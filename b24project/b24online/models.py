@@ -743,6 +743,9 @@ class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
 
 
 class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
+    class Meta:
+        ordering = ["-id"]
+
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     description = models.TextField(blank=False, null=False)
@@ -1023,6 +1026,9 @@ class Greeting(models.Model, IndexedModelMixin):
 
 
 class News(ActiveModelMixing, models.Model, IndexedModelMixin):
+    class Meta:
+        ordering = ["-id"]
+
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255, blank=True)

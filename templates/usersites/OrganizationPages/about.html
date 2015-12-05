@@ -2,11 +2,13 @@
 {% load CustomFilters %}
 {% block content %}
     {{ block.super }}
-    <div class="new-details">
-        <h1 class="titlepage">{{ site.user_site.organization.name }}</h1>
 
-        <div class="content-news">
+    <section class="content__info">
+        <article>
+        <h3>{{ site.user_site.organization.name }}</h3>
+
+
             <p>{{ site.user_site.organization.description|cleanHtml|safe }} </p>
-        </div>
-    </div>
+        </article>
+    </section>
 {% endblock %}

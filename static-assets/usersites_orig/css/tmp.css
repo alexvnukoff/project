@@ -1,0 +1,494 @@
+@charset "utf-8";
+/* Social buttons from sprite ========================================================= */
+.imgnews {
+    background:url(/static/b24online/img/news.png);
+}
+
+.social{
+    position:relative;
+    float:left;
+    width:100%;
+    margin:12px 0 0 0;
+}
+
+.social i{
+    display:inline-block;
+    width:24px;
+    height:26px;
+    margin-right:6px;
+}
+
+.share-1{
+    background-position:0px -60px;
+}
+
+.share-2{
+    background-position:-30px -60px;
+}
+
+.share-3{
+ background-position:-60px -60px;
+}
+
+.share-4{
+    background-position:-90px -60px;
+}
+
+/* Basket/cart pic ========================================================= */
+
+@font-face {
+  font-family: 'fontello';
+  src: url('../font/fontello.eot?90373385');
+  src: url('../font/fontello.eot?90373385#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff?90373385') format('woff'),
+       url('../font/fontello.ttf?90373385') format('truetype'),
+       url('../font/fontello.svg?90373385#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?62615246#fontello') format('svg');
+  }
+}
+*/
+
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-basket:before {
+    content: '\e800';
+}
+
+.icon-ok:before {
+    content: '\e801';
+}
+
+.icon-cancel:before {
+    content: '\e802';
+}
+
+.icon-trash-empty:before {
+  content: '\e803';
+}
+
+.basket-wrapper {
+    text-align:center;
+    margin:0 0 15px 0;
+}
+
+.basket-wrapper span {
+    font-size:12px;
+    display:block;
+}
+
+.basket-wrapper .icon-basket {
+    line-height:1.4;
+}
+
+a.basket-btn {
+    font-size:16px;
+    text-decoration:none;
+}
+
+a.basket-btn:hover {
+    color:#369BCD;
+    text-decoration:none;
+}
+
+a.basket-btn:active {
+    text-decoration:none;
+}
+
+.basket_buttons {
+    position:absolute;
+    margin:12px 0 0 0;
+}
+
+button.basket-btn {
+    margin:15px 0 10px 0;
+    background: #369bcd;
+    text-align:center;
+    color: #fff;
+    font-size:12px;
+    padding:4px 8px 4px 8px;
+    cursor:pointer;
+    border:0;
+    box-shadow: 0px 1px 2px #ddd;
+}
+
+a.red-btn {
+    display:block;
+    margin:15px 0 10px 0;
+    border:1px solid #dd4b39;
+    background: #dd4b39;
+    text-align:center;
+    color: #fff;
+    font-size:12px !important;
+    padding:6px 10px 6px 10px;
+    cursor:pointer;
+    border:0;
+    box-shadow: 0px 1px 2px #ddd;
+}
+
+a.red-btn:hover {
+    text-decoration:none;
+}
+
+button.btn-green {
+background: #2ca93b;
+}
+
+.basket_detail {
+    margin-top:230px;
+}
+
+.basket_detail table {
+    width:100%;
+}
+
+.basket_detail table img {
+    border:1px solid #ccc;
+    width:120px;
+}
+
+.basket_detail table td.image {
+    width:130px;
+    padding:10px;
+}
+
+.basket_detail table td.main {
+    width:400px;vertical-align:top;
+}
+
+.basket_detail table td.last {
+    width:100px;
+    text-align:center;
+}
+
+.basket_detail input.quantity {
+    display:block;
+    margin: 5px auto;
+    width:50px;
+    text-align:center;
+}
+
+.basket_detail hr {
+    border:0;
+    border-top:1px solid #dedede;
+    margin:15px 0 10px 0;
+}
+
+.basket_detail a.btn-cancel {
+    color:#848484;
+    display:inline-block;
+    margin-top:3px;
+}
+
+.basket_detail a.btn-cancel i.icon-trash-empty {
+    font-size:14px;
+}
+
+.basket_detail .a-btn {
+    margin:15px 0 10px 0;
+    background: #369bcd;
+    text-align:center;
+    color: #fff !important;
+    font-size:12px;
+    padding:5px 8px 5px 8px;
+    cursor:pointer;
+    box-shadow: 0px 1px 2px #ddd;
+}
+
+.basket_detail p.total_cost {
+    text-align:right;
+    font-size:15px;
+}
+
+/* Wrapper for Usersites settings =========================================== */
+
+.clear {
+  clear:both;
+}
+
+#wrapper h1 {
+  margin:30px 0 10px 0;
+  font-size:24px;
+  color:#000;
+}
+
+#wrapper h3 {
+  margin:20px 0 10px 0;
+  font-size:20px;
+  color:#000;
+}
+
+#wrapper p {
+  font-size:13px;
+}
+
+#wrapper hr {
+  display:block;
+  border:0;
+  border-top:1px solid #dedede;
+  margin:20px 0;
+}
+
+#wrapper form {
+  font-size:13px;
+}
+
+#wrapper .form-group {
+  margin:10px 0 10px 0;
+}
+
+#wrapper .form-group label {
+  display:block;
+  font-weight:bold;
+}
+
+#wrapper .form-group label span {
+  color:#818181;
+  font-weight:normal;
+  font-size:12px;
+}
+
+#wrapper .form-group small{
+  display:block;
+}
+
+#wrapper .error {
+  color:red;
+}
+
+#wrapper .form-group input[type=text] {
+  margin:3px 0;
+  padding:5px;
+  border:2px solid #919191;
+}
+
+#wrapper .form-group input[type=file] {
+  margin:3px 0;
+  border:0;
+  display:block !important;
+  overflow:hidden!important;
+}
+
+#wrapper .form-group textarea {
+  width:600px;margin:3px 0;
+  padding:5px;
+  resize:none;
+  font-size:13px;
+  border:2px solid #919191 !important;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#wrapper .form-group .viewimg {
+  margin-top:8px;
+}
+
+#wrapper .form-group .viewimg img {
+  border:1px solid #dedede;
+}
+
+#wrapper .form-group a.btn-link {
+  color:000;
+  background:#dedede;
+}
+
+#wrapper .form-group .showtype {
+  margin-top:5px;
+}
+
+#wrapper .form-group .template .ex-img {
+  float:left;
+  margin:3px 10px 5px 0;
+}
+
+#wrapper .form-group .template .ex-img img {
+  width:428px;
+  border:1px solid #919191;
+}
+
+#wrapper .form-group ul.custom_images {
+  margin:0;padding:0;
+}
+
+#wrapper .form-group ul.custom_images li {
+  margin:3px 0;
+  padding:0;
+}
+
+#wrapper .form-group ul.custom_images li img {
+  width:428px;
+  border:1px solid #919191 !important;
+  margin:0;
+  poadding:0;
+  display:block;
+}
+
+#wrapper .form-group ul.custom_images .label {
+  font-weight:bold;
+  font-size:11px;
+  margin:5px 0;
+}
+
+#wrapper .form-group .b-img.banner {
+  border:0;
+  height:auto;
+  margin-bottom:5px;
+}
+
+/* Products SALE / Coupon stuff ============================================= */
+
+.product-sale::after {
+    content: " ";
+    border-width: 3px 3px 4px 4px;
+    border-style: solid;
+    border-color: transparent #954232 #954232 transparent;
+    position: absolute;
+    top: 0px;
+    right: 100%;
+}
+
+.product-sale {
+  background:#dd4b39;
+  color:#fff;
+  font-weight:bold;
+  padding:5px 8px 5px 8px;
+  margin:-5px 0 0 10px;
+  top:0;
+  position:absolute;
+}
+
+.product-sale-box {
+  width:100%;
+  background:#eeeeee;
+  margin:20px 0 30px 0;
+}
+
+.product-sale-box .product-sale {
+  background:#dd4b39;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  padding:5px 8px 5px 8px;
+  margin:-5px 0 0 600px;
+  position:absolute;
+}
+
+.product-sale-box .cover-image {
+  text-align:center;
+}
+
+.product-sale-box .cover-image img {
+  width:100px;
+  margin:10px;
+  float:left;
+}
+
+.product-sale-box .cover-text {
+  margin:10px 0;
+  float:left;
+}
+
+.product-sale-box .cover-text h2 {
+  font-size:18px;
+  padding:5px 5px 10px 5px;
+  color:#444;
+}
+
+.product-sale-box .white-line {
+  width:550px;
+  background:#fff;
+  padding:10px;
+}
+
+.product-sale-box p.lead {
+  font-size:15px;
+}
+
+.product-sale-box span.price {
+  font-weight: bold;
+}
+
+.product-sale-box span.date {
+  color:#848484;
+}
+
+a.green-btn-sale {
+    display:inline-block;
+    margin:15px 0 10px 0;
+    border:1px solid #2ca93b;
+    background: #2ca93b;
+    text-align:center;
+    color: #fff;
+    font-size:12px !important;
+    padding:6px 10px 6px 10px;
+    cursor:pointer;
+    border:0;
+    box-shadow: 0px 1px 2px #ddd;
+}
+
+a.green-btn-sale:hover {
+  text-decoration:none;
+}
+
+/* Temp media queries ============================================= */
+
+@media only screen and (max-width:1250px){
+
+.sidebar {
+  display:none;
+}
+
+.adv, .banners {
+  display:none;
+}
+
+.wrapper {
+  width:100%;
+}
+
+.mainright {
+  float:none;
+  margin:0 auto;
+}
+
+}

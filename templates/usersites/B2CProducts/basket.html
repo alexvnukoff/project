@@ -7,99 +7,73 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 
-<div class="basket_detail">
-<h2>{% trans 'List of products:' %}</h2>
 
-{% if basket %}
-<form method="post" action="">{% csrf_token %}
-<table>
-{% for row in basket %}
+    <section class="content__info grid-layout cart">
 
-  <tr style="background:#{% cycle 'ffffff' 'fafafa' %}">
-    <td class="image">
-        <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">
-            {% if row.product.is_coupon %}
-                <div class="product-sale">-{{ row.product.coupon_discount_percent|intword }}%</div>
-            {% endif %}
-            {% if row.product.image %}
-                <img src="{{ row.product.image.small }}" alt="row.product.name">
+    {% if basket %}
+    <form method="post" action="">{% csrf_token %}
+        <h2>{% trans 'List of products:' %}</h2>
+    <table>
+         <tbody>
+
+    {% for row in basket %}
+
+        <tr>
+            <td>
+                {% if row.product.image %}
+                    <img src="{{ row.product.image.small }}" alt="row.product.name">
+                {% else %}
+                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                {% endif %}
+            </td>
+
+                    <td>
+                        <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }} ({{ row.product.name }})</a></h3>
+                        <p>{{ row.product.short_description|truncatewords:30 }}</p>
+                    </td>
+                    <td>
+                         {% if row.product.cost %}
+                        <p>{% trans 'Price' %}:</p>
+                        <span>{% if row.product.is_coupon %}{{ row.product.get_discount_price }}{% else %}{{ row.product.cost|formatPrice }}{% endif %} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
+
+                        {% else %}
+                            {% trans 'Contact to price' %}
+                        {% endif %}
+                        <input type="hidden" name="product_id" value="{{ row.product.id }}">
+                        <input class="quantity" type="text" name="quantity" value="{{ row.quantity }}">
+                        <a href="{% url 'b2c_products:basket' %}?del={{ row.product.id }}" onclick="return confirm('{% trans 'Are you sure delete this product?' %}');">Delete</a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><p id="total_cost"><strong>{% trans 'Total' %}: {{ price.total|intcomma }}</strong> <strong class="currency_for_total_cost"></strong></td>
+                </tr>
+            </tfoot>
+        </table>
+        <a href="{% url 'b2c_products:basket' %}?clean=1" class="clean">Clean bascket</a>
+        <button class="update">Update price</button>
+        </form>
+
+        <div class="pay">
+            {% if paypal_form %}
+            {{ paypal_form.render }}
             {% else %}
-                <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
             {% endif %}
-        </a>
-    </td>
-
-    <td class="main">{{ product.quantity }}
-        <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">
-            <h2 style="padding-bottom:5px;">{{ row.product.name }} ({{ row.product.name }})</h2>
-        </a>
-        <p>{{ row.product.short_description|truncatewords:30 }}</p>
-    </td>
-
-    <td class="last">
-        {% if row.product.cost %}
-        Price<br>
-        <strong>
-            <span class="raw_cost">{{ row.product.cost|formatPrice }}</span>
-            <span class="currency_symbol">{{ row.product.currency|getSymbol }}</span>
-
-            <input type="hidden" name="product_id" value="{{ row.product.id }}">
-            <input class="quantity" type="text" name="quantity" value="{{ row.quantity }}">
-
-            <a href="{% url 'b2c_products:basket' %}?del={{ row.product.id }}" onclick="return confirm('{% trans "Are you sure delete this product?" %}');" class="btn-cancel"><i class="icon-trash-empty"></i></a>
-        </strong>
+        </div>
         {% else %}
-            {% trans 'Contact to price' %}
+        <br>
+        <p>{% trans 'Your basket is empty.' %}</p>
         {% endif %}
-    </td>
-
-  </tr>
-
-{% endfor %}
-</table>
-
-<hr>
-
-<div class="basket_buttons">
- <a href="{% url 'b2c_products:basket' %}?clean=1" class="red-btn">
-        {% trans 'Clean basket' %}
-    </a>
-</div>
-
-<div style="text-align:right">
-<p id="total_cost"><strong>Total: {{ price.total|intcomma }} {{ products.get_currency }}</strong>
-<strong class="currency_for_total_cost"></strong></p>
-<button class="basket-btn btn-green" style="display:none;">{% trans "Checkout by E-mail" %}</button>
-<button class="basket-btn">{% trans "Update price" %}</button>
-</form>
-
-<div style="text-align:right">
-{% if paypal_form %}
-<br>
-{{ paypal_form.render }}
-{% else %}
-    <a class="bigbuy contact-us" style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-{% endif %}
-
-</div>
-
-<script>
-
-    var currency=document.getElementsByClassName('currency_symbol')[0];
-    $(document).ready(function(){
-        $('.currency_for_total_cost').html(currency.innerHTML);
-    });
-
-</script>
-
-{% else %}
-<br>
-<p>{% trans 'Your basket is empty.' %}</p>
-{% endif %}
+        </section>
 
 </div>
 </div>
-
-
 
 {% endblock %}
