@@ -6,14 +6,14 @@
                 <img src="{% static 'usersites/images/svg/menu.svg' %}" alt="">
             </div>
             <div class="horMenu">
-                <ul class="navigation vertical">
+                <ul class="navigation vertical clearfix">
                     <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
                     {% for page in site.user_site.organization.additional_pages.all %}
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
                 <div class="busket vertical">
-                    <span ngCloak><a href="{% url 'b2c_products:basket' %}">({% verbatim %}{{basket_count}}{% endverbatim %})</a></span>
+                    <span ngCloak><a href="{% url 'b2c_products:basket' %}">{% verbatim %}{{basket_count}}{% endverbatim %}</a></span>
                 </div>
             </div><!--End mainMenu-->
             <div class="tel vertical">

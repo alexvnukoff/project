@@ -3,24 +3,19 @@
 {% load CustomFilters %}
 
     <div class="offer__slider">
-        {% if images|length == 0 %}
+        {% if site.user_site.slider_images|length == 0 %}
 
-            <div class="slide">
-                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" alt="">
-            </div>
-            <div class="slide">
-                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" alt="">
-            </div>
-            <div class="slide">
-                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" alt="">
-            </div>
+            <div class="slide" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg"></div>
+            <div class="slide" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg"></div>
+            <div class="slide" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg"></div>
 
         {% else %}
-            {% for image in images %}
+            {% for i in site.user_site.slider_images %}
                 <div class="slide">
-                    <img src="{{ image }}" alt="">
+                    <img src="{{ i.image.big }}" alt="">
                 </div>
             {% endfor %}
         {% endif %}
     </div>
+
 
