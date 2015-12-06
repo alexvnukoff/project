@@ -1,4 +1,4 @@
-{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!DOCTYPE html>
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
@@ -23,7 +23,7 @@
 
 </head>
 
-<body class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}" ng-app="usRSite" ng-controller="MyAwesomeBasket">
+<body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}" ng-app="usRSite" ng-controller="MyAwesomeBasket">
 
     {% include 'usersites/header.html' %}
 
@@ -36,7 +36,11 @@
                     </a>
                 </div>
 
-    {% include 'usersites/slider.html' %}
+                {% block slider %}
+                    {% cache 3600 slider site.pk LANGUAGE_CODE %}
+                        {% include 'usersites/slider.html' %}
+                    {% endcache %}
+                {% endblock %}
 
             <div class="offer__icons">
                 {% if is_chamber %}

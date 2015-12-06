@@ -6,7 +6,6 @@ path = path[0];
 if (document.getElementsByClassName('currency_symbol').length > 0) {
 var currency = document.getElementsByClassName('currency_symbol')[0];
 $('.currency_for_total_cost').html(currency.innerHTML);
-
 }
 
 $("#lang_select").find('option').each(function( i, opt ) {
@@ -50,6 +49,10 @@ $( "#lang_select" ).change(function(e) {
 
     window.location.href = window.location.protocol + "//" + path.join('.');
 });
+
+if($('.offer__icons').children().length < 1) {
+      $('.offer__icons').hide();
+  }
 
 $('.sidebar-menu>li').each(function(){
     var hrefNum = $(this).children().length;
@@ -223,3 +226,16 @@ Share = {
             window.open(url,'','toolbar=0,status=0,width=626,height=436');
         }
 };
+
+$(function(){
+    $(window).resize(function(event) {
+      if ($(window).width() <= 1000) {
+        $('body').removeClass('display-vertical');
+      } else {$('body').addClass('display-vertical');};
+    });
+    if ($(window).width() < 1000) {
+       $('body').removeClass('display-vertical');
+    }
+      else { $('body').addClass('display-vertical'); }
+
+  })
