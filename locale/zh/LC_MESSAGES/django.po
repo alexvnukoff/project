@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-07 20:54+0000\n"
+"POT-Creation-Date: 2015-12-07 21:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4261,11 +4261,8 @@ msgstr "发送密码"
 
 #: templates/registration/password_reset_done.html:23
 msgid ""
-"\n"
-"                We have sent you an email with a link to reset your "
-"password.  Please check\n"
-"                your email and click the link to continue.\n"
-"                "
+"We have sent you an email with a link to reset your password.  Please check\n"
+"                your email and click the link to continue."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:6
@@ -4284,23 +4281,22 @@ msgstr ""
 #| "To change the password, click the following to link or copy it into your "
 #| "browser:"
 msgid ""
-"\n"
 "To reset your password, please click the following link, or copy and paste "
 "it\n"
-"into your web browser:\n"
+"into your web browser:"
 msgstr "修改密码，请点击一下链接并将其复制到你的浏览器"
 
-#: templates/registration/password_reset_email.html:19
+#: templates/registration/password_reset_email.html:17
 msgid "Your username, in case you've forgotten:"
 msgstr ""
 
-#: templates/registration/password_reset_email.html:22
+#: templates/registration/password_reset_email.html:20
 #, fuzzy
 #| msgid "Best deals"
 msgid "Best regards"
 msgstr "最好的交易"
 
-#: templates/registration/password_reset_email.html:23
+#: templates/registration/password_reset_email.html:21
 msgid "Management"
 msgstr ""
 

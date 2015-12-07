@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-07 20:54+0000\n"
+"POT-Creation-Date: 2015-12-07 21:07+0000\n"
 "PO-Revision-Date: 2015-11-24 12:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4193,11 +4193,8 @@ msgstr "קבע סיסמא"
 #: templates/registration/password_reset_done.html:23
 #, fuzzy
 msgid ""
-"\n"
-"                We have sent you an email with a link to reset your "
-"password.  Please check\n"
-"                your email and click the link to continue.\n"
-"                "
+"We have sent you an email with a link to reset your password.  Please check\n"
+"                your email and click the link to continue."
 msgstr "נשלח מייל ובו לינק לאיפוס סיסמא"
 
 #: templates/registration/password_reset_email.html:6
@@ -4216,21 +4213,20 @@ msgstr ""
 #| "To change the password, click the following to link or copy it into your "
 #| "browser:"
 msgid ""
-"\n"
 "To reset your password, please click the following link, or copy and paste "
 "it\n"
-"into your web browser:\n"
+"into your web browser:"
 msgstr "כדי לשנות את הסיסמא, הקלק על הקישור או העתק אותו"
 
-#: templates/registration/password_reset_email.html:19
+#: templates/registration/password_reset_email.html:17
 msgid "Your username, in case you've forgotten:"
 msgstr "שם המשתמש "
 
-#: templates/registration/password_reset_email.html:22
+#: templates/registration/password_reset_email.html:20
 msgid "Best regards"
 msgstr "בהוקרה,"
 
-#: templates/registration/password_reset_email.html:23
+#: templates/registration/password_reset_email.html:21
 msgid "Management"
 msgstr "הנהלה"
 
