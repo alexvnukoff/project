@@ -38,7 +38,7 @@
             {% if delete_url %}
                 <div class="tender-action">
                     <i class="imgnews remove icon-action"></i>
-                    <a href="{% url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}">
+                    <a href="{% url url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}">
                         <span class="deletext">{% trans 'remove' %}</span>
                     </a>
                 </div>
