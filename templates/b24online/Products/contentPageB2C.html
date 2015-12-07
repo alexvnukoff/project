@@ -9,7 +9,7 @@
     <ul class="listprd">
     {% for product in object_list %}
         <li>
-         {% setContextMenu product update_url=update_url %}
+         {% setContextMenu product update_url=update_url delete_url=delete_url %}
           <div class="thumb">
               <a href="{% url "products:B2CDetail" product.slug product.pk %}">
                   {% if product.image %}

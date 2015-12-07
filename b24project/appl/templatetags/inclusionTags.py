@@ -145,7 +145,6 @@ def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
     model_name = context.get('model', None)
     request = context.get('request')
-    update_url = None
 
     url_namespace = None
     set_current = False
@@ -159,7 +158,6 @@ def set_context_menu(context, obj, **kwargs):
     elif model_name == B2CProduct.__name__:
         url_namespace = "products"
         top_perm = False
-        delete = False
     elif model_name == InnovationProject.__name__:
         url_namespace = "innov"
     elif model_name == Tender.__name__:
@@ -180,27 +178,26 @@ def set_context_menu(context, obj, **kwargs):
         url_namespace = "tpp"
         delete = False
 
-    vars = {
+    params = {
         'top_perm': top_perm,
         'top_type': model_name.lower(),
         'obj': obj,
         'url_namespace': url_namespace,
         'current_path': current_path,
         'set_current': set_current,
-        'update_url': update_url,
         'delete': delete
     }
 
     has_perm = getattr(obj, 'has_perm', None)
 
     if has_perm is None or url_namespace is None:
-        vars['has_perm'] = None
+        params['has_perm'] = None
     else:
-        vars['has_perm'] = has_perm(request.user)
+        params['has_perm'] = has_perm(request.user)
 
-    vars.update(kwargs)
+    params.update(kwargs)
 
-    return vars
+    return params
 
 
 @register.inclusion_tag('b24online/News/last.html', takes_context=True)

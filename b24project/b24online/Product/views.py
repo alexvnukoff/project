@@ -31,12 +31,6 @@ class B2BProductList(ItemsList):
 
     model = B2BProduct
 
-    def get_context_data(self, **kwargs):
-        context = super(B2BProductList, self).get_context_data(**kwargs)
-        context['update_url'] = 'update'
-
-        return context
-
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/contentPage.html'
 
@@ -81,7 +75,10 @@ class B2CProductList(ItemsList):
 
     def get_context_data(self, **kwargs):
         context = super(B2CProductList, self).get_context_data(**kwargs)
-        context['update_url'] = 'updateB2C'
+        context.update(
+            update_url='updateB2C',
+            delete_url='deleteB2C'
+        )
 
         return context
 

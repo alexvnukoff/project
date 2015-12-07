@@ -1,7 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
@@ -14,12 +13,14 @@ def wall(request):
 
     if isinstance(organization, Company):
         b2c_products = B2CProduct.get_active_objects().filter(company=organization)[:3]
-        b2c_coupons  = B2CProduct.get_active_objects().filter(company=organization,
-                       coupon_dates__contains=now().date(), coupon_discount_percent__gt=0).order_by("-created_at")
+        b2c_coupons = B2CProduct.get_active_objects().filter(company=organization,
+                                                             coupon_dates__contains=now().date(),
+                                                             coupon_discount_percent__gt=0).order_by("-created_at")
         b2b_products = B2BProduct.get_active_objects().filter(company=organization)[:3]
     else:
         b2b_products = None
         b2c_products = None
+        b2c_coupons = None
 
     current_section = ''
 

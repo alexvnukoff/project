@@ -65,6 +65,6 @@ class ItemDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
-        context_data['title'] = self.get_title(),
+        context_data['title'] = self.get_title()
 
         return context_data
