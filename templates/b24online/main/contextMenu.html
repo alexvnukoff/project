@@ -42,7 +42,7 @@
                         <span class="deletext">{% trans 'remove' %}</span>
                     </a>
                 </div>
-            {% else %}
+            {% elif delete %}
                 <div class="tender-action">
                     <i class="imgnews remove icon-action"></i>
                     <a href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}">
