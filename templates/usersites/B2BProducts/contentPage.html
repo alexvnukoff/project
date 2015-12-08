@@ -10,7 +10,7 @@
    {% include 'usersites/Paginator.html' %}
 
                 <section class="content__info__products">
-                    <h2>B2B Products</h2>
+                    <h2>{% trans 'B2B Products' %}</h2>
                     <ul class="products-list">
 
                         {% for product in object_list %}
@@ -28,7 +28,7 @@
                             <div class="product__about">
 
                                 <p class="desc">
-                                <strong>{{ product.name|truncatewords:8 }}</strong></p>
+                                <strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}
                                 <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                                 {% else %}

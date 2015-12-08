@@ -25,9 +25,9 @@
                         <p class="date">{{ news.created_at|date:'d M Y' }}</p>
                         <p class="text">
                             {% if news.short_description %}
-                                 {{ news.short_description|force_escape|linebreaks }}
+                                 {{ news.short_description|force_escape|linebreaks|removetags:"p" }}
                             {% else %}
-                                 {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
+                                 {{ news.content|safe|truncatewords_html:"30"|removetags:"p" }}
                             {% endif %}
                         </p>
                     </div>

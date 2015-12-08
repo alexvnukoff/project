@@ -11,9 +11,7 @@
 
         {% else %}
             {% for i in site.user_site.slider_images %}
-                <div class="slide">
-                    <img src="{{ i.image.big }}" alt="">
-                </div>
+                <div class="slide" style="background-image: url({{ i.image.big }})"></div>
             {% endfor %}
         {% endif %}
     </div>
