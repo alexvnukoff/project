@@ -15,7 +15,7 @@
                 {% if forloop.first %}
                     <div class="main-action">
                         <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                        <div class="main-action__cover" style="background-image: url({{ product.image.big }}">
+                        <div class="main-action__cover" style="background-image: url({{ product.image.big }})">
                             <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
                         </div>
                         </a>
@@ -43,7 +43,7 @@
                     {% if forloop.first %}{% else %}
                         <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
                         <div class="action square">
-                            <div class="action__cover" style="background-image: url({{ product.image.big }}">
+                            <div class="action__cover" style="background-image: url({{ product.image.big }})">
                                 <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
                             </div>
                         </a>
@@ -80,7 +80,7 @@
                             </a>
                         </div>
                         <div class="product__about">
-                            <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
+                            <p class="desc"><strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}
                                 <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                                 {% else %}

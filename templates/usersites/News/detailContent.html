@@ -3,13 +3,17 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
+{% block title %}{{ object.title }}{% endblock %}
 {% block content %}
     {{ block.super }}
 
     <section class="content__info">
         <article>
 
-            <p>{{ object.content|cleanHtml|safe }}</p>
+            <h3>{{ object.title }}</h3>
+            <img src='{% static "b24online/img/news.jpg" %}' alt="">
+
+            {{ object.content|cleanHtml|safe }}
 
             {% if object.gallery_images %}
                 <ul class="gallery">

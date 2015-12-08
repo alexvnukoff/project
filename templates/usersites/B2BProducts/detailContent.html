@@ -5,6 +5,7 @@
 {% load staticfiles %}
 {% load inclusionTags %}
 {% load humanize %}
+{% block title %}{{ object.name }} {{ object.sku }}{% endblock %}
 {% block content %}
     {{ block.super }}
 

@@ -732,9 +732,10 @@ ul.navigation                           {
                                             max-width: 100%;
                                             float: none;
                                             height: auto;
-                                            margin: 10px auto;
+                                            margin: 10px auto 10px 0;
                                             display: block;
                                         }
+.hebrew .content__info article>img      { margin: 10px 0 10px auto}
 .content__info article p img              {
                                             max-width: 100%;
                                             float: none;
@@ -743,7 +744,8 @@ ul.navigation                           {
                                             display: block;
                                         }
 
-article h3                              { margin-bottom: 20px;}
+.wrapper article h3                              { margin-bottom: 20px; text-align: left;}
+.hebrew .wrapper article h3                      { text-align: right;}
         @media (max-width: 1250px)              {
             .content__info                      {    width: 100% }
         }
@@ -1511,7 +1513,7 @@ Content Info (actions)
 .content__info form                     {
                                             width: 100%;
                                             margin-bottom: 40px;
-                                            margin-top: 20px;
+                                            margin-top: 0px;
                                         }
 .content__info form input               {
                                             width: 50%;

@@ -9,7 +9,7 @@
 
 
     <section class="content__info grid-layout cart">
-
+    <!-- Check domain name {{ site.domain }} -->
     {% if basket %}
     <form method="post" action="">{% csrf_token %}
         <h2>{% trans 'List of products:' %}</h2>
