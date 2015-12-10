@@ -170,23 +170,31 @@ ul.navigation                           {
 #menuToggle                             {    display: none }
 
 
-        @media (max-width: 1200px)               {
+        @media (max-width: 1200px) {
             .navigation a                       {font-size: 14px; padding: 5px;}
             .hebrew .navigation a               {  padding: 5px;}
         }
-        @media (max-width: 1050px)               {
+
+        @media (max-width: 1100px) {
+            .navigation a                       {font-size: 12px;}
+        }
+
+        @media (max-width: 1050px) {
             .horMenu                            {width: 80%;}
             .hebrew .navigation a               {font-size: 12px;}
         }
-        @media (max-width: 1000px)               {
+
+        @media (max-width: 1000px) {
+            .navigation a                       {   font-size: 14px;}
             .tel a                              {   font-size: 14px;}
             .tel img                            {   width: 15px; margin-right: 5px;}
         }
 
-        @media (min-width: 1000px)               {
+        @media (min-width: 1000px) {
             .horMenu                            {    display: inline-block !important;}
         }
-        @media (max-width: 1000px)                             {
+
+        @media (max-width: 1000px) {
             header                              {
                                                     position: fixed;
                                                     z-index: 999;
@@ -256,14 +264,15 @@ ul.navigation                           {
 /* ------ offer slider -----*/
 .offer__slider                          {
                                             width: 76%;
-                                            height: 200px;
                                             display: inline-block;
                                             vertical-align: top;
                                         }
 .offer__slider .slick-slider            {   height: 100%;}
 .offer__slider .slide                   {  background-size: cover;
                                             background-position: 50% 50%;
-                                            background-repeat: no-repeat;}
+                                            background-repeat: no-repeat;
+                                            width: 100%;
+                                            padding-bottom: 13%;}
 .offer__slider .slide  img              {
                                             min-width: 100%;
                                             height: 100%;
@@ -400,7 +409,7 @@ ul.navigation                           {
                                                 float: right;
                                                 width: 16%;
                                             }
-.display-vertical .offer__icons             {    min-height: 400px;}
+.display-vertical .offer__icons             {    min-height: 700px;}
 .display-vertical .offer__icons__icon       {    margin: 0px auto 20px;}
 .display-vertical .offer__icons__icon:first-child
                                             {    margin-top: 0 }
@@ -419,7 +428,7 @@ ul.navigation                           {
                                                         width: 82%;
                                                         margin: 20px 0;
                                                     }
-            .display-vertical .content__info        {    width: 82% }
+            .display-vertical .content__info        {    width: 82%; display: inline-block;}
             .display-vertical .offer__slider        {    width: 58% }
         }
 
@@ -521,7 +530,9 @@ ul.navigation                           {
                                             width: 50%;
                                             margin: 0 -2px;}
 }
-
+@media (max-width: 700px) {
+    body:not(#main) .sidebar .banner-left {display: none;}
+}
 
 
 .sidebar-menu>li                        {
@@ -747,7 +758,7 @@ ul.navigation                           {
 .wrapper article h3                              { margin-bottom: 20px; text-align: left;}
 .hebrew .wrapper article h3                      { text-align: right;}
         @media (max-width: 1250px)              {
-            .content__info                      {    width: 100% }
+            .content__info                      {    width: 100%; display: block;}
         }
         @media (max-width: 700px)               {
             .content__info article>img          {    max-width: 50% }
@@ -1193,7 +1204,8 @@ Content Info (actions)
                                             line-height: 16px;
                                         }
 .hebrew .action__info h3 a              { text-align: right;}
-.action__info h3                        { line-height: 16px;}
+.action__info h3                        { line-height: 16px; text-align: left;}
+.hebrew .action__info h3                { text-align: right;}
 .action__info .old-price                {
                                             font-size: 12px;
                                             color: #5e5e5e;
@@ -1346,7 +1358,9 @@ Content Info (actions)
         }
         @media (max-width: 700px)                 {
 
-            .news__content__cover                   {    width: 15% }
+            .news__content__cover                   {    width: 20%;
+                                                        display: block;
+                                                        margin: 5px auto;}
             .news__content__desc                    {    width: 100% }
             .news__content .more                    {
                                                         float: none;
@@ -1445,7 +1459,7 @@ Content Info (actions)
 .product__about .price .currency        {
                                             margin-left: 5px;
                                             font-weight: 400;
-                                            font-size: 20px;
+                                            font-size: 16px;
                                         }
 .product__buy                           {
                                             width: 100%;
@@ -1794,6 +1808,7 @@ footer:after                            {
                                             vertical-align: middle;
                                             margin-right: 10px;
                                         }
+.hebrew .footer-content .copy img       { float: right; margin-left: 10px; margin-right: 0;}
 .footer-content .copy p                 {
                                             color: #fff;
                                             width: 315px;
@@ -1895,7 +1910,7 @@ footer:after                            {
 .product_box .info table            { text-align: left;}
 .product_box .info table td         { height: 40px; width: 150px;}
 
-.product_box .info form button      { float: left; margin-top: 25px; padding-bottom: 0;}
+.product_box .info form button      { float: left; margin:10px 0; padding-bottom: 0;}
 .product_box .info form input[name="amount"]  { width: 100%;}
 
 .product_box .info form button:hover { background-color: #54A5CD;}
