@@ -23,7 +23,7 @@
                         <div class="main-action__info">
                             <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
                             <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                            <div class="timer" date="{{ product.end_coupon_date|date:'m, j, Y' }}"></div>
+                            <div class="timer" date="{{ product.end_coupon_date|date:'Y-m-j' }}"></div>
 
                             <div class="offer vertical">
                                 <p class="price"><strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike></p>
@@ -51,7 +51,7 @@
                                 <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
                                 <p><span class="old-price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</span><span class="new-price">{{ product.get_discount_price }} {{ product.currency|getSymbol }}</span></p>
                                 <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'m, j, Y' }}"></div>
+                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-j' }}"></div>
                             </div>
                         </div>
                     {% endif %}
@@ -115,7 +115,11 @@
                         </div>
                         <div class="product__about">
                             <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
-                            <p class="price"><span class="value">{{ product.cost|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                            {% if product.cost %}
+                            <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                            {% else %}
+                            <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
                         </div>
                         <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
                     </li>
