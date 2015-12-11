@@ -1,4 +1,4 @@
-﻿
+
 /*General styles*/
 html, body                              {    height: 100% }
 body                                    {
@@ -179,7 +179,7 @@ ul.navigation                           {
             .navigation a                       {font-size: 12px;}
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1060px) {
             .horMenu                            {width: 80%;}
             .hebrew .navigation a               {font-size: 12px;}
         }
@@ -190,7 +190,7 @@ ul.navigation                           {
             .tel img                            {   width: 15px; margin-right: 5px;}
         }
 
-        @media (min-width: 1000px) {
+        @media (min-width: 1001px) {
             .horMenu                            {    display: inline-block !important;}
         }
 
@@ -266,26 +266,10 @@ ul.navigation                           {
                                             width: 76%;
                                             display: inline-block;
                                             vertical-align: top;
+                                            height: auto;
                                         }
 .offer__slider .slick-slider            {   height: 100%;}
-.offer__slider .slide                   {  background-size: cover;
-                                            background-position: 50% 50%;
-                                            background-repeat: no-repeat;
-                                            width: 100%;
-                                            padding-bottom: 13%;}
-.offer__slider .slide  img              {
-                                            min-width: 100%;
-                                            height: 100%;
-                                            position: absolute;
-                                            top: 50%;
-                                            left: 50%;
-                                            -webkit-transform: translate(-50%, -50%);
-                                            -moz-transform: translate(-50%, -50%);
-                                            -ms-transform: translate(-50%, -50%);
-                                            -o-transform: translate(-50%, -50%);
-                                            transform: translate(-50%, -50%);
-                                            margin: auto;
-                                        }
+
 
 .offer__slider .slick-dots li button::before
                                         {    content: "" }
