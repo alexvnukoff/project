@@ -76,16 +76,10 @@
     	<div class="sideleft">
           <select id="lang_select" style="height: 24px;width: 200px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
                         <option>{% trans 'Mother tongue' %}</option>
-
-                        <option value="am">{% trans "Armenian" %}</option>
-                        <option value="ar">{% trans "Arabic" %}</option>
-                        <option value="en">{% trans "English" %}</option>
-                        <option value="he">{% trans "Hebrew" %}</option>
-                        <option value="ru">{% trans "Russian" %}</option>
-                        <option value="zh">{% trans "Chinese" %}</option>
-                        <option value="uk">{% trans "Ukrainian" %}</option>
-
-
+                        {% get_available_languages as LANGUAGES %}
+                        {% for code, lang in LANGUAGES %}
+                            <option value="{{ code }}">{{ lang }}</option>
+                        {% endfor %}
                     </select>
 
                     <script>

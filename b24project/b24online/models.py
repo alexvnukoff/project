@@ -34,7 +34,9 @@ CURRENCY = [
     ('EUR', _('Euro')),
     ('USD', _('Dollar')),
     ('UAH', _('Hryvnia')),
-    ('RUB', _('Russian Ruble'))
+    ('RUB', _('Russian Ruble')),
+    ('BGN', _('Bulgarian Lev')),
+    ('BYR', _('Belarusian Ruble'))
 ]
 
 MEASUREMENT_UNITS = [

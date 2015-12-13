@@ -92,13 +92,10 @@
             	<div class="b-filter-left">
                 	<select id="lang_select">
                     	<option disabled selected>{% trans 'Mother tongue' %}</option>
-                        <option value="am">Armenian</option>
-                        <option value="ar">Arabic</option>
-                        <option value="en">English</option>
-                        <option value="he">עברית</option>
-                        <option value="ru">Русский</option>
-                        <option value="zh">Chinese</option>
-                        <option value="uk">Український</option>
+                        {% get_available_languages as LANGUAGES %}
+                        {% for code, lang in LANGUAGES %}
+                            <option value="{{ code }}">{{ lang }}</option>
+                        {% endfor %}
                     </select>
                      <!-- Google Translate injection -->
                     <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">

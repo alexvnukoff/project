@@ -62,15 +62,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                    <div class="select -lang">
+                    <div class="select-lang">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
-                            <option value="am">Armenian</option>
-                            <option value="ar"> Arabic </option>
-                            <option value="en">English</option>
-                            <option value="he">עברית</option>
-                            <option value="ru">Русский</option>
-                            <option value="zh">Chinese</option>
+                            {% get_available_languages as LANGUAGES %}
+                            {% for code, lang in LANGUAGES %}
+                                <option value="{{ code }}">{{ lang }}</option>
+                            {% endfor %}
                         </select>
                     </div>
 
