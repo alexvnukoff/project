@@ -1,17 +1,9 @@
 $(document).ready(function() {
 
-var path = (window.location.host).split('.');
-path = path[0];
-
 if (document.getElementsByClassName('currency_symbol').length > 0) {
 var currency = document.getElementsByClassName('currency_symbol')[0];
 $('.currency_for_total_cost').html(currency.innerHTML);
 }
-
-$("#lang_select").find('option').each(function( i, opt ) {
-    if( opt.value === path )
-        $(opt).attr('selected', 'selected');
-});
 
 $('.category-selector').on('change', function() {
     window.location.href = this.value
@@ -21,34 +13,40 @@ $("#item-amount").keyup(function() {
     document.getElementById('id_quantity').value = this.value;
 });
 
-$("#lang_select" ).change(function(e) {
-    if(!$(this).val())
-        return;
+var langs = []
 
-    var languages = ["am","ar","en","he","ru","zh"];
+$(document).ready(function() {
+    var path = (window.location.host).split('.');
+    path = path[0];
+    $("#lang_select").find('option').each(function( i, opt ) {
+        langs.push(opt.value);
 
-    if ($.inArray(path[0], languages) > -1) {
-        path[0] = $(this).val();
-    }
+        if( opt.value === path ) {
+            $(opt).attr('selected', 'selected');
+        }
+    });
 });
 
 $( "#lang_select" ).change(function(e) {
     if (!$( this ).val())
-        return;
+    return;
 
     path = (window.location.host).split('.');
-
     if (path[0] == 'www'){
-        delete path[0]
+        path[0] = $( this ).val();
+    } else if ($.inArray(path[0], langs) > -1) {
+        path[0] = $( this ).val()
+    } else {
+        path.unshift($( this ).val())
     }
 
-    var languages = ["am", "ar", "en", "he", "ru", "zh"];
-    if($.inArray(path[0], languages)>-1){
-        path[0] = $(this).val();
-    }
+    host = path.join('.');
 
-    window.location.href = window.location.protocol + "//" + path.join('.');
+    window.location.href =window.location.protocol + "//" + host  +
+            window.location.pathname + window.location.search + window.location.hash;
+
 });
+
 
 if($('.offer__icons').children().length < 1) {
       $('.offer__icons').hide();
