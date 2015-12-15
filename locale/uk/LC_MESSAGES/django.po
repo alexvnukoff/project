@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TppUA\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-07 21:07+0000\n"
+"POT-Creation-Date: 2015-12-15 21:24+0000\n"
 "PO-Revision-Date: 2014-07-14 14:57+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 
 #: b24project/appl/func.py:383 templates/b24online/AdminTpp/prices.html:51
 #: templates/b24online/Messages/index.html:39
-#: templates/b24online/main_page.html:190
-#: templates/b24online/main_page.html:218
+#: templates/b24online/main_page.html:187
+#: templates/b24online/main_page.html:215
 msgid "Organizations"
 msgstr "Організації"
 
@@ -32,11 +32,11 @@ msgstr "Організації"
 #: templates/b24online/Companies/detailContent.html:175
 #: templates/b24online/Tpp/detailContent.html:121
 #: templates/b24online/Wall/contentPage.html:116
-#: templates/b24online/index.html:197 templates/b24online/job_index.html:208
-#: templates/b24online/main_page.html:188
-#: templates/b24online/main_page.html:215
+#: templates/b24online/index.html:191 templates/b24online/job_index.html:208
+#: templates/b24online/main_page.html:185
+#: templates/b24online/main_page.html:212
 #: templates/usersites/News/contentPage.html:11
-#: templates/usersites/contentPage.html:150
+#: templates/usersites/contentPage.html:154
 #: templates/usersites_orig/contentPage.html:25
 msgid "News"
 msgstr "Новини"
@@ -60,8 +60,8 @@ msgstr "Продукти"
 #: b24project/appl/func.py:404 templates/b24online/Analytic/main.html:72
 #: templates/b24online/Companies/detailContent.html:212
 #: templates/b24online/Tpp/detailContent.html:154
-#: templates/b24online/main_page.html:192
-#: templates/b24online/main_page.html:220
+#: templates/b24online/main_page.html:189
+#: templates/b24online/main_page.html:217
 msgid "Innovation Projects"
 msgstr "Інноваційні проекти"
 
@@ -72,10 +72,10 @@ msgstr "Інноваційні проекти"
 #: templates/b24online/Analytic/main.html:95
 #: templates/b24online/Companies/index.html:5
 #: templates/b24online/Tpp/detailContent.html:179
-#: templates/b24online/forms.html:5 templates/b24online/index.html:177
+#: templates/b24online/forms.html:5 templates/b24online/index.html:171
 #: templates/b24online/job_index.html:188
-#: templates/b24online/main_page.html:191
-#: templates/b24online/main_page.html:219
+#: templates/b24online/main_page.html:188
+#: templates/b24online/main_page.html:216
 msgid "Companies"
 msgstr "Компанії"
 
@@ -84,14 +84,14 @@ msgstr "Компанії"
 #: templates/b24online/BusinessProposal/index.html:5
 #: templates/b24online/Companies/detailContent.html:217
 #: templates/b24online/Tpp/detailContent.html:159
-#: templates/b24online/main_page.html:193
-#: templates/b24online/main_page.html:221
+#: templates/b24online/main_page.html:190
+#: templates/b24online/main_page.html:218
 msgid "Business Proposals"
 msgstr "Бізнес Пропозиції"
 
 #: b24project/appl/func.py:425 b24project/b24online/Vacancy/views.py:22
-#: templates/b24online/main_page.html:200
-#: templates/b24online/main_page.html:234
+#: templates/b24online/main_page.html:197
+#: templates/b24online/main_page.html:231
 msgid "Job requirements"
 msgstr "Вимоги до кандидата"
 
@@ -200,7 +200,7 @@ msgstr "Тільки зареєстровані користувачі можу�
 #: b24project/b24online/Greetings/views.py:43
 #: templates/b24online/AdminTpp/greetings.html:5
 #: templates/b24online/AdminTpp/greetings.html:20
-#: templates/b24online/index.html:381 templates/b24online/job_index.html:417
+#: templates/b24online/index.html:375 templates/b24online/job_index.html:417
 #: templates/b24online/main/staticPages.html:13
 #: templates/registration/password_reset_email.html:4
 msgid "Greetings"
@@ -242,15 +242,15 @@ msgstr ""
 
 #: b24project/b24online/Product/views.py:26
 #: b24project/b24online/Product/views.py:109
-#: templates/b24online/main_page.html:189
-#: templates/b24online/main_page.html:216
+#: templates/b24online/main_page.html:186
+#: templates/b24online/main_page.html:213
 #, fuzzy
 msgid "Products B2B"
 msgstr "Продукти"
 
 #: b24project/b24online/Product/views.py:68
 #: b24project/b24online/Product/views.py:120
-#: templates/b24online/main_page.html:217
+#: templates/b24online/main_page.html:214
 #, fuzzy
 msgid "Products B2C"
 msgstr "Продукти"
@@ -318,8 +318,8 @@ msgstr "Додати бізнес-пропозицію"
 #: templates/b24online/Tpp/contentPage.html:64
 #: templates/centerpokupok/Company/contact.html:6
 #: templates/centerpokupok/Company/contact.html:51
-#: templates/centerpokupok/base.html:58 templates/usersites/base.html:101
-#: templates/usersites/site_sidebar.html:122
+#: templates/centerpokupok/base.html:58 templates/usersites/base.html:99
+#: templates/usersites/site_sidebar.html:120
 #: templates/usersites_orig/site_sidebar.html:122
 msgid "Contact us"
 msgstr "Зв'язатися з нами"
@@ -337,8 +337,8 @@ msgstr "Ваш власний сайт"
 
 #: b24project/b24online/Resume/views.py:28
 #: b24project/b24online/Resume/views.py:63
-#: templates/b24online/main_page.html:201
-#: templates/b24online/main_page.html:235
+#: templates/b24online/main_page.html:198
+#: templates/b24online/main_page.html:232
 msgid "Resume"
 msgstr "Резюме"
 
@@ -348,9 +348,9 @@ msgstr "Резюме"
 #: templates/b24online/Analytic/main.html:119
 #: templates/b24online/Companies/detailContent.html:197
 #: templates/b24online/Tpp/detailContent.html:144
-#: templates/b24online/index.html:185 templates/b24online/job_index.html:196
-#: templates/b24online/main_page.html:194
-#: templates/b24online/main_page.html:222
+#: templates/b24online/index.html:179 templates/b24online/job_index.html:196
+#: templates/b24online/main_page.html:191
+#: templates/b24online/main_page.html:219
 msgid "Tenders"
 msgstr "Тендери"
 
@@ -418,8 +418,8 @@ msgstr ""
 #: b24project/b24online/Users/views.py:13
 #: templates/b24online/AdminTpp/users.html:5
 #: templates/b24online/Messages/index.html:42
-#: templates/b24online/main_page.html:202
-#: templates/b24online/main_page.html:238
+#: templates/b24online/main_page.html:199
+#: templates/b24online/main_page.html:235
 msgid "Users"
 msgstr "Користувач"
 
@@ -437,7 +437,7 @@ msgid "Only registred users can send resume"
 msgstr "Тільки зареєстровані користувачі можуть відправляти резюме"
 
 #: b24project/b24online/Wall/views.py:14 templates/b24online/Wall/index.html:4
-#: templates/b24online/main_page.html:203
+#: templates/b24online/main_page.html:200
 msgid "Wall"
 msgstr "Стіна"
 
@@ -462,77 +462,86 @@ msgstr ""
 msgid "Russian Ruble"
 msgstr "Руська "
 
-#: b24project/b24online/models.py:41
+#: b24project/b24online/models.py:38
+msgid "Bulgarian Lev"
+msgstr ""
+
+#: b24project/b24online/models.py:39
+#, fuzzy
+msgid "Belarusian Ruble"
+msgstr "Руська "
+
+#: b24project/b24online/models.py:43
 msgid "Kilogram"
 msgstr ""
 
-#: b24project/b24online/models.py:42
+#: b24project/b24online/models.py:44
 msgid "Piece"
 msgstr ""
 
-#: b24project/b24online/models.py:143
+#: b24project/b24online/models.py:145
 #: templates/b24online/AdminTpp/adv_sett.html:20
 #: templates/b24online/AdvBanner/index.html:7
-#: templates/b24online/UserSites/addForm.html:176
-#: templates/b24online/main_page.html:229
+#: templates/b24online/UserSites/addForm.html:173
+#: templates/b24online/main_page.html:226
 msgid "Banners"
 msgstr "Банери"
 
-#: b24project/b24online/models.py:143
+#: b24project/b24online/models.py:145
 #, fuzzy
 #| msgid "Advertisement"
 msgid "Context Advertisement"
 msgstr "Анонс"
 
-#: b24project/b24online/models.py:332
+#: b24project/b24online/models.py:334
 msgid "parent"
 msgstr ""
 
-#: b24project/b24online/models.py:385
+#: b24project/b24online/models.py:387
 msgid "International"
 msgstr ""
 
-#: b24project/b24online/models.py:386
+#: b24project/b24online/models.py:388
 #, fuzzy
 #| msgid "Additional"
 msgid "National"
 msgstr "Додатково"
 
-#: b24project/b24online/models.py:387
+#: b24project/b24online/models.py:389
 #, fuzzy
 #| msgid "Affiche"
 msgid "Affiliate"
 msgstr "Афіша"
 
-#: b24project/b24online/models.py:1160
+#: b24project/b24online/models.py:1162
 msgid "Male"
 msgstr ""
 
-#: b24project/b24online/models.py:1160
+#: b24project/b24online/models.py:1162
 msgid "Female"
 msgstr ""
 
-#: b24project/b24online/models.py:1163
+#: b24project/b24online/models.py:1165
 #, fuzzy
 #| msgid "Business plan"
 msgid "Businessman"
 msgstr "Бізнес-план "
 
-#: b24project/b24online/models.py:1163
+#: b24project/b24online/models.py:1165
 msgid "Individual"
 msgstr ""
 
-#: b24project/b24online/models.py:1271 b24project/b24online/models.py:1360
+#: b24project/b24online/models.py:1273 b24project/b24online/models.py:1362
 #: b24project/usersites/Api/views.py:282
 msgid "B2B"
 msgstr ""
 
-#: b24project/b24online/models.py:1272 b24project/b24online/models.py:1361
+#: b24project/b24online/models.py:1274 b24project/b24online/models.py:1363
 #: b24project/usersites/Api/views.py:276
 msgid "B2C"
 msgstr ""
 
-#: b24project/b24online/models.py:1273 b24project/b24online/models.py:1362
+#: b24project/b24online/models.py:1275 b24project/b24online/models.py:1364
 #, fuzzy
 #| msgid "Users"
 msgid "User sites"
@@ -740,15 +749,13 @@ msgstr ""
 msgid "Extramural"
 msgstr ""
 
-#: b24project/tpp/settings.py:257 templates/b24online/index.html:84
-#: templates/b24online/job_index.html:107
+#: b24project/tpp/settings.py:257 templates/b24online/job_index.html:107
 #: templates/centerpokupok/header_big.html:45
 #, fuzzy
 msgid "Russian"
 msgstr "Руська "
 
-#: b24project/tpp/settings.py:258 templates/b24online/index.html:80
-#: templates/b24online/job_index.html:103
+#: b24project/tpp/settings.py:258 templates/b24online/job_index.html:103
 #: templates/centerpokupok/header_big.html:41
 #, fuzzy
 msgid "Armenian"
@@ -758,32 +765,27 @@ msgstr "Вірменська"
 msgid "Bulgarian"
 msgstr ""
 
-#: b24project/tpp/settings.py:262 templates/b24online/index.html:82
-#: templates/b24online/job_index.html:105
+#: b24project/tpp/settings.py:262 templates/b24online/job_index.html:105
 #: templates/centerpokupok/header_big.html:43
 msgid "English"
 msgstr ""
 
-#: b24project/tpp/settings.py:272 templates/b24online/index.html:86
-#: templates/b24online/job_index.html:109
+#: b24project/tpp/settings.py:272 templates/b24online/job_index.html:109
 #: templates/centerpokupok/header_big.html:47
 msgid "Ukrainian"
 msgstr ""
 
-#: b24project/tpp/settings.py:274 templates/b24online/index.html:83
-#: templates/b24online/job_index.html:106
+#: b24project/tpp/settings.py:274 templates/b24online/job_index.html:106
 #: templates/centerpokupok/header_big.html:44
 msgid "Hebrew"
 msgstr ""
 
-#: b24project/tpp/settings.py:275 templates/b24online/index.html:81
-#: templates/b24online/job_index.html:104
+#: b24project/tpp/settings.py:275 templates/b24online/job_index.html:104
 #: templates/centerpokupok/header_big.html:42
 msgid "Arabic"
 msgstr "Арабська"
 
-#: b24project/tpp/settings.py:276 templates/b24online/index.html:85
-#: templates/b24online/job_index.html:108
+#: b24project/tpp/settings.py:276 templates/b24online/job_index.html:108
 #: templates/centerpokupok/header_big.html:46
 msgid "Chinese"
 msgstr "Китайська"
@@ -800,10 +802,10 @@ msgstr "Додому"
 #: templates/b24online/Products/detailContent.html:141
 #: templates/b24online/Tenders/detailContent.html:86
 #: templates/b24online/Tpp/detailContent.html:134
-#: templates/usersites/B2BProducts/detailContent.html:86
-#: templates/usersites/B2CProducts/detailContent.html:92
+#: templates/usersites/B2BProducts/detailContent.html:87
+#: templates/usersites/B2CProducts/detailContent.html:93
 #: templates/usersites/OrganizationPages/gallery.html:6
-#: templates/usersites/base.html:98 templates/usersites/site_sidebar.html:119
+#: templates/usersites/base.html:96 templates/usersites/site_sidebar.html:117
 #: templates/usersites_orig/B2BProducts/detailContent.html:89
 #: templates/usersites_orig/B2CProducts/detailContent.html:103
 #: templates/usersites_orig/OrganizationPages/gallery.html:4
@@ -834,8 +836,9 @@ msgstr "Контакти"
 
 #: b24project/usersites/B2BProducts/views.py:16
 #: b24project/usersites/B2BProducts/views.py:17
-#: templates/usersites/base.html:88 templates/usersites/contentPage.html:104
-#: templates/usersites/site_sidebar.html:109
+#: templates/usersites/B2BProducts/contentPage.html:13
+#: templates/usersites/base.html:86 templates/usersites/contentPage.html:104
+#: templates/usersites/site_sidebar.html:107
 #: templates/usersites_orig/contentPage.html:118
 #: templates/usersites_orig/site_sidebar.html:109
 #, fuzzy
@@ -845,8 +848,9 @@ msgstr "Продукти"
 
 #: b24project/usersites/B2CProducts/views.py:26
 #: b24project/usersites/B2CProducts/views.py:27
-#: templates/usersites/base.html:84 templates/usersites/contentPage.html:67
-#: templates/usersites/site_sidebar.html:105
+#: templates/usersites/B2CProducts/contentPage.html:13
+#: templates/usersites/base.html:82 templates/usersites/contentPage.html:67
+#: templates/usersites/site_sidebar.html:103
 #: templates/usersites_orig/contentPage.html:92
 #: templates/usersites_orig/site_sidebar.html:105
 #, fuzzy
@@ -867,8 +871,8 @@ msgstr "Повідомлення було відправлено компані�
 #: b24project/usersites/Proposals/views.py:12
 #: b24project/usersites/Proposals/views.py:13
 #: templates/usersites/Proposals/contentPage.html:11
-#: templates/usersites/base.html:81 templates/usersites/contentPage.html:132
-#: templates/usersites/site_sidebar.html:102
+#: templates/usersites/base.html:79 templates/usersites/contentPage.html:136
+#: templates/usersites/site_sidebar.html:100
 #: templates/usersites_orig/contentPage.html:10
 #: templates/usersites_orig/site_sidebar.html:102
 msgid "Business proposals"
@@ -936,9 +940,9 @@ msgstr "Активуйте користувачів"
 #: templates/b24online/Products/detailContentB2C.html:64
 #: templates/b24online/Tpp/tabTenders.html:10
 #: templates/centerpokupok/Product/new.html:136
-#: templates/usersites/B2BProducts/detailContent.html:28
+#: templates/usersites/B2BProducts/detailContent.html:29
 #: templates/usersites/B2CProducts/basket.html:36
-#: templates/usersites/B2CProducts/detailContent.html:28
+#: templates/usersites/B2CProducts/detailContent.html:29
 #: templates/usersites_orig/B2BProducts/detailContent.html:45
 #: templates/usersites_orig/B2CProducts/detailContent.html:42
 msgid "Price"
@@ -1031,7 +1035,7 @@ msgstr "Назва"
 #: templates/b24online/AdminTpp/adv_sett.html:27
 #: templates/b24online/AdminTpp/adv_sett.html:42
 #: templates/b24online/Tpp/tabCompanies.html:10
-#: templates/b24online/main_page.html:233
+#: templates/b24online/main_page.html:230
 msgid "Site"
 msgstr "Сайт"
 
@@ -1131,7 +1135,7 @@ msgstr "Категорії"
 #: templates/b24online/Tenders/addForm.html:153
 #: templates/b24online/Tpp/addForm.html:217
 #: templates/b24online/TppTV/addForm.html:90
-#: templates/b24online/UserSites/addForm.html:219
+#: templates/b24online/UserSites/addForm.html:216
 #: templates/b24online/Vacancy/addForm.html:111
 #: templates/centerpokupok/Cabinet/index.html:45
 #: templates/centerpokupok/Cabinet/shippingAddress.html:39
@@ -1234,8 +1238,8 @@ msgstr ""
 #: templates/b24online/AdminTpp/pages.html:164
 #: templates/b24online/News/addForm.html:32
 #: templates/b24online/TppTV/addForm.html:30
-#: templates/b24online/UserSites/addForm.html:158
-#: templates/b24online/UserSites/addForm.html:191
+#: templates/b24online/UserSites/addForm.html:155
+#: templates/b24online/UserSites/addForm.html:188
 #: templates/b24online/tab_documents_structure.html:13
 msgid "Remove"
 msgstr "Видалити"
@@ -1343,7 +1347,7 @@ msgid "Image file (Maximum 50KB)"
 msgstr "Файл зображення (Максимум 50KB)"
 
 #: templates/b24online/AdvBanner/addForm.html:282
-#: templates/b24online/UserSites/addForm.html:201
+#: templates/b24online/UserSites/addForm.html:198
 msgid "Link URL"
 msgstr "Посилання  URL"
 
@@ -1464,13 +1468,13 @@ msgstr "Компанія"
 #: templates/b24online/Innov/detailContent.html:75
 #: templates/b24online/Products/categoryList.html:21
 #: templates/b24online/branchList.html:21
-#: templates/b24online/main_page.html:178
+#: templates/b24online/main_page.html:175
 #: templates/centerpokupok/Categories/index.html:18
 #: templates/centerpokupok/Coupons/index.html:85
 #: templates/centerpokupok/Product/detail.html:102
 #: templates/centerpokupok/Product/index.html:60
 #: templates/centerpokupok/Product/new.html:96
-#: templates/usersites/base.html:79 templates/usersites/site_sidebar.html:100
+#: templates/usersites/base.html:77 templates/usersites/site_sidebar.html:98
 #: templates/usersites_orig/site_sidebar.html:100
 msgid "Main"
 msgstr "Головна"
@@ -1488,7 +1492,7 @@ msgstr "Категорія"
 
 #: templates/b24online/BusinessProposal/BpCategoryList.html:36
 #: templates/b24online/Products/categoryList.html:36
-#: templates/b24online/UserSites/addForm.html:143
+#: templates/b24online/UserSites/addForm.html:140
 #: templates/b24online/branchList.html:36
 #, fuzzy
 msgid "Select"
@@ -1600,8 +1604,8 @@ msgstr "Скасувати"
 #: templates/b24online/Vacancy/detailContent.html:33
 #: templates/b24online/Wall/contentPage.html:105
 #: templates/centerpokupok/News/index.html:143
-#: templates/usersites/contentPage.html:140
-#: templates/usersites/contentPage.html:164
+#: templates/usersites/contentPage.html:144
+#: templates/usersites/contentPage.html:168
 #: templates/usersites_orig/News/contentPage.html:21
 #: templates/usersites_orig/Proposals/contentPage.html:13
 #: templates/usersites_orig/contentPage.html:15
@@ -1628,8 +1632,8 @@ msgstr "Дата"
 #: templates/centerpokupok/main/products.html:52
 #: templates/usersites/News/contentPage.html:34
 #: templates/usersites/Proposals/contentPage.html:22
-#: templates/usersites/contentPage.html:143
-#: templates/usersites/contentPage.html:173
+#: templates/usersites/contentPage.html:147
+#: templates/usersites/contentPage.html:177
 #: templates/usersites_orig/News/contentPage.html:30
 #: templates/usersites_orig/Proposals/contentPage.html:15
 #: templates/usersites_orig/contentPage.html:45
@@ -1744,7 +1748,7 @@ msgid "Director name"
 msgstr "Ім'я директор"
 
 #: templates/b24online/Companies/addForm.html:112
-#: templates/b24online/UserSites/addForm.html:114
+#: templates/b24online/UserSites/addForm.html:111
 msgid "Slogan"
 msgstr "Гасло"
 
@@ -2034,7 +2038,7 @@ msgid "Send"
 msgstr "Відправити"
 
 #: templates/b24online/Messages/index.html:5
-#: templates/b24online/main_page.html:237
+#: templates/b24online/main_page.html:234
 msgid "Messages"
 msgstr "Повідомлення"
 
@@ -2131,7 +2135,7 @@ msgstr "Уточнити ціну"
 #: templates/usersites/B2CProducts/contentPage.html:39
 #: templates/usersites/contentPage.html:34
 #: templates/usersites/contentPage.html:91
-#: templates/usersites/contentPage.html:120
+#: templates/usersites/contentPage.html:124
 #: templates/usersites_orig/B2BProducts/contentPage.html:53
 #: templates/usersites_orig/B2CProducts/contentPage.html:56
 #: templates/usersites_orig/contentPage.html:110
@@ -2146,8 +2150,8 @@ msgstr "Отримати ціну"
 
 #: templates/b24online/Products/detailContent.html:75
 #: templates/b24online/Products/detailContentB2C.html:75
-#: templates/usersites/B2BProducts/detailContent.html:33
-#: templates/usersites/B2CProducts/detailContent.html:33
+#: templates/usersites/B2BProducts/detailContent.html:34
+#: templates/usersites/B2CProducts/detailContent.html:34
 #: templates/usersites_orig/B2BProducts/detailContent.html:55
 #: templates/usersites_orig/B2CProducts/detailContent.html:53
 msgid "Unit"
@@ -2155,8 +2159,8 @@ msgstr "Одиниця"
 
 #: templates/b24online/Products/detailContent.html:80
 #: templates/b24online/Products/detailContentB2C.html:80
-#: templates/usersites/B2BProducts/detailContent.html:38
-#: templates/usersites/B2CProducts/detailContent.html:38
+#: templates/usersites/B2BProducts/detailContent.html:39
+#: templates/usersites/B2CProducts/detailContent.html:39
 #: templates/usersites_orig/B2BProducts/detailContent.html:61
 #: templates/usersites_orig/B2CProducts/detailContent.html:60
 msgid "Amount"
@@ -2169,8 +2173,8 @@ msgid "Reviews"
 msgstr "Перегляд"
 
 #: templates/b24online/Products/detailContentB2C.html:147
-#: templates/usersites/B2BProducts/detailContent.html:85
-#: templates/usersites/B2CProducts/detailContent.html:91
+#: templates/usersites/B2BProducts/detailContent.html:86
+#: templates/usersites/B2CProducts/detailContent.html:92
 #: templates/usersites_orig/B2BProducts/detailContent.html:88
 #: templates/usersites_orig/B2CProducts/detailContent.html:102
 #: templates/usersites_orig/Proposals/detailContent.html:30
@@ -2221,7 +2225,7 @@ msgstr "Професія"
 
 #: templates/b24online/Profile/index.html:6
 #: templates/b24online/login_header.html:18
-#: templates/b24online/main_page.html:236
+#: templates/b24online/main_page.html:233
 msgid "Profile"
 msgstr "Профіль"
 
@@ -2503,76 +2507,75 @@ msgstr "Youtube код"
 msgid "My own site"
 msgstr "Ваш власний сайт"
 
-#: templates/b24online/UserSites/addForm.html:87
+#: templates/b24online/UserSites/addForm.html:86
 msgid ""
-"\n"
-"                Dear colleagues, we are pleased to inform you that for the "
-"convenience of providing your interests,\n"
+"Dear colleagues, we are pleased to inform you that for the convenience of "
+"providing your interests,\n"
 "                we have developed an easy website builder that will help you "
 "create your own  external website in\n"
-"                just a couple of minutes.\n"
-"            "
+"                just a couple of minutes."
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:92
+#: templates/b24online/UserSites/addForm.html:89
 msgid "support"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:96
+#: templates/b24online/UserSites/addForm.html:93
 #, fuzzy
 #| msgid "Your own site"
 msgid "Your site"
 msgstr "Ваш власний сайт"
 
-#: templates/b24online/UserSites/addForm.html:102
+#: templates/b24online/UserSites/addForm.html:99
 msgid "Site sub-domain"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:108
+#: templates/b24online/UserSites/addForm.html:105
 #, fuzzy
 #| msgid "Your own site"
 msgid "OR your own domain"
 msgstr "Ваш власний сайт"
 
-#: templates/b24online/UserSites/addForm.html:115
+#: templates/b24online/UserSites/addForm.html:112
 msgid "Maximum 50 characters"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:120
+#: templates/b24online/UserSites/addForm.html:117
 #, fuzzy
 #| msgid "Organization"
 msgid "Organization logo"
 msgstr "Організація"
 
-#: templates/b24online/UserSites/addForm.html:120
+#: templates/b24online/UserSites/addForm.html:117
 msgid "Max Dimensions"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:131
+#: templates/b24online/UserSites/addForm.html:128
 #, fuzzy
 #| msgid "Select category"
 msgid "Site category"
 msgstr "Оберіть категорію"
 
-#: templates/b24online/UserSites/addForm.html:148
+#: templates/b24online/UserSites/addForm.html:145
 msgid "Or use custom images"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:148
+#: templates/b24online/UserSites/addForm.html:145
+#: templates/b24online/UserSites/addForm.html:182
 msgid "Dimensions"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:213
+#: templates/b24online/UserSites/addForm.html:210
 #, fuzzy
 #| msgid "Route description"
 msgid "Footer description"
 msgstr "Опис маршруту"
 
-#: templates/b24online/UserSites/addForm.html:213
+#: templates/b24online/UserSites/addForm.html:210
 msgid "maximum 200 characters"
 msgstr ""
 
-#: templates/b24online/UserSites/addForm.html:227
+#: templates/b24online/UserSites/addForm.html:224
 #, fuzzy
 #| msgid "Select category"
 msgid "Select a category"
@@ -2744,7 +2747,7 @@ msgid "All"
 msgstr "Всі"
 
 #: templates/b24online/baseFilter.html:84
-#: templates/b24online/main_page.html:179
+#: templates/b24online/main_page.html:176
 msgid "My"
 msgstr "Мій"
 
@@ -2796,32 +2799,32 @@ msgstr "Інноваційні проекти"
 msgid "Mother tongue"
 msgstr "рідна мова"
 
-#: templates/b24online/index.html:150 templates/b24online/job_index.html:173
+#: templates/b24online/index.html:144 templates/b24online/job_index.html:173
 msgid "Community"
 msgstr "Спільнота"
 
-#: templates/b24online/index.html:158
+#: templates/b24online/index.html:152
 msgid "Work with"
 msgstr "Робота з"
 
-#: templates/b24online/index.html:173 templates/b24online/job_index.html:184
+#: templates/b24online/index.html:167 templates/b24online/job_index.html:184
 msgid "Producst and services"
 msgstr "Продукти та послуги"
 
-#: templates/b24online/index.html:181 templates/b24online/job_index.html:192
+#: templates/b24online/index.html:175 templates/b24online/job_index.html:192
 msgid "Business community"
 msgstr "Ділове співтовариство"
 
-#: templates/b24online/index.html:189 templates/b24online/job_index.html:200
+#: templates/b24online/index.html:183 templates/b24online/job_index.html:200
 msgid "Innovative projects"
 msgstr "Інноваційні проекти"
 
-#: templates/b24online/index.html:193 templates/b24online/job_index.html:204
+#: templates/b24online/index.html:187 templates/b24online/job_index.html:204
 msgid "Jobs"
 msgstr "вакансії"
 
-#: templates/b24online/index.html:208 templates/b24online/index.html.py:230
-#: templates/b24online/index.html:256 templates/b24online/index.html.py:271
+#: templates/b24online/index.html:202 templates/b24online/index.html.py:224
+#: templates/b24online/index.html:250 templates/b24online/index.html.py:265
 #: templates/b24online/job_index.html:219
 #: templates/b24online/job_index.html:241
 #: templates/b24online/job_index.html:267
@@ -2833,11 +2836,11 @@ msgstr "вакансії"
 msgid "Sign up"
 msgstr "Зареєструватися"
 
-#: templates/b24online/index.html:209 templates/b24online/job_index.html:220
+#: templates/b24online/index.html:203 templates/b24online/job_index.html:220
 msgid "and get tools for business"
 msgstr "і отримати інструменти для бізнесу"
 
-#: templates/b24online/index.html:211 templates/b24online/job_index.html:222
+#: templates/b24online/index.html:205 templates/b24online/job_index.html:222
 msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
@@ -2845,7 +2848,7 @@ msgstr ""
 "У 2014 році портал ТПП-Центр відзначено нагородою знак Бізнес-лідер СНД  за "
 "внесок у розвиток економічної інтеграції"
 
-#: templates/b24online/index.html:217 templates/b24online/job_index.html:228
+#: templates/b24online/index.html:211 templates/b24online/job_index.html:228
 #: templates/centerpokupok/Registr/registr.html:6
 #: templates/centerpokupok/Registr/registr.html:59
 #: templates/centerpokupok/registration/activation_complete.html:46
@@ -2858,63 +2861,63 @@ msgstr ""
 msgid "Registration"
 msgstr "Реєстрація"
 
-#: templates/b24online/index.html:218 templates/b24online/job_index.html:229
+#: templates/b24online/index.html:212 templates/b24online/job_index.html:229
 msgid "on the portal will allow you to"
 msgstr "на порталі дозволить Вам"
 
-#: templates/b24online/index.html:220 templates/b24online/job_index.html:231
+#: templates/b24online/index.html:214 templates/b24online/job_index.html:231
 msgid "run a business behalf of the company"
 msgstr "запустити бізнес від імені компанії "
 
-#: templates/b24online/index.html:221 templates/b24online/job_index.html:232
+#: templates/b24online/index.html:215 templates/b24online/job_index.html:232
 msgid "to buy goods as a private person"
 msgstr "купувати товари в якості приватної особи"
 
-#: templates/b24online/index.html:222 templates/b24online/job_index.html:233
+#: templates/b24online/index.html:216 templates/b24online/job_index.html:233
 msgid "draw attention toward your projects"
 msgstr "привернути увагу до своїх проектів"
 
-#: templates/b24online/index.html:231 templates/b24online/job_index.html:242
+#: templates/b24online/index.html:225 templates/b24online/job_index.html:242
 msgid "and you will be able"
 msgstr "і ви зможете"
 
-#: templates/b24online/index.html:233 templates/b24online/job_index.html:244
+#: templates/b24online/index.html:227 templates/b24online/job_index.html:244
 msgid "create your own online shop"
 msgstr "створити свій власний інтернет-магазин"
 
-#: templates/b24online/index.html:234 templates/b24online/job_index.html:245
+#: templates/b24online/index.html:228 templates/b24online/job_index.html:245
 msgid "to represent your products and services"
 msgstr "представляти свою продукцію та послуги"
 
-#: templates/b24online/index.html:235 templates/b24online/job_index.html:246
+#: templates/b24online/index.html:229 templates/b24online/job_index.html:246
 msgid "communicate with potential customers"
 msgstr "спілкуватися з потенційними клієнтами"
 
-#: templates/b24online/index.html:243 templates/b24online/job_index.html:254
+#: templates/b24online/index.html:237 templates/b24online/job_index.html:254
 msgid "Registred"
 msgstr "Зареєстровані"
 
-#: templates/b24online/index.html:244 templates/b24online/job_index.html:255
+#: templates/b24online/index.html:238 templates/b24online/job_index.html:255
 msgid "users can"
 msgstr "користувачі можуть"
 
-#: templates/b24online/index.html:246 templates/b24online/job_index.html:257
+#: templates/b24online/index.html:240 templates/b24online/job_index.html:257
 msgid "create their own websites"
 msgstr "створювати свої власні веб-сайти"
 
-#: templates/b24online/index.html:247 templates/b24online/job_index.html:258
+#: templates/b24online/index.html:241 templates/b24online/job_index.html:258
 msgid "puts advertising on the portal"
 msgstr "розмістити рекламу на порталі"
 
-#: templates/b24online/index.html:248 templates/b24online/job_index.html:259
+#: templates/b24online/index.html:242 templates/b24online/job_index.html:259
 msgid "create their own communities of interest"
 msgstr "створити свої власні спільноти за інтересами"
 
-#: templates/b24online/index.html:257 templates/b24online/job_index.html:268
+#: templates/b24online/index.html:251 templates/b24online/job_index.html:268
 msgid "right now"
 msgstr "прямо зараз"
 
-#: templates/b24online/index.html:264 templates/b24online/job_index.html:275
+#: templates/b24online/index.html:258 templates/b24online/job_index.html:275
 #: templates/centerpokupok/registration/login.html:23
 #: templates/centerpokupok/registration/registration_form.html:31
 #: templates/centerpokupok/registration/registration_form.html:42
@@ -2923,57 +2926,57 @@ msgstr "прямо зараз"
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/b24online/index.html:265 templates/b24online/job_index.html:276
+#: templates/b24online/index.html:259 templates/b24online/job_index.html:276
 #: templates/registration/registration_form.html:38
 msgid "Confirm password"
 msgstr "Підтвердіть пароль"
 
-#: templates/b24online/index.html:268 templates/b24online/job_index.html:279
+#: templates/b24online/index.html:262 templates/b24online/job_index.html:279
 msgid "I agree to"
 msgstr "Я згоден"
 
-#: templates/b24online/index.html:268 templates/b24online/job_index.html:279
+#: templates/b24online/index.html:262 templates/b24online/job_index.html:279
 msgid "the term"
 msgstr "термін"
 
-#: templates/b24online/index.html:277
+#: templates/b24online/index.html:271
 #: templates/centerpokupok/Company/index.html:265
 msgid "Best deals"
 msgstr "Кращі пропозиції"
 
-#: templates/b24online/index.html:300 templates/b24online/job_index.html:292
+#: templates/b24online/index.html:294 templates/b24online/job_index.html:292
 msgid "Affiche"
 msgstr "Афіша"
 
-#: templates/b24online/index.html:315 templates/b24online/job_index.html:334
+#: templates/b24online/index.html:309 templates/b24online/job_index.html:334
 msgid "All exhibitions and forums"
 msgstr "Всі виставки та форуми"
 
-#: templates/b24online/index.html:318 templates/b24online/job_index.html:337
+#: templates/b24online/index.html:312 templates/b24online/job_index.html:337
 msgid "Business offers"
 msgstr "Ділові пропозиції"
 
-#: templates/b24online/index.html:339 templates/b24online/job_index.html:375
+#: templates/b24online/index.html:333 templates/b24online/job_index.html:375
 msgid "All business offers"
 msgstr "Всі ділові пропозиції"
 
-#: templates/b24online/index.html:344 templates/b24online/job_index.html:380
+#: templates/b24online/index.html:338 templates/b24online/job_index.html:380
 msgid "Introduction to London Markets"
 msgstr "Введення до ринку Лондону"
 
-#: templates/b24online/index.html:351 templates/b24online/job_index.html:387
+#: templates/b24online/index.html:345 templates/b24online/job_index.html:387
 msgid "Download Presentation"
 msgstr "Завантажити презентацію"
 
-#: templates/b24online/index.html:359 templates/b24online/job_index.html:395
+#: templates/b24online/index.html:353 templates/b24online/job_index.html:395
 msgid "Videoreference of V.Migirov"
 msgstr "Відеозвернення з V.Migirov"
 
-#: templates/b24online/index.html:370 templates/b24online/job_index.html:406
+#: templates/b24online/index.html:364 templates/b24online/job_index.html:406
 msgid "Download Guide Site"
 msgstr "Завантажити покажчик до сайту"
 
-#: templates/b24online/index.html:371
+#: templates/b24online/index.html:365
 #, fuzzy
 msgid "pdf-document"
 msgstr "Документ"
@@ -3040,85 +3043,85 @@ msgstr "Ім'я"
 msgid "Mobile number"
 msgstr "мобільний телефон"
 
-#: templates/b24online/main_page.html:129
-#: templates/b24online/main_page.html:136
+#: templates/b24online/main_page.html:126
+#: templates/b24online/main_page.html:133
 msgid "Add"
 msgstr "Додати"
 
-#: templates/b24online/main_page.html:195
-#: templates/b24online/main_page.html:223
+#: templates/b24online/main_page.html:192
+#: templates/b24online/main_page.html:220
 msgid "Exhibitions / Forums"
 msgstr "Виставки / Форуми"
 
-#: templates/b24online/main_page.html:199
+#: templates/b24online/main_page.html:196
 msgid "TPP TV"
 msgstr "ТПП ТВ"
 
-#: templates/b24online/main_page.html:212
+#: templates/b24online/main_page.html:209
 msgid "Admin Panel"
 msgstr "Панель адміністратора"
 
-#: templates/b24online/main_page.html:232
+#: templates/b24online/main_page.html:229
 msgid "Analytic"
 msgstr "Аналітика"
 
-#: templates/b24online/main_page.html:271
+#: templates/b24online/main_page.html:268
 msgid "Find.."
 msgstr "Знайти .."
 
-#: templates/b24online/main_page.html:293
+#: templates/b24online/main_page.html:290
 msgid "Notifications"
 msgstr "Повідомлення"
 
-#: templates/b24online/main_page.html:299
+#: templates/b24online/main_page.html:296
 msgid "See all"
 msgstr "Переглянути все"
 
-#: templates/b24online/main_page.html:311
+#: templates/b24online/main_page.html:308
 msgid "Shortcuts"
 msgstr ""
 
-#: templates/b24online/main_page.html:312
+#: templates/b24online/main_page.html:309
 #, fuzzy
 #| msgid "Business plan"
 msgid "Business"
 msgstr "Бізнес-план "
 
-#: templates/b24online/main_page.html:314
+#: templates/b24online/main_page.html:311
 #, fuzzy
 #| msgid "Create new account"
 msgid "Create a Company Account"
 msgstr "Створити новий обліковий запис"
 
-#: templates/b24online/main_page.html:315
+#: templates/b24online/main_page.html:312
 #, fuzzy
 #| msgid "Business Proposal"
 msgid "Add Business Proposal"
 msgstr "Комерційна пропозиція"
 
-#: templates/b24online/main_page.html:316
+#: templates/b24online/main_page.html:313
 #, fuzzy
 #| msgid "Products"
 msgid "Add B2B Product"
 msgstr "Продукти"
 
-#: templates/b24online/main_page.html:317
+#: templates/b24online/main_page.html:314
 #, fuzzy
 #| msgid "Products"
 msgid "Add B2C Product"
 msgstr "Продукти"
 
-#: templates/b24online/main_page.html:320
+#: templates/b24online/main_page.html:317
 msgid "Jobs &amp; Vacancies"
 msgstr ""
 
-#: templates/b24online/main_page.html:322
+#: templates/b24online/main_page.html:319
 #, fuzzy
 #| msgid "Vacancy"
 msgid "Post a Vacancy"
 msgstr "Вакансія"
 
-#: templates/b24online/main_page.html:323
+#: templates/b24online/main_page.html:320
 msgid "Post Your Resume Online"
 msgstr ""
 
@@ -3132,8 +3135,8 @@ msgid "or create a new one"
 msgstr "або зареєструватися"
 
 #: templates/b24online/tab_documents_structure.html:19
-#: templates/usersites/B2BProducts/detailContent.html:105
-#: templates/usersites/B2CProducts/detailContent.html:111
+#: templates/usersites/B2BProducts/detailContent.html:106
+#: templates/usersites/B2CProducts/detailContent.html:112
 #: templates/usersites/Proposals/detailContent.html:44
 #: templates/usersites_orig/B2BProducts/detailContent.html:109
 #: templates/usersites_orig/B2CProducts/detailContent.html:123
@@ -4353,19 +4356,20 @@ msgid "the terms of use"
 msgstr "умови використання"
 
 #: templates/usersites/B2BProducts/contentPage.html:35
-#: templates/usersites/B2BProducts/detailContent.html:49
+#: templates/usersites/B2BProducts/detailContent.html:50
 #: templates/usersites/B2CProducts/basket.html:67
 #: templates/usersites/B2CProducts/contentPage.html:35
-#: templates/usersites/B2CProducts/detailContent.html:49
+#: templates/usersites/B2CProducts/detailContent.html:50
 #: templates/usersites/contentPage.html:87
+#: templates/usersites/contentPage.html:121
 #: templates/usersites_orig/B2BProducts/detailContent.html:80
 #: templates/usersites_orig/B2CProducts/basket.html:81
 #: templates/usersites_orig/B2CProducts/detailContent.html:89
 msgid "Countact us"
 msgstr "Зв'язатися з нами"
 
-#: templates/usersites/B2BProducts/detailContent.html:84
-#: templates/usersites/B2CProducts/detailContent.html:90
+#: templates/usersites/B2BProducts/detailContent.html:85
+#: templates/usersites/B2CProducts/detailContent.html:91
 #, fuzzy
 #| msgid "About company"
 msgid "About Company"
@@ -4396,14 +4400,14 @@ msgstr "Всього сторінок"
 msgid "Your basket is empty."
 msgstr ""
 
-#: templates/usersites/B2CProducts/detailContent.html:65
+#: templates/usersites/B2CProducts/detailContent.html:66
 #: templates/usersites_orig/B2CProducts/detailContent.html:93
 #, fuzzy
 #| msgid "Advertisement basket"
 msgid "Add to basket"
 msgstr "Попередне замовлення"
 
-#: templates/usersites/B2CProducts/detailContent.html:66
+#: templates/usersites/B2CProducts/detailContent.html:67
 #: templates/usersites_orig/B2CProducts/detailContent.html:94
 msgid "Done!"
 msgstr ""
@@ -4428,12 +4432,12 @@ msgstr "Номер телефону"
 msgid "Slect Category"
 msgstr "Оберіть категорію"
 
-#: templates/usersites/base.html:80 templates/usersites/site_sidebar.html:101
+#: templates/usersites/base.html:78 templates/usersites/site_sidebar.html:99
 #: templates/usersites_orig/site_sidebar.html:101
 msgid "Company news"
 msgstr "Новини компанії"
 
-#: templates/usersites/base.html:100 templates/usersites/site_sidebar.html:121
+#: templates/usersites/base.html:98 templates/usersites/site_sidebar.html:119
 #: templates/usersites_orig/site_sidebar.html:121
 msgid "Company structure"
 msgstr "Структура компанії"
@@ -4452,7 +4456,7 @@ msgstr "Доступ заборонено"
 msgid "Current price"
 msgstr "Отримати ціну"
 
-#: templates/usersites/footer.html:18
+#: templates/usersites/footer.html:18 templates/usersites_orig/footer.html:15
 msgid "Copyright © 2011 - 2015 Expert Center, All Rights Reserved."
 msgstr ""
 
@@ -4516,13 +4520,6 @@ msgstr "більш"
 
 #: templates/usersites_orig/contentPage.html:76
 msgid "Buy Now"
-msgstr ""
-
-#: templates/usersites_orig/footer.html:15
-msgid ""
-"\n"
-"                Copyright © 2011 - 2015 Expert Center, All Rights Reserved.\n"
-"            "
 msgstr ""
 
 #, fuzzy

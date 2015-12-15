@@ -12,9 +12,7 @@
         	    <h3>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h3>
             {% endif %}
 
-            {% blocktrans %}
-                Copyright © 2011 - 2015 Expert Center, All Rights Reserved.
-            {% endblocktrans %}        </div>
+            {% trans 'Copyright © 2011 - 2015 Expert Center, All Rights Reserved.' %}
         <div class="ads">{% site_banner "SITES FOOTER" %}</div>
     </div>
 </div>
