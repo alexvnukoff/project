@@ -35,11 +35,14 @@
                                     <td>{{ object.get_measurement_unit_display }}</td>
                                 </tr>
                                 {% endif %}
+
+                            {% if paypal_form %}
                             <tr>
                                 <td>{% trans 'Amount' %}:</td>
                                 <td><input type="text" id="item-amount" ng-model="quantity" name="amount"></td>
                                 </form>
                             </tr>
+                            {% endif %}
 
                             <tr>
                                 <td></td>
@@ -47,7 +50,7 @@
                                     {% if paypal_form %}
                                     {{ paypal_form.render }}
                                     {% else %}
-                                        <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                                        <a style="color:#000;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
                                     {% endif %}
                                 </td>
 
