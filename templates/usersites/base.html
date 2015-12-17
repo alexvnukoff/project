@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'usersites/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
 
 </head>
 
@@ -62,7 +63,7 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                    <div class="select-lang">
+                    <div class="select -lang">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
@@ -105,6 +106,13 @@
 
     {% block content %}{% endblock %}
 
+    <section class="content__info" style="text-align:center;">
+        <br><br>
+        <article>
+    {{ site.user_site.footer_text|linebreaksbr  }}
+        </article>
+    </section>
+
         </div>
     </section>
 
@@ -124,7 +132,7 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
 
-
+<!--
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 
     <script>
@@ -153,6 +161,7 @@
     }
 
     </script>
+-->
 
 
 {% block js %}{% endblock %}

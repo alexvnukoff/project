@@ -14,35 +14,32 @@ var app = angular.module("usRSite", ['ngCookies']);
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     });
 
-app.controller('MyAwesomeBasket', ['$scope', '$http', '$cookies', '$timeout', function($scope, $http, $cookies, $timeout) {
-    $scope.getMyCount = function() {
-        $scope.basket_count = $cookies.get('b24online_bscookie_q_true');
-    }
+$("#BasketItemAdd").submit(function( event ) {
 
-    $http.get('/b2c-products/basket.html?get_stat=1').then(function success(response) {
-        $cookies.put('b24online_bscookie_q_true', response['data'].quantity__sum);
-        $scope.getMyCount();
-    }, function error(response) {
-        $cookies.put('b24online_bscookie_q_true', 0);
-        $scope.getMyCount();
-    });
+    event.preventDefault();
+    var $form = $(this),
 
-    $scope.addToBasket = function(pk,quantity) {
-        if(!quantity) { quantity = 1; }
-        $http.get('/b2c-products/basket.html?pk=' + pk + '&q=' + quantity).then(function success(response) {
-            $cookies.put('b24online_bscookie_q_true', response['data'].quantity__sum);
-            $scope.getMyCount();
-            $scope.add_to_basket = true;
-        }, function error(response) {
-            console.log(response['status']);
-        });
+        currency    = $form.find("input[name='currency']").val(),
+        paypal      = $form.find("input[name='company_paypal']").val(),
+        product_id  = $form.find("input[name='product_id']").val(),
+        quantity    = $form.find("input[name='quantity']").val(),
 
-        $timeout(function() {
-            $scope.add_to_basket = false;
-        }, 800);
+        url = $form.attr("action");
+        var posting = $.post(url, {
+                                currency: currency,
+                                company_paypal: paypal,
+                                product_id: product_id,
+                                quantity: quantity
+                            } );
 
-    }
-}]);
+      posting.done(function(data) {
+        $("#result").empty().append('<i class="icon-ok"></i>');
+        console.log(data);
+        window.location = '/' + $(location).prop('pathname').split('/')[1];
+      });
+
+});
+
 
 
 

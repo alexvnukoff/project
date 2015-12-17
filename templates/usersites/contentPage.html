@@ -29,7 +29,7 @@
                                 <p class="price"><strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike></p>
                                 <p class="economy">
                                     <span>{% trans 'Current price' %}</span>
-                                    <span class="value">{{ product.get_discount_price }} {{ product.currency|getSymbol }}</span>
+                                    <span class="value">{{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}</span>
                                 </p>
                                 <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="buy"><span>{% trans "Buy" %}</span></a>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="product__about">
                             <p class="desc"><strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}
-                                <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                                 {% else %}
                                 <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                                 {% endif %}
@@ -116,7 +116,7 @@
                         <div class="product__about">
                             <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
                             {% if product.cost %}
-                            <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                            <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                             {% else %}
                             <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
@@ -160,8 +160,6 @@
                     <div class="news__content__cover">
                         {% if article.image %}
                         <img src="{{ article.image.small }}" alt="">
-                        {% else %}
-                        <img src="{% static 'b24online/img/news.jpg' %}" alt="">
                         {% endif %}
                     </div>
                     <div class="news__content__desc clearfix">

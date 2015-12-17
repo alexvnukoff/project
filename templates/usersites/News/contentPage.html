@@ -17,8 +17,6 @@
                     <div class="news__content__cover">
             {% if news.image %}
                 <img src="{{ news.image.small }} " alt="{{ news.title }}" title="{{ news.title }}"/>
-            {% else %}
-                <img src="{% static 'b24online/img/news.jpg' %}" alt="" />
             {% endif %}
             </div>
                     <div class="news__content__desc clearfix">

@@ -13,7 +13,7 @@
                     {% endfor %}
                 </ul>
                 <div class="busket vertical">
-                    <span ngCloak><a href="{% url 'b2c_products:basket' %}">{% verbatim %}{{basket_count}}{% endverbatim %}</a></span>
+                    <span ngCloak><a href="{% url 'b2c_products:basket' %}">{{ request|basket_quantity }}</a></span>
                 </div>
             </div><!--End mainMenu-->
             <div class="tel vertical">

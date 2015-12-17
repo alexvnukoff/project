@@ -22,12 +22,17 @@
                 {% endif %}
             </div>
             <div class="info">
-                <form>
+                <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ object.pk }}">
+                    <input type="hidden" name="currency" value="{{ object.currency }}">
+                    <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
+                    <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
+
                     <table>
                         <tbody>
                             <tr>
                                 <td>{% trans "Price" %}:</td>
-                                <td>{{ object.currency|getSymbol }} {% if object.is_coupon %}{{ object.get_discount_price }}{% else %}{{ object.cost|formatPrice }}{% endif %}</td>
+                                <td>{{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}</td>
                             </tr>
                                 {% if object.measurement_unit %}
                                 <tr>
@@ -37,37 +42,46 @@
                                 {% endif %}
                             <tr>
                                 <td>{% trans 'Amount' %}:</td>
-                                <td><input type="text" id="item-amount" ng-model="quantity" name="amount"></td>
-                                </form>
+                                <td>
+                                    <input type="text" name="quantity" value="1" autocomplete="off" list="quantity" maxlength="2" onkeyup="this.value=this.value.replace(/[^\d]/,'')" id="id_quantity_src">
+                                        <datalist id="quantity">{% for i in loop_times %}<option value="{{ i }}" />{% endfor %}</datalist>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="padding-top:10px;">{% b2b_social_buttons object.image object.name object.description %}</td>
                             </tr>
 
                             <tr>
                                 <td></td>
                                 <td>
-                                    {% if paypal_form %}
-                                    {{ paypal_form.render }}
-                                    {% else %}
-                                        <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-                                    {% endif %}
-                                </td>
+                                    <button id="result">{% trans 'Add to basket' %}</button>
 
-                            <tr>
-                                <td></td>
-                                <td>
-                                    {% b2b_social_buttons object.image object.name object.description %}
                                 </td>
+                            </tr>
 
-                            </td>
                         </tbody>
                     </table>
+                </form>
 
-                    <!-- MyAwesomeBasket -->
-                    <button ng-disabled="add_to_basket" ng-click="addToBasket({{object.pk}}, quantity)">
-                        <span ng-hide="add_to_basket"><i class="icon-basket">&nbsp;</i>{% trans 'Add to basket' %}</span>
-                        <span ng-show="add_to_basket"><i class="icon-ok">&nbsp;</i>{% trans 'Done!' %}</span>
-                    </button>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                            <td>
+                                {% if paypal_form %}
+                                    <div style="">{{ paypal_form.render }}</div>
+                                {% else %}
+                                    <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                                {% endif %}</td>
+                            </tr>
 
+                        </tbody>
+                    </table>
             </div>
+
+
+
         </div>
 
 
