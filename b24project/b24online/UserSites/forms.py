@@ -148,4 +148,4 @@ GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
-                                             validate_max=True, max_num=3, extra=3)
+                                             validate_max=True, max_num=8, extra=8)
