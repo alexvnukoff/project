@@ -10,13 +10,14 @@
 
     <section class="content__info grid-layout cart">
     <!-- Check domain name {{ site.domain }} -->
-    {% if basket %}
+    {% if total > 0 %}
     <form method="post" action="">{% csrf_token %}
         <h2>{% trans 'List of products:' %}</h2>
     <table>
          <tbody>
 
-    {% for row in basket %}
+    {% for row in basket.src %}
+        {% if row.product.currency != request.session.basket_currency %}{% else %}
 
         <tr>
             <td>
@@ -34,17 +35,16 @@
                     <td>
                          {% if row.product.cost %}
                         <p>{% trans 'Price' %}:</p>
-                        <span>{% if row.product.is_coupon %}{{ row.product.get_discount_price }}{% else %}{{ row.product.cost|formatPrice }}{% endif %} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
-
+                        <span>{{ row.product.get_discount_price|formatPrice }} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
                         {% else %}
-                            {% trans 'Contact to price' %}
+                             <a style="display:block;background:none!important;color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                         {% endif %}
                         <input type="hidden" name="product_id" value="{{ row.product.id }}">
                         <input class="quantity" type="text" name="quantity" value="{{ row.quantity }}">
                         <a href="{% url 'b2c_products:basket' %}?del={{ row.product.id }}" onclick="return confirm('{% trans 'Are you sure delete this product?' %}');">Delete</a>
                     </td>
                 </tr>
-
+                {% endif %}
             {% endfor %}
 
             </tbody>
@@ -52,13 +52,14 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td><p id="total_cost"><strong>{% trans 'Total' %}: {{ price.total|intcomma }}</strong> <strong class="currency_for_total_cost"></strong></td>
+                    <td><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></td>
                 </tr>
             </tfoot>
         </table>
         <a href="{% url 'b2c_products:basket' %}?clean=1" class="clean">Clean bascket</a>
         <button class="update">Update price</button>
         </form>
+
 
         <div class="pay">
             {% if paypal_form %}

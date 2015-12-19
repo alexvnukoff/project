@@ -168,7 +168,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'tpp.SetCurCompanyMiddleware.SetCurCompany'
+    'tpp.SetCurCompanyMiddleware.SetCurCompany',
+    'centerpokupok.BasketMiddleware.Basket',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

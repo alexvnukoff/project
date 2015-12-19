@@ -1548,8 +1548,8 @@ Content Info (actions)
                                             cursor: pointer;
                                             float: right;
                                             margin-top: 0px;
-                                            font-weight: 900;
-                                            font-size: 16px;
+                                            font-weight: 600;
+                                            font-size: 15px;
                                             padding-bottom: 2px;
                                             -webkit-transition: all 0.3s ease;
                                             -o-transition: all 0.3s ease;
@@ -2236,6 +2236,7 @@ float: right;
 .product_box form.ng-pristine {margin:0;}
 .product_box .info input[type="image"] {width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0;}
 .content__info input[type="image"] {width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0;}
+p#total_cost strong {font-weight:600 !important;}
 
 /* Products SALE / Coupon stuff ============================================= */
 

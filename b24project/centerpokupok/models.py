@@ -17,7 +17,8 @@ from b24online.custom import CustomImageField
 from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage, IndexedModelMixin, \
     ActiveModelMixing, GalleryImage
 from b24online.utils import generate_upload_path, reindex_instance
-
+import uuid
+from decimal import Decimal
 
 class B2CProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
@@ -133,8 +134,17 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         return self.start_coupon_date and self.end_coupon_date \
                and self.start_coupon_date <= now().date() < self.end_coupon_date
 
+    @property
+    def has_discount(self):
+        return self.is_coupon or self.discount_percent
+
     def get_discount_price(self):
-        return int(self.cost) - int(self.cost) * int(self.coupon_discount_percent) / 100
+        discount_percent = 0
+        if self.is_coupon:
+            discount_percent = self.coupon_discount_percent
+        elif self.discount_percent:
+            discount_percent = self.discount_percent
+        return self.cost - self.cost * Decimal(discount_percent) / 100
 
 
 
@@ -154,25 +164,37 @@ def initial_department(sender, instance, created, **kwargs):
     instance.reindex()
 
 
-class B2CBasket(models.Model):
-    class Meta:
-        verbose_name = _("B2C Basket")
-        verbose_name_plural = _("B2C Baskets")
 
-    user_uuid = models.CharField(_('User ID'), max_length=111)
-    product = models.ForeignKey(B2CProduct)
-    quantity = models.IntegerField(_('Quanitty'))
-    site = models.ForeignKey(Site)
-    ordered = models.BooleanField(_('Ordered?'), default=False)
-    created = models.DateTimeField(_('Created'), default=timezone.now)
+class UserBasket(models.Model):
+    class Meta:
+        verbose_name = _("Basket")
+        verbose_name_plural = _('Baskets')
+        ordering = ('-created',)
+
+    user_uuid   = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    site_id     = models.IntegerField(_('Site ID'), default=settings.SITE_ID)
+    currency    = models.CharField(max_length=11, blank=True, null=True)
+    paypal      = models.CharField(max_length=111, blank=True, null=True)
+    created     = models.DateTimeField(_('Created'), default=timezone.now)
+    checked_out = models.BooleanField(_('Ordered?'), default=False)
 
     def __str__(self):
-        return self.user_uuid
+        return str(self.user_uuid)
 
-    def get_currency(self):
-        "Returns currency."
-        return self.product_id.currency
 
-    def get_price(self):
-        "Returns the cost and currency."
-        return ('{0} {1}').format(self.product_id.cost, self.product_id.currency)
+class BasketItem(models.Model):
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _('Products')
+        ordering = ('basket',)
+
+    basket   = models.ForeignKey(UserBasket, verbose_name=_('basket'), related_name='items')
+    product  = models.ForeignKey('B2CProduct', related_name='basket_product')
+    quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+
+    def __str__(self):
+        return self.product_id
+
+    # @property
+    # def total_price(self):
+    #     return self.quantity * self.amount

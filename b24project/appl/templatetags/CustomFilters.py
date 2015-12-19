@@ -271,3 +271,10 @@ def pop_val(value, key=None):
 
     key = key or list(value.keys())[0]
     return {'name': value.pop(int(key)), 'pk': key}
+
+
+@register.filter
+def basket_quantity(request):
+    from centerpokupok.Basket import Basket
+    basket = Basket(request)
+    return basket.count()

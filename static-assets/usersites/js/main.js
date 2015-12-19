@@ -9,11 +9,15 @@ $('.category-selector').on('change', function() {
     window.location.href = this.value
 });
 
-$("#item-amount").keyup(function() {
+$("#id_quantity_src").keyup(function() {
     document.getElementById('id_quantity').value = this.value;
 });
 
 var langs = []
+
+if($("#id_amount_src").get(0)) {
+    document.getElementById('id_amount').value = document.getElementById('id_amount_src').value;
+};
 
 $(document).ready(function() {
     var path = (window.location.host).split('.');
@@ -29,7 +33,7 @@ $(document).ready(function() {
 
 $( "#lang_select" ).change(function(e) {
     if (!$( this ).val())
-    return;
+      return;
 
     path = (window.location.host).split('.');
     if (path[0] == 'www'){
@@ -237,3 +241,4 @@ $(function(){
       else { $('body').addClass('display-vertical'); }
 
   })
+

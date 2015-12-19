@@ -11,7 +11,10 @@
         <article>
 
             <h3>{{ object.title }}</h3>
-            <img src='{% static "b24online/img/news.jpg" %}' alt="">
+
+        {% if object.image %}
+            <img src="{{ object.image.big }}" alt="{{ object.title }}" title="{{ object.title }}" />
+        {% endif %}
 
             {{ object.content|cleanHtml|safe }}
 
