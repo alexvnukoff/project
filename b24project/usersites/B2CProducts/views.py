@@ -66,6 +66,9 @@ class B2CProductList(ItemList):
 
         context_data['selected_category'] = self.category
 
+        if self.category:
+            context_data['url_parameter'] = [self.category.slug, self.category.pk]
+
         return context_data
 
     def get_url_paginator(self):
