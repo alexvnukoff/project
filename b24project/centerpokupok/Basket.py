@@ -14,7 +14,7 @@ class ItemDoesNotExist(Exception):
 class Basket:
     def __init__(self, request):
 
-        self.basket_id = request.session['uuid_hash']
+        self.basket_id = request.session.get('uuid_hash', False)
 
         if self.basket_id:
             try:
@@ -25,16 +25,22 @@ class Basket:
             basket = self.new(request)
         self.basket = basket
 
+        if request.session.get('company_paypal', False) and request.session.get('basket_currency', False):
+
+            if not self.basket.currency and not self.basket.paypal:
+                self.basket.currency = request.session.get('basket_currency')
+                self.basket.paypal = request.session.get('company_paypal')
+                self.basket.save()
+
+
     def __iter__(self):
         for item in self.basket.items.all():
             yield item
 
     def new(self, request):
         basket = UserBasket(created=now())
-        basket.user_uuid = request.session['uuid_hash']
+        basket.user_uuid = request.session.get('uuid_hash')
         basket.site_id = get_current_site(request).id
-        basket.currency = request.session['basket_currency']
-        basket.paypal = request.session['company_paypal']
         basket.save()
         return basket
 
