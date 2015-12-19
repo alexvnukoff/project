@@ -179,7 +179,7 @@ class UserBasket(models.Model):
     checked_out = models.BooleanField(_('Ordered?'), default=False)
 
     def __str__(self):
-        return str(self.user_uuid)
+        return '{0}'.format(self.user_uuid)
 
 
 class BasketItem(models.Model):
@@ -193,8 +193,4 @@ class BasketItem(models.Model):
     quantity = models.PositiveIntegerField(_('Quantity'), default=0)
 
     def __str__(self):
-        return self.product_id
-
-    # @property
-    # def total_price(self):
-    #     return self.quantity * self.amount
+        return '{0}'.format(self.product_id)
