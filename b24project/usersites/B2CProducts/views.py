@@ -200,3 +200,25 @@ class B2CProductBasket(View):
 
             basket.update(B2CProduct.objects.get(id=product_id), quantity)
         return HttpResponseRedirect((reverse('b2c_products:basket')))
+
+
+
+class B2CProductSearch(ItemList):
+    model = B2CProduct
+    template_name = 'usersites/B2CProducts/searchPage.html'
+    paginate_by = 16
+    filter_key = 'company'
+    url_paginator = "b2c_products:serch_paginator"
+    current_section = _("B2C Products")
+    title = _("B2C Products")
+
+    def get_url_paginator(self):
+        return self.url_paginator
+
+    def get_queryset(self):
+        q = self.request.GET.get('s') or None
+        if q and re.match('\w+', q):
+            return self.model.get_active_objects().filter(name__icontains=q)
+        return self.model.get_active_objects()
+
+

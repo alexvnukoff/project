@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from usersites.B2CProducts.views import B2CProductList, B2CProductDetail, B2CProductBasket
+from usersites.B2CProducts.views import B2CProductList, B2CProductDetail, B2CProductBasket, B2CProductSearch
 
 admin.autodiscover()
 
@@ -17,4 +17,8 @@ urlpatterns = patterns('',
                            B2CProductDetail.as_view(), name='detail'),
                        url(r'^basket\.html$',
                            B2CProductBasket.as_view(), name='basket'),
+                       url(r'^search/$',
+                           B2CProductSearch.as_view(), name="search"),
+                       url(r'^search/page(?P<page>[0-9]+)?/$', B2CProductSearch.as_view(),
+                           name="serch_paginator"),
                        )

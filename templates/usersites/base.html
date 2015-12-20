@@ -63,6 +63,12 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
+                        <div class="tmp_search">
+                        <form action="{% url 'b2c_products:search' %}">
+                            <input type="text" placeholder="Search" name="s">
+                        </form>
+                        </div>
+
                     <div class="select -lang">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
@@ -132,7 +138,7 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
 
-<!--
+
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 
     <script>
@@ -161,7 +167,6 @@
     }
 
     </script>
--->
 
 
 {% block js %}{% endblock %}
