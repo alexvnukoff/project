@@ -11,7 +11,7 @@
         <li>
          {% setContextMenu product update_url=update_url delete_url=delete_url %}
           <div class="thumb">
-              <a href="{% url "products:B2CDetail" product.slug product.pk %}">
+              <a href="{% url 'products:B2CDetail' product.slug product.pk %}">
                   {% if product.image %}
                       <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                   {% else %}
@@ -23,7 +23,7 @@
                 {% if product.country %}
                      <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
                 {% endif %}
-            <a href="{% url "products:B2CDetail" product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
+            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
            </div>
             <div class="price">
                 {% if product.cost %}
@@ -32,7 +32,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{% url "products:B2CDetail" product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
+            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

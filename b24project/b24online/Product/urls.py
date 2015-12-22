@@ -9,7 +9,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-     url(r'^$', b24online.Product.views.B2BProductList.as_view(), name='main'),
+     url(r'^b2b/$', b24online.Product.views.B2BProductList.as_view(), name='main'),
      url(r'^page(?P<page>[0-9]+)?/$', b24online.Product.views.B2BProductList.as_view(), name="paginator"),
      url(r'^my/$', b24online.Product.views.B2BProductList.as_view(my=True), name='my_main'),
      url(r'^my/page(?P<page>[0-9]+)?/$', b24online.Product.views.B2BProductList.as_view(my=True), name="my_main_paginator"),
