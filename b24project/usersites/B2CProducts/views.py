@@ -2,7 +2,7 @@
 import uuid, re
 from collections import OrderedDict
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import F, Sum, IntegerField, FloatField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
@@ -15,6 +15,11 @@ from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.cbv import ItemDetail, ItemList
 from django.utils.timezone import now
 from centerpokupok.Basket import Basket
+from django.views.generic.edit import FormView
+from centerpokupok.forms import OrderEmailForm
+from django.core.mail import send_mail
+from django.template import loader
+from django.conf import settings
 
 
 
@@ -218,7 +223,42 @@ class B2CProductSearch(ItemList):
     def get_queryset(self):
         q = self.request.GET.get('s') or None
         if q and re.match('\w+', q):
-            return self.model.get_active_objects().filter(name__icontains=q)
-        return self.model.get_active_objects()
+            return self.model.get_active_objects().filter(name__icontains=q, **self.get_filter_kwargs())
+        return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 
 
+
+class B2CProductByEmail(FormView):
+    template_name = 'usersites/B2CProducts/orderByEmail.html'
+    form_class = OrderEmailForm
+    success_url = reverse_lazy('b2c_products:order_done')
+
+    def get_context_data(self, **kwargs):
+        basket = Basket(self.request)
+        has = basket.count
+        context = super(B2CProductByEmail, self).get_context_data(**kwargs)
+        context['basket'] = dict(src=basket)
+        context['total'] = basket.summary
+        return context
+
+    def form_valid(self, form):
+        cd = form.cleaned_data
+        basket = Basket(self.request)
+        org_email = get_current_site(self.request).user_site.organization.email
+        context = {
+            'name': cd['name'],
+            'email': cd['email'],
+            'message': cd['message'],
+            'basket': dict(src=basket),
+            'total': '{0} {1}'.format(basket.summary(), basket.currency()),
+            'org': get_current_site(self.request).user_site.organization,
+            'site': get_current_site(self.request).domain,
+        }
+
+        subject = (_('Order from') + ' {0}').format(get_current_site(self.request).domain)
+        body = loader.render_to_string('usersites/B2CProducts/templateEmail.html', context)
+
+        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
+                [org_email, 'migirov@gmail.com'], fail_silently=False)
+
+        return super(B2CProductByEmail, self).form_valid(form)
