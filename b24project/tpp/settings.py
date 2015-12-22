@@ -199,6 +199,7 @@ CACHES = {
 
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 #SESSION_COOKIE_DOMAIN=".stackoverflow.com"
+SESSION_SAVE_EVERY_REQUEST = True
 
 DATABASES = {
     'default': {
