@@ -27,7 +27,7 @@
            </div>
             <div class="price">
                 {% if product.cost %}
-                    {{ product.currency|getSymbol }} {{ product.cost|formatPrice }}
+                    <span{% if product.is_coupon %} style="color:red"{% endif %}>{{ product.currency|getSymbol }}{{ product.get_discount_price }}</span>
                 {% else %}
                     {% trans 'Contact to price' %}
                 {% endif %}

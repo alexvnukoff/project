@@ -4,12 +4,13 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-
+from django.core.urlresolvers import reverse, reverse_lazy
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
     DeleteGalleryImage, DeleteDocument, DocumentList
 from b24online.models import B2BProduct, Company, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
+from paypal.standard.forms import PayPalPaymentsForm
 
 
 class B2BProductList(ItemsList):
@@ -55,9 +56,11 @@ class B2BProductList(ItemsList):
         return queryset
 
 
+
 class B2CProductList(ItemsList):
     # pagination url
-    url_my_paginator = "products:my_main_b2c_paginator"
+    url_paginator = "products:main_b2c_paginator"
+    url_my_paginator = "products:my_b2c_paginator"
 
     # Lists of required scripts and styles for ajax request
     scripts = []
@@ -86,7 +89,7 @@ class B2CProductList(ItemsList):
         self.template_name = 'b24online/Products/contentPageB2C.html'
 
     def no_ajax(self, request, *args, **kwargs):
-        self.template_name = 'b24online/Products/index.html'
+        self.template_name = 'b24online/Products/index_b2c.html'
 
     def get_queryset(self):
         queryset = super(B2CProductList, self).get_queryset()
@@ -100,6 +103,7 @@ class B2CProductList(ItemsList):
                 return queryset.none()
 
         return queryset.prefetch_related('company__countries')
+
 
 
 class B2BProductDetail(ItemDetail):
@@ -122,6 +126,28 @@ class B2CProductDetail(ItemDetail):
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('company', 'company__countries')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        if self.object.currency and self.object.cost and self.object.company.company_paypal_account:
+
+            paypal_dict = {
+                "business": self.object.company.company_paypal_account,
+                "amount":  self.object.get_discount_price,
+                "notify_url": self.request.build_absolute_uri(),
+                "return_url": self.request.build_absolute_uri(),
+                "cancel_return": self.request.build_absolute_uri(),
+                "item_number": self.object.pk,
+                "item_name": self.object.name,
+                "no_shipping": 0,
+                "quantity": 1,
+                "currency_code": self.object.currency
+            }
+
+            context_data['paypal_form'] = PayPalPaymentsForm(initial=paypal_dict)
+        return context_data
+
 
 
 class B2BProductDelete(ItemDeactivate):
@@ -314,7 +340,7 @@ class B2CProductCreate(ItemCreate):
     model = B2CProduct
     form_class = B2CProductForm
     template_name = 'b24online/Products/addFormB2C.html'
-    success_url = reverse_lazy('products:my_main_b2c')
+    success_url = reverse_lazy('products:my_b2c')
 
     def get(self, request, *args, **kwargs):
         """

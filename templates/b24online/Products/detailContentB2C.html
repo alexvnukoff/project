@@ -61,13 +61,14 @@
     <div class="goods-details-center">
         <ul>
             <li>
+
+                {% if item.is_coupon %}
+                <label style="color:red">{% trans " Discount price until" %} {{ item.end_coupon_date }}:</label>
+                {% else %}
                 <label>{% trans "Price" %}:</label>
+                {% endif %}
                 <p>
-                    {% if item.cost %}
-                         {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
-                    {% else %}
-                         {% trans 'Get price' %}
-                    {% endif %}
+        <span {% if item.is_coupon %} style="color:red"{% endif %}>{{ item.currency|getSymbol }} {{ item.get_discount_price }}</span>
                 </p>
             </li>
             {% if item.measurement_unit %}
@@ -78,7 +79,13 @@
             {% endif %}
             <li>
                 <label>{% trans 'Amount' %}:</label>
-                <input type="text" name="" value="" class="text" style="width:60%;" />
+                <input id="id_quantity_src" type="text" class="text" style="width:60%;" />
+
+                <script>
+                $("#id_quantity_src").keyup(function() {
+                    document.getElementById('id_quantity').value = this.value;
+                });
+                </script>
             </li>
             {% comment %}
             <li>
@@ -91,7 +98,16 @@
            </li>
            {% endcomment %}
            <li>
-               <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
+
+
+
+            {% if paypal_form %}
+                <div style="">{{ paypal_form.render }}</div>
+            {% else %}
+                <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
+            {% endif %}
+
+
            </li>
         </ul>
     </div>
