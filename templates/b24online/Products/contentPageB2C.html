@@ -13,13 +13,13 @@
     <div style="height:68px;"></div>
     <ul class="bxslider">
       {% if slider.slider_images|length == 0 %}
-          {% for i in site.user_site.slider_images %}
+          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/1.jpg" /></li>
+          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/2.jpg" /></li>
+          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/3.jpg" /></li>
+        {% else %}
+          {% for i in slider.slider_images %}
             <li><img src="{{ i.image.big }}" /></li>
           {% endfor %}
-        {% else %}
-        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/1.jpg" /></li>
-        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/2.jpg" /></li>
-        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/3.jpg" /></li>
       {% endif %}
     </ul>
   {% endif %}

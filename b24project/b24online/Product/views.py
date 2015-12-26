@@ -83,7 +83,10 @@ class B2CProductList(ItemsList):
         )
 
         if not self.my:
-            context['slider'] = UserSite.objects.filter(organization_id=23470) # Expert Center
+            try:
+                context['slider'] = UserSite.objects.get(organization_id=23470) # 23470 Expert Center
+            except UserSite.DoesNotExist:
+                context['slider'] = None
         return context
 
     def ajax(self, request, *args, **kwargs):
