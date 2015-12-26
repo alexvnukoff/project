@@ -48,13 +48,12 @@ class B2BProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.get_active_objects().filter(company_id=current_org)\
+                queryset = self.model.get_active_objects().filter(company_id=current_org) \
                     .order_by(*self._get_sorting_params())
             else:
                 queryset = queryset.none()
 
         return queryset
-
 
 
 class B2CProductList(ItemsList):
@@ -91,6 +90,9 @@ class B2CProductList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/index_b2c.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.prefetch_related('company__countries')
+
     def get_queryset(self):
         queryset = super(B2CProductList, self).get_queryset()
 
@@ -102,8 +104,7 @@ class B2CProductList(ItemsList):
             else:
                 return queryset.none()
 
-        return queryset.prefetch_related('company__countries')
-
+        return queryset
 
 
 class B2BProductDetail(ItemDetail):
@@ -131,10 +132,9 @@ class B2CProductDetail(ItemDetail):
         context_data = super().get_context_data(**kwargs)
 
         if self.object.currency and self.object.cost and self.object.company.company_paypal_account:
-
             paypal_dict = {
                 "business": self.object.company.company_paypal_account,
-                "amount":  self.object.get_discount_price,
+                "amount": self.object.get_discount_price,
                 "notify_url": self.request.build_absolute_uri(),
                 "return_url": self.request.build_absolute_uri(),
                 "cancel_return": self.request.build_absolute_uri(),
@@ -147,7 +147,6 @@ class B2CProductDetail(ItemDetail):
 
             context_data['paypal_form'] = PayPalPaymentsForm(initial=paypal_dict)
         return context_data
-
 
 
 class B2BProductDelete(ItemDeactivate):
@@ -173,7 +172,8 @@ def categories_list(request, model):
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('b24online/Products/categoryList.html', template_params, context_instance=RequestContext(request))
+    return render_to_response('b24online/Products/categoryList.html', template_params,
+                              context_instance=RequestContext(request))
 
 
 class B2BProductCreate(ItemCreate):
@@ -384,7 +384,6 @@ class B2CProductCreate(ItemCreate):
 
         if form.cleaned_data['start_coupon_date'] and form.cleaned_data['end_coupon_date'] \
                 and form.cleaned_data['coupon_discount_percent']:
-
             form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], form.cleaned_data['end_coupon_date'])
 
         with transaction.atomic():
@@ -458,7 +457,6 @@ class B2CProductUpdate(ItemUpdate):
             context_data['categories'] = B2CProductCategory.objects.filter(pk__in=categories)
 
         return context_data
-
 
     def form_valid(self, form, additional_page_form):
         """
