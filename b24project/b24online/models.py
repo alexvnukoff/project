@@ -341,6 +341,10 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    def __str__(self):
+        return self.pk
+
     def has_perm(self, user):
         if user is None or not user.is_authenticated() or user.is_anonymous():
             return False
