@@ -2,7 +2,28 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
-<div class="container">
+
+  <link href="{% static 'b24online/css/jquery.bxslider.css' %}" rel="stylesheet" />
+
+  <script src="{% static 'b24online/js/jquery.bxslider.min.js' %}"></script>
+  <script>$(document).ready(function(){$('.bxslider').bxSlider();});</script>
+  <div class="container">
+
+  {% if slider and not 'page' in request.path or 'page1' in request.path %}
+    <div style="height:68px;"></div>
+    <ul class="bxslider">
+      {% if slider.slider_images|length == 0 %}
+          {% for i in site.user_site.slider_images %}
+            <li><img src="{{ i.image.big }}" /></li>
+          {% endfor %}
+        {% else %}
+        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/1.jpg" /></li>
+        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/2.jpg" /></li>
+        <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/3.jpg" /></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
    {% include "b24online/main/paginator.html" %}
    {% include "b24online/main/popupFilter.html" %}
    {% include "b24online/main/local_menu_script.html" %}

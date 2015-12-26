@@ -11,7 +11,7 @@ from b24online.models import B2BProduct, Company, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 from paypal.standard.forms import PayPalPaymentsForm
-
+from usersites.models import UserSite
 
 class B2BProductList(ItemsList):
     # Pagination url
@@ -82,6 +82,8 @@ class B2CProductList(ItemsList):
             delete_url='deleteB2C'
         )
 
+        if not self.my:
+            context['slider'] = UserSite.objects.filter(organization_id=23470) # Expert Center
         return context
 
     def ajax(self, request, *args, **kwargs):
