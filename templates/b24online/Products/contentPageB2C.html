@@ -8,7 +8,6 @@
   <script src="{% static 'b24online/js/jquery.bxslider.min.js' %}"></script>
   <script>$(document).ready(function(){$('.bxslider').bxSlider();});</script>
   <div class="container">
-
   {% if slider and not 'page' in request.path or 'page1' in request.path %}
     <div style="height:68px;"></div>
     <ul class="bxslider">
