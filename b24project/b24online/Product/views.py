@@ -87,7 +87,7 @@ class B2CProductList(ItemsList):
 
         if not self.my:
             try:
-                context['slider'] = UserSite.objects.get(organization_id=64) # 23470 Expert Center
+                context['slider'] = UserSite.objects.get(organization_id=23470) # 23470 Expert Center
             except UserSite.DoesNotExist:
                 context['slider'] = None
         return context
@@ -119,7 +119,7 @@ class B2CProductList(ItemsList):
 class B2CPCouponsList(ItemsList):
     # pagination url
     url_paginator = "products:coupons_paginator"
-    paginate_by = 2
+    paginate_by = 12
 
     # Lists of required scripts and styles for ajax request
     scripts = []
@@ -148,8 +148,8 @@ class B2CPCouponsList(ItemsList):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
     def get_queryset(self):
-        queryset = super(B2CPCouponsList, self).get_queryset().filter(coupon_dates__contains=now().date())
-
+        queryset = super(B2CPCouponsList, self).get_queryset()
+        queryset = self.model.get_active_objects().filter(coupon_dates__contains=now().date())
         return queryset
 
 
