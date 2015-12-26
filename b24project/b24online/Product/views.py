@@ -12,6 +12,9 @@ from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
+from django.utils.timezone import now
+
+
 
 class B2BProductList(ItemsList):
     # Pagination url
@@ -84,7 +87,7 @@ class B2CProductList(ItemsList):
 
         if not self.my:
             try:
-                context['slider'] = UserSite.objects.get(organization_id=23470) # 23470 Expert Center
+                context['slider'] = UserSite.objects.get(organization_id=64) # 23470 Expert Center
             except UserSite.DoesNotExist:
                 context['slider'] = None
         return context
@@ -110,6 +113,45 @@ class B2CProductList(ItemsList):
                 return queryset.none()
 
         return queryset
+
+
+
+class B2CPCouponsList(ItemsList):
+    # pagination url
+    url_paginator = "products:coupons_paginator"
+    paginate_by = 2
+
+    # Lists of required scripts and styles for ajax request
+    scripts = []
+    styles = []
+
+    current_section = _("Products B2C")
+    addUrl = 'products:addB2C'
+    model = B2CProduct
+
+    # allowed filter list
+    # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    def get_context_data(self, **kwargs):
+        context = super(B2CPCouponsList, self).get_context_data(**kwargs)
+        context.update(
+            update_url='updateB2C',
+            delete_url='deleteB2C'
+        )
+
+        return context
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/contentPageB2C_coupons.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/index_b2c_coupons.html'
+
+    def get_queryset(self):
+        queryset = super(B2CPCouponsList, self).get_queryset().filter(coupon_dates__contains=now().date())
+
+        return queryset
+
 
 
 class B2BProductDetail(ItemDetail):

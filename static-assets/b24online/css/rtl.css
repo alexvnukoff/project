@@ -15,7 +15,6 @@ body, input, textarea, select{ text-align:right;}
 .register{ right:520px;}
 .desc{ float:right; padding-right:30px;}
 .homeslide .note{ left:410px; text-align:right;}
-.bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto{ left:80%;}
 .pr-best-price li .location .flag{ float:right;}
 .pr-best-price li .location a{}
 .pdfdownload img{ float:right;}
@@ -219,3 +218,11 @@ div.org-contacts ul li span.left{float: right;}
 
 .slide2 .desc h2, .slide3 .desc h2, .slide4 .desc h2{ padding-bottom:0; text-align: center;}
 .slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align:center; padding-bottom:12px;}
+
+li.big-coupon {direction:rtl;}
+li.big-coupon .bot .context {margin:10px 210px 10px 10px !important;}
+li.big-coupon .bot .context .current-price {direction:ltr !important;text-align:right !important;}
+li.big-coupon .bot .context .but {text-align:left !important;}
+li.big-coupon .bot .context .price-off {text-align:right;}
+li.big-coupon .top .sale {left:470px !important;}
+
