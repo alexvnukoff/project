@@ -15,7 +15,6 @@ from usersites.models import UserSite
 from django.utils.timezone import now
 
 
-
 class B2BProductList(ItemsList):
     # Pagination url
     url_paginator = "products:paginator"
@@ -119,7 +118,7 @@ class B2CProductList(ItemsList):
 class B2CPCouponsList(ItemsList):
     # pagination url
     url_paginator = "products:coupons_paginator"
-    paginate_by = 12
+    paginate_by = 13
 
     # Lists of required scripts and styles for ajax request
     scripts = []
@@ -148,8 +147,7 @@ class B2CPCouponsList(ItemsList):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
     def get_queryset(self):
-        queryset = super(B2CPCouponsList, self).get_queryset()
-        queryset = self.model.get_active_objects().filter(coupon_dates__contains=now().date())
+        queryset = super(B2CPCouponsList, self).get_queryset().filter(coupon_dates__contains=now().date()).exclude(coupon_discount_percent__isnull=True)
         return queryset
 
 
