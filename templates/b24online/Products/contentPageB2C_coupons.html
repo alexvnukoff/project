@@ -139,14 +139,14 @@ li.big-coupon .bot .context {
 }
 
 li.big-coupon .bot .context .price-off {
-  width:120px;
+  width:140px;
   font-weight:normal;
   display:inline-block;
   padding:10px;
 }
 
 li.big-coupon .bot .context .current-price {
-  width:180px;
+  width:160px;
   text-align:left;
   display:inline-block;
   font-size:18px;
@@ -180,6 +180,7 @@ li.big-coupon .bot .context .but a {
     <ul class="listprd">
     {% for product in object_list %}
         {% if forloop.first %}
+        {% if product.is_coupon %}
           <li class="big-coupon">
             <div class="top"><div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div></div>
               <div class="body">
@@ -205,7 +206,7 @@ li.big-coupon .bot .context .but a {
             <div class="bot">
               <div class="context">
                  <span class="price-off">
-                    <strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike> ({{ product.coupon_discount_percent|intword }}% off)
+                    <strike>{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</strike> ({{ product.coupon_discount_percent|intword }}% off)
                   </span>
 
                  <span class="current-price">
@@ -220,7 +221,7 @@ li.big-coupon .bot .context .but a {
               </div>
             </div>
           </li>
-
+          {% endif %}
         {% else %}
           <li>
            {% setContextMenu product update_url=update_url delete_url=delete_url %}
