@@ -1,14 +1,12 @@
 import os
-
 from django import template
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
-
 from appl.models import NewsCategories
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal, Company, News, Banner
+    BusinessProposal, Company, News, Banner, BannerBlock
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from appl import func
 from core.models import Item
@@ -25,7 +23,7 @@ def site_banner(context, side, block):
     cached = cache.get(cache_name)
 
     if not cached:
-        banner = Banner.objects.filter(site_id=site_pk, block__code=block, block__block_type='user_site').order_by('?')\
+        banner = Banner.objects.filter(site_id=site_pk, block__code=block, block__block_type='user_site').order_by('?') \
             .first()
 
         if banner:
@@ -276,7 +274,6 @@ def b2b_social_buttons(context, image, title, text):
 
 @register.inclusion_tag("centerpokupok/main/main_menu.html", takes_context=True)
 def categories_menu(context):
-
     return {'categories': B2CProductCategory.objects.filter(level=0).order_by('name')[:5]}
 
 
@@ -290,4 +287,12 @@ def companyMenuB2C(context, company, menu):
         'menu': menu,
         'MEDIA_URL': MEDIA_URL,
         'user': request.user
+    }
+
+
+@register.inclusion_tag("b24online/Products/slider.html")
+def products_banner_slider():
+    block = BannerBlock.objects.get(code='PRODUCT_SLIDER')
+    return {
+        'banners': Banner.get_active_objects().filter(block=block)
     }

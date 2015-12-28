@@ -1,0 +1,10 @@
+{% if banners %}
+    <div style="height:68px;"></div>
+    <ul class="bxslider">
+        {% for banner in banners %}
+            <li>
+                <img src="{{ banner.original }}" />
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

@@ -8,19 +8,8 @@
   <script src="{% static 'b24online/js/jquery.bxslider.min.js' %}"></script>
   <script>$(document).ready(function(){$('.bxslider').bxSlider();});</script>
   <div class="container">
-  {% if slider and not 'page' in request.path or 'page1' in request.path %}
-    <div style="height:68px;"></div>
-    <ul class="bxslider">
-      {% if slider.slider_images|length == 0 %}
-          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/1.jpg" /></li>
-          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/2.jpg" /></li>
-          <li><img src="{% static 'usersites/templates/' %}{{ slider.template.theme_folder }}/3.jpg" /></li>
-        {% else %}
-          {% for i in slider.slider_images %}
-            <li><img src="{{ i.image.big }}" /></li>
-          {% endfor %}
-      {% endif %}
-    </ul>
+  {% if page.number == 1 %}
+    {% products_banner_slider %}
   {% endif %}
 
    {% include "b24online/main/paginator.html" %}
