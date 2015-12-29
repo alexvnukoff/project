@@ -23,6 +23,8 @@ from b24online.search_indexes import SearchEngine
 from core import tasks
 from core.cbv import HybridListView
 from b24online.forms import GalleryImageForm, DocumentForm
+from centerpokupok.models import B2CProduct, B2CProductCategory
+
 
 
 class TabItemList(HybridListView):
@@ -144,6 +146,7 @@ class ItemsList(HybridListView):
         'country': Country,
         'countries': Country,
         'b2b_categories': B2BProductCategory,
+        'b2c_categories': B2CProductCategory,
         'branches': Branch,
         'bp_categories': BusinessProposalCategory,
     }

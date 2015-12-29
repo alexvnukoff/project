@@ -12,15 +12,15 @@ from django.utils.translation import ugettext as _
 import lxml
 from lxml.html.clean import clean_html
 from b24online.Analytic.analytic import get_results
-
+from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
 from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
-    BusinessProposalCategoryIndex, SearchEngine
-from centerpokupok.models import B2CProduct
+    BusinessProposalCategoryIndex, SearchEngine, B2cProductCategoryIndex
 from core.models import Item
 from jobs.models import Requirement
 from tpp.SiteUrlMiddleWare import get_request
+
 
 
 def get_paginator_range(page):
@@ -612,6 +612,10 @@ def autocomplete_filter(filter_key, q, page):
         'b2b_categories': {
             'model': B2BProductCategory,
             'index_model': B2bProductCategoryIndex,
+        },
+        'b2c_categories': {
+            'model': B2CProductCategory,
+            'index_model': B2cProductCategoryIndex,
         },
         'bp_categories': {
             'model': BusinessProposalCategory,

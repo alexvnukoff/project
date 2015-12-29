@@ -59,6 +59,11 @@ var ui =
             selector: '#filter-b2b_categories',
             name: 'filter[b2b_categories]'
         },
+        b2c_categories:
+        {
+            selector: '#filter-b2c_categories',
+            name: 'filter[b2c_categories]'
+        },
         branches:
         {
             selector: '#filter-branches',
@@ -992,7 +997,7 @@ var FileUploader = { //Async uploader (uploadify)
         $.get(link, function(data) {
             FileUploader.parent.find('.files_holder').load(FileUploader.structureURL);
         });
-        
+
         return false;
     }
 };
@@ -1044,11 +1049,11 @@ var companyStructure =
 
 
     setForms: function() {
-        
+
         var LANG = this.LANG;
-        
+
         this.forms = {
-            vacancy: 
+            vacancy:
                 '<div class="vacadd" id="add-vac-popup">' +
                     '<i class="close-formadd imgnews" />' +
                     '<div class="title">' + LANG['popup_vac'] + '</div>' +

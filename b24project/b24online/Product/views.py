@@ -7,12 +7,13 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
     DeleteGalleryImage, DeleteDocument, DocumentList
-from b24online.models import B2BProduct, Company, B2BProductCategory
+from b24online.models import B2BProduct, Company, Chamber, Country, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from django.utils.timezone import now
+
 
 
 class B2BProductList(ItemsList):
