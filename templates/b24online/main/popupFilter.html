@@ -30,6 +30,9 @@
                 {% if 'organization' in available_filters %}
                     <li><a href="#tabfil-6">{% trans "Organization" %}</a></li>
                 {% endif %}
+                {% if 'b2c_categories' in available_filters %}
+                    <li><a href="#tabfil-7">{% trans "Category" %}</a></li>
+                {% endif %}
             </ul>
         </div>
 
@@ -84,5 +87,15 @@
                 </div>
             </div>
         {% endif %}
+
+        {% if 'b2c_categories' in available_filters %}
+            <div id="tabfil-7">
+                <div class="tabfilter-content">
+                    <input id="filter-b2c_categories" type="hidden" class="big-selector">
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock %}
+
