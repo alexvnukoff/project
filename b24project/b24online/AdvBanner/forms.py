@@ -23,7 +23,7 @@ class BannerForm(forms.ModelForm):
         countries = cleaned_data.get("country", None)
         image = self.cleaned_data.get('image', None)
 
-        if image and image.size > 50 * 1024:
+        if image and image.size > 200 * 1024:
             self.add_error('image', "Image file too large")
 
         if image and (image.image.width != self.block.width or image.image.height != self.block.height):
