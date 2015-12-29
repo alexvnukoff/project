@@ -3,7 +3,9 @@
     <ul class="bxslider">
         {% for banner in banners %}
             <li>
-                <img src="{{ banner.image.original }}" />
+                <a href="{{ banner.link }}" title="{{ banner.title }}" target="_blank">
+                    <img src="{{ banner.image.url }}" alt="{{ banner.title }}" title="{{ banner.title }}" />
+                </a>
             </li>
         {% endfor %}
     </ul>
