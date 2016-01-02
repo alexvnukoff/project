@@ -465,7 +465,7 @@ class B2CProductUpdate(ItemUpdate):
     model = B2CProduct
     form_class = B2CProductForm
     template_name = 'b24online/Products/addFormB2C.html'
-    success_url = reverse_lazy('products:my_main_b2c')
+    success_url = reverse_lazy('products:my_b2c')
 
     def get(self, request, *args, **kwargs):
         """
