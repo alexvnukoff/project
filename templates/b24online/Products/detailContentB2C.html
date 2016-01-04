@@ -4,7 +4,6 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-
 {% block header %}
     {% include "b24online/login_header.html" %}
 {% endblock %}
@@ -68,7 +67,7 @@
                 <label>{% trans "Price" %}:</label>
                 {% endif %}
                 <p>
-        <span {% if item.is_coupon %} style="color:red"{% endif %}>{{ item.currency|getSymbol }} {{ item.get_discount_price }}</span>
+        <span {% if item.is_coupon %} style="color:red"{% endif %}>{{ item.currency|getSymbol }} {{ item.get_discount_price|formatPrice }}</span>
                 </p>
             </li>
             {% if item.measurement_unit %}
