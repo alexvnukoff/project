@@ -174,8 +174,9 @@ a.red-btn:hover {
 .btn-green {
 border:0;
 color:#fff;
-padding: 5px 9px;
-background: #2ca93b;
+margin:0 15px;
+padding:5px 9px;
+background:#2ca93b !important;
 }
 
 .basket_detail {

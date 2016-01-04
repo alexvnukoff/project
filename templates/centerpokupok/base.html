@@ -1,86 +1,237 @@
-{% load staticfiles %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        {% block head %}
-            {% block  meta%}
-                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                  {% load i18n %}
-            {% endblock %}
+{% load staticfiles %}{% load i18n %}<!DOCTYPE html>
+<html >
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-            <title>{% block title %}{% trans 'Shopcenter' %}{% endblock %}</title>
+<title>{% block title %}{% trans 'Shopcenter' %}{% endblock %}</title>
 
-            {% block styles %}
-                <link href='http://fonts.googleapis.com/css?family=Roboto:100,300,700,400&subset=latin,latin-ext,cyrillic-ext' rel='stylesheet' type='text/css'>
-                <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/reset.css" %}">
-                <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/shopcenter.css" %}">
-                    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/anythingslider.css" %}">
-                <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-                <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
-            {% endblock %}
+<link href='http://fonts.googleapis.com/css?family=Roboto:100,300,700,400&subset=latin,latin-ext,cyrillic-ext' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="{% static 'centerpokupok/css/reset.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'centerpokupok/css/jquery.countdown.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'centerpokupok/js/slick/slick.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'centerpokupok/css/anythingslider.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'centerpokupok/css/shopcenter.css' %}">
+<script type="text/javascript" src="{% static 'centerpokupok/js/jquery-1.9.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'centerpokupok/js/jquery.anythingslider.js' %}"></script>
+<script type="text/javascript" src="{% static 'centerpokupok/js/slick/slick.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'centerpokupok/js/base.js' %}"></script>
+<script type="text/javascript" src="{% static 'centerpokupok/js/jquery.countdown.js' %}"></script>
+<script type="text/javascript" src="{% static 'centerpokupok/js/jquery.countdown-ru.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#slider1').slick({
+              adaptiveHeight: true,
+              autoplay: false,
+              autoplaySpeed: 12000,
+              arrows: true,
+              dots: false,
+              fade: false,
+              infinite: true,
+              initialSlide: 1,
+              pauseOnHover: true,
+              slidesToShow: 7,
+              slidesToScroll: 2,
+              slide: '.itempartner',
+              speed: 1000,
+              touchMove: true,
+              useCSS: true,
+              responsive: [
+                {
+                  breakpoint: 1024,
+                  settings: {
+                    slidesToShow: 6,
+                    slidesToScroll: 3,
+                  }
+                },
+                {
+                  breakpoint: 900,
+                  settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 3
+                  }
+                },
+                {
+                  breakpoint: 650,
+                  settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 2
+                  }
+                },
+                {
+                  breakpoint: 510,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3
+                  }
+                },
+                {
+                  breakpoint: 380,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                  }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+              ]
+        });
 
-            {% block js %}
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-                <script type="text/javascript" src="{% static "centerpokupok/js/base.js" %}"></script>
-                <script type="text/javascript" src="{% static "centerpokupok/js/jquery.anythingslider.js" %}"></script>
-            {% endblock %}
-        {% endblock %}
-    </head>
+        $('#slideimage').slick({
+            arrows: false,
+            dots: true
+        });
 
-    <body>
-        {% block header %}
-        {% endblock %}
+        $('#bestproduct').slick({
+            adaptiveHeight: false,
+            autoplay: false,
+            autoplaySpeed: 12000,
+            arrows: true,
+            dots: false,
+            fade: false,
+            infinite: true,
+            initialSlide: 1,
+            pauseOnHover: true,
+            slidesToShow: 5,
+            slidesToScroll: 2,
+            slide: '.clumn-best',
+            speed: 1000,
+            touchMove: true,
+            useCSS: true,
+            responsive: [
+                {
+                  breakpoint: 1024,
+                  settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 1,
+                  }
+                },
+                {
+                  breakpoint: 800,
+                  settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 2
+                  }
+                },
+                {
+                  breakpoint: 650,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1
+                  }
+                },
+                {
+                  breakpoint: 500,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                    adaptiveHeight: true
+                  }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+              ]
+        });
+    })
+</script>
+<script type="text/javascript">
+$(function () {
+    var austDay = new Date();
+    austDay = new Date(austDay.getFullYear() + 1, 1 - 1, 26);
+    $('.topCountdown').countdown({until: 60000});
+});
+$(function () {
+    var austDay = new Date();
+    austDay = new Date(austDay.getFullYear() + 1, 1 - 1, 26);
+    $('#compactLayout').countdown({until: 60000, compact: true,
+    layout: '{hnn}{sep}{mnn}{sep}{snn} {desc}'});
+});
+</script>
+<!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+</head>
+<body>
 
-        {% block body %}
-        {% endblock %}
+{% include 'centerpokupok/header.html' %}
 
-        {% block footer %}
-            </div>
-            <div id="quicklnk">
-                <div class="container">
-                    <ul id="linkun">
-                        <li class="top">{% trans 'About project' %}</li>
-                        <li><a href="#">{% trans 'About system' %}</a></li>
-                        <li><a href="#">{% trans 'How the system works' %}</a></li>
-                        <li><a href="#">{% trans 'Announcements and product reviews' %}</a></li>
-                        <li><a href="#">{% trans 'Public offer' %}</a></li>
-                    </ul>
-                    <ul id="linkun">
-                        <li class="top">{% trans 'How to buy' %}</li>
-                        <li><a href="#">{% trans 'Subscribe to updates' %}</a></li>
-                        <li><a href="#">{% trans 'How to pay' %}</a></li>
-                        <li><a href="#">{% trans 'Delivery option' %}</a></li>
-                        <li><a href="#">{% trans 'Customers protection' %}</a></li>
-                        <li><a href="#">{% trans 'Quick reference' %}</a></li>
-                    </ul>
-                    <ul id="linkun">
-                        <li class="top">{% trans 'Services' %}</li>
-                        <li><a href="#">{% trans 'Contact us' %}</a></li>
-                        <li><a href="#">{% trans 'FAQ' %}</a></li>
-                        <li><a href="#">{% trans 'Ask about community' %}</a></li>
-                        <li><a href="#">{% trans 'Partner program' %}</a></li>
-                    </ul>
-                    <ul id="subscribe">
-                        <li class="top">
-                            <i class="imgshop i-subs"></i>{% trans 'Subscribe to newsletter' %}
-                        </li>
-                        <li>{% trans 'Receive our weekly announcements and reviews of new products' %}</li>
-                        <li><input type="text" name="" placeholder="Ваш E-mail" class="text" /></li>
-                        <li><a class="btnreg" href="#">{% trans 'Subscribe' %}</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="footer">
-                <div class="container">
-                    <label>© 2013 {% trans 'Shopping center - buy with pleasure all over the world' %}</label>
-                    <div class="social">
-                        <a href="#" class="imgshop icon-social i-face"></a>
-                        <a href="#" class="imgshop icon-social i-twitter"></a>
-                        <a href="#" class="imgshop icon-social i-youtube"></a>
-                        <a href="#" class="imgshop icon-social i-vimeo"></a>
-                    </div>
-                </div>
-            </div>
-        {% endblock %}
-    </body>
+<!--   <div id="flag-var">
+    <ul>
+      <li><i class="iflag flag1"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag2"></i><a href="#">Латвия</a></li>
+      <li><i class="iflag flag3"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag4"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag5"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag6"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag1"></i><a href="#">Израиль</a></li>
+      <li><i class="iflag flag2"></i><a href="#">Россия</a></li>
+      <li><i class="iflag flag3"></i><a href="#">Эстония</a></li>
+      <li><i class="iflag flag4"></i><a href="#">Россия</a></li>
+      <li><i class="iflag flag5"></i><a href="#">Эстония</a></li>
+      <li><i class="iflag flag6"></i><a href="#">Эстония</a></li>
+      <li><i class="iflag flag1"></i><a href="#">Россия</a></li>
+      <li><i class="iflag flag2"></i><a href="#">Эстония</a></li>
+      <li><i class="iflag flag3"></i><a href="#">Украина</a></li>
+      <li><i class="iflag flag4"></i><a href="#">Беларусь</a></li>
+      <li><i class="iflag flag5"></i><a href="#">Украина</a></li>
+      <li><i class="iflag flag6"></i><a href="#">Беларусь</a></li>
+      <li><i class="iflag flag1"></i><a href="#">Беларусь</a></li>
+      <li><i class="iflag flag2"></i><a href="#">Украина</a></li>
+      <li><i class="iflag flag3"></i><a href="#">Беларусь</a></li>
+    </ul>
+  </div> -->
+
+
+
+
+
+</div>
+{% block footer %}
+<div id="quicklnk">
+    <div class="container">
+        <ul id="linkun">
+            <li class="top">{% trans 'О площадке' %}</li>
+            <li><a href="#">{% trans 'О системе' %}</a></li>
+            <li><a href="#">{% trans 'Как работает площадка' %}</a></li>
+            <li><a href="#">{% trans 'Анонсы и обзоры товаров' %}</a></li>
+            <li><a href="#">{% trans 'Публичная оферта' %}</a></li>
+        </ul>
+        <ul id="linkun">
+            <li class="top">{% trans 'Как купить' %}</li>
+            <li><a href="#">{% trans 'Подписаться на обновления' %}</a></li>
+            <li><a href="#">{% trans 'Как оплатить заказ' %}</a></li>
+            <li><a href="#">{% trans 'Выбор доставки' %}</a></li>
+            <li><a href="#">{% trans 'Защита покупателя' %}</a></li>
+            <li><a href="#">{% trans 'Быстрое ознакомление' %}</a></li>
+        </ul>
+        <ul id="linkun">
+            <li class="top">{% trans 'Сервисный' %}</li>
+            <li><a href="#">{% trans 'Связаться с нами' %}</a></li>
+            <li><a href="#">{% trans 'Часто задаваемые вопросы' %}</a></li>
+            <li><a href="#">{% trans 'Спросить в сообществе' %}</a></li>
+            <li><a href="#">{% trans 'Партнерская программа' %}</a></li>
+        </ul>
+        <ul id="subscribe">
+            <li class="top">
+                <i class="imgshop i-subs"></i>{% trans 'Подписаться на рассылку' %}
+            </li>
+            <li>{% trans 'Получайте каждую неделю наши анонсы и обзоры новинок' %}</li>
+            <li><input type="text" name="" placeholder="{% trans 'Ваш E-mail' %}" class="text" /></li>
+            <li><a class="btnreg" href="#">{% trans 'Подписаться' %}</a></li>
+        </ul>
+    </div>
+</div>
+<div id="footer">
+    <div class="container">
+        <label>© {%  now 'Y' %} {% trans 'Центр покупок - покупай с удовольствием по всему миру' %}</label>
+        <div class="social">
+            <a href="#" class="imgshop icon-social i-face">Facebook</a>
+            <a href="#" class="imgshop icon-social i-twitter">Twitter</a>
+            <a href="#" class="imgshop icon-social i-youtube">Youtube</a>
+            <a href="#" class="imgshop icon-social i-vimeo">vimeo</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</body>
 </html>

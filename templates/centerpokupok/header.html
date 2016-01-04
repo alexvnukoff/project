@@ -1,0 +1,144 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}<div id="mainpage">
+  <div id="top">
+    <div class="container">
+      <span><a href="/">{% trans 'Home page' %}</a></span>
+      <span><i class="icons i-questinon"></i><a href="#">{% trans 'Задать вопрос' %}</a></span>
+      <span><i class="icons i-customer"></i><a href="#">{% trans 'Защита потребителя' %}</a></span>
+      {% if user.is_authenticated  %}
+          <span class="reg"><i class="icons i-reg"></i><a href="{% url 'profile:main' %}"> {{ user.email }}</a>,&nbsp;&nbsp;<a href="{% url 'logout' %}">{% trans "Выйти" %}</a></span>
+       {% else %}
+         <span class="reg"><i class="icons i-reg"></i><a href="#">{% trans 'Войти на сайт' %}</a></span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div id="header">
+    <div class="head-l">
+      <a href="/" class="imgshop" id="logo" title="{% trans 'Shopcenter' %}">
+        <img src="{% static 'centerpokupok/images/logo.png' %}" height="80" width="284" alt="" />
+      </a>
+      <div id="sl-lang">
+        <div id="linklang">
+          {% trans 'Выбрать язык' %}
+          <i class="icons arrow-lang"></i>
+        </div>
+        <div class="languagetop">
+          <ul id="localmenu">
+            <script>
+                var langs = [
+                    ['am', '{% trans "Armenian" %}'],
+                    ['ar', '{% trans "Arabic" %}'],
+                    ['en', '{% trans "English" %}'],
+                    ['he', '{% trans "Hebrew" %}'],
+                    ['ru', '{% trans "Russian" %}'],
+                    ['zh', '{% trans "Chinese" %}'],
+                    ['uk', '{% trans "Ukrainian" %}']
+                ];
+                var local = $('#localmenu');
+                for (i in langs)
+                {
+                    var language = langs[i][0];
+                    var name = langs[i][1];
+                    var host = (window.location.host).split('.');
+                    if (host.length == 3)
+                        host[0] = language;
+                    else
+                        host.unshift(language);
+                    host = host.join('.');
+                    host = window.location.protocol + "//" + host + window.location.pathname + window.location.search + window.location.hash;
+                    local.append('<li class="level1-li sub"><a class="level1-a" href="' + host + '">' + name + '</a></li>');
+                }
+            </script>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="regacc">
+      {% if user.id > 0 %}
+      <p>{% trans 'Ваша рабочая область' %}</p>
+      <a href="{% url 'profile:main' %}" class="btnreg">{% trans 'Панель управления' %}</a>
+      <a href="{% url 'logout' %}" class="btnreg">{%  trans 'Выйти' %}</a>
+      {% else %}
+      <p>{% trans 'Зарегистрируйтесь прямо сейчас' %}</p>
+      <a href="#" class="btnreg">{% trans 'Я - продавец' %}</a>
+      <a href="{% url 'register' %}" class="btnreg">{%  trans 'Я - покупатель' %}</a>
+      {% endif %}
+    </div>
+    <div class="cart">
+      <div class="clearfix">
+        <i class="icart imgshop"></i>
+        <div class="cartitem">
+          <p><a href="#" id="linkcart">3 товара</a></p>
+          <p>на  <strong>$ 320.60</strong></p>
+          <div class="cartmini">
+            <ul>
+              <li>
+                <img src="{% static 'centerpokupok/images/products/thumb.jpg' %}" alt="" class="thumb">
+                <div class="descart">
+                  <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
+                  <p>x 1 <font class="number">$3.80</font></p>
+                  <a href="#" class="icons i-delete">Delete</a>
+                </div>
+              </li>
+              <li>
+                <img src="{% static 'centerpokupok/images/products/thumb.jpg' %}" alt="" class="thumb">
+                <div class="descart">
+                  <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
+                  <p>x 1 <font class="number">$3.80</font></p>
+                  <a href="#" class="icons i-delete">Delete</a>
+                </div>
+              </li>
+              <li>
+                <img src="{% static 'centerpokupok/images/products/thumb.jpg' %}" alt="" class="thumb">
+                <div class="descart">
+                  <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
+                  <p>x 1 <font class="number">$3.80</font></p>
+                  <a href="#" class="icons i-delete">Delete</a>
+                </div>
+              </li>
+              <li class="total">
+                <div>
+                  <label class="left">Общая сумма:</label>
+                  <label class="right">$ 220.03</label>
+                </div>
+                <div>
+                  <label class="left">Стоимость доставки:</label>
+                  <label class="right">бесплатная</label>
+                </div>
+                <div class="price">
+                  <label class="left">Всего:</label>
+                  <label class="right">$ 220.03</label>
+                </div>
+                <div><a class="btnreg" href="#">Оформить заказ</a></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="viewcart"><a href="#">Оформить заказ</a></div>
+    </div>
+  </div>
+  <div id="homesearch">
+    <div class="bginput">
+      <i class="icon-search imgshop"></i>
+      <form id="searchForm" action="{% url 'products:list' %}">
+      <input type="text" name="q" placeholder="Поиск товара" class="text" />
+      <div class="styled-select">
+                <select name="select">
+                  <option value="1">Выбрать категорию</option>
+                  <option value="2">Выбрать категорию</option>
+                </select>
+            </div>
+            <div class="styled-select">
+                <select name="select">
+                  <option value="1">Выбрать регион</option>
+                  <option value="2">Выбрать регион</option>
+                </select>
+            </div>
+    </div>
+     <a href="#" onclick="$('#searchForm').submit();" class="btns">{% trans 'Поиск' %}</a>
+    </form>
+  </div>
