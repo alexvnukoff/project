@@ -210,7 +210,7 @@ li.big-coupon .bot .context .but a {
                   </span>
 
                  <span class="current-price">
-                 <small>Current price</small> {{ product.get_discount_price }} {{ product.currency|getSymbol }}
+                 <small>Current price</small> {{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}
                 </span>
 
                 <span class="but">
