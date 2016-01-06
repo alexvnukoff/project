@@ -159,11 +159,12 @@
         <div class="linkbottom">
             {% show_static_pages %}
             <ul class="clumn">
-                <li>
+        <!--
                     <a href="https://vk.com/tppcentr"><i class="imgmain iconsocial i-blog"></i></a>
                     <a href="https://www.facebook.com/tppcentercom"><i class="imgmain iconsocial i-face"></i></a>
                     <a href="https://www.youtube.com/channel/UCoQtkd1hIT62K3dXGizgRaQ"><i class="imgmain iconsocial i-video"></i></a>
-                </li>
+                -->
+
                 {% cache 3600 statistic LANGUAGE_CODE %}
                     {% statistic %}
                 {% endcache %}

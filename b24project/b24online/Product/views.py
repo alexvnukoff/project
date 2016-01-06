@@ -5,11 +5,14 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
-from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
-    DeleteGalleryImage, DeleteDocument, DocumentList
-from b24online.models import B2BProduct, Company, Chamber, Country, B2BProductCategory
+from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
+                   ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
+                   DeleteDocument, DocumentList
+from b24online.models import B2BProduct, Company, Chamber, Country, \
+                                                B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
+from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, \
+                                                           B2CProductForm
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from django.utils.timezone import now
@@ -51,8 +54,9 @@ class B2BProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.get_active_objects().filter(company_id=current_org) \
-                    .order_by(*self._get_sorting_params())
+                queryset = self.model.get_active_objects()\
+                .filter(company_id=current_org)\
+                .order_by(*self._get_sorting_params())
             else:
                 queryset = queryset.none()
 
@@ -87,10 +91,12 @@ class B2CProductList(ItemsList):
 
         if not self.my:
             try:
-                context['slider'] = UserSite.objects.get(organization_id=23470) # 23470 Expert Center
+                 # 23470 Expert Center ID
+                context['slider'] = UserSite.objects.get(organization_id=23470)
             except UserSite.DoesNotExist:
                 context['slider'] = None
         return context
+
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/contentPageB2C.html'
@@ -104,11 +110,16 @@ class B2CProductList(ItemsList):
     def get_queryset(self):
         queryset = super(B2CProductList, self).get_queryset()
 
-        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+        if self.request.user.is_authenticated() and not self.request.user.\
+                                                is_anonymous() and self.my:
             current_org = self._current_organization
 
+            if self.is_my():
+                current_org = self._current_organization
+
             if current_org is not None:
-                queryset = self.model.get_active_objects().filter(company_id=current_org)
+                queryset = self.model.get_active_objects()\
+                           .filter(company_id=current_org)
             else:
                 return queryset.none()
 
@@ -148,7 +159,9 @@ class B2CPCouponsList(ItemsList):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
     def get_queryset(self):
-        queryset = super(B2CPCouponsList, self).get_queryset().filter(coupon_dates__contains=now().date()).exclude(coupon_discount_percent__isnull=True)
+        queryset = super(B2CPCouponsList, self).get_queryset().filter(\
+                                  coupon_dates__contains=now().date())\
+                        .exclude(coupon_discount_percent__isnull=True)
         return queryset
 
 
@@ -161,7 +174,8 @@ class B2BProductDetail(ItemDetail):
     addUrl = 'products:add'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('company', 'company__countries')
+        return super().get_queryset().prefetch_related('company', \
+                                            'company__countries')
 
 
 class B2CProductDetail(ItemDetail):
@@ -172,12 +186,14 @@ class B2CProductDetail(ItemDetail):
     addUrl = 'products:addB2C'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('company', 'company__countries')
+        return super().get_queryset().prefetch_related('company', \
+                                            'company__countries')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        if self.object.currency and self.object.cost and self.object.company.company_paypal_account:
+        if self.object.currency and self.object.cost and self.object.company.\
+                                                      company_paypal_account:
             paypal_dict = {
                 "business": self.object.company.company_paypal_account,
                 "amount": self.object.get_discount_price,
@@ -211,15 +227,16 @@ def categories_list(request, model):
     categories = model.objects.filter(parent=parent)
 
     if parent is not None:
-        bread_crumbs = model.objects.get(pk=parent).get_ancestors(ascending=False, include_self=True)
+        bread_crumbs = model.objects.get(pk=parent)\
+                            .get_ancestors(ascending=False, include_self=True)
 
     template_params = {
         'object_list': categories,
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('b24online/Products/categoryList.html', template_params,
-                              context_instance=RequestContext(request))
+    return render_to_response('b24online/Products/categoryList.html',\
+           template_params, context_instance=RequestContext(request))
 
 
 class B2BProductCreate(ItemCreate):
@@ -239,7 +256,8 @@ class B2BProductCreate(ItemCreate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet()
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form,\
+                             additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -290,11 +308,13 @@ class B2BProductCreate(ItemCreate):
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
-        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        context_data = self.get_context_data(form=form,\
+             additional_page_form=additional_page_form)
         categories = form.cleaned_data.get('categories', None)
 
         if categories is not None:
-            context_data['categories'] = B2BProductCategory.objects.filter(pk__in=categories)
+            context_data['categories'] = B2BProductCategory.objects\
+                                          .filter(pk__in=categories)
 
         return self.render_to_response(context_data)
 
@@ -315,7 +335,8 @@ class B2BProductUpdate(ItemUpdate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(instance=self.object)
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form,\
+                            additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -326,7 +347,8 @@ class B2BProductUpdate(ItemUpdate):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+        additional_page_form = AdditionalPageFormSet(self.request.POST,\
+                                                  instance=self.object)
 
         if form.is_valid() and additional_page_form.is_valid():
             return self.form_valid(form, additional_page_form)
@@ -338,7 +360,8 @@ class B2BProductUpdate(ItemUpdate):
         categories = context_data['form']['categories'].value()
 
         if categories:
-            context_data['categories'] = B2BProductCategory.objects.filter(pk__in=categories)
+            context_data['categories'] = B2BProductCategory.objects\
+                                          .filter(pk__in=categories)
 
         return context_data
 
@@ -351,7 +374,8 @@ class B2BProductUpdate(ItemUpdate):
         form.instance.updated_by = self.request.user
 
         if form.changed_data and 'sku' in form.changed_data:
-            form.instance.metadata['stock_keeping_unit'] = form.cleaned_data['sku']
+            form.instance.metadata['stock_keeping_unit'] = form\
+                                            .cleaned_data['sku']
 
         with transaction.atomic():
             self.object = form.save()
@@ -378,7 +402,8 @@ class B2BProductUpdate(ItemUpdate):
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form,\
+                            additional_page_form=additional_page_form))
 
 
 class B2CProductCreate(ItemCreate):
@@ -398,7 +423,8 @@ class B2CProductCreate(ItemCreate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet()
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form,\
+                            additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -428,9 +454,11 @@ class B2CProductCreate(ItemCreate):
         form.instance.company = Company.objects.get(pk=organization_id)
         form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        if form.cleaned_data['start_coupon_date'] and form.cleaned_data['end_coupon_date'] \
-                and form.cleaned_data['coupon_discount_percent']:
-            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], form.cleaned_data['end_coupon_date'])
+        if form.cleaned_data['start_coupon_date'] and \
+                  form.cleaned_data['end_coupon_date'] \
+                  and form.cleaned_data['coupon_discount_percent']:
+            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'],\
+                                            form.cleaned_data['end_coupon_date'])
 
         with transaction.atomic():
             self.object = form.save()
@@ -452,11 +480,13 @@ class B2CProductCreate(ItemCreate):
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
-        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        context_data = self.get_context_data(form=form,\
+             additional_page_form=additional_page_form)
         categories = form.cleaned_data.get('categories', None)
 
         if categories is not None:
-            context_data['categories'] = B2CProductCategory.objects.filter(pk__in=categories)
+            context_data['categories'] = B2CProductCategory.objects\
+                                          .filter(pk__in=categories)
 
         return self.render_to_response(context_data)
 
@@ -477,7 +507,8 @@ class B2CProductUpdate(ItemUpdate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(instance=self.object)
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form,\
+                            additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -488,7 +519,8 @@ class B2CProductUpdate(ItemUpdate):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+        additional_page_form = AdditionalPageFormSet(self.request.POST,\
+                                                  instance=self.object)
 
         if form.is_valid() and additional_page_form.is_valid():
             return self.form_valid(form, additional_page_form)
@@ -500,7 +532,8 @@ class B2CProductUpdate(ItemUpdate):
         categories = context_data['form']['categories'].value()
 
         if categories:
-            context_data['categories'] = B2CProductCategory.objects.filter(pk__in=categories)
+            context_data['categories'] = B2CProductCategory.objects\
+                                          .filter(pk__in=categories)
 
         return context_data
 
@@ -513,12 +546,15 @@ class B2CProductUpdate(ItemUpdate):
         form.instance.updated_by = self.request.user
 
         if form.changed_data and 'sku' in form.changed_data:
-            form.instance.metadata['stock_keeping_unit'] = form.cleaned_data['sku']
+            form.instance.metadata['stock_keeping_unit'] =\
+                                    form.cleaned_data['sku']
 
-        if form.cleaned_data['start_coupon_date'] and form.cleaned_data['end_coupon_date'] \
-                and form.cleaned_data['coupon_discount_percent']:
+        if form.cleaned_data['start_coupon_date'] and \
+             form.cleaned_data['end_coupon_date'] and \
+             form.cleaned_data['coupon_discount_percent']:
 
-            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], form.cleaned_data['end_coupon_date'])
+            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], \
+                                            form.cleaned_data['end_coupon_date'])
         else:
             form.instance.coupon_dates = None
 
@@ -547,7 +583,8 @@ class B2CProductUpdate(ItemUpdate):
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, \
+                            additional_page_form=additional_page_form))
 
 
 class B2BProductGalleryImageList(GalleryImageList):
