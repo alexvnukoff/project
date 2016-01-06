@@ -113,13 +113,10 @@ class B2CProductList(ItemsList):
         if self.is_my():
             current_org = self._current_organization
 
-            if self.is_my():
-                current_org = self._current_organization
-
             if current_org is not None:
                 queryset = self.model.get_active_objects()\
-+                          .filter(company_id=current_org)\
-+                   .order_by(*self._get_sorting_params())
+                .filter(company_id=current_org)\
+                .order_by(*self._get_sorting_params())
             else:
                 queryset = queryset.none()
 
