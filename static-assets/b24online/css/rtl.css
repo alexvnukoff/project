@@ -1,4 +1,4 @@
-body, input, textarea, select{ text-align:right;}
+body, input, textarea, select{direction:rtl;}
 
 .header-r li .text-r{ padding: 0 10px 0 0;}
 .tophead-l{ text-align:left;}

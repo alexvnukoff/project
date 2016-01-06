@@ -14,10 +14,10 @@ import os, logging
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-DEFAULT_FROM_EMAIL = 'noreply@tppcenter.com'
-SERVER_EMAIL  = 'noreply@tppcenter.com'
+DEFAULT_FROM_EMAIL = 'noreply@b24online.com'
+SERVER_EMAIL  = 'noreply@b24online.com'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'noreply@tppcenter.com'
+EMAIL_HOST_USER = 'noreply@b24online.com'
 EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
