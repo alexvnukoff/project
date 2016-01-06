@@ -110,8 +110,7 @@ class B2CProductList(ItemsList):
     def get_queryset(self):
         queryset = super(B2CProductList, self).get_queryset()
 
-        if self.request.user.is_authenticated() and not self.request.user.\
-                                                is_anonymous() and self.my:
+        if self.is_my():
             current_org = self._current_organization
 
             if self.is_my():
@@ -119,9 +118,10 @@ class B2CProductList(ItemsList):
 
             if current_org is not None:
                 queryset = self.model.get_active_objects()\
-                           .filter(company_id=current_org)
++                          .filter(company_id=current_org)\
++                   .order_by(*self._get_sorting_params())
             else:
-                return queryset.none()
+                queryset = queryset.none()
 
         return queryset
 
