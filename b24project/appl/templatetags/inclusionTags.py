@@ -130,7 +130,7 @@ def get_my_companies_list(context):
 @register.inclusion_tag('b24online/main/statistic.html')
 def statistic(*args, **kwargs):
     model_statistic = {
-        _('Products'): B2BProduct.objects.count(),
+        # _('Products'): B2BProduct.objects.count(),
         _('Companies'): Company.objects.count(),
         _('Partners'): Chamber.objects.count()
     }
