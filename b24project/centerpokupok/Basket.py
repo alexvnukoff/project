@@ -54,7 +54,10 @@ class Basket:
             item.quantity = quantity
             item.save()
         else: #ItemAlreadyExists
-            item.quantity = int(quantity)
+            if item.quantity:
+                item.quantity += int(quantity)
+            else:
+                item.quantity = int(quantity)
             item.save()
 
     def remove(self, product):
