@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from mptt.admin import MPTTModelAdmin
-from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, PolymorphicMPTTParentModelAdmin
+from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
+                                  PolymorphicMPTTParentModelAdmin
 
-from b24online.models import B2BProductCategory, Country, Branch, Company, Organization, Chamber, BannerBlock, \
-    B2BProduct
+from b24online.models import B2BProductCategory, Country, Branch, Company, \
+                           Organization, Chamber, BannerBlock, B2BProduct
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -33,11 +34,18 @@ class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
             'all': ('admin/treenode/admin.css',)
         }
 
+
+class CompanyAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = ('id', 'name', 'slug', 'director', 'company_paypal_account',)
+    search_fields = ['name', 'slug', 'director', 'company_paypal_account',]
+
+
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
 admin.site.register(Branch, MPTTModelAdmin)
 admin.site.register(Organization, TreeNodeParentAdmin)
-admin.site.register(Company, ModelAdmin)
+admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
