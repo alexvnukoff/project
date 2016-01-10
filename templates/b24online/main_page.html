@@ -181,7 +181,7 @@
                 {% endif %}
                 <div id="tabs-1">
                     <ul class="tab1-cate">
-
+                        <li><a class="single-page" href="{% url 'wall:main' %}">{% trans 'Wall' %}</a></li>
                     	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products B2B' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main_b2c' %}">{% trans 'Products B2C' %}</a></li>
@@ -190,7 +190,6 @@
                         <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
                         <li><a class="single-page" href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
                         <li><a class="single-page" href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
-                        <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
 {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
@@ -198,8 +197,13 @@
 {% endcomment %}        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
                         <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
+
+                        <!-- temporary hide..
+
+                        <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
-                        <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+
+                        -->
 
                     </ul>
                 </div>
@@ -218,7 +222,7 @@
                             <li><a class="single-page" href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
                             <li><a class="single-page" href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
                             <li><a class="single-page" href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
-                            <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
+
                             <li><a class="single-page" href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
     {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
@@ -230,9 +234,17 @@
                             <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
+
+                            <!-- temporary hide..
+
+                            <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                             <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                             <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
                             <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
+
+                            -->
+
+
     {% comment %}           <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
     {% endcomment %}    </ul>
                     </div>
@@ -240,14 +252,6 @@
             </div>
             <div class="banner-wrapper-left">
 
-                <!-- Booking.com injection -->
-                <div class="bannerleft">
-                    <iframe src="https://www.booking.com/general.html?aid=388214&tmpl=searchbox&label=booking&width=200&bgcolor=FFF09C&lang=en"
-                            height="237" width="100%" frameborder="0" scrolling="no" name="sbox_iframe"
-                            style="padding: 0 0 0 0;">
-                    </iframe>
-                </div>
-                <!-- /Booking.com injection -->
                 {% get_banner "Left 1" item %}
                 {% get_banner "Left 2" item %}
                 {% get_banner "Left 3" item %}
