@@ -1,6 +1,10 @@
+# -*- encoding: utf-8 -*-
+
 import importlib
 import os
 import uuid
+import socket
+import logging
 from PIL import Image
 
 from django.conf import settings
@@ -10,9 +14,11 @@ from django.core.files.move import file_move_safe
 from django.utils import translation
 from django.utils.text import slugify
 from django.utils.timezone import now
+
 import errno
 from unidecode import unidecode
 
+logger = logging.getLogger(__name__)
 
 def get_index_name(lang=None, index_prefix='b24-'):
     if lang:
@@ -199,3 +205,80 @@ def class_for_name(module_name, class_name):
     # get the class, will raise AttributeError if class cannot be found
     c = getattr(m, class_name)
     return c
+
+
+class GeoIPHelper(object):
+    """
+    GeoIP actions wrapper.
+    """
+    IP_KEYS_ORDER = (
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_CLIENT_IP',
+        'HTTP_X_REAL_IP',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'HTTP_VIA',
+        'X_FORWARDED_FOR',
+        'REMOTE_ADDR',
+    )
+
+    @staticmethod
+    def is_valid_ip(ip_str):
+        """
+        Check the validity of an IPv4 address
+        """
+        try:
+            socket.inet_pton(socket.AF_INET, ip_str)
+        except AttributeError:
+            try:
+                socket.inet_aton(ip_str)
+            except (AttributeError, socket.error):
+                return False
+            return ip_str.count('.') == 3
+        except socket.error:
+            return False
+        return True
+
+    @classmethod
+    def get_request_ip(cls, request):
+        """
+        Return the real IP fetched from request META headers.
+        """
+        ip = None
+        for key in cls.IP_KEYS_ORDER:
+            value = request.META.get(key, '').strip()
+            if value:
+                ips = [ip.strip().lower() for ip in value.split(',')]
+                for ip_str in ips:
+                    if ip_str and cls.is_valid_ip(ip_str):
+                        ip = ip_str
+                        break
+        return ip
+    
+    @classmethod
+    def get_geoip_data(cls, ip):
+        geoip_data = {}
+        import GeoIP
+        gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
+        if gi_db_path:
+            try:
+                gi_country_h = GeoIP.open(
+                    os.path.join(gi_db_path, 'GeoIP.dat'),
+                    GeoIP.GEOIP_STANDARD)
+            except GeoIP.error:
+                pass
+            else:
+                country_data = gi_country_h.country_code_by_addr(ip)
+                logger.debug(country_data)
+            try:
+                gi_city_h = GeoIP.open(
+                    os.path.join(gi_db_path, 'GeoLiteCity.dat'),
+                    GeoIP.GEOIP_STANDARD)
+            except GeoIP.error:
+                pass
+            else:
+                city_data = gi_city_h.record_by_addr(ip)
+                logger.debug(city_data)
+        return geoip_data

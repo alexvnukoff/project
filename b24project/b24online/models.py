@@ -1,5 +1,9 @@
-from argparse import ArgumentError
+# -*- encoding: utf-8 -*-
+
 import os
+import hashlib
+
+from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -15,6 +19,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_str
+
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
 from django_pgjson.fields import JsonBField
@@ -1461,6 +1467,8 @@ class RegisteredEventType(models.Model):
         verbose_name = _('Registered events type')
         verbose_name_plural = _('Registered events types')
 
+    def __unicode__(self):
+        return self.name
 
 class RegisteredEvent(models.Model):
     """
@@ -1470,18 +1478,20 @@ class RegisteredEvent(models.Model):
     event_type = models.ForeignKey(RegisteredEventType,
                                    verbose_name=_('Event  type'))
     site = models.ForeignKey(Site, verbose_name=_('Site'),
-                             on_delete=models.CASCADE)
+                             null=True, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Meaningful data
-    url = models.TextField(_('Requested URL'), blank=True)
-    username = models.CharField(_('Username'), max_length=255, blank=True)
+    url = models.TextField(_('Requested URL'), blank=True, null=True)
+    username = models.CharField(_('Username'), max_length=255, 
+                                blank=True, null=True)
     ip_address = models.GenericIPAddressField(_('IP address of request'),
                                               blank=True, null=True)
-    user_agent = models.CharField(_('User Agent info'), max_length=255)
+    user_agent = models.CharField(_('User Agent info'), max_length=255,
+                                  blank=True, null=True)
     geoip_data = JsonBField(_('Geo information'), default={}, blank=True)
     extra_data = JsonBField(_('Event extra information'), default={},
                             blank=True)
@@ -1489,6 +1499,15 @@ class RegisteredEvent(models.Model):
     class Meta:
         verbose_name = _('Registered event')
         verbose_name_plural = _('Registered events')
+
+    @property
+    def unique_key(self):
+        """
+        Return the unique key based on IP and UA.
+        """
+        return hashlib.md5(":" . join(
+            map(smart_str, (self.ip_address, self.user_agent)))).hexdigest()        
+                
 
 
 @receiver(pre_save)
