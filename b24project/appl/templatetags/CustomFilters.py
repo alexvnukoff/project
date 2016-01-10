@@ -1,8 +1,11 @@
+# -*- encoding: utf-8 -*-
+
 from collections import OrderedDict
 from copy import copy
 from decimal import Decimal
 import os
 import datetime
+import logging
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -19,6 +22,8 @@ from appl.func import currency_symbol
 from b24online.models import Chamber, Notification
 from tpp.SiteUrlMiddleWare import get_request
 import b24online.urls
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -278,3 +283,15 @@ def basket_quantity(request):
     from centerpokupok.Basket import Basket
     basket = Basket(request)
     return basket.count()
+
+
+@register.filter
+def register_event(request, instance, event_type_slug):
+    """
+    Register the Event with defined type slug.
+    """
+    logger.debug('Start to register')
+    logger.debug('Request: %s', request)
+    logger.debug('Instance: %s', instance)
+    logger.debug('Type: %s', event_type_slug)
+    return None

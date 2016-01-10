@@ -17,6 +17,7 @@ from django.utils._os import abspathu
 from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
+from django_pgjson.fields import JsonBField
 
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
@@ -1447,6 +1448,47 @@ class AdvertisementOrder(Order):
             return True
 
         return self.purchaser.has_perm()
+
+
+class RegisteredEventType(models.Model):
+    """
+    The registered events types.
+    """
+    name = models.CharField(_('Name'), max_length=255, blank=False, null=False)
+    slug = models.SlugField(_('Code'), max_length=20)
+
+    class Meta:
+        verbose_name = _('Registered events type')
+        verbose_name_plural = _('Registered events types')
+
+
+class RegisteredEvent(models.Model):
+    """
+    The registered events.
+    """
+    # "Bindings" to type, site and instance
+    event_type = models.ForeignKey(RegisteredEventType,
+                                   verbose_name=_('Event  type'))
+    site = models.ForeignKey(Site, verbose_name=_('Site'),
+                             on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Meaningful data
+    url = models.TextField(_('Requested URL'), blank=True)
+    username = models.CharField(_('Username'), max_length=255, blank=True)
+    ip_address = models.GenericIPAddressField(_('IP address of request'),
+                                              blank=True, null=True)
+    user_agent = models.CharField(_('User Agent info'), max_length=255)
+    geoip_data = JsonBField(_('Geo information'), default={}, blank=True)
+    extra_data = JsonBField(_('Event extra information'), default={},
+                            blank=True)
+
+    class Meta:
+        verbose_name = _('Registered event')
+        verbose_name_plural = _('Registered events')
 
 
 @receiver(pre_save)
