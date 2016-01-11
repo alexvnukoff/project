@@ -5,11 +5,11 @@ from django.utils.translation import ugettext as _
 
 from b24online.models import B2BProduct, B2BProductCategory
 from usersites.cbv import ItemDetail, ItemList
+from ..mixins import UserTemplateMixin
 
-
-class B2BProductList(ItemList):
+class B2BProductList(UserTemplateMixin, ItemList):
     model = B2BProduct
-    template_name = 'usersites/B2BProducts/contentPage.html'
+    template_name = '{template_path}/B2BProducts/contentPage.html'
     paginate_by = 16
     filter_key = 'company'
     url_paginator = "b2b_products:paginator"
@@ -78,7 +78,7 @@ class B2BProductList(ItemList):
         return queryset
 
 
-class B2BProductListDetail(ItemDetail):
+class B2BProductListDetail(UserTemplateMixin, ItemDetail):
     model = B2BProduct
     filter_key = 'company'
-    template_name = 'usersites/B2BProducts/detailContent.html'
+    template_name = '{template_path}/B2BProducts/detailContent.html'
