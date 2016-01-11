@@ -271,7 +271,6 @@ class GeoIPHelper(object):
                 pass
             else:
                 country_data = gi_country_h.country_code_by_addr(ip)
-                logger.debug(country_data)
             try:
                 gi_city_h = GeoIP.open(
                     os.path.join(gi_db_path, 'GeoLiteCity.dat'),
@@ -279,6 +278,16 @@ class GeoIPHelper(object):
             except GeoIP.error:
                 pass
             else:
-                city_data = gi_city_h.record_by_addr(ip)
-                logger.debug(city_data)
+                geoip_data = gi_city_h.record_by_addr(ip)
+                if not geoip_data:
+                    try:
+                        gi_country_h = GeoIP.open(
+                            os.path.join(gi_db_path, 'GeoIP.dat'),
+                            GeoIP.GEOIP_STANDARD)
+                    except GeoIP.error:
+                        pass
+                    else:
+                        country_code = gi_country_h.country_code_by_addr(ip)
+                        if country_code:
+                            geoip_data['country_code'] = country_code
         return geoip_data
