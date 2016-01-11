@@ -1,14 +1,25 @@
+# -*- encoding: utf-8 -*-
+
+import json 
+import logging
+import datetime
+
 from django.core.cache import cache
 from django.db.models import Q
-from appl import func
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
+from django.contrib.sites.shortcuts import get_current_site
+from django.views.generic import TemplateView
 
-import json
-from b24online.models import Organization, Company, Tender
+from appl import func
+from b24online.models import (Organization, Company, Tender, 
+    RegisteredEvent, B2BProduct)
+from centerpokupok.models import B2CProduct
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -65,3 +76,35 @@ def get_analytic(request):
         result = [{'type': row[0], 'count': row[1]} for row in analytic]
 
     return HttpResponse(json.dumps(result))
+
+
+class RegisteredEventsList(TemplateView):
+    template_name = 'b24online/Analytic/registered_events_list.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs)
+        return self.render_to_response(context)
+                    
+    def get_context_data(self, request, **kwargs):
+        context = super(RegisteredEventsList, self)\
+            .get_context_data(**kwargs)
+
+        # Current organization and products
+        organization = request.session.get('current_company', None)
+        data_grid = []
+        start_date = finish_date = datetime.date.today()
+        if organization:
+            logger.debug('Step 1')
+            logger.debug(organization)
+            if True:
+                logger.debug('Step 2')
+                b2c_products = B2CProduct.get_active_objects()\
+                    .filter(company_id=organization)
+                logger.debug(b2c_products)
+                for item in b2c_products:
+                    data = RegisteredEvent.get_geoip_data(
+                        'view', instance=item, 
+                        start_date=start_date,
+                        finish_date=finish_date) 
+                    logger.debug(data)                       
+        return context

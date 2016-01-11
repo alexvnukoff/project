@@ -3,6 +3,7 @@
 import os
 import hashlib
 import logging
+import datetime
 
 from argparse import ArgumentError
 from urllib.parse import urljoin
@@ -1530,7 +1531,9 @@ class RegisteredEvent(models.Model):
             return False
 
     @classmethod
-    def get_geoip_distribute(cls, field_key, event_type_slug, instance=None):
+    def get_geoip_distribute(cls, field_key, event_type_slug, 
+                             instance=None, start_date=None,
+                             finish_date=None):
         """
         Get the events distribution for some object by some 
         parameter.
@@ -1543,13 +1546,36 @@ class RegisteredEvent(models.Model):
         except RegisteredEventType.DoesNotExist:
             return ()
         else:
+            _extra = []
+            if start_date:
+                start_datetime = datetime.datetime.combine(start_date, 
+                    datetime.datetime.max.time())
+                _extra.append(
+                    "B.created_at <= '%s'" % \
+                        start_datetime.strftime('%Y-%m-%d %H:%I:%S'))
+            if finish_date:
+                finish_datetime = datetime.datetime.combine(finish_date, 
+                    datetime.datetime.max.time())
+                _extra.append(
+                    "B.created_at <= '%s'" % \
+                        finish_datetime.strftime('%Y-%m-%d %H:%I:%S'))
+            extra_condition = 'AND ' + ' AND ' . join(_extra) if _extra else '' 
+            
             if not instance:
                 sql = """SELECT 
-                    COUNT(*) AS cnt, B.geoip_data->>'{0}' AS field 
+                    COUNT(*) AS common, 
+                    COUNT(CASE WHEN B.is_unique = true THEN 1 ELSE 0 END) 
+                        AS uniq,
+                    B.geoip_data->>'{0}' AS field,
+                    date(B.created_at) AS b_date
                     FROM b24online_registeredevent AS B 
                     WHERE B.geoip_data->>'{0}' <> '' 
-                        AND B.event_type_id = '{1}'
-                    GROUP BY field""" . format(field_key, event_type.pk)
+                        AND B.event_type_id = '{1} 
+                        {2}'
+                    GROUP BY field, b_date ORDER BY b_date""" . format(
+                        field_key, 
+                        event_type.pk,
+                        extra_condition)
             else:
                 try:
                     content_type = ContentType.objects.get_for_model(instance)
@@ -1557,14 +1583,86 @@ class RegisteredEvent(models.Model):
                     return ()
                 else:
                     sql = """SELECT 
-                        COUNT(*) AS cnt, B.geoip_data->>'{0}' AS field 
+                        COUNT(*) common, 
+                        COUNT(CASE WHEN B.is_unique = true 
+                            THEN 1 ELSE 0 END) AS uniq, 
+                        B.geoip_data->>'{0}' AS field,
+                        date(B.created_at) AS b_date
                         FROM b24online_registeredevent AS B 
                         WHERE B.geoip_data->>'{0}' <> '' 
                             AND B.event_type_id = '{1}'
+                            {2}
+                            AND B.content_type_id = '{3}'
+                            AND B.object_id = '{4}'
+                        GROUP BY field, b_date ORDER BY b_date""" . format(
+                            field_key, event_type.pk, extra_condition, 
+                            content_type.pk, instance.pk)
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            for item in cursor.fetchall():
+                yield item
+
+    @classmethod
+    def get_geoip_data(cls, event_type_slug, 
+                       instance=None, start_date=None,
+                       finish_date=None):
+        """
+        Get the events amounts for some object.
+        """
+        # FIXME: use the extra instead raw sql
+        
+        try:
+            event_type = RegisteredEventType.objects.get(
+                slug=event_type_slug)
+        except RegisteredEventType.DoesNotExist:
+            return ()
+        else:
+            _extra = []
+            if start_date:
+                start_datetime = datetime.datetime.combine(start_date, 
+                    datetime.datetime.max.time())
+                _extra.append(
+                    "B.created_at <= '%s'" % \
+                        start_datetime.strftime('%Y-%m-%d %H:%I:%S'))
+            if finish_date:
+                finish_datetime = datetime.datetime.combine(finish_date, 
+                    datetime.datetime.max.time())
+                _extra.append(
+                    "B.created_at <= '%s'" % \
+                        finish_datetime.strftime('%Y-%m-%d %H:%I:%S'))
+            extra_condition = 'AND ' + ' AND ' . join(_extra) if _extra else '' 
+            
+            if not instance:
+                sql = """SELECT 
+                    COUNT(*) AS common, 
+                    COUNT(CASE WHEN B.is_unique = true THEN 1 ELSE 0 END) 
+                        AS uniq,
+                    date(B.created_at) AS b_date
+                    FROM b24online_registeredevent AS B 
+                    WHERE AND B.event_type_id = '{0} 
+                        {1}'
+                    GROUP BY b_date ORDER BY b_date""" . format(
+                        event_type.pk,
+                        extra_condition)
+            else:
+                try:
+                    content_type = ContentType.objects.get_for_model(instance)
+                except AttributeError:
+                    return ()
+                else:
+                    sql = """SELECT 
+                        COUNT(*) common, 
+                        COUNT(CASE WHEN B.is_unique = true 
+                            THEN 1 ELSE 0 END) AS uniq, 
+                        date(B.created_at) AS b_date
+                        FROM b24online_registeredevent AS B 
+                        WHERE B.event_type_id = '{0}'
+                            {1}
                             AND B.content_type_id = '{2}'
                             AND B.object_id = '{3}'
-                        GROUP BY field""" . format(field_key, 
-                            event_type.pk, content_type.pk, instance.pk)
+                        GROUP BY b_date ORDER BY b_date""" . format(
+                            event_type.pk, extra_condition, 
+                            content_type.pk, instance.pk)
             cursor = connection.cursor()
             cursor.execute(sql)
             for item in cursor.fetchall():
