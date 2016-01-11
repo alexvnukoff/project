@@ -1530,6 +1530,7 @@ class RegisteredEvent(models.Model):
             return False
 
 
+
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
     fields = [field.name for field in sender._meta.get_fields()]
