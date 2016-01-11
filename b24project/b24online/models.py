@@ -16,7 +16,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
-from django.db import models
+from django.db import models, connection
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -1529,6 +1529,46 @@ class RegisteredEvent(models.Model):
         else:
             return False
 
+    @classmethod
+    def get_geoip_distribute(cls, field_key, event_type_slug, instance=None):
+        """
+        Get the events distribution for some object by some 
+        parameter.
+        """
+        # FIXME: use the extra instead raw sql
+        
+        try:
+            event_type = RegisteredEventType.objects.get(
+                slug=event_type_slug)
+        except RegisteredEventType.DoesNotExist:
+            return ()
+        else:
+            if not instance:
+                sql = """SELECT 
+                    COUNT(*) AS cnt, B.geoip_data->>'{0}' AS field 
+                    FROM b24online_registeredevent AS B 
+                    WHERE B.geoip_data->>'{0}' <> '' 
+                        AND B.event_type_id = '{1}'
+                    GROUP BY field""" . format(field_key, event_type.pk)
+            else:
+                try:
+                    content_type = ContentType.objects.get_for_model(instance)
+                except AttributeError:
+                    return ()
+                else:
+                    sql = """SELECT 
+                        COUNT(*) AS cnt, B.geoip_data->>'{0}' AS field 
+                        FROM b24online_registeredevent AS B 
+                        WHERE B.geoip_data->>'{0}' <> '' 
+                            AND B.event_type_id = '{1}'
+                            AND B.content_type_id = '{2}'
+                            AND B.object_id = '{3}'
+                        GROUP BY field""" . format(field_key, 
+                            event_type.pk, content_type.pk, instance.pk)
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            for item in cursor.fetchall():
+                yield item
 
 
 @receiver(pre_save)
