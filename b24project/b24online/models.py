@@ -1499,9 +1499,6 @@ class RegisteredEventStats(_RegisteredEventAbs):
     The registered events stats per day.
     """
     registered_at = models.DateField(auto_now_add=True, db_index=True)
-    event_hash = models.CharField(_('Event hash key'), max_length=32,
-                                  validators=[MinLengthValidator(32)],
-                                  null=False, db_index=True)
     ip_address = models.GenericIPAddressField(_('IP address of request'),
                                               blank=True, null=True)
     user_agent = models.CharField(_('User Agent info'), max_length=255,
@@ -1532,6 +1529,9 @@ class RegisteredEvent(_RegisteredEventAbs):
                                               blank=True, null=True)
     user_agent = models.CharField(_('User Agent info'), max_length=255,
                                   blank=True, null=True)
+    event_hash = models.CharField(_('Event hash key'), max_length=32,
+                                  validators=[MinLengthValidator(32)],
+                                  null=False, default='', db_index=True)
     is_unique = models.BooleanField(_('Is event unique for this day'),
                                     default=False)
     event_data = HStoreField(_('Event extra data'), blank=True, null=True)
@@ -1555,22 +1555,21 @@ class RegisteredEvent(_RegisteredEventAbs):
         key_str = key_str_raw.encode('utf-8')
         return hashlib.md5(key_str).hexdigest()
 
-    def save(self, *args, **kwargs):
+    def check_is_unique(self):
         # FIXME: replace by Redis
         cls = type(self)
-        if not self.pk:
-            try:
-                cls.objects\
-                    .filter(event_type=self.event_type,
-                        site=self.site,
-                        content_type=self.content_type,
-                        object_id=self.object_id,
-                        registered_at__startswith=datetime.date.today())[0]
-            except IndexError:
-                self.is_unique = True
-            else:
-                self.is_unique = False
-            return super(RegisteredEvent, self).save(*args, **kwargs)
+        try:
+            cls.objects.filter(
+                event_type=self.event_type,
+                site=self.site,
+                content_type=self.content_type,
+                object_id=self.object_id,
+                event_hash=self.unique_key,
+                registered_at__startswith=datetime.date.today())[0]
+        except IndexError:
+            return True
+        else:
+            return False
 
 
 @receiver(pre_save)
@@ -1616,24 +1615,24 @@ def process_event(sender, instance, created, **kwargs):
     """
     Process the registered event.
     """
-    try:
-        stats = RegisteredEventStats.objects\
-            .get(event_type=instance.event_type,
-                 site=instance.site,
-                 content_type=instance.content_type,
-                 object_id=instance.object_id,
-                 registered_at=instance.registered_at.date())
-    except RegisteredEventStats.DoesNotExist:
-        stats = RegisteredEventStats(
-            event_type=instance.event_type,
-            site=instance.site,
-            content_type=instance.content_type,
-            object_id=instance.object_id,
-            registered_at=instance.registered_at.date(),
-            unique_amount=0, total_amount=0)
+    if instance.event_hash:
+        try:
+            stats = RegisteredEventStats.objects\
+                .get(event_type=instance.event_type,
+                     site=instance.site,
+                     content_type=instance.content_type,
+                     object_id=instance.object_id,
+                     registered_at=instance.registered_at.date())
+        except RegisteredEventStats.DoesNotExist:
+            stats = RegisteredEventStats(
+                event_type=instance.event_type,
+                site=instance.site,
+                content_type=instance.content_type,
+                object_id=instance.object_id,
+                registered_at=instance.registered_at.date(),
+                unique_amount=0, total_amount=0)
 
-    if instance.is_unique:
-        stats.unique_amount += 1
-
-    stats.total_amount += 1
-    stats.save()
+        if instance.is_unique:
+            stats.unique_amount += 1
+        stats.total_amount += 1
+        stats.save()

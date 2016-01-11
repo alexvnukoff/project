@@ -315,6 +315,7 @@ def process_event(event, request):
     """
     Process (define and store attributes values) the Event.
     """
+    logger.debug(event)
     def _random_ip():
         # For debugging
         import random
@@ -325,11 +326,15 @@ def process_event(event, request):
 
     if event:
         assert isinstance(event, RegisteredEvent), 'Invalid parameter'
+        event.site = get_current_site(request)
         event.url = request.path
         event.username = request.META.get('REMOTE_USER')
-        event.ip_address = GeoIPHelper.get_request_ip(request)
-        #event.ip_address = _random_ip()
+        # event.ip_address = GeoIPHelper.get_request_ip(request)
+        event.ip_address = _random_ip()
         event.user_agent = request.META.get('HTTP_USER_AGENT') 
-        event.geoip_data = GeoIPHelper.get_geoip_data(event.ip_address) 
+        event.event_hash = event.unique_key
+        data = GeoIPHelper.get_geoip_data(event.ip_address) 
+        event.event_data = dict((k, str(v)) for k, v in data.items())
+        event.is_unique = event.check_is_unique()
         event.save()
     return ''
