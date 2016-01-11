@@ -11,17 +11,19 @@ from b24online.models import AdditionalPage, Department
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
 
+from ..mixins import UserTemplateMixin
 
-class PageDetail(ItemDetail):
+
+class PageDetail(UserTemplateMixin, ItemDetail):
     model = AdditionalPage
-    template_name = 'usersites/OrganizationPages/page.html'
+    template_name = '{template_path}/OrganizationPages/page.html'
 
     def get_queryset(self):
         return get_current_site(self.request).user_site.organization.additional_pages.all()
 
 
-class Contacts(DetailView):
-    template_name = 'usersites/OrganizationPages/contact.html'
+class Contacts(UserTemplateMixin, DetailView):
+    template_name = '{template_path}/OrganizationPages/contact.html'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -55,8 +57,8 @@ class Contacts(DetailView):
         return context_data
 
 
-class Structure(ListView):
-    template_name = 'usersites/OrganizationPages/structure.html'
+class Structure(UserTemplateMixin, ListView):
+    template_name = '{template_path}/OrganizationPages/structure.html'
     model = Department
     ordering = ['name']
 
