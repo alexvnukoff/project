@@ -2,6 +2,7 @@
 
 import os
 import hashlib
+import logging
 
 from argparse import ArgumentError
 from urllib.parse import urljoin
@@ -13,6 +14,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField, DateRangeField, DateTimeRangeField
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
+
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -54,6 +57,7 @@ MEASUREMENT_UNITS = [
 image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
+logger = logging.getLogger(__name__)
 
 # class UserManager(BaseUserManager):
 #     def create_user(self, email, password=None):
@@ -1485,6 +1489,7 @@ class RegisteredEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Meaningful data
+    is_unique = models.BooleanField(default=False)
     url = models.TextField(_('Requested URL'), blank=True, null=True)
     username = models.CharField(_('Username'), max_length=255, 
                                 blank=True, null=True)
@@ -1505,9 +1510,24 @@ class RegisteredEvent(models.Model):
         """
         Return the unique key based on IP and UA.
         """
-        return hashlib.md5(":" . join(
-            map(smart_str, (self.ip_address, self.user_agent)))).hexdigest()        
-                
+        meaning_data = (self.ip_address, self.user_agent, 
+                        self.content_type.id, self.object_id)
+        key_str_raw = ':' . join(map(smart_str, meaning_data))
+        key_str = key_str_raw.encode('utf-8')
+        return '{0}__{1}' . format(self.event_type.slug, 
+            hashlib.md5(key_str).hexdigest())
+
+    def check_unique_key(self):
+        """
+        Check is the event is unique.
+        """
+        # FIXME: by the Redis (not Cache).
+        is_unique_timeout = getattr(settings, 'IS_UNIQUE_TIMEOUT', 24 * 60 *60)
+        if not cache.get(self.unique_key):
+            cache.set(self.unique_key, True, is_unique_timeout)
+            return True
+        else:
+            return False
 
 
 @receiver(pre_save)

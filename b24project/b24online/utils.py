@@ -259,8 +259,9 @@ class GeoIPHelper(object):
     
     @classmethod
     def get_geoip_data(cls, ip):
-        geoip_data = {}
         import GeoIP
+
+        geoip_data = {}
         gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
         if gi_db_path:
             try:
@@ -278,7 +279,7 @@ class GeoIPHelper(object):
             except GeoIP.error:
                 pass
             else:
-                geoip_data = gi_city_h.record_by_addr(ip)
+                geoip_data = gi_city_h.record_by_addr(ip) or {}
                 if not geoip_data:
                     try:
                         gi_country_h = GeoIP.open(
