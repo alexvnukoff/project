@@ -16,6 +16,7 @@ from django.contrib.postgres.fields import HStoreField, DateRangeField, DateTime
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.core.validators import MinLengthValidator
 
 from django.db import models, connection
 from django.db.models.signals import pre_save, post_save
@@ -27,7 +28,6 @@ from django.utils.encoding import smart_str
 
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
-from django_pgjson.fields import JsonBField
 
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
@@ -1475,198 +1475,102 @@ class RegisteredEventType(models.Model):
     def __unicode__(self):
         return self.name
 
-class RegisteredEvent(models.Model):
+##
+# Models for stats
+##
+class _RegisteredEventAbs(models.Model):
     """
-    The registered events.
+    The registered events abstract class.
     """
-    # "Bindings" to type, site and instance
     event_type = models.ForeignKey(RegisteredEventType,
                                    verbose_name=_('Event  type'))
     site = models.ForeignKey(Site, verbose_name=_('Site'),
                              null=True, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(_('Instance ID'))
     item = GenericForeignKey('content_type', 'object_id')
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    # Meaningful data
-    is_unique = models.BooleanField(default=False)
+    class Meta:
+        abstract = True
+
+
+class RegisteredEventStats(_RegisteredEventAbs):
+    """
+    The registered events stats per day.
+    """
+    registered_at = models.DateField(auto_now_add=True, db_index=True)
+    event_hash = models.CharField(_('Event hash key'), max_length=32,
+                                  validators=[MinLengthValidator(32)],
+                                  null=False, db_index=True)
+    ip_address = models.GenericIPAddressField(_('IP address of request'),
+                                              blank=True, null=True)
+    user_agent = models.CharField(_('User Agent info'), max_length=255,
+                                  blank=True, null=True)
+    event_data = HStoreField(_('Event extra data'), blank=True, null=True)
+    unique_amount = models.PositiveIntegerField(_('Unique'))
+    total_amount = models.PositiveIntegerField(_('Total'))
+
+    class Meta:
+        verbose_name = _('Registered events stats')
+        unique_together = ('event_type', 'site', 'content_type',
+            'object_id', 'registered_at')
+
+
+class RegisteredEvent(_RegisteredEventAbs):
+    """
+    The registered events.
+
+    Maybe could be replaced by Redis records.
+    """
+
+    registered_at = models.DateTimeField(auto_now_add=True,
+        db_index=True)
     url = models.TextField(_('Requested URL'), blank=True, null=True)
-    username = models.CharField(_('Username'), max_length=255, 
+    username = models.CharField(_('Username'), max_length=255,
                                 blank=True, null=True)
     ip_address = models.GenericIPAddressField(_('IP address of request'),
                                               blank=True, null=True)
     user_agent = models.CharField(_('User Agent info'), max_length=255,
                                   blank=True, null=True)
-    geoip_data = JsonBField(_('Geo information'), default={}, blank=True)
-    extra_data = JsonBField(_('Event extra information'), default={},
-                            blank=True)
+    is_unique = models.BooleanField(_('Is event unique for this day'),
+                                    default=False)
+    event_data = HStoreField(_('Event extra data'), blank=True, null=True)
 
     class Meta:
         verbose_name = _('Registered event')
         verbose_name_plural = _('Registered events')
+        unique_together = ('event_type', 'site', 'content_type',
+            'object_id', 'registered_at', 'ip_address',
+            'user_agent')
 
     @property
     def unique_key(self):
         """
         Return the unique key based on IP and UA.
         """
-        meaning_data = (self.ip_address, self.user_agent, 
-                        self.content_type.id, self.object_id)
+        meaning_data = (self.event_type.slug, self.ip_address,
+                        self.user_agent, self.content_type.id,
+                        self.object_id)
         key_str_raw = ':' . join(map(smart_str, meaning_data))
         key_str = key_str_raw.encode('utf-8')
-        return '{0}__{1}' . format(self.event_type.slug, 
-            hashlib.md5(key_str).hexdigest())
+        return hashlib.md5(key_str).hexdigest()
 
-    def check_unique_key(self):
-        """
-        Check is the event is unique.
-        """
-        # FIXME: by the Redis (not Cache).
-        is_unique_timeout = getattr(settings, 'IS_UNIQUE_TIMEOUT', 24 * 60 *60)
-        if not cache.get(self.unique_key):
-            cache.set(self.unique_key, True, is_unique_timeout)
-            return True
-        else:
-            return False
-
-    @classmethod
-    def get_geoip_distribute(cls, field_key, event_type_slug, 
-                             instance=None, start_date=None,
-                             finish_date=None):
-        """
-        Get the events distribution for some object by some 
-        parameter.
-        """
-        # FIXME: use the extra instead raw sql
-        
-        try:
-            event_type = RegisteredEventType.objects.get(
-                slug=event_type_slug)
-        except RegisteredEventType.DoesNotExist:
-            return ()
-        else:
-            _extra = []
-            if start_date:
-                start_datetime = datetime.datetime.combine(start_date, 
-                    datetime.datetime.max.time())
-                _extra.append(
-                    "B.created_at <= '%s'" % \
-                        start_datetime.strftime('%Y-%m-%d %H:%I:%S'))
-            if finish_date:
-                finish_datetime = datetime.datetime.combine(finish_date, 
-                    datetime.datetime.max.time())
-                _extra.append(
-                    "B.created_at <= '%s'" % \
-                        finish_datetime.strftime('%Y-%m-%d %H:%I:%S'))
-            extra_condition = 'AND ' + ' AND ' . join(_extra) if _extra else '' 
-            
-            if not instance:
-                sql = """SELECT 
-                    COUNT(*) AS common, 
-                    COUNT(CASE WHEN B.is_unique = true THEN 1 ELSE 0 END) 
-                        AS uniq,
-                    B.geoip_data->>'{0}' AS field,
-                    date(B.created_at) AS b_date
-                    FROM b24online_registeredevent AS B 
-                    WHERE B.geoip_data->>'{0}' <> '' 
-                        AND B.event_type_id = '{1} 
-                        {2}'
-                    GROUP BY field, b_date ORDER BY b_date""" . format(
-                        field_key, 
-                        event_type.pk,
-                        extra_condition)
+    def save(self, *args, **kwargs):
+        # FIXME: replace by Redis
+        cls = type(self)
+        if not self.pk:
+            try:
+                cls.objects\
+                    .filter(event_type=self.event_type,
+                        site=self.site,
+                        content_type=self.content_type,
+                        object_id=self.object_id,
+                        registered_at__startswith=datetime.date.today())[0]
+            except IndexError:
+                self.is_unique = True
             else:
-                try:
-                    content_type = ContentType.objects.get_for_model(instance)
-                except AttributeError:
-                    return ()
-                else:
-                    sql = """SELECT 
-                        COUNT(*) common, 
-                        COUNT(CASE WHEN B.is_unique = true 
-                            THEN 1 ELSE 0 END) AS uniq, 
-                        B.geoip_data->>'{0}' AS field,
-                        date(B.created_at) AS b_date
-                        FROM b24online_registeredevent AS B 
-                        WHERE B.geoip_data->>'{0}' <> '' 
-                            AND B.event_type_id = '{1}'
-                            {2}
-                            AND B.content_type_id = '{3}'
-                            AND B.object_id = '{4}'
-                        GROUP BY field, b_date ORDER BY b_date""" . format(
-                            field_key, event_type.pk, extra_condition, 
-                            content_type.pk, instance.pk)
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            for item in cursor.fetchall():
-                yield item
-
-    @classmethod
-    def get_geoip_data(cls, event_type_slug, 
-                       instance=None, start_date=None,
-                       finish_date=None):
-        """
-        Get the events amounts for some object.
-        """
-        # FIXME: use the extra instead raw sql
-        
-        try:
-            event_type = RegisteredEventType.objects.get(
-                slug=event_type_slug)
-        except RegisteredEventType.DoesNotExist:
-            return ()
-        else:
-            _extra = []
-            if start_date:
-                start_datetime = datetime.datetime.combine(start_date, 
-                    datetime.datetime.max.time())
-                _extra.append(
-                    "B.created_at <= '%s'" % \
-                        start_datetime.strftime('%Y-%m-%d %H:%I:%S'))
-            if finish_date:
-                finish_datetime = datetime.datetime.combine(finish_date, 
-                    datetime.datetime.max.time())
-                _extra.append(
-                    "B.created_at <= '%s'" % \
-                        finish_datetime.strftime('%Y-%m-%d %H:%I:%S'))
-            extra_condition = 'AND ' + ' AND ' . join(_extra) if _extra else '' 
-            
-            if not instance:
-                sql = """SELECT 
-                    COUNT(*) AS common, 
-                    COUNT(CASE WHEN B.is_unique = true THEN 1 ELSE 0 END) 
-                        AS uniq,
-                    date(B.created_at) AS b_date
-                    FROM b24online_registeredevent AS B 
-                    WHERE AND B.event_type_id = '{0} 
-                        {1}'
-                    GROUP BY b_date ORDER BY b_date""" . format(
-                        event_type.pk,
-                        extra_condition)
-            else:
-                try:
-                    content_type = ContentType.objects.get_for_model(instance)
-                except AttributeError:
-                    return ()
-                else:
-                    sql = """SELECT 
-                        COUNT(*) common, 
-                        COUNT(CASE WHEN B.is_unique = true 
-                            THEN 1 ELSE 0 END) AS uniq, 
-                        date(B.created_at) AS b_date
-                        FROM b24online_registeredevent AS B 
-                        WHERE B.event_type_id = '{0}'
-                            {1}
-                            AND B.content_type_id = '{2}'
-                            AND B.object_id = '{3}'
-                        GROUP BY b_date ORDER BY b_date""" . format(
-                            event_type.pk, extra_condition, 
-                            content_type.pk, instance.pk)
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            for item in cursor.fetchall():
-                yield item
+                self.is_unique = False
+            return super(RegisteredEvent, self).save(*args, **kwargs)
 
 
 @receiver(pre_save)
@@ -1705,3 +1609,31 @@ def index_item(sender, instance, created, **kwargs):
 @receiver(user_registered)
 def initial_profile(sender, user, request, **kwargs):
     Profile.objects.create(user=user, country=Country.objects.first())
+
+
+@receiver(post_save, sender=RegisteredEvent)
+def process_event(sender, instance, created, **kwargs):
+    """
+    Process the registered event.
+    """
+    try:
+        stats = RegisteredEventStats.objects\
+            .get(event_type=instance.event_type,
+                 site=instance.site,
+                 content_type=instance.content_type,
+                 object_id=instance.object_id,
+                 registered_at=instance.registered_at.date())
+    except RegisteredEventStats.DoesNotExist:
+        stats = RegisteredEventStats(
+            event_type=instance.event_type,
+            site=instance.site,
+            content_type=instance.content_type,
+            object_id=instance.object_id,
+            registered_at=instance.registered_at.date(),
+            unique_amount=0, total_amount=0)
+
+    if instance.is_unique:
+        stats.unique_amount += 1
+
+    stats.total_amount += 1
+    stats.save()

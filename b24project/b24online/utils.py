@@ -253,25 +253,19 @@ class GeoIPHelper(object):
                 ips = [ip.strip().lower() for ip in value.split(',')]
                 for ip_str in ips:
                     if ip_str and cls.is_valid_ip(ip_str):
-                        ip = ip_str
-                        break
+                        return ip_str
         return ip
     
     @classmethod
     def get_geoip_data(cls, ip):
+        """
+        Fetch the info from GeoIP database by IP address.
+        """
         import GeoIP
 
         geoip_data = {}
         gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
         if gi_db_path:
-            try:
-                gi_country_h = GeoIP.open(
-                    os.path.join(gi_db_path, 'GeoIP.dat'),
-                    GeoIP.GEOIP_STANDARD)
-            except GeoIP.error:
-                pass
-            else:
-                country_data = gi_country_h.country_code_by_addr(ip)
             try:
                 gi_city_h = GeoIP.open(
                     os.path.join(gi_db_path, 'GeoLiteCity.dat'),

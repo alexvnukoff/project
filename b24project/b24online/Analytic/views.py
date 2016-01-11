@@ -94,17 +94,7 @@ class RegisteredEventsList(TemplateView):
         data_grid = []
         start_date = finish_date = datetime.date.today()
         if organization:
-            logger.debug('Step 1')
-            logger.debug(organization)
             if True:
-                logger.debug('Step 2')
                 b2c_products = B2CProduct.get_active_objects()\
                     .filter(company_id=organization)
-                logger.debug(b2c_products)
-                for item in b2c_products:
-                    data = RegisteredEvent.get_geoip_data(
-                        'view', instance=item, 
-                        start_date=start_date,
-                        finish_date=finish_date) 
-                    logger.debug(data)                       
         return context

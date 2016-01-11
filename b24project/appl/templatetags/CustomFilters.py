@@ -331,6 +331,5 @@ def process_event(event, request):
         #event.ip_address = _random_ip()
         event.user_agent = request.META.get('HTTP_USER_AGENT') 
         event.geoip_data = GeoIPHelper.get_geoip_data(event.ip_address) 
-        event.is_unique = event.check_unique_key()
         event.save()
     return ''
