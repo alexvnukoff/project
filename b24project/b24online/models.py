@@ -1499,19 +1499,43 @@ class RegisteredEventStats(_RegisteredEventAbs):
     The registered events stats per day.
     """
     registered_at = models.DateField(auto_now_add=True, db_index=True)
-    ip_address = models.GenericIPAddressField(_('IP address of request'),
-                                              blank=True, null=True)
-    user_agent = models.CharField(_('User Agent info'), max_length=255,
-                                  blank=True, null=True)
-    event_data = HStoreField(_('Event extra data'), blank=True, null=True)
     unique_amount = models.PositiveIntegerField(_('Unique'))
     total_amount = models.PositiveIntegerField(_('Total'))
+    extra_data = HStoreField(_('Event extra data'), blank=True, null=True)
 
     class Meta:
         verbose_name = _('Registered events stats')
         unique_together = ('event_type', 'site', 'content_type',
             'object_id', 'registered_at')
 
+    def store_info(self, registered_event):
+        cls = type(self)
+        _add = {'unique': 1 if registered_event.is_unique else 0,
+                'total': 1}
+        data = registered_event.event_data
+        if not self.extra_data:
+            self.extra_data = {}
+        if data:
+            key_data = []
+            for _key in ('country_code', 'country_name', 'city'):
+                _value = data.get(_key)
+                if not _value or _value == 'None':
+                    _value = 'undef'
+                key_data.append(_value.strip())
+            for _type in ('unique', 'total'):
+                _key = ':' . join(key_data + [_type,])
+                logger.debug(_key)
+                if _key in self.extra_data:
+                    try:
+                        _old = int(self.extra_data)
+                    except TypeError:
+                        _old = 0
+                    _new = _old + _add.get(_type, 0)
+                else:
+                    _new = _add.get(_type, 0)
+                self.extra_data[_key] = str(_new)
+                    
+        self.save()
 
 class RegisteredEvent(_RegisteredEventAbs):
     """
@@ -1613,6 +1637,7 @@ def process_event(sender, instance, created, **kwargs):
     Process the registered event.
     """
     if instance.event_hash:
+        # Try to get or create stats instance
         try:
             stats = RegisteredEventStats.objects\
                 .get(event_type=instance.event_type,
@@ -1629,7 +1654,6 @@ def process_event(sender, instance, created, **kwargs):
                 registered_at=instance.registered_at.date(),
                 unique_amount=0, total_amount=0)
 
-        if instance.is_unique:
-            stats.unique_amount += 1
-        stats.total_amount += 1
+        # Increase the counters and store GeoIP info
+        stats.store_info(instance)
         stats.save()

@@ -304,7 +304,7 @@ def process_stats_data(data, date_range):
             continue
         else:
             content_types = []
-            add_1 = [event_type, content_types]
+            add_1 = [event_type_id, event_type, content_types]
             data_grid.append(add_1)
             for content_type_id, data_2 in data_1.items():
                 try:
@@ -316,7 +316,7 @@ def process_stats_data(data, date_range):
                     model_class = content_type.model_class()
                     model_name = model_class._meta.verbose_name \
                         or model_class.__name__
-                    add_2 = [model_name, items]
+                    add_2 = [content_type_id, model_name, items]
                     content_types.append(add_2)
                     for item_id, data_3 in data_2.items():
                         try:
@@ -325,7 +325,7 @@ def process_stats_data(data, date_range):
                             continue
                         else:
                             idates = []
-                            add_3 = [str(item), idates]
+                            add_3 = [item_id, str(item), idates]
                             items.append(add_3)
                             for xdate, _ in date_range:
                                 idates.append({'date': xdate, 

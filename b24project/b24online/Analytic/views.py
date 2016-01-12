@@ -81,8 +81,8 @@ def get_analytic(request):
     return HttpResponse(json.dumps(result))
 
 
-class RegisteredEventsList(TemplateView):
-    template_name = 'b24online/Analytic/registered_events_list.html'
+class RegisteredEventStats(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = RegisteredEventStatsForm
     
     def get(self, request, *args, **kwargs):
@@ -147,3 +147,8 @@ class RegisteredEventsList(TemplateView):
             'organization': organization,
         })
         return context
+
+
+class RegisteredEventStatsDetail(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats_detail.html'
+    

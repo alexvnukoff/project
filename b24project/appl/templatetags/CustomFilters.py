@@ -315,7 +315,6 @@ def process_event(event, request):
     """
     Process (define and store attributes values) the Event.
     """
-    logger.debug(event)
     def _random_ip():
         # For debugging
         import random
