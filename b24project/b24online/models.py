@@ -1509,6 +1509,9 @@ class RegisteredEventStats(_RegisteredEventAbs):
             'object_id', 'registered_at')
 
     def store_info(self, registered_event):
+        """
+        Increment the counters and store the GeoIP info.
+        """
         cls = type(self)
         _add = {'unique': 1 if registered_event.is_unique else 0,
                 'total': 1}
@@ -1534,8 +1537,24 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 else:
                     _new = _add.get(_type, 0)
                 self.extra_data[_key] = str(_new)
-                    
         self.save()
+        
+    def get_extra_info(self):
+        """
+        Return GeoIP info.
+        """
+        extra_info = []
+        if not self.extra_data:
+            extra_info.append([_('Undefined'),
+                [(_('Undefined'), self.unique_amount or 0, 
+                 self.total_amount or 0), ]])
+        else:
+            for item_key, item_value in self.extra_data.items():
+                logger.debug('%s = %s', item_key, item_value)
+                
+        return extra_info
+    
+    
 
 class RegisteredEvent(_RegisteredEventAbs):
     """

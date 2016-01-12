@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from collections import OrderedDict
+from collections import OrderedDict, Iterable
 from copy import copy
 from decimal import Decimal
 import os
@@ -308,6 +308,12 @@ def register_event(instance, event_type_slug):
             content_type=content_type,
             object_id=instance.pk)
     return None
+
+
+@register.assignment_tag()
+def get_length(some_list):
+    return length(some_list) \
+        if isinstance(some_list, collections.Iterable) else 0
 
 
 @register.filter
