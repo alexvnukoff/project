@@ -5,15 +5,17 @@
 {% block content %}
 <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
 <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>
-<script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
-<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/templates-v1-bootstrap.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/fancybox/jquery.fancybox.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/templ-custom.css' %}"/>
+
 
 <script type="text/javascript">
-    $(document).ready(function(e) {
-       $(".showtype").click(function(){
-        $(".external-type, #fade-profile").show();
+    $(document).ready(function (e) {
+        $(".showtype").click(function () {
+            $(".external-type, #fade-profile").show();
         });
-        $(".close-regform").click(function(){
+        $(".close-regform").click(function () {
             $(".external-type, #fade-profile").hide();
         });
         $('.listtype').slimScroll({
@@ -23,43 +25,43 @@
 
         });
 
-        $(".selectTemplate").click(function(event) {
-
+        $(".selectTemplate").click(function (event) {
 
             var folder = $(this).data('folder');
             var id = $(this).data('id');
-            var src_1 = "{% static "usersites/templates" %}" + "/" + folder + "/1.jpg";
-            var src_2 = "{% static "usersites/templates" %}" + "/" + folder + "/2.jpg";
+            var src_1 = "{% static 'usersites/templates' %}" + "/" + folder + "/1.jpg";
+            var src_2 = "{% static 'usersites/templates' %}" + "/" + folder + "/2.jpg";
 
 
-            $('.template1').attr('src',src_1);
-            $('.template2').attr('src',src_2);
+            $('.template1').attr('src', src_1);
+            $('.template2').attr('src', src_2);
             $('#input-template').val(id);
 
             $(".external-type, #fade-profile").hide();
-      });
-
-      $('#user_site_form').submit(function() {
-        $('input[name$="block"]').each(function(index, element) {
-            var li = $(this).closest('li');
-            if (li.find('input[name$="advertisement_ptr"]').val() == '' && li.find('input[name$="image"]').val() == '') {
-                $(this).val('');
-            }
         });
-      });
+
+        $('#user_site_form').submit(function () {
+            $('input[name$="block"]').each(function (index, element) {
+                var li = $(this).closest('li');
+                if (li.find('input[name$="advertisement_ptr"]').val() == '' && li.find('input[name$="image"]').val() == '') {
+                    $(this).val('');
+                }
+            });
+        });
     });
 </script>
 
 <script>
-    $(function() {
+    $(function () {
 
-    $('.themesb2b').bxSlider();
-});
+        $('.themesb2b').bxSlider();
+    });
 </script>
 <style>
     .error-handler {
         float: none;
     }
+
     .b-img.banner {
         width: 150px;
         height: 150px;
@@ -76,162 +78,320 @@
     }
 
     .b-img {
-       float: none;
+        float: none;
     }
 </style>
 
 <div id="wrapper">
 
-        <h1>{% trans "My own site" %}</h1>
-        <p>{% blocktrans %}Dear colleagues, we are pleased to inform you that for the convenience of providing your interests,
-                we have developed an easy website builder that will help you create your own  external website in
-                just a couple of minutes.{% endblocktrans %}
-            {% trans "support" %}:
-            <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.
-        </p>
+    <h1>{% trans "My own site" %}</h1>
 
-<h3>{% trans "Your site" %}</h3>
+    <p>{% blocktrans %}Dear colleagues, we are pleased to inform you that for the convenience of providing your
+        interests,
+        we have developed an easy website builder that will help you create your own external website in
+        just a couple of minutes.{% endblocktrans %}
+        {% trans "support" %}:
+        <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.
+    </p>
+
+    <h3>{% trans "Your site" %}</h3>
 
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
         {% csrf_token %}
 
-        <div class="form-group">
-        <label>{% trans "Site sub-domain" %}</label>
-        <input type="text" name="sub_domain" placeholder="mysite" class="text" style="width:30%;" value="{{ form.sub_domain.value|default_if_none:"" }}"/>.{{ domain }}
-        {% if form.errors.sub_domain %}<small class="error">{{ form.errors.sub_domain.0 }}</small>{% endif %}
-        </div>
 
-        <div class="form-group">
-        <label>{% trans "OR your own domain" %}</label>
-        <input type="text" name="domain" placeholder="example.com" class="text" style="width:30%;" value="{{ form.domain.value|default_if_none:"" }}"/>
-        {% if form.errors.domain %}<small class="error">{{ form.errors.domain.0 }}</small>{% endif %}
-         </div>
+        <div class="template_list clearfix__templates">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs " role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                        Templates</a>
+                </li>
+                <li role="presentation">
+                    <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">
+                        Site settings</a>
+                </li>
 
-        <div class="form-group">
-        <label>{% trans "Slogan" %}</label>
-        <input type="text" name="slogan" placeholder="{% trans 'Maximum 50 characters' %}" maxlength="50" class="text" style="width:60%;" value="{{ form.slogan.value|default_if_none:"" }}">
-        {% if form.errors.slogan %}<small class="error">{{ form.errors.slogan.0 }}</small>{% endif %}
-         </div>
-
-        <div class="form-group">
-        <label>{% trans "Organization logo" %} <span>({% trans "Max Dimensions" %} 220x120px)</span></label>
-        <input type="file" name="logo">
-        {% if form.errors.logo %}<small class="error">{{ form.errors.logo.0 }}</small>{% endif %}
-            <div class="viewimg">
-            {% if form.initial.logo %}
-                <img src="{{ form.initial.logo.big }}">
-            {% endif %}
-            </div>
-        </div>
-
-        <div class="form-group">
-        <label>{% trans "Site category" %}</label>
-        <input id="input-template" type="hidden" name="template" value="{{ form.template.value|default_if_none:"" }}">
-        <div class="template">
-            {% if template  %}
-                <div class="ex-img"><img class="template1" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/1.jpg"></div>
-                <div class="ex-img"><img class="template2" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/2.jpg"></div>
-            {% else %}
-                <div class="ex-img"><img class="template1" src="{% static "b24online/img/ex-img.jpg" %}"></div>
-                <div class="ex-img"><img class="template2" src="{% static "b24online/img/ex-img.jpg" %}"></div>
-            {% endif %}
-            </div>
-            <div class="clear"></div>
-        <center><button onclick='return false;' class="btn-link showtype">{% trans "Select" %}</a></center>
-        {% if form.errors.template %}<small class="error">{{ form.errors.template.0 }}</small>{% endif %}
-         </div>
-
-        <div class="form-group">
-        <label>{% trans "Or use custom images" %} ({% trans "Dimensions" %} 700Х183)</label>
-
-            <ul class="custom_images">
-                {{ gallery_images_form.management_form }}
-                {{ gallery_images_form.non_form_errors }}
-                {% for gallery_form in gallery_images_form %}
-                    {{ gallery_form.id }}
-                    {% if gallery_form.initial.image %}
-                    <li><img src='{{ gallery_form.initial.image.big }}'></li>
-                    {% if gallery_form.DELETE %}
-                        <div class="remove_image">{% trans 'Remove' %}{{ gallery_form.DELETE }}</div>
-                    {% endif %}
-
-                    {% endif %}
-                    <li>
-                        {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
-                        <div class="fileinputs">
-                            <input type="file" name="{{ gallery_form.image.html_name }}">
-                        </div>
-                    </li>
-                    <div class="clear"></div>
-                {% endfor %}
             </ul>
-        </div>
 
-    <hr>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="template_list__block">
+                        <div
+                        class="template_list__block--empty {%if object.user_template == None%} template_list__block--active {%endif%}">
+                        </div>
+                        <div class="template_list__inner_block">
+                            <div class="template_list__img">
+                                <img class="center-block__templates template_list__img--empty
+                                    {%if object.user_template == None%} template_list__img--active {%endif%} "
+                                     src="{% static 'usersites/images/default_template_small.png' %}"
+                                     alt="Template">
+                            </div>
+                            <div class="teplate_list__name text-center__templates teplate_list__name--dotdotdot">
+                                Default
+                            </div>
+                            <div class="template_list__btns text-center__templates">
+                                <div class="clearfix__templates">
+                                    <div class="template_list__btn_preview__link">
+                                        <a class="fancybox-effects-a"
+                                           href="{% static 'usersites/images/default_template_big.png' %}"
+                                           title="Default theme">
+                                            <button type="button" class="template_list__btn_preview template_list__margin_right">
+                                                View
+                                            </button>
+                                        </a>
+                                    </div>
+                                    <div class="template_list__btn_pick__link">
+                                        <button type="button" class="template_list__btn_pick"
+                                                data-template-id="">
+                                            Choose
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for user_site_template in user_site_templates %}
+                    <div class="template_list__block">
+                        <div 
+                        class="template_list__block--empty {%if object.user_template == user_site_template%} template_list__block--active {%endif%}">
+                        </div>
+                        <div class="template_list__inner_block">
+                            <div class="template_list__img">
+                                <img class="center-block__templates template_list__img--empty
+                                    {%if object.user_template == user_site_template%} template_list__img--active {%endif%} "
+                                     src="{{ user_site_template.thumbnail.big }}"
+                                     alt="Template">
+                            </div>
+                            <div class="teplate_list__name text-center__templates teplate_list__name--dotdotdot">
+                                {{user_site_template.name}}
+                            </div>
+                            <div class="template_list__btns text-center__templates">
+                                <div class="clearfix__templates">
+                                    <div class="template_list__btn_preview__link">
+                                        <a class="fancybox-effects-a"
+                                           href="{{ user_site_template.thumbnail.big }}"
+                                           title="{{user_site_template.name}}">
+                                            <button type="button" class="template_list__btn_preview template_list__margin_right">
+                                                View
+                                            </button>
+                                        </a>
+                                    </div>
+                                    <div class="template_list__btn_pick__link">
+                                        <button type="button" class="template_list__btn_pick"
+                                                data-template-id="{{user_site_template.id}}">
+                                            Choose
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
 
-        <div class="form-group banners">
-        <label>{% trans "Banners" %}:</label>
+                </div>
 
-                {{ banners_form.management_form }}
-                {{ banners_form.non_form_errors }}
-                <ul class="custom_images">
-                {% for banner_form in banners_form %}
-                    {{ banner_form.id }}
-                    {% with valid_blocks|pop_val:banner_form.block.value as block %}
-                        <li>
-                            <div class="label">{{ block.name }}{% if "RIGHT" in block.name %} ({% trans 'Dimensions' %} 205x102){% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125){% elif "FOOTER" in block.name %} ({% trans 'Dimensions' %} 540x70){% endif %}</div>
-                            <div class="right">
-                                {% if banner_form.initial.image %}
+                <div role="tabpanel" class="tab-pane " id="profile">
+                    <div class="form-group">
+                        <label>{% trans "Site sub-domain" %}</label>
+                        <input type="text" name="sub_domain" placeholder="mysite" class="text" style="width:30%;"
+                               value="{{ form.sub_domain.value|default_if_none:'' }}"/>.{{ domain }}
+                        {% if form.errors.sub_domain %}
+                        <small class="error">{{ form.errors.sub_domain.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>{% trans "OR your own domain" %}</label>
+                        <input type="text" name="domain" placeholder="example.com" class="text" style="width:30%;"
+                               value="{{ form.domain.value|default_if_none:'' }}"/>
+                        {% if form.errors.domain %}
+                        <small class="error">{{ form.errors.domain.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>{% trans "Slogan" %}</label>
+                        <input type="text" name="slogan" placeholder="{% trans 'Maximum 50 characters' %}"
+                               maxlength="50"
+                               class="text" style="width:60%;" value="{{ form.slogan.value|default_if_none:'' }}">
+                        {% if form.errors.slogan %}
+                        <small class="error">{{ form.errors.slogan.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>{% trans "Organization logo" %}
+                            <span>({% trans "Max Dimensions" %} 220x120px)</span></label>
+                        <input type="file" name="logo">
+                        {% if form.errors.logo %}
+                        <small class="error">{{ form.errors.logo.0 }}</small>
+                        {% endif %}
+                        <div class="viewimg">
+                            {% if form.initial.logo %}
+                            <img src="{{ form.initial.logo.big }}"/>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{% trans "Site category" %}</label>
+                        <input id="input-template" type="hidden" name="template"
+                               value="{{ form.template.value|default_if_none:'' }}">
+
+                        <div class="template">
+                            {% if template %}
+                            <div class="ex-img"><img class="template1"
+                                                     src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/1.jpg">
+                            </div>
+                            <div class="ex-img"><img class="template2"
+                                                     src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/2.jpg">
+                            </div>
+                            {% else %}
+                            <div class="ex-img"><img class="template1" src="{% static 'b24online/img/ex-img.jpg' %}">
+                            </div>
+                            <div class="ex-img"><img class="template2" src="{% static 'b24online/img/ex-img.jpg' %}">
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="clear"></div>
+                        <center>
+                            <button onclick='return false;' class="btn-link showtype">{% trans "Select" %}</button>
+                        </center>
+                        {% if form.errors.template %}
+                        <small class="error">{{ form.errors.template.0 }}</small>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>{% trans "Or use custom images" %} ({% trans "Dimensions" %} 700Х183)</label>
+
+                        <ul class="custom_images">
+                            {{ gallery_images_form.management_form }}
+                            {{ gallery_images_form.non_form_errors }}
+                            {% for gallery_form in gallery_images_form %}
+                            {{ gallery_form.id }}
+                            {% if gallery_form.initial.image %}
+                            <li><img src='{{ gallery_form.initial.image.big }}'></li>
+                            {% if gallery_form.DELETE %}
+                            <div class="remove_image">{% trans 'Remove' %}{{ gallery_form.DELETE }}</div>
+                            {% endif %}
+
+                            {% endif %}
+                            <li>
+                                {% if gallery_form.errors.image %}
+                                <small class="error">{{ gallery_form.errors.image.0 }}</small>
+                                {% endif %}
+                                <div class="fileinputs">
+                                    <input type="file" name="{{ gallery_form.image.html_name }}">
+                                </div>
+                            </li>
+                            <div class="clear"></div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group banners">
+                        <label>{% trans "Banners" %}:</label>
+
+                        {{ banners_form.management_form }}
+                        {{ banners_form.non_form_errors }}
+                        <ul class="custom_images">
+                            {% for banner_form in banners_form %}
+                            {{ banner_form.id }}
+                            {% with valid_blocks|pop_val:banner_form.block.value as block %}
+                            <li>
+                                <div class="label">{{ block.name }}{% if "RIGHT" in block.name %} ({% trans 'Dimensions'
+                                    %}
+                                    205x102){% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125){% elif
+                                    "FOOTER" in
+                                    block.name %} ({% trans 'Dimensions' %} 540x70){% endif %}
+                                </div>
+                                <div class="right">
+                                    {% if banner_form.initial.image %}
                                     <div class="b-img banner">
                                         <img src='{{ banner_form.initial.image.big }}'>
                                     </div>
                                     <div>{% trans 'Remove' %}{{ banner_form.DELETE }}</div>
-                                {% endif %}
-                                {% if banner_form.errors.image %}<small class="error">{{ banner_form.errors.image.0 }}</small>{% endif %}
-                                <div class="fileinputs">
-                                    <input type="file" name="{{ banner_form.image.html_name }}">
-                                    <input value="{{ block.pk }}" type="hidden" name="{{ banner_form.block.html_name }}">
-                                    <input value="{{ banner_form.advertisement_ptr.value|default_if_none:"" }}" type="hidden" name="{{ banner_form.advertisement_ptr.html_name }}">
+                                    {% endif %}
+                                    {% if banner_form.errors.image %}
+                                    <small class="error">{{ banner_form.errors.image.0 }}</small>
+                                    {% endif %}
+                                    <div class="fileinputs">
+                                        <input type="file" name="{{ banner_form.image.html_name }}">
+                                        <input value="{{ block.pk }}" type="hidden"
+                                               name="{{ banner_form.block.html_name }}">
+                                        <input value="{{ banner_form.advertisement_ptr.value|default_if_none:'' }}"
+                                               type="hidden"
+                                               name="{{ banner_form.advertisement_ptr.html_name }}">
+                                    </div>
+                                    <div>
+                                        {% if banner_form.errors.link %}
+                                        <small class="error">{{ banner_form.errors.link.0 }}</small>
+                                        {% endif %}
+                                        {% trans 'Link URL' %}: <input
+                                            value="{{ banner_form.link.value|default_if_none:'' }}"
+                                            type="text" name="{{ banner_form.link.html_name }}">
+                                    </div>
                                 </div>
-                                <div>
-                                    {% if banner_form.errors.link %}<small class="error">{{ banner_form.errors.link.0 }}</small>{% endif %}
-                                    {% trans 'Link URL' %}: <input value="{{ banner_form.link.value|default_if_none:"" }}" type="text" name="{{ banner_form.link.html_name }}">
-                                </div>
-                            </div>
-                        </li>
-                    {% endwith %}
-                {% endfor %}
-            </ul>
+                            </li>
+                            {% endwith %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <input id="input_user_template" type="hidden" name="user_template"
+                               value="{{ form.user_template.id|default_if_none:'' }}">
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label>{% trans "Footer description" %}: ({% trans "maximum 200 characters" %})</label>
+                        <textarea name="footer_text"
+                                  maxlength="200">{{ form.footer_text.value|default_if_none:"" }}</textarea>
+                        {% if form.errors.footer_text %}
+                        <small class="error">{{ form.errors.footer_text.0 }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
-        <hr>
-
-        <div class="form-group">
-            <label>{% trans "Footer description" %}: ({% trans "maximum 200 characters" %})</label>
-            <textarea name="footer_text" maxlength="200">{{ form.footer_text.value|default_if_none:"" }}</textarea>
-            {% if form.errors.footer_text %}<small class="error">{{ form.errors.footer_text.0 }}</small>{% endif %}
-        </div>
-
-        <div class="form-group">
-            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
-        </div>
 
     </form>
 </div>
 
 <div class="external-type">
     <i class="close-regform imgnews"></i>
+
     <div class="title">{% trans "Select a category" %}</div>
     <div class="listtype">
         {% for template in form.template.field.choices.queryset.all %}
-             {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
-                  <ul>
-             {% endif %}
-                  <li><a class="selectTemplate" data-id="{{ template.pk }}" data-folder="{{ template.theme_folder }}" href="#">{{ template.name }}</a></li>
-            {% if forloop.counter|divisibleby:"16" or forloop.last %}
-                  </ul>
+        {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
+        <ul>
             {% endif %}
+            <li><a class="selectTemplate" data-id="{{ template.pk }}" data-folder="{{ template.theme_folder }}"
+                   href="#">{{ template.name }}</a></li>
+            {% if forloop.counter|divisibleby:"16" or forloop.last %}
+        </ul>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
+
+<script type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
+<script type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'usersites/css/fancybox/jquery.fancybox.js' %}"></script>
+<script type="text/javascript" src="{% static 'usersites/js/templates-v1-bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'usersites/js/jquery.dotdotdot.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'usersites/js/templ-custom.js' %}"></script>
 {% endblock %}
