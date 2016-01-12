@@ -1559,12 +1559,9 @@ class RegisteredEvent(_RegisteredEventAbs):
         # FIXME: replace by Redis
         cls = type(self)
         try:
-            cls.objects.filter(
-                event_type=self.event_type,
-                site=self.site,
-                content_type=self.content_type,
-                object_id=self.object_id,
-                event_hash=self.unique_key,
+            cls.objects.filter(event_type=self.event_type,
+                site=self.site, content_type=self.content_type,
+                object_id=self.object_id, event_hash=self.unique_key,
                 registered_at__startswith=datetime.date.today())[0]
         except IndexError:
             return True

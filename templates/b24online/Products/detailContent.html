@@ -59,6 +59,8 @@
 
     </div>
     <div class="goods-details-center">
+        {# Register the 'view' event for b2c product #}
+        {{ item|register_event:"click"|process_event:request }}
         <ul>
             <li>
                 <label>{% trans "Price" %}:</label>

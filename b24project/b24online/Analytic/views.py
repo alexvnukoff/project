@@ -5,9 +5,10 @@ import logging
 import datetime
 
 from django.core.cache import cache
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
@@ -16,8 +17,10 @@ from django.views.generic import TemplateView
 
 from appl import func
 from b24online.models import (Organization, Company, Tender, 
-    RegisteredEvent, B2BProduct)
+    RegisteredEvent, RegisteredEventStats, B2BProduct)
 from centerpokupok.models import B2CProduct
+from b24online.Analytic.forms import RegisteredEventStatsForm
+from b24online.utils import process_stats_data
 
 logger = logging.getLogger(__name__)
 
@@ -80,8 +83,12 @@ def get_analytic(request):
 
 class RegisteredEventsList(TemplateView):
     template_name = 'b24online/Analytic/registered_events_list.html'
-
+    form_class = RegisteredEventStatsForm
+    
     def get(self, request, *args, **kwargs):
+        """
+        Add the request for processing.
+        """
         context = self.get_context_data(request, **kwargs)
         return self.render_to_response(context)
                     
@@ -91,10 +98,52 @@ class RegisteredEventsList(TemplateView):
 
         # Current organization and products
         organization = request.session.get('current_company', None)
+        qs = RegisteredEventStats.objects.all()
+        if 'filter' in request.GET:
+            form = self.form_class(data=request.GET)
+            if form.is_valid():
+                qs = form.filter(qs)
+        else:
+            form = self.form_class()
+
+        date_range = list(form.date_range())
         data_grid = []
-        start_date = finish_date = datetime.date.today()
         if organization:
-            if True:
-                b2c_products = B2CProduct.get_active_objects()\
-                    .filter(company_id=organization)
+            b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
+            b2c_products = B2CProduct.get_active_objects()\
+                .filter(company_id=organization)
+            b2c_ids = [item.id for item in b2c_products]
+            
+            b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
+            b2b_products = B2BProduct.get_active_objects()\
+                .filter(company_id=organization)
+            b2b_ids = [item.id for item in b2b_products]
+
+            qs = qs.filter(
+                (Q(content_type_id=b2c_content_type) \
+                    & Q(object_id__in=b2c_ids)) | \
+                (Q(content_type_id=b2b_content_type) \
+                    & Q(object_id__in=b2b_ids)))\
+                .values('event_type_id', 'content_type_id', 'object_id', 
+                    'registered_at')\
+                .annotate(unique=Sum('unique_amount'), 
+                    total=Sum('total_amount'))\
+                .order_by('event_type_id', 'content_type_id', 
+                    'object_id', 'registered_at') 
+            data = {}
+            for _d in qs:
+                data.setdefault(_d['event_type_id'], {})\
+                    .setdefault(_d['content_type_id'], {})\
+                    .setdefault(_d['object_id'], {})\
+                    .setdefault(_d['registered_at'], {})\
+                    .update({'unique': _d['unique'], 'total': _d['total']})
+
+            data_grid = process_stats_data(data, date_range)
+
+        context.update({
+            'form': form,
+            'date_range': date_range,
+            'data_grid': data_grid,
+            'organization': organization,
+        })
         return context

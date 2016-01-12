@@ -286,3 +286,51 @@ class GeoIPHelper(object):
                         if country_code:
                             geoip_data['country_code'] = country_code
         return geoip_data
+
+
+def process_stats_data(data, date_range):
+    """
+    Process comlex data from query about stats.
+    """
+
+    from django.contrib.contenttypes.models import ContentType
+    from b24online.models import RegisteredEventType
+    
+    data_grid = []
+    for event_type_id, data_1 in data.items():
+        try:
+            event_type = RegisteredEventType.objects.get(id=event_type_id)
+        except RegisteredEventType.DoesNotExist:
+            continue
+        else:
+            content_types = []
+            add_1 = [event_type, content_types]
+            data_grid.append(add_1)
+            for content_type_id, data_2 in data_1.items():
+                try:
+                    content_type = ContentType.objects.get(pk=content_type_id)
+                except ContentType.DoesNotExist:
+                    continue
+                else:
+                    items = []
+                    model_class = content_type.model_class()
+                    model_name = model_class._meta.verbose_name \
+                        or model_class.__name__
+                    add_2 = [model_name, items]
+                    content_types.append(add_2)
+                    for item_id, data_3 in data_2.items():
+                        try:
+                            item = model_class.objects.get(pk=item_id)
+                        except model_class.DoesNotExist:
+                            continue
+                        else:
+                            idates = []
+                            add_3 = [str(item), idates]
+                            items.append(add_3)
+                            for xdate, _ in date_range:
+                                idates.append({'date': xdate, 
+                                    'unique': data_3.get(xdate, {})\
+                                        .get('unique', 0),
+                                    'total': data_3.get(xdate, {})\
+                                        .get('total', 0)})
+    return data_grid
