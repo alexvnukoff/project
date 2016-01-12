@@ -1,96 +1,134 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-<div class="prd-new">
-    <div class="title-discount">
-        <span class="left">
-            <label>{% trans "Latest" %}</label>
-            <a href="{% url "products:list" %}">{% trans "More" %}</a>
-        </span>
-    </div>
-    <ul class="listnew">
-    {% for product in newProducrList %}
-        <li>
-            {% if product.coupon_discount_percent %}
-                <div class="discount"><i class="icons i-after"></i> -{{ product.coupon_discount_percent }}%</div>
-            {% elif product.discount_percent %}
-                <div class="discount"><i class="icons i-after"></i> -{{ product.discount_percent }}%</div>
-            {% endif %}
-            <div class="img_gallery">
-                <div class="shadow"></div>
-                <div class="img_block">
-                    <a href="{% url "products:detail" product.pk %}">
-                        <img src="{{ product.image.big }}" alt="{{ product.name }}" />
-                    </a>
-                </div>
-            </div>
-            <p><a href="{% url "products:detail" product.pk %}">{{ product.name }}</a></p>
-            <p>
-                <font class="number"> {{ product.currency|getSymbol }}
-                    {% if product.coupon_discount_percent %}
-                        {{ product.cost|discountPrice:product.coupon_discount_percent }}
-                    {% elif product.discount_percent %}
-                        {{ product.cost|discountPrice:product.discount_percent }}
-                    {% endif %}
-                </font>
-            </p>
-            <p>
-                {% for cat in product.categories.all %}
-                     <a href="{% url "products:category" cat.pk %}" class="viewall">
-                        {{ cat.name|truncatewords:3 }}
-                    </a>
-                {% endfor %}
-            </p>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
-<div class="prd-new">
-    <div class="title-discount">
-        <span class="left">
-            <label>{% trans "Top sales" %}</label>
-              <a href="{% url "products:list" %}">{% trans "More" %}</a>
-        </span>
-    </div>
-    <ul class="listnew">
-    {% for product  in topPoductList %}
-        <li>
-            {% if product.coupon_discount_percent %}
-                <div class="discount"><i class="icons i-after"></i> -{{ product.coupon_discount_percent }}%</div>
-            {% elif product.discount_percent %}
-                <div class="discount"><i class="icons i-after"></i> -{{ product.discount_percent }}%</div>
-            {% endif %}
-          <div class="img_gallery">
-            <div class="shadow"></div>
-                <div class="img_block">
-                  <a href="{% url "products:detail" product.pk %}">
-                      <img src="{{ product.image.big }}" alt="{{ product.name }}" />
-                  </a>
-                </div>
-          </div>
 
-            <p><a href="{% url "products:detail" product.pk %}">{{ product.name }}</a></p>
-            <p>
-                <font class="number"> {{ product.currency|getSymbol }}
-                    {% if product.coupon_discount_percent %}
-                        {{ product.cost|discountPrice:product.coupon_discount_percent }}
-                    {% elif product.discount_percent %}
-                        {{ product.cost|discountPrice:product.discount_percent }}
-                    {% else %}
-                        {{ product.cost|formatPrice }}
-                    {% endif %}
-                </font>
-            </p>
-            <p>
-               {% if product.categories.all %}
-                    {% for cat in categories %}
-                         <a href="{% url "products:category" cat.pk %}" class="viewall">
-                            {{ cat.name|truncatewords:3 }}
-                        </a>
+    <!-- Main page products        -->
+        <!--***************************-->
+        <div class="var-main">
+            <div class="prd-new">
+                <div class="title-discount">
+                    <span class="left">
+                        <label>Новинки</label>
+                        <a href="#">еще</a>
+                    </span>
+                </div>
+                <ul class="listnew">
+
+                    {% for product in newProducrList %}
+                    <li>
+                        {% if product.coupon_discount_percent %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.coupon_discount_percent }}%</div>
+                        {% elif product.discount_percent %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.discount_percent }}%</div>
+                        {% endif %}
+                        <div class="img_gallery">
+                            <div class="shadow"></div>
+                            <div class="img_block">
+                                <a href="{% url "products:detail" product.pk %}">
+                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" />
+                                </a>
+                            </div>
+                        </div>
+                        <p><a href="{% url "products:detail" product.pk %}">{{ product.name }}</a></p>
+                        <p>
+                            <font class="number"> {{ product.currency|getSymbol }}
+                                {% if product.coupon_discount_percent %}
+                                    {{ product.cost|discountPrice:product.coupon_discount_percent }}
+                                {% elif product.discount_percent %}
+                                    {{ product.cost|discountPrice:product.discount_percent }}
+                                {% endif %}
+                            </font>
+                        </p>
+                        <p>
+                            {% for cat in product.categories.all %}
+                                 <a href="{% url "products:category" cat.pk %}" class="viewall">
+                                    {{ cat.name|truncatewords:3 }}
+                                </a>
+                            {% endfor %}
+                        </p>
+                    </li>
                     {% endfor %}
-                {% endif %}
-            </p>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
+
+                </ul>
+            </div>
+            <div class="prd-new">
+                <div class="title-discount">
+                    <span class="left">
+                        <label>Хиты продаж</label>
+                        <a href="#">еще</a>
+                    </span>
+                </div>
+                <ul class="listnew">
+
+                     {% for product in topPoductList %}
+                    <li>
+                        {% if product.coupon_discount_percent %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.coupon_discount_percent }}%</div>
+                        {% elif product.discount_percent %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.discount_percent }}%</div>
+                        {% endif %}
+                      <div class="img_gallery">
+                        <div class="shadow"></div>
+                            <div class="img_block">
+                              <a href="{% url "products:detail" product.pk %}">
+                                  <img src="{{ product.image.big }}" alt="{{ product.name }}" />
+                              </a>
+                            </div>
+                      </div>
+
+                        <p><a href="{% url "products:detail" product.pk %}">{{ product.name }}</a></p>
+                        <p>
+                            <font class="number"> {{ product.currency|getSymbol }}
+                                {% if product.coupon_discount_percent %}
+                                    {{ product.cost|discountPrice:product.coupon_discount_percent }}
+                                {% elif product.discount_percent %}
+                                    {{ product.cost|discountPrice:product.discount_percent }}
+                                {% else %}
+                                    {{ product.cost|formatPrice }}
+                                {% endif %}
+                            </font>
+                        </p>
+                        <p>
+                           {% if product.categories.all %}
+                                {% for cat in categories %}
+                                     <a href="{% url "products:category" cat.pk %}" class="viewall">
+                                        {{ cat.name|truncatewords:3 }}
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                    </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+            <div class="items-coupon">
+                <h2>Спеццена</h2>
+                <ul>
+                    <li>
+                        <div class="discount"><i class="icons i-after"></i> 30%</div>
+                        <img alt="" src="images/products/pr2.jpg">
+                        <div class="coupon-info">
+                            <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                            <p class="price">
+                                <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                Экономия: $ 22.10
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="discount"><i class="icons i-after"></i> 30%</div>
+                        <img alt="" src="images/products/pr3.jpg">
+                        <div class="coupon-info">
+                            <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                            <p class="price">
+                                <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                Экономия: $ 22.10
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
