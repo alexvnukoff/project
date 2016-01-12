@@ -274,7 +274,7 @@ def b2b_social_buttons(context, image, title, text):
 
 @register.inclusion_tag("centerpokupok/main/main_menu.html", takes_context=True)
 def categories_menu(context):
-    return {'categories': B2CProductCategory.objects.filter(level=0).order_by('name')[:5]}
+    return {'categories': B2CProductCategory.objects.filter(level=0).order_by('name')[:8]}
 
 
 @register.inclusion_tag("centerpokupok/Company/header.html", takes_context=True)
