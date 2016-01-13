@@ -672,7 +672,7 @@ def verify_ipn_request(payment_obj):
     except ObjectDoesNotExist:
         return True, "B2C product does not exist. (%s)" % payment_obj.item_number
 
-    if product.company.company_paypal_account != payment_obj.receiver_email:
+    if product.company.company_paypal_account != payment_obj.business:
         return True, "Invalid receiver_email. (%s)" % payment_obj.receiver_email
 
     return False, None
