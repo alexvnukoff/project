@@ -334,8 +334,8 @@ def process_event(event, request):
         event.site = get_current_site(request)
         event.url = request.path
         event.username = request.META.get('REMOTE_USER')
-        # event.ip_address = GeoIPHelper.get_request_ip(request)
-        event.ip_address = _random_ip()
+        event.ip_address = GeoIPHelper.get_request_ip(request)
+        #event.ip_address = _random_ip()
         event.user_agent = request.META.get('HTTP_USER_AGENT') 
         event.event_hash = event.unique_key
         data = GeoIPHelper.get_geoip_data(event.ip_address) 
