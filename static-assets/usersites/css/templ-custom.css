@@ -152,13 +152,15 @@
 
 .template_list__btn_preview__link {
     float: left;
-    margin-left: 40px;
+    margin-left: 35px;
 }
 .template_list__btn_pick__link {
     margin-left: -20px;
 }
 
-
+img {
+    max-width: 100%;
+}
 
 
 

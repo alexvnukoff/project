@@ -2,7 +2,7 @@ from django.utils.translation import ugettext as _
 
 from b24online.models import News
 from usersites.cbv import ItemList, ItemDetail
-from ..mixins import UserTemplateMixin
+from usersites.mixins import UserTemplateMixin
 
 class NewsList(UserTemplateMixin, ItemList):
     model = News
