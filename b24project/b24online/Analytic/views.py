@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import json 
+import re
 import logging
 import datetime
 
@@ -17,7 +18,8 @@ from django.views.generic import TemplateView
 
 from appl import func
 from b24online.models import (Organization, Company, Tender, 
-    RegisteredEvent, RegisteredEventStats, B2BProduct)
+    RegisteredEvent, RegisteredEventStats, RegisteredEventType, 
+    B2BProduct)
 from centerpokupok.models import B2CProduct
 from b24online.Analytic.forms import RegisteredEventStatsForm
 from b24online.utils import process_stats_data
@@ -81,7 +83,7 @@ def get_analytic(request):
     return HttpResponse(json.dumps(result))
 
 
-class RegisteredEventStats(TemplateView):
+class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = RegisteredEventStatsForm
     
@@ -93,7 +95,7 @@ class RegisteredEventStats(TemplateView):
         return self.render_to_response(context)
                     
     def get_context_data(self, request, **kwargs):
-        context = super(RegisteredEventsList, self)\
+        context = super(RegisteredEventStatsView, self)\
             .get_context_data(**kwargs)
 
         # Current organization and products
@@ -149,6 +151,61 @@ class RegisteredEventStats(TemplateView):
         return context
 
 
-class RegisteredEventStatsDetail(TemplateView):
+class RegisteredEventStatsDetailView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats_detail.html'
     
+    def get_context_data(self, **kwargs):
+        date_re = re.compile('^(\d{4})-(\d{1,2})-(\d{1,2})$')
+        context = super(RegisteredEventStatsDetailView, self)\
+            .get_context_data(**kwargs)
+        
+        event_type_id, content_type_id, instance_id, cnt_type = \
+            map(lambda x: self.kwargs.get(x), 
+                ('event_type_id', 'content_type_id', 
+                'instance_id', 'cnt_type'))
+        data_str = self.request.GET.get('date', None)
+        if all((event_type_id, content_type_id, instance_id, 
+           cnt_type, data_str)):
+            _m = date_re.match(data_str)
+            if _m:
+                while True:
+                    try:
+                        xdate = datetime.date(*map(int, _m.groups()))                
+                    except:
+                        break
+
+                    try:
+                        event_type = RegisteredEventType.objects.get(id=event_type_id)
+                    except RegisteredEventType.DoesNotExist:
+                        break
+                        
+                    try:
+                        content_type = ContentType.objects.get(pk=content_type_id)
+                    except ContentType.DoesNotExist:
+                        break
+                    model_class = content_type.model_class()
+                    model_name = model_class._meta.verbose_name \
+                        or model_class.__name__
+                    try:
+                        instance = model_class.objects.get(pk=instance_id)
+                    except model_class.DoesNotExist:
+                        break
+
+                    context.update({'event_type': event_type, 
+                        'instance_type': model_name, 
+                        'instance': instance,
+                        'xdate': xdate})
+                
+                    try:
+                        stats = RegisteredEventStats.objects.filter(
+                            event_type_id=event_type_id, 
+                            content_type_id=content_type_id, 
+                            object_id=instance_id,
+                            registered_at=xdate)[0]
+                    except IndexError:
+                        pass
+                    else:
+                        data_grid = stats.get_extra_info(cnt_type)
+                        context['data_grid'] = data_grid
+                    break
+        return context

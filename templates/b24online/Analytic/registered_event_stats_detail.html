@@ -13,6 +13,29 @@
 {% block content %}
 <div class="analytics">
   <div>
-  </div>    
+    <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
+    <h3>{% trans 'For' %} {{ instance_type }} &laquo;{{ instance }}&raquo;</h3>
+    
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+      <tr class="top">
+        <th>{% trans 'Country' %}</th>
+        <th>{% trans 'City' %}</th>
+        <th>{% trans 'Amount' %}</th>
+      </tr>
+      {% for country_name, data_1 in data_grid %}
+        {% get_length data_1 as rowspan %}    
+
+        {% for city, counter in data_1 %}
+        <tr valign="top">
+          {% if forloop.first %}            
+          <td rowspan="{{ rowspan }}">{{ country_name }}</td>
+          {% endif %}
+          <td>{{ city }}</td>
+          <td>{{ counter }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
 </div>
 {% endblock %}

@@ -14,9 +14,9 @@ urlpatterns = patterns('',
          name='get_analytic'),
      url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
          r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$', 
-         b24online.Analytic.views.RegisteredEventStatsDetail.as_view(),
+         b24online.Analytic.views.RegisteredEventStatsDetailView.as_view(),
          name='event_stats_detail'),
      url(r'^stats/$', 
-         b24online.Analytic.views.RegisteredEventStats.as_view(),
+         b24online.Analytic.views.RegisteredEventStatsView.as_view(),
          name='event_stats'),
 )

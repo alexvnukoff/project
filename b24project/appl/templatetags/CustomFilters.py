@@ -312,8 +312,8 @@ def register_event(instance, event_type_slug):
 
 @register.assignment_tag()
 def get_length(some_list):
-    return length(some_list) \
-        if isinstance(some_list, collections.Iterable) else 0
+    return len(some_list) \
+        if isinstance(some_list, Iterable) else 0
 
 
 @register.filter

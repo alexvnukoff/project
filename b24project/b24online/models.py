@@ -1539,7 +1539,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 self.extra_data[_key] = str(_new)
         self.save()
         
-    def get_extra_info(self):
+    def get_extra_info(self, cnt_type):
         """
         Return GeoIP info.
         """
@@ -1549,11 +1549,29 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 [(_('Undefined'), self.unique_amount or 0, 
                  self.total_amount or 0), ]])
         else:
+            data = {}
             for item_key, item_value in self.extra_data.items():
-                logger.debug('%s = %s', item_key, item_value)
-                
+                item_key_list = item_key.split(':')
+                country_name, city, cnt_type = item_key_list[1:]
+                try:
+                    _value = int(item_value)
+                except TypeError:
+                    continue
+                else:
+                    data.setdefault(country_name, {})\
+                        .setdefault(city, {})[cnt_type] = _value
+            extra_info = []
+            for country_name, data_1 in data.items():
+                cities = []
+                add_1 = [country_name, cities]
+                extra_info.append(add_1)
+                for city, data_2 in data_1.items():
+                    cnt = data_2.get(cnt_type, 0)
+                    if not city or city == 'undef':
+                        city = _('Undefined')
+                    add_2 = [city, cnt]
+                    cities.append(add_2)
         return extra_info
-    
     
 
 class RegisteredEvent(_RegisteredEventAbs):

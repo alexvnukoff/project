@@ -56,19 +56,19 @@
           {% endfor %}
         </tr>
         
-        {% for instance_id, instance, instance_data in data_2%}
+        {% for instance_id, instance, instance_data in data_2 %}
         <tr>
           <td>{{ instance }}</td>
           {% for item in instance_data %}
           <td>
             {% if item.unique %}
-              <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}">{{ item.unique }}</a></td>
+              <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
             {% else %}
               0
             {% endif%}
           <td>
             {% if item.total %}
-              <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}">{{ item.total }}</a>
+              <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
             {% else %}
               0
             {% endif %}
