@@ -1,0 +1,48 @@
+{% extends 'usersites_templates/default_left_banners/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block content %}
+    {{ block.super }}
+
+<section class="content__info">
+    <section class="content__info__structute clearfix">
+
+        {% for department, vacancies in departments.items %}
+        <div class="wrap">
+            <h2>{{ department }}</h2>
+            <article class="workers">
+                <table>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>{% trans 'Employee' %}</td>
+                            <td>{% trans 'Position' %}</td>
+                            <td>{% trans 'Phone number' %}</td>
+                            <td>{% trans 'Send message' %}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vacancy in vacancies %}
+                        <tr>
+                            <td>
+                                {% if profile.user.avatar %}
+                                  <img src="{{ vacancy.user.profile.avatar.th }}" class="avatar" alt="" />
+                                {% else%}
+                                    <img src="{% static 'b24online/img/profile.jpg' %}" class="avatar" alt="" />
+                                {% endif %}
+                            </td>
+                            <td>{{ vacancy.user.profile.full_name }}</td>
+                            <td>{{ vacancy.name }}</td>
+                            <td>{{ vacancy.user.profile.phone }}</td>
+                            <td><a href="" class="call">{% trans 'Send' %}</a></td>
+                        </tr>
+                         {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+        </div>
+        {% endfor %}
+    </section>
+</section>
+{% endblock %}
