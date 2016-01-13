@@ -1543,9 +1543,14 @@ class RegisteredEventStats(_RegisteredEventAbs):
         """
         Return GeoIP info.
         """
+        
         extra_info = []
         if not self.extra_data:
-            extra_info.append([_('Undefined'),
+            if cnt_type == 'unique':
+                cnt = self.unique_amount or 0
+            else:
+                cnt = self.total_amount or 0
+            extra_info.append([_('Undefined'), cnt,
                 [(_('Undefined'), self.unique_amount or 0, 
                  self.total_amount or 0), ]])
         else:
@@ -1563,14 +1568,16 @@ class RegisteredEventStats(_RegisteredEventAbs):
             extra_info = []
             for country_name, data_1 in data.items():
                 cities = []
-                add_1 = [country_name, cities]
-                extra_info.append(add_1)
+                country_amount = 0
                 for city, data_2 in data_1.items():
                     cnt = data_2.get(cnt_type, 0)
+                    country_amount += cnt
                     if not city or city == 'undef':
                         city = _('Undefined')
                     add_2 = [city, cnt]
                     cities.append(add_2)
+                add_1 = [country_name, country_amount, cities]
+                extra_info.append(add_1)
         return extra_info
     
 
