@@ -12,10 +12,8 @@ class RegisteredEventStatsForm(forms.Form):
     Form for registered events stats filter.
     """
     start_date = forms.DateField(label=_('From'),
-        input_formats=['%d/%m/%Y', '%d.%m.%Y'], 
         required=False)
     end_date = forms.DateField(label=_('To'),
-        input_formats=['%d/%m/%Y', '%d.%m.%Y'], 
         required=False)
 
     def __init__(self, *args, **kwargs):
@@ -23,6 +21,8 @@ class RegisteredEventStatsForm(forms.Form):
         Set the initial values.
         """
         super(RegisteredEventStatsForm, self).__init__(*args, **kwargs)
+        self.fields['start_date'].widget.attrs.update({'class': 'date'})
+        self.fields['end_date'].widget.attrs.update({'class': 'date'})
         self.today = datetime.date.today()
         weekday = self.today.weekday()
         self.initial['start_date'] = self.today - datetime.timedelta(days=weekday)
