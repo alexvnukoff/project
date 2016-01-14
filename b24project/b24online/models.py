@@ -1,10 +1,8 @@
-import os
+import datetime
 import hashlib
 import logging
-import datetime
-
-from argparse import ArgumentError
 import os
+from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -18,17 +16,14 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.core.validators import MinLengthValidator
-
-from django.db import models, connection, transaction
+from django.db import models, transaction
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
-from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_str
-
+from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
