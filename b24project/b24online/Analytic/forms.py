@@ -12,8 +12,10 @@ class RegisteredEventStatsForm(forms.Form):
     Form for registered events stats filter.
     """
     start_date = forms.DateField(label=_('From'),
+        input_formats=["%d/%m/%Y"],
         required=False)
     end_date = forms.DateField(label=_('To'),
+        input_formats=["%d/%m/%Y"],
         required=False)
 
     def __init__(self, *args, **kwargs):
