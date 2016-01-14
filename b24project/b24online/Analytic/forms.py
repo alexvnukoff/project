@@ -41,11 +41,13 @@ class RegisteredEventStatsForm(forms.Form):
         """
         Get the dates range of the form.
         """
+        start_date = end_date = None
         if hasattr(self, 'cleaned_data'):
-            start_date = self.cleaned_data['start_date']        
-            end_date = self.cleaned_data['end_date']        
-        else:
+            start_date = self.cleaned_data.get('start_date')
+            end_date = self.cleaned_data.get('end_date')        
+        if not start_date:
             start_date = self.initial['start_date']        
+        if not end_date:
             end_date = self.initial['end_date']        
                         
         day_count = (end_date - start_date).days + 1
