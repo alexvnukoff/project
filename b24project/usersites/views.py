@@ -1,4 +1,5 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from b24online.models import BusinessProposal, B2BProduct, News, Company
@@ -33,5 +34,18 @@ def wall(request):
         'b2c_products': b2c_products,
         'b2b_products': b2b_products
     }
+    template_name = "{template_path}/contentPage.html"
+    site = get_current_site(request)
+    try:
+        user_site = site.user_site
+        user_site.refresh_from_db()
 
-    return render_to_response("usersites/contentPage.html", template_params, context_instance=RequestContext(request))
+        if user_site.user_template is not None:
+            folder_template = user_site.user_template.folder_name
+            template_name = template_name.format(template_path=folder_template)
+        else:
+            template_name = template_name.format(template_path='usersites')
+    except ObjectDoesNotExist:
+        template_name = template_name.format(template_path='usersites')
+
+    return render_to_response(template_name, template_params, context_instance=RequestContext(request))

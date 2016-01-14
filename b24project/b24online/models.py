@@ -1,5 +1,10 @@
 import os
+import hashlib
+import logging
+import datetime
+
 from argparse import ArgumentError
+import os
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -13,13 +18,17 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.db import models
-from django.db import transaction
+from django.core.cache import cache
+from django.core.validators import MinLengthValidator
+
+from django.db import models, connection, transaction
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_str
+
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
@@ -50,6 +59,7 @@ MEASUREMENT_UNITS = [
 image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
+logger = logging.getLogger(__name__)
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -1462,6 +1472,182 @@ class AdvertisementOrder(Order):
         return self.purchaser.has_perm()
 
 
+class RegisteredEventType(models.Model):
+    """
+    The registered events types.
+    """
+    name = models.CharField(_('Name'), max_length=255, blank=False, null=False)
+    slug = models.SlugField(_('Code'), max_length=20)
+
+    class Meta:
+        verbose_name = _('Registered events type')
+        verbose_name_plural = _('Registered events types')
+
+    def __unicode__(self):
+        return self.name
+
+##
+# Models for stats
+##
+class _RegisteredEventAbs(models.Model):
+    """
+    The registered events abstract class.
+    """
+    event_type = models.ForeignKey(RegisteredEventType,
+                                   verbose_name=_('Event  type'))
+    site = models.ForeignKey(Site, verbose_name=_('Site'),
+                             null=True, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField(_('Instance ID'))
+    item = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        abstract = True
+
+
+class RegisteredEventStats(_RegisteredEventAbs):
+    """
+    The registered events stats per day.
+    """
+    registered_at = models.DateField(auto_now_add=True, db_index=True)
+    unique_amount = models.PositiveIntegerField(_('Unique'))
+    total_amount = models.PositiveIntegerField(_('Total'))
+    extra_data = HStoreField(_('Event extra data'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Registered events stats')
+        unique_together = ('event_type', 'site', 'content_type',
+            'object_id', 'registered_at')
+
+    def store_info(self, registered_event):
+        """
+        Increment the counters and store the GeoIP info.
+        """
+        cls = type(self)
+        _add = {'unique': 1 if registered_event.is_unique else 0,
+                'total': 1}
+        data = registered_event.event_data
+        if not self.extra_data:
+            self.extra_data = {}
+        if data:
+            key_data = []
+            for _key in ('country_code', 'country_name', 'city'):
+                _value = data.get(_key)
+                if not _value or _value == 'None':
+                    _value = 'undef'
+                key_data.append(_value.strip())
+            for _type in ('unique', 'total'):
+                _key = ':' . join(key_data + [_type,])
+                logger.debug(_key)
+                if _key in self.extra_data:
+                    try:
+                        _old = int(self.extra_data)
+                    except TypeError:
+                        _old = 0
+                    _new = _old + _add.get(_type, 0)
+                else:
+                    _new = _add.get(_type, 0)
+                self.extra_data[_key] = str(_new)
+        self.save()
+
+    def get_extra_info(self, cnt_type):
+        """
+        Return GeoIP info.
+        """
+
+        extra_info = []
+        if not self.extra_data:
+            if cnt_type == 'unique':
+                cnt = self.unique_amount or 0
+            else:
+                cnt = self.total_amount or 0
+            extra_info.append([_('Undefined'), cnt,
+                [(_('Undefined'), self.unique_amount or 0,
+                 self.total_amount or 0), ]])
+        else:
+            data = {}
+            for item_key, item_value in self.extra_data.items():
+                item_key_list = item_key.split(':')
+                country_name, city, cnt_type = item_key_list[1:]
+                try:
+                    _value = int(item_value)
+                except TypeError:
+                    continue
+                else:
+                    data.setdefault(country_name, {})\
+                        .setdefault(city, {})[cnt_type] = _value
+            extra_info = []
+            for country_name, data_1 in data.items():
+                cities = []
+                country_amount = 0
+                for city, data_2 in data_1.items():
+                    cnt = data_2.get(cnt_type, 0)
+                    country_amount += cnt
+                    if not city or city == 'undef':
+                        city = _('Undefined')
+                    add_2 = [city, cnt]
+                    cities.append(add_2)
+                add_1 = [country_name, country_amount, cities]
+                extra_info.append(add_1)
+        return extra_info
+
+
+class RegisteredEvent(_RegisteredEventAbs):
+    """
+    The registered events.
+
+    Maybe could be replaced by Redis records.
+    """
+
+    registered_at = models.DateTimeField(auto_now_add=True,
+        db_index=True)
+    url = models.TextField(_('Requested URL'), blank=True, null=True)
+    username = models.CharField(_('Username'), max_length=255,
+                                blank=True, null=True)
+    ip_address = models.GenericIPAddressField(_('IP address of request'),
+                                              blank=True, null=True)
+    user_agent = models.CharField(_('User Agent info'), max_length=255,
+                                  blank=True, null=True)
+    event_hash = models.CharField(_('Event hash key'), max_length=32,
+                                  validators=[MinLengthValidator(32)],
+                                  null=False, default='', db_index=True)
+    is_unique = models.BooleanField(_('Is event unique for this day'),
+                                    default=False)
+    event_data = HStoreField(_('Event extra data'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Registered event')
+        verbose_name_plural = _('Registered events')
+        unique_together = ('event_type', 'site', 'content_type',
+            'object_id', 'registered_at', 'ip_address',
+            'user_agent')
+
+    @property
+    def unique_key(self):
+        """
+        Return the unique key based on IP and UA.
+        """
+        meaning_data = (self.event_type.slug, self.ip_address,
+                        self.user_agent, self.content_type.id,
+                        self.object_id)
+        key_str_raw = ':' . join(map(smart_str, meaning_data))
+        key_str = key_str_raw.encode('utf-8')
+        return hashlib.md5(key_str).hexdigest()
+
+    def check_is_unique(self):
+        # FIXME: replace by Redis
+        cls = type(self)
+        try:
+            cls.objects.filter(event_type=self.event_type,
+                site=self.site, content_type=self.content_type,
+                object_id=self.object_id, event_hash=self.unique_key,
+                registered_at__startswith=datetime.date.today())[0]
+        except IndexError:
+            return True
+        else:
+            return False
+
+
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
     fields = [field.name for field in sender._meta.get_fields()]
@@ -1498,3 +1684,31 @@ def index_item(sender, instance, created, **kwargs):
 @receiver(user_registered)
 def initial_profile(sender, user, request, **kwargs):
     Profile.objects.create(user=user, country=Country.objects.first())
+
+
+@receiver(post_save, sender=RegisteredEvent)
+def process_event(sender, instance, created, **kwargs):
+    """
+    Process the registered event.
+    """
+    if instance.event_hash:
+        # Try to get or create stats instance
+        try:
+            stats = RegisteredEventStats.objects\
+                .get(event_type=instance.event_type,
+                     site=instance.site,
+                     content_type=instance.content_type,
+                     object_id=instance.object_id,
+                     registered_at=instance.registered_at.date())
+        except RegisteredEventStats.DoesNotExist:
+            stats = RegisteredEventStats(
+                event_type=instance.event_type,
+                site=instance.site,
+                content_type=instance.content_type,
+                object_id=instance.object_id,
+                registered_at=instance.registered_at.date(),
+                unique_amount=0, total_amount=0)
+
+        # Increase the counters and store GeoIP info
+        stats.store_info(instance)
+        stats.save()

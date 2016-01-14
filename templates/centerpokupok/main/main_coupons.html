@@ -5,10 +5,16 @@
 {% if coupons %}
     <div class="title-discount">
         <span class="left">
-            <label>{% trans "Coupons" %}</label>
-            <a href="{% url "coupons:list" %}">{% trans "More" %}</a>
+            <label>Coupons</label>
+            <a href="{% url 'coupons:list' %}">{% trans "More" %}</a>
+        </span>
+        <span class="right">
+            <a href="#">Новые</a>
+            <a href="#">Популярные</a>
+            <a href="#">По категориям</a>
         </span>
     </div>
+
     <div class="best-cp">
         {% for coupon in coupons %}
             {% if forloop.first %}
@@ -48,6 +54,7 @@
                             </a>
                             <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon_discount_percent }}%</div>
                         </div>
+
                         <div class="discountinfo">
                             <a title="{{ coupon.name }}" href="{% url "products:detail" coupon.pk %}">{{ coupon.name }}</a>
                             <p>

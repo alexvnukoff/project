@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView
 
 from b24online.models import Organization, Company, BannerBlock
 from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, CompanyBannerFormSet, ChamberBannerFormSet
-from usersites.models import UserSite, ExternalSiteTemplate
+from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate
 
 
 @login_required()
@@ -150,8 +150,8 @@ class SiteCreate(CreateView):
         context_data = super().get_context_data(**kwargs)
         context_data['domain'] = settings.USER_SITES_DOMAIN
         context_data['valid_blocks'] = self.get_valid_blocks()
+        context_data['user_site_templates'] = UserSiteTemplate.objects.all()
         template_id = context_data.get('form')['template'].value()
-
         if template_id:
             context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
 
@@ -280,6 +280,7 @@ class SiteUpdate(UpdateView):
         context_data = super().get_context_data(**kwargs)
         context_data['valid_blocks'] = self.get_valid_blocks()
         template_id = context_data.get('form')['template'].value()
+        context_data['user_site_templates'] = UserSiteTemplate.objects.all()
 
         if template_id:
             context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
