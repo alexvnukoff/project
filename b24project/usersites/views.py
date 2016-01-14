@@ -39,6 +39,7 @@ def wall(request):
     try:
         user_site = site.user_site
         user_site.refresh_from_db()
+
         if user_site.user_template is not None:
             folder_template = user_site.user_template.folder_name
             template_name = template_name.format(template_path=folder_template)

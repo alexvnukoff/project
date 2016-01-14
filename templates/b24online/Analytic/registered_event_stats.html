@@ -1,0 +1,154 @@
+{% extends 'b24online/main_page.html' %}
+
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block title %}{% trans 'Statistics' %}{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css"%}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
+  <script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <div class="newsform">
+    <form method="get" action=".">
+        {% csrf_token %}
+        <div>
+          <label>{{ form.start_date.label}}</label>
+          {% if form.errors.start_date %}
+            <div class="error-handler"> <div class="formserror">{{ form.errors.start_date.0 }}</div></div>
+          {% endif %}
+          {{ form.start_date }}
+        </div>
+        <div>
+          <label>{{ form.end_date.label }}</label>
+          {% if form.errors.end_date %}
+            <div class="error-handler"><div class="formserror">{{ form.errors.end_date.0 }}</div></div>
+          {% endif %}
+          {{ form.end_date }}
+        </div>
+        <div class="newform-button">
+          <input type="submit" class="btntype2" name="filter" value="{% trans 'Filter' %}">
+          <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+    </form>
+  </div>
+  <br/>
+  <div>
+    {% for event_type_id, event_type, data_1 in data_grid %}
+    <div style="margin-top: 20px;">
+      <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
+      {% for content_type_id, item_type, data_2 in data_1 %}
+        {% for instance_id, instance, instance_data in data_2 %}
+        <div>
+        <h3>{% trans 'For' %} {{ item_type }} &laquo;{{ instance }}&raquo;</h3>
+        <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+          <tr class="top">
+            {% for xdate in date_range %}
+            <th colspan="2" align="center">{{ xdate.0|date:"d M Y" }}</td>          
+            {% endfor %}
+          </tr>
+          <tr class="top">
+            {% for xdate in date_range %}
+            <th align="center">uniq</td>          
+            <th align="center">total</td>          
+            {% endfor %}
+          </tr>
+          <tr>
+            {% for item in instance_data %}
+            <td align="center">
+              {% if item.unique %}
+                <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+              {% else %}
+                0
+              {% endif%}
+            </td>
+            <td align="center">
+              {% if item.total %}
+                <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
+              {% else %}
+                0
+              {% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+        </table>
+        </div>
+        <br/>
+        <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+          <tr>
+            <td align="center">
+            <canvas id="stats-bar-{{ event_type_id }}-{{ content_type_id }}-{{ instance_id }}" 
+              width="400" height="200"/>
+            </td>
+          </tr>
+        </table>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>    
+</div>
+<script type="application/javascript">
+{% for event_type_id, event_type, data_1 in data_grid %}
+  {% for content_type_id, item_type, data_2 in data_1 %}
+    {% for instance_id, instance, instance_data in data_2 %}
+	var barChartData_{{ event_type_id }}_{{ content_type_id }}_{{ instance_id }} = {
+		labels : [
+    {% for xdate in date_range %}
+      '{{ xdate.0|date:"d M Y" }}',
+    {% endfor %}
+		],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [
+          {% for item in instance_data %}{{ item.unique }},{% endfor %}
+				]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [
+          {% for item in instance_data %}{{ item.total }},{% endfor %}
+				]
+			}
+		]
+  };
+    {% endfor %}  
+  {% endfor %}  
+{% endfor %}  
+
+window.onload = function(){
+{% for event_type_id, event_type, data_1 in data_grid %}
+  {% for content_type_id, item_type, data_2 in data_1 %}
+    {% for instance_id, instance, instance_data in data_2 %}
+
+		var ctx = document.getElementById("stats-bar-{{ event_type_id }}-{{ content_type_id }}-{{ instance_id }}").getContext("2d");
+		window.myBar_{{ event_type_id }}_{{ content_type_id }}_{{ instance_id }} = new Chart(ctx).Bar(barChartData_{{ event_type_id }}_{{ content_type_id }}_{{ instance_id }}, {
+			responsive : true
+		});
+    {% endfor %}  
+  {% endfor %}  
+{% endfor %}  
+	};
+
+</script>
+
+{% endblock %}

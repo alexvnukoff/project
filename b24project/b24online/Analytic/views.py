@@ -1,14 +1,30 @@
+# -*- encoding: utf-8 -*-
+
+import json 
+import re
+import logging
+import datetime
+
 from django.core.cache import cache
-from django.db.models import Q
-from appl import func
+from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
+from django.contrib.sites.shortcuts import get_current_site
+from django.views.generic import TemplateView
 
-import json
-from b24online.models import Organization, Company, Tender
+from appl import func
+from b24online.models import (Organization, Company, Tender, 
+    RegisteredEvent, RegisteredEventStats, RegisteredEventType, 
+    B2BProduct)
+from centerpokupok.models import B2CProduct
+from b24online.Analytic.forms import RegisteredEventStatsForm
+from b24online.utils import process_stats_data
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -65,3 +81,131 @@ def get_analytic(request):
         result = [{'type': row[0], 'count': row[1]} for row in analytic]
 
     return HttpResponse(json.dumps(result))
+
+
+class RegisteredEventStatsView(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats.html'
+    form_class = RegisteredEventStatsForm
+    
+    def get(self, request, *args, **kwargs):
+        """
+        Add the request for processing.
+        """
+        context = self.get_context_data(request, **kwargs)
+        return self.render_to_response(context)
+                    
+    def get_context_data(self, request, **kwargs):
+        context = super(RegisteredEventStatsView, self)\
+            .get_context_data(**kwargs)
+
+        # Current organization and products
+        organization = request.session.get('current_company', None)
+        qs = RegisteredEventStats.objects.all()
+        if 'filter' in request.GET:
+            form = self.form_class(data=request.GET)
+            if form.is_valid():
+                qs = form.filter(qs)
+        else:
+            form = self.form_class()
+
+        date_range = list(form.date_range())
+        data_grid = []
+        if organization:
+            b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
+            b2c_products = B2CProduct.get_active_objects()\
+                .filter(company_id=organization)
+            b2c_ids = [item.id for item in b2c_products]
+            
+            b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
+            b2b_products = B2BProduct.get_active_objects()\
+                .filter(company_id=organization)
+            b2b_ids = [item.id for item in b2b_products]
+
+            qs = qs.filter(
+                (Q(content_type_id=b2c_content_type) \
+                    & Q(object_id__in=b2c_ids)) | \
+                (Q(content_type_id=b2b_content_type) \
+                    & Q(object_id__in=b2b_ids)))\
+                .values('event_type_id', 'content_type_id', 'object_id', 
+                    'registered_at')\
+                .annotate(unique=Sum('unique_amount'), 
+                    total=Sum('total_amount'))\
+                .order_by('event_type_id', 'content_type_id', 
+                    'object_id', 'registered_at') 
+            data = {}
+            for _d in qs:
+                data.setdefault(_d['event_type_id'], {})\
+                    .setdefault(_d['content_type_id'], {})\
+                    .setdefault(_d['object_id'], {})\
+                    .setdefault(_d['registered_at'], {})\
+                    .update({'unique': _d['unique'], 'total': _d['total']})
+
+            data_grid = process_stats_data(data, date_range)
+
+        context.update({
+            'form': form,
+            'date_range': date_range,
+            'data_grid': data_grid,
+            'organization': organization,
+        })
+        return context
+
+
+class RegisteredEventStatsDetailView(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        date_re = re.compile('^(\d{4})-(\d{1,2})-(\d{1,2})$')
+        context = super(RegisteredEventStatsDetailView, self)\
+            .get_context_data(**kwargs)
+        
+        event_type_id, content_type_id, instance_id, cnt_type = \
+            map(lambda x: self.kwargs.get(x), 
+                ('event_type_id', 'content_type_id', 
+                'instance_id', 'cnt_type'))
+        data_str = self.request.GET.get('date', None)
+        if all((event_type_id, content_type_id, instance_id, 
+           cnt_type, data_str)):
+            _m = date_re.match(data_str)
+            if _m:
+                while True:
+                    try:
+                        xdate = datetime.date(*map(int, _m.groups()))                
+                    except:
+                        break
+
+                    try:
+                        event_type = RegisteredEventType.objects.get(id=event_type_id)
+                    except RegisteredEventType.DoesNotExist:
+                        break
+                        
+                    try:
+                        content_type = ContentType.objects.get(pk=content_type_id)
+                    except ContentType.DoesNotExist:
+                        break
+                    model_class = content_type.model_class()
+                    model_name = model_class._meta.verbose_name \
+                        or model_class.__name__
+                    try:
+                        instance = model_class.objects.get(pk=instance_id)
+                    except model_class.DoesNotExist:
+                        break
+
+                    context.update({'event_type': event_type, 
+                        'instance_type': model_name, 
+                        'instance': instance,
+                        'xdate': xdate})
+                
+                    try:
+                        stats = RegisteredEventStats.objects.filter(
+                            event_type_id=event_type_id, 
+                            content_type_id=content_type_id, 
+                            object_id=instance_id,
+                            registered_at=xdate)[0]
+                    except IndexError:
+                        pass
+                    else:
+                        data_grid = stats.get_extra_info(cnt_type)
+                        context['data_grid'] = data_grid
+                    break
+        return context

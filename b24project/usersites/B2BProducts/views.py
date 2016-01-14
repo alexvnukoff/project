@@ -18,7 +18,7 @@ class B2BProductList(UserTemplateMixin, ItemList):
 
     def dispatch(self, request, *args, **kwargs):
         category_pk = kwargs.pop('pk', None)
-        
+
         if category_pk:
             self.category = B2BProductCategory.objects.get(pk=category_pk)
         else:
