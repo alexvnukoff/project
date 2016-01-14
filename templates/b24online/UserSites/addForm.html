@@ -119,12 +119,12 @@
                 <div role="tabpanel" class="tab-pane active" id="home">
                     <div class="template_list__block">
                         <div
-                        class="template_list__block--empty {%if object.user_template == None%} template_list__block--active {%endif%}">
+                        class="template_list__block--empty {% if object.user_template == None%} template_list__block--active {% endif %}">
                         </div>
                         <div class="template_list__inner_block">
                             <div class="template_list__img">
                                 <img class="center-block__templates template_list__img--empty
-                                    {%if object.user_template == None%} template_list__img--active {%endif%} "
+                                    {% if object.user_template == None%} template_list__img--active {% endif %} "
                                      src="{% static 'usersites/images/default_template_small.png' %}"
                                      alt="Template">
                             </div>
@@ -155,13 +155,13 @@
                     {% for user_site_template in user_site_templates %}
                     <div class="template_list__block">
                         <div
-                        class="template_list__block--empty {%if object.user_template == user_site_template%} template_list__block--active {%endif%}">
+                        class="template_list__block--empty {% if object.user_template == user_site_template %} template_list__block--active {% endif %}">
                         </div>
                         <div class="template_list__inner_block">
                             <div class="template_list__img">
                                 <img class="center-block__templates template_list__img--empty
-                                    {%if object.user_template == user_site_template%} template_list__img--active {%endif%} "
-                                     src="{{ user_site_template.thumbnail.big }}"
+                                    {% if object.user_template == user_site_template %} template_list__img--active {% endif %} "
+                                     src="{{ user_site_template.thumbnail.small }}"
                                      alt="Template">
                             </div>
                             <div class="teplate_list__name text-center__templates teplate_list__name--dotdotdot">
@@ -180,7 +180,7 @@
                                     </div>
                                     <div class="template_list__btn_pick__link">
                                         <button type="button" class="template_list__btn_pick"
-                                                data-template-id="{{user_site_template.id}}">
+                                                data-template-id="{{ user_site_template.id }}">
                                             Choose
                                         </button>
                                     </div>
