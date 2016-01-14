@@ -1,0 +1,18 @@
+{% extends 'usersites_templates/default_left_banners/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+     <section class="content__info">
+
+    <h2>{% trans 'Your Order' %}</h2>
+
+    <p>&nbsp;</p>
+    <p>{% trans 'Your order has been submitted.' %}</p>
+    </section>
+
+{% endblock %}

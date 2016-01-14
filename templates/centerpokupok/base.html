@@ -182,7 +182,7 @@ $(function () {
   </div> -->
 
 
-
+{% block body %}{% endblock %}
 
 
 </div>
@@ -223,13 +223,8 @@ $(function () {
 </div>
 <div id="footer">
     <div class="container">
-        <label>© {%  now 'Y' %} {% trans 'Центр покупок - покупай с удовольствием по всему миру' %}</label>
-        <div class="social">
-            <a href="#" class="imgshop icon-social i-face">Facebook</a>
-            <a href="#" class="imgshop icon-social i-twitter">Twitter</a>
-            <a href="#" class="imgshop icon-social i-youtube">Youtube</a>
-            <a href="#" class="imgshop icon-social i-vimeo">vimeo</a>
-        </div>
+        <p style="text-align:center;">© {%  now 'Y' %} {% trans 'Центр покупок - покупай с удовольствием по всему миру' %}</p>
+
     </div>
 </div>
 {% endblock %}

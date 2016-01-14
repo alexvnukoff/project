@@ -20,12 +20,12 @@ from centerpokupok.forms import OrderEmailForm
 from django.core.mail import send_mail
 from django.template import loader
 from django.conf import settings
+from usersites.mixins import UserTemplateMixin
 
 
-
-class B2CProductList(ItemList):
+class B2CProductList(UserTemplateMixin, ItemList):
     model = B2CProduct
-    template_name = 'usersites/B2CProducts/contentPage.html'
+    template_name = '{template_path}/B2CProducts/contentPage.html'
     paginate_by = 16
     filter_key = 'company'
     url_paginator = "b2c_products:paginator"
@@ -98,11 +98,11 @@ class B2CProductList(ItemList):
 
 
 
-class B2CProductDetail(ItemDetail):
+class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
     model = B2CProduct
     filter_key = 'company'
-    template_name = 'usersites/B2CProducts/detailContent.html'
+    template_name = '{template_path}/B2CProducts/detailContent.html'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -208,9 +208,9 @@ class B2CProductBasket(View):
 
 
 
-class B2CProductSearch(ItemList):
+class B2CProductSearch(UserTemplateMixin, ItemList):
     model = B2CProduct
-    template_name = 'usersites/B2CProducts/searchPage.html'
+    template_name = '{template_path}/B2CProducts/searchPage.html'
     paginate_by = 16
     filter_key = 'company'
     url_paginator = "b2c_products:serch_paginator"
@@ -228,8 +228,8 @@ class B2CProductSearch(ItemList):
 
 
 
-class B2CProductByEmail(FormView):
-    template_name = 'usersites/B2CProducts/orderByEmail.html'
+class B2CProductByEmail(UserTemplateMixin, FormView):
+    template_name = '{template_path}/B2CProducts/orderByEmail.html'
     form_class = OrderEmailForm
     success_url = reverse_lazy('b2c_products:order_done')
 
@@ -247,6 +247,7 @@ class B2CProductByEmail(FormView):
         org_email = get_current_site(self.request).user_site.organization.email
         context = {
             'name': cd['name'],
+            'last_name': cd['last_name'],
             'email': cd['email'],
             'message': cd['message'],
             'basket': dict(src=basket),

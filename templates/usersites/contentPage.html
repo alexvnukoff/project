@@ -80,6 +80,8 @@
                             </a>
                         </div>
                         <div class="product__about">
+                            {# Register the 'view' event for b2c product #}
+                            {{ product|register_event:"view"|process_event:request }}
                             <p class="desc"><strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}
                                 <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
@@ -114,6 +116,8 @@
                             {% endif %}
                         </div>
                         <div class="product__about">
+                            {# Register the 'view' event for b2b product #}
+                            {{ product|register_event:"view"|process_event:request }}
                             <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
                             {% if product.cost %}
                             <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>

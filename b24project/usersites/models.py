@@ -23,8 +23,18 @@ class ExternalSiteTemplate(models.Model):
         return self.name
 
 
+class UserSiteTemplate(models.Model):
+    name = models.CharField(max_length=255)
+    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=255)
+    folder_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class UserSite(ActiveModelMixing, models.Model):
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
+    user_template = models.ForeignKey(UserSiteTemplate, blank=True, null=True)
     organization = models.ForeignKey(Organization)
     slogan = models.CharField(max_length=2048, blank=True, null=True)
     is_active = models.BooleanField(default=True)

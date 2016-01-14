@@ -103,7 +103,7 @@ class SiteForm(forms.ModelForm):
 
     class Meta:
         model = UserSite
-        fields = ('slogan', 'template', 'footer_text', 'logo')
+        fields = ('slogan', 'template', 'user_template', 'footer_text', 'logo')
 
 
 class GalleryForm(forms.ModelForm):
