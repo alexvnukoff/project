@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 
 from b24online.models import B2BProduct, B2BProductCategory
 from usersites.cbv import ItemDetail, ItemList
-from ..mixins import UserTemplateMixin
+from usersites.mixins import UserTemplateMixin
 
 class B2BProductList(UserTemplateMixin, ItemList):
     model = B2BProduct
@@ -18,7 +18,7 @@ class B2BProductList(UserTemplateMixin, ItemList):
 
     def dispatch(self, request, *args, **kwargs):
         category_pk = kwargs.pop('pk', None)
-        
+
         if category_pk:
             self.category = B2BProductCategory.objects.get(pk=category_pk)
         else:

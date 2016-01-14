@@ -10,8 +10,7 @@ from django.utils.translation import ugettext as _
 from b24online.models import AdditionalPage, Department
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
-
-from ..mixins import UserTemplateMixin
+from usersites.mixins import UserTemplateMixin
 
 
 class PageDetail(UserTemplateMixin, ItemDetail):

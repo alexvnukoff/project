@@ -20,7 +20,7 @@ from centerpokupok.forms import OrderEmailForm
 from django.core.mail import send_mail
 from django.template import loader
 from django.conf import settings
-from ..mixins import UserTemplateMixin
+from usersites.mixins import UserTemplateMixin
 
 
 class B2CProductList(UserTemplateMixin, ItemList):
@@ -247,6 +247,7 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         org_email = get_current_site(self.request).user_site.organization.email
         context = {
             'name': cd['name'],
+            'last_name': cd['last_name'],
             'email': cd['email'],
             'message': cd['message'],
             'basket': dict(src=basket),

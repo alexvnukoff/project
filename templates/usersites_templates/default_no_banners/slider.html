@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+    <div class="offer__slider">
+        {% if site.user_site.slider_images|length == 0 %}
+
+            <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" />
+            <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" />
+            <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" />
+        {% else %}
+            {% for i in site.user_site.slider_images %}
+            <img src="{{ i.image.big }}" alt="">
+            {% endfor %}
+        {% endif %}
+    </div>
