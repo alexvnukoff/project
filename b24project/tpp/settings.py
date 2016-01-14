@@ -107,8 +107,6 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     'raven.contrib.django.raven_compat',
-    'core',
-    'appl',
     'b24online',
     'jobs',
     'centerpokupok',
@@ -244,7 +242,7 @@ ROOT_URLCONF = 'b24online.urls'
 SITE_ID = 143
 
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'b24online.User'
 
 MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(BASE_DIR, '..', 'uploads').replace('\\', '/'))

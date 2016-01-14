@@ -125,10 +125,10 @@ class B2CProductDetail(ItemDetail):
         context_data = super().get_context_data(**kwargs)
         domain = get_current_site(self.request).domain
 
-        if self.object.currency and self.object.cost and self.object.company.company_paypal_account:
+        if self.object.currency and self.object.cost:
 
             paypal_dict = {
-                "business": self.object.company.company_paypal_account,
+                "business": '',
                 "amount":  self.object.get_discount_price,
                 "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
                 "return_url": self.request.build_absolute_uri(),

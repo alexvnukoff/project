@@ -1,24 +1,27 @@
-from argparse import ArgumentError
 import os
+from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField, DateRangeField, DateTimeRangeField
 from django.contrib.sites.models import Site
+from django.core.cache import cache
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db import transaction
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
 from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
-from django.db import transaction
-
-from guardian.shortcuts import assign_perm, remove_perm
+from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
@@ -48,66 +51,77 @@ image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
 
-# class UserManager(BaseUserManager):
-#     def create_user(self, email, password=None):
-#         email = self.normalize_email(email).lower()
-#         user = self.model(email=email)
-#
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         Profile.objects.create(user=user)
-#
-#         return user
-#
-#     def create_superuser(self, email, password):
-#         user = self.create_user(email, password=password)
-#         user.is_admin = True
-#         user.save(using=self._db)
-#         return user
-#
-#
-# class User(AbstractBaseUser, PermissionsMixin):
-#     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
-#     is_active = models.BooleanField(default=True)
-#     is_admin = models.BooleanField(default=False)
-#     is_manager = models.BooleanField(default=False)  # for enterprise content management
-#     is_commando = models.BooleanField(default=False)  # for special purposes
-#     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
-#
-#     objects = UserManager()
-#
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = []
-#
-#     def get_full_name(self):
-#         return '%s %s' % (self.first_name, self.last_name,)
-#
-#     def get_short_name(self):
-#         return self.email
-#
-#     def __str__(self):
-#         return self.email
-#
-#     def has_module_perms(self, app_label):
-#         return True
-#
-#     @property
-#     def is_staff(self):
-#         return self.is_admin
-#
-#     def email_user(self, subject, message, from_email=None):
-#         send_mail(subject, message, from_email, [self.email])
-#
-#     def manageable_organizations(self):
-#         key = "user:%s:manageable_organizations" % self.pk
-#         organization_ids = cache.get(key)
-#
-#         if organization_ids is None:
-#             organization_ids = [org.pk for org in
-#                                 get_objects_for_user(self, 'b24online.manage_organization', Organization)]
-#             cache.set(key, organization_ids,  60 * 10)
-#
-#         return organization_ids or []
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        email = self.normalize_email(email).lower()
+        user = self.model(email=email)
+
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        user = self.create_user(email, password, **extra_fields)
+        user.is_active = True
+        user.is_admin = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)  # for enterprise content management
+    is_commando = models.BooleanField(default=False)  # for special purposes
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name,)
+
+    def get_short_name(self):
+        return self.email
+
+    def __str__(self):
+        return self.email
+
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+
+    def email_user(self, subject, message, from_email=None):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email])
+
+    def manageable_organizations(self):
+        key = "user:%s:manageable_organizations" % self.pk
+        organization_ids = cache.get(key)
+
+        if organization_ids is None:
+            organization_ids = [org.pk for org in
+                                get_objects_for_user(self, 'b24online.manage_organization', Organization)]
+            cache.set(key, organization_ids,  60 * 10)
+
+        return organization_ids or []
+
+    class Meta:
+        db_table = 'core_user'
+
 
 class ActiveModelMixing:
     fields_cache = {}
@@ -340,7 +354,6 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return self.pk

@@ -1,16 +1,11 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import News, Category, Country, Product, Cabinet, Order, Favorite
-from core.models import Value, Item, Attribute, Dictionary, User
-from appl import func
-from django.http import Http404
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from centerpokupok.forms import UserDetail, OrderForm
 from django.utils.translation import ugettext as _
+
+from appl import func
+from appl.models import Product, Cabinet, Order, Favorite
+from centerpokupok.forms import UserDetail, OrderForm
 
 
 @login_required(login_url=("/registration/"))

@@ -1,23 +1,22 @@
 import hashlib
 
-from django.conf import settings
+import lxml
+from PIL import Image
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.timezone import make_aware, is_naive, get_current_timezone, now
-from django.db.models import Q
 from django.core.paginator import Paginator
-from PIL import Image
+from django.db.models import Q
 from django.template import RequestContext, loader
+from django.utils.timezone import make_aware, is_naive, get_current_timezone, now
 from django.utils.translation import ugettext as _
-import lxml
 from lxml.html.clean import clean_html
+
 from b24online.Analytic.analytic import get_results
-from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
 from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
     BusinessProposalCategoryIndex, SearchEngine, B2cProductCategoryIndex
-from core.models import Item
+from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement
 from tpp.SiteUrlMiddleWare import get_request
 
@@ -45,108 +44,6 @@ def get_paginator_range(page):
 
     paginator_range = range(start, end)
     return paginator_range
-
-# Deprecated
-def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
-    '''
-    Method  return List of Values of items and  Pagination
-    items = QuerySet of items
-    attr = (list of item's attributes)
-    page = number of current page
-    page_num = num element per page
-    '''
-    paginator = Paginator(items, page_num)
-    try:
-        page = items = paginator.page(page)
-    except Exception:
-        page = items = paginator.page(1)
-    if not isinstance(items, list):
-        items = tuple([item.pk for item in page.object_list])
-    attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
-
-    return attributeValues, page  # Return List Item and Page object of current page
-
-# Deprecated
-def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
-    '''
-    Method  return List of Values of items and  Pagination
-    items = QuerySet of items
-    attr = (list of item's attributes)
-    page = number of current page
-    page_num = num element per page
-    '''
-    paginator = Paginator(items, page_num)
-
-    try:
-        page = items = paginator.page(page)
-    except Exception:
-        page = items = paginator.page(1)
-
-    if not isinstance(items, list):
-        items = tuple([item.pk for item in page.object_list])
-
-    attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
-
-    return attributeValues, page  # Return List Item and Page object of current page
-
-# Deprecated
-def getItemsListWithPagination(cls, *attr, page=1, site=False):
-    '''
-    Method  return List of Item of specific class including Pagination
-    cls = (class name of specific Item (News , Company))
-    attr = (list of item's attributes)
-    page = number of current page
-    '''
-
-    clsObj = (globals()[cls])
-
-    if not issubclass(clsObj, Item):
-        raise ValueError("Wrong object type")
-
-    if site:
-        items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)
-    else:
-        items = clsObj.active.get_active().all()
-
-    paginator = Paginator(items, 10)
-    try:
-        page = items = paginator.page(page)  # check if page is valid
-    except Exception:
-        page = items = paginator.page(1)
-
-    items = tuple([item.pk for item in page.object_list])
-    attributeValues = clsObj.getItemsAttributesValues(attr, items)
-
-    return attributeValues, page  # Return List Item and Page object of current page
-
-
-# Deprecated
-def sortByAttr(cls, attribute, order="ASC", type="str"):  # IMPORTANT: should be called before any filter
-    '''
-        Order Items by attribute
-        cls: class name instance of Item
-        attribute: Attribute name
-        order: Order direction DESC / ASC
-        type: Sorting type str/int
-            Example: qSet = sortByAtt("Product", "NAME")
-            Example: qSet = sortByAtt("Product", "NAME", "DESC", "int")
-    '''
-
-    clsObj = (globals()[cls])
-
-    if not issubclass(clsObj, Item):
-        raise ValueError("Wrong object type")
-
-    if type != "str":
-        case = 'TO_NUMBER("CORE_VALUE"."TITLE", \'999999999.999\')'
-    else:
-        case = 'CAST("CORE_VALUE"."TITLE" AS VARCHAR(100))'
-
-    if order != "ASC":
-        case = '-' + case
-
-    return clsObj.active.get_active().filter(item2value__attr__title=attribute).extra(order_by=[case])
-
 
 def currency_symbol(currency):
     if not currency:
