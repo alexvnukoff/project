@@ -26,7 +26,8 @@
                         </a>
                             </div>
                             <div class="product__about">
-
+                                {# Register the 'view' event for b2c product #}
+                                {{ product|register_event:"view"|process_event:request }}
                                 <p class="desc">
                                     <strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}

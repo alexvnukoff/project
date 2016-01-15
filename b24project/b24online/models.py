@@ -1516,7 +1516,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
         _add = {'unique': 1 if registered_event.is_unique else 0,
                 'total': 1}
         data = registered_event.event_data
-        if not self.extra_data:
+        if not self.extra_data or not isinstance(self.extra_data, dict):
             self.extra_data = {}
         if data:
             key_data = []
@@ -1527,7 +1527,6 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 key_data.append(_value.strip())
             for _type in ('unique', 'total'):
                 _key = ':' . join(key_data + [_type,])
-                logger.debug(_key)
                 if _key in self.extra_data:
                     try:
                         _old = int(self.extra_data)
@@ -1537,6 +1536,8 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 else:
                     _new = _add.get(_type, 0)
                 self.extra_data[_key] = str(_new)
+        self.unique_amount += _add['unique']
+        self.total_amount += _add['total']
         self.save()
         
     def get_extra_info(self, cnt_type):
@@ -1700,4 +1701,3 @@ def process_event(sender, instance, created, **kwargs):
 
         # Increase the counters and store GeoIP info
         stats.store_info(instance)
-        stats.save()
