@@ -1,10 +1,5 @@
-from django.conf.urls import patterns, url
-from django.contrib import admin
+from django.conf.urls import url
 
 import b24online.Profile.views
 
-admin.autodiscover()
-
-urlpatterns = patterns('',
-                       url(r'^$', b24online.Profile.views.ProfileUpdate.as_view(), name='main'),
-                       )
+urlpatterns = [url(r'^$', b24online.Profile.views.ProfileUpdate.as_view(), name='main')]

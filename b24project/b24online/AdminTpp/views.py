@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -19,7 +20,6 @@ from b24online.search_indexes import SearchEngine, ProfileIndex, GreetingIndex
 from b24online.utils import class_for_name
 from centerpokupok.models import B2CProductCategory
 from core.cbv import JSONResponseMixin
-from core.models import User
 
 
 class BaseAdminAuth(View):
@@ -132,10 +132,10 @@ class Users(BaseAdminTpp):
             paginator = Paginator(s, 10)
             on_page = paginator.page(page)
 
-            objects = User.objects.filter(profile__pk__in=[obj.django_id for obj in on_page.object_list.execute().hits]) \
+            objects = get_user_model().objects.filter(profile__pk__in=[obj.django_id for obj in on_page.object_list.execute().hits]) \
                 .prefetch_related('profile')
         else:
-            queryset = User.objects.order_by(*orderby)
+            queryset = get_user_model().objects.order_by(*orderby)
             paginator = Paginator(queryset, 10)
             on_page = paginator.page(page)
             objects = on_page.object_list.prefetch_related('profile')

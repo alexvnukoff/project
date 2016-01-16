@@ -1,15 +1,15 @@
 import os
+
 from django import template
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
-from appl.models import NewsCategories
+
+from appl import func
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
     BusinessProposal, Company, News, Banner, BannerBlock
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from appl import func
-from core.models import Item
 from jobs.models import Requirement, Resume
 
 register = template.Library()
@@ -138,7 +138,7 @@ def statistic(*args, **kwargs):
     return {'model_statistic': model_statistic}
 
 
-@register.inclusion_tag(name='setContextMenu', file_name='b24online/main/contextMenu.html', takes_context=True)
+@register.inclusion_tag('b24online/main/contextMenu.html', name='setContextMenu', takes_context=True)
 def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
     model_name = context.get('model', None)
@@ -196,21 +196,6 @@ def set_context_menu(context, obj, **kwargs):
     params.update(kwargs)
 
     return params
-
-
-@register.inclusion_tag('b24online/News/last.html', takes_context=True)
-def getLastNews(context):
-    request = context.get('request')
-    MEDIA_URL = context.get('MEDIA_URL', '')
-
-    news = list(
-        News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).order_by('-pk').values_list('pk',
-                                                                                                                  flat=True)[
-        :3])
-    newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
-
-    return {'MEDIA_URL': MEDIA_URL, 'newsValues': newsValues}
-
 
 @register.inclusion_tag('usersites/slider.html', takes_context=True)
 def site_slider(context):
