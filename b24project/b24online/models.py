@@ -1508,6 +1508,10 @@ class RegisteredEventStats(_RegisteredEventAbs):
         unique_together = ('event_type', 'site', 'content_type',
             'object_id', 'registered_at')
 
+    def __str__(self):
+        return _('Event stats of type "{0}" for "{1}"') . \
+            format(self.event_type.name, str(self.item))
+
     def store_info(self, registered_event):
         """
         Increment the counters and store the GeoIP info.
@@ -1612,6 +1616,10 @@ class RegisteredEvent(_RegisteredEventAbs):
             'object_id', 'registered_at', 'ip_address',
             'user_agent')
 
+    def __str__(self):
+        return _('Event of type "{0}" for "{1}"') . \
+            format(self.event_type.name, str(self.item))
+
     @property
     def unique_key(self):
         """
@@ -1636,6 +1644,23 @@ class RegisteredEvent(_RegisteredEventAbs):
             return True
         else:
             return False
+
+    @property            
+    def geo_info(self):
+        if not self.event_data:
+            return None
+        data = []
+        for item_code, item_name in (
+            ('country_code', _('Country code')),
+            ('country_name', _('Country name')),
+            ('city', _('City'))):
+            item_value = self.event_data.get(item_code)
+            if item_value:
+                data.append('{0} : {1}' . format(item_name, item_value))
+        if data:
+            return ', ' . join(data)
+        else:
+            return None
 
 
 @receiver(pre_save)
