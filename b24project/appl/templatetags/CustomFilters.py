@@ -302,7 +302,8 @@ def register_event(instance, event_type_slug):
         event_type = RegisteredEventType.objects.get(
             slug=event_type_slug)
     except (RegisteredEventType.DoesNotExist, AttributeError):
-        pass
+        logger.error('There are not RegisteredEventType with slug="%s"',  
+                     event_type_slug)
     else:
         return RegisteredEvent.objects.create(
             event_type=event_type,
