@@ -8,6 +8,7 @@ import datetime
 import logging
 
 from django.db import models
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -301,7 +302,8 @@ def register_event(instance, event_type_slug):
         event_type = RegisteredEventType.objects.get(
             slug=event_type_slug)
     except (RegisteredEventType.DoesNotExist, AttributeError):
-        pass
+        logger.error('There are not RegisteredEventType with slug="%s"',  
+                     event_type_slug)
     else:
         return RegisteredEvent.objects.create(
             event_type=event_type,
@@ -334,8 +336,10 @@ def process_event(event, request):
         event.site = get_current_site(request)
         event.url = request.path
         event.username = request.META.get('REMOTE_USER')
-        event.ip_address = GeoIPHelper.get_request_ip(request)
-        #event.ip_address = _random_ip()
+        if getattr(settings, 'REGISTER_RANDOM_IPS', False):
+            event.ip_address = _random_ip()
+        else:
+            event.ip_address = GeoIPHelper.get_request_ip(request)
         event.user_agent = request.META.get('HTTP_USER_AGENT') 
         event.event_hash = event.unique_key
         data = GeoIPHelper.get_geoip_data(event.ip_address) 

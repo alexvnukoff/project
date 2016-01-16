@@ -1,0 +1,1 @@
+[{"model": "b24online.registeredeventtype", "pk": 1, "fields": {"slug": "view", "name": "View"}}, {"model": "b24online.registeredeventtype", "pk": 2, "fields": {"name": "Click", "slug": "click"}}]

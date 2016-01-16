@@ -10,6 +10,8 @@ from b24online.custom import CustomImageField
 from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
 from b24online.utils import generate_upload_path
 from django.utils.translation import ugettext as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class ExternalSiteTemplate(models.Model):
@@ -30,6 +32,22 @@ class UserSiteTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_save, sender=UserSiteTemplate)
+def uploadTemplateImage(sender, instance, **kwargs):
+    from core import tasks
+    params = []
+    params.append({
+    'file': instance.thumbnail.path,
+    'sizes': {
+        'big': {'box': (1280, 2630), 'fit': True},
+        'small': {'box': (145, 300), 'fit': True}
+        }
+    })
+
+    tasks.upload_images.delay(*params)
+
 
 
 class UserSite(ActiveModelMixing, models.Model):

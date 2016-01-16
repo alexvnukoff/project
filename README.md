@@ -29,3 +29,12 @@ B24 и остальные сайты
 а также не удаляемыми(Вместо удаления деактивируем, наследуют от ActiveModelMixing
 
 Используются спец. поля Postgres (HStore, Range).
+
+####GeoIP
+
+ + mkdir /usr/share/GeoIP && cd /usr/share/GeoIP
+ + wget "http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz"
+ + wget "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
+ + gunzip GeoIP.dat.gz && gunzip GeoLiteCity.dat.gz
+ + yum update && yum install geoip geoip-devel
+ + pip install geoip

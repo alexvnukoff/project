@@ -4,8 +4,9 @@ from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
                                   PolymorphicMPTTParentModelAdmin
 
-from b24online.models import B2BProductCategory, Country, Branch, Company, \
-                           Organization, Chamber, BannerBlock, B2BProduct
+from b24online.models import (B2BProductCategory, Country, Branch, Company,
+                              Organization, Chamber, BannerBlock, B2BProduct,
+                              RegisteredEventStats, RegisteredEvent)
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -41,6 +42,20 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug', 'director', 'company_paypal_account',]
 
 
+class RegisteredEventAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'is_unique', 'ip_address', 'user_agent', 
+                    'registered_at', 'geo_info']
+    list_per_page = 20
+    list_filter = ['is_unique', 'registered_at']    
+
+
+class RegisteredEventStatsAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'unique_amount', 'total_amount', 
+                    'registered_at']
+    list_per_page = 20
+    list_filter = ['registered_at']    
+
+
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
 admin.site.register(Branch, MPTTModelAdmin)
@@ -49,3 +64,7 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
+admin.site.register(RegisteredEvent, RegisteredEventAdmin)
+admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)
+
+

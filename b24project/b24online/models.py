@@ -1514,6 +1514,10 @@ class RegisteredEventStats(_RegisteredEventAbs):
         unique_together = ('event_type', 'site', 'content_type',
             'object_id', 'registered_at')
 
+    def __str__(self):
+        return _('Event stats of type "{0}" for "{1}"') . \
+            format(self.event_type.name, str(self.item))
+
     def store_info(self, registered_event):
         """
         Increment the counters and store the GeoIP info.
@@ -1522,7 +1526,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
         _add = {'unique': 1 if registered_event.is_unique else 0,
                 'total': 1}
         data = registered_event.event_data
-        if not self.extra_data:
+        if not self.extra_data or not isinstance(self.extra_data, dict):
             self.extra_data = {}
         if data:
             key_data = []
@@ -1533,7 +1537,6 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 key_data.append(_value.strip())
             for _type in ('unique', 'total'):
                 _key = ':' . join(key_data + [_type,])
-                logger.debug(_key)
                 if _key in self.extra_data:
                     try:
                         _old = int(self.extra_data)
@@ -1543,6 +1546,8 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 else:
                     _new = _add.get(_type, 0)
                 self.extra_data[_key] = str(_new)
+        self.unique_amount += _add['unique']
+        self.total_amount += _add['total']
         self.save()
 
     def get_extra_info(self, cnt_type):
@@ -1595,7 +1600,7 @@ class RegisteredEvent(_RegisteredEventAbs):
     """
 
     registered_at = models.DateTimeField(auto_now_add=True,
-        db_index=True)
+                                         db_index=True)
     url = models.TextField(_('Requested URL'), blank=True, null=True)
     username = models.CharField(_('Username'), max_length=255,
                                 blank=True, null=True)
@@ -1616,6 +1621,10 @@ class RegisteredEvent(_RegisteredEventAbs):
         unique_together = ('event_type', 'site', 'content_type',
             'object_id', 'registered_at', 'ip_address',
             'user_agent')
+
+    def __str__(self):
+        return _('Event of type "{0}" for "{1}"') . \
+            format(self.event_type.name, str(self.item))
 
     @property
     def unique_key(self):
@@ -1641,6 +1650,23 @@ class RegisteredEvent(_RegisteredEventAbs):
             return True
         else:
             return False
+
+    @property            
+    def geo_info(self):
+        if not self.event_data:
+            return None
+        data = []
+        for item_code, item_name in (
+            ('country_code', _('Country code')),
+            ('country_name', _('Country name')),
+            ('city', _('City'))):
+            item_value = self.event_data.get(item_code)
+            if item_value:
+                data.append('{0} : {1}' . format(item_name, item_value))
+        if data:
+            return ', ' . join(data)
+        else:
+            return None
 
 
 @receiver(pre_save)
@@ -1706,4 +1732,3 @@ def process_event(sender, instance, created, **kwargs):
 
         # Increase the counters and store GeoIP info
         stats.store_info(instance)
-        stats.save()

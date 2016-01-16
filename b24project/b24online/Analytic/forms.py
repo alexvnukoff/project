@@ -13,9 +13,11 @@ class RegisteredEventStatsForm(forms.Form):
     """
     start_date = forms.DateField(label=_('From'),
         input_formats=["%d/%m/%Y"],
+        widget=forms.DateInput(format = '%d/%m/%Y'),
         required=False)
     end_date = forms.DateField(label=_('To'),
         input_formats=["%d/%m/%Y"],
+        widget=forms.DateInput(format = '%d/%m/%Y'),
         required=False)
 
     def __init__(self, *args, **kwargs):
