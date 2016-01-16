@@ -325,4 +325,4 @@ except ImportError as e:
     logging.info(e)
 
 # Set the path to GeoIP database
-GEOIP_DB_PATH = '/usr/local/share/GeoIP/'
+GEOIP_DB_PATH = '/usr/share/GeoIP/'
