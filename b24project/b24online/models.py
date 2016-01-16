@@ -1590,7 +1590,7 @@ class RegisteredEvent(_RegisteredEventAbs):
     """
 
     registered_at = models.DateTimeField(auto_now_add=True,
-        db_index=True)
+                                         db_index=True)
     url = models.TextField(_('Requested URL'), blank=True, null=True)
     username = models.CharField(_('Username'), max_length=255,
                                 blank=True, null=True)
