@@ -322,5 +322,15 @@ try:
 except ImportError as e:
     logging.info(e)
 
+
+###################### Statistics settings ###################################
 # Set the path to GeoIP database
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
+
+# Options to events registration: Redis or Db
+EVENT_STORE_WAYS = ('db', 'redis')
+
+# Current setting 
+EVENT_STORE = 'redis'
+
+EVENT_STORE_REDIS = 'redis://127.0.0.1:6379/1'

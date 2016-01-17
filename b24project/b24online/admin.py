@@ -1,5 +1,11 @@
+# -*- encoding: utf-8 -*-
+
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.utils.translation import ugettext_lazy as _
+from django.conf.urls import patterns, url
+from django.core.urlresolvers import reverse
+
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
                                   PolymorphicMPTTParentModelAdmin
@@ -50,10 +56,40 @@ class RegisteredEventAdmin(admin.ModelAdmin):
 
 
 class RegisteredEventStatsAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'unique_amount', 'total_amount', 
-                    'registered_at']
+    list_display = ['__str__', 'show_unique_amount', 
+                    'show_total_amount', 'registered_at']
     list_per_page = 20
     list_filter = ['registered_at']    
+
+    def show_amount(self, object, cnt_type):
+        object_kwargs = object.get_kwargs()
+        object_kwargs.update({'cnt_type': cnt_type})
+        return '<a href="{1}?date={2}">{0}</a>' . format(
+            object.unique_amount,
+            reverse('admin:event_stats_detail', kwargs=object_kwargs),
+            object.registered_at.strftime('%Y-%m-%d'))
+
+    def show_unique_amount(self, object):
+        return self.show_amount(object, 'unique')
+    show_unique_amount.allow_tags = True
+    show_unique_amount.short_description = _('Unique amount')
+
+    def show_total_amount(self, object):
+        return self.show_amount(object, 'total')
+    show_total_amount.allow_tags = True
+    show_total_amount.short_description = _('Total amount')
+
+    def show_stats(self, request):
+        pass
+                
+    def get_urls(self):
+        return patterns(
+            '',
+             url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
+                 r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
+                 self.show_stats,
+                 name='event_stats_detail'),
+        ) + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
 admin.site.register(B2BProductCategory, MPTTModelAdmin)

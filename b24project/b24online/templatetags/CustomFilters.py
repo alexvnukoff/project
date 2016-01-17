@@ -23,9 +23,10 @@ from django import template
 
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
-    RegisteredEvent)
+                              RegisteredEvent)
+from b24online.stats import RegisteredEventHelper
+
 from tpp.SiteUrlMiddleWare import get_request
-from b24online.utils import GeoIPHelper
 
 import b24online.urls
 
@@ -291,6 +292,22 @@ def basket_quantity(request):
     return basket.count()
 
 
+
+
+@register.assignment_tag()
+def get_length(some_list):
+    """
+    Return the length of some iterable
+    """
+    return len(some_list) \
+        if isinstance(some_list, Iterable) else 0
+
+
+#
+# Next two filters use sequentially. For example::
+#
+#   {{ product|register_event:"view"|process_event:request }}  
+#
 @register.filter
 def register_event(instance, event_type_slug):
     """
@@ -312,38 +329,12 @@ def register_event(instance, event_type_slug):
     return None
 
 
-@register.assignment_tag()
-def get_length(some_list):
-    return len(some_list) \
-        if isinstance(some_list, Iterable) else 0
-
-
 @register.filter
 def process_event(event, request):
     """
-    Process (define and store attributes values) the Event.
+    Register the event (define and store attributes values).
+    Return empty string.
     """
-    def _random_ip():
-        # For debugging
-        import random
-        import socket
-        import struct
-        return socket.inet_ntoa(
-            struct.pack('>I', random.randint(1, 0xffffffff)))
-
-    if event:
-        assert isinstance(event, RegisteredEvent), 'Invalid parameter'
-        event.site = get_current_site(request)
-        event.url = request.path
-        event.username = request.META.get('REMOTE_USER')
-        if getattr(settings, 'REGISTER_RANDOM_IPS', False):
-            event.ip_address = _random_ip()
-        else:
-            event.ip_address = GeoIPHelper.get_request_ip(request)
-        event.user_agent = request.META.get('HTTP_USER_AGENT') 
-        event.event_hash = event.unique_key
-        data = GeoIPHelper.get_geoip_data(event.ip_address) 
-        event.event_data = dict((k, str(v)) for k, v in data.items())
-        event.is_unique = event.check_is_unique()
-        event.save()
+    assert isinstance(event, RegisteredEvent), 'Invalid parameter'
+    RegisteredEventHelper(event).register(request)
     return ''
