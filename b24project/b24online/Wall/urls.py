@@ -1,5 +1,5 @@
 from django.conf.urls import url
 
-import b24online.Wall.views
+from b24online.Wall.views import get_wall_list
 
-urlpatterns = [url(r'^$', b24online.Wall.views.get_wall_list, name='main')]
+urlpatterns = [url(r'^$', get_wall_list, name='main')]

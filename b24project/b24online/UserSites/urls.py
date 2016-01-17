@@ -1,5 +1,5 @@
 from django.conf.urls import url
 
-import b24online.UserSites.views
+from b24online.UserSites.views import form_dispatch
 
-urlpatterns = [url(r'^$', b24online.UserSites.views.form_dispatch, name='main')]
+urlpatterns = [url(r'^$', form_dispatch, name='main')]

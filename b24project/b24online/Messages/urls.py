@@ -1,9 +1,9 @@
 from django.conf.urls import url
 
-import b24online.Messages.views
+from b24online.Messages.views import view_messages, add_message
 
 urlpatterns = [
-    url(r'^$', b24online.Messages.views.view_messages, name='main'),
-    url(r'^(?P<recipient_id>[0-9]+)/$', b24online.Messages.views.view_messages, name="message_item"),
-    url(r'^add/$', b24online.Messages.views.add_message, name="add"),
+    url(r'^$', view_messages, name='main'),
+    url(r'^(?P<recipient_id>[0-9]+)/$', view_messages, name="message_item"),
+    url(r'^add/$', add_message, name="add"),
 ]
