@@ -1,9 +1,9 @@
 from django.conf.urls import url
 
-import b24online.AdvTop.views
+from b24online.AdvTop.views import CreateContextAdvertisement, adv_json_filter, OrderDetail
 
 urlpatterns = [
-    url(r'^add/([0-9]+)/$', b24online.AdvTop.views.CreateContextAdvertisement.as_view(), name='top_form'),
-    url(r'^filter/$', b24online.AdvTop.views.adv_json_filter, name='filter'),
-    url(r'^order/(?P<pk>[0-9]+)/$', b24online.AdvTop.views.OrderDetail.as_view(), name='order'),
+    url(r'^add/([0-9]+)/$', CreateContextAdvertisement.as_view(), name='top_form'),
+    url(r'^filter/$', adv_json_filter, name='filter'),
+    url(r'^order/(?P<pk>[0-9]+)/$', OrderDetail.as_view(), name='order'),
 ]

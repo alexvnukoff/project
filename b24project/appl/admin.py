@@ -2,13 +2,12 @@ from appl.models import (Article, Basket, Company, Cabinet, Department, Document
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment, Favorite,
                          Greeting, Exhibition, SystemMessages, Notification, Branch, NewsCategories, InnovationProject,
-                         BusinessProposal, AdditionalPages, Messages, AdvBanner, AdvBannerType, AdvOrder, AdvTop, topTypes,
-                        staticPages, Requirement, BpCategories, UserSites, ExternalSiteTemplate, Resume, Vacancy, PayPalPayment)
-
+                         BusinessProposal, AdditionalPages, Messages, AdvBanner, AdvBannerType, AdvOrder, AdvTop,
+                         topTypes,
+                         staticPages, Requirement, BpCategories, UserSites, ExternalSiteTemplate, Resume, Vacancy,
+                         PayPalPayment)
 from core.models import Relationship, Value
-
 from django.contrib import admin
-
 
 
 class ParentRelationshipInLIne(admin.TabularInline):
@@ -17,11 +16,13 @@ class ParentRelationshipInLIne(admin.TabularInline):
     fk_name = "parent"
     raw_id_fields = ("create_user", 'child')
 
+
 class ChildtRelationshipInLIne(admin.TabularInline):
     model = Relationship
     extra = 1
     fk_name = "child"
     raw_id_fields = ("create_user", 'parent')
+
 
 class ValuesInline(admin.TabularInline):
     model = Value
@@ -32,9 +33,6 @@ class ValuesInline(admin.TabularInline):
 class AdditionalAdmin(admin.ModelAdmin):
     inlines = [ParentRelationshipInLIne, ChildtRelationshipInLIne, ValuesInline]
     raw_id_fields = ("create_user", 'update_user', 'community')
-
-
-
 
 
 admin.site.register(AdditionalPages, AdditionalAdmin)
@@ -99,12 +97,3 @@ admin.site.register(Vacancy, AdditionalAdmin)
 
 admin.site.register(UserSites, AdditionalAdmin)
 admin.site.register(PayPalPayment, AdditionalAdmin)
-
-
-
-
-
-
-
-
-

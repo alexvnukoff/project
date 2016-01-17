@@ -1,5 +1,5 @@
 from django.conf.urls import url
 
-import b24online.Profile.views
+from b24online.Profile.views import ProfileUpdate
 
-urlpatterns = [url(r'^$', b24online.Profile.views.ProfileUpdate.as_view(), name='main')]
+urlpatterns = [url(r'^$', ProfileUpdate.as_view(), name='main')]
