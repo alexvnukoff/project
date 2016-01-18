@@ -8,8 +8,13 @@ import os
 import socket
 import random
 import struct
+import datetime
 import logging
+import uuid
 
+from urllib.parse import unquote, urlparse
+            
+import redis
 import GeoIP
 
 from django.conf import settings
@@ -19,6 +24,42 @@ from django.contrib.sites.shortcuts import get_current_site
 from b24online.models import (RegisteredEventType, RegisteredEvent)
 
 logger = logging.getLogger(__name__)
+
+
+class InvalidParameterError(Exception):
+    """
+    The common exception for the case of function (method) invalid parameters. 
+    """
+
+
+
+def get_connection(connection_url=None): 
+    """ 
+    Return the Redis connection by the connection URL.  
+    """ 
+    url = connection_url if connection_url else \
+        getattr(settings, 'EVENT_STORE_REDIS_URL', None) 
+    if not url:
+        raise InvalidParameterError('Store connection URL is not defined')
+    url_info = urlparse(url)
+    assert url_info.scheme == 'redis', 'It\'s not Redis scheme'
+
+    conn_params = {}
+    if url_info.hostname:
+        conn_params.update({'host': url_info.hostname})
+    if url_info.port:
+        conn_params.update({'port': url_info.port})
+
+    path = url_info.path or ''
+    path = path[1:] if path and path[0] == '/' else path
+    if path:
+        try:
+            db_num = int(path)
+        except ValueError:
+            pass
+        else:
+            conn_params.update({'db': db_num})
+    return redis.Redis(**conn_params)
 
 
 class GeoIPHelper(object):
@@ -98,14 +139,8 @@ class GeoIPHelper(object):
                             geoip_data['country_code'] = country_code
         return geoip_data
 
-
-class RegisteredEventHelper(object):
-    """
-    Wrapper for RegisteredEvent.
-    """
-
     @staticmethod
-    def _random_ip():
+    def random_ip():
         """
         Return random generated IP address.
         
@@ -116,19 +151,50 @@ class RegisteredEventHelper(object):
         import struct
         return socket.inet_ntoa(
             struct.pack('>I', random.randint(1, 0xffffffff)))
-    
+
+
+class RegisteredEventHelper(object):
+    """
+    Wrapper for RegisteredEvent.
+    """
+
     def __init__(self, event, *args, **kwargs):
         assert isinstance(event, RegisteredEvent), 'Invalid parameter'
         self._event = event
         self.is_stored = bool(self._event.pk)
+
+    @classmethod
+    def get_event_smth_key(cls, request, query_type):
+        """
+        Return events query key for the HTTPRequest instance
+        """
+        request_uuid = getattr(request, '_uuid', None)
+        return 'registered:events:{0}:{1}:{2}' . format(
+            query_type,
+            request__uuid, 
+            datetime.date.today().strftime('%Y-%m-%d')) if request_uuid else None
+            
+    @classmethod
+    def get_event_data_key(cls, request):
+        """
+        Return events query key for the HTTPRequest instance
+        """
+        return cls.get_event_smth_key(request, 'data')
+            
+    @classmethod
+    def get_event_unique_key(cls, request):
+        """
+        Return events query key for the HTTPRequest instance
+        """
+        return cls.get_event_smth_key(request, 'unique')
         
     def register(self, request):
         cls = type(self)
         self._event.site = get_current_site(request)
         self._event.url = request.path
         self._event.username = request.META.get('REMOTE_USER')
-        if getattr(settings, 'REGISTER_RANDOM_IPS', False):
-            self._event.ip_address = cls._random_ip()
+        if getattr(settings, 'DEBUG_RANDOM_IPS', False):
+            self._event.ip_address = GeoIPHelper._random_ip()
         else:
             self._event.ip_address = GeoIPHelper.get_request_ip(request)
         self._event.user_agent = request.META.get('HTTP_USER_AGENT') 
@@ -184,3 +250,11 @@ def process_stats_data(data, date_range):
                                     'total': data_3.get(xdate, {})\
                                         .get('total', 0)})
     return data_grid
+
+
+class RegisteredEventMiddleware(object):
+    """
+    Set the unique key for the every request
+    """
+    def process_request(self, request):
+        setattr(request, '_uuid', str(uuid.uuid4())
