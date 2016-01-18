@@ -14,6 +14,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from b24online.stats.helpers import GeoIPHelper
 from b24online.tasks import process_events_queue
 
+logger = logging.getLogger(__name__)
+
 
 class RegisteredEventMiddleware(object):
     """
@@ -45,5 +47,5 @@ class RegisteredEventMiddleware(object):
             event_data['user_agent'] = _ua = request.META.get('HTTP_USER_AGENT') 
             geo_data = GeoIPHelper.get_geoip_data(_ip) 
             event_data.update(dict((k, str(v)) for k, v in geo_data.items()))
-            process_events_queue(request_uuid, event_data)
+            process_events_queue.delay(request_uuid, event_data)
         return response
