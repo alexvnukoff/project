@@ -17,6 +17,7 @@ from urllib.parse import unquote, urlparse
 import redis
 import GeoIP
 
+from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.shortcuts import get_current_site
@@ -26,13 +27,41 @@ from b24online.models import (RegisteredEventType, RegisteredEvent)
 logger = logging.getLogger(__name__)
 
 
+##
+# Exceptions
+##
 class InvalidParameterError(Exception):
     """
     The common exception for the case of function (method) invalid parameters. 
     """
 
+class InconsistentDataError(Exception):
+    pass
+    
 
+##
+# Utilities
+##
 
+KEY_COMPONENTS_SEPARATOR = ':'
+
+def flatten(x):
+    """
+    Return the flattened complex list.
+    """
+    return [y for l in x for y in flatten(l)] if type(x) is list else [x]
+                    
+                           
+def glue(*components):
+    """
+    Return the key builded from components.
+    """
+    # Cast to 'list' type
+    components = list(components) 
+    return KEY_COMPONENTS_SEPARATOR . join(
+        map(lambda x: str(x).strip(), flatten(components)))
+                                                                  
+                                                                  
 def get_connection(connection_url=None): 
     """ 
     Return the Redis connection by the connection URL.  
@@ -61,6 +90,10 @@ def get_connection(connection_url=None):
             conn_params.update({'db': db_num})
     return redis.Redis(**conn_params)
 
+
+##
+# Helpers classes
+##
 
 class GeoIPHelper(object):
     """
@@ -164,32 +197,45 @@ class RegisteredEventHelper(object):
         self.is_stored = bool(self._event.pk)
 
     @classmethod
-    def get_event_smth_key(cls, request, query_type):
+    def get_events_smth_key(cls, request, query_type):
         """
         Return events query key for the HTTPRequest instance
         """
         request_uuid = getattr(request, '_uuid', None)
-        return 'registered:events:{0}:{1}:{2}' . format(
-            query_type,
-            request__uuid, 
+        return glue('registered', 'events', query_type, request_uuid, 
             datetime.date.today().strftime('%Y-%m-%d')) if request_uuid else None
             
     @classmethod
-    def get_event_data_key(cls, request):
+    def get_request_events_key(cls, request):
         """
         Return events query key for the HTTPRequest instance
         """
-        return cls.get_event_smth_key(request, 'data')
+        return cls.get_events_smth_key(request, 'data')
             
     @classmethod
-    def get_event_unique_key(cls, request):
+    def get_stored_event(cls, instance, event_type_slug):
+        assert isinstance(instance, models.Model), 'Invalid parameter'
+        try:
+            content_type = ContentType.objects.get_for_model(instance)
+            event_type = RegisteredEventType.objects.get(
+                slug=event_type_slug)
+        except (RegisteredEventType.DoesNotExist, AttributeError):
+            logger.error('There are not RegisteredEventType with slug="%s"',  
+                         event_type_slug)
+        else:
+            return glue('registered', 'event', 
+                event_type.pk, content_type.pk, instance.pk)
+
+        raise InconsistentDataError
+
+    @classmethod
+    def register(cls, event_stored_key, request):
+        events_queue_key = cls.get_request_events_key(request)
+        if events_queue_key:
+            rconn = get_connection()
+            rconn.lpush(events_queue_key, event_stored_key)
+
         """
-        Return events query key for the HTTPRequest instance
-        """
-        return cls.get_event_smth_key(request, 'unique')
-        
-    def register(self, request):
-        cls = type(self)
         self._event.site = get_current_site(request)
         self._event.url = request.path
         self._event.username = request.META.get('REMOTE_USER')
@@ -202,11 +248,7 @@ class RegisteredEventHelper(object):
         data = GeoIPHelper.get_geoip_data(self._event.ip_address) 
         self._event.event_data = dict((k, str(v)) for k, v in data.items())
         self._event.is_unique = self._event.check_is_unique()
-        self.store_event()
-
-    def store_event(self):
-        self._event.save()
-
+        """
 
 def process_stats_data(data, date_range):
     """
@@ -254,7 +296,19 @@ def process_stats_data(data, date_range):
 
 class RegisteredEventMiddleware(object):
     """
-    Set the unique key for the every request
+    Set the unique key for the every request and process events queue in the
+    end.
     """
     def process_request(self, request):
-        setattr(request, '_uuid', str(uuid.uuid4())
+        setattr(request, '_uuid', str(uuid.uuid4()))
+
+    def process_response(self, request, response):
+        rconn = get_connection()
+        events_queue_key = RegisteredEventHelper.get_request_events_key(request)
+        logger.debug(events_queue_key)
+        while True:
+            event_key = rconn.lpop(events_queue_key)
+            logger.debug(event_key)
+            if not event_key:
+                break
+        return response

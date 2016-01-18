@@ -7,7 +7,6 @@ import os
 import datetime
 import logging
 
-from django.db import models
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -313,28 +312,17 @@ def register_event(instance, event_type_slug):
     """
     Register (save) the Event with defined type slug.
     """
-    assert isinstance(instance, models.Model), 'Invalid parameter'
-    try:
-        content_type = ContentType.objects.get_for_model(instance)
-        event_type = RegisteredEventType.objects.get(
-            slug=event_type_slug)
-    except (RegisteredEventType.DoesNotExist, AttributeError):
-        logger.error('There are not RegisteredEventType with slug="%s"',  
-                     event_type_slug)
-    else:
-        return RegisteredEvent.objects.create(
-            event_type=event_type,
-            content_type=content_type,
-            object_id=instance.pk)
-    return None
+    return RegisteredEventHelper.get_stored_event(
+        instance, 
+        event_type_slug)
 
 
 @register.filter
-def process_event(event, request):
+def process_event(event_stored_key, request):
     """
     Register the event (define and store attributes values).
     Return empty string.
     """
-    assert isinstance(event, RegisteredEvent), 'Invalid parameter'
-    RegisteredEventHelper(event).register(request)
+    logger.debug('Saved key: %s', event_stored_key)
+    RegisteredEventHelper.register(event_stored_key, request)
     return ''
