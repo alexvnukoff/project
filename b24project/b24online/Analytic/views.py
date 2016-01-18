@@ -22,7 +22,7 @@ from b24online.models import (Organization, Company, Tender,
     B2BProduct)
 from centerpokupok.models import B2CProduct
 from b24online.Analytic.forms import RegisteredEventStatsForm
-from b24online.stats import process_stats_data
+from b24online.stats.utils import process_stats_data
 
 logger = logging.getLogger(__name__)
 

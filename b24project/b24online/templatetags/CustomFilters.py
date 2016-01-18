@@ -23,7 +23,7 @@ from django import template
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
-from b24online.stats import RegisteredEventHelper
+from b24online.stats.helpers import RegisteredEventHelper
 
 from tpp.SiteUrlMiddleWare import get_request
 

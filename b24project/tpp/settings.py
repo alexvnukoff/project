@@ -169,7 +169,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
-    'b24online.stats.RegisteredEventMiddleware',
+    'b24online.stats.middleware.RegisteredEventMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
