@@ -45,7 +45,7 @@ class RegisteredEventMiddleware(object):
             _ip = GeoIPHelper.get_random_ip() \
                     if getattr(settings, 'DEBUG_RANDOM_IPS', False) \
                         else GeoIPHelper.get_request_ip(request)
-            _ip = random.choice(ips)
+            ### _ip = random.choice(ips)
             if _ip:
                 event_data = {}
                 event_data['ip_address'] = _ip
