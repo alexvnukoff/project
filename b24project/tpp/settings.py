@@ -169,6 +169,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
+    'b24online.stats.middleware.RegisteredEventMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -322,5 +323,11 @@ try:
 except ImportError as e:
     logging.info(e)
 
+
+###################### Statistics settings ###################################
 # Set the path to GeoIP database
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
+
+# The Redis DB url for stats
+EVENT_STORE_REDIS_URL = 'redis://127.0.0.1:6379/8'
+
