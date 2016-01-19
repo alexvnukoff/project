@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.contrib.auth.admin import UserAdmin
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
                                   PolymorphicMPTTParentModelAdmin
 
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEvent)
+                              RegisteredEventStats, RegisteredEvent, User)
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -56,6 +57,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
     list_filter = ['registered_at']    
 
 
+admin.site.register(User, UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
 admin.site.register(Branch, MPTTModelAdmin)
