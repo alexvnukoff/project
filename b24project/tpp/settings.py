@@ -328,5 +328,6 @@ except ImportError as e:
 # Set the path to GeoIP database
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
 
+# The Redis DB url for stats
 EVENT_STORE_REDIS_URL = 'redis://127.0.0.1:6379/8'
 
