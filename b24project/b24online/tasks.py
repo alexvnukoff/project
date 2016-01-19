@@ -50,7 +50,7 @@ def process_events_queue(request_uuid, extra_data):
 
 
 @periodic_task(name="b24online.process_events_stats",
-    run_every=crontab(**getattr(settings, 'STATS_CRONTAB', {'minute': 5})))
+    run_every=crontab(**{'minute': '*/5'}))
 def process_events_stats():
     today = datetime.date.today()
     rconn = get_redis_connection()
