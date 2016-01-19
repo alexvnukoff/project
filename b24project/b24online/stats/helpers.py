@@ -79,10 +79,8 @@ class GeoIPHelper(object):
         """
         Return the info from GeoIP database for IP address.
         """
-        logger.debug('Here')
         geoip_data = {}
         gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
-        logger.debug(gi_db_path)
         if gi_db_path:
             try:
                 gi_city_h = GeoIP.open(
@@ -151,14 +149,15 @@ class RegisteredEventHelper(object):
             logger.error(err_msg)
             raise InconsistentDataError(err_msg)
         else:
-            return glue('registered', 'event', 
-                event_type.pk, content_type.pk, instance.pk)
+            return [event_type.pk, content_type.pk, instance.pk]
 
     @classmethod
-    def register(cls, event_stored_key, request):
+    def register(cls, event_stored_data, request):
         """
         Store the Event in Redis queue.
         """
+        event_stored_key = glue('registered', 'event', event_stored_data)
+        logger.debug(event_stored_key)
         request_uuid = getattr(request, '_uuid', None)
         if request_uuid:
             events_queue_key = cls.get_request_key(request_uuid, 'queue')

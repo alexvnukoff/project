@@ -8,6 +8,9 @@ import redis
 from urllib.parse import unquote, urlparse
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+
+from b24online.models import RegisteredEventType
 from b24online.stats import InvalidParameterError
 
 

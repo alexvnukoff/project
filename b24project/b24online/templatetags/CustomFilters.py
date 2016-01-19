@@ -318,10 +318,10 @@ def register_event(instance, event_type_slug):
 
 
 @register.filter
-def process_event(event_stored_key, request):
+def process_event(event_stored_data, request):
     """
     Register the event (define and store attributes values).
     Return empty string.
     """
-    RegisteredEventHelper.register(event_stored_key, request)
+    RegisteredEventHelper.register(event_stored_data, request)
     return ''
