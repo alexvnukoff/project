@@ -11,15 +11,19 @@ import struct
 import datetime
 import logging
 import uuid
+import hashlib
 import GeoIP
 
 from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import smart_str
 
 from b24online.models import RegisteredEventType
 from b24online.stats import InconsistentDataError
 from b24online.stats.utils import glue, get_redis_connection
+
+logger = logging.getLogger(__name__)
 
 
 class GeoIPHelper(object):
@@ -75,8 +79,10 @@ class GeoIPHelper(object):
         """
         Return the info from GeoIP database for IP address.
         """
+        logger.debug('Here')
         geoip_data = {}
         gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
+        logger.debug(gi_db_path)
         if gi_db_path:
             try:
                 gi_city_h = GeoIP.open(
@@ -118,6 +124,9 @@ class RegisteredEventHelper(object):
     Wrapper for RegisteredEvent.
     """
 
+    ready_to_process = glue('registered', 'events', 'ready')
+    geo_data_key = glue('registered', 'events', 'geo_data')
+
     @classmethod
     def get_request_key(cls, request_uuid, affix):
         """
@@ -156,3 +165,28 @@ class RegisteredEventHelper(object):
             if events_queue_key:
                 rconn = get_redis_connection()
                 rconn.lpush(events_queue_key, event_stored_key)
+
+    @classmethod
+    def get_unique_key(cls, extra_data):
+        """
+        Return the unique key based on instance, IP and UA.
+        """
+        ip = extra_data.get('ip_address')
+        ua = extra_data.get('user_agent')
+        if all((ip, ua)):
+            meaning_data = (ip, ua)
+            key_str_raw = ':' . join(map(smart_str, meaning_data))
+            key_str = key_str_raw.encode('utf-8')
+            return hashlib.md5(key_str).hexdigest()
+        return None
+
+    @classmethod
+    def get_geoip_info_key(cls, extra_data):
+        key_data = []
+        for _key in ('country_code', 'country_name', 'city'):
+            _value = extra_data.get(_key)
+            if not _value or _value == 'None':
+                _value = 'undef'
+            key_data.append(_value.strip())
+        return glue(key_data) if key_data else None
+        
