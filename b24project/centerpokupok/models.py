@@ -21,11 +21,22 @@ import uuid
 from decimal import Decimal
 
 
+class CategoryManager(models.Manager):
+    def get_queryset(self):
+        return super(CategoryManager, self).get_queryset().filter(parent=None)
+
+class AdminCategoryManager(models.Manager):
+    def get_queryset(self):
+        return super(AdminCategoryManager, self).get_queryset()
+
 class B2CProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+
+    objects = CategoryManager()
+    foradmin = AdminCategoryManager()
 
     @staticmethod
     def get_index_model(**kwargs):

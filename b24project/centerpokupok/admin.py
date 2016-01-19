@@ -16,7 +16,12 @@ class ItemBasketAdmin(admin.ModelAdmin):
     readonly_fields = ['basket', 'product', 'quantity', ]
 
 
-admin.site.register(B2CProductCategory, MPTTModelAdmin)
+class MyModelAdmin(MPTTModelAdmin):
+    def get_queryset(self, request):
+             return B2CProductCategory.foradmin.all()
+
+
+admin.site.register(B2CProductCategory, MyModelAdmin)
 admin.site.register(B2CProduct, ModelAdmin)
 admin.site.register(UserBasket, UserBasketAdmin)
 admin.site.register(BasketItem, ItemBasketAdmin)
