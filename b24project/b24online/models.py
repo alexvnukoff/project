@@ -4,7 +4,6 @@ import logging
 import os
 from argparse import ArgumentError
 from urllib.parse import urljoin
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -31,7 +30,6 @@ from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
-
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
 from b24online.utils import generate_upload_path, reindex_instance, document_upload_path
 from tpp.celery import app
@@ -55,6 +53,7 @@ image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
 logger = logging.getLogger(__name__)
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -120,7 +119,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if organization_ids is None:
             organization_ids = [org.pk for org in
                                 get_objects_for_user(self, 'b24online.manage_organization', Organization)]
-            cache.set(key, organization_ids,  60 * 10)
+            cache.set(key, organization_ids, 60 * 10)
 
         return organization_ids or []
 
@@ -1484,6 +1483,9 @@ class RegisteredEventType(models.Model):
         return self.name
 
 
+##
+# Models for stats
+##
 class _RegisteredEventAbs(models.Model):
     """
     The registered events abstract class.
@@ -1512,10 +1514,10 @@ class RegisteredEventStats(_RegisteredEventAbs):
     class Meta:
         verbose_name = _('Registered events stats')
         unique_together = ('event_type', 'site', 'content_type',
-            'object_id', 'registered_at')
+                           'object_id', 'registered_at')
 
     def __str__(self):
-        return _('Event stats of type "{0}" for "{1}"') . \
+        return _('Event stats of type "{0}" for "{1}"'). \
             format(self.event_type.name, str(self.item))
 
     def get_kwargs(self):
@@ -1543,7 +1545,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
                     _value = 'undef'
                 key_data.append(_value.strip())
             for _type in ('unique', 'total'):
-                _key = ':' . join(key_data + [_type,])
+                _key = ':'.join(key_data + [_type, ])
                 if _key in self.extra_data:
                     try:
                         _old = int(self.extra_data)
@@ -1569,8 +1571,8 @@ class RegisteredEventStats(_RegisteredEventAbs):
             else:
                 cnt = self.total_amount or 0
             extra_info.append([_('Undefined'), cnt,
-                [(_('Undefined'), self.unique_amount or 0,
-                 self.total_amount or 0), ]])
+                               [(_('Undefined'), self.unique_amount or 0,
+                                 self.total_amount or 0), ]])
         else:
             data = {}
             for item_key, item_value in self.extra_data.items():
@@ -1581,7 +1583,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
                 except TypeError:
                     continue
                 else:
-                    data.setdefault(country_name, {})\
+                    data.setdefault(country_name, {}) \
                         .setdefault(city, {})[cnt_type] = _value
             extra_info = []
             for country_name, data_1 in data.items():
@@ -1626,11 +1628,11 @@ class RegisteredEvent(_RegisteredEventAbs):
         verbose_name = _('Registered event')
         verbose_name_plural = _('Registered events')
         unique_together = ('event_type', 'site', 'content_type',
-            'object_id', 'registered_at', 'ip_address',
-            'user_agent')
+                           'object_id', 'registered_at', 'ip_address',
+                           'user_agent')
 
     def __str__(self):
-        return _('Event of type "{0}" for "{1}"') . \
+        return _('Event of type "{0}" for "{1}"'). \
             format(self.event_type.name, str(self.item))
 
     @property
@@ -1641,7 +1643,7 @@ class RegisteredEvent(_RegisteredEventAbs):
         meaning_data = (self.event_type.slug, self.ip_address,
                         self.user_agent, self.content_type.id,
                         self.object_id)
-        key_str_raw = ':' . join(map(smart_str, meaning_data))
+        key_str_raw = ':'.join(map(smart_str, meaning_data))
         key_str = key_str_raw.encode('utf-8')
         return hashlib.md5(key_str).hexdigest()
 
@@ -1650,28 +1652,28 @@ class RegisteredEvent(_RegisteredEventAbs):
         cls = type(self)
         try:
             cls.objects.filter(event_type=self.event_type,
-                site=self.site, content_type=self.content_type,
-                object_id=self.object_id, event_hash=self.unique_key,
-                registered_at__startswith=datetime.date.today())[0]
+                               site=self.site, content_type=self.content_type,
+                               object_id=self.object_id, event_hash=self.unique_key,
+                               registered_at__startswith=datetime.date.today())[0]
         except IndexError:
             return True
         else:
             return False
 
-    @property            
+    @property
     def geo_info(self):
         if not self.event_data:
             return None
         data = []
         for item_code, item_name in (
-            ('country_code', _('Country code')),
-            ('country_name', _('Country name')),
-            ('city', _('City'))):
+                ('country_code', _('Country code')),
+                ('country_name', _('Country name')),
+                ('city', _('City'))):
             item_value = self.event_data.get(item_code)
             if item_value:
-                data.append('{0} : {1}' . format(item_name, item_value))
+                data.append('{0} : {1}'.format(item_name, item_value))
         if data:
-            return ', ' . join(data)
+            return ', '.join(data)
         else:
             return None
 
@@ -1722,7 +1724,7 @@ def process_event(sender, instance, created, **kwargs):
     if instance.event_hash:
         # Try to get or create stats instance
         try:
-            stats = RegisteredEventStats.objects\
+            stats = RegisteredEventStats.objects \
                 .get(event_type=instance.event_type,
                      site=instance.site,
                      content_type=instance.content_type,
