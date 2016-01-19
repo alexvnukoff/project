@@ -124,6 +124,7 @@ class RegisteredEventHelper(object):
 
     ready_to_process = glue('registered', 'events', 'ready')
     geo_data_key = glue('registered', 'events', 'geo_data')
+    already_key = glue('registered', 'events', 'already')
 
     @classmethod
     def get_request_key(cls, request_uuid, affix):

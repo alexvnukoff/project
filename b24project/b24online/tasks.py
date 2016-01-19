@@ -52,23 +52,32 @@ def process_events_queue(request_uuid, extra_data):
 @periodic_task(name="b24online.process_events_stats",
     run_every=crontab(**getattr(settings, 'STATS_CRONTAB', {'minute': 5})))
 def process_events_stats():
-    return 
     today = datetime.date.today()
     rconn = get_redis_connection()
     if rconn:
         geo_data_key = RegisteredEventHelper.geo_data_key
         ready_to_process_key = RegisteredEventHelper.ready_to_process
+        already_key = RegisteredEventHelper.already_key
+        stats_ids = []
         while True:
             event_key_b = rconn.spop(ready_to_process_key)
             if not event_key_b:
                 break
+
+            already = False
             event_key = event_key_b.decode()
-            total = rconn.get(event_key)
+            total = rconn.get(event_key) or 0
             try:
                 total = int(total)
             except TypeError:
                 continue
             else:
+                rconn.set(event_key, 0)
+                if rconn.hget(already_key, event_key):
+                    already = True
+                else:
+                    rconn.hset(already_key, event_key, True)
+
                 geo_data = rconn.hget(geo_data_key, event_key)
                 geo_data = geo_data.decode()                
             try:
@@ -92,7 +101,7 @@ def process_events_stats():
                     unique_amount=0, total_amount=0)
             
             data = stats.extra_data or {}
-            _add = {'unique': 1, 'total': total}
+            _add = {'unique': 1 if not already else 0, 'total': total}
             for _type in ('unique', 'total'):
                 _key = glue(geo_data, _type)
                 if _key in data:
@@ -104,19 +113,9 @@ def process_events_stats():
                 else:
                     _new = _add.get(_type, 0)
                 data[_key] = str(_new)
+
             stats.extra_data = data
-            
-            unique = 0
-            total = 0
-            for _k, _v in stats.extra_data.items():
-                try:
-                    v = int(_v)
-                except TypeError:
-                    continue
-                else:
-                    d = _k.split(':')[-1]
-                    if d == 'unique':
-                        stats.unique_amount += v
-                    elif d == 'total':
-                        stats.total_amount += v
+            stats.unique_amount += _add['unique']            
+            stats.total_amount += _add['total']            
             stats.save()
+
