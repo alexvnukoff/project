@@ -5,14 +5,14 @@ from django.contrib.admin import ModelAdmin
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth.admin import UserAdmin
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
                                   PolymorphicMPTTParentModelAdmin
 
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEvent)
+                              RegisteredEventStats, RegisteredEvent, User)
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -92,6 +92,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
         ) + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
+admin.site.register(User, UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
 admin.site.register(Branch, MPTTModelAdmin)
