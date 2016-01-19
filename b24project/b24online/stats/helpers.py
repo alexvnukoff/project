@@ -73,7 +73,7 @@ class GeoIPHelper(object):
                     if ip_str and cls.is_valid_ip(ip_str):
                         return ip_str
         return None
-    
+
     @classmethod
     def get_geoip_data(cls, ip):
         """
@@ -107,7 +107,7 @@ class GeoIPHelper(object):
     def get_random_ip():
         """
         Return random generated IP address.
-        
+
         For debugging.
         """
         import random
@@ -131,10 +131,10 @@ class RegisteredEventHelper(object):
         """
         Return events query key for the HTTPRequest instance
         """
-        return glue('registered', 'events', 
+        return glue('registered', 'events',
             datetime.date.today().strftime('%Y-%m-%d'),
             request_uuid, affix)
-            
+
     @classmethod
     def get_stored_event(cls, instance, event_type_slug):
         """
@@ -146,7 +146,7 @@ class RegisteredEventHelper(object):
             event_type = RegisteredEventType.objects.get(
                 slug=event_type_slug)
         except (RegisteredEventType.DoesNotExist, AttributeError) as exc:
-            err_msg = 'Error: %s' % esc
+            err_msg = 'Error: %s' % exc
             logger.error(err_msg)
             raise InconsistentDataError(err_msg)
         else:
@@ -189,4 +189,4 @@ class RegisteredEventHelper(object):
                 _value = 'undef'
             key_data.append(_value.strip())
         return glue(key_data) if key_data else None
-        
+
