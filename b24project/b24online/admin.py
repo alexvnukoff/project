@@ -1,18 +1,25 @@
 # -*- encoding: utf-8 -*-
 
+import logging
+
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.contrib.auth.admin import UserAdmin
-from mptt.admin import MPTTModelAdmin
 from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponseRedirect
+
+from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
     PolymorphicMPTTParentModelAdmin
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
                               RegisteredEventStats, RegisteredEvent, User)
+from b24online.stats.utils import convert_date
+
+logger = logging.getLogger(__name__)
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -48,13 +55,6 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug', 'director', 'company_paypal_account', ]
 
 
-class RegisteredEventAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'is_unique', 'ip_address', 'user_agent',
-                    'registered_at', 'geo_info']
-    list_per_page = 20
-    list_filter = ['is_unique', 'registered_at']
-
-
 class RegisteredEventStatsAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'show_unique_amount', 
                     'show_total_amount', 'registered_at']
@@ -62,6 +62,9 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
     list_filter = ['registered_at']
 
     def show_amount(self, object, cnt_type):
+        """
+        Return the the appropriate href to detailed stats.
+        """
         object_kwargs = object.get_kwargs()
         object_kwargs.update({'cnt_type': cnt_type})
         return '<a href="{1}?date={2}">{0}</a>' . format(
@@ -70,18 +73,32 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
             object.registered_at.strftime('%Y-%m-%d'))
 
     def show_unique_amount(self, object):
+        """
+        For 'unique' counter.
+        """
         return self.show_amount(object, 'unique')
     show_unique_amount.allow_tags = True
     show_unique_amount.short_description = _('Unique amount')
 
     def show_total_amount(self, object):
+        """
+        For 'total' counter.
+        """
         return self.show_amount(object, 'total')
     show_total_amount.allow_tags = True
     show_total_amount.short_description = _('Total amount')
 
-    def show_stats(self, request):
-        pass
-                
+    def show_stats(self, request, event_type_id, content_type_id,
+                   instance_id, cnt_type):
+        logger.debug('Step 1')
+        if 'date' in request.GET:
+            registered_at = convert_date(request.GET['date'])
+            logger.debug(registered_at)
+        ## stats_item = RegisteredEventStats.objects.get_stats_item()
+        logger.debug('Step 2')
+        return HttpResponseRedirect(
+            reverse('admin:b24online_registeredeventstats_changelist'))
+
     def get_urls(self):
         return patterns(
             '',
@@ -121,5 +138,4 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
-admin.site.register(RegisteredEvent, RegisteredEventAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)
