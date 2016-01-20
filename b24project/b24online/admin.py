@@ -115,7 +115,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     'opts': RegisteredEventStats._meta,
                     }
                 return render_to_response(
-                    'admin/test.html', 
+                    'admin/stats.html', 
                     context,    
                     context_instance=RequestContext(request))
 
