@@ -1486,7 +1486,7 @@ class RegisteredEventType(models.Model):
 ##
 # Models for stats
 ##
-class _RegisteredEventAbs(models.Model):
+class RegisteredEventMixin(models.Model):
     """
     The registered events abstract class.
     """
@@ -1502,7 +1502,7 @@ class _RegisteredEventAbs(models.Model):
         abstract = True
 
 
-class RegisteredEventStats(_RegisteredEventAbs):
+class RegisteredEventStats(RegisteredEventMixin):
     """
     The registered events stats per day.
     """
@@ -1601,7 +1601,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
         return extra_info
 
 
-class RegisteredEvent(_RegisteredEventAbs):
+class RegisteredEvent(RegisteredEventMixin):
     """
     The registered events.
 

@@ -10,6 +10,9 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.contrib.sites.shortcuts import get_current_site
+from django.template import RequestContext
 
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
@@ -90,14 +93,32 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
 
     def show_stats(self, request, event_type_id, content_type_id,
                    instance_id, cnt_type):
-        logger.debug('Step 1')
+        site = get_current_site(request)
         if 'date' in request.GET:
             registered_at = convert_date(request.GET['date'])
-            logger.debug(registered_at)
-        ## stats_item = RegisteredEventStats.objects.get_stats_item()
-        logger.debug('Step 2')
-        return HttpResponseRedirect(
-            reverse('admin:b24online_registeredeventstats_changelist'))
+            try:
+                stats = RegisteredEventStats.objects.get(
+                    event_type_id=event_type_id, 
+                    # site_id=site.pk,
+                    content_type_id=content_type_id,
+                    object_id=instance_id,
+                    registered_at=registered_at)
+            except RegisteredEventStats.DoesNotExist:
+                return HttpResponseRedirect(
+                    reverse('admin:b24online_registeredeventstats_changelist'))
+            else:
+                data_grid = stats.get_extra_info(cnt_type)
+                context = {
+                    'data_grid': data_grid,
+                    'item': stats,
+                    'has_permission': True,
+                    'opts': RegisteredEventStats._meta,
+                    }
+                return render_to_response(
+                    'admin/test.html', 
+                    context,    
+                    context_instance=RequestContext(request))
+
 
     def get_urls(self):
         return patterns(
