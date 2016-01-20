@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
+{% load humanize %}
 
   <link href="{% static 'b24online/css/jquery.bxslider.css' %}" rel="stylesheet" />
 
@@ -18,6 +19,7 @@
     <ul class="listprd">
     {% for product in object_list %}
         <li>
+         {% if product.is_coupon %}<span class="universal-sale">-{{ product.coupon_discount_percent|intword }}%</span>{% endif %}
          {% setContextMenu product update_url=update_url delete_url=delete_url %}
           <div class="thumb">
               <a href="{% url 'products:B2CDetail' product.slug product.pk %}">
@@ -34,6 +36,7 @@
                 {% endif %}
             <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
            </div>
+           {% if product.is_coupon %}<label style="color:555">{% trans " Discount price until" %}<br>{{ product.end_coupon_date }}</label>{% else %}<label>&nbsp;<br>&nbsp;</label>{% endif %}
             <div class="price">
                 {% if product.cost %}
                     <span{% if product.is_coupon %} style="color:red"{% endif %}>{{ product.currency|getSymbol }}{{ product.get_discount_price|formatPrice }}</span>
@@ -41,7 +44,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
+            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="{% if product.is_coupon %}coupon_btnbuy{% else %}btnbuy{% endif %}">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>
