@@ -89,18 +89,21 @@
 
             {% if paypal_form %}
                 <div style="">{{ paypal_form.render }}</div>
+
+                <input id="id_quantity_src" placeholder="{% trans 'Amount' %}" type="text" class="text" style="margin:10px 0;width:100px;" />
+
+                <script>
+                $("#id_quantity_src").keyup(function() {
+                    document.getElementById('id_quantity').value = this.value;
+                });
+                </script>
+
             {% else %}
                 <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
             {% endif %}
 
 
-            <input id="id_quantity_src" placeholder="{% trans 'Amount' %}" type="text" class="text" style="margin:10px 0;width:100px;" />
 
-            <script>
-            $("#id_quantity_src").keyup(function() {
-                document.getElementById('id_quantity').value = this.value;
-            });
-            </script>
 
     </div>
 
