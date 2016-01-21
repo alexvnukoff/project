@@ -4,7 +4,10 @@
 The utitlities for :mod:`b24online.stats`.
 """
 
+import datetime
+import re
 import redis
+
 from urllib.parse import unquote, urlparse
 
 from django.conf import settings
@@ -15,6 +18,7 @@ from b24online.stats import InvalidParameterError
 
 
 KEY_COMPONENTS_SEPARATOR = ':'
+DATE_RE = re.compile('^(\d{2,4})-(\d{1,2})-(\d{1,2}).*?$')
 
 
 def flatten(x):
@@ -107,3 +111,14 @@ def process_stats_data(data, date_range):
     return data_grid
 
 
+def convert_date(date_str):
+    """
+    Return 'datetime.date' instance from the string 'YYYY-MM-DD'.
+    """
+    assert isinstance(date_str, str), 'Invalid parameter'
+    _match = DATE_RE.match(date_str)
+    if _match:
+        _year, _month, _day = map(int, _match.groups())
+        return datetime.date(_year, _month, _day)
+    else:
+        return None

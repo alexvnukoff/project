@@ -1,0 +1,78 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+{% load CustomFilters %}
+
+{% block extrahead %}{{ block.super }}
+<script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; {% trans 'Events stats' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="results">
+<table id="result_list">
+  <thead>
+    <tr>
+      <!-- th scope="col">dsfsdf</th -->
+      <th>{% trans 'Country' %}</th>
+      <th>{% trans 'Amount for Country' %}</th>
+      <th>{% trans 'City' %}</th>
+      <th>{% trans 'Amount for City' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for country_name, country_amount, data_1 in data_grid %}
+      {% get_length data_1 as rowspan %}    
+      {% for city, counter in data_1 %}
+        <tr valign="top">
+          {% if forloop.first %}            
+          <td rowspan="{{ rowspan }}" align="center">{{ country_name }}</td>
+          <td rowspan="{{ rowspan }}" align="center" color="{{ color_1 }}">{{ country_amount }}</td>
+          {% endif %}
+          <td align="center">{{ city }}</td>
+          <td align="center">{{ counter }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+</div>
+<br/><br/>
+<div id="canvas-holder">
+  <canvas id="stats-chart" width="300" height="300"/>
+</div>
+
+<script type="application/javascript">
+  var pieData = [
+  {% for country_name, country_amount, data_1 in data_grid %}
+	  {
+		  value: {{ country_amount }},
+			color: chart_colors[{{ forloop.counter|add:"20" }}],
+			highlight: chart_colors[{{ forloop.counter|add:"35" }}],
+			label: "{{ country_name }}"
+		},
+  {% endfor %}
+  ];  
+  window.onload = function() {
+    var ctx = document.getElementById("stats-chart").getContext("2d");
+    window.myPie = new Chart(ctx).Pie(pieData);
+  };
+                              
+                              
+</script>
+
+{% endblock %}

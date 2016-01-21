@@ -33,19 +33,11 @@ class RegisteredEventMiddleware(object):
         """
         Process the events queue and return HTTPResponse.
         """
-        # Async processing of events 
-        # FIXME: (andrey_k) maybe necessary use smth like USE_CELERY?
-        
-        # For debug
-        ips = ['111.171.130.29', '51 159.8.161.4', '51 95.110.96.67',
-               '95.110.96.67']
         request_uuid = getattr(request, '_uuid', None)
         if request_uuid:
-            
             _ip = GeoIPHelper.get_random_ip() \
                     if getattr(settings, 'DEBUG_RANDOM_IPS', False) \
                         else GeoIPHelper.get_request_ip(request)
-            ### _ip = random.choice(ips)
             if _ip:
                 event_data = {}
                 event_data['ip_address'] = _ip
