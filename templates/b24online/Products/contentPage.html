@@ -6,8 +6,6 @@
    {% include "b24online/main/paginator.html" %}
    {% include "b24online/main/popupFilter.html" %}
    {% include "b24online/main/local_menu_script.html" %}
-
-
     <ul class="listprd">
     {% for product in object_list %}
         <li>
@@ -34,7 +32,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{{ product.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
+            <a href="{% url 'products:buyB2B' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

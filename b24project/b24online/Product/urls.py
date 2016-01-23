@@ -1,9 +1,12 @@
 from django.conf.urls import url
 
-from b24online.Product.views import B2BProductList, B2CProductList, B2CPCouponsList, B2BProductCreate, B2BProductUpdate, \
-    B2CProductCreate, B2CProductUpdate, B2BProductDelete, B2CProductDelete, categories_list, B2BProductDetail, \
-    B2CProductDetail, B2BProductGalleryImageList, DeleteB2BProductGalleryImage, B2BProductDocumentList, \
-    DeleteB2BProductDocument
+from b24online.Product.views import (B2BProductList, B2CProductList, 
+    B2CPCouponsList, B2BProductCreate, B2BProductUpdate, 
+    B2CProductCreate, B2CProductUpdate, B2BProductDelete, 
+    B2CProductDelete, categories_list, B2BProductDetail, 
+    B2CProductDetail, B2BProductGalleryImageList, 
+    DeleteB2BProductGalleryImage, B2BProductDocumentList, 
+    DeleteB2BProductDocument, B2BProductBuy, B2CProductBuy)
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
 
@@ -26,6 +29,11 @@ urlpatterns = [
     url(r'^delete-b2c/(?P<pk>[0-9]+)/$', B2CProductDelete.as_view(), name="deleteB2C"),
     url(r'^category-list$', categories_list, {'model': B2BProductCategory}, name="B2BCategoryList"),
     url(r'^category-list-b2c$', categories_list, {'model': B2CProductCategory}, name="B2CCategoryList"),
+
+    url(r'^b2b/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', 
+        B2BProductBuy.as_view(), name="buyB2B"),
+    url(r'^b2c/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', 
+        B2CProductBuy.as_view(), name="buyB2C"),
     url(r'^b2b/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', B2BProductDetail.as_view(), name="detail"),
     url(r'^b2c/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', B2CProductDetail.as_view(), name="B2CDetail"),
 

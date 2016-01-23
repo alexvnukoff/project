@@ -258,10 +258,10 @@ class B2BProductCreate(ItemCreate):
 
     def post(self, request, *args, **kwargs):
         """
-            Handles POST requests, instantiating a form instance and its inline
-            formsets with the passed POST variables and then checking them for
-            validity.
-            """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and then checking them for
+        validity.
+        """
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
@@ -600,3 +600,24 @@ class B2BProductDocumentList(DocumentList):
 
 class DeleteB2BProductDocument(DeleteDocument):
     owner_model = B2BProduct
+
+
+class B2BProductBuy(ItemDetail):
+    model = B2BProduct
+    template_name = 'b24online/Products/buyB2BProduct.html'
+    current_section = _('Products B2B')
+
+    def get_queryset(self):
+        return super().get_queryset()\
+            .prefetch_related('company', 'company__countries')
+
+
+class B2CProductBuy(ItemDetail):
+    model = B2CProduct
+    template_name = 'b24online/Products/buyB2CProduct.html'
+    current_section = _('Products B2C')
+
+    def get_queryset(self):
+        return super().get_queryset()\
+            .prefetch_related('company', 'company__countries')
+

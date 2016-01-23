@@ -89,3 +89,14 @@ class B2CProductForm(forms.ModelForm):
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
+
+class ProductBuyForm(forms.Form):
+    """
+    The form to add DealItem.
+    """
+    customer_type = forms.ChoiceField(
+        label=_('Customer type'),
+        required=True, 
+        choices=DealOrder.CUSTOMER_TYPES)
+        
+                                        
