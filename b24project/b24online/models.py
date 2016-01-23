@@ -1,9 +1,13 @@
+# -*- encoding: utf-8 -*-
+
+import os
 import datetime
 import hashlib
 import logging
-import os
+
 from argparse import ArgumentError
 from urllib.parse import urljoin
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -159,6 +163,33 @@ class IndexedModelMixin:
         raise NotImplementedError('Reindex not implemented')
 
 
+class AbstractRegisterInfoModel(models.Model):
+    """
+    The abstract model-container of registration info fields.
+    """
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+        verbose_name=_('Creator'), 
+        related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+        verbose_name=_('Editor'),
+        related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(_('Creation time'),
+        default=timezone.now)
+    updated_at = models.DateTimeField(_('Update time'),
+        auto_now=True)
+    
+    class Meta:
+        abstract = True
+       
+    @property    
+    def created(self):
+        """
+        Return the created_at datetime text by selected format.
+        """
+        #FIXME: (andrey_k) select datetime format from settings
+        return seld.created_at.strftime('%d/%m/%Y %H:%I:%S')
+
+
 class AdvertisementPrice(models.Model):
     ADVERTISEMENT_TYPES = [('banner', _('Banners')), ('context', _('Context Advertisement'))]
 
@@ -178,9 +209,153 @@ class AdvertisementPrice(models.Model):
         unique_together = ("content_type", "object_id")
 
 
-class Order(models.Model):
-    pass
+class Order(AbstractRegisterInfoModel):
+    """
+    The model class for Client Orders to buy Products.
+    
+    Assume that the order creator is a customer person or a delegate of customer
+    company.
+    """
+    AS_COMPANY, AS_PERSON = 'company', 'person'
+    CUSTOMER_TYPES = (AS_COMPANY, _('Company'), AS_PERSON, _('Person'))
 
+    DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
+    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
+                (PARTIALLY, _('Partially paid')), (PAID, _('Paid')))
+
+    customer_type = models.CharField(_('Customer type'), max_length=10, 
+                                     choices=CUSTOMER_TYPES, 
+                                     null=False, blank=False)
+    customer_company = models.ForeignKey('Company', 
+                                         related_name='customer_company',
+                                         verbose_name=_('Customer company'),
+                                         null=True, blank=True)
+    order_no = models.CharField(_('Order No.'), max_length=50, 
+                                blank=True, null=True, db_index=True)
+    total_cost = models.DecimalField(_('Total order cost'), 
+                                     max_digits=15, decimal_places=2, 
+                                     null=True, blank=False, editable=False)
+    paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
+                                   db_index=True)
+    status = models.CharField(_('Order status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, blank=False)
+    
+    class Meta:
+        verbose_name = _('Product order')
+        verbose_name_plural = _('Product orders')
+
+    def __str__(self):
+        _data = [_('Order from %s') % self.created,]
+        if self.order_no:
+            _data.append('%s %s' % (_('order No.') % self.order_no))
+        return ', ' . join(_data)
+        
+    @property
+    def customer_person(self):
+        return self.created_by 
+        
+    def get_customer_type(self):
+        """
+        Return the customer type title: Company or Person.
+        """
+        return type(self).CUSTOMER_TYPES.get(self.customer_type)
+
+    def get_status(self):
+        """
+        Return the order status.
+        """
+        return type(self).STATUSES.get(self.status)
+       
+    # FIXME: add the methods for already paid, unpaid deals and total
+    # product's cost 
+    def get_paid_cost(self):
+        pass
+
+    def get_unpaid_cost(self):
+        pass
+
+    def get_products_cost(self):
+        pass
+
+
+class Deal(AbstractRegisterInfoModel):
+    """
+    The model class for Orders Deal to buy Products.
+    
+    The deal No. has been added as some company can keep records about every
+    deal.
+    """
+    DRAFT, READY, PAID = 'draft', 'ready', 'paid'
+    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), (PAID, _('Paid')))
+
+    order = models.ForeignKey(Order, related_name='deal_order',
+                              verbose_name=_('Order'), null=False, blank=False,
+                              editable=False)
+    supplier_company = models.ForeignKey('Company', 
+                                         related_name='supplier_company',
+                                         verbose_name=_('Supplier company'),
+                                         null=False, blank=False,
+                                         editable=False)
+
+    deal_no = models.CharField(_('Deal No.'), max_length=50, 
+                                blank=True, null=True, db_index=True)
+    total_cost = models.DecimalField(_('Total deal cost'), 
+                                     max_digits=15, decimal_places=2, 
+                                     null=True, blank=False, editable=False)
+    paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
+                                   db_index=True)
+    status = models.CharField(_('Deal status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, blank=False)
+    
+    class Meta:
+        verbose_name = _('Purchase deal')
+        verbose_name_plural = _('Purchase deal')
+
+    def __str__(self):
+        _data = [_('Deal from %s for order %s') % (self.created, self.order)]
+        if self.order_no:
+            _data.append(_('order No. %s') % self.order_no)
+        return ', ' . join(_data)
+        
+    def get_status(self):
+        """
+        Return the order status.
+        """
+        return type(self).STATUSES.get(self.status)
+       
+    # FIXME: (andrey_k) add the method
+    def get_products_cost(self):
+        pass
+
+
+class DealItem(models.Model):
+    """
+    The model class for Deal Item.
+    
+    ContentType is limited only by B2BProduct and B2CProduct.
+    Add the cost (price) because need to remember the price on deal datetime.
+    """
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24onlie', model='b2bproduct') | \
+        models.Q(app_label='centerpokupok', model='b2cproduct')
+
+    deal = models.ForeignKey(Deal, related_name='item_deal',
+                              verbose_name=_('Deal'), null=False, blank=False,
+                              editable=False)
+    content_type = models.ForeignKey(ContentType,
+                                     limit_choices_to=CONTENT_TYPE_LIMIT, 
+                                     on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    cost = models.DecimalField(_('The product price'), 
+                               max_digits=15, decimal_places=2, 
+                               null=True, blank=True)       
+    quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+
+    class Meta:
+        verbose_name = 'Deal product'
+        verbose_name_plural = 'Deal products'
 
 class Advertisement(models.Model):
     dates = DateRangeField()
@@ -1422,7 +1597,7 @@ class Banner(ActiveModelMixing, Advertisement):
         tasks.upload_images.delay(params)
 
 
-class AdvertisementOrder(Order):
+class AdvertisementOrder(models.Model):
     advertisement = models.OneToOneField(Advertisement)
     total_cost = models.DecimalField(max_digits=15, decimal_places=2, null=False, blank=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
