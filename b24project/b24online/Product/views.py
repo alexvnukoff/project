@@ -1,3 +1,7 @@
+# -*- encoding: utf-8 -*-
+
+import logging
+
 from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.http import HttpResponseRedirect
@@ -5,18 +9,21 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.utils.timezone import now
+
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
 from b24online.models import B2BProduct, Company, Chamber, Country, \
                                                 B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.Product.forms import B2BProductForm, AdditionalPageFormSet, \
-                                                           B2CProductForm
+from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
+    B2CProductForm, B2_ProductBuyForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from django.utils.timezone import now
 
+
+logger = logging.getLogger(__name__)
 
 
 class B2BProductList(ItemsList):
@@ -606,10 +613,31 @@ class B2BProductBuy(ItemDetail):
     model = B2BProduct
     template_name = 'b24online/Products/buyB2BProduct.html'
     current_section = _('Products B2B')
-
+    form_class = B2_ProductBuyForm
+    
     def get_queryset(self):
         return super().get_queryset()\
             .prefetch_related('company', 'company__countries')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object)
+        context.update({'form': form})
+        return self.render_to_response(context)
+                    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(
+                self.get_success_url())
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def get_context_data(self, request, **kwargs):
+        self.object = self.get_object()
+        return super(B2BProductBuy, self).get_context_data(**kwargs)
 
 
 class B2CProductBuy(ItemDetail):

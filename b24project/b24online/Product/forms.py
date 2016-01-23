@@ -1,9 +1,13 @@
+# -*- encoding: utf-8 -*-
+
 from django import forms
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from guardian.shortcuts import get_objects_for_user
 
-from b24online.models import B2BProduct, AdditionalPage
+from b24online.models import (B2BProduct, AdditionalPage, Organization, 
+    DealOrder, Deal, DealItem)
 from centerpokupok.models import B2CProduct
 
 
@@ -90,13 +94,31 @@ class B2CProductForm(forms.ModelForm):
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
 
-class ProductBuyForm(forms.Form):
+class B2_ProductBuyForm(forms.Form):
     """
     The form to add DealItem.
     """
-    customer_type = forms.ChoiceField(
-        label=_('Customer type'),
-        required=True, 
+    customer_type = forms.ChoiceField(label=_('Customer type'),
+        required=True, widget=forms.RadioSelect, 
         choices=DealOrder.CUSTOMER_TYPES)
         
-                                        
+    customer_company = forms.ChoiceField(label=_('Company'), required=False, 
+        choices=())
+        
+    def __init__(self, request, product, *args, **kwargs):
+        """
+        Initialize the fields.
+        """
+        super(B2_ProductBuyForm, self).__init__(*args, **kwargs)
+        
+        # The 'customer_company' field
+        org_ids = get_objects_for_user(
+            request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), with_superuser=False)
+        orgs = Organization.objects.filter(pk__in=org_ids).order_by('company__name')
+        self.fields['customer_company'].choices = \
+            ((item.id, item.company.name) for item in orgs if item.company)
+        self.initial['customer_type'] = DealOrder.AS_PERSON
+
+    def save(self):
+        pass

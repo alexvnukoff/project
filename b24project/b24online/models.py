@@ -1782,7 +1782,7 @@ class DealOrder(AbstractRegisterInfoModel):
     customer company.
     """
     AS_COMPANY, AS_PERSON = 'company', 'person'
-    CUSTOMER_TYPES = ((AS_COMPANY, _('Company')), (AS_PERSON, _('Person')))
+    CUSTOMER_TYPES = ((AS_PERSON, _('Person')), (AS_COMPANY, _('Company')),)
 
     DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
