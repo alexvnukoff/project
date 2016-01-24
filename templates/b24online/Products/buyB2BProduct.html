@@ -95,7 +95,8 @@
         {{ item|register_event:"click"|process_event:request }}
         
         {% if form %}
-        <form action="." method="post">
+        <form action="" method="post">
+        {% csrf_token %}
         <ul class="form-control">
             <fieldset class="dcol">
               <legend>{% trans 'Select customer' %}</legend>
@@ -106,6 +107,19 @@
               <li id="id-customer-company-row">
                 <label>{{ form.customer_company.label }}:</label>
                 <p>{{ form.customer_company }}</p>
+              </li>
+            </fieldset>
+            <fieldset class="dcol">
+              <legend>{% trans 'Quantity' %}</legend>
+              <li id="id-product-cost-row">
+                <label>{% trans 'Product price' %}:</label>
+                <p>
+                  {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
+                </p>
+              </li>
+              <li id="id-customer-type-row">
+                <label>{{ form.quantity.label }}:</label>
+                <p>{{ form.quantity }}</p>
               </li>
             </fieldset>
             <li>

@@ -1,6 +1,10 @@
 # -*- encoding: utf-8 -*-
 
+import logging
+
+from django.db import transaction
 from django import forms
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
@@ -9,6 +13,8 @@ from guardian.shortcuts import get_objects_for_user
 from b24online.models import (B2BProduct, AdditionalPage, Organization, 
     DealOrder, Deal, DealItem)
 from centerpokupok.models import B2CProduct
+
+logger = logging.getLogger(__name__)
 
 
 class B2BProductForm(forms.ModelForm):
@@ -98,20 +104,23 @@ class B2_ProductBuyForm(forms.Form):
     """
     The form to add DealItem.
     """
-    customer_type = forms.ChoiceField(label=_('Customer type'),
-        required=True, widget=forms.RadioSelect, 
-        choices=DealOrder.CUSTOMER_TYPES)
-        
+    customer_type = forms.ChoiceField(label=_('Customer type'), required=True, 
+        widget=forms.RadioSelect, choices=DealOrder.CUSTOMER_TYPES)
     customer_company = forms.ChoiceField(label=_('Company'), required=False, 
         choices=())
-        
+    quantity = forms.IntegerField(label=_('Quantity'), 
+        required=True)        
+    
     def __init__(self, request, product, *args, **kwargs):
         """
-        Initialize the fields.
+        Initialize the fields - customer_type and customer_company
         """
         super(B2_ProductBuyForm, self).__init__(*args, **kwargs)
+        self._request = request        
+        self._product = product
+        self._supplier = product.company
         
-        # The 'customer_company' field
+        # The 'customer_company' field choices 
         org_ids = get_objects_for_user(
             request.user, ['b24online.manage_organization'],
             Organization.get_active_objects().all(), with_superuser=False)
@@ -119,6 +128,58 @@ class B2_ProductBuyForm(forms.Form):
         self.fields['customer_company'].choices = \
             ((item.id, item.company.name) for item in orgs if item.company)
         self.initial['customer_type'] = DealOrder.AS_PERSON
+        self.initial['quantity'] = 1
 
+    def clean_customer_type(self):
+        """
+        Get the customer.
+        """
+        self._customer_type = self.cleaned_data['customer_type']
+        if self._customer_type == DealOrder.AS_COMPANY:
+            customer_company = self.cleaned_data['customer_company']
+            self._customer = customer_company
+        else:
+            self._customer = self._request.user
+        return self._customer_type
+
+    @transaction.atomic                    
     def save(self):
-        pass
+        if self._customer_type == DealOrder.AS_COMPANY:
+            deal_order, created = DealOrder.objects\
+                .get_or_create(
+                    customer_type=self._customer_type,
+                    customer_company=self._customer, 
+                    status=DealOrder.DRAFT)
+        else:
+            deal_order, created = DealOrder.objects\
+                .get_or_create(
+                    customer_type=self._customer_type,
+                    created_by=self._customer, 
+                    status=DealOrder.DRAFT)
+        if created or not deal_order.total_cost:
+            deal_order.total_cost = 0
+        deal_order.total_cost += \
+            self._product.cost * self.cleaned_data['quantity']
+        deal_order.created_by = self._request.user
+        deal_order.save()
+
+        deal, created = Deal.objects\
+            .get_or_create(
+                deal_order=deal_order,
+                supplier_company=self._supplier,
+                status=DealOrder.DRAFT)
+        if created or deal.total_cost:
+            deal.total_cost = 0
+        deal.total_cost += \
+            self._product.cost * self.cleaned_data['quantity']
+        deal.created_by = self._request.user
+        deal.save()
+
+        model_type = ContentType.objects.get_for_model(self._product)
+        deal_item = DealItem.objects\
+            .create(
+                deal=deal,
+                content_type=model_type,
+                object_id=self._product.pk,
+                quantity=self.cleaned_data['quantity'],
+                cost=self._product.cost)

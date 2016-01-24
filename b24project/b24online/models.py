@@ -169,12 +169,14 @@ class AbstractRegisterInfoModel(models.Model):
     """
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
         verbose_name=_('Creator'), 
-        related_name='%(class)s_create_user')
+        related_name='%(class)s_create_user',
+        null=True, blank=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
         verbose_name=_('Editor'),
-        related_name='%(class)s_update_user')
+        related_name='%(class)s_update_user',
+        null=True, blank=True)
     created_at = models.DateTimeField(_('Creation time'),
-        default=timezone.now)
+        default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(_('Update time'),
         auto_now=True)
     
@@ -1801,7 +1803,7 @@ class DealOrder(AbstractRegisterInfoModel):
                                      max_digits=15, decimal_places=2, 
                                      null=True, blank=False, editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
-                                   db_index=True)
+                                   null=True, blank=True, db_index=True)
     status = models.CharField(_('Order status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
@@ -1868,7 +1870,7 @@ class Deal(AbstractRegisterInfoModel):
                                      max_digits=15, decimal_places=2, 
                                      null=True, blank=False, editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
-                                   db_index=True)
+                                   null=True, blank=True, db_index=True)
     status = models.CharField(_('Deal status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
