@@ -158,7 +158,6 @@ class RegisteredEventHelper(object):
         Store the Event in Redis queue.
         """
         event_stored_key = glue('registered', 'event', event_stored_data)
-        logger.debug(event_stored_key)
         request_uuid = getattr(request, '_uuid', None)
         if request_uuid:
             events_queue_key = cls.get_request_key(request_uuid, 'queue')

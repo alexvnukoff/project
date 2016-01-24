@@ -26,7 +26,12 @@
                     <meta property="og:image" content="{{ meta.image }}" />
                 {% endif %}
 
-                <title>{{ meta.title|truncatechars:80}}</title>
+                <title>
+                    {% block html_title %}
+                    {{ meta.title|truncatechars:80}}
+                    {% endblock %}
+                </title>
+                
                 <meta name="description" content="{{ meta.description|safe|truncatewords_html:20|force_escape|linebreaks }}"/>
                 <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
             {% else %}

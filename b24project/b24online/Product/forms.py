@@ -142,7 +142,7 @@ class B2_ProductBuyForm(forms.Form):
             self._customer = self._request.user
         return self._customer_type
 
-    @transaction.atomic                    
+    ## @transaction.atomic                    
     def save(self):
         if self._customer_type == DealOrder.AS_COMPANY:
             deal_order, created = DealOrder.objects\
@@ -168,7 +168,7 @@ class B2_ProductBuyForm(forms.Form):
                 deal_order=deal_order,
                 supplier_company=self._supplier,
                 status=DealOrder.DRAFT)
-        if created or deal.total_cost:
+        if created or not deal.total_cost:
             deal.total_cost = 0
         deal.total_cost += \
             self._product.cost * self.cleaned_data['quantity']
@@ -182,4 +182,6 @@ class B2_ProductBuyForm(forms.Form):
                 content_type=model_type,
                 object_id=self._product.pk,
                 quantity=self.cleaned_data['quantity'],
+                currency=self._product.currency,
                 cost=self._product.cost)
+        return deal_order
