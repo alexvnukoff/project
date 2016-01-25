@@ -104,10 +104,10 @@ class B2_ProductBuyForm(forms.Form):
     """
     The form to add DealItem.
     """
-    customer_type = forms.ChoiceField(label=_('Customer type'), required=True, 
-        widget=forms.RadioSelect, choices=DealOrder.CUSTOMER_TYPES)
     customer_company = forms.ChoiceField(label=_('Company'), required=False, 
         choices=())
+    customer_type = forms.ChoiceField(label=_('Customer type'), required=True, 
+        widget=forms.RadioSelect, choices=DealOrder.CUSTOMER_TYPES)
     quantity = forms.IntegerField(label=_('Quantity'), 
         required=True)        
     
