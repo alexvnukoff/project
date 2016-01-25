@@ -136,7 +136,7 @@ class B2_ProductBuyForm(forms.Form):
         """
         self._customer_type = self.cleaned_data['customer_type']
         if self._customer_type == DealOrder.AS_COMPANY:
-            customer_company = self.cleaned_data['customer_company']
+            customer_company = self.data['customer_company']
             self._customer = customer_company
         else:
             self._customer = self._request.user
@@ -148,7 +148,7 @@ class B2_ProductBuyForm(forms.Form):
             deal_order, created = DealOrder.objects\
                 .get_or_create(
                     customer_type=self._customer_type,
-                    customer_company=self._customer, 
+                    customer_company_id=self._customer, 
                     status=DealOrder.DRAFT)
         else:
             deal_order, created = DealOrder.objects\
