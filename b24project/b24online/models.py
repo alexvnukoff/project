@@ -1851,6 +1851,9 @@ class DealOrder(AbstractRegisterInfoModel):
     def can_pay(self):
         return self.status == self.DRAFT
        
+    def can_edit(self):
+        return self.status == self.DRAFT
+       
     # FIXME: add the methods for already paid, unpaid deals and total
     # product's cost 
     def get_paid_cost(self):
@@ -1938,6 +1941,12 @@ class Deal(AbstractRegisterInfoModel):
         """
         for currency, cost in self.total_cost_data.items():
             yield (cost, currency)
+
+    def can_pay(self):
+        return self.status == self.DRAFT
+       
+    def can_edit(self):
+        return self.status == self.DRAFT
 
 
 class DealItem(models.Model):

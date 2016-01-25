@@ -87,7 +87,7 @@
       <div class="deal-item" style="display: block">
       <p>
         <label>{% trans 'Deal' %}:</label>
-        {{ deal }}
+        <a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</a>
       </p>
       <p>
         <label>{% trans 'Supplier' %}:</label>
@@ -100,14 +100,20 @@
           <th>{% trans 'Price' %}</th>
           <th>{% trans 'Total' %}</th>
           <th>{% trans 'Currency' %}</th>
+          {% if item.can_edit %}
+          <th>&nbsp;</th>
+          {% endif %}
         </tr>
         {% for deal_item in deal.get_items %}
         <tr>
-          <td>{{ deal_item.item.name }}</td>
+          <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
           <td align="center">{{ deal_item.quantity}}</td>
           <td align="center">{{ deal_item.cost }}</td>
           <td align="center">{{ deal_item.get_total }}</td>
           <td align="center">{{ deal_item.currency|getSymbol }}</td>
+          {% if item.can_edit %}
+          <td align="center"><a href="">delete</a></td>
+          {% endif %}
         </tr>
         {% endfor %}
       </table>  

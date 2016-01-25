@@ -2,7 +2,6 @@
 
 import logging
 
-from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -10,7 +9,7 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.timezone import now
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView, View
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
@@ -653,6 +652,13 @@ class B2CProductBuy(ItemDetail):
         return super().get_queryset()\
             .prefetch_related('company', 'company__countries')
 
+
+class DealOrderList(ListView):
+    model = DealOrder
+    template_name = 'b24online/Products/dealOrderList.html'
+    current_section = _('Deals')
+
+
 class DealOrderDetail(DetailView):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
@@ -677,3 +683,52 @@ class DealOrderPayment(DetailView):
         return HttpResponseRedirect(
             reverse('products:deal_order_detail', 
                 kwargs={'pk': item.pk}))
+
+
+class DealList(DetailView):
+    model = Deal
+    template_name = 'b24online/Products/dealList.html'
+    current_section = _('Deals')
+
+
+class DealDetail(DetailView):
+    model = Deal
+    template_name = 'b24online/Products/dealDetail.html'
+    current_section = _('Deals')
+
+    def get_context_data(self, **kwargs):
+        context = super(DealDetail, self).get_context_data(**kwargs)
+        self.object = self.get_object()
+        context.update({'item': self.object})
+        return context
+
+
+class DealPayment(DetailView):
+    model = Deal
+    template_name = 'b24online/Products/dealDetail.html'
+    current_section = _('Deals')
+
+    def get(self, request, *args, **kwargs):
+        item = self.get_object()
+        item.status = DealOrder.PAID
+        item.save()
+        return HttpResponseRedirect(
+            reverse('products:deal_order_detail', 
+                kwargs={'pk': item.pk}))
+
+
+class DealItemDelete(DetailView):
+    model = DealItem
+    template_name = 'b24online/Products/dealDetail.html'
+    current_section = _('Deals')
+
+    def get(self, request, *args, **kwargs):
+        item = self.get_object()
+        next = request.GET.get('next', 
+            reverse('products:deal_detail', 
+                kwargs={'pk': item.deal.pk}))        
+        if item.deal.status == Deal.DRAFT \
+            and item.deal.deal_order.status == DealOrder.DRAFT:    
+            item.delete()
+        return HttpResponseRedirect(next)
+

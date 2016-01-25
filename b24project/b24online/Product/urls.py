@@ -7,7 +7,9 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     B2CProductDetail, B2BProductGalleryImageList, 
     DeleteB2BProductGalleryImage, B2BProductDocumentList, 
     DeleteB2BProductDocument, B2BProductBuy, B2CProductBuy,
-    DealOrderDetail, DealOrderPayment)
+    DealOrderList, DealOrderDetail, DealOrderPayment,
+    DealList, DealDetail, DealPayment, DealItemDelete)
+    
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
 
@@ -59,5 +61,15 @@ urlpatterns = [
         DealOrderDetail.as_view(), name="deal_order_detail"),
     url(r'^orders/(?P<pk>[0-9]+)/pay/$', 
         DealOrderPayment.as_view(), name="deal_order_payment"),
+    url(r'^orders/$', 
+        DealOrderList.as_view(), name="deal_order_list"),
+    url(r'^deals/(?P<pk>[0-9]+)/$', 
+        DealDetail.as_view(), name="deal_detail"),
+    url(r'^deals/(?P<pk>[0-9]+)/$', 
+        DealPayment.as_view(), name="deal_payment"),
+    url(r'^deals/$', 
+        DealList.as_view(), name="deal_list"),
+    url(r'^deals/item/(?P<pk>[0-9]+)/delete/$', 
+        DealItemDelete.as_view(), name="deal_item_delete"),
 
 ]
