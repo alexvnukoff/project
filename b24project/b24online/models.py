@@ -1874,6 +1874,18 @@ class DealOrder(AbstractRegisterInfoModel):
             data.append((cost, currency))
         return data
 
+    @classmethod
+    def get_user_orders(cls, request, status=DRAFT):
+        
+        qs = cls.objects.all()
+        org_ids = get_objects_for_user(
+            request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), with_superuser=False)
+        qs = qs.filter(
+            (Q(customer_type=AS_PERSON) & Q(created_by=request.user)) | \
+            (Q(customer_type=AS_COMPANY) & Q(customer_company__inorg_ids)))
+        return qs
+                    
 
 class Deal(AbstractRegisterInfoModel):
     """

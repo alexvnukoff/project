@@ -291,8 +291,6 @@ def basket_quantity(request):
     return basket.count()
 
 
-
-
 @register.assignment_tag()
 def get_length(some_list):
     """
@@ -325,3 +323,12 @@ def process_event(event_stored_data, request):
     """
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
+
+
+@register.filter
+def deal_order_quantity(request):
+    """
+    Return the draft dela orders count.
+    """
+    from b24online.models import DealOrder
+    return DealOrder.get_user_orders(request).count()
