@@ -22,6 +22,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.db import models, transaction
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -1869,21 +1870,19 @@ class DealOrder(AbstractRegisterInfoModel):
         """
         Return deal cost in different currencies.
         """
-        data = []
         for currency, cost in self.total_cost_data.items():
-            data.append((cost, currency))
-        return data
+            yield (cost, currency)
 
     @classmethod
     def get_user_orders(cls, request, status=DRAFT):
-        
         qs = cls.objects.all()
         org_ids = get_objects_for_user(
             request.user, ['b24online.manage_organization'],
             Organization.get_active_objects().all(), with_superuser=False)
-        qs = qs.filter(
-            (Q(customer_type=AS_PERSON) & Q(created_by=request.user)) | \
-            (Q(customer_type=AS_COMPANY) & Q(customer_company__inorg_ids)))
+        qs = qs.filter(Q(status=status) &
+            (Q(customer_type=cls.AS_PERSON) & Q(created_by=request.user)) | \
+            (Q(customer_type=cls.AS_COMPANY) & \
+                Q(customer_company__in=org_ids)))
         return qs
                     
 
@@ -1939,7 +1938,7 @@ class Deal(AbstractRegisterInfoModel):
         """
         Return the order status.
         """
-        return type(self).STATUSES.get(self.status)
+        return dict(type(self).STATUSES).get(self.status)
        
     def get_items(self):
         """
@@ -1959,6 +1958,14 @@ class Deal(AbstractRegisterInfoModel):
        
     def can_edit(self):
         return self.status == self.DRAFT
+
+    @classmethod
+    def get_user_deals(cls, request, status=DRAFT):
+        deal_order_ids = [item.pk for item in \
+            DealOrder.get_user_orders(request, status=status)]
+        qs = cls.objects.all()
+        qs = qs.filter(Q(status=status) & Q(deal_order_id__in=deal_order_ids))
+        return qs
 
 
 class DealItem(models.Model):

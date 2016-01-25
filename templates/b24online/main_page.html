@@ -198,6 +198,12 @@
                         <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
 
+                        {# The orders and deals #}
+                        <li><a href="{% url 'products:deal_order_filtered_list' 'draft' %}">
+                          {% trans 'Orders basket' %} ({{ request|deal_order_quantity|default:"0" }})</a></li>
+                        <li><a href="{% url 'products:deal_filtered_list' 'draft' %}">
+                          {% trans 'Deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+
                         <!-- temporary hide..
 
                         <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
@@ -234,7 +240,6 @@
                             <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
-
                             <!-- temporary hide..
 
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>

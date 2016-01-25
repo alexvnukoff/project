@@ -331,4 +331,16 @@ def deal_order_quantity(request):
     Return the draft dela orders count.
     """
     from b24online.models import DealOrder
-    return DealOrder.get_user_orders(request).count()
+    return DealOrder.get_user_orders(request, status=DealOrder.DRAFT)\
+        .count()
+
+
+@register.filter
+def deal_quantity(request):
+    """
+    Return the draft dela orders count.
+    """
+    from b24online.models import Deal
+    return Deal.get_user_deals(request, status=Deal.DRAFT).count()
+
+

@@ -72,9 +72,7 @@
         {% if cost_list %}
           {% for cost, currency in cost_list %}
               <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
-            </tr>
-            {% endfor %}
-          </table>
+          {% endfor %}
         {% else %}
         -
         {% endif %}

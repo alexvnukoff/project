@@ -71,6 +71,9 @@ urlpatterns = [
         DealPayment.as_view(), name="deal_payment"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),
+    url(r'^deals/(?P<status>draft|ready|paid)/$', 
+        DealList.as_view(), name="deal_filtered_list"),
+
     url(r'^deals/item/(?P<pk>[0-9]+)/delete/$', 
         DealItemDelete.as_view(), name="deal_item_delete"),
 

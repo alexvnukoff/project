@@ -685,7 +685,7 @@ class DealOrderPayment(DetailView):
                 kwargs={'pk': item.pk}))
 
 
-class DealList(DetailView):
+class DealList(ListView):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals')
