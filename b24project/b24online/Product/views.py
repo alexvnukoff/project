@@ -3,6 +3,7 @@
 import logging
 
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -10,12 +11,13 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView, View
+from guardian.shortcuts import get_objects_for_user
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
 from b24online.models import (B2BProduct, Company, Chamber, Country, 
-    B2BProductCategory, DealOrder, Deal, DealItem)
+    B2BProductCategory, DealOrder, Deal, DealItem, Organization)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
     B2CProductForm, B2_ProductBuyForm)
@@ -678,8 +680,7 @@ class DealOrderPayment(DetailView):
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
-        item.status = DealOrder.PAID
-        item.save()
+        item.pay()
         return HttpResponseRedirect(
             reverse('products:deal_order_detail', 
                 kwargs={'pk': item.pk}))
@@ -689,6 +690,15 @@ class DealList(ListView):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals')
+
+    def get_queryset(self):
+        queryset = super(DealList, self).get_queryset()
+
+        org_ids = get_objects_for_user(
+            self.request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), with_superuser=False)
+        return queryset.filter(Q(status=Deal.PAID) \
+            & Q(supplier_company_id__in=org_ids))
 
 
 class DealDetail(DetailView):
@@ -710,8 +720,7 @@ class DealPayment(DetailView):
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
-        item.status = DealOrder.PAID
-        item.save()
+        item.paid()
         return HttpResponseRedirect(
             reverse('products:deal_order_detail', 
                 kwargs={'pk': item.pk}))

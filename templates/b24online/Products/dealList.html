@@ -65,7 +65,7 @@
         </tr>
         {% for deal in object_list %}
         <tr>
-          <td>{{ deal }}</td>
+          <td><a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</td>
           <td>{{ deal.supplier_company.name }}</td>
           <td>{{ deal.get_status }}</td>
           <td>

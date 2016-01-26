@@ -1875,6 +1875,9 @@ class DealOrder(AbstractRegisterInfoModel):
 
     @classmethod
     def get_user_orders(cls, request, status=DRAFT):
+        """
+        Return the qs for DealOrders where the user is a customer.
+        """
         qs = cls.objects.all()
         org_ids = get_objects_for_user(
             request.user, ['b24online.manage_organization'],
@@ -1884,11 +1887,22 @@ class DealOrder(AbstractRegisterInfoModel):
             (Q(customer_type=cls.AS_COMPANY) & \
                 Q(customer_company__in=org_ids)))
         return qs
+          
+    @transaction.atomic
+    def pay(self):
+        """
+        Pay the order.
+        """
+        cls = type(self)
+        for deal in Deal.objects.filter(Q(deal_order=self) & ~Q(status=Deal.PAID)):
+            deal.status = Deal.PAID
+            deal.save()
+        self.status = cls.PAID
+        self.save()
                     
 
 class Deal(AbstractRegisterInfoModel):
-    """
-    The model class for Orders Deal to buy Products.
+    """    The model class for Orders Deal to buy Products.
     
     The deal No. has been added as some company can keep records about every
     deal.
@@ -1961,11 +1975,22 @@ class Deal(AbstractRegisterInfoModel):
 
     @classmethod
     def get_user_deals(cls, request, status=DRAFT):
-        deal_order_ids = [item.pk for item in \
-            DealOrder.get_user_orders(request, status=status)]
-        qs = cls.objects.all()
-        qs = qs.filter(Q(status=status) & Q(deal_order_id__in=deal_order_ids))
-        return qs
+        """
+        Return the deals for use's companies.
+        """
+        org_ids = get_objects_for_user(
+            request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), with_superuser=False)
+        return cls.objects.filter(Q(status=status) \
+            & Q(supplier_company_id__in=org_ids))
+
+    def pay(self):
+        """
+        Pay the deal.
+        """
+        self.status = cls.PAID
+        self.save()
+
 
 
 class DealItem(models.Model):
@@ -2009,10 +2034,8 @@ def reclaculate_order_cost(sender, instance, created, **kwargs):
     """
     Recalculate total cost of parents: deal and order
     """
-    logger.debug('Step 1')
     assert isinstance(instance, DealItem), \
         _('Invalid parameter')
-    logger.debug('Step 2')
         
     if instance.currency and instance.cost and instance.quantity > 0:
         if instance.deal.status == Deal.DRAFT:
