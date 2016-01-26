@@ -33,7 +33,8 @@ class RegisteredEventStatsForm(forms.Form):
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
         self.today = datetime.date.today()
         weekday = self.today.weekday()
-        self.initial['start_date'] = self.today - datetime.timedelta(days=weekday)
+        self.initial['start_date'] = \
+            self.today - datetime.timedelta(days=weekday)
         self.initial['end_date'] = \
             self.today + datetime.timedelta(days=(6 - weekday))
         
@@ -63,17 +64,25 @@ class RegisteredEventStatsForm(forms.Form):
             _date = start_date + datetime.timedelta(days=n)
             yield (_date, True if _date == self.today else False)
 
+    def date_limits(self):
+        start_date = end_date = None
+        if hasattr(self, 'cleaned_data'):
+            start_date = self.cleaned_data.get('start_date')
+            end_date = self.cleaned_data.get('end_date')        
+        if not start_date:
+            start_date = self.initial['start_date']        
+        if not end_date:
+            end_date = self.initial['end_date']        
+        return (start_date, end_date)        
+
     def prev_week(self):
-        logger.debug('Step 1')
-        (b, e) = map(lambda x: x[0] - datetime.timedelta(days=7),
-                     self.date_range())
-        logger.debug(b, e)
+        (b, e) = map(lambda x: x - datetime.timedelta(days=7),
+                     self.date_limits())
         return {'start_date': b, 'end_date': e}
 
-    @property
     def next_week(self):
-        (b, e) = map(lambda x: x[0] + datetime.timedelta(days=7),
-                     self.date_range())
+        (b, e) = map(lambda x: x + datetime.timedelta(days=7),
+                     self.date_limits())
         if b > self.today:
             return {'start_date': None, 'end_date': None}
         else:

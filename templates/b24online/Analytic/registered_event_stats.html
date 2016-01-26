@@ -146,7 +146,7 @@
   <div id="movement">
     {% with p_start_date=form.prev_week.start_date p_end_date=form.prev_week.end_date %}
         {% if p_start_date %}
-        <a href="{{ request.path }}">{% trans 'Previus week' %}</a>&nbsp;&nbsp;&nbsp;
+        <a href="{{ request.path }}?start_date={{ p_start_date|date:'d/m/Y'}}&end_date={{ p_end_date|date:'d/m/Y'}}">{% trans 'Previus week' %}</a>&nbsp;&nbsp;&nbsp;
         {% endif %}
     {% endwith  %}
     <a href="{{ request.path }}">{% trans 'Next week' %}</a>
