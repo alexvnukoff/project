@@ -221,7 +221,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -318,12 +318,6 @@ RAVEN_CONFIG = {
     'dsn': 'https://c01d9a4420f94559be74d1b30f18e7e8:9d976cb46171495cbeb33892ae0ad102@sentry.ssilaev.com/3',
 }
 
-try:
-    from local_settings import *
-except ImportError as e:
-    logging.info(e)
-
-
 ###################### Statistics settings ###################################
 # Set the path to GeoIP database
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
@@ -331,3 +325,7 @@ GEOIP_DB_PATH = '/usr/share/GeoIP/'
 # The Redis DB url for stats
 EVENT_STORE_REDIS_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com/1'
 
+try:
+    from local_settings import *
+except ImportError as e:
+    logging.info(e)
