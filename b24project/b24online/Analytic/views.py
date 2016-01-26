@@ -23,7 +23,7 @@ from b24online.models import (Organization, Company, Tender,
     RegisteredEvent, RegisteredEventStats, RegisteredEventType, 
     B2BProduct)
 from centerpokupok.models import B2CProduct
-from b24online.Analytic.forms import RegisteredEventStatsForm
+from b24online.Analytic.forms import SelectPeriodForm
 from b24online.stats.utils import process_stats_data
 
 logger = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ def get_analytic(request):
 
 class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
-    form_class = RegisteredEventStatsForm
+    form_class = SelectPeriodForm
 
     @method_decorator(login_required)
     @method_decorator(csrf_exempt)

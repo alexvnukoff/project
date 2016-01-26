@@ -345,3 +345,19 @@ def deal_quantity(request):
          if request.user.is_authenticated() else 0
 
 
+@register.filter
+def get_by_content_type(item):
+    content_type_id = item.get('content_type_id')
+    instance_id = item.get('object_id')
+    if content_type_id and instance_id:        
+        try:
+            content_type = ContentType.objects.get(pk=content_type_id)
+        except ContentType.DoesNotExist:
+            pass
+        else:
+            model_class = content_type.model_class()
+            try:
+                return model_class.objects.get(pk=instance_id)
+            except model_class.DoesNotExist:
+                pass
+    return None

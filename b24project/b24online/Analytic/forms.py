@@ -11,7 +11,7 @@ from b24online.models import RegisteredEvent
 logger = logging.getLogger(__name__)
 
 
-class RegisteredEventStatsForm(forms.Form):
+class SelectPeriodForm(forms.Form):
     """
     Form for registered events stats filter.
     """
@@ -28,7 +28,7 @@ class RegisteredEventStatsForm(forms.Form):
         """
         Set the initial values.
         """
-        super(RegisteredEventStatsForm, self).__init__(*args, **kwargs)
+        super(SelectPeriodForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs.update({'class': 'date'})
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
         self.today = datetime.date.today()
