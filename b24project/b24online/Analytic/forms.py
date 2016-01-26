@@ -28,15 +28,17 @@ class SelectPeriodForm(forms.Form):
         """
         Set the initial values.
         """
+        is_clear = kwargs.pop('is_clear', False)
         super(SelectPeriodForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs.update({'class': 'date'})
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
-        self.today = datetime.date.today()
-        weekday = self.today.weekday()
-        self.initial['start_date'] = \
-            self.today - datetime.timedelta(days=weekday)
-        self.initial['end_date'] = \
-            self.today + datetime.timedelta(days=(6 - weekday))
+        if not is_clear:
+            self.today = datetime.date.today()
+            weekday = self.today.weekday()
+            self.initial['start_date'] = \
+                self.today - datetime.timedelta(days=weekday)
+            self.initial['end_date'] = \
+                self.today + datetime.timedelta(days=(6 - weekday))
         
     def filter(self, qs):
         """
