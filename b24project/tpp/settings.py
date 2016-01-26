@@ -221,6 +221,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_L10N = True
+USE_THOUSAND_SEPARATOR = False
 
 USE_TZ = True
 
@@ -317,10 +318,11 @@ RAVEN_CONFIG = {
     'dsn': 'https://c01d9a4420f94559be74d1b30f18e7e8:9d976cb46171495cbeb33892ae0ad102@sentry.ssilaev.com/3',
 }
 
+# Set the path to GeoIP database
+GEOIP_DB_PATH = '/usr/share/GeoIP/'
+
+
 try:
     from local_settings import *
 except ImportError as e:
     logging.info(e)
-
-# Set the path to GeoIP database
-GEOIP_DB_PATH = '/usr/share/GeoIP/'
