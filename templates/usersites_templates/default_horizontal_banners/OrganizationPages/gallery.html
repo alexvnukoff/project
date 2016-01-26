@@ -1,0 +1,18 @@
+{% extends 'usersites_templates/default_horizontal_banners/index.html' %}
+{% load i18n %}
+{% block content %}
+
+    <section class="content__info">
+        <h3>{% trans 'Gallery' %}</h3>
+
+                <ul class="gallery">
+                    {% for gallery_obj in site.user_site.organization.gallery_images %}
+                    <figure>
+                        <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
+                            <img src="{{ gallery_obj.image.big }}">
+                        </a>
+                    </figure>
+
+                {% endfor %}
+                </ul>
+{% endblock %}

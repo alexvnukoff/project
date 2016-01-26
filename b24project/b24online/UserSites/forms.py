@@ -149,3 +149,9 @@ CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fiel
                                              validate_max=True, max_num=8, extra=8)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
+
+
+class TemplateForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('user_template',)

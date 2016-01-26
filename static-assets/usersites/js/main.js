@@ -229,6 +229,7 @@ Share = {
         }
 };
 
+if($("display-vertical").get(0)) {
 $(function(){
     $(window).resize(function(event) {
       if ($(window).width() <= 1000) {
@@ -240,5 +241,6 @@ $(function(){
     }
       else { $('body').addClass('display-vertical'); }
 
-  })
+  });
+};
 

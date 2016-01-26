@@ -1,0 +1,188 @@
+{% extends 'usersites_templates/default_horizontal_banners/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+
+<section class="content__info grid-layout">
+
+    {% if b2c_coupons %}
+
+        <section class="content__info__actions">
+            {% for product in b2c_coupons %}
+                {% if forloop.first %}
+                    <div class="main-action">
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        <div class="main-action__cover" style="background-image: url({{ product.image.big }})">
+                            <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
+                        </div>
+                        </a>
+
+                        <div class="main-action__info">
+                            <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
+                            <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                            <div class="timer" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+
+                            <div class="offer vertical">
+                                <p class="price"><strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike></p>
+                                <p class="economy">
+                                    <span>{% trans 'Current price' %}</span>
+                                    <span class="value">{{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}</span>
+                                </p>
+                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="buy"><span>{% trans "Buy" %}</span></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="actions">
+                {% for product in b2c_coupons %}
+                    {% if forloop.first %}{% else %}
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        <div class="action square">
+                            <div class="action__cover" style="background-image: url({{ product.image.big }})">
+                                <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
+                            </div>
+                        </a>
+                            <div class="action__info">
+                                <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
+                                <p><span class="old-price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</span><span class="new-price">{{ product.get_discount_price }} {{ product.currency|getSymbol }}</span></p>
+                                <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+
+     {% if b2c_products %}
+        <section class="content__info__products">
+
+            <h2>{% trans "B2C Products" %}</h2>
+            <ul class="products-list">
+
+                {% for product in b2c_products %}
+                    <li class="product">
+                        <div class="product__cover vertical">
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+
+                            {% if product.image %}
+                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" />
+                            {% endif %}
+                            </a>
+                        </div>
+                        <div class="product__about">
+                            {# Register the 'view' event for b2c product #}
+                            {{ product|register_event:"view"|process_event:request }}
+                            <p class="desc"><strong>{{ product.name|truncatechars:80 }}</strong></p>
+                                {% if product.cost %}
+                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                {% else %}
+                                <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                {% endif %}
+
+                        </div>
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </section>
+    {% endif %}
+
+
+
+     {% if b2b_products %}
+        <section class="content__info__products">
+
+            <h2>{% trans "B2B Products" %}</h2>
+            <ul class="products-list">
+
+                {% for product in b2b_products %}
+                    <li class="product">
+                        <div class="product__cover vertical">
+                            {% if product.image %}
+                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" />
+                            {% endif %}
+                        </div>
+                        <div class="product__about">
+                            {# Register the 'view' event for b2b product #}
+                            {{ product|register_event:"view"|process_event:request }}
+                            <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
+                            {% if product.cost %}
+                            <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                            {% else %}
+                            <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </section>
+    {% endif %}
+
+
+    <section class="content__info__news">
+        {% if proposals %}
+
+            <h2>{% trans "Business proposals" %}</h2>
+
+            {% for proposal in proposals %}
+
+                    <article class="news">
+                        <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
+                        <div class="news__content clearfix">
+                            <div class="news__content__desc clearfix">
+                                <p class="date">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
+                                <p class="text">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"30" }}</p>
+                            </div>
+                            <a href="{{ proposal.get_absolute_url }}" class="more vertical"><span>{% trans 'More' %}</span></a>
+                        </div>
+                    </article>
+            {% endfor %}
+        {% endif %}
+
+        {% if news %}
+        <h2>{% trans "News" %}</h2>
+
+        {% for article in news %}
+            <article class="news">
+                <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
+                <div class="news__content clearfix">
+                    <div class="news__content__cover">
+                        {% if article.image %}
+                        <img src="{{ article.image.small }}" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{% trans 'Date' %}: {{ article.created_at|date:'d M Y' }}</p>
+
+                    {% if article.short_description %}
+                         <p class="text">{{ article.short_description|force_escape|linebreaks }}</p>
+                    {% else %}
+                         <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"30" }}</p>
+                    {% endif %}
+
+                    </div>
+                    <a href="{% url 'news:detail' article.slug article.pk %}" class="more vertical"><span>{% trans 'More' %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+        {% endif %}
+
+    </section>
+ </section>
+
+{% endblock %}

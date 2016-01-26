@@ -90,6 +90,24 @@
             <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.
         </p>
 
+
+<h3>{% trans 'My template' %}</h3>
+
+<div class="templates-box">
+<a href="{% url 'site:template' %}">
+{% if object.user_template %}
+<img class="t-image" src="{{ object.user_template.thumbnail.small }}">
+{% else %}
+
+<img class="t-image" src="{% static 'usersites/images' %}/default-template.png">
+{% endif %}
+</a>
+{% if object.user_template %}<p style="margin:10px 0;">{{ object.user_template }}</p>{% else %}<p style="margin:10px 0;">{% trans 'Default (vertical banners)' %}</p>{% endif %}
+</div>
+
+<p><a href="{% url 'site:template' %}"><button class="btn-link">{% trans 'Select Template' %}</button></a></p>
+
+
 <h3>{% trans "Your site" %}</h3>
 
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">

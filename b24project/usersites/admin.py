@@ -3,6 +3,7 @@ from django.contrib.admin import ModelAdmin
 from usersites.models import ExternalSiteTemplate, UserSite, UserSiteTemplate
 
 class UserSiteTemplateAdmin(admin.ModelAdmin):
+    save_on_top = True
     list_display = ('name', 'folder_name',)
 
 admin.site.register(ExternalSiteTemplate, ModelAdmin)

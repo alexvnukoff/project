@@ -9,10 +9,11 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView
-
 from b24online.models import Organization, Company, BannerBlock
-from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, CompanyBannerFormSet, ChamberBannerFormSet
+from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, \
+            TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet
 from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate
+
 
 
 @login_required()
@@ -290,6 +291,39 @@ class SiteUpdate(UpdateView):
         else:
             context_data['domain'] = self.object.root_domain
 
+        return context_data
+
+    def get_object(self, queryset=None):
+        return self.site
+
+
+
+
+class TemplateUpdate(UpdateView):
+    model = UserSite
+    form_class = TemplateForm
+    template_name = 'b24online/UserSites/templateForm.html'
+    success_url = reverse_lazy('site:main')
+
+    def dispatch(self, request, *args, **kwargs):
+
+        organization_id = request.session.get('current_company', None)
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+
+
+        return super(TemplateUpdate, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['user_site_templates'] = UserSiteTemplate.objects.all()
         return context_data
 
     def get_object(self, queryset=None):
