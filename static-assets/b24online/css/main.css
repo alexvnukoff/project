@@ -289,23 +289,23 @@ background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#e
 .external-slide .bx-wrapper .bx-controls-direction a {position: absolute;top: 50%;margin-top:-26px;outline: 0;width:30px;height:53px;text-indent: -9999px;z-index: 9999;}
 .external-slide .themesb2b li .items{ position:relative; float:left; display:inline; width:130px; height:198px; margin:0 8px; box-shadow:0px 0px 5px #ebebeb;}
 
-li.big-coupon {
+ul li.big-coupon {
   width:100%;
   background:#e9f7fc;
 }
 
-li.big-coupon .top {
+ul li.big-coupon .top {
   position: relative;
   z-index: 1;
   height: auto;
 }
 
-li.big-coupon .body {
+ul li.big-coupon .body {
   margin:5px;
   background:#fff;
 }
 
-li.big-coupon .body .coupon-thumb {
+ul li.big-coupon .body .coupon-thumb {
   width:150px;
   text-align:center;
   margin:10px 10px -40px 10px;
@@ -314,11 +314,11 @@ li.big-coupon .body .coupon-thumb {
   display:inline-block;
 }
 
-li.big-coupon .body .coupon-thumb img {
+ul li.big-coupon .body .coupon-thumb img {
   max-width:150px;
 }
 
-li.big-coupon .body .coupon-context {
+ul li.big-coupon .body .coupon-context {
   width:410px;
   vertical-align:top;
   margin:10px 10px 10px 10px;
@@ -326,39 +326,39 @@ li.big-coupon .body .coupon-context {
   line-height:1.2;
 }
 
-li.big-coupon .body .coupon-context h2 {
+ul li.big-coupon .body .coupon-context h2 {
   margin:10px 0;
 }
 
-li.big-coupon .body .coupon-context h2 a {
+ul li.big-coupon .body .coupon-context h2 a {
   color:#159FCB;
 }
 
-li.big-coupon .body .coupon-context .timer-heading {
+ul li.big-coupon .body .coupon-context .timer-heading {
   font-size:12px;
   color:#a5a5a5;
   margin:10px 0 5px 0;
 }
 
-li.big-coupon .body .coupon-context .timer .countdown-section {
+ul li.big-coupon .body .coupon-context .timer .countdown-section {
   display:inline-block;
   vertical-align:middle;
   margin:0 10px;
   text-align:center;
 }
 
-li.big-coupon .body .coupon-context .timer .countdown-amount {
+ul li.big-coupon .body .coupon-context .timer .countdown-amount {
   display:block;
   font-size:32px;
   padding:0 5px;
 }
 
-li.big-coupon .body .coupon-context .timer .countdown-period {
+ul li.big-coupon .body .coupon-context .timer .countdown-period {
   font-size:11px;
   color:#c7c7c7;
 }
 
-li.big-coupon .top .sale {
+ul li.big-coupon .top .sale {
   position:absolute;
   left:140px;
   background:#dd201c;
@@ -369,7 +369,7 @@ li.big-coupon .top .sale {
   padding:8px 12px;
 }
 
-li.big-coupon .top .sale span::after {
+ul li.big-coupon .top .sale span::after {
   content: " ";
   border-width:3px 3px 4px 4px;
   border-style:solid;
@@ -379,12 +379,12 @@ li.big-coupon .top .sale span::after {
   right:100%;
 }
 
-li.big-coupon .bot {
+ul li.big-coupon .bot {
   width:100%;
   background:#159fcb;
 }
 
-li.big-coupon .bot .context {
+ul li.big-coupon .bot .context {
   display:inline-block;
   color:#fff;
   font-size:15px;
@@ -393,32 +393,32 @@ li.big-coupon .bot .context {
   margin:10px 0 10px 210px;
 }
 
-li.big-coupon .bot .context .price-off {
+ul li.big-coupon .bot .context .price-off {
   width:140px;
   font-weight:normal;
   display:inline-block;
   padding:10px;
 }
 
-li.big-coupon .bot .context .current-price {
+ul li.big-coupon .bot .context .current-price {
   width:180px;
   text-align:left;
   display:inline-block;
   font-size:18px;
 }
 
-li.big-coupon .bot .context .current-price small {
+ul li.big-coupon .bot .context .current-price small {
   color:#c8f2ff;
   font-size:12px;
 }
 
-li.big-coupon .bot .context .but {
+ul li.big-coupon .bot .context .but {
   display:inline-block;
   text-align:right;
   width:80px;
 }
 
-li.big-coupon .bot .context .but a span.buyout {
+ul li.big-coupon .bot .context .but a span.buyout {
   background:#dd201c;
   color:#fff;
   font-weight:bold;
@@ -427,6 +427,127 @@ li.big-coupon .bot .context .but a span.buyout {
   text-align:center;
 }
 
-li.big-coupon .bot .context .but a {
+ul li.big-coupon .bot .context .but a {
   text-decoration:none;
+}
+
+li a.coupon_btnbuy {
+    float: left;
+    width: 100%;
+    margin: 10px 0px 0px;
+    font-size: 12px;
+    background: transparent url("../img/coupon_btnbuy.gif") repeat-x scroll 0% 0%;
+    line-height: 21px;
+    text-align: center;
+    color: #FFF;
+    text-shadow: 0 0 1px #555;
+    border-radius: 3px;
+    text-decoration:none;
+    box-shadow: 0px 1px 2px #DDD;
+    opacity:1;
+}
+
+li a.coupon_btnbuy:hover,
+li a.coupon_btnbuy:active {
+   opacity:0.9;
+}
+
+.universal-sale {
+  position:absolute;
+  margin-left:20px;
+  margin-right:20px;
+  background:#dd201c;
+  color:#fff;
+  font-size: 12px;
+  font-weight:600;
+  text-align:center;
+  padding:4px 6px;
+  z-index:1;
+}
+
+.universal-sale::after {
+  content: " ";
+  border-width:3px 3px 4px 4px;
+  border-style:solid;
+  border-color:transparent #dd201c #dd201c transparent;
+  position:absolute;
+  top:0px;
+  right:100%;
+}
+
+
+/* Coupon detail page */
+
+
+.coupon-big {
+   width:620px !important;
+   background:#fff;
+   margin:35px 0;
+   padding:10px;
+   border:10px solid #e9f7fc;
+}
+
+.coupon-big h1 {
+   line-height: 1.2;
+   margin:20px 0 5px 0;
+   color:#0089bc;
+   font-size:20px;
+   font-weight:bold;
+}
+
+.coupon-big .universal-sale {
+  position:absolute;
+  margin-top:-15px;
+  margin-left:20px;
+  margin-right:20px;
+  background:#dd201c;
+  color:#fff;
+  font-size: 14px;
+  font-weight:600;
+  text-align:center;
+  padding:8px 12px;
+  z-index:1;
+}
+
+.coupon-big img.coupon-big-image {
+width:200px;
+}
+
+.coupon-big .coupon-image {
+   width:200px;
+   float:left;
+}
+
+.coupon-big .timer-heading {
+  font-size:12px;
+  color:#a5a5a5;
+  margin:10px 0 5px 0;
+}
+
+.coupon-big .timer .countdown-section {
+  display:inline-block;
+  vertical-align:middle;
+  margin:0 10px;
+  text-align:center;
+}
+
+.coupon-big .timer .countdown-amount {
+  display:block;
+  font-size:32px;
+  padding:0 5px;
+}
+
+.coupon-big .timer .countdown-period {
+  font-size:11px;
+  color:#c7c7c7;
+}
+.coupon-big .timer {
+   width:250px;
+   border-top:1px solid #dedede;
+   border-bottom:1px solid #dedede;
+   padding:10px;
+}
+
+.coupon-big .social {
+   margin:10px 0;
 }

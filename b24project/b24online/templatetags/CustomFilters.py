@@ -7,7 +7,6 @@ import os
 import datetime
 import logging
 
-from django.db import models
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -23,9 +22,10 @@ from django import template
 
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
-    RegisteredEvent)
+                              RegisteredEvent)
+from b24online.stats.helpers import RegisteredEventHelper
+
 from tpp.SiteUrlMiddleWare import get_request
-from b24online.utils import GeoIPHelper
 
 import b24online.urls
 
@@ -291,59 +291,37 @@ def basket_quantity(request):
     return basket.count()
 
 
+
+
+@register.assignment_tag()
+def get_length(some_list):
+    """
+    Return the length of some iterable
+    """
+    return len(some_list) \
+        if isinstance(some_list, Iterable) else 0
+
+
+#
+# Next two filters use sequentially. For example::
+#
+#   {{ product|register_event:"view"|process_event:request }}  
+#
 @register.filter
 def register_event(instance, event_type_slug):
     """
     Register (save) the Event with defined type slug.
     """
-    assert isinstance(instance, models.Model), 'Invalid parameter'
-    try:
-        content_type = ContentType.objects.get_for_model(instance)
-        event_type = RegisteredEventType.objects.get(
-            slug=event_type_slug)
-    except (RegisteredEventType.DoesNotExist, AttributeError):
-        logger.error('There are not RegisteredEventType with slug="%s"',  
-                     event_type_slug)
-    else:
-        return RegisteredEvent.objects.create(
-            event_type=event_type,
-            content_type=content_type,
-            object_id=instance.pk)
-    return None
-
-
-@register.assignment_tag()
-def get_length(some_list):
-    return len(some_list) \
-        if isinstance(some_list, Iterable) else 0
+    return RegisteredEventHelper.get_stored_event(
+        instance, 
+        event_type_slug)
 
 
 @register.filter
-def process_event(event, request):
+def process_event(event_stored_data, request):
     """
-    Process (define and store attributes values) the Event.
+    Register the event (define and store attributes values).
+    Return empty string.
     """
-    def _random_ip():
-        # For debugging
-        import random
-        import socket
-        import struct
-        return socket.inet_ntoa(
-            struct.pack('>I', random.randint(1, 0xffffffff)))
-
-    if event:
-        assert isinstance(event, RegisteredEvent), 'Invalid parameter'
-        event.site = get_current_site(request)
-        event.url = request.path
-        event.username = request.META.get('REMOTE_USER')
-        if getattr(settings, 'REGISTER_RANDOM_IPS', False):
-            event.ip_address = _random_ip()
-        else:
-            event.ip_address = GeoIPHelper.get_request_ip(request)
-        event.user_agent = request.META.get('HTTP_USER_AGENT') 
-        event.event_hash = event.unique_key
-        data = GeoIPHelper.get_geoip_data(event.ip_address) 
-        event.event_data = dict((k, str(v)) for k, v in data.items())
-        event.is_unique = event.check_is_unique()
-        event.save()
+    RegisteredEventHelper.register(event_stored_data, request)
     return ''

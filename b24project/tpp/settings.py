@@ -169,6 +169,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
+    'b24online.stats.middleware.RegisteredEventMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -318,9 +319,12 @@ RAVEN_CONFIG = {
     'dsn': 'https://c01d9a4420f94559be74d1b30f18e7e8:9d976cb46171495cbeb33892ae0ad102@sentry.ssilaev.com/3',
 }
 
+###################### Statistics settings ###################################
 # Set the path to GeoIP database
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
 
+# The Redis DB url for stats
+EVENT_STORE_REDIS_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com/1'
 
 try:
     from local_settings import *

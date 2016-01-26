@@ -1466,6 +1466,8 @@ class AdvertisementOrder(Order):
         return self.purchaser.has_perm()
 
 
+### Models for stats
+
 class RegisteredEventType(models.Model):
     """
     The registered events types.
@@ -1484,7 +1486,7 @@ class RegisteredEventType(models.Model):
 ##
 # Models for stats
 ##
-class _RegisteredEventAbs(models.Model):
+class RegisteredEventMixin(models.Model):
     """
     The registered events abstract class.
     """
@@ -1500,7 +1502,7 @@ class _RegisteredEventAbs(models.Model):
         abstract = True
 
 
-class RegisteredEventStats(_RegisteredEventAbs):
+class RegisteredEventStats(RegisteredEventMixin):
     """
     The registered events stats per day.
     """
@@ -1517,6 +1519,13 @@ class RegisteredEventStats(_RegisteredEventAbs):
     def __str__(self):
         return _('Event stats of type "{0}" for "{1}"'). \
             format(self.event_type.name, str(self.item))
+
+    def get_kwargs(self):
+        return {
+            'event_type_id': self.event_type_id,
+            'content_type_id': self.content_type_id,
+            'instance_id': self.object_id,
+        }
 
     def store_info(self, registered_event):
         """
@@ -1592,7 +1601,7 @@ class RegisteredEventStats(_RegisteredEventAbs):
         return extra_info
 
 
-class RegisteredEvent(_RegisteredEventAbs):
+class RegisteredEvent(RegisteredEventMixin):
     """
     The registered events.
 
@@ -1604,14 +1613,14 @@ class RegisteredEvent(_RegisteredEventAbs):
     url = models.TextField(_('Requested URL'), blank=True, null=True)
     username = models.CharField(_('Username'), max_length=255,
                                 blank=True, null=True)
-    ip_address = models.GenericIPAddressField(_('IP address of request'),
+    ip_address = models.GenericIPAddressField(_('IP address'),
                                               blank=True, null=True)
-    user_agent = models.CharField(_('User Agent info'), max_length=255,
+    user_agent = models.CharField(_('User Agent'), max_length=255,
                                   blank=True, null=True)
     event_hash = models.CharField(_('Event hash key'), max_length=32,
                                   validators=[MinLengthValidator(32)],
                                   null=False, default='', db_index=True)
-    is_unique = models.BooleanField(_('Is event unique for this day'),
+    is_unique = models.BooleanField(_('Is unique'),
                                     default=False)
     event_data = HStoreField(_('Event extra data'), blank=True, null=True)
 

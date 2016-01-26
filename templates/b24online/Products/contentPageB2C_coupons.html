@@ -32,151 +32,7 @@ $(document).ready(function() {
 
 </script>
 
-<style>
 
-li.big-coupon {
-  width:100%;
-  background:#e9f7fc;
-}
-
-li.big-coupon .top {
-  position: relative;
-  z-index: 1;
-  height: auto;
-}
-
-li.big-coupon .body {
-  margin:5px;
-  background:#fff;
-}
-
-li.big-coupon .body .coupon-thumb {
-  width:150px;
-  text-align:center;
-  margin:10px 10px -40px 10px;
-  padding:20px;
-  background:#fff;
-  display:inline-block;
-}
-
-li.big-coupon .body .coupon-thumb img {
-  max-width:150px;
-}
-
-li.big-coupon .body .coupon-context {
-  width:410px;
-  vertical-align:top;
-  margin:10px 10px 10px 10px;
-  display:inline-block;
-  line-height:1.2;
-}
-
-li.big-coupon .body .coupon-context h2 {
-  margin:10px 0;
-}
-
-li.big-coupon .body .coupon-context h2 a {
-  color:#159FCB;
-}
-
-li.big-coupon .body .coupon-context .timer-heading {
-  font-size:12px;
-  color:#a5a5a5;
-  margin:10px 0 5px 0;
-}
-
-li.big-coupon .body .coupon-context .timer .countdown-section {
-  display:inline-block;
-  vertical-align:middle;
-  margin:0 10px;
-  text-align:center;
-}
-
-li.big-coupon .body .coupon-context .timer .countdown-amount {
-  display:block;
-  font-size:32px;
-  padding:0 5px;
-}
-
-li.big-coupon .body .coupon-context .timer .countdown-period {
-  font-size:11px;
-  color:#c7c7c7;
-}
-
-li.big-coupon .top .sale {
-  position:absolute;
-  left:140px;
-  background:#dd201c;
-  color:#fff;
-  font-size: 16px;
-  font-weight:600;
-  text-align:center;
-  padding:8px 12px;
-}
-
-li.big-coupon .top .sale span::after {
-  content: " ";
-  border-width:3px 3px 4px 4px;
-  border-style:solid;
-  border-color:transparent #dd201c #dd201c transparent;
-  position:absolute;
-  top:0px;
-  right:100%;
-}
-
-li.big-coupon .bot {
-  width:100%;
-  background:#159fcb;
-}
-
-li.big-coupon .bot .context {
-  display:inline-block;
-  color:#fff;
-  font-size:15px;
-  font-weight:600;
-  width:500px;
-  margin:10px 0 10px 210px;
-}
-
-li.big-coupon .bot .context .price-off {
-  width:140px;
-  font-weight:normal;
-  display:inline-block;
-  padding:10px;
-}
-
-li.big-coupon .bot .context .current-price {
-  width:180px;
-  text-align:left;
-  display:inline-block;
-  font-size:18px;
-}
-
-li.big-coupon .bot .context .current-price small {
-  color:#c8f2ff;
-  font-size:12px;
-}
-
-li.big-coupon .bot .context .but {
-  display:inline-block;
-  text-align:right;
-  width:80px;
-}
-
-li.big-coupon .bot .context .but a span.buyout {
-  background:#dd201c;
-  color:#fff;
-  font-weight:bold;
-  padding:8px 18px;
-  font-size:16px;
-  text-align:center;
-}
-
-li.big-coupon .bot .context .but a {
-  text-decoration:none;
-}
-
-   </style>
     <ul class="listprd">
     {% for product in object_list %}
         {% if forloop.first %}
@@ -200,17 +56,17 @@ li.big-coupon .bot .context .but a {
                   </a>
 
                   <p class="timer-heading">{% trans 'Promotion ends' %}</p>
-                  <div class="timer" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                  <div style="font-size:32px;" class="timer icon-clock" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
               </div>
 
             <div class="bot">
               <div class="context">
                  <span class="price-off">
-                    <strike>{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</strike> ({{ product.coupon_discount_percent|intword }}% off)
+                    <strike>{{ product.currency|getSymbol }}{{ product.cost|formatPrice }}</strike> ({{ product.coupon_discount_percent|intword }}% off)
                   </span>
 
                  <span class="current-price">
-                 <small>Current price</small> {{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}
+                 <small>Current price</small> {{ product.currency|getSymbol }}{{ product.get_discount_price|formatPrice }}
                 </span>
 
                 <span class="but">
@@ -224,6 +80,7 @@ li.big-coupon .bot .context .but a {
           {% endif %}
         {% else %}
           <li>
+          <span class="universal-sale">-{{ product.coupon_discount_percent|intword }}%</span>
            {% setContextMenu product update_url=update_url delete_url=delete_url %}
             <div class="thumb">
                 <a href="{% url 'products:B2CDetail' product.slug product.pk %}">
@@ -240,6 +97,8 @@ li.big-coupon .bot .context .but a {
                   {% endif %}
               <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
              </div>
+
+             <label style="color:555">{% trans " Discount price until" %}<br>{{ product.end_coupon_date }}</label>
               <div class="price">
                   {% if product.cost %}
                       <span{% if product.is_coupon %} style="color:red"{% endif %}>{{ product.currency|getSymbol }}{{ product.get_discount_price }}</span>
@@ -247,7 +106,7 @@ li.big-coupon .bot .context .but a {
                       {% trans 'Contact to price' %}
                   {% endif %}
               </div>
-              <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
+              <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="coupon_btnbuy">{% trans 'Buy' %}</a>
           </li>
         {% endif %}
     {% empty %}

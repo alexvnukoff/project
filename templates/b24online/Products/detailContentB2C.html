@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
+{% load humanize %}
 
 {% block header %}
     {% include "b24online/login_header.html" %}
@@ -10,12 +11,15 @@
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script src="{% static 'b24online/js/jquery.uploadify.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+
     <script>
     $(function() {
          $(".goods-details-tab").tabs();});
@@ -32,31 +36,99 @@
             {% endif %}
         {% endif %}
         ga('set', 'dimension2', 'product');
+
+    $(document).ready(function() {
+      $(function(){
+        var date = $('.timer').attr('date');
+        $('.timer').countdown({until: new Date(date), format: 'dHM'});
+      })
+
+      $(function(){
+        var date = $('.timer-mini').attr('date');
+        $('.timer-mini').countdown({until: new Date(date), compact: true});
+      })
+    });
+
     </script>
 {% endblock %}
 
 {% block keywords %}{% endblock %}
 {% block content %}
-<div class="goods-details">
-    <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
-    <div class="goods-details-left">
-        <div class="gallery">
-            <div id="panel">
-                {% if item.image %}
-                  <img id="largeImage" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
-                {% else %}
-                  <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </div>
-            <div id="thumbs">
-                {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
-                    <img src="{{ gallery_item.image.big }}" alt="" />
-                {% endfor %}
-            </div>
+
+
+{% if item.is_coupon %}
+    <div class="goods-details coupon-big">
+    <span class="universal-sale">-{{ item.coupon_discount_percent|intword }}%</span>
+    <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
+
+        <div class="coupon-image">
+        {% if item.image %}
+            <img class="coupon-big-image" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
+        {% else %}
+            <img id="coupon-big-image" src="{% static 'b24online/img/item.jpg' %}" alt="" />
+        {% endif %}
+
+
+        <div style="margin:10px 0;text-align:center;">
+
+            <p><strong><a href="{{ item.company.get_absolute_url }}">{{ item.company.name }}</a></strong></p>
+            <p><a href="{{ item.company.site }}">{{ item.company.site }}</a></p>
+            <p><a data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a></p>
         </div>
-        {% b2b_social_buttons item.image item.name item.description %}
+
+        </div>
+
+        <div style="width:380px;padding:10px 20px;float:left;">
+
+            <h2><span style="font-weight:normal;">{% trans 'Current price' %}:</span> {{ item.currency|getSymbol }}{{ item.get_discount_price|formatPrice }} <span class="price-off"><span style="font-weight:normal;color:#a5a5a5">(<strike>{{ item.currency|getSymbol }}{{ item.cost|formatPrice }}</strike>)</span></span></h2>
+
+            <p class="timer-heading">{% trans 'Promotion ends' %}</p>
+            <div style="font-size:32px;" class="timer icon-clock" date="{{ item.end_coupon_date|date:'Y-m-d' }}"></div>
+
+            {% b2b_social_buttons item.image item.name item.description %}
+
+            {% if paypal_form %}
+                <div style="">{{ paypal_form.render }}</div>
+
+                <input id="id_quantity_src" placeholder="{% trans 'Amount' %}" type="text" class="text" style="margin:10px 0;width:100px;" />
+
+                <script>
+                $("#id_quantity_src").keyup(function() {
+                    document.getElementById('id_quantity').value = this.value;
+                });
+                </script>
+
+            {% else %}
+                <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
+            {% endif %}
+
+
+
 
     </div>
+
+{% else %}
+
+    <div class="goods-details">
+        <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+        <div class="goods-details-left">
+            <div class="gallery">
+                <div id="panel">
+                    {% if item.image %}
+                      <img id="largeImage" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
+                    {% else %}
+                      <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                    {% endif %}
+                </div>
+                <div id="thumbs">
+                    {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
+                        <img src="{{ gallery_item.image.big }}" alt="" />
+                    {% endfor %}
+                </div>
+            </div>
+            {% b2b_social_buttons item.image item.name item.description %}
+
+        </div>
     <div class="goods-details-center">
         <ul>
             <li>
@@ -110,6 +182,8 @@
            </li>
         </ul>
     </div>
+
+
     <ul class="goods-info">
        <li class="top">
             <div class="iconinfo"><i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i> </div>
@@ -146,7 +220,13 @@
             </div>
        </li>
     </ul>
+
+
+{% endif %}
+
+
     <div class="goods-details-tab cpn-details-tab">
+
         <div class="tab-cate">
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
@@ -164,9 +244,11 @@
                 {% endfor %}
             </ul>
         </div>
+
         <div id="goods-tabs-1">
             <div class="content-goods-tab">{{ item.description|cleanHtml|safe }}</div>
         </div>
+
         <div id="goods-tabs-2">
             <div class="content-goods-tab">
                 {% for document in item.documents.all %}
@@ -174,11 +256,13 @@
                 {% endfor %}
             </div>
         </div>
+
         <div id="goods-tabs-3">
             <div class="content-goods-tab">
 
             </div>
         </div>
+
         {% for page in item.additional_pages.all %}
             <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
@@ -186,4 +270,23 @@
          {% endfor %}
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% endblock %}

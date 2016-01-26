@@ -1,13 +1,28 @@
+# -*- encoding: utf-8 -*-
+
+import logging
+
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.contrib.auth.admin import UserAdmin
-from mptt.admin import MPTTModelAdmin
 from django.utils.translation import ugettext_lazy as _
+from django.conf.urls import patterns, url
+from django.core.urlresolvers import reverse
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.contrib.sites.shortcuts import get_current_site
+from django.template import RequestContext
+
+from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
     PolymorphicMPTTParentModelAdmin
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
                               RegisteredEventStats, RegisteredEvent, User)
+from b24online.stats.utils import convert_date
+
+logger = logging.getLogger(__name__)
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -43,18 +58,76 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug', 'director', 'company_paypal_account', ]
 
 
-class RegisteredEventAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'is_unique', 'ip_address', 'user_agent',
-                    'registered_at', 'geo_info']
-    list_per_page = 20
-    list_filter = ['is_unique', 'registered_at']
-
-
 class RegisteredEventStatsAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'unique_amount', 'total_amount',
-                    'registered_at']
+    list_display = ['__str__', 'show_unique_amount', 
+                    'show_total_amount', 'registered_at']
     list_per_page = 20
     list_filter = ['registered_at']
+
+    def show_amount(self, object, cnt_type):
+        """
+        Return the the appropriate href to detailed stats.
+        """
+        object_kwargs = object.get_kwargs()
+        object_kwargs.update({'cnt_type': cnt_type})
+        return '<a href="{1}?date={2}">{0}</a>' . format(
+            object.unique_amount,
+            reverse('admin:event_stats_detail', kwargs=object_kwargs),
+            object.registered_at.strftime('%Y-%m-%d'))
+
+    def show_unique_amount(self, object):
+        """
+        For 'unique' counter.
+        """
+        return self.show_amount(object, 'unique')
+    show_unique_amount.allow_tags = True
+    show_unique_amount.short_description = _('Unique amount')
+
+    def show_total_amount(self, object):
+        """
+        For 'total' counter.
+        """
+        return self.show_amount(object, 'total')
+    show_total_amount.allow_tags = True
+    show_total_amount.short_description = _('Total amount')
+
+    def show_stats(self, request, event_type_id, content_type_id,
+                   instance_id, cnt_type):
+        site = get_current_site(request)
+        if 'date' in request.GET:
+            registered_at = convert_date(request.GET['date'])
+            try:
+                stats = RegisteredEventStats.objects.get(
+                    event_type_id=event_type_id, 
+                    # site_id=site.pk,
+                    content_type_id=content_type_id,
+                    object_id=instance_id,
+                    registered_at=registered_at)
+            except RegisteredEventStats.DoesNotExist:
+                return HttpResponseRedirect(
+                    reverse('admin:b24online_registeredeventstats_changelist'))
+            else:
+                data_grid = stats.get_extra_info(cnt_type)
+                context = {
+                    'data_grid': data_grid,
+                    'item': stats,
+                    'has_permission': True,
+                    'opts': RegisteredEventStats._meta,
+                    }
+                return render_to_response(
+                    'admin/stats.html', 
+                    context,    
+                    context_instance=RequestContext(request))
+
+
+    def get_urls(self):
+        return patterns(
+            '',
+             url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
+                 r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
+                 self.show_stats,
+                 name='event_stats_detail'),
+        ) + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
 class B24UserAdmin(UserAdmin):
@@ -86,5 +159,4 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
-admin.site.register(RegisteredEvent, RegisteredEventAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)
