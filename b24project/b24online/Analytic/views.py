@@ -15,6 +15,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from appl import func
 from b24online.models import (Organization, Company, Tender, 
@@ -86,6 +88,11 @@ def get_analytic(request):
 class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = RegisteredEventStatsForm
+
+    @method_decorator(login_required)
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(RegisteredEventStatsView, self).dispatch(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         """
@@ -98,27 +105,53 @@ class RegisteredEventStatsView(TemplateView):
         context = super(RegisteredEventStatsView, self)\
             .get_context_data(**kwargs)
 
+        current_organization = request.session.get('current_company', False)
+
+        if current_organization is False:
+            return HttpResponseRedirect(reverse('denied'))
+
+        current_organization = Organization.objects.get(pk=current_organization)
+
+        context = {'current_company': current_organization.name}
+
+        if current_organization.parent and isinstance(current_organization, Company):
+            key = "analytic:main:chamber:%s" % current_organization.parent.pk
+            context['chamber_events'] = cache.get(key)
+
+            if not context['chamber_events']:
+                org_filter = Q(organization=current_organization.parent) | Q(organization__parent=current_organization.parent)
+                context['chamber_events'] = {
+                    'tenders': Tender.objects.filter(org_filter).count(),
+                    'proposals': Tender.objects.filter(org_filter).count(),
+                    'exhibitions': Tender.objects.filter(org_filter).count()
+                }
+
+                cache.set(key, context['chamber_events'], 60 * 60 * 24)
+
         # Current organization and products
         organization = request.session.get('current_company', None)
         qs = RegisteredEventStats.objects.all()
-        if 'filter' in request.GET:
-            form = self.form_class(data=request.GET)
-            if form.is_valid():
-                qs = form.filter(qs)
-        else:
-            form = self.form_class()
+        ##if 'filter' in request.GET:
+        ##    form = self.form_class(data=request.GET)
+        ##    if form.is_valid():
+        ##        qs = form.filter(qs)
+        ##else:
+        ##    form = self.form_class()
+        form = self.form_class(data=request.GET)
+        if form.is_valid():
+            qs = form.filter(qs)
 
         date_range = list(form.date_range())
         data_grid = []
-        if organization:
+        if current_organization:
             b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
             b2c_products = B2CProduct.get_active_objects()\
-                .filter(company_id=organization)
+                .filter(company_id=current_organization)
             b2c_ids = [item.id for item in b2c_products]
             
             b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
             b2b_products = B2BProduct.get_active_objects()\
-                .filter(company_id=organization)
+                .filter(company_id=current_organization)
             b2b_ids = [item.id for item in b2b_products]
 
             qs = qs.filter(
@@ -146,7 +179,7 @@ class RegisteredEventStatsView(TemplateView):
             'form': form,
             'date_range': date_range,
             'data_grid': data_grid,
-            'organization': organization,
+            'organization': current_organization,
         })
         return context
 

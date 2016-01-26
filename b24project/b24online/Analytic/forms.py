@@ -1,10 +1,14 @@
 # -*- encoding: utf-8 -*-
 
 import datetime
+import logging
 
 from django import forms
 from django.utils.translation import gettext as _
+from django.utils import timezone
 from b24online.models import RegisteredEvent
+
+logger = logging.getLogger(__name__)
 
 
 class RegisteredEventStatsForm(forms.Form):
@@ -58,3 +62,19 @@ class RegisteredEventStatsForm(forms.Form):
         for n in range(day_count):
             _date = start_date + datetime.timedelta(days=n)
             yield (_date, True if _date == self.today else False)
+
+    def prev_week(self):
+        logger.debug('Step 1')
+        (b, e) = map(lambda x: x[0] - datetime.timedelta(days=7),
+                     self.date_range())
+        logger.debug(b, e)
+        return {'start_date': b, 'end_date': e}
+
+    @property
+    def next_week(self):
+        (b, e) = map(lambda x: x[0] + datetime.timedelta(days=7),
+                     self.date_range())
+        if b > self.today:
+            return {'start_date': None, 'end_date': None}
+        else:
+            return {'start_date': b, 'end_date': e}
