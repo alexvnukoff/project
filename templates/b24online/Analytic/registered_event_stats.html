@@ -146,10 +146,14 @@
   <div id="movement">
     {% with p_start_date=form.prev_week.start_date p_end_date=form.prev_week.end_date %}
         {% if p_start_date %}
-        <a href="{{ request.path }}?start_date={{ p_start_date|date:'d/m/Y'}}&end_date={{ p_end_date|date:'d/m/Y'}}">{% trans 'Previus week' %}</a>&nbsp;&nbsp;&nbsp;
+        <a href="{{ request.path }}?start_date={{ p_start_date|date:'d/m/Y'}}&end_date={{ p_end_date|date:'d/m/Y'}}">&laquo;&nbsp;{% trans 'Previus week' %}</a>&nbsp;&nbsp;&nbsp;
         {% endif %}
     {% endwith  %}
-    <a href="{{ request.path }}">{% trans 'Next week' %}</a>
+    {% with n_start_date=form.prev_week.start_date n_end_date=form.prev_week.end_date %}
+        {% if n_start_date %}
+        <a href="{{ request.path }}?start_date={{ n_start_date|date:'d/m/Y'}}&end_date={{ n_end_date|date:'d/m/Y'}}">{% trans 'Next week' %}&nbsp;&raquo;</a>&nbsp;&nbsp;&nbsp;
+        {% endif %}
+    {% endwith  %}
   </div>
   <div>
     {% for event_type_id, event_type, data_1 in data_grid %}

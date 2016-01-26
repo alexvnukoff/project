@@ -131,7 +131,7 @@ class RegisteredEventStatsView(TemplateView):
         # Current organization and products
         organization = request.session.get('current_company', None)
         qs = RegisteredEventStats.objects.all()
-        if 'start_datefilter' in request.GET and 'end_date' in request.GET: 
+        if 'start_date' in request.GET and 'end_date' in request.GET: 
             form = self.form_class(data=request.GET)
             if form.is_valid():
                 qs = form.filter(qs)
