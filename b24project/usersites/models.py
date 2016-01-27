@@ -41,8 +41,7 @@ def uploadTemplateImage(sender, instance, **kwargs):
     params.append({
     'file': instance.thumbnail.path,
     'sizes': {
-        'big': {'box': (1280, 2630), 'fit': True},
-        'small': {'box': (145, 300), 'fit': True}
+        'small': {'box': (200, 200), 'fit': True},
         }
     })
 

@@ -1,0 +1,52 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+
+
+
+<div id="wrapper">
+
+        <h1>{% trans "Select Template" %}</h1>
+
+        <p>{% blocktrans %}Dear colleagues, select desired template and then click Save.{% endblocktrans %}</p>
+
+
+<form action="" method="POST">{% csrf_token %}
+
+<div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
+<label>
+<img class="t-image" src="{% static 'usersites/images' %}/default-template.png">
+<input type="radio" name="user_template" value="" {% if not object.user_template %}checked="checked"{% endif %}>
+</label>
+<p>{% trans 'Default (vertical banners)' %}</p>
+</div>
+
+
+{% for i in user_site_templates.all %}
+
+<div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
+<label>
+<img class="t-image" src="{{ i.thumbnail.small }}">
+<input type="radio" name="user_template" value="{{ i.pk }}" {% if i == object.user_template %}checked="checked"{% endif %}>
+</label>
+<p>{{ i }}</p>
+</div>
+
+{% endfor %}
+
+<hr>
+<input class="bigbuy" value="Save" type="submit">
+
+</form>
+
+
+
+
+</div>
+{% endblock %}

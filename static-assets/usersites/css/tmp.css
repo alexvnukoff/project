@@ -496,3 +496,12 @@ a.green-btn-sale:hover {
 
 .tmp_search {}
 .tmp_search input {font-size:16px;padding:10px;margin:0 0 15px 0;width:100%;}
+
+
+
+/* UserSites choice templates  ============================================= */
+
+
+.templates-box {display:inline-block;}
+.templates-box label {cursor:pointer;}
+.templates-box img.t-image {border:1px solid #919191;display:block;}

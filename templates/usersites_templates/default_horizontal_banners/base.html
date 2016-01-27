@@ -24,7 +24,7 @@
 
 </head>
 
-<body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
+<body{% if request.path == "/" %} id="main"{% endif %} class="{% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {% include 'usersites/header.html' %}
 
@@ -46,7 +46,12 @@
             <div class="offer__icons">
                 {% if is_chamber %}
                         {% site_context_adv %}
-
+                {% else %}
+                        {% site_banner "top" "SITES RIGHT 1" %}
+                        {% site_banner "top" "SITES RIGHT 2" %}
+                        {% site_banner "top" "SITES RIGHT 3" %}
+                        {% site_banner "top" "SITES RIGHT 4" %}
+                        {% site_banner "top" "SITES RIGHT 5" %}
                 {% endif %}
                 </div>
 
@@ -100,6 +105,8 @@
                 <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
                     </ul>
 
+                    {% site_banner "left" "SITES LEFT 1" %}
+                    {% site_banner "left" "SITES LEFT 2" %}
                     <br><br>
                 </aside>
 
@@ -130,6 +137,8 @@
         <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
+
+
 
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
