@@ -19,15 +19,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from appl import func
-from b24online.models import (Organization, Company, Tender, 
-    RegisteredEvent, RegisteredEventStats, RegisteredEventType, 
-    B2BProduct)
+from b24online.models import (Organization, Company, Tender, Exhibition,
+    RegisteredEvent, RegisteredEventStats, RegisteredEventType, B2BProduct)
 from centerpokupok.models import B2CProduct
 from b24online.Analytic.forms import SelectPeriodForm
+from b24online.utils import get_current_organization
 from b24online.stats.utils import process_stats_data
 
 logger = logging.getLogger(__name__)
-
 
 @login_required
 def main(request):
@@ -89,47 +88,47 @@ class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = SelectPeriodForm
 
-    @method_decorator(login_required)
-    @method_decorator(csrf_exempt)
+    #@method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RegisteredEventStatsView, self).dispatch(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         """
-        Add the request for processing.
+        Add the request for processing in args.
         """
         context = self.get_context_data(request, **kwargs)
+        redirect_url = context.get('redirect_url')
+        if redirect_url:
+            return HttpResponseRedirect(redirect_url)
         return self.render_to_response(context)
                     
     def get_context_data(self, request, **kwargs):
-        context = super(RegisteredEventStatsView, self)\
-            .get_context_data(**kwargs)
+        context = {}
 
-        current_organization = request.session.get('current_company', False)
+        # Define selected organization (company)
+        current_organization = get_current_organization(request)
+        if not current_organization:
+            return {'redirect_url': reverse('denied')}
+        context.update({'current_company': current_organization.name})
 
-        if current_organization is False:
-            return HttpResponseRedirect(reverse('denied'))
+        ### Info about Tenders, Exhibition etc
+        ### FIXME: delete, the block has been deleted from template
+        ##if current_organization.parent and \
+        ##    isinstance(current_organization, Company):
+        ##   
+        ##    key = "analytic:main:chamber:%s" % current_organization.parent.pk
+        ##    context['chamber_events'] = cache.get(key)
+        ##    if not context['chamber_events']:
+        ##        org_filter = Q(organization=current_organization.parent) \
+        ##            | Q(organization__parent=current_organization.parent)
+        ##        context['chamber_events'] = {
+        ##            'tenders': Tender.objects.filter(org_filter).count(),
+        ##            'proposals': Tender.objects.filter(org_filter).count(),
+        ##            'exhibitions': Exhibition.objects.filter(org_filter).count()
+        ##        }
+        ##        cache.set(key, context['chamber_events'], 60 * 60 * 24)
 
-        current_organization = Organization.objects.get(pk=current_organization)
-
-        context = {'current_company': current_organization.name}
-
-        if current_organization.parent and isinstance(current_organization, Company):
-            key = "analytic:main:chamber:%s" % current_organization.parent.pk
-            context['chamber_events'] = cache.get(key)
-
-            if not context['chamber_events']:
-                org_filter = Q(organization=current_organization.parent) | Q(organization__parent=current_organization.parent)
-                context['chamber_events'] = {
-                    'tenders': Tender.objects.filter(org_filter).count(),
-                    'proposals': Tender.objects.filter(org_filter).count(),
-                    'exhibitions': Tender.objects.filter(org_filter).count()
-                }
-
-                cache.set(key, context['chamber_events'], 60 * 60 * 24)
-
-        # Current organization and products
-        organization = request.session.get('current_company', None)
+        # Filtered form
         qs = RegisteredEventStats.objects.all()
         if 'start_date' in request.GET and 'end_date' in request.GET: 
             form = self.form_class(data=request.GET)
@@ -137,40 +136,38 @@ class RegisteredEventStatsView(TemplateView):
                 qs = form.filter(qs)
         else:
             form = self.form_class()
-
         date_range = list(form.date_range())
-        data_grid = []
-        if current_organization:
-            b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
-            b2c_products = B2CProduct.get_active_objects()\
-                .filter(company_id=current_organization)
-            b2c_ids = [item.id for item in b2c_products]
-            
-            b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
-            b2b_products = B2BProduct.get_active_objects()\
-                .filter(company_id=current_organization)
-            b2b_ids = [item.id for item in b2b_products]
 
-            qs = qs.filter(
-                (Q(content_type_id=b2c_content_type) \
-                    & Q(object_id__in=b2c_ids)) | \
-                (Q(content_type_id=b2b_content_type) \
-                    & Q(object_id__in=b2b_ids)))\
-                .values('event_type_id', 'content_type_id', 'object_id', 
-                    'registered_at')\
-                .annotate(unique=Sum('unique_amount'), 
-                    total=Sum('total_amount'))\
-                .order_by('event_type_id', 'content_type_id', 
-                    'object_id', 'registered_at') 
-            data = {}
-            for _d in qs:
-                data.setdefault(_d['event_type_id'], {})\
-                    .setdefault(_d['content_type_id'], {})\
-                    .setdefault(_d['object_id'], {})\
-                    .setdefault(_d['registered_at'], {})\
-                    .update({'unique': _d['unique'], 'total': _d['total']})
+        # Form the qs
+        b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
+        b2c_ids = [item.id for item in B2CProduct.get_active_objects()\
+            .filter(company_id=current_organization)]
 
-            data_grid = process_stats_data(data, date_range)
+        b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
+        b2b_ids = [item.id for item in B2BProduct.get_active_objects()\
+            .filter(company_id=current_organization)]
+
+        qs = qs.filter(
+            (Q(content_type_id=b2c_content_type) \
+                & Q(object_id__in=b2c_ids)) | \
+            (Q(content_type_id=b2b_content_type) \
+                & Q(object_id__in=b2b_ids)))\
+            .values('event_type_id', 'content_type_id', 'object_id', 
+                'registered_at')\
+            .annotate(unique=Sum('unique_amount'), 
+                total=Sum('total_amount'))\
+            .order_by('event_type_id', 'content_type_id', 
+                'object_id', 'registered_at') 
+
+        # Build the data grid
+        data = {}
+        for item in qs:
+            data.setdefault(item['event_type_id'], {})\
+                .setdefault(item['content_type_id'], {})\
+                .setdefault(item['object_id'], {})\
+                .setdefault(item['registered_at'], {})\
+                .update({'unique': item['unique'], 'total': item['total']})
+        data_grid = process_stats_data(data, date_range)
 
         context.update({
             'form': form,

@@ -129,7 +129,6 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     context,    
                     context_instance=RequestContext(request))
 
-    @method_decorator(csrf_exempt)
     def show_stats(self, request):
         site = get_current_site(request)
         b2c_content_type = ContentType.objects.get_for_model(B2CProduct)

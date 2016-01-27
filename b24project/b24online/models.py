@@ -1816,6 +1816,22 @@ class DealOrder(AbstractRegisterInfoModel):
         verbose_name = _('Product order')
         verbose_name_plural = _('Product orders')
 
+    @classmethod
+    def get_user_orders(cls, user, status=DRAFT):
+        """
+        Return the qs for DealOrders where the user is a customer.
+        """
+        if user.is_authenticated():
+            org_ids = get_objects_for_user(
+                user, ['b24online.manage_organization'],
+                Organization.get_active_objects().all(), with_superuser=False)
+            return cls.objects.filter(status=status).filter(
+                (Q(customer_type=cls.AS_PERSON) & Q(created_by=user)) | \
+                (Q(customer_type=cls.AS_COMPANY) & \
+                    Q(customer_company__in=org_ids)))
+        else:
+            return cls.objects.none()
+          
     def __str__(self):
         _data = [_('Order from %s') % self.created,]
         if self.order_no:
@@ -1849,23 +1865,6 @@ class DealOrder(AbstractRegisterInfoModel):
         """
         return dict(type(self).STATUSES).get(self.status)
        
-    def can_pay(self):
-        return self.status == self.DRAFT
-       
-    def can_edit(self):
-        return self.status == self.DRAFT
-       
-    # FIXME: add the methods for already paid, unpaid deals and total
-    # product's cost 
-    def get_paid_cost(self):
-        pass
-
-    def get_unpaid_cost(self):
-        pass
-
-    def get_products_cost(self):
-        pass
-
     def get_total_cost(self):
         """
         Return deal cost in different currencies.
@@ -1873,21 +1872,6 @@ class DealOrder(AbstractRegisterInfoModel):
         for currency, cost in self.total_cost_data.items():
             yield (cost, currency)
 
-    @classmethod
-    def get_user_orders(cls, request, status=DRAFT):
-        """
-        Return the qs for DealOrders where the user is a customer.
-        """
-        qs = cls.objects.all()
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), with_superuser=False)
-        qs = qs.filter(Q(status=status) &
-            (Q(customer_type=cls.AS_PERSON) & Q(created_by=request.user)) | \
-            (Q(customer_type=cls.AS_COMPANY) & \
-                Q(customer_company__in=org_ids)))
-        return qs
-          
     @transaction.atomic
     def pay(self):
         """
@@ -1935,6 +1919,20 @@ class Deal(AbstractRegisterInfoModel):
         verbose_name = _('Purchase deal')
         verbose_name_plural = _('Purchase deal')
 
+    @classmethod
+    def get_user_deals(cls, user, status=DRAFT):
+        """
+        Return the deals for user's companies.
+        """
+        if user.is_authenticated():
+            org_ids = get_objects_for_user(
+                user, ['b24online.manage_organization'],
+                Organization.get_active_objects().all(), with_superuser=False)
+            return cls.objects.filter(Q(status=status) \
+                & Q(supplier_company_id__in=org_ids))
+        else:
+            return cls.objects.none()
+
     def __str__(self):
         _data = [_('Deal from %s') % self.created,]
         if self.deal_no:
@@ -1973,16 +1971,6 @@ class Deal(AbstractRegisterInfoModel):
     def can_edit(self):
         return self.status == self.DRAFT
 
-    @classmethod
-    def get_user_deals(cls, request, status=DRAFT):
-        """
-        Return the deals for use's companies.
-        """
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), with_superuser=False)
-        return cls.objects.filter(Q(status=status) \
-            & Q(supplier_company_id__in=org_ids))
 
     def pay(self):
         """

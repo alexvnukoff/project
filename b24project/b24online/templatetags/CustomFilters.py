@@ -328,21 +328,21 @@ def process_event(event_stored_data, request):
 @register.filter
 def deal_order_quantity(request):
     """
-    Return the draft dela orders count.
+    Return the draft deal orders count.
     """
     from b24online.models import DealOrder
-    return DealOrder.get_user_orders(request, status=DealOrder.DRAFT)\
-            .count() if request.user.is_authenticated() else 0
+    return DealOrder.get_user_orders(request.user, status=DealOrder.DRAFT)\
+        .count() if request.user.is_authenticated() else 0
 
 
 @register.filter
 def deal_quantity(request):
     """
-    Return the draft dela orders count.
+    Return the paid deals count.
     """
     from b24online.models import Deal
-    return Deal.get_user_deals(request, status=Deal.PAID).count() \
-         if request.user.is_authenticated() else 0
+    return Deal.get_user_deals(request.user, status=Deal.PAID)\
+        .count() if request.user.is_authenticated() else 0
 
 
 @register.filter
