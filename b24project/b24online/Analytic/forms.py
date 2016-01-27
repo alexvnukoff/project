@@ -67,6 +67,9 @@ class SelectPeriodForm(forms.Form):
             yield (_date, True if _date == self.today else False)
 
     def date_limits(self):
+        """
+        Return the dict with selected period's start_date and end_date.
+        """
         start_date = end_date = None
         if hasattr(self, 'cleaned_data'):
             start_date = self.cleaned_data.get('start_date')
@@ -75,17 +78,27 @@ class SelectPeriodForm(forms.Form):
             start_date = self.initial['start_date']        
         if not end_date:
             end_date = self.initial['end_date']        
-        return (start_date, end_date)        
 
-    def prev_week(self):
-        (b, e) = map(lambda x: x - datetime.timedelta(days=7),
-                     self.date_limits())
-        return {'start_date': b, 'end_date': e}
+        return {
+            'start_date': start_date,
+            'end_date': end_date
+        }
+
+    def get_week(self, multiplier):
+        """
+        Return the start- and end date for some week.
+        """
+        date_limits = self.date_limits()
+        delta = multiplier * datetime.timedelta(days=7) 
+        return {
+            'start_date': date_limits['start_date'] + delta,
+            'end_date': date_limits['end_date'] + delta,
+        }
 
     def next_week(self):
-        (b, e) = map(lambda x: x + datetime.timedelta(days=7),
-                     self.date_limits())
-        if b > self.today:
-            return {'start_date': None, 'end_date': None}
-        else:
-            return {'start_date': b, 'end_date': e}
+        """Return the next week."""
+        return self.get_week(1)
+
+    def prev_week(self):
+        """Return the previous week."""
+        return self.get_week(-1)
