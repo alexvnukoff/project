@@ -59,7 +59,7 @@
 {% if item.is_coupon %}
     <div class="goods-details coupon-big">
     <span class="universal-sale">-{{ item.coupon_discount_percent|intword }}%</span>
-    <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
+    <h1>{{ item.name }}</h1>
 
         <div class="coupon-image">
         {% if item.image %}
@@ -102,15 +102,12 @@
                 <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
             {% endif %}
 
-
-
-
     </div>
 
 {% else %}
 
     <div class="goods-details">
-        <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+        <h1>{{ item.name }}</h1>
         <div class="goods-details-left">
             <div class="gallery">
                 <div id="panel">
@@ -170,14 +167,11 @@
            {% endcomment %}
            <li>
 
-
-
             {% if paypal_form %}
                 <div style="">{{ paypal_form.render }}</div>
             {% else %}
                 <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
             {% endif %}
-
 
            </li>
         </ul>
@@ -221,9 +215,7 @@
        </li>
     </ul>
 
-
 {% endif %}
-
 
     <div class="goods-details-tab cpn-details-tab">
 
@@ -270,23 +262,5 @@
          {% endfor %}
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 {% endblock %}
