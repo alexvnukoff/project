@@ -88,7 +88,6 @@ class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = SelectPeriodForm
 
-    #@method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RegisteredEventStatsView, self).dispatch(*args, **kwargs)
     

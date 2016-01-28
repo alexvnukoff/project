@@ -697,8 +697,7 @@ class DealList(ListView):
         org_ids = get_objects_for_user(
             self.request.user, ['b24online.manage_organization'],
             Organization.get_active_objects().all(), with_superuser=False)
-        return queryset.filter(Q(status=Deal.PAID) \
-            & Q(supplier_company_id__in=org_ids))
+        return queryset.filter(status=Deal.PAID, supplier_company_id__in=org_ids)
 
 
 class DealDetail(DetailView):

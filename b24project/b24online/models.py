@@ -190,7 +190,6 @@ class AbstractRegisterInfoModel(models.Model):
         """
         Return the created_at datetime text by selected format.
         """
-        #FIXME: (andrey_k) select datetime format from settings
         return self.created_at.strftime('%d/%m/%Y %H:%I:%S')
 
 
@@ -1857,7 +1856,10 @@ class DealOrder(AbstractRegisterInfoModel):
             return None
 
     def get_deals(self):
-        return Deal.objects.filter(deal_order=self).order_by('id')
+        """
+        Return all Order's deals.
+        """
+        return self.deals_list.order_by('id')
 
     def get_status(self):
         """
@@ -1894,7 +1896,7 @@ class Deal(AbstractRegisterInfoModel):
     DRAFT, READY, PAID = 'draft', 'ready', 'paid'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), (PAID, _('Paid')))
 
-    deal_order = models.ForeignKey(DealOrder, related_name='deal_order',
+    deal_order = models.ForeignKey(DealOrder, related_name='deals_list',
                               verbose_name=_('Order'), null=False, blank=False,
                               editable=False)
     supplier_company = models.ForeignKey('Company', 
@@ -1928,8 +1930,8 @@ class Deal(AbstractRegisterInfoModel):
             org_ids = get_objects_for_user(
                 user, ['b24online.manage_organization'],
                 Organization.get_active_objects().all(), with_superuser=False)
-            return cls.objects.filter(Q(status=status) \
-                & Q(supplier_company_id__in=org_ids))
+            return cls.objects.filter(status=status, 
+                                      supplier_company_id__in=org_ids)
         else:
             return cls.objects.none()
 
@@ -1978,7 +1980,6 @@ class Deal(AbstractRegisterInfoModel):
         """
         self.status = cls.PAID
         self.save()
-
 
 
 class DealItem(models.Model):
