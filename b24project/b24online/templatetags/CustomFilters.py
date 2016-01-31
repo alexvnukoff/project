@@ -299,20 +299,25 @@ def get_length(some_list):
     return len(some_list) \
         if isinstance(some_list, Iterable) else 0
 
+# FIXME: (andrey_k) delete it
+@register.filter()
+def to_list(some_dict):
+    return [(k, v) for k, v in some_dict.items()]
 
-#
-# Next two filters use sequentially. For example::
-#
-#   {{ product|register_event:"view"|process_event:request }}  
-#
+@register.filter()
+def show_type(instance):
+    return type(instance)
+
+
+
 @register.filter
 def register_event(instance, event_type_slug):
     """
     Register (save) the Event with defined type slug.
     """
-    return RegisteredEventHelper.get_stored_event(
-        instance, 
-        event_type_slug)
+    logger.debug(instance)
+    logger.debug(event_type_slug)
+    return RegisteredEventHelper.get_stored_event(instance, event_type_slug)
 
 
 @register.filter
@@ -321,6 +326,7 @@ def process_event(event_stored_data, request):
     Register the event (define and store attributes values).
     Return empty string.
     """
+    logger.debug(event_stored_data)
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
 

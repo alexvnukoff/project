@@ -10,6 +10,9 @@
     {% for product in object_list %}
         <li>
          {% setContextMenu product update_url=update_url delete_url=delete_url %}
+
+         {# Register the 'view' event for b2b product #}
+         {{ product|register_event:"view"|process_event:request }}
           <div class="thumb">
               <a href="{{ product.get_absolute_url }}">
                   {% if product.image %}

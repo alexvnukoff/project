@@ -4,6 +4,7 @@ import json
 import re
 import logging
 import datetime
+from collections import OrderedDict
 
 from django.core.cache import cache
 from django.db.models import Q, Count, Sum
@@ -17,10 +18,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext_lazy as _
 
 from appl import func
 from b24online.models import (Organization, Company, Tender, Exhibition,
-    RegisteredEvent, RegisteredEventStats, RegisteredEventType, B2BProduct)
+    RegisteredEvent, RegisteredEventStats, RegisteredEventType, B2BProduct,
+    InnovationProject, BusinessProposal)
 from centerpokupok.models import B2CProduct
 from b24online.Analytic.forms import SelectPeriodForm
 from b24online.utils import get_current_organization
@@ -84,8 +87,8 @@ def get_analytic(request):
     return HttpResponse(json.dumps(result))
 
 
-class RegisteredEventStatsView(TemplateView):
-    template_name = 'b24online/Analytic/registered_event_stats.html'
+class RegisteredEventStatsDetailView(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats_detail.html'
     form_class = SelectPeriodForm
 
     def dispatch(self, *args, **kwargs):
@@ -110,24 +113,6 @@ class RegisteredEventStatsView(TemplateView):
             return {'redirect_url': reverse('denied')}
         context.update({'current_company': current_organization.name})
 
-        ### Info about Tenders, Exhibition etc
-        ### FIXME: delete, the block has been deleted from template
-        ##if current_organization.parent and \
-        ##    isinstance(current_organization, Company):
-        ##   
-        ##    key = "analytic:main:chamber:%s" % current_organization.parent.pk
-        ##    context['chamber_events'] = cache.get(key)
-        ##    if not context['chamber_events']:
-        ##        org_filter = Q(organization=current_organization.parent) \
-        ##            | Q(organization__parent=current_organization.parent)
-        ##        context['chamber_events'] = {
-        ##            'tenders': Tender.objects.filter(org_filter).count(),
-        ##            'proposals': Tender.objects.filter(org_filter).count(),
-        ##            'exhibitions': Exhibition.objects.filter(org_filter).count()
-        ##        }
-        ##        cache.set(key, context['chamber_events'], 60 * 60 * 24)
-
-        # Filtered form
         qs = RegisteredEventStats.objects.all()
         if 'start_date' in request.GET and 'end_date' in request.GET: 
             form = self.form_class(data=request.GET)
@@ -167,9 +152,10 @@ class RegisteredEventStatsView(TemplateView):
                 .setdefault(item['registered_at'], {})\
                 .update({'unique': item['unique'], 'total': item['total']})
         data_grid = process_stats_data(data, date_range)
-
+        
         context.update({
             'form': form,
+            'date_limits': form.date_limits(),
             'date_range': date_range,
             'data_grid': data_grid,
             'organization': current_organization,
@@ -177,8 +163,8 @@ class RegisteredEventStatsView(TemplateView):
         return context
 
 
-class RegisteredEventStatsDetailView(TemplateView):
-    template_name = 'b24online/Analytic/registered_event_stats_detail.html'
+class RegisteredEventStatsDiagView(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats_diag.html'
     
     def get_context_data(self, **kwargs):
         date_re = re.compile('^(\d{4})-(\d{1,2})-(\d{1,2})$')
@@ -234,4 +220,160 @@ class RegisteredEventStatsDetailView(TemplateView):
                         data_grid = stats.get_extra_info(cnt_type)
                         context['data_grid'] = data_grid
                     break
+        return context
+
+
+class RegisteredEventStatsView(TemplateView):
+    template_name = 'b24online/Analytic/registered_event_stats.html'
+    form_class = SelectPeriodForm
+
+    PROCESSED_MODELS = (
+        (B2BProduct, 'company_id'),
+        (B2CProduct, 'company_id'),
+        (BusinessProposal, 'organization_id'),
+        (InnovationProject, 'organization_id'),
+        (Tender, 'organization_id'),
+        (Exhibition, 'organization_id'),
+    )
+    
+    STATS_ITEMS = (
+        ('B2BProduct', _('B2B Products')),
+        ('B2CProduct', _('B2C Products')),
+        ('BusinessProposal', _('Business Proposals')),
+        ('InnovationProject', _('Innovation Projects')),
+        ('Tender', _('Tenders')),
+        ('Exhibition', _('Exhibitions')),
+        ('Main', _('Main')),
+        ('Company', _('Companies')),
+        )
+
+    def dispatch(self, *args, **kwargs):
+        return super(RegisteredEventStatsView, self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        """
+        Add the request for processing in args.
+        """
+        context = self.get_context_data(request, **kwargs)
+        redirect_url = context.get('redirect_url')
+        if redirect_url:
+            return HttpResponseRedirect(redirect_url)
+        return self.render_to_response(context)
+                    
+    def get_context_data(self, request, **kwargs):
+        cls = type(self)
+        context = {}
+
+        # Define selected organization (company)
+        current_organization = get_current_organization(request)
+        if not current_organization:
+            return {'redirect_url': reverse('denied')}
+        context.update({'current_company': current_organization.name})
+
+        qs = RegisteredEventStats.objects.all()
+        if 'start_date' in request.GET and 'end_date' in request.GET: 
+            form = self.form_class(data=request.GET)
+            if form.is_valid():
+                qs = form.filter(qs)
+        else:
+            form = self.form_class()
+        date_range = list(form.date_range())
+        
+        # Construct the query
+        qs_filters = None
+        for item_model, org_field_name in cls.PROCESSED_MODELS:
+            item_model_content_type = ContentType.objects\
+                .get_for_model(item_model)
+            company_filter = {org_field_name: current_organization}
+            ids = [item.id for item in item_model.objects\
+                .filter(**company_filter)]
+            qs_filter = Q(content_type_id=item_model_content_type) & \
+                Q(object_id__in=ids)
+            if not qs_filters:
+                qs_filters = qs_filter
+            else:
+                qs_filters |= qs_filter
+
+        qs = qs.filter(qs_filters)\
+            .values('content_type_id', 'object_id', 'event_type_id')\
+            .annotate(unique=Sum('unique_amount'), 
+                total=Sum('total_amount'))\
+            .order_by('content_type_id', 'object_id', 'event_type_id',
+                '-unique')
+                
+        # Build the data grid
+        data = OrderedDict()
+        for item in qs:
+            data.setdefault(item['content_type_id'], OrderedDict())\
+                .setdefault(item['object_id'], OrderedDict())\
+                .setdefault(item['event_type_id'], OrderedDict())\
+                .update({'unique': item['unique'], 'total': item['total']})
+
+        data_grid = {}
+        event_types = OrderedDict()
+        for content_type_id, data_1 in data.items():
+            for item_id, data_2 in data_1.items():
+                for event_type_id, _ in data_2.items():
+                    try:
+                        event_type = RegisteredEventType.objects\
+                            .get(id=event_type_id)
+                    except RegisteredEventType.DoesNotExist:
+                        continue
+                    else:
+                        event_types[event_type_id] = event_type
+
+        raw_data_grid = {}
+        for content_type_id, data_1 in data.items():
+            try:
+                content_type = ContentType.objects.get(pk=content_type_id)
+            except ContentType.DoesNotExist:
+                continue
+            model_class = content_type.model_class()
+            model_name = model_class.__name__
+            
+            common_stats = OrderedDict([(event_type_id, {'unique': 0, 'total': 0}) \
+                for event_type_id, _ in event_types.items()])
+            detail_stats = []
+            for item_id, data_2 in data_1.items():
+                try:
+                    item = model_class.objects.get(pk=item_id)
+                except model_class.DoesNotExist:
+                    continue
+                else:
+                    _data = []
+                    for event_type_id, event_type in event_types.items():
+                        if event_type_id in data_2:
+                            _stats = data_2[event_type_id]
+                            common_stats[event_type_id]['unique'] += \
+                                _stats['unique']
+                            common_stats[event_type_id]['total'] += \
+                                _stats['total']
+                        else:
+                            _stats = {'unique': 0, 'total': 0}
+                        _data.append(_stats)
+                    detail_stats.append((item, _data))
+            raw_data_grid[model_name] = {
+                'detailed': detail_stats,
+                'common': common_stats}
+        
+        null_data = {'common': OrderedDict([(event_type_id, {'unique': 0, 'total': 0}) \
+                for event_type_id, _ in event_types.items()]), 
+                'detailed': []}
+
+        data_grid = []
+        for item_key, item_name in cls.STATS_ITEMS:
+            if item_key in raw_data_grid:
+                data_grid.append((item_key.lower(), item_name, 
+                    raw_data_grid[item_key]))
+            else:
+                data_grid.append((item_key.lower(), item_name, null_data))
+        
+        context.update({
+            'form': form,
+            'date_limits': form.date_limits(),
+            'date_range': date_range,
+            'data_grid': data_grid,
+            'event_types': [(k, v) for k, v in event_types.items()],
+            'organization': current_organization,
+        })
         return context

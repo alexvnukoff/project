@@ -32,8 +32,8 @@ class SelectPeriodForm(forms.Form):
         super(SelectPeriodForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs.update({'class': 'date'})
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
+        self.today = datetime.date.today()
         if not is_clear:
-            self.today = datetime.date.today()
             weekday = self.today.weekday()
             self.initial['start_date'] = \
                 self.today - datetime.timedelta(days=weekday)
@@ -97,7 +97,9 @@ class SelectPeriodForm(forms.Form):
 
     def next_week(self):
         """Return the next week."""
-        return self.get_week(1)
+        result = self.get_week(1)
+        return result if result['start_date'] <= self.today \
+            else {'start_date': None, 'end_date': None}
 
     def prev_week(self):
         """Return the previous week."""

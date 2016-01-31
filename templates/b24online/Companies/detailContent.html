@@ -84,6 +84,7 @@
 {% block keywords %}{% endblock %}
 
 {% block content %}
+    {{ item|register_event:"click"|process_event:request }}
     <div class="companies">
         <div class="deal-details">
             <h3> <i class="flag sprite {{ item.country.flag }}"></i>

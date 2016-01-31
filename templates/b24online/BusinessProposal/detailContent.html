@@ -39,6 +39,7 @@
 {% block keywords %}{% endblock %}
 
 {% block content %}
+    {{ item|register_event:"click"|process_event:request }}
     <div class="tender">
         <div class="tender-details-title">
             {% if item.country %}
