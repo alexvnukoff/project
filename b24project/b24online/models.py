@@ -1836,6 +1836,9 @@ class DealOrder(AbstractRegisterInfoModel):
         if self.order_no:
             _data.append('%s %s' % (_('order No.') % self.order_no))
         return ', ' . join(_data)
+
+    def can_pay(self):
+        return self.status == self.DRAFT
         
     @property
     def customer_person(self):

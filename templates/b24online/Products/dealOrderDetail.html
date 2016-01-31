@@ -123,7 +123,12 @@
     
     {% if item.can_pay %}
     <p>
-      <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay Order' %}</a>
+      <span>
+        <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay Order' %}</a>
+      </span>
+      <span>
+        <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay by Email' %}</a>
+      </span>
     </p>
     {% endif %}    
     

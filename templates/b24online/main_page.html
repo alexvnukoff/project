@@ -236,13 +236,11 @@
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
 
-                        {# The orders and deals #}
-                        <li><a href="{% url 'products:deal_order_filtered_list' 'draft' %}">
-                            {% trans 'Orders basket' %} ({{ request|deal_order_quantity|default:"0" }})</a></li>
+                        {# The deals history #}
                         <li><a href="{% url 'products:deal_filtered_list' 'paid' %}">
-                            {% trans 'Deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
-                            <!-- temporary hide..
+                            {% trans 'Deals history' %} ({{ request|deal_quantity|default:"0" }})</a></li>
 
+                            <!-- temporary hide..
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                             <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                             <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
@@ -293,24 +291,23 @@
             <div class="newsright">
             <div class="b-notyfi event-holder">
             	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% set_notification_count %}</a>
+              <div class="formevent">
+                <i class="close-event imgnews" ></i>
+                <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
+                <div class="list-holder">
+                  <ul>
+                  </ul>
+                </div>
+                <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
+              </div>
 
-                    <div class="formevent">
-                        	<i class="close-event imgnews" ></i>
-                            <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
-                            <div class="list-holder">
-                                <ul>
+              <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
+              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
+              <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
 
-                                </ul>
-                            </div>
-                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
-                        </div>
+              <i style="margin-right:1px;" class="imgnews icon-notyfi icon-nt5  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
+              <a style="margin-left:1px;" href="{% url 'products:deal_order_filtered_list' 'draft' %}">{{ request|deal_order_quantity|default:"0" }}</a>
 
-                   <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
-
-                <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
-
-                <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
-                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
             </div>
                 <div>
                     <div class="help-desk">
