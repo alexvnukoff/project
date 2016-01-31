@@ -1,22 +1,7 @@
-{% extends 'b24online/main_page.html' %}
-
 {% load static from staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
 
-{% block styles %}
-  {{ block.super }}
-  <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css"%}" />
-  <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
-{% endblock %}
-
-{% block js %}
-  {{ block.super }}
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
-{% endblock %}
-
-{% block content %}
 <div class="analytics">
   <div>
     <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
@@ -67,11 +52,6 @@
 		},
   {% endfor %}
   ];  
-  window.onload = function() {
-    var ctx = document.getElementById("stats-chart").getContext("2d");
-    window.myPie = new Chart(ctx).Pie(pieData);
-  };
-                              
-                              
+  var ctx = document.getElementById("stats-chart").getContext("2d");
+  window.myPie = new Chart(ctx).Pie(pieData);
 </script>
-{% endblock %}

@@ -23,14 +23,14 @@
         {% for item in instance_data %}
         <td align="center">
           {% if item.unique %}
-            <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
           {% else %}
             0
           {% endif%}
         </td>
         <td align="center">
           {% if item.total %}
-            <a href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
           {% else %}
             0
           {% endif %}
@@ -40,13 +40,64 @@
     </table>
     </div>
     <br/>
-    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+
+    <table width="100%" cellspacing="2" cellpadding="2" border="0">
       <tr>
         <td align="center">
-        <canvas id="stats-bar-{{ event_type_id }}-{{ content_type_id }}-{{ instance_id }}" 
+        <canvas id="stats-bar" 
           width="400" height="200"/>
         </td>
       </tr>
     </table>
 </div>
 </div>
+
+<script type="application/javascript">
+	var barChartData = {
+		labels : [
+    {% for xdate in date_range %}
+      '{{ xdate.0|date:"d M Y" }}',
+    {% endfor %}
+		],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [
+          {% for item in instance_data %}{{ item.unique }},{% endfor %}
+				]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [
+          {% for item in instance_data %}{{ item.total }},{% endfor %}
+				]
+			}
+		]
+  };
+
+  var ctx = document.getElementById("stats-bar").getContext("2d");
+	window.myBar = new Chart(ctx).Bar(barChartData, {
+	  responsive : true
+	});
+
+    $('#diagdialog').dialog({
+        autoOpen: false,
+        minWidth: 500,
+        minHeight: 500,
+        modal: true,
+    });
+    $(".stats_diag").on("click", function(e) {
+        e.preventDefault();
+        $("#diagdialog").html("");
+        $("#diagdialog").dialog("open");
+        $("#diagdialog").load(this.href);
+        return false;
+    });
+
+</script>

@@ -182,7 +182,7 @@ class RegisteredEventStatsDiagView(TemplateView):
     
     def get_context_data(self, **kwargs):
         date_re = re.compile('^(\d{4})-(\d{1,2})-(\d{1,2})$')
-        context = super(RegisteredEventStatsDetailView, self)\
+        context = super(RegisteredEventStatsDiagView, self)\
             .get_context_data(**kwargs)
         
         event_type_id, content_type_id, instance_id, cnt_type = \
@@ -272,6 +272,9 @@ class RegisteredEventStatsView(TemplateView):
         redirect_url = context.get('redirect_url')
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
+        if self.request.is_ajax():
+            self.template_name = \
+                'b24online/Analytic/registered_event_stats_base.html'
         return self.render_to_response(context)
                     
     def get_context_data(self, request, **kwargs):
