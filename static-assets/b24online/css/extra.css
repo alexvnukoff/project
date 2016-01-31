@@ -43,15 +43,15 @@ table.table-stats td.is-child {
 
 tr.toggle-next td.toggler {
     cursor: pointer;
-    background:url('../img/rarr-blue.png') right 3px no-repeat;
-    padding-right:20px;
+    background:url('../img/rarr-blue.png') left 3px no-repeat;
+    padding-left:20px;
     width: -moz-fit-content; /* mozilla only */
     width: intrinsic; /* webkit only */
     border-bottom:1px dotted blue;
 }
 
 tr.toggle-next.toggled td.toggler {
-    background:url('../img/darr-blue.png') right 3px no-repeat;
+    background:url('../img/darr-blue.png') left 3px no-repeat;
     border-bottom:0;
 } 
 

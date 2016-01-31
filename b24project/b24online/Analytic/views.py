@@ -11,7 +11,7 @@ from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
@@ -92,7 +92,8 @@ class RegisteredEventStatsDetailView(TemplateView):
     form_class = SelectPeriodForm
 
     def dispatch(self, *args, **kwargs):
-        return super(RegisteredEventStatsView, self).dispatch(*args, **kwargs)
+        return super(RegisteredEventStatsDetailView, self)\
+            .dispatch(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         """
@@ -107,11 +108,34 @@ class RegisteredEventStatsDetailView(TemplateView):
     def get_context_data(self, request, **kwargs):
         context = {}
 
-        # Define selected organization (company)
-        current_organization = get_current_organization(request)
-        if not current_organization:
-            return {'redirect_url': reverse('denied')}
-        context.update({'current_company': current_organization.name})
+        event_type_id, content_type_id, instance_id, cnt_type = \
+            map(lambda x: self.kwargs.get(x), 
+                ('event_type_id', 'content_type_id', 
+                'instance_id', 'cnt_type'))
+
+        try:
+            event_type = RegisteredEventType.objects.get(id=event_type_id)
+        except RegisteredEventType.DoesNotExist:
+            raise Http404
+            
+        try:
+            content_type = ContentType.objects.get(pk=content_type_id)
+        except ContentType.DoesNotExist:
+            raise Http404
+            
+        model_class = content_type.model_class()
+        model_name = model_class._meta.verbose_name \
+            or model_class.__name__
+        try:
+            instance = model_class.objects.get(pk=instance_id)
+        except model_class.DoesNotExist:
+            raise Http404
+
+        context.update({'event_type_id': event_type.pk,
+            'event_type': event_type,
+            'content_type_id': content_type.pk, 
+            'instance_type': model_name, 
+            'instance': instance})
 
         qs = RegisteredEventStats.objects.all()
         if 'start_date' in request.GET and 'end_date' in request.GET: 
@@ -120,45 +144,35 @@ class RegisteredEventStatsDetailView(TemplateView):
                 qs = form.filter(qs)
         else:
             form = self.form_class()
+            qs = form.filter(qs)
+            
         date_range = list(form.date_range())
 
-        # Form the qs
-        b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
-        b2c_ids = [item.id for item in B2CProduct.get_active_objects()\
-            .filter(company_id=current_organization)]
-
-        b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
-        b2b_ids = [item.id for item in B2BProduct.get_active_objects()\
-            .filter(company_id=current_organization)]
-
-        qs = qs.filter(
-            (Q(content_type_id=b2c_content_type) \
-                & Q(object_id__in=b2c_ids)) | \
-            (Q(content_type_id=b2b_content_type) \
-                & Q(object_id__in=b2b_ids)))\
-            .values('event_type_id', 'content_type_id', 'object_id', 
-                'registered_at')\
+        qs = qs.filter(content_type_id=content_type_id, 
+                event_type_id=event_type_id,
+                object_id=instance_id)\
+            .values('registered_at')\
             .annotate(unique=Sum('unique_amount'), 
                 total=Sum('total_amount'))\
-            .order_by('event_type_id', 'content_type_id', 
-                'object_id', 'registered_at') 
+            .order_by('registered_at') 
 
         # Build the data grid
-        data = {}
-        for item in qs:
-            data.setdefault(item['event_type_id'], {})\
-                .setdefault(item['content_type_id'], {})\
-                .setdefault(item['object_id'], {})\
-                .setdefault(item['registered_at'], {})\
-                .update({'unique': item['unique'], 'total': item['total']})
-        data_grid = process_stats_data(data, date_range)
+        data = dict((item['registered_at'], {'unique': item['unique'], 
+            'total': item['total']}) for item in qs)
         
+        data_grid = []
+        for registered_at, item in date_range:
+            _data = data.get(registered_at, {'unique': 0, 'total': 0})
+            _data.update({'date': registered_at})
+            data_grid.append(_data)
+        logger.debug(data_grid)
+                
         context.update({
             'form': form,
             'date_limits': form.date_limits(),
             'date_range': date_range,
-            'data_grid': data_grid,
-            'organization': current_organization,
+            'instance_data': data_grid,
+            'instance_id': instance_id,
         })
         return context
 
@@ -277,17 +291,23 @@ class RegisteredEventStatsView(TemplateView):
                 qs = form.filter(qs)
         else:
             form = self.form_class()
+            qs = form.filter(qs)
+
         date_range = list(form.date_range())
         
         # Construct the query
         qs_filters = None
+        content_type_ids = {}
         for item_model, org_field_name in cls.PROCESSED_MODELS:
-            item_model_content_type = ContentType.objects\
+            content_type = ContentType.objects\
                 .get_for_model(item_model)
+            model_class = content_type.model_class()
+            model_name = model_class.__name__
+            content_type_ids[model_name] = content_type.pk                 
             company_filter = {org_field_name: current_organization}
             ids = [item.id for item in item_model.objects\
                 .filter(**company_filter)]
-            qs_filter = Q(content_type_id=item_model_content_type) & \
+            qs_filter = Q(content_type_id=content_type) & \
                 Q(object_id__in=ids)
             if not qs_filters:
                 qs_filters = qs_filter
@@ -340,7 +360,7 @@ class RegisteredEventStatsView(TemplateView):
                 except model_class.DoesNotExist:
                     continue
                 else:
-                    _data = []
+                    _data = OrderedDict()
                     for event_type_id, event_type in event_types.items():
                         if event_type_id in data_2:
                             _stats = data_2[event_type_id]
@@ -350,7 +370,7 @@ class RegisteredEventStatsView(TemplateView):
                                 _stats['total']
                         else:
                             _stats = {'unique': 0, 'total': 0}
-                        _data.append(_stats)
+                        _data[event_type_id] = _stats
                     detail_stats.append((item, _data))
             raw_data_grid[model_name] = {
                 'detailed': detail_stats,
@@ -361,12 +381,15 @@ class RegisteredEventStatsView(TemplateView):
                 'detailed': []}
 
         data_grid = []
+        
         for item_key, item_name in cls.STATS_ITEMS:
+            content_type_id = content_type_ids.get(item_key, None)
             if item_key in raw_data_grid:
-                data_grid.append((item_key.lower(), item_name, 
+                data_grid.append((content_type_id, item_key.lower(), item_name, 
                     raw_data_grid[item_key]))
             else:
-                data_grid.append((item_key.lower(), item_name, null_data))
+                data_grid.append((content_type_id, item_key.lower(), 
+                    item_name, null_data))
         
         context.update({
             'form': form,
@@ -374,6 +397,5 @@ class RegisteredEventStatsView(TemplateView):
             'date_range': date_range,
             'data_grid': data_grid,
             'event_types': [(k, v) for k, v in event_types.items()],
-            'organization': current_organization,
         })
         return context

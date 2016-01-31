@@ -8,17 +8,16 @@
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css"%}" />
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
-
+  <script  type="text/javascript" src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
   <script type="text/javascript">
     $(function() {
       $( ".date" ).datepicker({
@@ -36,26 +35,74 @@
     	    var child_class = '.' + $(this).attr('id') + '-child';
   	    	$(this).nextAll(child_class).hide();		    
     	  });
-
     	$('.toggle-next.force-open').addClass('toggled');
-
     	$('.toggle-next').click(function () {
     	    var child_class = '.' + $(this).attr('id') + '-child';
       		$(this).toggleClass('toggled').nextAll(child_class).toggle();	
     	});
-    
-    });
-                                                                        
+
+        $('#dialog').dialog({
+            autoOpen: false,
+            minWidth: 800,
+            minHeight: 400,
+            modal: true,
+        });
+        
+        $(".stats_detail").on("click", function(e) {
+            e.preventDefault();
+            $("#dialog").html("");
+            // $("#dialog").dialog("option", "title", "Loading...").dialog("open");
+            $("#dialog").dialog("open");
+            $("#dialog").load(this.href, function() {
+            });
+        });
+     });
   </script>
 {% endblock %}
 
 {% block content %}
+<div id="dialog" style="display: none;"></div>
+
 <div class="analytics">
-  <div class="title">
+<div class="title">
     {% trans "Events statistics" %} 
     {% trans 'from' %} {{ form.date_limits.start_date|date:"d M Y" }}
     {% trans 'till' %} {{ form.date_limits.end_date|date:"d M Y" }}
-  </div>
+</div>
+  <br/>
+  
+  <p style="display: block; text-align:right; font-size: 130%;" class="info">
+   <span style="float:left">
+    {% with p_start_date=form.prev_week.start_date p_end_date=form.prev_week.end_date %}
+        {% if p_start_date %}
+        <a href="{{ request.path }}?start_date={{ p_start_date|date:'d/m/Y'|urlencode }}&end_date={{ p_end_date|date:'d/m/Y'|urlencode}}">&laquo;&nbsp;{% trans 'Previus week' %}</a>&nbsp;&nbsp;&nbsp;
+        {% endif %}
+    {% endwith  %}
+   </span>
+    {% with n_start_date=form.next_week.start_date n_end_date=form.next_week.end_date %}
+        {% if n_start_date %}
+        <span style="display: block; flow: right;">
+        <a href="{{ request.path }}?start_date={{ n_start_date|date:'d/m/Y'|urlencode }}&end_date={{ n_end_date|date:'d/m/Y'|urlencode}}">{% trans 'Next week' %}&nbsp;&raquo;</a>&nbsp;&nbsp;&nbsp;
+        </span>
+        {% endif %}
+        &nbsp;
+    {% endwith  %}
+  </p>
+
+
+<div class="cpn-details-tab ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <div class="tab-cate">
+        <ul>
+            <li><a href="#stats-tabs-1">On B2BPortal</a></li>
+            <li>
+                <a href="{{ url.path }}?src=b2cportal">{% trans 'On B2CPortal' %}</a>
+            <li>
+                <a href="{{ url.path }}>src=usersites">{% trans 'On user sites' %}</a>
+            </li>
+        </ul>
+    </div>
+    <div id="stats-tabs-1" style="margin-top: 20px;">
+    <p>&nbsp;</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-stats">
       <tr align="center" class="top">
         <th rowspan="2">{% trans "Section name" %}</th>
@@ -70,7 +117,7 @@
         {% endfor %}
       </tr>
 
-      {% for item_key, item_name, item_data in data_grid %}
+      {% for content_type_id, item_key, item_name, item_data in data_grid %}
         <tr id="{{ item_key }}-item" class="{% if item_data.detailed %} toggle-next{% endif %}">
           <td class="toggler">
             {{ item_name }}
@@ -86,17 +133,30 @@
         </tr>
 
         {% if item_data.detailed %}
-        {% for s_item, s_data in item_data.detailed %}
+        {% for instance, s_data in item_data.detailed %}
         <tr style="display: none;" class="{{ item_key }}-item-child">
           <td class="is-child">
-            <a href="{{ s_item.get_absolute_url }}">{{ s_item.name|default:s_item }}</a>
+            <a href="{{ instance.get_absolute_url }}">{{ instance.name|default:instance }}</a>
           </td>
-          {% for stats in s_data %}
+          {% for event_type_id, stats in s_data.items %}
           <td align="center">
-            {% if stats.unique %}<a href="#">{{ stats.unique }}{% else %}0{% endif %}
+            {% if stats.unique %}
+              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='unique' %}">
+                {{ stats.unique }}
+              </a>
+            {% else %}
+              0
+            {% endif %}
           </td>
           <td align="center">
-            {% if stats.total %}<a href="#">{{ stats.total }}{% else %}0{% endif %}
+            {% if stats.total %}
+              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='total' %}">
+                {{ stats.total }}
+              </a>
+            {% else %}
+              0
+            {% endif %}
+
           </td>
           {% endfor %}
         </tr>
@@ -105,5 +165,7 @@
 
       {% endfor %}
     </table>
+    </div>
+    </div>
 </div>
 {% endblock %}

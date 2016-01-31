@@ -44,9 +44,17 @@ class SelectPeriodForm(forms.Form):
         """
         Filter the queryset by dates.
         """
-        data = self.cleaned_data
+        start_date = end_date = None
+        if hasattr(self, 'cleaned_data'):
+            start_date = self.cleaned_data.get('start_date')
+            end_date = self.cleaned_data.get('end_date')        
+        if not start_date:
+            start_date = self.initial['start_date']        
+        if not end_date:
+            end_date = self.initial['end_date']        
+        
         return qs.filter(
-            registered_at__range=(data['start_date'], data['end_date']))
+                registered_at__range=(start_date, end_date))
 
     def date_range(self):
         """
