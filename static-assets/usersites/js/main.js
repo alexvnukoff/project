@@ -16,7 +16,9 @@ $("#id_quantity_src").keyup(function() {
 var langs = []
 
 if($("#id_amount_src").get(0)) {
+  if($("#id_amount").get(0)) {
     document.getElementById('id_amount').value = document.getElementById('id_amount_src').value;
+  };
 };
 
 $(document).ready(function() {
