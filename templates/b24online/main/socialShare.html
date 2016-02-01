@@ -1,6 +1,6 @@
 {% load CustomFilters %}
                     <script>
-                        var ptext = '{{ text|safe|striptags|cleanHtml|truncatechars:200 }}';
+                        var ptext = '{{ text|truncatechars:200|cleanHtml|striptags|safe }}';
                         var purl = window.location.origin + window.location.pathname;
                         var ptitle = '{{ title }}';
                         var pimage = '';
