@@ -49,6 +49,13 @@
                 {% endif %}
                 <textarea name="keywords" rows="5">{{ form.keywords.value|default_if_none:"" }}</textarea>
             </div>
+            <div>
+                <label class="sapce">{% trans 'Youtube code' %}</label>
+                {% if form.errors.video_code %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.video_code.0 }}</div></div>
+                {% endif %}
+                <input name="video_code" rows="5" value="{{ form.video_code.value|default_if_none:"" }}"/>
+            </div>
         </div>
 
         <ul class="uploadconfig">
