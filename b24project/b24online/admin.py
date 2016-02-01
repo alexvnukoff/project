@@ -2,24 +2,23 @@
 
 import logging
 
+from django.conf.urls import patterns, url
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.utils.translation import ugettext_lazy as _
-from django.conf.urls import patterns, url
-from django.core.urlresolvers import reverse
 from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.contrib.sites.shortcuts import get_current_site
 from django.template import RequestContext
-
+from django.utils.translation import ugettext_lazy as _
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
     PolymorphicMPTTParentModelAdmin
+
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEvent, User)
+                              RegisteredEventStats, User)
 from b24online.stats.utils import convert_date
 
 logger = logging.getLogger(__name__)
@@ -59,7 +58,7 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 class RegisteredEventStatsAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'show_unique_amount', 
+    list_display = ['__str__', 'show_unique_amount',
                     'show_total_amount', 'registered_at']
     list_per_page = 20
     list_filter = ['registered_at']
@@ -70,7 +69,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
         """
         object_kwargs = object.get_kwargs()
         object_kwargs.update({'cnt_type': cnt_type})
-        return '<a href="{1}?date={2}">{0}</a>' . format(
+        return '<a href="{1}?date={2}">{0}</a>'.format(
             object.unique_amount,
             reverse('admin:event_stats_detail', kwargs=object_kwargs),
             object.registered_at.strftime('%Y-%m-%d'))
@@ -80,6 +79,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
         For 'unique' counter.
         """
         return self.show_amount(object, 'unique')
+
     show_unique_amount.allow_tags = True
     show_unique_amount.short_description = _('Unique amount')
 
@@ -88,6 +88,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
         For 'total' counter.
         """
         return self.show_amount(object, 'total')
+
     show_total_amount.allow_tags = True
     show_total_amount.short_description = _('Total amount')
 
@@ -98,7 +99,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
             registered_at = convert_date(request.GET['date'])
             try:
                 stats = RegisteredEventStats.objects.get(
-                    event_type_id=event_type_id, 
+                    event_type_id=event_type_id,
                     # site_id=site.pk,
                     content_type_id=content_type_id,
                     object_id=instance_id,
@@ -113,21 +114,19 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     'item': stats,
                     'has_permission': True,
                     'opts': RegisteredEventStats._meta,
-                    }
+                }
                 return render_to_response(
-                    'admin/stats.html', 
-                    context,    
+                    'admin/stats.html',
+                    context,
                     context_instance=RequestContext(request))
 
-
     def get_urls(self):
-        return patterns(
-            '',
-             url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
-                 r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
-                 self.show_stats,
-                 name='event_stats_detail'),
-        ) + super(RegisteredEventStatsAdmin, self).get_urls()
+        return [
+                   url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
+                       r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
+                       self.show_stats,
+                       name='event_stats_detail'),
+               ] + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
 class B24UserAdmin(UserAdmin):
@@ -135,7 +134,7 @@ class B24UserAdmin(UserAdmin):
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('email',)}),
         (_('Permissions'), {'fields': ('is_active',)}),
-        (_('Important dates'), {'fields': ('date_joined', )}),
+        (_('Important dates'), {'fields': ('date_joined',)}),
     )
     add_fieldsets = (
         (None, {
@@ -149,6 +148,7 @@ class B24UserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions',)
     change_form_template = 'loginas/change_form.html'
+
 
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
