@@ -6,7 +6,6 @@ from decimal import Decimal
 import os
 import datetime
 import logging
-
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -19,14 +18,11 @@ from lxml.html.clean import clean_html
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
-
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
 from b24online.stats.helpers import RegisteredEventHelper
-
 from tpp.SiteUrlMiddleWare import get_request
-
 import b24online.urls
 
 logger = logging.getLogger(__name__)
@@ -95,6 +91,11 @@ def getSymbol(value):
 @register.filter(name='split')
 def split(str, splitter):
     return str.split(splitter)
+
+
+@register.filter(name='remove_whitespaces')
+def remove_whitespaces(sentence):
+    return " ".join(sentence.split())
 
 
 @register.filter(name='cleanHtml')
@@ -291,8 +292,6 @@ def basket_quantity(request):
     return basket.count()
 
 
-
-
 @register.assignment_tag()
 def get_length(some_list):
     """
@@ -313,7 +312,7 @@ def register_event(instance, event_type_slug):
     Register (save) the Event with defined type slug.
     """
     return RegisteredEventHelper.get_stored_event(
-        instance, 
+        instance,
         event_type_slug)
 
 

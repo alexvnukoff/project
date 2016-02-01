@@ -20,7 +20,7 @@
             {% if meta %}
                 <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
                 <meta property="og:url" content="{{ meta.url }}" />
-                <meta property="og:description" content="{{ meta.description|truncatechars:300 }}" />
+                <meta property="og:description" content="{{ meta.description|cleanHtml|safe|striptags|remove_whitespaces|truncatechars:300 }}" />
 
                 {% if meta.image %}
                     <meta property="og:image" content="{{ meta.image }}" />
