@@ -5,7 +5,9 @@
 <div class="analytics">
   <div>
     <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
+    {% if instance %}
     <h3>{% trans 'For' %} {{ instance_type }} &laquo;{{ instance }}&raquo;</h3>
+    {% endif %}
     
     <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
       <tr class="top">

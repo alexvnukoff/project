@@ -18,7 +18,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from appl import func
 from b24online.models import (Organization, Company, Tender, Exhibition,
@@ -122,20 +122,17 @@ class RegisteredEventStatsDetailView(TemplateView):
             content_type = ContentType.objects.get(pk=content_type_id)
         except ContentType.DoesNotExist:
             raise Http404
-            
         model_class = content_type.model_class()
         model_name = model_class._meta.verbose_name \
             or model_class.__name__
-        try:
-            instance = model_class.objects.get(pk=instance_id)
-        except model_class.DoesNotExist:
-            raise Http404
-
-        context.update({'event_type_id': event_type.pk,
-            'event_type': event_type,
-            'content_type_id': content_type.pk, 
-            'instance_type': model_name, 
-            'instance': instance})
+            
+        if instance_id:
+            try:
+                instance = model_class.objects.get(pk=instance_id)
+            except model_class.DoesNotExist:
+                raise Http404
+        else:
+            instance = None
 
         qs = RegisteredEventStats.objects.all()
         if 'start_date' in request.GET and 'end_date' in request.GET: 
@@ -149,9 +146,10 @@ class RegisteredEventStatsDetailView(TemplateView):
         date_range = list(form.date_range())
 
         qs = qs.filter(content_type_id=content_type_id, 
-                event_type_id=event_type_id,
-                object_id=instance_id)\
-            .values('registered_at')\
+                event_type_id=event_type_id)
+        if instance_id:
+            qs = qs.filter(object_id=instance_id)
+        qs = qs.values('registered_at')\
             .annotate(unique=Sum('unique_amount'), 
                 total=Sum('total_amount'))\
             .order_by('registered_at') 
@@ -159,19 +157,24 @@ class RegisteredEventStatsDetailView(TemplateView):
         # Build the data grid
         data = dict((item['registered_at'], {'unique': item['unique'], 
             'total': item['total']}) for item in qs)
-        
+
+        logger.debug(data)        
         data_grid = []
         for registered_at, item in date_range:
             _data = data.get(registered_at, {'unique': 0, 'total': 0})
             _data.update({'date': registered_at})
             data_grid.append(_data)
-        logger.debug(data_grid)
                 
+        logger.debug(data_grid)
         context.update({
             'form': form,
             'date_limits': form.date_limits(),
             'date_range': date_range,
-            'instance_data': data_grid,
+            'event_type_id': event_type.pk,
+            'event_type': event_type,
+            'content_type_id': content_type.pk, 
+            'instance_type': model_name, 
+            'data_grid': data_grid,
             'instance_id': instance_id,
         })
         return context
@@ -184,13 +187,12 @@ class RegisteredEventStatsDiagView(TemplateView):
         date_re = re.compile('^(\d{4})-(\d{1,2})-(\d{1,2})$')
         context = super(RegisteredEventStatsDiagView, self)\
             .get_context_data(**kwargs)
-        
         event_type_id, content_type_id, instance_id, cnt_type = \
             map(lambda x: self.kwargs.get(x), 
                 ('event_type_id', 'content_type_id', 
                 'instance_id', 'cnt_type'))
         data_str = self.request.GET.get('date', None)
-        if all((event_type_id, content_type_id, instance_id, 
+        if all((event_type_id, content_type_id, 
            cnt_type, data_str)):
             _m = date_re.match(data_str)
             if _m:
@@ -212,27 +214,52 @@ class RegisteredEventStatsDiagView(TemplateView):
                     model_class = content_type.model_class()
                     model_name = model_class._meta.verbose_name \
                         or model_class.__name__
-                    try:
-                        instance = model_class.objects.get(pk=instance_id)
-                    except model_class.DoesNotExist:
-                        break
+                    if instance_id:
+                        try:
+                            instance = model_class.objects.get(pk=instance_id)
+                        except model_class.DoesNotExist:
+                            break
+                    else:
+                        instance = None
 
                     context.update({'event_type': event_type, 
                         'instance_type': model_name, 
                         'instance': instance,
                         'xdate': xdate})
                 
-                    try:
-                        stats = RegisteredEventStats.objects.filter(
-                            event_type_id=event_type_id, 
-                            content_type_id=content_type_id, 
-                            object_id=instance_id,
-                            registered_at=xdate)[0]
-                    except IndexError:
-                        pass
-                    else:
+                    qs = RegisteredEventStats.objects.filter(
+                        event_type_id=event_type_id, 
+                        content_type_id=content_type_id,
+                        registered_at=xdate)
+                    if instance_id:
+                        qs = qs.filter(object_id=instance_id)
+                        stats = qs[0]
                         data_grid = stats.get_extra_info(cnt_type)
+                    else:
+                        _data = {}
+                        for stats in qs:
+                            _data_1 = stats.get_extra_info(cnt_type)
+                            for country, amount, city_distrib in \
+                                stats.get_extra_info(cnt_type):
+                                logger.debug(country)
+                                if country in _data:
+                                    _data[country]['amount'] += amount
+                                    for k, v in city_distrib:
+                                        if k in _data[country]['cities']:
+                                            _data[country]['cities'][k] += v
+                                        else:
+                                            _data[country]['cities'][k] = v 
+                                else:
+                                    _data.setdefault(country, {})['amount'] = amount
+                                    _data[country]['cities'] =\
+                                        dict(city_distrib) if city_distrib else {}
+                        data_grid = []
+                        if _data:
+                            for k, v in _data.items():
+                                data_grid.append([k, v['amount'], 
+                                    [(k1, v1) for k1, v1 in v['cities'].items()]])
                         context['data_grid'] = data_grid
+
                     break
         return context
 
@@ -255,7 +282,7 @@ class RegisteredEventStatsView(TemplateView):
         ('B2CProduct', _('B2C Products')),
         ('BusinessProposal', _('Business Proposals')),
         ('InnovationProject', _('Innovation Projects')),
-        ('Tender', _('Tenders')),
+#        ('Tender', _('Tenders')),
         ('Exhibition', _('Exhibitions')),
         ('Main', _('Main')),
         ('Company', _('Companies')),
@@ -323,7 +350,7 @@ class RegisteredEventStatsView(TemplateView):
                 total=Sum('total_amount'))\
             .order_by('content_type_id', 'object_id', 'event_type_id',
                 '-unique')
-                
+
         # Build the data grid
         data = OrderedDict()
         for item in qs:
@@ -333,17 +360,8 @@ class RegisteredEventStatsView(TemplateView):
                 .update({'unique': item['unique'], 'total': item['total']})
 
         data_grid = {}
-        event_types = OrderedDict()
-        for content_type_id, data_1 in data.items():
-            for item_id, data_2 in data_1.items():
-                for event_type_id, _ in data_2.items():
-                    try:
-                        event_type = RegisteredEventType.objects\
-                            .get(id=event_type_id)
-                    except RegisteredEventType.DoesNotExist:
-                        continue
-                    else:
-                        event_types[event_type_id] = event_type
+        event_types = [(item.id, item) \
+            for item in RegisteredEventType.objects.order_by('id')]
 
         raw_data_grid = {}
         for content_type_id, data_1 in data.items():
@@ -355,7 +373,7 @@ class RegisteredEventStatsView(TemplateView):
             model_name = model_class.__name__
             
             common_stats = OrderedDict([(event_type_id, {'unique': 0, 'total': 0}) \
-                for event_type_id, _ in event_types.items()])
+                for event_type_id, _ in event_types])
             detail_stats = []
             for item_id, data_2 in data_1.items():
                 try:
@@ -364,7 +382,7 @@ class RegisteredEventStatsView(TemplateView):
                     continue
                 else:
                     _data = OrderedDict()
-                    for event_type_id, event_type in event_types.items():
+                    for event_type_id, event_type in event_types:
                         if event_type_id in data_2:
                             _stats = data_2[event_type_id]
                             common_stats[event_type_id]['unique'] += \
@@ -379,8 +397,9 @@ class RegisteredEventStatsView(TemplateView):
                 'detailed': detail_stats,
                 'common': common_stats}
         
-        null_data = {'common': OrderedDict([(event_type_id, {'unique': 0, 'total': 0}) \
-                for event_type_id, _ in event_types.items()]), 
+        null_data = {'common': OrderedDict([
+            (event_type_id, {'unique': 0, 'total': 0}) \
+                for event_type_id, _ in event_types]), 
                 'detailed': []}
 
         data_grid = []
@@ -399,6 +418,6 @@ class RegisteredEventStatsView(TemplateView):
             'date_limits': form.date_limits(),
             'date_range': date_range,
             'data_grid': data_grid,
-            'event_types': [(k, v) for k, v in event_types.items()],
+            'event_types': event_types,
         })
         return context

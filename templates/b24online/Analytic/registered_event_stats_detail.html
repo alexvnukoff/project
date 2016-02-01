@@ -6,7 +6,9 @@
 <div style="margin-top: 20px;">
   <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
     <div>
+    {% if instance %}
     <h3>{% trans 'For' %} {{ item_type }} &laquo;{{ instance }}&raquo;</h3>
+    {% endif %}
     <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
       <tr class="top">
         {% for xdate in date_range %}
@@ -20,17 +22,26 @@
         {% endfor %}
       </tr>
       <tr>
-        {% for item in instance_data %}
+        {% for item in data_grid %}
         <td align="center">
           {% if item.unique %}
+            {% if instance %}
             <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+            {% else %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+            {% endif %}
           {% else %}
             0
           {% endif%}
         </td>
         <td align="center">
           {% if item.total %}
+            {% if instance %}
             <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
+            {% else %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
+            
+            {% endif %}
           {% else %}
             0
           {% endif %}
@@ -66,7 +77,7 @@
 				highlightFill: "rgba(220,220,220,0.75)",
 				highlightStroke: "rgba(220,220,220,1)",
 				data : [
-          {% for item in instance_data %}{{ item.unique }},{% endfor %}
+          {% for item in data_grid %}{{ item.unique }},{% endfor %}
 				]
 			},
 			{
@@ -75,7 +86,7 @@
 				highlightFill : "rgba(151,187,205,0.75)",
 				highlightStroke : "rgba(151,187,205,1)",
 				data : [
-          {% for item in instance_data %}{{ item.total }},{% endfor %}
+          {% for item in data_grid %}{{ item.total }},{% endfor %}
 				]
 			}
 		]

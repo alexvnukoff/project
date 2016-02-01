@@ -28,7 +28,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
 from django.utils.encoding import smart_str
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
@@ -1604,8 +1604,8 @@ class RegisteredEventStats(RegisteredEventMixin):
                 cnt = self.unique_amount or 0
             else:
                 cnt = self.total_amount or 0
-            extra_info.append([_('Undefined'), cnt,
-                               [(_('Undefined'), self.unique_amount or 0,
+            extra_info.append([ugettext('Undefined'), cnt,
+                               [(ugettext('Undefined'), self.unique_amount or 0,
                                  self.total_amount or 0), ]])
         else:
             data = {}
@@ -1627,7 +1627,7 @@ class RegisteredEventStats(RegisteredEventMixin):
                     cnt = data_2.get(cnt_type, 0)
                     country_amount += cnt
                     if not city or city == 'undef':
-                        city = _('Undefined')
+                        city = ugettext('Undefined')
                     add_2 = [city, cnt]
                     cities.append(add_2)
                 add_1 = [country_name, country_amount, cities]

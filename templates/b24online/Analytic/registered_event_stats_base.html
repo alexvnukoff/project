@@ -24,10 +24,12 @@
           </td>
           {% for event_type_id, stats in item_data.common.items %}
           <td align="center">
-            {% if stats.unique %}<a href="#">{{ stats.unique }}{% else %}0{% endif %}
+            {% if stats.unique %}<a class="stats_detail" 
+                href="{% url 'analytic:event_stats_ct_detail' event_type_id=event_type_id content_type_id=content_type_id cnt_type='unique' %}?start_date={{date_limits.start_date|date:'d/m/Y' }}&end_date={{date_limits.end_date|date:'d/m/Y' }}">{{ stats.unique }}</a>{% else %}0{% endif %}
           </td>
           <td align="center">
-            {% if stats.total %}<a href="#">{{ stats.total }}{% else %}0{% endif %}
+            {% if stats.total %}<a class="stats_detail" 
+                href="{% url 'analytic:event_stats_ct_detail' event_type_id=event_type_id content_type_id=content_type_id cnt_type='total' %}?start_date={{ date_limits.start_date|date:'d/m/Y' }}&end_date={{ date_limits.end_date|date:'d/m/Y' }}">{{ stats.total }}</a>{% else %}0{% endif %}
           </td>
           {% endfor %}
         </tr>
@@ -41,7 +43,7 @@
           {% for event_type_id, stats in s_data.items %}
           <td align="center">
             {% if stats.unique %}
-              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='unique' %}">
+              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='unique' %}?start_date={{ date_limits.start_date|date:'d/m/Y' }}&end_date={{ date_limits.end_date|date:'d/m/Y' }}">
                 {{ stats.unique }}
               </a>
             {% else %}
@@ -50,7 +52,7 @@
           </td>
           <td align="center">
             {% if stats.total %}
-              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='total' %}">
+              <a class="stats_detail" href="{% url 'analytic:event_stats_detail' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance.id cnt_type='total' %}?start_date={{ date_limits.start_date|date:'d/m/Y' }}&end_date={{ date_limits.end_date|date:'d/m/Y' }}">
                 {{ stats.total }}
               </a>
             {% else %}
