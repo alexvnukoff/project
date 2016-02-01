@@ -1,9 +1,6 @@
 {% load CustomFilters %}
                     <script>
-
-                        {% autoescape off %}
-                            var ptext = '{{ text|linebreaks|cleanHtml|striptags|truncatechars:200 }}';
-                        {% endautoescape %}
+                        var ptext = '{{ text|safe|striptags|cleanHtml|truncatechars:200 }}';
                         var purl = window.location.origin + window.location.pathname;
                         var ptitle = '{{ title }}';
                         var pimage = '';
