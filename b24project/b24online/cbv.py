@@ -341,6 +341,9 @@ class ItemDetail(DetailView):
     def _get_item_meta(self):
         title = getattr(self.object, 'title', '') or getattr(self.object, 'name', '')
         image = getattr(self.object, 'image', '') or getattr(self.object, 'logo', '')
+        description = getattr(self.object, 'short_description', "") \
+                      or getattr(self.object, 'description', "") \
+                      or getattr(self.object, 'content', "")
 
         if image:
             image = image.big
@@ -351,7 +354,7 @@ class ItemDetail(DetailView):
             'title': Truncator(title).chars("80", truncate='...'),
             'image': image,
             'url': url.scheme + "://" + url.netloc + url.path,
-            'description': getattr(self.object, 'description', "") or getattr(self.object, 'content', ""),
+            'description': description,
             'keywords':  getattr(self.object, 'keywords', '')
         }
 
