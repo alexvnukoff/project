@@ -238,8 +238,10 @@
                             <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
 
                         {# The deals history #}
-                        <li><a href="{% url 'products:deal_filtered_list' 'paid' %}">
-                            {% trans 'Deals history' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+                        <li><a href="{% url 'products:deal_list' %}">
+                            {% trans 'Current deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+                        <li><a href="{% url 'products:deal_list' %}">
+                            {% trans 'Deals history' %}</a></li>
 
                             <!-- temporary hide..
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>

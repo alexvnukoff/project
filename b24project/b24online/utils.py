@@ -219,3 +219,10 @@ def get_current_organization(request):
         except Organization.DoesNotExist:
             pass
     return None
+
+
+def get_managed_org_ids(user, permission='b24online.manage_organization'):
+    from b24online.models import Organization
+    from guardian.shortcuts import get_objects_for_user
+    return  get_objects_for_user(user, [permission],
+        Organization.get_active_objects().all(), with_superuser=False)

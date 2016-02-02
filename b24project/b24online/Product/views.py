@@ -9,6 +9,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView, View
 from guardian.shortcuts import get_objects_for_user
@@ -23,7 +25,7 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-
+from b24online.utils import get_managed_org_ids
 
 logger = logging.getLogger(__name__)
 
@@ -679,7 +681,11 @@ class DealOrderList(ListView):
     """
     model = DealOrder
     template_name = 'b24online/Products/dealOrderList.html'
-    current_section = _('Deals history')
+    current_section = _('Basket')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super(DealOrderList, self).get_queryset()\
@@ -699,11 +705,19 @@ class DealOrderDetail(ItemDetail):
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
 
 class DealOrderPayment(ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
@@ -718,20 +732,32 @@ class DealList(ListView):
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals history')
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            self.template_name = \
+                'b24online/Products/dealListBase.html'
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        queryset = super(DealList, self).get_queryset()
+        qs = super(DealList, self).get_queryset()
+        org_ids = get_managed_org_ids(self.request.user)
+        qs = qs.filter(supplier_company_id__in=org_ids)
 
-        org_ids = get_objects_for_user(
-            self.request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), with_superuser=False)
-        return queryset.filter(status=Deal.PAID, supplier_company_id__in=org_ids)
-
-
+        by_status = self.request.GET.get('status')
+        if by_status:
+            qs = qs.filter(status=by_status)
+        return qs
+        
 
 class DealDetail(ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('deal_order', 
@@ -744,6 +770,10 @@ class DealPayment(ItemDetail):
     current_section = _('Deals history')
     form_class = DealPaymentForm
     success_url = reverse_lazy('products:deal_order_basket')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -763,6 +793,10 @@ class DealItemDelete(ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()

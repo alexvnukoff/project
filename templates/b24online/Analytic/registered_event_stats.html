@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-{% block title %}{% trans 'Statistics' %}{% endblock %}
+{% block html_title %}{% trans 'Statistics' %}{% endblock %}
 
 {% block styles %}
     {{ block.super }}
@@ -28,11 +28,11 @@
 <div id="diagdialog" style="display: none;"></div>
 
 <div class="analytics">
-<div class="title">
+  <div class="title">
     {% trans "Events statistics" %} 
     {% trans 'from' %} {{ form.date_limits.start_date|date:"d M Y" }}
     {% trans 'till' %} {{ form.date_limits.end_date|date:"d M Y" }}
-</div>
+  </div>
   <br/>
   
   <p style="display: block; text-align:right; font-size: 130%;" class="info">
