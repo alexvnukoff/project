@@ -51,7 +51,7 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 <div class="goods-details">
-    <h1>{{ deal }}</h1>
+    <h1>{{ item }}</h1>
     <hr class="hr-divider-one">
     <p>
       <label>{% trans 'Customer' %}:</label>
@@ -91,7 +91,8 @@
           <th>&nbsp;</th>
           {% endif %}
         </tr>
-        {% for deal_item in deal.get_items %}
+        
+        {% for deal_item in item.get_items %}
         <tr>
           <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
           <td align="center">{{ deal_item.quantity}}</td>

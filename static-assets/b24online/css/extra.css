@@ -4,7 +4,7 @@
     font-size: 130%;
 }
 
-table.table-stats {
+table.table-data {
     font-family: verdana, arial, sans-serif;
     font-size: 11px;
     color: #333333;
@@ -13,7 +13,7 @@ table.table-stats {
     border-collapse: collapse;
 }
 
-table.table-stats th {
+table.table-data th {
     border-width: 1px;
     padding: 5px;
     border-style: solid;
@@ -21,11 +21,11 @@ table.table-stats th {
     background-color: #B2CFD8;
 }
 
-table.table-stats tr:hover td {
+table.table-data tr:hover td {
     background-color: #DFEBF1;
 }
 
-table.table-stats td {
+table.table-data td {
     border-width: 1px;
     padding: 5px;
     border-style: solid;
@@ -33,7 +33,7 @@ table.table-stats td {
     background-color: #ffffff;
 }
 
-table.table-stats td.is-child {
+table.table-data td.is-child {
     border-width: 1px;
     padding: 5px 5px 5px 15px;
     border-style: solid;

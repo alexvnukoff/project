@@ -656,24 +656,28 @@ class B2CProductBuy(ItemDetail):
 
 
 class DealOrderList(ListView):
+    """
+    Deal Orders list.
+    """
     model = DealOrder
     template_name = 'b24online/Products/dealOrderList.html'
-    current_section = _('Deals')
+    current_section = _('Deals history')
 
+    def get_queryset(self):
+        qs = super(DealOrderList, self).get_queryset()\
+            .prefetch_related('customer_company', 'created_by')
+        by_status = self.kwargs.get('status')
+        if by_status:
+            qs = qs.filter(status=by_status)
+        return qs
 
-class DealOrderDetail(DetailView):
+class DealOrderDetail(ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
-    current_section = _('Deals')
-
-    def get_context_data(self, **kwargs):
-        context = super(DealOrderDetail, self).get_context_data(**kwargs)
-        self.object = self.get_object()
-        context.update({'item': self.object})
-        return context
+    current_section = _('Deals history')
 
 
-class DealOrderPayment(DetailView):
+class DealOrderPayment(ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals')
@@ -700,19 +704,18 @@ class DealList(ListView):
         return queryset.filter(status=Deal.PAID, supplier_company_id__in=org_ids)
 
 
-class DealDetail(DetailView):
+
+class DealDetail(ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
-    current_section = _('Deals')
+    current_section = _('Deal')
 
-    def get_context_data(self, **kwargs):
-        context = super(DealDetail, self).get_context_data(**kwargs)
-        self.object = self.get_object()
-        context.update({'item': self.object})
-        return context
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('deal_order', 
+            'supplier_company')
 
 
-class DealPayment(DetailView):
+class DealPayment(ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals')
@@ -722,10 +725,10 @@ class DealPayment(DetailView):
         item.paid()
         return HttpResponseRedirect(
             reverse('products:deal_order_detail', 
-                kwargs={'pk': item.pk}))
+                kwargs={'item_id': item.pk}))
 
 
-class DealItemDelete(DetailView):
+class DealItemDelete(ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals')
@@ -734,7 +737,7 @@ class DealItemDelete(DetailView):
         item = self.get_object()
         next = request.GET.get('next', 
             reverse('products:deal_detail', 
-                kwargs={'pk': item.deal.pk}))        
+                kwargs={'item_id': item.deal.pk}))        
         if item.deal.status == Deal.DRAFT \
             and item.deal.deal_order.status == DealOrder.DRAFT:    
             item.delete()

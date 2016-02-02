@@ -131,6 +131,7 @@ class RegisteredEventHelper(object):
         """
         Return events query key for the HTTPRequest instance
         """
+        
         return glue('registered', 'events',
             datetime.date.today().strftime('%Y-%m-%d'),
             request_uuid, affix)

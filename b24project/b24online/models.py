@@ -1777,7 +1777,7 @@ def process_event(sender, instance, created, **kwargs):
         stats.store_info(instance)
 
 
-class DealOrder(AbstractRegisterInfoModel):
+class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The model class for Client Orders to buy Products.
     
@@ -1810,6 +1810,8 @@ class DealOrder(AbstractRegisterInfoModel):
     status = models.CharField(_('Order status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = _('Product order')
@@ -1890,7 +1892,7 @@ class DealOrder(AbstractRegisterInfoModel):
         self.save()
                     
 
-class Deal(AbstractRegisterInfoModel):
+class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     """    The model class for Orders Deal to buy Products.
     
     The deal No. has been added as some company can keep records about every
@@ -1919,6 +1921,8 @@ class Deal(AbstractRegisterInfoModel):
     status = models.CharField(_('Deal status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = _('Purchase deal')

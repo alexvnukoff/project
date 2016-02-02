@@ -9,7 +9,7 @@
     {% if instance %}
     <h3>{% trans 'For' %} {{ item_type }} &laquo;{{ instance }}&raquo;</h3>
     {% endif %}
-    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
       <tr class="top">
         {% for xdate in date_range %}
         <th colspan="2" align="center">{{ xdate.0|date:"d M Y" }}</td>          
@@ -26,9 +26,9 @@
         <td align="center">
           {% if item.unique %}
             {% if instance %}
-            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.unique }}</strong></a></td>
             {% else %}
-            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.unique }}</a></td>
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.unique }}</strong></a></td>
             {% endif %}
           {% else %}
             0
@@ -37,10 +37,9 @@
         <td align="center">
           {% if item.total %}
             {% if instance %}
-            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.total }}</strong></a>
             {% else %}
-            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}">{{ item.total }}</a>
-            
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.total }}</strong></a>
             {% endif %}
           {% else %}
             0

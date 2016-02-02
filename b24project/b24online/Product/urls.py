@@ -57,24 +57,24 @@ urlpatterns = [
         DeleteB2BProductDocument.as_view(), name="documents_remove_item"),
 
     # Urls for orders and deals 
-    url(r'^orders/(?P<pk>[0-9]+)/$', 
+    url(r'^orders/(?P<item_id>[0-9]+)/$', 
         DealOrderDetail.as_view(), name="deal_order_detail"),
-    url(r'^orders/(?P<pk>[0-9]+)/pay/$', 
+    url(r'^orders/(?P<item_id>[0-9]+)/pay/$', 
         DealOrderPayment.as_view(), name="deal_order_payment"),
     url(r'^orders/$', 
         DealOrderList.as_view(), name="deal_order_list"),
     url(r'^orders/(?P<status>draft|ready|partially|paid)/$', 
         DealOrderList.as_view(), name="deal_order_filtered_list"),
-    url(r'^deals/(?P<pk>[0-9]+)/$', 
+    url(r'^deals/(?P<item_id>[0-9]+)/$', 
         DealDetail.as_view(), name="deal_detail"),
-    url(r'^deals/(?P<pk>[0-9]+)/$', 
+    url(r'^deals/(?P<item_id>[0-9]+)/$', 
         DealPayment.as_view(), name="deal_payment"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),
     url(r'^deals/(?P<status>draft|ready|paid)/$', 
         DealList.as_view(), name="deal_filtered_list"),
 
-    url(r'^deals/item/(?P<pk>[0-9]+)/delete/$', 
+    url(r'^deals/item/(?P<item_id>[0-9]+)/delete/$', 
         DealItemDelete.as_view(), name="deal_item_delete"),
 
 ]

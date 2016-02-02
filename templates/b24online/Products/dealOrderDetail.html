@@ -121,6 +121,7 @@
     {% endfor %}
     </div>
     
+    {% comment %}
     {% if item.can_pay %}
     <p>
       <span>
@@ -130,7 +131,8 @@
         <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay by Email' %}</a>
       </span>
     </p>
-    {% endif %}    
+    {% endif %}
+    {% endcomment %}    
     
     
 </div>

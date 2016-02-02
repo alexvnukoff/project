@@ -58,7 +58,7 @@
       
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="data-table">
         <tr>
-          <th>{% trans 'Order' %}</th>
+          <th>{% trans 'Deal order' %}</th>
           <th>{% trans 'Customer' %}</th>
           <th>{% trans 'Status' %}</th>
           <th>{% trans 'Cost' %}</th>
@@ -82,8 +82,8 @@
         </tr>
         {% empty %}
         <tr>
-          <td>
-          {% trans 'There are no deals' %}
+          <td colspan="4" align="center">
+          <p>{% trans 'There are no deals' %}</p>
           </td>
         </tr>
         {% endfor %}
