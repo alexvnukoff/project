@@ -3,7 +3,7 @@
 import logging
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -20,7 +20,7 @@ from b24online.models import (B2BProduct, Company, Chamber, Country,
     B2BProductCategory, DealOrder, Deal, DealItem, Organization)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
-    B2CProductForm, B2_ProductBuyForm)
+    B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 
@@ -685,7 +685,7 @@ class DealOrderDetail(ItemDetail):
 class DealOrderPayment(ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
-    current_section = _('Deals')
+    current_section = _('Deals history')
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
@@ -698,7 +698,7 @@ class DealOrderPayment(ItemDetail):
 class DealList(ListView):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
-    current_section = _('Deals')
+    current_section = _('Deals history')
 
     def get_queryset(self):
         queryset = super(DealList, self).get_queryset()
@@ -713,7 +713,7 @@ class DealList(ListView):
 class DealDetail(ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
-    current_section = _('Deal')
+    current_section = _('Deals history')
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('deal_order', 
@@ -722,21 +722,30 @@ class DealDetail(ItemDetail):
 
 class DealPayment(ItemDetail):
     model = Deal
-    template_name = 'b24online/Products/dealDetail.html'
-    current_section = _('Deals')
+    template_name = 'b24online/Products/dealPayment.html'
+    current_section = _('Deals history')
+    form_class = DealPaymentForm
+    success_url = reverse_lazy('products:deal_order_filtered_list', 
+        kwargs={'status': 'basket'})
 
     def get(self, request, *args, **kwargs):
-        item = self.get_object()
-        item.paid()
-        return HttpResponseRedirect(
-            reverse('products:deal_order_detail', 
-                kwargs={'item_id': item.pk}))
+        self.object = self.get_object()
+        form = self.form_class(request)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request, instance=self.object, data=request.GET)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class DealItemDelete(ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
-    current_section = _('Deals')
+    current_section = _('Deals history')
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()

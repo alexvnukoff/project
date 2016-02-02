@@ -12,23 +12,7 @@
 {% block styles %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
-    <style type="text/css">
-      .form-control fieldset.dcol {
-        margin: 10px;
-        padding: 10px;
-        border-color: #aaaaaa;
-        border-style: solid;
-        border-width: 1px;
-      }
-
-      .form-control fieldset.dcol legend {
-        border: none;
-        font-weight: normal;
-        font-size: 16px;  
-        padding: 0px 5px 2px;
-        border-radius: 5px;
-      }
-    </style>    
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
 {% endblock %}
 
 {% block js %}

@@ -185,3 +185,34 @@ class B2_ProductBuyForm(forms.Form):
                 currency=self._product.currency,
                 cost=self._product.cost)
         return deal_order
+
+
+class DealPaymentForm(forms.ModelForm):
+
+    def __init__(self, request, *args, **kwargs):
+        super(DealPaymentForm, self).__init__(*args, **kwargs)
+        self.request = request
+#        for field_key in self.fields:
+#            self.fields[field_key].required = True
+        user = request.user
+        if user.is_authenticated():
+            self.initial['person_first_name'] = user.profile.first_name
+            self.initial['person_last_name'] = user.profile.last_name
+            self.initial['person_country'] = user.profile.country
+            self.initial['person_email'] = user.email
+
+    class Meta:
+        model = Deal
+        fields = (
+            'person_first_name',
+            'person_last_name',
+            'person_phone_number',
+            'person_country',
+            'person_address',
+            'person_email',
+        )
+        
+    def save(self, *args, **kwargs):
+        super(DealPaymentForm, self).save(*args, **kwargs)
+        self.instance.pay()
+        return self.instance

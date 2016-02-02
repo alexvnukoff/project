@@ -4,7 +4,7 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-{% block html_title %}{{ item }}{% endblock %}
+{% block html_title %}{{ item }} :: {% trans 'Payment ' %}{% endblock %}
 
 {% block header %}
     {% include "b24online/login_header.html" %}
@@ -14,6 +14,11 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
 {% endblock %}
 
 {% block keywords %}{% endblock %}
@@ -50,10 +55,10 @@
     </p>
     </div>
     
-    <p class="data"><h2>{% trans 'Products list' %}</h2></p>
-    <hr class="hr-divider-two">
+    
     <div class="data">
-      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+      <h2 class="data toggle-next">{% trans 'Products list' %}</h2>
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data" style="display: none;">
         <tr>
           <th>{% trans 'Product' %}</th>
           <th>{% trans 'Quantity' %}</th>
@@ -79,12 +84,31 @@
         {% endfor %}
       </table>  
     </div>
-    
-    {% if item.can_pay %}
-    <p>
-      <a class="bigbuy" href="{% url 'products:deal_payment' item.pk %}" >{% trans 'Order by email' %}</a>
-    </p>
-    {% endif %}    
   </div>    
+
+  <div class="data">
+    <h2>{% trans 'Deal Order details' %}</h2>
+    <hr class="hr-divider-one">
+        {% if form %}
+        <form action="" method="post">
+        {% csrf_token %}
+        <ul class="form-control">
+            <fieldset class="dcol">
+              <legend>{% trans 'Enter customer person info' %}</legend>
+              {% for field in form %}  
+              <li>
+                <label>{{ field.label }}{% if field.required %}*{% endif %}:</label>
+                <p>{{ field }}</p>
+              </li>
+              {% endfor %}
+            </fieldset>
+            <li>
+              <input type="submit" name="save" value="{% trans 'Save' %}" />
+            </li>
+        </ul>
+        </form>
+        {% endif %}
+  
+  </div>
 </div>
 {% endblock %}

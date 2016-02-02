@@ -1866,6 +1866,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         return self.deals_list.order_by('id')
 
+    def get_draft_deals(self):
+        """
+        Return all Order's deals.
+        """
+        return self.deals_list.filter(status='draft').order_by('id')
+
     def get_status(self):
         """
         Return the order status.
@@ -1922,6 +1928,20 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     status = models.CharField(_('Deal status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
+    person_first_name = models.CharField(_('First name'), max_length=255, 
+                                            blank=True, null=True)
+    person_last_name = models.CharField(_('Last name'), max_length=255, 
+                                 blank=True, null=True)
+    person_phone_number = models.CharField(_('Phone number'), max_length=255, 
+                                    blank=True, null=True)
+    person_country = models.ForeignKey(Country, verbose_name=_('Country'), 
+                                       blank=True, null=True)
+    person_address = models.CharField(_('Address'), max_length=2048, 
+                                      blank=True, null=False)
+    person_email = models.EmailField(verbose_name='E-mail', 
+                                     blank=True, null=True,   
+                                     max_length=255, db_index=True)
+
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     
@@ -1986,7 +2006,8 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         Pay the deal.
         """
-        self.status = cls.PAID
+        
+        self.status = self.ORDERED
         self.save()
 
 

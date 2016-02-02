@@ -67,7 +67,7 @@ urlpatterns = [
         DealOrderList.as_view(), name="deal_order_filtered_list"),
     url(r'^deals/(?P<item_id>[0-9]+)/$', 
         DealDetail.as_view(), name="deal_detail"),
-    url(r'^deals/(?P<item_id>[0-9]+)/$', 
+    url(r'^deals/(?P<item_id>[0-9]+)/pay/$', 
         DealPayment.as_view(), name="deal_payment"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),

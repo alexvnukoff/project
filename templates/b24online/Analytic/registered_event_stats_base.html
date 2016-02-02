@@ -18,7 +18,7 @@
       </tr>
 
       {% for content_type_id, item_key, item_name, item_data in data_grid %}
-        <tr id="{{ item_key }}-item" class="{% if item_data.detailed %} toggle-next{% endif %}">
+        <tr id="{{ item_key }}-item" class="{% if item_data.detailed %} toggle-child{% endif %}">
           <td class="toggler">
             {{ item_name }}
           </td>

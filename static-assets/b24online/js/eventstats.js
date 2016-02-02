@@ -12,12 +12,12 @@ $(function() {
 
 $(document).ready(function () {
     // Stats data table rows toggling
-    $('.toggle-next').not('.force-open').each(function () {
+    $('.toggle-child').not('.force-open').each(function () {
         var child_class = '.' + $(this).attr('id') + '-child';
       	$(this).nextAll(child_class).hide();		    
     });
-    $('.toggle-next.force-open').addClass('toggled');
-  	$('.toggle-next').click(function () {
+    $('.toggle-child.force-open').addClass('toggled');
+  	$('.toggle-child').click(function () {
         var child_class = '.' + $(this).attr('id') + '-child';
         $(this).toggleClass('toggled').nextAll(child_class).toggle();	
     });
