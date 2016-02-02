@@ -63,7 +63,7 @@ urlpatterns = [
         DealOrderPayment.as_view(), name="deal_order_payment"),
     url(r'^orders/$', 
         DealOrderList.as_view(), name="deal_order_list"),
-    url(r'^orders/(?P<status>draft|ready|partially|paid)/$', 
+    url(r'^orders/(?P<status>draft|ready|partially|paid|basket)/$', 
         DealOrderList.as_view(), name="deal_order_filtered_list"),
     url(r'^deals/(?P<item_id>[0-9]+)/$', 
         DealDetail.as_view(), name="deal_detail"),
@@ -71,9 +71,8 @@ urlpatterns = [
         DealPayment.as_view(), name="deal_payment"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),
-    url(r'^deals/(?P<status>draft|ready|paid)/$', 
+    url(r'^deals/(?P<status>draft|ready|paid|ordered)/$', 
         DealList.as_view(), name="deal_filtered_list"),
-
     url(r'^deals/item/(?P<item_id>[0-9]+)/delete/$', 
         DealItemDelete.as_view(), name="deal_item_delete"),
 

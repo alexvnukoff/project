@@ -11,7 +11,8 @@
     {% block styles %}
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
-         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
         <style>
             .selected-menu {
                 background-color: #D7D7D9;
@@ -305,9 +306,13 @@
               <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
               <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
 
-              <i style="margin-right:1px;" class="imgnews icon-notyfi icon-nt5  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
-              <a style="margin-left:1px;" href="{% url 'products:deal_order_filtered_list' 'draft' %}">{{ request|deal_order_quantity|default:"0" }}</a>
-
+              {% if request.user.is_authenticated %}  
+                  <span class="basket">
+                      <a href="{% url 'products:deal_order_filtered_list' 'basket' %}">{{ request|deal_order_quantity|default:"0" }}</a>
+                  </span>
+              {% else %}
+                  <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
+              {% endif %}
             </div>
                 <div>
                     <div class="help-desk">

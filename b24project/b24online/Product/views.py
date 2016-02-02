@@ -668,8 +668,13 @@ class DealOrderList(ListView):
             .prefetch_related('customer_company', 'created_by')
         by_status = self.kwargs.get('status')
         if by_status:
-            qs = qs.filter(status=by_status)
+            if by_status == 'basket':
+                qs = qs.filter(~Q(status=DealOrder.PAID))
+                self.template_name = 'b24online/Products/dealOrderBasket.html'
+            else:
+                qs = qs.filter(status=by_status)
         return qs
+
 
 class DealOrderDetail(ItemDetail):
     model = DealOrder

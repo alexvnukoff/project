@@ -1,0 +1,82 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}
+  {{ item }}
+{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <div class="items-content">
+        <h1>{% trans 'You basket' %}</h1>
+        <hr class="hr-divider-one">
+        <div class="items">
+            {% for deal_order in object_list %}
+            <div class="item">
+                <h2>{{ deal_order }} for {{ deal_order.get_customer }}</h2>
+                <hr class="hr-divider-two">
+                <table width="100%" cellspacing="2" cellpadding="2" 
+                    border="0" class="table-data">
+                    <tr>
+                      <th>{% trans 'Product supplier' %}</th>
+                      <th>{% trans 'Deal date' %}</th>
+                      <th>{% trans 'Deal cost' %}</th>
+                      <th>{% trans 'Product' %}</th>
+                      <th>{% trans 'Product amount' %}</th>
+                      <th>{% trans 'Product price' %}</th>
+                      <th>{% trans 'Product currency' %}</th>
+                    </tr>
+                    {% for deal in deal_order.get_deals %}
+                      {% with deal.get_items as items %}
+                      {% get_length items as items_len %}
+
+                      {% for deal_item in deal.get_items %}
+                      <tr>
+                        {% if forloop.first %}
+                        <td rowspan="{{ items_len }}">
+                          {{ deal.supplier_company.name }}
+                        </td>
+                        <td rowspan="{{ items_len }}">
+                          {{ deal.created_at|date:"d m Y" }}
+                        </td>
+                        <td rowspan="{{ items_len }}>
+                        {% with deal.get_total_cost as cost_list %}
+                          {% if cost_list %}
+                          {% for cost, currency in cost_list %}
+                            <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
+                          {% endfor %}
+                          {% else %}
+                            -
+                          {% endif %}
+                          {% endwith %}
+                        </td>
+                        {% endif %}
+                        <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
+                        <td align="center">{{ deal_item.quantity}}</td>
+                        <td align="center">{{ deal_item.cost }}</td>
+                        <td align="center">{{ deal_item.currency|getSymbol }}</td>
+                      </tr>
+                      {% endfor %}
+                      {% endwith %}  
+                    {% endfor %}
+                </table> 
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

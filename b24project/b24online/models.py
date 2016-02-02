@@ -1898,8 +1898,9 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     The deal No. has been added as some company can keep records about every
     deal.
     """
-    DRAFT, READY, PAID = 'draft', 'ready', 'paid'
-    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), (PAID, _('Paid')))
+    DRAFT, READY, PAID, ORDERED = 'draft', 'ready', 'paid', 'ordered'
+    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
+                (PAID, _('Paid')), (ORDERED, _('Ordered by Email')))
 
     deal_order = models.ForeignKey(DealOrder, related_name='deals_list',
                               verbose_name=_('Order'), null=False, blank=False,

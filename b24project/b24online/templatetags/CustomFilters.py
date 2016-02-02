@@ -7,6 +7,7 @@ import os
 import datetime
 import logging
 
+from django.db.models import Q
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -19,6 +20,7 @@ from lxml.html.clean import clean_html
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+from guardian.shortcuts import get_objects_for_user
 
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
@@ -315,8 +317,6 @@ def register_event(instance, event_type_slug):
     """
     Register (save) the Event with defined type slug.
     """
-    logger.debug(instance)
-    logger.debug(event_type_slug)
     return RegisteredEventHelper.get_stored_event(instance, event_type_slug)
 
 
@@ -336,9 +336,23 @@ def deal_order_quantity(request):
     """
     Return the draft deal orders count.
     """
-    from b24online.models import DealOrder
-    return DealOrder.get_user_orders(request.user, status=DealOrder.DRAFT)\
-        .count() if request.user.is_authenticated() else 0
+    from b24online.models import (Organization, DealOrder, Deal, DealItem)
+
+    if request.user.is_authenticated():
+        org_ids = get_objects_for_user(
+            request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), 
+            with_superuser=False)
+        return DealItem.objects.select_related('deal', 'deal__deal_order')\
+            .filter(
+                ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
+                ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
+                    Q(deal__deal_order__created_by=request.user)) | \
+                 (Q(deal__deal_order__customer_type=DealOrder.AS_COMPANY) & \
+                    Q(deal__deal_order__customer_company_id__in=org_ids))))\
+            .count()
+    else:
+        return None
 
 
 @register.filter

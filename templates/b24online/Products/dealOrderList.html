@@ -14,49 +14,21 @@
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
-    <style type="text/css">
-      hr.hr-divider-one { 
-        border: 0; 
-        height: 1px; 
-        background: #333; 
-        background-image: linear-gradient(to right, #ccc, #333, #ccc); 
-      }
-      hr.hr-divider-two { 
-        border: 0; 
-        height: 1px; 
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
-      }
-      .deal-item {
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-      }
-      #deals {
-        padding: 10px;
-        margin: 10px;
-      }
-      .data-table th,td {
-        border: 1px solid #aaaaaa;
-        margin: 2px;
-        padding: 2px;
-      }
-      .bolded {
-        font-weight: bold;
-      }
-      
-    </style>    
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
 
 {% endblock %}
 
 {% block keywords %}{% endblock %}
 {% block content %}
 <div class="goods-details">
-    <h1>{% trans 'Orders list' %}</h1>
+    <h1>{% trans 'You basket' %}</h1>
     <hr class="hr-divider-one">
+
     <div id="deals">
       <div class="deal-item" style="display: block">
       
-      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="data-table">
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Deal order' %}</th>
           <th>{% trans 'Customer' %}</th>
