@@ -189,11 +189,14 @@ class B2_ProductBuyForm(forms.Form):
 
 class DealPaymentForm(forms.ModelForm):
 
+    agree = forms.BooleanField(label=_('Agree with license conditions'),
+        required=True)
+                        
     def __init__(self, request, *args, **kwargs):
         super(DealPaymentForm, self).__init__(*args, **kwargs)
         self.request = request
-#        for field_key in self.fields:
-#            self.fields[field_key].required = True
+        for field_name in self.fields:
+            self.fields[field_name].required = True
         user = request.user
         if user.is_authenticated():
             self.initial['person_first_name'] = user.profile.first_name
@@ -210,6 +213,7 @@ class DealPaymentForm(forms.ModelForm):
             'person_country',
             'person_address',
             'person_email',
+            'agree',
         )
         
     def save(self, *args, **kwargs):

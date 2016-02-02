@@ -55,60 +55,6 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 
-
-{% if item.is_coupon %}
-    <div class="goods-details coupon-big">
-    <span class="universal-sale">-{{ item.coupon_discount_percent|intword }}%</span>
-    <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
-
-        <div class="coupon-image">
-        {% if item.image %}
-            <img class="coupon-big-image" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
-        {% else %}
-            <img id="coupon-big-image" src="{% static 'b24online/img/item.jpg' %}" alt="" />
-        {% endif %}
-
-
-        <div style="margin:10px 0;text-align:center;">
-
-            <p><strong><a href="{{ item.company.get_absolute_url }}">{{ item.company.name }}</a></strong></p>
-            <p><a href="{{ item.company.site }}">{{ item.company.site }}</a></p>
-            <p><a data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a></p>
-        </div>
-
-        </div>
-
-        <div style="width:380px;padding:10px 20px;float:left;">
-
-            <h2><span style="font-weight:normal;">{% trans 'Current price' %}:</span> {{ item.currency|getSymbol }}{{ item.get_discount_price|formatPrice }} <span class="price-off"><span style="font-weight:normal;color:#a5a5a5">(<strike>{{ item.currency|getSymbol }}{{ item.cost|formatPrice }}</strike>)</span></span></h2>
-
-            <p class="timer-heading">{% trans 'Promotion ends' %}</p>
-            <div style="font-size:32px;" class="timer icon-clock" date="{{ item.end_coupon_date|date:'Y-m-d' }}"></div>
-
-            {% b2b_social_buttons item.image item.name item.description %}
-
-            {% if paypal_form %}
-                <div style="">{{ paypal_form.render }}</div>
-
-                <input id="id_quantity_src" placeholder="{% trans 'Amount' %}" type="text" class="text" style="margin:10px 0;width:100px;" />
-
-                <script>
-                $("#id_quantity_src").keyup(function() {
-                    document.getElementById('id_quantity').value = this.value;
-                });
-                </script>
-
-            {% else %}
-                <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
-            {% endif %}
-
-
-
-
-    </div>
-
-{% else %}
-
     <div class="goods-details">
         <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
         <div class="goods-details-left">
@@ -127,60 +73,43 @@
                 </div>
             </div>
             {% b2b_social_buttons item.image item.name item.description %}
-
         </div>
     <div class="goods-details-center">
-        <ul>
-            <li>
-
-                {% if item.is_coupon %}
-                <label style="color:red">{% trans " Discount price until" %} {{ item.end_coupon_date }}:</label>
-                {% else %}
-                <label>{% trans "Price" %}:</label>
-                {% endif %}
+        {% if form %}
+        <form action="" method="post">
+        {% csrf_token %}
+        <ul class="form-control">
+            <fieldset class="dcol">
+              <legend>{% trans 'Select customer' %}</legend>
+              <li id="id-customer-type-row">
+                <label>{{ form.customer_type.label }}:</label>
+                <p>{{ form.customer_type }}</p>
+              </li>
+              <li id="id-customer-company-row">
+                <label>{{ form.customer_company.label }}:</label>
+                <p>{{ form.customer_company }}</p>
+              </li>
+            </fieldset>
+            <fieldset class="dcol">
+              <legend>{% trans 'Quantity' %}</legend>
+              <li id="id-product-cost-row">
+                <label>{% trans 'Product price' %}:</label>
                 <p>
-        <span {% if item.is_coupon %} style="color:red"{% endif %}>{{ item.currency|getSymbol }} {{ item.get_discount_price|formatPrice }}</span>
+                  {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
                 </p>
-            </li>
-            {% if item.measurement_unit %}
-                <li>
-                    <label>{% trans 'Unit' %}:</label>
-                    <p>{{ item.get_measurement_unit_display }}</p>
-                </li>
-            {% endif %}
+              </li>
+              <li id="id-customer-type-row">
+                <label>{{ form.quantity.label }}:</label>
+                <p>{{ form.quantity }}</p>
+              </li>
+            </fieldset>
             <li>
-                <label>{% trans 'Amount' %}:</label>
-                <input id="id_quantity_src" type="text" class="text" style="width:60%;" />
-
-                <script>
-                $("#id_quantity_src").keyup(function() {
-                    document.getElementById('id_quantity').value = this.value;
-                });
-                </script>
+              <input type="submit" name="save" value="{% trans 'Buy' %}" />
             </li>
-            {% comment %}
-            <li>
-                <label>{% trans 'Delivery method' %}:</label>
-                <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
-                <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
-                <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
-                <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
-                <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
-           </li>
-           {% endcomment %}
-           <li>
-
-
-
-            {% if paypal_form %}
-                <div style="">{{ paypal_form.render }}</div>
-            {% else %}
-                <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
-            {% endif %}
-
-
-           </li>
         </ul>
+        </form>
+        {% endif %}
+
     </div>
 
 
@@ -220,10 +149,6 @@
             </div>
        </li>
     </ul>
-
-
-{% endif %}
-
 
     <div class="goods-details-tab cpn-details-tab">
 

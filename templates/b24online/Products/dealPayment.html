@@ -97,13 +97,21 @@
               <legend>{% trans 'Enter customer person info' %}</legend>
               {% for field in form %}  
               <li>
-                <label>{{ field.label }}{% if field.required %}*{% endif %}:</label>
-                <p>{{ field }}</p>
+                {% if field.name == "agree" %}
+                  {{ field }}&nbsp;{% trans 'Agree with' %}
+                  <a href="{% url 'project:terms' %}" target="_blank">{% trans 'license conditions' %}</a>
+                {% else %}
+                  <label>{{ field.label }}:{% if field.field.required %}<span style="color: #a00;">*</span>{% endif %}</label>
+                  <p>{{ field }}</p>
+                {% endif %}
+                {% if form.is_bound and field.errors %}
+                <p class="errors">{{ field.errors|striptags }}</p>
+                {% endif %}
               </li>
               {% endfor %}
             </fieldset>
             <li>
-              <input type="submit" name="save" value="{% trans 'Save' %}" />
+              <input type="submit" name="save" value="{% trans 'Order by email' %}" />
             </li>
         </ul>
         </form>

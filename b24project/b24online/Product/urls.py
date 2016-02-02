@@ -63,6 +63,8 @@ urlpatterns = [
         DealOrderPayment.as_view(), name="deal_order_payment"),
     url(r'^orders/$', 
         DealOrderList.as_view(), name="deal_order_list"),
+    url(r'^orders/basket/$', DealOrderList.as_view(),
+        {'status': 'basket'}, name="deal_order_basket"),
     url(r'^orders/(?P<status>draft|ready|partially|paid|basket)/$', 
         DealOrderList.as_view(), name="deal_order_filtered_list"),
     url(r'^deals/(?P<item_id>[0-9]+)/$', 

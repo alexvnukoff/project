@@ -308,7 +308,7 @@
 
               {% if request.user.is_authenticated %}  
                   <span class="basket">
-                      <a href="{% url 'products:deal_order_filtered_list' 'basket' %}">{{ request|deal_order_quantity|default:"0" }}</a>
+                      <a href="{% url 'products:deal_order_basket' %}">{{ request|deal_order_quantity|default:"0" }}</a>
                   </span>
               {% else %}
                   <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>

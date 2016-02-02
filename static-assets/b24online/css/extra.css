@@ -139,19 +139,31 @@ p.data-info label {
     font-weight: 500;
 }
 
-      .form-control fieldset.dcol {
-        margin: 10px;
-        padding: 10px;
-        border-color: #aaaaaa;
-        border-style: solid;
-        border-width: 1px;
-      }
+.form-control fieldset.dcol {
+    margin: 10px;
+    padding: 10px;
+    border-color: #aaaaaa;
+    border-style: solid;
+    border-width: 1px;
+}
 
-      .form-control fieldset.dcol legend {
-        border: none;
-        font-weight: normal;
-        font-size: 16px;  
-        padding: 0px 5px 2px;
-        border-radius: 5px;
-      }
+.form-control fieldset.dcol legend {
+    border: none;
+    font-weight: normal;
+    font-size: 16px;  
+    padding: 0px 5px 2px;
+    border-radius: 5px;
+}
 
+fieldset.dcol li {
+    margin-top: 10px;
+}
+
+.errors { 
+    color: #a00; 
+    border: 1px solid #a00;
+    font-size: 70%;
+    padding:4px 25px;
+    background: #fee;
+    margin-bottom: 10px;
+}

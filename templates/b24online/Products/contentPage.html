@@ -26,7 +26,7 @@
                 {% if product.country %}
                      <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
                 {% endif %}
-            <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatechars:45 }}</a>
+            <a href="{% url 'products:buyB2B' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
            </div>
             <div class="price">
                 {% if product.cost %}

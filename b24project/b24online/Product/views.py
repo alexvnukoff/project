@@ -633,9 +633,7 @@ class B2BProductBuy(ItemDetail):
         if form.is_valid():
             item = form.save()
             return HttpResponseRedirect(
-                reverse('products:deal_order_detail', 
-                        kwargs={'pk': item.pk}))
-
+                reverse('products:deal_order_basket'))
         context.update({'form': form})
         return self.render_to_response(context)
 
@@ -648,11 +646,31 @@ class B2CProductBuy(ItemDetail):
     model = B2CProduct
     template_name = 'b24online/Products/buyB2CProduct.html'
     current_section = _('Products B2C')
-    success_url = reverse_lazy('products:main')
-
+    form_class = B2_ProductBuyForm
+    
     def get_queryset(self):
         return super().get_queryset()\
             .prefetch_related('company', 'company__countries')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object)
+        context.update({'form': form})
+        return self.render_to_response(context)
+                    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object, data=request.POST)
+        if form.is_valid():
+            item = form.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def get_context_data(self, request, **kwargs):
+        self.object = self.get_object()
+        return super(B2CProductBuy, self).get_context_data(**kwargs)
 
 
 class DealOrderList(ListView):
@@ -725,8 +743,7 @@ class DealPayment(ItemDetail):
     template_name = 'b24online/Products/dealPayment.html'
     current_section = _('Deals history')
     form_class = DealPaymentForm
-    success_url = reverse_lazy('products:deal_order_filtered_list', 
-        kwargs={'status': 'basket'})
+    success_url = reverse_lazy('products:deal_order_basket')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
