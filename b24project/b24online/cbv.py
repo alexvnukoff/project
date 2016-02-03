@@ -1,6 +1,5 @@
 import os
 from urllib.parse import urlparse
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -15,7 +14,6 @@ from django.utils._os import abspathu
 from django.utils.decorators import method_decorator
 from django.utils.text import Truncator
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView, ListView
-
 from appl import func
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
     GalleryImage, Document, Chamber
@@ -26,12 +24,11 @@ from b24online.forms import GalleryImageForm, DocumentForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
 
 
-
 class TabItemList(HybridListView):
     paginate_by = 10
     allow_empty = True
 
-    #pagination url
+    # pagination url
     url_paginator = None
 
 
@@ -341,6 +338,8 @@ class ItemDetail(DetailView):
     def _get_item_meta(self):
         title = getattr(self.object, 'title', '') or getattr(self.object, 'name', '')
         image = getattr(self.object, 'image', '') or getattr(self.object, 'logo', '')
+        description = getattr(self.object, 'description', "") \
+                      or getattr(self.object, 'content', "")
 
         if image:
             image = image.big
@@ -351,8 +350,8 @@ class ItemDetail(DetailView):
             'title': Truncator(title).chars("80", truncate='...'),
             'image': image,
             'url': url.scheme + "://" + url.netloc + url.path,
-            'description': getattr(self.object, 'description', "") or getattr(self.object, 'content', ""),
-            'keywords':  getattr(self.object, 'keywords', '')
+            'description': description,
+            'keywords': getattr(self.object, 'keywords', '')
         }
 
     def get_context_data(self, **kwargs):
@@ -552,7 +551,6 @@ class UploadDocument(CreateView):
 
     def form_valid(self, form):
         with transaction.atomic():
-
             form.instance.created_by = self.request.user
             form.instance.updated_by = self.request.user
 

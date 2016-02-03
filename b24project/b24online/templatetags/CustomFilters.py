@@ -26,9 +26,7 @@ from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
 from b24online.stats.helpers import RegisteredEventHelper
-
 from tpp.SiteUrlMiddleWare import get_request
-
 import b24online.urls
 
 logger = logging.getLogger(__name__)
@@ -97,6 +95,11 @@ def getSymbol(value):
 @register.filter(name='split')
 def split(str, splitter):
     return str.split(splitter)
+
+
+@register.filter(name='remove_whitespaces')
+def remove_whitespaces(sentence):
+    return " ".join(sentence.split())
 
 
 @register.filter(name='cleanHtml')

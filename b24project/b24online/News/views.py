@@ -199,7 +199,7 @@ class NewsFeed(Feed):
 
 class NewsCreate(ItemCreate):
     model = News
-    fields = ['title', 'image', 'content', 'keywords', 'short_description']
+    fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
     template_name = 'b24online/News/addForm.html'
     success_url = reverse_lazy('news:main')
     org_required = False
@@ -228,7 +228,7 @@ class NewsCreate(ItemCreate):
 
 class NewsUpdate(ItemUpdate):
     model = News
-    fields = ['title', 'image', 'content', 'keywords', 'short_description']
+    fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
     template_name = 'b24online/News/addForm.html'
     success_url = reverse_lazy('news:main')
 
