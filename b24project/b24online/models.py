@@ -1784,20 +1784,22 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     Assume that the order creator is a customer person or a delegate of 
     customer company.
     """
-    AS_COMPANY, AS_PERSON = 'company', 'person'
-    CUSTOMER_TYPES = ((AS_PERSON, _('Person')), (AS_COMPANY, _('Company')),)
+    AS_ORGANIZATION, AS_PERSON = 'organization', 'person'
+    CUSTOMER_TYPES = ((AS_PERSON, _('Person')), 
+                      (AS_ORGANIZATION, _('Organization')),)
 
     DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
                 (PARTIALLY, _('Partially paid')), (PAID, _('Paid')))
 
-    customer_type = models.CharField(_('Customer type'), max_length=10, 
+    customer_type = models.CharField(_('Customer type'), max_length=15, 
                                      choices=CUSTOMER_TYPES, 
                                      null=False, blank=False)
-    customer_company = models.ForeignKey('Company', 
-                                         related_name='customer_company',
-                                         verbose_name=_('Customer company'),
-                                         null=True, blank=True)
+    customer_organization = models.ForeignKey(
+        'Organization', 
+        related_name='deal_orders',
+        verbose_name=_('Customer organization'),
+        null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50, 
                                 blank=True, null=True, db_index=True)
     total_cost = models.DecimalField(_('Total order cost'), 
@@ -1828,8 +1830,8 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                 Organization.get_active_objects().all(), with_superuser=False)
             return cls.objects.filter(status=status).filter(
                 (Q(customer_type=cls.AS_PERSON) & Q(created_by=user)) | \
-                (Q(customer_type=cls.AS_COMPANY) & \
-                    Q(customer_company__in=org_ids)))
+                (Q(customer_type=cls.AS_ORGANIZATION) & \
+                    Q(customer_organization__in=org_ids)))
         else:
             return cls.objects.none()
           
@@ -1854,9 +1856,9 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_customer(self):
         if self.customer_type == self.AS_PERSON:
-            return _('Person %s') % self.created_by
-        elif self.customer_type == self.AS_COMPANY:
-            return _('Company %s') % self.customer_company.name
+            return self.created_by
+        elif self.customer_type == self.AS_ORGANIZATION:
+            return self.customer_organization.name
         else:
             return None
 
@@ -1901,7 +1903,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     """    The model class for Orders Deal to buy Products.
     
-    The deal No. has been added as some company can keep records about every
+    The deal No. has been added as some organization can keep records about every
     deal.
     """
     DRAFT, READY, PAID, ORDERED = 'draft', 'ready', 'paid', 'ordered'
@@ -1912,7 +1914,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
                               verbose_name=_('Order'), null=False, blank=False,
                               editable=False)
     supplier_company = models.ForeignKey('Company', 
-                                         related_name='supplier_company',
+                                         related_name='deals',
                                          verbose_name=_('Supplier company'),
                                          null=False, blank=False,
                                          editable=False)

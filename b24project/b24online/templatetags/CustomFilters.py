@@ -346,10 +346,10 @@ def deal_order_quantity(request):
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
             .filter(
                 ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
-                ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
-                    Q(deal__deal_order__created_by=request.user)) | \
-                 (Q(deal__deal_order__customer_type=DealOrder.AS_COMPANY) & \
-                    Q(deal__deal_order__customer_company_id__in=org_ids))))\
+            ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
+                Q(deal__deal_order__created_by=request.user)) | \
+            (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
+                Q(deal__deal_order__customer_organization_id__in=org_ids))))\
             .count()
     else:
         return None

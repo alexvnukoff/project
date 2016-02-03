@@ -689,7 +689,7 @@ class DealOrderList(ListView):
 
     def get_queryset(self):
         qs = super(DealOrderList, self).get_queryset()\
-            .prefetch_related('customer_company', 'created_by')
+            .prefetch_related('customer_organization', 'created_by')
         by_status = self.kwargs.get('status')
         if by_status:
             if by_status == 'basket':
