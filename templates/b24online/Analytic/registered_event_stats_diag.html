@@ -1,0 +1,56 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="analytics">
+  <div>
+    <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
+    {% if instance %}
+    <h3>{% trans 'For' %} {{ instance_type }} &laquo;{{ instance }}&raquo;</h3>
+    {% endif %}
+    
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+      <tr class="top">
+        <th>{% trans 'Country' %}</th>
+        <th>{% trans 'Amount for Country' %}</th>
+        <th>{% trans 'City' %}</th>
+        <th>{% trans 'Amount for City' %}</th>
+      </tr>
+      {% for country_name, country_amount, data_1 in data_grid %}
+        {% get_length data_1 as rowspan %}    
+
+        {% for city, counter in data_1 %}
+        <tr valign="top">
+          {% if forloop.first %}            
+          <td rowspan="{{ rowspan }}" align="center">{{ country_name }}</td>
+          <td rowspan="{{ rowspan }}" align="center">{{ country_amount }}</td>
+          {% endif %}
+          <td align="center">{{ city }}</td>
+          <td align="center">{{ counter }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
+  <p align="center" style="margin-top: 15px;">
+    <canvas id="stats-chart" width="300" height="300"/>
+  </p>
+</div>
+
+<script type="application/javascript">
+    var pieData = [
+    {% for country_name, country_amount, data_1 in data_grid %}
+	      {
+	      value: {{ country_amount }},
+			  color: chart_colors[{{ forloop.counter }}][0],
+			  highlight: chart_colors[{{ forloop.counter }}][1],
+			  label: "{{ country_name }}",
+		    },
+    {% endfor %}
+    ];  
+
+    var ctx = document.getElementById("stats-chart").getContext("2d");
+    window.myPie = new Chart(ctx).Pie(pieData, {
+        animationSteps: 0,
+    });
+</script>

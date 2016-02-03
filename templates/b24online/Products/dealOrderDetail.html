@@ -1,0 +1,139 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}
+  {{ item }}
+{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+    <style type="text/css">
+      hr.hr-divider-one { 
+        border: 0; 
+        height: 1px; 
+        background: #333; 
+        background-image: linear-gradient(to right, #ccc, #333, #ccc); 
+      }
+      hr.hr-divider-two { 
+        border: 0; 
+        height: 1px; 
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
+      }
+      .deal-item {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      #deals {
+        padding: 10px;
+        margin: 10px;
+      }
+      .data-table th,td {
+        border: 1px solid #aaaaaa;
+        margin: 2px;
+        padding: 2px;
+      }
+      .bolded {
+        font-weight: bold;
+      }
+      
+    </style>    
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <h1>{{ item }}</h1>
+    <hr class="hr-divider-one">
+    <p>
+      <label>{% trans 'Customer' %}:</label>
+      {{ item.get_customer }}
+    </p>
+    <p>
+      <label>{% trans 'Order date' %}:</label>
+      {{ item.created }}
+    </p>
+    <p>
+      <label>{% trans 'Order status' %}:</label>
+      {{ item.get_status }}
+    </p>
+    <p>
+      <label>{% trans 'Total order cost' %}:</label>
+      
+      {% with item.get_total_cost as cost_list %}
+        {% if cost_list %}
+          {% for cost, currency in cost_list %}
+              <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
+          {% endfor %}
+        {% else %}
+        -
+        {% endif %}
+      {% endwith %}
+    </p>
+    <hr class="hr-divider-two">
+
+    <div id="deals">
+    {% for deal in item.get_deals %}
+      <div class="deal-item" style="display: block">
+      <p>
+        <label>{% trans 'Deal' %}:</label>
+        <a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</a>
+      </p>
+      <p>
+        <label>{% trans 'Supplier' %}:</label>
+        {{ deal.supplier_company.name }}
+      </p>
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="data-table">
+        <tr>
+          <th>{% trans 'Product' %}</th>
+          <th>{% trans 'Quantity' %}</th>
+          <th>{% trans 'Price' %}</th>
+          <th>{% trans 'Total' %}</th>
+          <th>{% trans 'Currency' %}</th>
+          {% if item.can_edit %}
+          <th>&nbsp;</th>
+          {% endif %}
+        </tr>
+        {% for deal_item in deal.get_items %}
+        <tr>
+          <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
+          <td align="center">{{ deal_item.quantity}}</td>
+          <td align="center">{{ deal_item.cost }}</td>
+          <td align="center">{{ deal_item.get_total }}</td>
+          <td align="center">{{ deal_item.currency|getSymbol }}</td>
+          {% if item.can_edit %}
+          <td align="center"><a href="">delete</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>  
+      </div>
+    {% empty %}
+      {% trans 'There are no deals for the order' %}
+    {% endfor %}
+    </div>
+    
+    {% comment %}
+    {% if item.can_pay %}
+    <p>
+      <span>
+        <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay Order' %}</a>
+      </span>
+      <span>
+        <a class="bigbuy" href="{% url 'products:deal_order_payment' item.pk %}" >{% trans 'Pay by Email' %}</a>
+      </span>
+    </p>
+    {% endif %}
+    {% endcomment %}    
+    
+    
+</div>
+{% endblock %}

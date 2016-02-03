@@ -5,7 +5,8 @@
 {% load CustomFilters %}
 {% block content %}
     {{ block.super }}
-
+          {# Register the 'view' event for b2c product #}
+          {{ object|register_event:"click"|process_event:request }}
             <section class="content__info clearfix">
                 <article class="clearfix">
                     <h3>{{ object.title }}</h3>

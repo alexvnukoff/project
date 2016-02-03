@@ -1,28 +1,34 @@
+# -*- encoding: utf-8 -*-
+
+import os
 import datetime
 import hashlib
 import logging
-import os
+
 from argparse import ArgumentError
 from urllib.parse import urljoin
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField, DateRangeField, DateTimeRangeField
+from django.contrib.postgres.fields import (HStoreField, DateRangeField, 
+    DateTimeRangeField, JSONField)
 from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.db import models, transaction
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
 from django.utils.encoding import smart_str
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
@@ -159,6 +165,34 @@ class IndexedModelMixin:
         raise NotImplementedError('Reindex not implemented')
 
 
+class AbstractRegisterInfoModel(models.Model):
+    """
+    The abstract model-container of registration info fields.
+    """
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+        verbose_name=_('Creator'), 
+        related_name='%(class)s_create_user',
+        null=True, blank=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+        verbose_name=_('Editor'),
+        related_name='%(class)s_update_user',
+        null=True, blank=True)
+    created_at = models.DateTimeField(_('Creation time'),
+        default=timezone.now, db_index=True)
+    updated_at = models.DateTimeField(_('Update time'),
+        auto_now=True)
+    
+    class Meta:
+        abstract = True
+       
+    @property    
+    def created(self):
+        """
+        Return the created_at datetime text by selected format.
+        """
+        return self.created_at.strftime('%d/%m/%Y %H:%I:%S')
+
+
 class AdvertisementPrice(models.Model):
     ADVERTISEMENT_TYPES = [('banner', _('Banners')), ('context', _('Context Advertisement'))]
 
@@ -180,7 +214,7 @@ class AdvertisementPrice(models.Model):
 
 class Order(models.Model):
     pass
-
+    
 
 class Advertisement(models.Model):
     dates = DateRangeField()
@@ -1570,8 +1604,8 @@ class RegisteredEventStats(RegisteredEventMixin):
                 cnt = self.unique_amount or 0
             else:
                 cnt = self.total_amount or 0
-            extra_info.append([_('Undefined'), cnt,
-                               [(_('Undefined'), self.unique_amount or 0,
+            extra_info.append([ugettext('Undefined'), cnt,
+                               [(ugettext('Undefined'), self.unique_amount or 0,
                                  self.total_amount or 0), ]])
         else:
             data = {}
@@ -1593,7 +1627,7 @@ class RegisteredEventStats(RegisteredEventMixin):
                     cnt = data_2.get(cnt_type, 0)
                     country_amount += cnt
                     if not city or city == 'undef':
-                        city = _('Undefined')
+                        city = ugettext('Undefined')
                     add_2 = [city, cnt]
                     cities.append(add_2)
                 add_1 = [country_name, country_amount, cities]
@@ -1741,3 +1775,305 @@ def process_event(sender, instance, created, **kwargs):
 
         # Increase the counters and store GeoIP info
         stats.store_info(instance)
+
+
+class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The model class for Client Orders to buy Products.
+    
+    Assume that the order creator is a customer person or a delegate of 
+    customer company.
+    """
+    AS_COMPANY, AS_PERSON = 'company', 'person'
+    CUSTOMER_TYPES = ((AS_PERSON, _('Person')), (AS_COMPANY, _('Company')),)
+
+    DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
+    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
+                (PARTIALLY, _('Partially paid')), (PAID, _('Paid')))
+
+    customer_type = models.CharField(_('Customer type'), max_length=10, 
+                                     choices=CUSTOMER_TYPES, 
+                                     null=False, blank=False)
+    customer_company = models.ForeignKey('Company', 
+                                         related_name='customer_company',
+                                         verbose_name=_('Customer company'),
+                                         null=True, blank=True)
+    order_no = models.CharField(_('Order No.'), max_length=50, 
+                                blank=True, null=True, db_index=True)
+    total_cost = models.DecimalField(_('Total order cost'), 
+                                     max_digits=15, decimal_places=2, 
+                                     null=True, blank=False, editable=False)
+    total_cost_data = JSONField(_('Total cost data'), null=True, blank=False, 
+                                editable=False)
+    paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
+                                   null=True, blank=True, db_index=True)
+    status = models.CharField(_('Order status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, blank=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    
+    class Meta:
+        verbose_name = _('Product order')
+        verbose_name_plural = _('Product orders')
+
+    @classmethod
+    def get_user_orders(cls, user, status=DRAFT):
+        """
+        Return the qs for DealOrders where the user is a customer.
+        """
+        if user.is_authenticated():
+            org_ids = get_objects_for_user(
+                user, ['b24online.manage_organization'],
+                Organization.get_active_objects().all(), with_superuser=False)
+            return cls.objects.filter(status=status).filter(
+                (Q(customer_type=cls.AS_PERSON) & Q(created_by=user)) | \
+                (Q(customer_type=cls.AS_COMPANY) & \
+                    Q(customer_company__in=org_ids)))
+        else:
+            return cls.objects.none()
+          
+    def __str__(self):
+        _data = [_('Order from %s') % self.created,]
+        if self.order_no:
+            _data.append('%s %s' % (_('order No.') % self.order_no))
+        return ', ' . join(_data)
+
+    def can_pay(self):
+        return self.status == self.DRAFT
+        
+    @property
+    def customer_person(self):
+        return self.created_by 
+        
+    def get_customer_type(self):
+        """
+        Return the customer type title: Company or Person.
+        """
+        return type(self).CUSTOMER_TYPES.get(self.customer_type)
+
+    def get_customer(self):
+        if self.customer_type == self.AS_PERSON:
+            return _('Person %s') % self.created_by
+        elif self.customer_type == self.AS_COMPANY:
+            return _('Company %s') % self.customer_company.name
+        else:
+            return None
+
+    def get_deals(self):
+        """
+        Return all Order's deals.
+        """
+        return self.deals_list.order_by('id')
+
+    def get_draft_deals(self):
+        """
+        Return all Order's deals.
+        """
+        return self.deals_list.filter(status='draft').order_by('id')
+
+    def get_status(self):
+        """
+        Return the order status.
+        """
+        return dict(type(self).STATUSES).get(self.status)
+       
+    def get_total_cost(self):
+        """
+        Return deal cost in different currencies.
+        """
+        for currency, cost in self.total_cost_data.items():
+            yield (cost, currency)
+
+    @transaction.atomic
+    def pay(self):
+        """
+        Pay the order.
+        """
+        cls = type(self)
+        for deal in Deal.objects.filter(Q(deal_order=self) & ~Q(status=Deal.PAID)):
+            deal.status = Deal.PAID
+            deal.save()
+        self.status = cls.PAID
+        self.save()
+                    
+
+class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
+    """    The model class for Orders Deal to buy Products.
+    
+    The deal No. has been added as some company can keep records about every
+    deal.
+    """
+    DRAFT, READY, PAID, ORDERED = 'draft', 'ready', 'paid', 'ordered'
+    STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
+                (PAID, _('Paid')), (ORDERED, _('Ordered by Email')))
+
+    deal_order = models.ForeignKey(DealOrder, related_name='deals_list',
+                              verbose_name=_('Order'), null=False, blank=False,
+                              editable=False)
+    supplier_company = models.ForeignKey('Company', 
+                                         related_name='supplier_company',
+                                         verbose_name=_('Supplier company'),
+                                         null=False, blank=False,
+                                         editable=False)
+    deal_no = models.CharField(_('Deal No.'), max_length=50, 
+                                blank=True, null=True, db_index=True)
+    total_cost = models.DecimalField(_('Total deal cost'), 
+                                     max_digits=15, decimal_places=2, 
+                                     null=True, blank=False, editable=False)
+    total_cost_data = JSONField(_('Total cost data'), null=True, blank=False, 
+                                editable=False)
+    paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
+                                   null=True, blank=True, db_index=True)
+    status = models.CharField(_('Deal status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, blank=False)
+    person_first_name = models.CharField(_('First name'), max_length=255, 
+                                            blank=True, null=True)
+    person_last_name = models.CharField(_('Last name'), max_length=255, 
+                                 blank=True, null=True)
+    person_phone_number = models.CharField(_('Phone number'), max_length=255, 
+                                    blank=True, null=True)
+    person_country = models.ForeignKey(Country, verbose_name=_('Country'), 
+                                       blank=True, null=True)
+    person_address = models.CharField(_('Address'), max_length=2048, 
+                                      blank=True, null=False)
+    person_email = models.EmailField(verbose_name='E-mail', 
+                                     blank=True, null=True,   
+                                     max_length=255, db_index=True)
+
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    
+    class Meta:
+        verbose_name = _('Purchase deal')
+        verbose_name_plural = _('Purchase deal')
+
+    @classmethod
+    def get_user_deals(cls, user, status=DRAFT):
+        """
+        Return the deals for user's companies.
+        """
+        if user.is_authenticated():
+            org_ids = get_objects_for_user(
+                user, ['b24online.manage_organization'],
+                Organization.get_active_objects().all(), with_superuser=False)
+            return cls.objects.filter(status=status, 
+                                      supplier_company_id__in=org_ids)
+        else:
+            return cls.objects.none()
+
+    def __str__(self):
+        _data = [_('Deal from %s') % self.created,]
+        if self.deal_no:
+            _data.append(_('deal No. %s') % self.deal_no)
+        return ', ' . join(_data)
+        
+    @property
+    def description(self):
+        _data = [_('Deal from %s for order %s') % (self.created, self.deal_order)]
+        if self.deal_no:
+            _data.append(_('deal No. %s') % self.deal_no)
+        return ', ' . join(_data)
+        
+    def get_status(self):
+        """
+        Return the order status.
+        """
+        return dict(type(self).STATUSES).get(self.status)
+       
+    def get_items(self):
+        """
+        Return the qs for deal items.
+        """
+        return DealItem.objects.filter(deal=self).order_by('id')
+
+    def get_total_cost(self):
+        """
+        Return deal cost in different currencies.
+        """
+        for currency, cost in self.total_cost_data.items():
+            yield (cost, currency)
+
+    def can_pay(self):
+        return self.status == self.DRAFT
+       
+    def can_edit(self):
+        return self.status == self.DRAFT
+
+
+    def pay(self):
+        """
+        Pay the deal.
+        """
+        
+        self.status = self.ORDERED
+        self.save()
+
+
+class DealItem(models.Model):
+    """
+    The model class for Deal Item.
+    
+    ContentType is limited only by B2BProduct and B2CProduct.
+    Add the cost (price) because need to remember the price on deal datetime.
+    """
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24onlie', model='b2bproduct') | \
+        models.Q(app_label='centerpokupok', model='b2cproduct')
+
+    deal = models.ForeignKey(Deal, related_name='item_deal',
+                              verbose_name=_('Deal'), null=False, blank=False,
+                              editable=False)
+    content_type = models.ForeignKey(ContentType,
+                                     limit_choices_to=CONTENT_TYPE_LIMIT, 
+                                     on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    cost = models.DecimalField(_('The product price'), 
+                               max_digits=15, decimal_places=2, 
+                               null=True, blank=True)       
+    currency = models.CharField(_('Currence'), max_length=255, blank=True, 
+                                null=True, choices=CURRENCY)
+    quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+
+    class Meta:
+        verbose_name = 'Deal product'
+        verbose_name_plural = 'Deal products'
+
+    def get_total(self):
+        """
+        Return the total cost
+        """
+        return self.cost * self.quantity
+
+
+@receiver(post_save, sender=DealItem)
+def reclaculate_order_cost(sender, instance, created, **kwargs):
+    """
+    Recalculate total cost of parents: deal and order
+    """
+    assert isinstance(instance, DealItem), \
+        _('Invalid parameter')
+        
+    if instance.currency and instance.cost and instance.quantity > 0:
+        if instance.deal.status == Deal.DRAFT:
+            data = instance.deal.total_cost_data or {}
+            if instance.currency in data:
+                data[instance.currency] += \
+                    float(instance.cost * instance.quantity)
+            else:
+                data[instance.currency] = \
+                    float(instance.cost * instance.quantity)
+            instance.deal.total_cost_data = data
+            instance.deal.save()
+
+        if instance.deal.deal_order.status == DealOrder.DRAFT:
+            data = instance.deal.deal_order.total_cost_data or {}
+            if instance.currency in data:
+                data[instance.currency] += \
+                    float(instance.cost * instance.quantity)
+            else:
+                data[instance.currency] = \
+                    float(instance.cost * instance.quantity)
+            instance.deal.deal_order.total_cost_data = data
+            instance.deal.deal_order.save()

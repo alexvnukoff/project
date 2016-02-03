@@ -9,7 +9,8 @@
     <ul class="tender-list" id="afisha-list">
         {% for proposal in object_list %}
             <li>
-               {% setContextMenu proposal %}
+            {% setContextMenu proposal %}
+            {{ proposal|register_event:"click"|process_event:request }}
             <div class="title">
                {% if proposal.country %}
                     <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>

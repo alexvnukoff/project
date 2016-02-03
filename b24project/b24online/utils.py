@@ -3,6 +3,7 @@
 import importlib
 import os
 import uuid
+import logging
 from PIL import Image
 
 from django.conf import settings
@@ -15,6 +16,8 @@ from django.utils.timezone import now
 
 import errno
 from unidecode import unidecode
+
+logger = logging.getLogger(__name__)
 
 
 def get_index_name(lang=None, index_prefix='b24-'):
@@ -202,3 +205,24 @@ def class_for_name(module_name, class_name):
     # get the class, will raise AttributeError if class cannot be found
     c = getattr(m, class_name)
     return c
+
+
+def get_current_organization(request):
+    """
+    Return the current organization (stored in request.session)
+    """
+    from b24online.models import Organization
+    current_organization_id = request.session.get('current_company')
+    if current_organization_id:
+        try:
+            return Organization.objects.get(pk=current_organization_id)
+        except Organization.DoesNotExist:
+            pass
+    return None
+
+
+def get_managed_org_ids(user, permission='b24online.manage_organization'):
+    from b24online.models import Organization
+    from guardian.shortcuts import get_objects_for_user
+    return  get_objects_for_user(user, [permission],
+        Organization.get_active_objects().all(), with_superuser=False)

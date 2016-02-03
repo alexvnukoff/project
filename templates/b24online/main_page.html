@@ -11,7 +11,8 @@
     {% block styles %}
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
-         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
         <style>
             .selected-menu {
                 background-color: #D7D7D9;
@@ -198,6 +199,7 @@
                         <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
 
+
                         <!-- temporary hide..
 
                         <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
@@ -235,8 +237,13 @@
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
 
-                            <!-- temporary hide..
+                        {# The deals history #}
+                        <li><a href="{% url 'products:deal_list' %}">
+                            {% trans 'Current deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+                        <li><a href="{% url 'products:deal_list' %}">
+                            {% trans 'Deals history' %}</a></li>
 
+                            <!-- temporary hide..
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                             <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                             <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
@@ -287,24 +294,27 @@
             <div class="newsright">
             <div class="b-notyfi event-holder">
             	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% set_notification_count %}</a>
+              <div class="formevent">
+                <i class="close-event imgnews" ></i>
+                <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
+                <div class="list-holder">
+                  <ul>
+                  </ul>
+                </div>
+                <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
+              </div>
 
-                    <div class="formevent">
-                        	<i class="close-event imgnews" ></i>
-                            <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
-                            <div class="list-holder">
-                                <ul>
+              <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
+              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
+              <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
 
-                                </ul>
-                            </div>
-                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
-                        </div>
-
-                   <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
-
-                <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
-
-                <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
-                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
+              {% if request.user.is_authenticated %}  
+                  <span class="basket">
+                      <a href="{% url 'products:deal_order_basket' %}">{{ request|deal_order_quantity|default:"0" }}</a>
+                  </span>
+              {% else %}
+                  <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
+              {% endif %}
             </div>
                 <div>
                     <div class="help-desk">

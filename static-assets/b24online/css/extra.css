@@ -1,0 +1,169 @@
+.data {
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.data h1 {
+    font-size: 180%;
+}
+
+.data h2 {
+    font-size: 130%;
+}
+
+table.table-data {
+    color: #333333;
+    border-width: 1px;
+    border-color: #3A3A3A;
+    border-collapse: collapse;
+}
+
+table.table-data th {
+    border-width: 1px;
+    padding: 5px;
+    border-style: solid;
+    border-color: #517994;
+    background-color: #B2CFD8;
+}
+
+table.table-data tr:hover td {
+    background-color: #DFEBF1;
+}
+
+table.table-data td {
+    border-width: 1px;
+    padding: 5px;
+    border-style: solid;
+    border-color: #517994;
+    background-color: #ffffff;
+}
+
+table.table-data td.is-child {
+    border-width: 1px;
+    padding: 5px 5px 5px 15px;
+    border-style: solid;
+    border-color: #517994;
+    background-color: #ffffff;
+}
+
+tr.toggle-child td.toggler {
+    cursor: pointer;
+    background:url('../img/rarr-blue.png') left 3px no-repeat;
+    padding-left:20px;
+    width: -moz-fit-content; /* mozilla only */
+    width: intrinsic; /* webkit only */
+    border-bottom:1px dotted blue;
+}
+
+tr.toggle-child.toggled td.toggler {
+    background:url('../img/darr-blue.png') left 3px no-repeat;
+    border-bottom:0;
+} 
+
+.toggle-next {
+    cursor: pointer;
+    background:url('../img/rarr-blue.png') right 3px no-repeat;
+    padding-right:20px;
+    width: -moz-fit-content; /* mozilla only */
+    width: intrinsic; /* webkit only */
+    border-bottom:1px dotted blue;
+}
+.toggle-next.toggled {
+    background:url('../img/darr-blue.png') right 3px no-repeat;
+    border-bottom:0;
+} 
+
+.toggle-next {
+    cursor: pointer;
+    background:url('../img/rarr-blue.png') right 3px no-repeat;
+    padding-right:20px;
+    width: -moz-fit-content; /* mozilla only */
+    width: intrinsic; /* webkit only */
+    border-bottom:1px dotted blue;
+}
+.toggle-next.toggled {
+    background:url('../img/darr-blue.png') right 3px no-repeat;
+    border-bottom:0;
+} 
+
+.basket {
+    # margin-top: 17px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    background-image: url(../img/basket.svg);
+    background-repeat: no-repeat;
+    text-align: center;
+    font-weight: bold;
+    background-size: 100% 100%;
+}
+
+.basket a {
+    margin: 0px;
+}
+
+hr.hr-divider-one { 
+    border: 0; 
+    height: 1px; 
+    background: #333; 
+    background-image: linear-gradient(to right, #ccc, #333, #ccc); 
+}
+hr.hr-divider-two { 
+    border: 0; 
+    height: 1px; 
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
+}
+
+.mediumbuy { 
+    float:left; 
+    width:100%; 
+    margin: 0 5px; 
+    font-size:12px; 
+    padding: 2px;
+    background:url(../img/btnbuy.gif) repeat-x; 
+    text-align:center; 
+    color:#FFF; 
+    text-shadow: #-1px -1px 1px #317ca1; 
+    border-radius:3px; 
+    box-shadow:0px 1px 2px #DDD;
+}
+
+p.data-info {
+    padding: 2px 0;
+    text: font-weight: bold;
+}
+
+p.data-info label {
+    font-weight: 500;
+}
+
+.form-control fieldset.dcol {
+    margin: 10px;
+    padding: 10px;
+    border-color: #aaaaaa;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.form-control fieldset.dcol legend {
+    border: none;
+    font-weight: normal;
+    font-size: 16px;  
+    padding: 0px 5px 2px;
+    border-radius: 5px;
+}
+
+fieldset.dcol li {
+    margin-top: 10px;
+}
+
+.errors { 
+    color: #a00; 
+    border: 1px solid #a00;
+    font-size: 70%;
+    padding:4px 25px;
+    background: #fee;
+    margin-bottom: 10px;
+}

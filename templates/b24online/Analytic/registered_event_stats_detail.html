@@ -1,77 +1,113 @@
-{% extends 'b24online/main_page.html' %}
-
 {% load static from staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
 
-{% block styles %}
-  {{ block.super }}
-  <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css"%}" />
-  <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
-{% endblock %}
-
-{% block js %}
-  {{ block.super }}
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
-  <script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
-{% endblock %}
-
-{% block content %}
 <div class="analytics">
-  <div>
-    <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
-    <h3>{% trans 'For' %} {{ instance_type }} &laquo;{{ instance }}&raquo;</h3>
-    
-    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+<div style="margin-top: 20px;">
+  <h2>{% trans 'Statistics for' %} &laquo;{{ event_type.name }}&raquo;</h2>
+    <div>
+    {% if instance %}
+    <h3>{% trans 'For' %} {{ item_type }} &laquo;{{ instance }}&raquo;</h3>
+    {% endif %}
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
       <tr class="top">
-        <th>{% trans 'Country' %}</th>
-        <th>{% trans 'Amount for Country' %}</th>
-        <th>{% trans 'City' %}</th>
-        <th>{% trans 'Amount for City' %}</th>
-      </tr>
-      {% for country_name, country_amount, data_1 in data_grid %}
-        {% get_length data_1 as rowspan %}    
-
-        {% for city, counter in data_1 %}
-        <tr valign="top">
-          {% if forloop.first %}            
-          <td rowspan="{{ rowspan }}" align="center">{{ country_name }}</td>
-          <td rowspan="{{ rowspan }}" align="center" color="{{ color_1 }}">{{ country_amount }}</td>
-          {% endif %}
-          <td align="center">{{ city }}</td>
-          <td align="center">{{ counter }}</td>
-        </tr>
+        {% for xdate in date_range %}
+        <th colspan="2" align="center">{{ xdate.0|date:"d M Y" }}</td>          
         {% endfor %}
-      {% endfor %}
+      </tr>
+      <tr class="top">
+        {% for xdate in date_range %}
+        <th align="center">uniq</td>          
+        <th align="center">total</td>          
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for item in data_grid %}
+        <td align="center">
+          {% if item.unique %}
+            {% if instance %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.unique }}</strong></a></td>
+            {% else %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='unique' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.unique }}</strong></a></td>
+            {% endif %}
+          {% else %}
+            0
+          {% endif%}
+        </td>
+        <td align="center">
+          {% if item.total %}
+            {% if instance %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id instance_id=instance_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.total }}</strong></a>
+            {% else %}
+            <a class="stats_diag" href="{% url 'analytic:event_stats_ct_detail_distrib' event_type_id=event_type_id content_type_id=content_type_id cnt_type='total' %}?date={{ item.date|date:'Y-m-d'}}"><strong>{{ item.total }}</strong></a>
+            {% endif %}
+          {% else %}
+            0
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
     </table>
-  </div>
-  <div id="canvas-holder">
-    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-staff">
+    </div>
+    <br/>
+
+    <table width="100%" cellspacing="2" cellpadding="2" border="0">
       <tr>
         <td align="center">
-        <canvas id="stats-chart" width="300" height="300"/>
+        <canvas id="stats-bar" 
+          width="400" height="200"/>
         </td>
       </tr>
     </table>
-  </div>
+</div>
 </div>
 
 <script type="application/javascript">
-  var pieData = [
-  {% for country_name, country_amount, data_1 in data_grid %}
-	  {
-		  value: {{ country_amount }},
-			color: chart_colors[{{ forloop.counter|add:"20" }}],
-			highlight: chart_colors[{{ forloop.counter|add:"35" }}],
-			label: "{{ country_name }}"
-		},
-  {% endfor %}
-  ];  
-  window.onload = function() {
-    var ctx = document.getElementById("stats-chart").getContext("2d");
-    window.myPie = new Chart(ctx).Pie(pieData);
+	var barChartData = {
+		labels : [
+    {% for xdate in date_range %}
+      '{{ xdate.0|date:"d M Y" }}',
+    {% endfor %}
+		],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [
+          {% for item in data_grid %}{{ item.unique }},{% endfor %}
+				]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [
+          {% for item in data_grid %}{{ item.total }},{% endfor %}
+				]
+			}
+		]
   };
-                              
-                              
+
+  var ctx = document.getElementById("stats-bar").getContext("2d");
+	window.myBar = new Chart(ctx).Bar(barChartData, {
+	  responsive : true
+	});
+
+    $('#diagdialog').dialog({
+        autoOpen: false,
+        minWidth: 500,
+        minHeight: 500,
+        modal: true,
+    });
+    $(".stats_diag").on("click", function(e) {
+        e.preventDefault();
+        $("#diagdialog").html("");
+        $("#diagdialog").dialog("open");
+        $("#diagdialog").load(this.href);
+        return false;
+    });
+
 </script>
-{% endblock %}

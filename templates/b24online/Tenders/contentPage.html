@@ -10,6 +10,7 @@
         <ul class="tender-list">
             {% for tender in object_list %}
             <li>
+                {{ tender|register_event:"view"|process_event:request }}
                 {% setContextMenu tender %}
                 <div class="title">
                     {% if tender.organization.flag %}

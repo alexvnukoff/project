@@ -13,6 +13,7 @@
         <ul class="company-list">
             {% for company in object_list %}
                 <li>
+                    {{ company|register_event:"view"|process_event:request }}
                      {% setContextMenu company %}
                     <div class="title">
                         <i class="flag sprite {{ company.country.flag }}"></i>

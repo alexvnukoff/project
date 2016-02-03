@@ -1,0 +1,122 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block html_title %}{{ item }} :: {% trans 'Payment ' %}{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+  <div class="data">
+    <h1>{{ item }}</h1>
+    <hr class="hr-divider-one">
+
+    <div class="data">
+    <p class="data-info">
+      <label>{% trans 'Customer' %}:</label>
+      {{ item.deal_order.get_customer }}
+    </p>
+    <p class="data-info">
+      <label>{% trans 'Supplier' %}:</label>
+      {{ item.supplier_company.name }}
+    </p>
+
+    <p class="data-info">
+      <label>{% trans 'Total deal cost' %}:</label>
+      
+      {% with item.get_total_cost as cost_list %}
+        {% if cost_list %}
+          {% for cost, currency in cost_list %}
+              <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+        -
+        {% endif %}
+      {% endwith %}
+    </p>
+    </div>
+    
+    
+    <div class="data">
+      <h2 class="data toggle-next">{% trans 'Products list' %}</h2>
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data" style="display: none;">
+        <tr>
+          <th>{% trans 'Product' %}</th>
+          <th>{% trans 'Quantity' %}</th>
+          <th>{% trans 'Price' %}</th>
+          <th>{% trans 'Total' %}</th>
+          <th>{% trans 'Currency' %}</th>
+          {% if item.can_edit %}
+          <th>&nbsp;</th>
+          {% endif %}
+        </tr>
+        
+        {% for deal_item in item.get_items %}
+        <tr>
+          <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
+          <td align="center">{{ deal_item.quantity}}</td>
+          <td align="center">{{ deal_item.cost }}</td>
+          <td align="center">{{ deal_item.get_total }}</td>
+          <td align="center">{{ deal_item.currency|getSymbol }}</td>
+          {% if item.can_edit %}
+          <td align="center"><a href="{% url 'products:deal_item_delete' deal_item.pk %}">delete</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>  
+    </div>
+  </div>    
+
+  <div class="data">
+    <h2>{% trans 'Deal Order details' %}</h2>
+    <hr class="hr-divider-one">
+        {% if form %}
+        <form action="" method="post">
+        {% csrf_token %}
+        <ul class="form-control">
+            <fieldset class="dcol">
+              <legend>{% trans 'Enter customer person info' %}</legend>
+              {% for field in form %}  
+              <li>
+                {% if field.name == "agree" %}
+                  {{ field }}&nbsp;{% trans 'Agree with' %}
+                  <a href="{% url 'project:terms' %}" target="_blank">{% trans 'license conditions' %}</a>
+                {% else %}
+                  <label>{{ field.label }}:{% if field.field.required %}<span style="color: #a00;">*</span>{% endif %}</label>
+                  <p>{{ field }}</p>
+                {% endif %}
+                {% if form.is_bound and field.errors %}
+                <p class="errors">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </fieldset>
+            <li>
+              <input type="submit" name="save" value="{% trans 'Order by email' %}" />
+            </li>
+        </ul>
+        </form>
+        {% endif %}
+  
+  </div>
+</div>
+{% endblock %}

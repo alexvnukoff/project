@@ -11,6 +11,8 @@
         <h2>{% trans 'Business proposals' %}</h2>
 
          {% for proposal in object_list %}
+            {# Register the 'view' event for b2b product #}
+            {{ proposal|register_event:"view"|process_event:request }}
             <article class="news">
                 <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
                 <div class="news__content clearfix">

@@ -6,6 +6,8 @@ from decimal import Decimal
 import os
 import datetime
 import logging
+
+from django.db.models import Q
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
@@ -18,6 +20,8 @@ from lxml.html.clean import clean_html
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+from guardian.shortcuts import get_objects_for_user
+
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
@@ -300,20 +304,23 @@ def get_length(some_list):
     return len(some_list) \
         if isinstance(some_list, Iterable) else 0
 
+# FIXME: (andrey_k) delete it
+@register.filter()
+def to_list(some_dict):
+    return [(k, v) for k, v in some_dict.items()]
 
-#
-# Next two filters use sequentially. For example::
-#
-#   {{ product|register_event:"view"|process_event:request }}  
-#
+@register.filter()
+def show_type(instance):
+    return type(instance)
+
+
+
 @register.filter
 def register_event(instance, event_type_slug):
     """
     Register (save) the Event with defined type slug.
     """
-    return RegisteredEventHelper.get_stored_event(
-        instance,
-        event_type_slug)
+    return RegisteredEventHelper.get_stored_event(instance, event_type_slug)
 
 
 @register.filter
@@ -322,5 +329,58 @@ def process_event(event_stored_data, request):
     Register the event (define and store attributes values).
     Return empty string.
     """
+    logger.debug(event_stored_data)
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
+
+
+@register.filter
+def deal_order_quantity(request):
+    """
+    Return the draft deal orders count.
+    """
+    from b24online.models import (Organization, DealOrder, Deal, DealItem)
+
+    if request.user.is_authenticated():
+        org_ids = get_objects_for_user(
+            request.user, ['b24online.manage_organization'],
+            Organization.get_active_objects().all(), 
+            with_superuser=False)
+        return DealItem.objects.select_related('deal', 'deal__deal_order')\
+            .filter(
+                ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
+                ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
+                    Q(deal__deal_order__created_by=request.user)) | \
+                 (Q(deal__deal_order__customer_type=DealOrder.AS_COMPANY) & \
+                    Q(deal__deal_order__customer_company_id__in=org_ids))))\
+            .count()
+    else:
+        return None
+
+
+@register.filter
+def deal_quantity(request):
+    """
+    Return the paid deals count.
+    """
+    from b24online.models import Deal
+    return Deal.get_user_deals(request.user, status=Deal.PAID)\
+        .count() if request.user.is_authenticated() else 0
+
+
+@register.filter
+def get_by_content_type(item):
+    content_type_id = item.get('content_type_id')
+    instance_id = item.get('object_id')
+    if content_type_id and instance_id:        
+        try:
+            content_type = ContentType.objects.get(pk=content_type_id)
+        except ContentType.DoesNotExist:
+            pass
+        else:
+            model_class = content_type.model_class()
+            try:
+                return model_class.objects.get(pk=instance_id)
+            except model_class.DoesNotExist:
+                pass
+    return None

@@ -1,0 +1,35 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}{% trans 'Deals history' %}{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/css/company.css" %}' />
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/css/extra.css" %}' />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="cpn-details-tab ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <div class="tab-cate">
+        <ul>
+            <li><a href="#deals-tabs">{% trans 'All deals' %}</a></li>
+            <li><a href="{{ url.path }}?status=draft">{% trans 'Ready to pay' %}</a></li>
+            <li><a href="{{ url.path }}?status=ordered">{% trans 'Ordered by email' %}</a></li>
+            <li><a href="{{ url.path }}?status=paid">{% trans 'Paid dals' %}</a></li>
+        </ul>
+    </div>
+    <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">
+      {% include "b24online/Products/dealListBase.html" %}
+    </div>
+</div>
+
+{% endblock %}

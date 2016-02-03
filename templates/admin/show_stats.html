@@ -1,0 +1,76 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+{% load CustomFilters %}
+
+{% block extrahead %}{{ block.super }}
+<script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; {% trans 'Events stats' %}
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="newsform">
+    <form method="get" action=".">
+        <div>
+          <label>{{ form.start_date.label}}</label>
+          {% if form.errors.start_date %}
+            <div class="error-handler"> <div class="formserror">{{ form.errors.start_date.0 }}</div></div>
+          {% endif %}
+          {{ form.start_date }}
+        </div>
+        <div>
+          <label>{{ form.end_date.label }}</label>
+          {% if form.errors.end_date %}
+            <div class="error-handler"><div class="formserror">{{ form.errors.end_date.0 }}</div></div>
+          {% endif %}
+          {{ form.end_date }}
+        </div>
+        <div class="newform-button">
+          <input type="submit" class="btntype2" name="filter" value="{% trans 'Filter' %}">
+          <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+    </form>
+  </div>
+
+<br/><br/>
+<div class="results">
+{% for event_type, items in data_grid %}
+<p>
+  {% trans 'Event type' %}: {{ event_type.name }}
+</p>
+
+<table id="result_list">
+  <thead>
+    <tr valign="top">
+      <th align="center">{% trans 'Product' %}</th>
+      <th align="center">{% trans 'Unique' %}</th>
+      <th align="center">{% trans 'Total' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+      <tr>
+        <td>{{ item|get_by_content_type }}</td>
+        <td align="center">{{ item.unique|default:"0" }}</td>
+        <td align="center">{{ item.total|default:"0" }}</td>
+      </tr> 
+    {% endfor %}
+  </tbody>
+</table>
+<br/><br/>
+{% endfor %}
+</div>
+{% endblock %}

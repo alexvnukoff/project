@@ -10,6 +10,7 @@
         <ul class="tender-list" id="afisha-list">
             {% for exhibition in object_list %}
                 <li>
+                {{ exhibition|register_event:"view"|process_event:request }}
                 {% setContextMenu exhibition %}
                     <div class="title">
                         {% if exhibition.country %}

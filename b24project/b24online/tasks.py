@@ -49,9 +49,8 @@ def process_events_queue(request_uuid, extra_data):
                 rconn.sadd(ready_to_process_key, event_unique_key)
 
 
-#@periodic_task(name='b24online.process_events_stats',
-#    run_every=crontab(**{'minute': '*/5'}))
-@task(name="b24online.process_events_stats")
+@periodic_task(name='b24online.process_events_stats',
+    run_every=crontab(**{'hour': '*/6'}))
 def process_events_stats():
     today = datetime.date.today()
     rconn = get_redis_connection()

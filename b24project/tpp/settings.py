@@ -90,9 +90,6 @@ TEMPLATES = [
     },
 ]
 
-
-
-
 # django
 DJANGO_APPS = (
     'django.contrib.postgres',

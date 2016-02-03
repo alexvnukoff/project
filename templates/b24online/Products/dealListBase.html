@@ -1,0 +1,43 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="data">
+    <h1>{% trans 'Deals list' %}</h1>
+    <hr class="hr-divider-one">
+    <div class="data">
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+          <th>{% trans 'Deal' %}</th>
+          <th>{% trans 'Customer' %}</th>
+          <th>{% trans 'Status' %}</th>
+          <th>{% trans 'Cost' %}</th>
+        </tr>
+        {% for deal in object_list %}
+        <tr>
+          <td><a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</td>
+          <td>{{ deal.deal_order.get_customer }}</td>
+          <td>{{ deal.get_status }}</td>
+          <td>
+            {% with deal.get_total_cost as cost_list %}
+              {% if cost_list %}
+                {% for cost, currency in cost_list %}
+                <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
+                {% endfor %}
+              {% else %}
+              -
+              {% endif %}
+            {% endwith %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" align="center">
+          {% trans 'There are no deals' %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>  
+    </div>
+</div>

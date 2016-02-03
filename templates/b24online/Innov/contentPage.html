@@ -9,6 +9,7 @@
         {% include "b24online/main/local_menu_script.html" %}
         <ul class="tender-list" id="afisha-list">
             {% for innov in object_list %}
+                {{ innov|register_event:"view"|process_event:request }}
                 <li>
                 {% setContextMenu innov %}
                     <div class="title">

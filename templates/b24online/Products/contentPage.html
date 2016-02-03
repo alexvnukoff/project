@@ -6,12 +6,13 @@
    {% include "b24online/main/paginator.html" %}
    {% include "b24online/main/popupFilter.html" %}
    {% include "b24online/main/local_menu_script.html" %}
-
-
     <ul class="listprd">
     {% for product in object_list %}
         <li>
          {% setContextMenu product update_url=update_url delete_url=delete_url %}
+
+         {# Register the 'view' event for b2b product #}
+         {{ product|register_event:"view"|process_event:request }}
           <div class="thumb">
               <a href="{{ product.get_absolute_url }}">
                   {% if product.image %}
@@ -25,7 +26,7 @@
                 {% if product.country %}
                      <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
                 {% endif %}
-            <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatechars:45 }}</a>
+            <a href="{% url 'products:buyB2B' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
            </div>
             <div class="price">
                 {% if product.cost %}
@@ -34,7 +35,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{{ product.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
+            <a href="{% url 'products:buyB2B' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

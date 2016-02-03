@@ -66,6 +66,8 @@
 {% block keywords %}{% endblock %}
 
 {% block content %}
+    {{ item|register_event:"view"|process_event:request }}
+
     <div class="tender">
         <div class="tender-details-title">
             <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
