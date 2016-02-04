@@ -104,8 +104,8 @@ class B2_ProductBuyForm(forms.Form):
     """
     The form to add DealItem.
     """
-    customer_company = forms.ChoiceField(label=_('Company'), required=False, 
-        choices=())
+    customer_organization = forms.ChoiceField(label=_('Organization'), 
+        required=False, choices=())
     customer_type = forms.ChoiceField(label=_('Customer type'), required=True, 
         widget=forms.RadioSelect, choices=DealOrder.CUSTOMER_TYPES)
     quantity = forms.IntegerField(label=_('Quantity'), 
@@ -113,20 +113,20 @@ class B2_ProductBuyForm(forms.Form):
     
     def __init__(self, request, product, *args, **kwargs):
         """
-        Initialize the fields - customer_type and customer_company
+        Initialize the fields - customer_type and customer_organization
         """
         super(B2_ProductBuyForm, self).__init__(*args, **kwargs)
         self._request = request        
         self._product = product
         self._supplier = product.company
         
-        # The 'customer_company' field choices 
+        # The 'customer_organization' field choices 
         org_ids = get_objects_for_user(
             request.user, ['b24online.manage_organization'],
             Organization.get_active_objects().all(), with_superuser=False)
-        orgs = Organization.objects.filter(pk__in=org_ids).order_by('company__name')
-        self.fields['customer_company'].choices = \
-            ((item.id, item.company.name) for item in orgs if item.company)
+        orgs = Organization.objects.filter(pk__in=org_ids).order_by('id')
+        self.fields['customer_organization'].choices = \
+            ((item.id, item.name) for item in orgs)
         self.initial['customer_type'] = DealOrder.AS_PERSON
         self.initial['quantity'] = 1
 
@@ -135,20 +135,20 @@ class B2_ProductBuyForm(forms.Form):
         Get the customer.
         """
         self._customer_type = self.cleaned_data['customer_type']
-        if self._customer_type == DealOrder.AS_COMPANY:
-            customer_company = self.data['customer_company']
-            self._customer = customer_company
+        if self._customer_type == DealOrder.AS_ORGANIZATION:
+            customer_organization = self.data['customer_organization']
+            self._customer = customer_organization
         else:
             self._customer = self._request.user
         return self._customer_type
 
-    ## @transaction.atomic                    
+    @transaction.atomic                    
     def save(self):
-        if self._customer_type == DealOrder.AS_COMPANY:
+        if self._customer_type == DealOrder.AS_ORGANIZATION:
             deal_order, created = DealOrder.objects\
                 .get_or_create(
                     customer_type=self._customer_type,
-                    customer_company_id=self._customer, 
+                    customer_organization_id=self._customer, 
                     status=DealOrder.DRAFT)
         else:
             deal_order, created = DealOrder.objects\

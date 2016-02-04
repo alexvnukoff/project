@@ -26,7 +26,11 @@
         <div class="data">
             {% for deal_order in object_list %}
             <div class="data">
-                <h2>{{ deal_order }} for {{ deal_order.get_customer }}</h2>
+                {% with deal_order.get_customer as customer %}  
+                <h2>{{ deal_order }} for 
+                  <a href="{{ customer.get_absolute_url }}">{{ customer }}</a>
+                </h2>
+                {% endwith %}
                 <hr class="hr-divider-two">
                 <div class="data">
                 <table width="100%" cellspacing="2" cellpadding="2" 
