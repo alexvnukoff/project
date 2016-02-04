@@ -419,6 +419,21 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
 
         return department.create_vacancy(name, user)
 
+    def get_descendants_filtered(self, **filters):
+        """
+        Return the qs for node descendants under some filtered conditions.
+        """
+        return self.get_descendants().filter(**filters)
+         
+    def get_descendants_for_model(self, model_klass):
+        """
+        Return the qs for node descendants of defined ContentType.
+        """
+        assert issubclass(model_klass, models.Model), \
+            _('Invalid parameter. Must be a "Model" subclass')
+        content_type = ContentType.objects.get_for_model(model_klass) 
+        return self.get_descendants().filter(polymorphic_ctype=content_type)
+
     @property
     def vacancies(self):
         return Vacancy.objects.filter(department__organization=self)

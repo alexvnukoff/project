@@ -5,11 +5,11 @@
 {% load CustomFilters %}
 
 {% block html_title %}{% trans 'Statistics' %}{% endblock %}
+{% block title %}{% trans 'Statistics' %}{% endblock %}
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}" />
-    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery-ui.min.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css'%}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
@@ -17,14 +17,15 @@
 
 {% block js %}
     {{ block.super }}
-    <script  type="text/javascript" src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+    <script  type="text/javascript" src="{% static 'b24online/css/jquery-ui-1.10.4.custom.js' %}"></script>
     <script  type="text/javascript" src="{% static 'b24online/js/Chart.min.js' %}"></script>
     <script  type="text/javascript" src="{% static 'b24online/js/Chart.colors.js' %}"></script>
     <script  type="text/javascript" src="{% static 'b24online/js/eventstats.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div id="bardialog" style="display: none;"></div>
+
+<div id="bardialog" class="stats-dialog" style="display: none;"></div>
 <div id="diagdialog" style="display: none;"></div>
 
 <div class="analytics">
@@ -63,7 +64,7 @@
             <li><a href="{{ url.path }}?tab=usersites">{% trans 'On user sites' %}</a></li>
         </ul>
     </div>
-    <div id="stats-tabs" style="margin-top: 20px;">
+    <div id="stats-info" style="margin-top: 20px;">
         {% include "b24online/Analytic/registered_event_stats_base.html" %}
     </div>
     </div>
