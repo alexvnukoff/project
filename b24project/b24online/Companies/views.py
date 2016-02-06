@@ -1,4 +1,7 @@
+# -*- encoding: utf -*-
+
 import json
+import logging
 
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
@@ -20,6 +23,8 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDea
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
     Vacancy, Organization, Branch, Chamber
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+
+logger = logging.getLogger(__name__)
 
 
 class CompanyList(ItemsList):
@@ -202,11 +207,14 @@ def _tab_innovation_projects(request, company, page=1):
 
 
 def _tab_structure(request, company, page=1):
+    """
+    Company view's tab 'Structure' processing.
+    """
     organization = get_object_or_404(Company, pk=company)
+    if request.is_ajax() and not request.user.is_anonymous() \
+        and request.user.is_authenticated():
 
-    if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
         item_id = request.POST.get("id", None)
-
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
         request_type = request.POST.get("type", None)

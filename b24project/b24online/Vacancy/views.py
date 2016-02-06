@@ -1,3 +1,8 @@
+# -*- encoding: utf -*-
+
+import json
+import logging
+
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
@@ -5,6 +10,7 @@ from django.conf import settings
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate
 from jobs.models import Requirement, Resume
+from b24online.models import StaffGroup
 from b24online.Vacancy.forms import RequirementForm
 
 
@@ -150,3 +156,13 @@ class RequirementUpdate(ItemUpdate):
             self.object.reindex()
 
         return result
+
+
+def get_staffgroup_options(request, *args, **kwargs):
+    """
+    Return the :class:`StaffGroup` options for select field.
+    """
+    options = [{'name': '------', 'id': ''}]
+    for item in StaffGroup.objects.order_by('group__name'):
+        options.append({'name': item.group.name, 'id': item.pk})
+    return HttpResponse(json.dumps(options), content_type='application/json')

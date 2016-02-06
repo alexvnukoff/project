@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, Group
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField, 
@@ -2094,3 +2094,16 @@ def reclaculate_order_cost(sender, instance, created, **kwargs):
                     float(instance.cost * instance.quantity)
             instance.deal.deal_order.total_cost_data = data
             instance.deal.deal_order.save()
+
+
+class StaffGroup(models.Model):
+    """
+    Class for the relations of :class:`auth.models.Group` for 
+    organization's staff vacancies.
+    """
+    group = models.OneToOneField(Group, verbose_name=_('Vacancy group'))
+
+    class Meta:
+        verbose_name = 'Group for staff'
+        verbose_name_plural = 'Groups for staff'
+

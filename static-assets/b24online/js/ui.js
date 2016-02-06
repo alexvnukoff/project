@@ -1056,9 +1056,14 @@ var companyStructure =
             vacancy:
                 '<div class="vacadd" id="add-vac-popup">' +
                     '<i class="close-formadd imgnews" />' +
-                    '<div class="title">' + LANG['popup_vac'] + '</div>' +
+                    '<div class="title">' + LANG['popup_vac_title'] + '</div>' +
                     '<div class="staffaddin">' +
+                        '<label>' + LANG['popup_vac'] + '</label>' +
                         '<input type="text" name="" id="vac-name" class="textstructure" />' +
+                        '<label>' + LANG['popup_staffgroup'] + '</label>' +
+                        '<select id="staffgroups" style="width: 100%">' +
+                            '<option disabled selected>' + LANG['popup_loading'] + '</option>' +
+                        '</select>' +
                         '<div class="formadd-button">' +
                             '<a class="btntype2" id="btn-add-vacancy" href="#">' + LANG['popup_ok'] + '</a>' +
                             '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
@@ -1249,10 +1254,18 @@ var companyStructure =
 
         var form = $(self.forms.vacancy);
         var input = form.find('#vac-name');
-
         if (action == 'edit') {//edit
             input.val(self.item.text().trim());
         }
+
+        $.getJSON('/vacancy/staffgroup/options/', function(options) {
+            var replacement = '<select>';
+            $.each(options, function(index, option) {
+                replacement += '<option value="' + option.id + '">' + option.name + '</option>';
+            });
+            replacement += '</select>';
+            $('#staffgroups').replaceWith(replacement);
+        });
 
         form.on('click','#btn-add-vacancy', function() {
             var name = input.val().trim();
@@ -1331,14 +1344,10 @@ var companyStaff =
         self.setForms();
 
         $('#user-add-button').on('click', function() {
-		console.log(self);
             return self.addNew($(this));
 		});
 
         $('.btnremove-small').on('click', function() {
-console.log(self);
-console.log($(this));
-console.log(this);
             return self.removeStaff($(this));
 		});
     },
@@ -1364,7 +1373,7 @@ console.log(this);
                                     '<div class="holder">' +
                                         '<label>' + LANG['popup_vac'] + '</label>' +
                                         '<select id="vacancy-list" style="width:62%;">' +
-                                            '<option disabled selected>' + LANG['select_department'] + '</option>' +
+                                            '<option disabled selected>' + LANG['select_vacancy'] + '</option>' +
                                         '</select>' +
                                     '</div>' +
                                     '<div class="holder">' +
@@ -1397,12 +1406,9 @@ console.log(this);
     },
 
     setOptions: function(select, options) {
-
         select.find('option').remove();
-
         for (i in options) {
             obj = options[i];
-
             select.append('<option value="' + obj.value + '">' + obj.name + '</option>');
         }
     },
@@ -1427,13 +1433,12 @@ console.log(this);
                    var options = self.cache[id];
                    self.setOptions(select, options);
                } else {
-
                    self.setOptions(select, [option_loading]);
-
                    $.get(self.staffURL, {"action": "vacancy", "department": id}, function(options) {
                        self.cache[id] = options;
                        self.setOptions(select, options);
                    }, 'json');
+                   
                }
            }
         });

@@ -329,7 +329,6 @@ def process_event(event_stored_data, request):
     Register the event (define and store attributes values).
     Return empty string.
     """
-    logger.debug(event_stored_data)
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
 
