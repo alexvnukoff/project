@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView, View
 from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import LoginRequiredMixin
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
@@ -658,7 +659,7 @@ class B2CProductBuy(B2_ProductBuy):
     current_section = _('Products B2C')
 
 
-class DealOrderList(ListView):
+class DealOrderList(LoginRequiredMixin, ListView):
     """
     Deal Orders list.
     """
@@ -666,13 +667,19 @@ class DealOrderList(ListView):
     template_name = 'b24online/Products/dealOrderList.html'
     current_section = _('Basket')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super(DealOrderList, self).get_queryset()\
             .prefetch_related('customer_organization', 'created_by')
+        qs = qs.filter(
+            (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
+             Q(created_by=request.user)) | \
+            (Q(customer_type=DealOrder.AS_ORGANIZATION) & \
+             Q(customer_organization__in=get_permitted_orgs(request.user))))
+        
         by_status = self.kwargs.get('status')
         if by_status:
             if by_status == 'basket':
@@ -683,24 +690,24 @@ class DealOrderList(ListView):
         return qs
 
 
-class DealOrderDetail(ItemDetail):
+class DealOrderDetail(LoginRequiredMixin, ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
 
-class DealOrderPayment(ItemDetail):
+class DealOrderPayment(LoginRequiredMixin, ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
@@ -710,12 +717,12 @@ class DealOrderPayment(ItemDetail):
                 kwargs={'pk': item.pk}))
 
 
-class DealList(ListView):
+class DealList(LoginRequiredMixin, ListView):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
+    #@method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if self.request.is_ajax():
             self.template_name = \
@@ -740,30 +747,30 @@ class DealList(ListView):
         return context
         
 
-class DealDetail(ItemDetail):
+class DealDetail(LoginRequiredMixin, ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('deal_order', 
             'supplier_company')
 
 
-class DealPayment(ItemDetail):
+class DealPayment(LoginRequiredMixin, ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealPayment.html'
     current_section = _('Deals history')
     form_class = DealPaymentForm
     success_url = reverse_lazy('products:deal_order_basket')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -779,14 +786,52 @@ class DealPayment(ItemDetail):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class DealItemDelete(ItemDetail):
+class DealPayPal(LoginRequiredMixin, ItemDetail):
+    model = Deal
+    template_name = 'b24online/Products/dealPayPal.html'
+    current_section = _('Deals history')
+    success_url = reverse_lazy('products:deal_order_basket')
+
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paypal_forms = []
+
+        if self.object.supplier_company.company_paypal_account:
+            for currency, cost in self.object.total_cost_data.items():                            
+                paypal_dict = {
+                    "business": self.object.supplier_company.company_paypal_account,
+                    "amount": cost,
+                    #"notify_url": self.request.build_absolute_uri(),
+                    #"return_url": self.request.build_absolute_uri(),
+                    #"cancel_return": self.request.build_absolute_uri(),
+                    "item_number": self.object,
+                    "item_name": self.object,
+                    "no_shipping": 0,
+                    "quantity": 1,
+                    "currency_code": currency
+                }
+                paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+                logger.debug(dir(paypal_form))    
+                paypal_forms.append(paypal_form)
+        context.update({
+            'paypal_forms': paypal_forms,
+            'deal': self.object,
+        })
+        
+        return context
+
+class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    #@method_decorator(login_required)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()

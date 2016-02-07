@@ -25,8 +25,10 @@ from guardian.shortcuts import get_objects_for_user
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
+from b24online.utils import get_permitted_orgs
 from b24online.stats.helpers import RegisteredEventHelper
 from tpp.SiteUrlMiddleWare import get_request
+
 import b24online.urls
 
 logger = logging.getLogger(__name__)
@@ -340,16 +342,13 @@ def deal_order_quantity(request):
     from b24online.models import (Organization, DealOrder, Deal, DealItem)
 
     if request.user.is_authenticated():
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), 
-            with_superuser=False)
+        orgs = get_permitted_orgs(request.user)
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
             .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
             ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
              Q(deal__deal_order__created_by=request.user)) | \
              (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
-             Q(deal__deal_order__customer_organization_id__in=org_ids))))\
+             Q(deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
         return None

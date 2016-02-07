@@ -77,7 +77,7 @@
                           <a class="mediumbuy" href="{% url 'products:deal_payment' deal.pk %}" >{% trans 'Order by Email' %}</a>
                           {% if deal.supplier_company.company_paypal_account %}
                           <br/><br/>
-                          <a class="mediumbuy" href="" >{% trans 'Pay by Paypal' %}</a>
+                          <a class="mediumbuy" href="{% url 'products:deal_paypal' deal.pk %}" >{% trans 'Pay by Paypal' %}</a>
                           {% endif %}
                         </td>
                         {% endif %}

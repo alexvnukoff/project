@@ -2044,7 +2044,7 @@ class DealItem(models.Model):
     CONTENT_TYPE_LIMIT = models.Q(app_label='b24onlie', model='b2bproduct') | \
         models.Q(app_label='centerpokupok', model='b2cproduct')
 
-    deal = models.ForeignKey(Deal, related_name='item_deal',
+    deal = models.ForeignKey(Deal, related_name='deal_items',
                               verbose_name=_('Deal'), null=False, blank=False,
                               editable=False)
     content_type = models.ForeignKey(ContentType,
