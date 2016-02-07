@@ -11,7 +11,6 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView, View
 from guardian.shortcuts import get_objects_for_user
@@ -667,10 +666,6 @@ class DealOrderList(LoginRequiredMixin, ListView):
     template_name = 'b24online/Products/dealOrderList.html'
     current_section = _('Basket')
 
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
-
     def get_queryset(self):
         qs = super(DealOrderList, self).get_queryset()\
             .prefetch_related('customer_organization', 'created_by')
@@ -695,19 +690,11 @@ class DealOrderDetail(LoginRequiredMixin, ItemDetail):
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
 
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
-
 
 class DealOrderPayment(LoginRequiredMixin, ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
-
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
@@ -722,7 +709,6 @@ class DealList(LoginRequiredMixin, ListView):
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals history')
 
-    #@method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if self.request.is_ajax():
             self.template_name = \
@@ -752,10 +738,6 @@ class DealDetail(LoginRequiredMixin, ItemDetail):
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
 
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
-
     def get_queryset(self):
         return super().get_queryset().prefetch_related('deal_order', 
             'supplier_company')
@@ -767,10 +749,6 @@ class DealPayment(LoginRequiredMixin, ItemDetail):
     current_section = _('Deals history')
     form_class = DealPaymentForm
     success_url = reverse_lazy('products:deal_order_basket')
-
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -791,10 +769,6 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
     template_name = 'b24online/Products/dealPayPal.html'
     current_section = _('Deals history')
     success_url = reverse_lazy('products:deal_order_basket')
-
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -828,10 +802,6 @@ class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
-
-    #@method_decorator(login_required)
-    #def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
