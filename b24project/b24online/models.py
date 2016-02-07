@@ -37,7 +37,8 @@ from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeign
 from registration.signals import user_registered
 from uuslug import uuslug
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
-from b24online.utils import generate_upload_path, reindex_instance, document_upload_path
+from b24online.utils import (generate_upload_path, reindex_instance, 
+                             document_upload_path, get_current_organization)
 from tpp.celery import app
 
 CURRENCY = [
@@ -1873,7 +1874,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         if self.customer_type == self.AS_PERSON:
             return self.created_by
         elif self.customer_type == self.AS_ORGANIZATION:
-            return self.customer_organization.name
+            return self.customer_organization
         else:
             return None
 
@@ -1967,18 +1968,23 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         verbose_name_plural = _('Purchase deal')
 
     @classmethod
-    def get_user_deals(cls, user, status=DRAFT):
+    def get_current_deals(cls, request, statuses=None):
         """
         Return the deals for user's companies.
         """
-        if user.is_authenticated():
-            org_ids = get_objects_for_user(
-                user, ['b24online.manage_organization'],
-                Organization.get_active_objects().all(), with_superuser=False)
-            return cls.objects.filter(status=status, 
-                                      supplier_company_id__in=org_ids)
+        logger.debug('Step 1')
+        if request.user.is_authenticated():
+            logger.debug('Step 2')
+            qs = cls.objects.filter(
+                supplier_company=get_current_organization(request)
+            )
+            logger.debug(qs)
+            if statuses:
+                qs = qs.filter(status__in=statuses)           
+            logger.debug(qs)
         else:
-            return cls.objects.none()
+            qs = cls.objects.none()
+        return qs
 
     def __str__(self):
         _data = [_('Deal from %s') % self.created,]

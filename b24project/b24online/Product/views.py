@@ -26,7 +26,8 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import get_permitted_orgs
+from b24online.utils import (get_current_organization, get_permitted_orgs)
+
 
 logger = logging.getLogger(__name__)
 
@@ -614,66 +615,47 @@ class DeleteB2BProductDocument(DeleteDocument):
     owner_model = B2BProduct
 
 
-class B2BProductBuy(ItemDetail):
+class B2_ProductBuy(ItemDetail):
+    model = None
+    template_name = None
+    current_section = None
+    form_class = B2_ProductBuyForm
+    
+    def get_queryset(self):
+        return super().get_queryset()\
+            .prefetch_related('company', 'company__countries')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object)
+        context.update({'form': form})
+        return self.render_to_response(context)
+                    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object, data=request.POST)
+        if form.is_valid():
+            item = form.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def get_context_data(self, request, **kwargs):
+        self.object = self.get_object()
+        return super(B2_ProductBuy, self).get_context_data(**kwargs)
+
+
+class B2BProductBuy(B2_ProductBuy):
     model = B2BProduct
     template_name = 'b24online/Products/buyB2BProduct.html'
     current_section = _('Products B2B')
-    form_class = B2_ProductBuyForm
-    
-    def get_queryset(self):
-        return super().get_queryset()\
-            .prefetch_related('company', 'company__countries')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object)
-        context.update({'form': form})
-        return self.render_to_response(context)
-                    
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object, data=request.POST)
-        if form.is_valid():
-            item = form.save()
-            return HttpResponseRedirect(
-                reverse('products:deal_order_basket'))
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def get_context_data(self, request, **kwargs):
-        self.object = self.get_object()
-        return super(B2BProductBuy, self).get_context_data(**kwargs)
 
 
-class B2CProductBuy(ItemDetail):
+class B2CProductBuy(B2_ProductBuy):
     model = B2CProduct
     template_name = 'b24online/Products/buyB2CProduct.html'
     current_section = _('Products B2C')
-    form_class = B2_ProductBuyForm
-    
-    def get_queryset(self):
-        return super().get_queryset()\
-            .prefetch_related('company', 'company__countries')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object)
-        context.update({'form': form})
-        return self.render_to_response(context)
-                    
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object, data=request.POST)
-        if form.is_valid():
-            item = form.save()
-            return HttpResponseRedirect(
-                reverse('products:deal_order_basket'))
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def get_context_data(self, request, **kwargs):
-        self.object = self.get_object()
-        return super(B2CProductBuy, self).get_context_data(**kwargs)
 
 
 class DealOrderList(ListView):
@@ -742,12 +724,20 @@ class DealList(ListView):
 
     def get_queryset(self):
         qs = super(DealList, self).get_queryset()
-        qs = qs.filter(supplier_company__in=get_permitted_orgs(
-            self.request.user))
+        qs = qs.filter(
+            supplier_company=get_current_organization(self.request)
+        )
         by_status = self.request.GET.get('status')
         if by_status:
             qs = qs.filter(status=by_status)
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(DealList, self).get_context_data(**kwargs)
+        context.update(
+            {'current_organization': get_current_organization(self.request)}
+        )
+        return context
         
 
 class DealDetail(ItemDetail):
@@ -782,7 +772,7 @@ class DealPayment(ItemDetail):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(request, instance=self.object, data=request.GET)
+        form = self.form_class(request, instance=self.object, data=request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(self.success_url)

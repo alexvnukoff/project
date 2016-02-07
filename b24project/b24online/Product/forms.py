@@ -153,24 +153,19 @@ class B2_ProductBuyForm(forms.Form):
 
     def send_notification(self, deal_item):
         """
-        Send the notications.
-        """        
-        notification_template = getattr(settings, 'DEAL_NOTICATION_TEMPLATE')
+        Send the notifications.
+        """
+        notific_disable = getattr(settings, 'ORDER_NOTIFICATION_DISABLE')
+        notific_template = getattr(settings, 'ORDER_NOTIFICATION_TEMPLATE')
         email = deal_item.deal.supplier_company.email
-        if notification_template and email:
-            context = {
-                'deal_item': deal_item, 
-            }
-            supplier = deal_item.deal.supplier_company
-            message = render_to_string(notification_template, context)
+        
+        if not notific_disable and notific_template and email:
+            message = render_to_string(notific_template, 
+                                       {'deal_item': deal_item,})
             subject = _('The info about ordered product. %(deal)s') \
-                % {'deal': deal_item.deal}
-            mail = EmailMessage(
-                subject,
-                message,
-                'noreply@tppcenter.com',
-                [email, 'orders@b24online.com']
-            )
+                        % {'deal': deal_item.deal}
+            mail = EmailMessage(subject, message, 'noreply@tppcenter.com',
+                                [email, 'orders@b24online.com'])
             mail.send()
 
     def save(self):

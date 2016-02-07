@@ -230,10 +230,11 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
     from django.db import models
     from b24online.models import Organization
     from guardian.shortcuts import get_objects_for_user
+
     qs = get_objects_for_user(user, [permission],
         Organization.get_active_objects().all(), with_superuser=False)
+
     if model_klass and issubclass(model_klass, models.Model):
         model_content_type = ContentType.objects.get_for_model(model_klass)
         qs = qs.filter(polymorphic_ctype_id=model_content_type)
     return qs
-                   

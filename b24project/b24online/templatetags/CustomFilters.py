@@ -332,7 +332,6 @@ def process_event(event_stored_data, request):
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
 
-
 @register.filter
 def deal_order_quantity(request):
     """
@@ -346,24 +345,23 @@ def deal_order_quantity(request):
             Organization.get_active_objects().all(), 
             with_superuser=False)
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
-            .filter(
-                ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
+            .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
             ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
-                Q(deal__deal_order__created_by=request.user)) | \
-            (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
-                Q(deal__deal_order__customer_organization_id__in=org_ids))))\
+             Q(deal__deal_order__created_by=request.user)) | \
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
+             Q(deal__deal_order__customer_organization_id__in=org_ids))))\
             .count()
     else:
         return None
 
 
 @register.filter
-def deal_quantity(request):
+def deal_number(request):
     """
     Return the paid deals count.
     """
     from b24online.models import Deal
-    return Deal.get_user_deals(request.user, status=Deal.PAID)\
+    return Deal.get_current_deals(request, statuses=[Deal.PAID, Deal.ORDERED])\
         .count() if request.user.is_authenticated() else 0
 
 
