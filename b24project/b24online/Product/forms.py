@@ -2,17 +2,22 @@
 
 import logging
 
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django import forms
+from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
+from django.conf import settings
+
 from guardian.shortcuts import get_objects_for_user
 
 from b24online.models import (B2BProduct, AdditionalPage, Organization, 
-    DealOrder, Deal, DealItem)
+    DealOrder, Deal, DealItem, Company)
 from centerpokupok.models import B2CProduct
+from b24online.utils import get_permitted_orgs
 
 logger = logging.getLogger(__name__)
 
@@ -119,15 +124,19 @@ class B2_ProductBuyForm(forms.Form):
         self._request = request        
         self._product = product
         self._supplier = product.company
+        self.has_companies = False
         
         # The 'customer_organization' field choices 
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), with_superuser=False)
-        orgs = Organization.objects.filter(pk__in=org_ids).order_by('id')
-        self.fields['customer_organization'].choices = \
-            ((item.id, item.name) for item in orgs)
+        orgs = get_permitted_orgs(request.user, model_klass=Company)
         self.initial['customer_type'] = DealOrder.AS_PERSON
+        if orgs:
+            self.fields['customer_organization'].choices = \
+                ((item.id, item.name) for item in orgs)
+            self.has_companies = True
+        else:
+            del self.fields['customer_organization']
+            self.fields['customer_type'].widget = forms.HiddenInput()
+
         self.initial['quantity'] = 1
 
     def clean_customer_type(self):
@@ -142,50 +151,80 @@ class B2_ProductBuyForm(forms.Form):
             self._customer = self._request.user
         return self._customer_type
 
-    @transaction.atomic                    
+    def send_notification(self, deal_item):
+        """
+        Send the notications.
+        """        
+        notification_template = getattr(settings, 'DEAL_NOTICATION_TEMPLATE')
+        email = deal_item.deal.supplier_company.email
+        if notification_template and email:
+            context = {
+                'deal_item': deal_item, 
+            }
+            supplier = deal_item.deal.supplier_company
+            message = render_to_string(notification_template, context)
+            subject = _('The info about ordered product. %(deal)s') \
+                % {'deal': deal_item.deal}
+            mail = EmailMessage(
+                subject,
+                message,
+                'noreply@tppcenter.com',
+                [email, 'orders@b24online.com']
+            )
+            mail.send()
+
     def save(self):
-        if self._customer_type == DealOrder.AS_ORGANIZATION:
-            deal_order, created = DealOrder.objects\
-                .get_or_create(
-                    customer_type=self._customer_type,
-                    customer_organization_id=self._customer, 
-                    status=DealOrder.DRAFT)
+        """
+        Save deal and it's new item.
+        """
+        try:
+            with transaction.atomic():
+                if self._customer_type == DealOrder.AS_ORGANIZATION:
+                    deal_order, created = DealOrder.objects\
+                        .get_or_create(
+                            customer_type=self._customer_type,
+                            customer_organization_id=self._customer, 
+                            status=DealOrder.DRAFT)
+                else:
+                    deal_order, created = DealOrder.objects\
+                        .get_or_create(
+                            customer_type=self._customer_type,
+                            created_by=self._customer, 
+                            status=DealOrder.DRAFT)
+                if created or not deal_order.total_cost:
+                    deal_order.total_cost = 0
+                deal_order.total_cost += \
+                    self._product.cost * self.cleaned_data['quantity']
+                deal_order.created_by = self._request.user
+                deal_order.save()
+
+                deal, created = Deal.objects\
+                    .get_or_create(
+                        deal_order=deal_order,
+                        supplier_company=self._supplier,
+                        status=DealOrder.DRAFT)
+                if created or not deal.total_cost:
+                    deal.total_cost = 0
+                deal.total_cost += \
+                    self._product.cost * self.cleaned_data['quantity']
+                deal.created_by = self._request.user
+                deal.save()
+
+                model_type = ContentType.objects.get_for_model(self._product)
+                deal_item = DealItem.objects\
+                    .create(
+                        deal=deal,
+                        content_type=model_type,
+                        object_id=self._product.pk,
+                        quantity=self.cleaned_data['quantity'],
+                        currency=self._product.currency,
+                        cost=self._product.cost)
+        except IntegrityError:
+            raise
         else:
-            deal_order, created = DealOrder.objects\
-                .get_or_create(
-                    customer_type=self._customer_type,
-                    created_by=self._customer, 
-                    status=DealOrder.DRAFT)
-        if created or not deal_order.total_cost:
-            deal_order.total_cost = 0
-        deal_order.total_cost += \
-            self._product.cost * self.cleaned_data['quantity']
-        deal_order.created_by = self._request.user
-        deal_order.save()
-
-        deal, created = Deal.objects\
-            .get_or_create(
-                deal_order=deal_order,
-                supplier_company=self._supplier,
-                status=DealOrder.DRAFT)
-        if created or not deal.total_cost:
-            deal.total_cost = 0
-        deal.total_cost += \
-            self._product.cost * self.cleaned_data['quantity']
-        deal.created_by = self._request.user
-        deal.save()
-
-        model_type = ContentType.objects.get_for_model(self._product)
-        deal_item = DealItem.objects\
-            .create(
-                deal=deal,
-                content_type=model_type,
-                object_id=self._product.pk,
-                quantity=self.cleaned_data['quantity'],
-                currency=self._product.currency,
-                cost=self._product.cost)
+            self.send_notification(deal_item)
         return deal_order
-
+        
 
 class DealPaymentForm(forms.ModelForm):
 

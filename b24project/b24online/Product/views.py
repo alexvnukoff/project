@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import sys
 import logging
 
 from django.db import transaction
@@ -25,7 +26,7 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import get_managed_org_ids
+from b24online.utils import get_permitted_orgs
 
 logger = logging.getLogger(__name__)
 
@@ -741,9 +742,8 @@ class DealList(ListView):
 
     def get_queryset(self):
         qs = super(DealList, self).get_queryset()
-        org_ids = get_managed_org_ids(self.request.user)
-        qs = qs.filter(supplier_company_id__in=org_ids)
-
+        qs = qs.filter(supplier_company__in=get_permitted_orgs(
+            self.request.user))
         by_status = self.request.GET.get('status')
         if by_status:
             qs = qs.filter(status=by_status)

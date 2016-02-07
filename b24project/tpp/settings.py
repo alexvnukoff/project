@@ -326,3 +326,6 @@ try:
     from local_settings import *
 except ImportError as e:
     logging.info(e)
+
+# The text template for notification about ordered product
+DEAL_NOTICATION_TEMPLATE = 'b24online/Products/notification.txt'
