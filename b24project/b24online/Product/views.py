@@ -670,7 +670,7 @@ class DealOrderList(LoginRequiredMixin, ListView):
         qs = super(DealOrderList, self).get_queryset()\
             .prefetch_related('customer_organization', 'created_by')
         qs = qs.filter(
-            (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
+            (Q(customer_type=DealOrder.AS_PERSON) & \
              Q(created_by=self.request.user)) | \
             (Q(customer_type=DealOrder.AS_ORGANIZATION) & \
              Q(customer_organization__in=get_permitted_orgs(
