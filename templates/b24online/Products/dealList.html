@@ -20,6 +20,21 @@
 {% block js %}
     {{ block.super }}
     <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
+    <script  type="text/javascript">
+        $(document).ready(function () {
+            document.body.onclick = function (e) {
+                e = e || event;
+                var target = e.target || e.srcElement;
+                alert('tag = ' + target.tagName + '; id = ' +
+                    target.id +'; class = ' + target.className)
+            }
+            $('#deals-tabs').on('tabsload', function( event, ui ) {
+                alert('OKOKO');
+            });
+        });
+        
+    </script>
+    
 {% endblock %}
 
 {% block keywords %}{% endblock %}
@@ -28,9 +43,9 @@
     <div class="tab-cate">
         <ul>
             <li><a href="#deals-tabs">{% trans 'All deals' %}</a></li>
-            <li><a href="{% url 'products:deal_filtered_list' 'draft' %}">{% trans 'Ready to pay' %}</a></li>
-            <li><a href="{% url 'products:deal_filtered_list' 'ordered' %}">{% trans 'Ordered by email' %}</a></li>
-            <li><a href="{% url 'products:deal_filtered_list' 'paid' %}">{% trans 'Paid dals' %}</a></li>
+            <li><a href="{% url 'products:deal_list' %}?status=draft">{% trans 'Ready to pay' %}</a></li>
+            <li><a href="{% url 'products:deal_list' %}?status=ordered">{% trans 'Ordered by email' %}</a></li>
+            <li><a href="{% url 'products:deal_list' %}?status=paid">{% trans 'Paid dals' %}</a></li>
         </ul>
     </div>
     <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">

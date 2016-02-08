@@ -3,8 +3,9 @@
  */
 $(document).ready(function() {
        socket_connect();
-
-        function socket_connect() {
+       
+       function socket_connect() {
+           //return;
             socket = new SockJS('http://' + window.location.hostname + ':9999/orders');  // ваш порт для асинхронного сервиса
             // при соединении вызываем событие login, которое будет выполнено на серверной стороне
 

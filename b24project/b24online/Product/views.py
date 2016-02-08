@@ -722,7 +722,7 @@ class DealList(LoginRequiredMixin, ListView):
         qs = qs.filter(
             supplier_company=get_current_organization(self.request)
         )
-        by_status = self.request.GET.get('status')
+        by_status = self.kwargs.get('status') or self.request.GET.get('status')
         if by_status:
             qs = qs.filter(status=by_status)
         return qs
