@@ -23,7 +23,7 @@ from b24online.models import (B2BProduct, Company, Chamber, Country,
     B2BProductCategory, DealOrder, Deal, DealItem, Organization)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
-    B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
+    B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from b24online.utils import (get_current_organization, get_permitted_orgs)
@@ -709,6 +709,7 @@ class DealList(LoginRequiredMixin, ListView):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals history')
+    form_class = DealListFilterForm
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.is_ajax():
@@ -728,9 +729,19 @@ class DealList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DealList, self).get_context_data(**kwargs)
-        context.update(
-            {'current_organization': get_current_organization(self.request)}
-        )
+        logger.debug(context)
+        qs = Deal.objects.all()
+        if 'filter' in self.request.GET:
+            form = self.form_class(data=self.request.GET)
+            if form.is_valid():
+                qs = form.filter(qs)
+        else:
+            form = self.form_class()
+        context.update({
+            'current_organization': get_current_organization(self.request),
+            'form': form,
+        })
+                
         return context
         
 

@@ -157,15 +157,17 @@ class B2_ProductBuyForm(forms.Form):
         """
         notific_disable = getattr(settings, 'ORDER_NOTIFICATION_DISABLE')
         notific_template = getattr(settings, 'ORDER_NOTIFICATION_TEMPLATE')
+        notific_from = getattr(settings, 'ORDER_NOTIFICATION_FROM')
+        notific_to = getattr(settings, 'ORDER_NOTIFICATION_TO')
         email = deal_item.deal.supplier_company.email
-        
-        if not notific_disable and notific_template and email:
+        if not notific_disable and all((notific_template, email,
+                                        notific_from, notific_to)):
             message = render_to_string(notific_template, 
                                        {'deal_item': deal_item,})
             subject = _('The info about ordered product. %(deal)s') \
                         % {'deal': deal_item.deal}
-            mail = EmailMessage(subject, message, 'noreply@tppcenter.com',
-                                [email, 'orders@b24online.com'])
+            mail = EmailMessage(subject, message, notific_from,
+                                [email, notific_to])
             mail.send()
 
     def save(self):
@@ -254,3 +256,40 @@ class DealPaymentForm(forms.ModelForm):
         super(DealPaymentForm, self).save(*args, **kwargs)
         self.instance.pay()
         return self.instance
+
+
+class DealListFilterForm(forms.Form):
+    """
+    The search form for :class:`Deal`.
+    """
+    supplier_company_name = forms.CharField(
+        label=_('Supplier company'),
+        required=False
+    )
+    product_name = forms.CharField(
+        label=_('Product'),
+        required=False
+    )
+    start_date = forms.DateField(
+        label=_('From'),
+        input_formats=["%d/%m/%Y"],
+        widget=forms.DateInput(format = '%d/%m/%Y'),
+        required=False
+    )
+    end_date = forms.DateField(
+        label=_('Till'),
+        input_formats=["%d/%m/%Y"],
+        widget=forms.DateInput(format = '%d/%m/%Y'),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        """
+        Set the initial values.
+        """
+        super(DealListFilterForm, self).__init__(*args, **kwargs)
+        self.fields['start_date'].widget.attrs.update({'class': 'date'})
+        self.fields['end_date'].widget.attrs.update({'class': 'date'})
+        
+    def filter(self, qs):
+        return qs

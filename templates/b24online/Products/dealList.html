@@ -13,7 +13,13 @@
 {% block styles %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href='{% static "b24online/css/company.css" %}' />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}" />
     <link type="text/css" rel="stylesheet" href='{% static "b24online/css/extra.css" %}' />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
 {% endblock %}
 
 {% block keywords %}{% endblock %}
@@ -22,9 +28,9 @@
     <div class="tab-cate">
         <ul>
             <li><a href="#deals-tabs">{% trans 'All deals' %}</a></li>
-            <li><a href="{{ url.path }}?status=draft">{% trans 'Ready to pay' %}</a></li>
-            <li><a href="{{ url.path }}?status=ordered">{% trans 'Ordered by email' %}</a></li>
-            <li><a href="{{ url.path }}?status=paid">{% trans 'Paid dals' %}</a></li>
+            <li><a href="{% url 'products:deal_filtered_list' 'draft' %}">{% trans 'Ready to pay' %}</a></li>
+            <li><a href="{% url 'products:deal_filtered_list' 'ordered' %}">{% trans 'Ordered by email' %}</a></li>
+            <li><a href="{% url 'products:deal_filtered_list' 'paid' %}">{% trans 'Paid dals' %}</a></li>
         </ul>
     </div>
     <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">

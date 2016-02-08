@@ -330,3 +330,5 @@ except ImportError as e:
 # The text template for notification about ordered product
 ORDER_NOTIFICATION_TEMPLATE = 'b24online/Products/notification.txt'
 ORDER_NOTIFICATION_DISABLE = False
+ORDER_NOTIFICATION_FROM = 'noreply@tppcenter.com'
+ORDER_NOTIFICATION_TO = 'orders@b24online.com'

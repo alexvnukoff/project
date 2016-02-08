@@ -5,6 +5,30 @@
 
 {% if not as_insert%}<div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
 <div class="data">
+    {% if form %}
+    <div class="data">
+        <form action="" method="get">
+        <p class="toggle-next" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
+        <ul class="form-control" style="display: none;">
+            <fieldset class="dcol">
+              {% for field in form %}  
+              <li>
+                <label>{{ field.label }}:</label>
+                <p>{{ field }}</p>
+                {% if form.is_bound and field.errors %}
+                <p class="errors">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </li>
+              {% endfor %}
+              <li>
+                <input type="submit" name="filter" value="{% trans 'Search' %}" />
+              </li>
+            </fieldset>
+        </ul>
+        </form>
+    </div>
+    {% endif %}
+
     <h1>{% trans 'Deals list' %} {% trans 'for' %} {{ current_organization }}</h1>
     <hr class="hr-divider-one">
     <div class="data">
