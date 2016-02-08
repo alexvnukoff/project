@@ -729,19 +729,21 @@ class DealList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DealList, self).get_context_data(**kwargs)
-        logger.debug(context)
-        qs = Deal.objects.all()
+        qs = context.get('deal_list', Deal.objects.none())
+        is_filtered = False
         if 'filter' in self.request.GET:
             form = self.form_class(data=self.request.GET)
             if form.is_valid():
+                is_filtered = True
                 qs = form.filter(qs)
         else:
             form = self.form_class()
         context.update({
+            'object_list': qs,
             'current_organization': get_current_organization(self.request),
             'form': form,
+            'is_filtered': is_filtered,
         })
-                
         return context
         
 
@@ -801,7 +803,6 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
                     "currency_code": currency
                 }
                 paypal_form = PayPalPaymentsForm(initial=paypal_dict)
-                logger.debug(dir(paypal_form))    
                 paypal_forms.append(paypal_form)
         context.update({
             'paypal_forms': paypal_forms,

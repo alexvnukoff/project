@@ -3,6 +3,7 @@
 import logging
 
 from django.db import transaction, IntegrityError
+from django.db.models import Q
 from django import forms
 from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
@@ -262,8 +263,8 @@ class DealListFilterForm(forms.Form):
     """
     The search form for :class:`Deal`.
     """
-    supplier_company_name = forms.CharField(
-        label=_('Supplier company'),
+    customer_name = forms.CharField(
+        label=_('Customer company'),
         required=False
     )
     product_name = forms.CharField(
@@ -292,4 +293,22 @@ class DealListFilterForm(forms.Form):
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
         
     def filter(self, qs):
+        customer_name, product_name, start_date, end_date,  = \
+            list(map(lambda x: self.cleaned_data.get(x), self.fields.keys()))
+        if start_date:
+            qs = qs.filter(created_at__gte=start_date) 
+        if end_date:
+            qs = qs.filter(created_at__lte=end_date) 
+        if customer_name:
+            qs = qs.filter(
+                (Q(deal_order__customer_type=DealOrder.AS_PERSON, 
+                   deal_order__created_by__profile__isnull=False) & \
+                (Q(deal_order__created_by__profile__first_name__icontains=\
+                    customer_name) | \
+                 Q(deal_order__created_by__profile__last_name__icontains=\
+                       customer_name))) | \
+                 Q(deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+                   deal_order__customer_organization__company__isnull=False,
+                   deal_order__customer_organization__company__name__icontains=\
+                       customer_name))
         return qs

@@ -1972,16 +1972,12 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         Return the deals for user's companies.
         """
-        logger.debug('Step 1')
         if request.user.is_authenticated():
-            logger.debug('Step 2')
             qs = cls.objects.filter(
                 supplier_company=get_current_organization(request)
             )
-            logger.debug(qs)
             if statuses:
                 qs = qs.filter(status__in=statuses)           
-            logger.debug(qs)
         else:
             qs = cls.objects.none()
         return qs

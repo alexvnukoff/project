@@ -8,8 +8,8 @@
     {% if form %}
     <div class="data">
         <form action="" method="get">
-        <p class="toggle-next" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
-        <ul class="form-control" style="display: none;">
+        <p class="toggle-next {% if is_filtered %}force-open{% endif %}" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
+        <ul class="form-control" {% if not is_filtered %}style="display: none;"{% endif %}>
             <fieldset class="dcol">
               {% for field in form %}  
               <li>
