@@ -666,6 +666,19 @@ class DealOrderList(LoginRequiredMixin, ListView):
     template_name = 'b24online/Products/dealOrderList.html'
     current_section = _('Basket')
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Define if the Order status was has been set for simple filter or
+        basket.
+        
+        If the basket was requested set the template.
+        """
+        self.status = self.kwargs.get('status')
+        self.is_basket = self.status == 'basket'
+        if self.is_basket:  
+            self.template_name = 'b24online/Products/dealOrderBasket.html'
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         qs = super(DealOrderList, self).get_queryset()\
             .prefetch_related('customer_organization', 'created_by')
@@ -675,14 +688,10 @@ class DealOrderList(LoginRequiredMixin, ListView):
             (Q(customer_type=DealOrder.AS_ORGANIZATION) & \
              Q(customer_organization__in=get_permitted_orgs(
                  self.request.user))))
-        
-        by_status = self.kwargs.get('status')
-        if by_status:
-            if by_status == 'basket':
-                qs = qs.filter(~Q(status=DealOrder.PAID))
-                self.template_name = 'b24online/Products/dealOrderBasket.html'
-            else:
-                qs = qs.filter(status=by_status)
+        if self.is_basket:
+            qs = qs.filter(~Q(status=DealOrder.PAID))
+        elif self.status:
+            qs = qs.filter(status=self.status)
         return qs
 
 
