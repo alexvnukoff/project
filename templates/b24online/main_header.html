@@ -8,7 +8,7 @@
         </div>
         <div class="tophead-r">
             <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span>Facebook</a>
-            <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span>Google</a>
+            {% comment %}<a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span>Google</a>{% endcomment %}
         	<a href="{% url 'auth_login' %}" title=""><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'registration_register' %}" title=""><font>{% trans 'Sign up' %}</font></a>
         </div>
     </div>
