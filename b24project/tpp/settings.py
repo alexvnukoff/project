@@ -21,8 +21,10 @@ EMAIL_HOST_USER = 'noreply@b24online.com'
 EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
 CELERY_SEND_TASK_ERROR_EMAILS = True
+
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+RAISE_EXCEPTIONS = True
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
@@ -84,7 +86,9 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                'tpp.context_processors.site_processor'
+                "tpp.context_processors.site_processor",
+                "social.apps.django_app.context_processors.backends",
+                "social.apps.django_app.context_processors.login_redirect"
             )
         }
     },
@@ -103,6 +107,7 @@ DJANGO_APPS = (
 )
 
 LOCAL_APPS = (
+    'social.apps.django_app.default',
     'raven.contrib.django.raven_compat',
     'b24online',
     'jobs',
@@ -245,9 +250,42 @@ AUTH_USER_MODEL = 'b24online.User'
 MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(BASE_DIR, '..', 'uploads').replace('\\', '/'))
 
+# FACEBOOK
+SOCIAL_AUTH_FACEBOOK_KEY = '1701658433380177'
+SOCIAL_AUTH_FACEBOOK_SECRET = '72a75fd39cc67a7682e23c4939b48d1e'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'id,name,email',}
+
+# GOOGLE
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '941800294954-4vsfrb8u7ctc6bjvvfree9m9ja54d6bp.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'KPftndibEQQ5fvqYQyRqebR9'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email',]
+
 AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.open_id.OpenIdAuth',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend'
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.mail.mail_validation',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
 )
 
 
