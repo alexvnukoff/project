@@ -679,7 +679,10 @@ class DealOrderList(LoginRequiredMixin, ListView):
         by_status = self.kwargs.get('status')
         if by_status:
             if by_status == 'basket':
-                qs = qs.filter(~Q(status=DealOrder.PAID))
+                qs = qs.filter(deals_list__status=Deal.DRAFT)\
+                    .annotate(deals_amount=Count('deals_list'))\
+                    .filter(deals_amount__gt=0)
+
                 self.template_name = 'b24online/Products/dealOrderBasket.html'
             else:
                 qs = qs.filter(status=by_status)

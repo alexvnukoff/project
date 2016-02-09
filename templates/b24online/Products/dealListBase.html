@@ -85,4 +85,25 @@
       </table>  
     </div>
 </div>
-{% if not as_insert%}</div>{% endif %}
+{% if not as_insert %}
+</div>
+{% autoescape off %}
+<script  type="text/javascript">
+    $('.toggle-next').not('.force-open').each(
+        function () {
+        $(this).next().hide();
+        });
+    $('.toggle-next.force-open').addClass('toggled');
+    $('.toggle-next').click(
+        function () {
+            $(this).toggleClass('toggled').next().toggle();
+    });
+    $( ".date" ).datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "2010:",
+        dateFormat: "dd/mm/yy"
+    });
+</script>    
+{% endautoescape %}
+{% endif %}
