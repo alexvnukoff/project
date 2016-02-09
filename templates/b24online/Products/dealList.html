@@ -20,19 +20,6 @@
 {% block js %}
     {{ block.super }}
     <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
-    <script  type="text/javascript">
-        $(document).ready(function () {
-            document.body.onclick = function (e) {
-                e = e || event;
-                var target = e.target || e.srcElement;
-                alert('tag = ' + target.tagName + '; id = ' +
-                    target.id +'; class = ' + target.className)
-            }
-            $('#deals-tabs').on('tabsload', function( event, ui ) {
-                alert('OKOKO');
-            });
-        });
-        
     </script>
     
 {% endblock %}

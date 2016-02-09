@@ -23,7 +23,8 @@ from b24online.models import (B2BProduct, Company, Chamber, Country,
     B2BProductCategory, DealOrder, Deal, DealItem, Organization)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
-    B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm)
+    B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
+    DealItemFormSet)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from b24online.utils import (get_current_organization, get_permitted_orgs)
@@ -665,6 +666,15 @@ class DealOrderList(LoginRequiredMixin, ListView):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderList.html'
     current_section = _('Basket')
+    item_formset = None
+
+    @classmethod
+    def get_deal_items_formset(cls, deal):
+        """
+        Construct the formset for Deal items.
+        """
+        assert isinstance(deal, Deal), _('Invalid parameter')
+        return DealItemFormSet(queryset=deal.get_items())
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -689,10 +699,44 @@ class DealOrderList(LoginRequiredMixin, ListView):
              Q(customer_organization__in=get_permitted_orgs(
                  self.request.user))))
         if self.is_basket:
-            qs = qs.filter(~Q(status=DealOrder.PAID))
+            qs = qs.filter(deals_list__status=Deal.DRAFT)\
+                .annotate(deals_amount=Count('deals_list'))\
+                .filter(deals_amount__gt=0)
         elif self.status:
             qs = qs.filter(status=self.status)
+
+        self.items_qs = DealItem.objects.filter(deal__status=Deal.DRAFT,
+            deal__deal_order__in=qs)
+            
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(DealOrderList, self).get_context_data(**kwargs)
+        
+        items_qs = DealItem.objects.filter(deal__status=Deal.DRAFT,
+            deal__deal_order__in=context.get('object_list'))
+        if self.request.method == 'POST':
+            self.item_formset = DealItemFormSet(queryset=items_qs,
+                                           data=self.request.POST)
+        else:
+            self.item_formset = DealItemFormSet(queryset=items_qs)
+        item_formset_dict = dict((item_form.instance.pk, item_form) \
+            for item_form in self.item_formset)
+
+        context.update({
+            'item_formset': self.item_formset,
+            'item_formset_dict': item_formset_dict,
+        })        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(**kwargs)
+        if self.item_formset and self.item_formset.is_valid():
+            self.item_formset.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        return self.render_to_response(context)
 
 
 class DealOrderDetail(LoginRequiredMixin, ItemDetail):

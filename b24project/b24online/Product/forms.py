@@ -8,6 +8,7 @@ from django import forms
 from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
+from django.forms import modelformset_factory
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
@@ -240,6 +241,7 @@ class DealPaymentForm(forms.ModelForm):
             self.initial['person_last_name'] = user.profile.last_name
             self.initial['person_country'] = user.profile.country
             self.initial['person_email'] = user.email
+            self.initial['person_phone_number'] = user.profile.mobile_number
 
     class Meta:
         model = Deal
@@ -312,3 +314,7 @@ class DealListFilterForm(forms.Form):
                    deal_order__customer_organization__company__name__icontains=\
                        customer_name))
         return qs
+
+
+# The formset for products in Basket
+DealItemFormSet = modelformset_factory(DealItem, fields=('quantity',), extra=0)

@@ -380,3 +380,17 @@ def get_by_content_type(item):
             except model_class.DoesNotExist:
                 pass
     return None
+
+
+@register.assignment_tag(takes_context=True)
+def apply_handler(context, handler_name, instance):
+    """
+    Apply some handler which was assign in context to instance.
+    """
+    handler = context.get(handler_name)
+    return handler(instance) if handler and callable(handler) else None
+
+
+@register.filter
+def get_item(container, key):
+    return container.get(key, None)

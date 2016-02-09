@@ -24,6 +24,9 @@
         <h1>{% trans 'Your basket' %}</h1>
         <hr class="hr-divider-one">
         <div class="data">
+            <form action="" method="post">
+            {% csrf_token %}
+            {{ item_formset.management_form }}
             {% for deal_order in object_list %}
             <div class="data">
                 {% with deal_order.get_customer as customer %}  
@@ -49,6 +52,10 @@
                       {% get_length items as items_len %}
 
                       {% for deal_item in deal.get_items %}
+                      {% with item_formset_dict|get_item:deal_item.pk as item_form %}
+                      {% for hidden in item_form.hidden_fields %}
+                        {{ hidden }}  
+                      {% endfor %}
                       <tr valign="top">
                         {% if forloop.first %}
                         <td rowspan="{{ items_len }}">
@@ -59,11 +66,11 @@
                         </td>
                         {% endif %}
                         <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
-                        <td align="center">{{ deal_item.quantity}}</td>
+                        <td align="center">{{ item_form.quantity }}</td>
                         <td align="center">{{ deal_item.cost }} {{ deal_item.currency|getSymbol }}</td>
                         {% if forloop.first %}
-                        <td rowspan="{{ items_len }}>
-                        {% with deal.get_total_cost as cost_list %}
+                        <td rowspan="{{ items_len }}">
+                          {% with deal.get_total_cost as cost_list %}
                           {% if cost_list %}
                           {% for cost, currency in cost_list %}
                             <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
@@ -82,13 +89,16 @@
                         </td>
                         {% endif %}
                       </tr>
+                      {% endwith %}
                       {% endfor %}
-                      {% endwith %}  
+                      {% endwith %}
                     {% endfor %}
                 </table> 
                 </div>
             </div>
             {% endfor %}
+            <input type="submit" name="update" value="{% trans 'Update' %}">
+            </form>
         </div>
     </div>
 </div>
