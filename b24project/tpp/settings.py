@@ -359,6 +359,7 @@ GEOIP_DB_PATH = '/usr/share/GeoIP/'
 
 # The Redis DB url for stats
 EVENT_STORE_REDIS_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com/1'
+ANALYTIC = True
 
 try:
     from local_settings import *

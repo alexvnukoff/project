@@ -6,19 +6,16 @@ Celery task for 'b24online' application.
 
 import logging
 import datetime
-
 from django.conf import settings
-
 from celery import task
 from celery.schedules import crontab, crontab_parser
 from celery.decorators import periodic_task
-
 from b24online.models import RegisteredEventStats
 from b24online.stats.utils import get_redis_connection, glue
 from b24online.stats.helpers import RegisteredEventHelper
 
-
 logger = logging.getLogger('b24online.tasks')
+
 
 @task(name='b24online.process_events_queue')
 def process_events_queue(request_uuid, extra_data):
@@ -28,29 +25,29 @@ def process_events_queue(request_uuid, extra_data):
     site_id = extra_data.get('site_id')
     rconn = get_redis_connection()
     if site_id and rconn:
-        queue_key = RegisteredEventHelper\
+        queue_key = RegisteredEventHelper \
             .get_request_key(request_uuid, 'queue')
         geo_data_key = RegisteredEventHelper.geo_data_key
         ready_to_process_key = RegisteredEventHelper.ready_to_process
-        
+
         while True:
             event_key_b = rconn.lpop(queue_key)
             if not event_key_b:
                 break
             event_key = event_key_b.decode()
             event_unique_key = glue(
-                event_key, 
+                event_key,
                 RegisteredEventHelper.get_unique_key(extra_data))
             if event_unique_key:
                 rconn.incr(event_unique_key)
-                geo_value = RegisteredEventHelper\
+                geo_value = RegisteredEventHelper \
                     .get_geoip_info_key(extra_data)
                 rconn.hset(geo_data_key, event_unique_key, geo_value)
                 rconn.sadd(ready_to_process_key, event_unique_key)
 
 
 @periodic_task(name='b24online.process_events_stats',
-    run_every=crontab(**{'hour': '*/6'}))
+               run_every=crontab(**{'hour': '*/6'}))
 def process_events_stats():
     today = datetime.date.today()
     rconn = get_redis_connection()
@@ -79,7 +76,7 @@ def process_events_stats():
                     rconn.hset(already_key, event_key, True)
 
                 geo_data = rconn.hget(geo_data_key, event_key)
-                geo_data = geo_data.decode()                
+                geo_data = geo_data.decode()
             try:
                 event_type_id, content_type_id, object_id = \
                     map(lambda x: int(x), event_key.split(':')[2:5])
@@ -87,7 +84,7 @@ def process_events_stats():
                 break
 
             try:
-                stats = RegisteredEventStats.objects\
+                stats = RegisteredEventStats.objects \
                     .get(event_type_id=event_type_id,
                          content_type_id=content_type_id,
                          object_id=object_id,
@@ -99,7 +96,7 @@ def process_events_stats():
                     object_id=object_id,
                     registered_at=today,
                     unique_amount=0, total_amount=0)
-            
+
             data = stats.extra_data or {}
             _add = {'unique': 1 if not already else 0, 'total': total}
             for _type in ('unique', 'total'):
@@ -115,7 +112,6 @@ def process_events_stats():
                 data[_key] = str(_new)
 
             stats.extra_data = data
-            stats.unique_amount += _add['unique']            
-            stats.total_amount += _add['total']            
+            stats.unique_amount += _add['unique']
+            stats.total_amount += _add['total']
             stats.save()
-
