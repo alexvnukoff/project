@@ -84,6 +84,7 @@ urlpatterns = [
     url(r'^company-manage/', b24online.views.my_companies),
     url(r'^set/(?P<item_id>[0-9]+)/$', b24online.views.set_current, name="setCurrent"),
     url(r'^branch-list$', b24online.views.branch_list, name="branch_list"),
+    url('', include('social.apps.django_app.urls', namespace='social')),
 ]
 
 if settings.DEBUG:
