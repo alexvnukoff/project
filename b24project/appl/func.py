@@ -539,10 +539,9 @@ def autocomplete_filter(filter_key, q, page):
             s = s.query('match', is_deleted=False)
 
         paginator = Paginator(s, 10)
-        hits = paginator.page(page).object_list.execute().hits
-        object_ids = [obj.django_id for obj in hits]
+        object_ids = [obj.django_id for obj in paginator.page(page).object_list]
 
-        return model_dict['model'].objects.filter(pk__in=object_ids), hits.total
+        return model_dict['model'].objects.filter(pk__in=object_ids), paginator.count
     else:
         objects = model_dict['model'].objects.all()
         paginator = Paginator(objects, 10)

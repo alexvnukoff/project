@@ -33,6 +33,10 @@ class RegisteredEventMiddleware(object):
         """
         Process the events queue and return HTTPResponse.
         """
+
+        if not settings.ANALYTIC:
+            return response
+
         request_uuid = getattr(request, '_uuid', None)
         if request_uuid:
             _ip = GeoIPHelper.get_random_ip() \
