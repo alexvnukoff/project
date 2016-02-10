@@ -334,7 +334,7 @@ BUCKET_REGION = 'eu-west-1'
 
 ##################### Celery settings ####################################
 CELERY_RESULT_BACKEND ='djcelery.backends.database:DatabaseBackend'
-CELERY_REDIS = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+CELERY_REDIS = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
 
 
 CELERY_TASK_SERIALIZER = "pickle"
