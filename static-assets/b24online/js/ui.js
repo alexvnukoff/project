@@ -1202,6 +1202,14 @@ var companyStructure =
         return false;
     },
 
+    setOptions: function(select, options) {
+        select.find('option').remove();
+        for (i in options) {
+            obj = options[i];
+            select.append('<option value="' + obj.value + '">' + obj.name + '</option>');
+        }
+    },
+
     setDepValues: function(action) {
         var self = this;
 
@@ -1254,33 +1262,33 @@ var companyStructure =
 
         var form = $(self.forms.vacancy);
         var input = form.find('#vac-name');
+        if (typeof STAFFGROUPS !== "undefined") {
+            var staffgroup_select = form.find('#staffgroups');
+            self.setOptions(staffgroup_select, 
+                        STAFFGROUP.unshift({'value': '', 'name': '----'}));
+        }
+        
         if (action == 'edit') {//edit
             input.val(self.item.text().trim());
         }
 
-        $.getJSON('/vacancy/staffgroup/options/', function(options) {
-            var replacement = '<select>';
-            $.each(options, function(index, option) {
-                replacement += '<option value="' + option.id + '">' + option.name + '</option>';
-            });
-            replacement += '</select>';
-            $('#staffgroups').replaceWith(replacement);
-        });
-
         form.on('click','#btn-add-vacancy', function() {
             var name = input.val().trim();
-
             if (!name)
                 return false;
-
             id = self.item.data('item-id');
+            staffgroup_value = staffgroup_select.val();
 
             var contentHolder = $('#structure-tab .tpp-dt-content');
-
             contentHolder.html(self.loader);
             self.hideOverlay();
 
-            $.post(self.structureURL, {name: name, id: id, action: action, type: 'vacancy'}, function(data) {
+            $.post(self.structureURL, {
+                    name: name, 
+                    id: id, 
+                    action: action, type: 'vacancy', 
+                    staffgroup: staffgroup_value
+                }, function(data) {
                     contentHolder.replaceWith(data);
             } , 'html');
 
@@ -1356,6 +1364,15 @@ var companyStaff =
     setForms: function() {
 
         var LANG = this.LANG;
+        var staffgroup_options = '';
+        if (typeof STAFFGROUPS !== "undefined") {
+            staffgroup_options += '<div class="title">' + LANG['extra_permissions_title'] + '</div>';
+            $.each(STAFFGROUPS, function(index, item) {
+                staffgroup_options += '<div class="holder">' +
+                    '<input type="checkbox" id="id-staffgroup-' + item.value + '">' + item.name +
+                '</div>';
+            });
+        }
 
         this.form =
                         '<div class="staffadd" id="add-user-popup">' +
@@ -1379,9 +1396,13 @@ var companyStaff =
                                     '<div class="holder">' +
                                         '<input type="checkbox" id="is-admin">' + LANG['popup_administrator'] +
                                     '</div>' +
+                                    '<div class="holder">' +
+                                        '<input type="checkbox" id="is-hidden-user">' + LANG['popup_hidden_user'] +
+                                    '</div>' +
+                                    '<div class="title">' + LANG['popup_user_title'] + '</div>' +
                                     '<div class="inputadd">' +
                                         '<input type="text" id="user-name" class="text" />' +
-                                    '</div>' +
+                                    '</div>' + staffgroup_options +
                                     '<div class="formadd-button">' +
                                         '<a class="btntype2" id="btn-add-user" href="#">' + LANG['popup_add'] + '</a>' +
                                         '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +

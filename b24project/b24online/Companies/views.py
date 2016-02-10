@@ -20,8 +20,9 @@ from guardian.shortcuts import get_objects_for_user
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
     DeleteGalleryImage, DeleteDocument, DocumentList
-from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Vacancy, Organization, Branch, Chamber
+from b24online.models import (Company, News, Tender, Exhibition, B2BProduct, 
+                              BusinessProposal, InnovationProject, 
+                              Vacancy, Organization, Branch, Chamber, StaffGroup)
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
 
 logger = logging.getLogger(__name__)
@@ -94,6 +95,11 @@ class CompanyDetail(ItemDetail):
     def _get_payed_status(self):
         # TODO
         pass
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({'staffgroups': StaffGroup.get_options()})
+        return context_data
 
 
 def _tab_news(request, company, page=1):
@@ -262,7 +268,7 @@ def _tab_structure(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
-        'item_pk': company
+        'item_pk': company,
     }
 
     return render_to_response('b24online/Companies/tabStructure.html', template_params, context_instance=RequestContext(request))
@@ -347,7 +353,7 @@ def _tab_staff(request, company, page=1):
         'url_paginator': url_paginator,
         'url_parameter': company,
         'item_pk': company,
-        'has_perm': organization.has_perm(request.user)
+        'has_perm': organization.has_perm(request.user),
     }
 
     return render_to_response('b24online/Companies/tabStaff.html', template_params, context_instance=RequestContext(request))

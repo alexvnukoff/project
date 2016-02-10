@@ -4,6 +4,11 @@
 
 <script>
     $(function(){
+        var STAFFGROUPS = [
+            {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
         companyStaff.init('{% url "companies:tab_staff" item_pk %}', LANG['staff']);
     });
 </script>

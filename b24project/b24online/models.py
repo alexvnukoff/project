@@ -759,6 +759,10 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
+    staffgroup = models.ForeignKey('StaffGroup', null=True, 
+                                   related_name='group_vacancies')
+    is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
+                                        default=False, db_index=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -2107,3 +2111,8 @@ class StaffGroup(models.Model):
         verbose_name = 'Group for staff'
         verbose_name_plural = 'Groups for staff'
 
+    @classmethod
+    def get_options(cls):
+        return ((item.id, item.group.name) \
+            for item in cls.objects.select_related('group')\
+                .order_by('group__name'))

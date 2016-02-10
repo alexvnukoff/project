@@ -77,11 +77,20 @@
             'popup_vac': '{% trans "Vacancy title" %}',
             'popup_administrator': '{% trans "Administrator" %}',
             'popup_title': '{% trans "Add staff" %}',
+            'popup_user_title': '{% trans "Add user email" %}',
             'popup_title_edit': '{% trans "Edit staff" %}',
             'popup_loading': '{% trans "Loading..." %}',
             'select_department': '{% trans "Select department" %}',
             'select_vacancy': '{% trans "Select vacancy" %}',
+            'popup_hidden_user': '{% trans "Do not show user" %}',
+            'extra_permissions_title': '{% trans "Select additional permissions" %}',
         };
+
+        var STAFFGROUPS = [
+            {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
     </script>
 
 {% endblock %}
