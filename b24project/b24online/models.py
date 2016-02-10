@@ -22,8 +22,8 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.db import models, transaction
-from django.db.models import Q
-from django.db.models.signals import pre_save, post_save
+from django.db.models import Q, F, Sum
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils._os import abspathu
@@ -1818,11 +1818,6 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50, 
                                 blank=True, null=True, db_index=True)
-    total_cost = models.DecimalField(_('Total order cost'), 
-                                     max_digits=15, decimal_places=2, 
-                                     null=True, blank=False, editable=False)
-    total_cost_data = JSONField(_('Total cost data'), null=True, blank=False, 
-                                editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
                                    null=True, blank=True, db_index=True)
     status = models.CharField(_('Order status'), max_length=10, 
@@ -1882,13 +1877,13 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         Return all Order's deals.
         """
-        return self.deals_list.order_by('id')
+        return self.order_deals.order_by('id')
 
     def get_draft_deals(self):
         """
         Return all Order's deals.
         """
-        return self.deals_list.filter(status='draft').order_by('id')
+        return self.order_deals.filter(status='draft').order_by('id')
 
     def get_status(self):
         """
@@ -1896,12 +1891,13 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         return dict(type(self).STATUSES).get(self.status)
        
-    def get_total_cost(self):
-        """
-        Return deal cost in different currencies.
-        """
-        for currency, cost in self.total_cost_data.items():
-            yield (cost, currency)
+    #def get_total_cost(self):
+    #    """
+    #    Return deal cost in different currencies.
+    #    """
+    #    qs = self.order_deals.annotate(cost=Sum('total_cost')).values()
+    #    for currency, cost in self.total_cost_data.items():
+    #        yield (cost, currency)
 
     @transaction.atomic
     def pay(self):
@@ -1926,11 +1922,11 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')), 
                 (PAID, _('Paid')), (ORDERED, _('Ordered by Email')))
 
-    deal_order = models.ForeignKey(DealOrder, related_name='deals_list',
+    deal_order = models.ForeignKey(DealOrder, related_name='order_deals',
                               verbose_name=_('Order'), null=False, blank=False,
                               editable=False)
     supplier_company = models.ForeignKey('Company', 
-                                         related_name='deals',
+                                         related_name='company_deals',
                                          verbose_name=_('Supplier company'),
                                          null=False, blank=False,
                                          editable=False)
@@ -1939,8 +1935,8 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     total_cost = models.DecimalField(_('Total deal cost'), 
                                      max_digits=15, decimal_places=2, 
                                      null=True, blank=False, editable=False)
-    total_cost_data = JSONField(_('Total cost data'), null=True, blank=False, 
-                                editable=False)
+    currency = models.CharField(_('Currence'), max_length=255, blank=True, 
+                                null=True, choices=CURRENCY)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
                                    null=True, blank=True, db_index=True)
     status = models.CharField(_('Deal status'), max_length=10, 
@@ -2007,13 +2003,6 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         return DealItem.objects.filter(deal=self).order_by('id')
 
-    def get_total_cost(self):
-        """
-        Return deal cost in different currencies.
-        """
-        for currency, cost in self.total_cost_data.items():
-            yield (cost, currency)
-
     def can_pay(self):
         return self.status == self.DRAFT
        
@@ -2040,7 +2029,7 @@ class DealItem(models.Model):
     CONTENT_TYPE_LIMIT = models.Q(app_label='b24onlie', model='b2bproduct') | \
         models.Q(app_label='centerpokupok', model='b2cproduct')
 
-    deal = models.ForeignKey(Deal, related_name='deal_items',
+    deal = models.ForeignKey(Deal, related_name='deal_products',
                               verbose_name=_('Deal'), null=False, blank=False,
                               editable=False)
     content_type = models.ForeignKey(ContentType,
@@ -2053,7 +2042,7 @@ class DealItem(models.Model):
                                null=True, blank=True)       
     currency = models.CharField(_('Currence'), max_length=255, blank=True, 
                                 null=True, choices=CURRENCY)
-    quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+    quantity = models.PositiveIntegerField(_('Quantity'))
 
     class Meta:
         verbose_name = 'Deal product'
@@ -2066,33 +2055,15 @@ class DealItem(models.Model):
         return self.cost * self.quantity
 
 
-@receiver(post_save, sender=DealItem)
-def reclaculate_order_cost(sender, instance, created, **kwargs):
+@receiver([post_save, post_delete], sender=DealItem)
+def recalculate_order_cost(sender, instance, *args, **kwargs):
     """
     Recalculate total cost of parents: deal and order
     """
-    assert isinstance(instance, DealItem), \
-        _('Invalid parameter')
+    assert isinstance(instance, DealItem), _('Invalid parameter')
         
-    if instance.currency and instance.cost and instance.quantity > 0:
-        if instance.deal.status == Deal.DRAFT:
-            data = instance.deal.total_cost_data or {}
-            if instance.currency in data:
-                data[instance.currency] += \
-                    float(instance.cost * instance.quantity)
-            else:
-                data[instance.currency] = \
-                    float(instance.cost * instance.quantity)
-            instance.deal.total_cost_data = data
-            instance.deal.save()
+    instance.deal.total_cost = instance.deal.deal_products\
+        .aggregate(total_cost=Sum(F('cost') * F('quantity'), 
+            output_field=models.FloatField())).get('total_cost', 0.0)
+    instance.deal.save()
 
-        if instance.deal.deal_order.status == DealOrder.DRAFT:
-            data = instance.deal.deal_order.total_cost_data or {}
-            if instance.currency in data:
-                data[instance.currency] += \
-                    float(instance.cost * instance.quantity)
-            else:
-                data[instance.currency] = \
-                    float(instance.cost * instance.quantity)
-            instance.deal.deal_order.total_cost_data = data
-            instance.deal.deal_order.save()

@@ -699,8 +699,8 @@ class DealOrderList(LoginRequiredMixin, ListView):
              Q(customer_organization__in=get_permitted_orgs(
                  self.request.user))))
         if self.is_basket:
-            qs = qs.filter(deals_list__status=Deal.DRAFT)\
-                .annotate(deals_amount=Count('deals_list'))\
+            qs = qs.filter(order_deals__status=Deal.DRAFT)\
+                .annotate(deals_amount=Count('order_deals'))\
                 .filter(deals_amount__gt=0)
         elif self.status:
             qs = qs.filter(status=self.status)
@@ -839,29 +839,24 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        paypal_forms = []
-
         if self.object.supplier_company.company_paypal_account:
-            for currency, cost in self.object.total_cost_data.items():                            
-                paypal_dict = {
-                    "business": self.object.supplier_company.company_paypal_account,
-                    "amount": cost,
-                    #"notify_url": self.request.build_absolute_uri(),
-                    #"return_url": self.request.build_absolute_uri(),
-                    #"cancel_return": self.request.build_absolute_uri(),
-                    "item_number": self.object,
-                    "item_name": self.object,
-                    "no_shipping": 0,
-                    "quantity": 1,
-                    "currency_code": currency
-                }
-                paypal_form = PayPalPaymentsForm(initial=paypal_dict)
-                paypal_forms.append(paypal_form)
+            paypal_dict = {
+                "business": self.object.supplier_company.company_paypal_account,
+                "amount": self.object.cost,
+                #"notify_url": self.request.build_absolute_uri(),
+                #"return_url": self.request.build_absolute_uri(),
+                #"cancel_return": self.request.build_absolute_uri(),
+                "item_number": self.object,
+                "item_name": self.object,
+                "no_shipping": 0,
+                "quantity": 1,
+                "currency_code": self.object.currency
+            }
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
         context.update({
-            'paypal_forms': paypal_forms,
+            'paypal_form': paypal_form,
             'deal': self.object,
         })
-        
         return context
 
 class DealItemDelete(LoginRequiredMixin, ItemDetail):

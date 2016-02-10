@@ -34,7 +34,7 @@
                 {% if product.country %}
                      <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
                 {% endif %}
-            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
+            <a href="{% url 'products:buyB2C' product.slug product.pk %}" class="name">{{ product.name|truncatechars:45 }}</a>
            </div>
            {% if product.is_coupon %}<label style="color:555">{% trans " Discount price until" %}<br>{{ product.end_coupon_date }}</label>{% else %}<label>&nbsp;<br>&nbsp;</label>{% endif %}
             <div class="price">
@@ -44,7 +44,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="{% if product.is_coupon %}coupon_btnbuy{% else %}btnbuy{% endif %}">{% trans 'Buy' %}</a>
+            <a href="{% url 'products:buyB2C' product.slug product.pk %}" class="{% if product.is_coupon %}coupon_btnbuy{% else %}btnbuy{% endif %}">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

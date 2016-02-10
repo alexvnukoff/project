@@ -190,24 +190,15 @@ class B2_ProductBuyForm(forms.Form):
                             customer_type=self._customer_type,
                             created_by=self._customer, 
                             status=DealOrder.DRAFT)
-                if created or not deal_order.total_cost:
-                    deal_order.total_cost = 0
-                deal_order.total_cost += \
-                    self._product.cost * self.cleaned_data['quantity']
                 deal_order.created_by = self._request.user
                 deal_order.save()
-
                 deal, created = Deal.objects\
                     .get_or_create(
                         deal_order=deal_order,
+                        currency=self._product.currency,
                         supplier_company=self._supplier,
-                        status=DealOrder.DRAFT)
-                if created or not deal.total_cost:
-                    deal.total_cost = 0
-                deal.total_cost += \
-                    self._product.cost * self.cleaned_data['quantity']
-                deal.created_by = self._request.user
-                deal.save()
+                        status=DealOrder.DRAFT,
+                        created_by=self._request.user)
 
                 model_type = ContentType.objects.get_for_model(self._product)
                 deal_item = DealItem.objects\
@@ -317,4 +308,10 @@ class DealListFilterForm(forms.Form):
 
 
 # The formset for products in Basket
-DealItemFormSet = modelformset_factory(DealItem, fields=('quantity',), extra=0)
+DealItemFormSet = modelformset_factory(
+    DealItem, 
+    fields=('quantity',), 
+    can_delete=True, 
+    widgets={'quantity': forms.NumberInput(attrs={'min': '1'}),}, 
+    extra=0
+)
