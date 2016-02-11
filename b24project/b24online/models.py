@@ -1403,7 +1403,7 @@ class Notification(models.Model):
         return self.message
 
 
-class MessageChat(AbstractRegisterInfoModel):
+class MessageChat(models.Model):
     """
     CLass for messages chat.
     """
