@@ -4,16 +4,17 @@
 {% load cache %}
 {% load inclusionTags %}
 {% get_current_language as LANGUAGE_CODE %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head lang="{% getLang %}">
+<!doctype html>
+<html lang="{% getLang %}">
+<head>
+<meta charset="utf-8">
+
     {% block head %}
         <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
         <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
 
         {% block  meta%}
 
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <meta name='yandex-verification' content='7036efbb8c82d0da' />
             <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
 
@@ -31,7 +32,7 @@
                     {{ meta.title|truncatechars:80}}
                     {% endblock %}
                 </title>
-                
+
                 <meta name="description" content="{{ meta.description|safe|truncatewords_html:20|force_escape|linebreaks }}"/>
                 <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
             {% else %}
@@ -60,8 +61,6 @@
 
         {% endblock %}
 
-
-
         {% block styles %}
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/main.css' %}" />
@@ -73,20 +72,81 @@
         {% endblock %}
 
 
-
-
         {% block js %}
             <script type="application/javascript">
                 var statciPath = '{% static "b24online/" %}';
                 var LANG = {};
             </script>
-		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
             <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
             <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
             <script  type="text/javascript" src="{% static "b24online/js/base.js"%}"></script>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 
-            <!-- Yandex.Metrika counter -->
+        {% endblock %}
+
+    {% endblock %}
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "b24online/css/ie.css" %}" /><![endif]-->
+
+    <!-- Google Translate-->
+    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
+
+</head>
+
+<body>
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=1701658433380177";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    {% block header %}
+
+    {% endblock %}
+    {% block rtl %}
+         {% if LANGUAGE_BIDI %}
+              <link type="text/css" rel="stylesheet" href="{% static "b24online/css/rtl.css"%}" />
+          {% endif %}
+    {% endblock %}
+
+    {% block body %}
+
+
+
+
+
+    {% endblock %}
+
+
+{% block footer %}
+
+
+    <div class="wrapper">
+        <div class="linkbottom">
+            {% show_static_pages %}
+            <ul class="clumn">
+                {% cache 3600 statistic LANGUAGE_CODE %}
+                    {% statistic %}
+                {% endcache %}
+            </ul>
+        </div>
+    </div>
+ </div>
+    <div id="footer">
+        <div class="wrapper">
+            © 2010–{% now 'Y' %} {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
+        </div>
+    </div>
+
+ <div class="black_overlay" id="fade-profile"></div>
+ {% endblock %}
+
+             <!-- Yandex.Metrika counter -->
             <script type="text/javascript">
                 (function (d, w, c) {
                     (w[c] = w[c] || []).push(function() {
@@ -128,58 +188,6 @@
             </script>
             <!-- /Google analytics -->
 
-        {% endblock %}
-
-    {% endblock %}
-
-    <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "b24online/css/ie.css" %}" /><![endif]-->
-
-    <!-- Google Translate-->
-    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
-
-</head>
-
-<body>
-    {% block header %}
-
-    {% endblock %}
-    {% block rtl %}
-         {% if LANGUAGE_BIDI %}
-              <link type="text/css" rel="stylesheet" href="{% static "b24online/css/rtl.css"%}" />
-          {% endif %}
-    {% endblock %}
-
-    {% block body %}
-
-
-
-
-
-    {% endblock %}
-
-
-{% block footer %}
-
-
-    <div class="wrapper">
-        <div class="linkbottom">
-            {% show_static_pages %}
-            <ul class="clumn">
-                {% cache 3600 statistic LANGUAGE_CODE %}
-                    {% statistic %}
-                {% endcache %}
-            </ul>
-        </div>
-    </div>
- </div>
-    <div id="footer">
-        <div class="wrapper">
-            © 2010–{% now 'Y' %} {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
-        </div>
-    </div>
-
- <div class="black_overlay" id="fade-profile"></div>
- {% endblock %}
     <script type="text/javascript">
      if ( typeof ui != 'undefined' ){
          $(document).bind(ui.signals['end_load'], function(event, url, data, history) {
@@ -191,7 +199,7 @@
 <div style="display: none;" class="white_content" id="light-contact">
     <div class="contact-table">
         <div class="contact-tablein">
-        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+            <a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
           <form id="messageToCompany"  enctype="multipart/form-data">
 
             <ul class="contactform">
@@ -200,21 +208,21 @@
                 </li>
 
 
-            	<li>
-                	<label>{% trans 'Send message to' %}:</label>
+                <li>
+                    <label>{% trans 'Send message to' %}:</label>
                     <label id="send_to" ></label>
                 </li>
                 <li>
-                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                    <label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
                     <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
                 </li>
                 <li>
-                	<label id="file-title">{% trans 'File' %}</label>
+                    <label id="file-title">{% trans 'File' %}</label>
                     <input name="file" id="file-input" type="file" />
                     <input name="company" id="toCompany" type="hidden" />
                 </li>
                 <li class="end">
-                	<div class="newform-button">
+                    <div class="newform-button">
                         <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
                         <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
                     </div>
