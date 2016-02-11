@@ -198,11 +198,15 @@
                 <li style="text-align: center;">
                     <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
                 </li>
-
-
             	<li>
                 	<label>{% trans 'Send message to' %}:</label>
                     <label id="send_to" ></label>
+                </li>
+            	<li>
+                	<label>{% trans 'Message subject' %}:</label>
+                    <div class="">
+                        <input name="subject" style="width: 498px;" />
+                    </div>
                 </li>
                 <li>
                 	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
@@ -212,6 +216,13 @@
                 	<label id="file-title">{% trans 'File' %}</label>
                     <input name="file" id="file-input" type="file" />
                     <input name="company" id="toCompany" type="hidden" />
+                </li>
+                <li>
+                	<label id="destination">{% trans 'To' %}</label>
+                	  <div style="flow: left">
+                	    <div><input name="send_way" type="radio" value="email" /><span>{% trans 'Email' %}</span></div>
+                      <div><input name="send_way" type="radio" value="portal" /><span>{% trans 'Portal messages' %}</span></div>
+                    </div>
                 </li>
                 <li class="end">
                 	<div class="newform-button">
