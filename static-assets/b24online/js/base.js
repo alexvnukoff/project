@@ -227,21 +227,22 @@ $(document).ready(function()
 
     $(document).on('click', ".contact-us", function()
     {
-        $('#send_succsefuly').hide()
+        $('#send-succsefuly').hide()
 	    document.getElementById('light-contact').style.display='block';
         document.getElementById('fade-contact').style.display='block';
 
-        var company_id = $(this).data('id');
-        var company_name = $(this).data('name');
-        $("#toCompany").val(company_id);
-        $('#send_to').text(company_name);
+        // 
+        var organization_id = $(this).data('id');
+        var organization_name = $(this).data('name');
+        $("#to-organization").val(organization_id);
+        $('#send-to').text(organization_name);
 
         var user_id = $(this).data('userId');
         var user_name = $(this).data('userName');
-        $("#toUser").val(user_id);
+        $("#to-recipient").val(user_id);
         if (typeof user_id !== "undefined") {
-            $('#user-reciever-info').show();
-            $('#send_to_user').text(user_name);
+            $('#user-recipient-info').show();
+            $('#send-to-user').text(user_name);
         }
 	});
      $(document).on('click', "#cancel", function()
@@ -253,14 +254,14 @@ $(document).ready(function()
     $(document).on('click', "#send-message", function()
     {
         $('#send_succsefuly').text("Please wait to response.....").show();
-        $("#messageToCompany").ajaxSubmit({
+        $("#message-to-organization").ajaxSubmit({
             url: '/companies/send/',
             type: 'post',
             success:function(data) {
-                    $('#send_succsefuly').text(data).show()
+                $('#send_succsefuly').text(data).show()
             }
         });
-        $("#messageToCompany")[0].reset();
+        $("#message-to-organization")[0].reset();
 	});
 
     $(document).on('click', "#send-resume", function()

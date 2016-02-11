@@ -392,42 +392,41 @@ def send_message(request):
     if request.is_ajax():
         if not request.user.is_anonymous() and request.user.is_authenticated() and request.POST.get('company', False):
             if request.POST.get('message', False) or request.FILES.get('file', False):
-                company_pk = request.POST.get('company')
-
-                # this condition as temporary design for separation Users and Organizations
-                organization = Company.get_active_objects().get(pk=company_pk)
-
-                if request.POST.get('delivery_way') == 'portal':
-                    pass                
+                organization_pk = request.POST.get('organization_id')
+                subject = request.POST.get('subject', ''),
+                message_text = request.POST.get('message', ''),
+                attachment = request.FILES.get('file', False)
+                try:
+                    organization = Organization.get_active_objects()\
+                        .get(pk=organization_pk)
+                except Organization.DoesNotExist:
+                    response = _('There is not such Organization')
                 else:
-                    if not organization.email:
-                        email = 'admin@tppcenter.com'
-                        subject = _('This message was sent to '
-                                    'company with id: ') + str(organization.pk)
+                    if request.POST.get('delivery_way') == 'portal':
+                        pass
                     else:
-                        email = organization.email
-                        subject = _('New message')
-                        
-                    mail = EmailMessage(
-                        subject,
-                        request.POST.get('message', ""),
-                        'noreply@tppcenter.com',
-                        [email]
-                    )
-                    attachment = request.FILES.get('file', False)
-                    if attachment:
-                        mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                    mail.send()
-
+                        if not organization.email:
+                            email = 'admin@tppcenter.com'
+                            subject = _('This message was sent to '
+                                        'company with id = %{pk}d, '
+                                        'subject: %(subject)s') % \
+                                            (organization.pk, subject)
+                        else:
+                            email = organization.email
+                            subject = _('New message: %{subject}s') % \
+                                {'subject': subject}
+                        mail = EmailMessage(subject, message_text, 
+                                            'noreply@tppcenter.com', [email])
+                        if attachment:
+                            mail.attach(attachment.name, attachment.read(), 
+                                        attachment.content_type)
+                        mail.send()
                 response = _('You have successfully sent the message.')
-
             else:
                 response = _('Message or file are required')
         else:
             response = _('Only registered users can send the messages')
-
         return HttpResponse(response)
-
     return HttpResponseBadRequest()
 
 

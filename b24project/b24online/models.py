@@ -1444,9 +1444,8 @@ class Message(models.Model):
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
                                   related_name='received', null=True,
                                   blank=True)
-    to_organization = models.ForeignKey('Organization', 
-                                        related_name='messages', null=True, 
-                                        blank=True)
+    organization = models.ForeignKey('Organization', related_name='messages', 
+                                     null=True, blank=True)
     chat = models.ForeignKey(MessageChat, related_name='chat_messages',
                              null=True, blank=True)
     is_read = models.BooleanField(default=False)

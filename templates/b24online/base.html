@@ -188,23 +188,27 @@
      }
      ga('send', 'pageview');
     </script>
+
 <div style="display: none;" class="white_content" id="light-contact">
     <div class="contact-table">
         <div class="contact-tablein">
         	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
-          <form id="messageToCompany"  enctype="multipart/form-data">
-
+          <form id="message-to-organization"  enctype="multipart/form-data">
+            <input name="organization_id" id="to-organization" type="hidden" />
+            <input name="recipient_id" id="to-recipient" type="hidden" />
             <ul class="contactform">
-                <li style="text-align: center;">
-                    <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
-                </li>
-            	<li id="receiver-info">
-                	<label>{% trans 'Send message to' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="send_to"></span>
+              <li style="text-align: center;">
+                <label id="send-succsefuly" style="color: #008000;" hidden="hidden">
+                  {% trans 'You have successfully sent the message.' %}
+                </label>
               </li>
-            	<li id="user-reciever-info" style="display: none;">
+            	<li id="organization-info">
+                	<label>{% trans 'Send message to' %}:</label>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="send-to"></span>
+              </li>
+            	<li id="recipient-info" style="display: none;">
                 	<label>{% trans 'For user' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="send_to_user"></span>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="send-to-user"></span>
               </li>
               
             	<li>
@@ -220,8 +224,6 @@
                 <li>
                 	<label id="file-title">{% trans 'File' %}</label>
                     <input name="file" id="file-input" type="file" />
-                    <input name="company" id="toCompany" type="hidden" />
-                    <input name="company" id="toUser" type="hidden" />
                 </li>
                 <li>
                 	<label id="destination">{% trans 'To' %}</label>

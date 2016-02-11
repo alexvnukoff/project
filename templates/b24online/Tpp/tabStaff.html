@@ -40,7 +40,14 @@
                         {% endif %}
                         <td>{{ user.work_positions.first.department.name }}</td>
                         <td>{{ user.work_positions.first.name }}</td>
-                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ user.profile.full_name }}" data-id="{{ user.pk }}"></i></td>
+                        <td>
+                          <i class="staff-contact-msg img-status contact-us" 
+                            data-name="{{ organization.name }}" 
+                            data-id="{{ item_pk }}"
+                            data-user-name="{% if user.profile.full_name %}{{ user.profile.full_name }}{% else %}{{ user.email }}{% endif %}" 
+                            data-user-id="{{ user.pk }}">
+                          </i>
+                        </td>
                         <td><i class="staff-status-active img-status"></i></td>
                         {% comment %}
                             {% if status == 'Active' %}
