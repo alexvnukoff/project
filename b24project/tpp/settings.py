@@ -103,7 +103,7 @@ DJANGO_APPS = (
 )
 
 LOCAL_APPS = (
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
     'b24online',
     'jobs',
     'centerpokupok',

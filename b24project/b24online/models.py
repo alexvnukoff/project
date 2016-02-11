@@ -413,11 +413,11 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
             organization=self
         )
 
-    def create_vacancy(self, name, department, user):
+    def create_vacancy(self, name, department, user, **kwargs):
         if department.organization != self:
             raise ArgumentError('department', 'Unknown department')
 
-        return department.create_vacancy(name, user)
+        return department.create_vacancy(name, user, **kwargs)
 
     def get_descendants_filtered(self, **filters):
         """
@@ -745,12 +745,18 @@ class Department(models.Model):
     def get_absolute_url(self):
         return reverse('department:detail', args=[self.slug, self.pk])
 
-    def create_vacancy(self, name, user):
+    def create_vacancy(self, name, user, **kwargs):
+        staffgroup_id = kwargs.get('staffgroup_id')
+        try:
+            staffgroup = StaffGroup.objects.get(pk=staffgroup_id)
+        except StaggGroup.DoesNotExist:
+            staffgroup = None        
         return Vacancy.objects.create(
             name=name,
             created_by=user,
             updated_by=user,
-            department=self
+            department=self,
+            staffgroup=staffgroup,
         )
 
 
@@ -759,8 +765,8 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    staffgroup = models.ForeignKey('StaffGroup', null=True, 
-                                   related_name='group_vacancies')
+    staffgroup = models.ManyToManyField('StaffGroup', 
+                                        related_name='group_vacancies')
     is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
                                         default=False, db_index=True)
 
@@ -1397,11 +1403,57 @@ class Notification(models.Model):
         return self.message
 
 
+class MessageChat(AbstractRegisterInfoModel):
+    """
+    CLass for messages chat.
+    """
+    OPENED, CLOSED = 'opened', 'closed'
+    STATUSES = (
+        (OPENED, _('Opened')),
+        (CLOSED, _('Closed')),
+    )
+    subject = models.CharField(_('Chat subject'), max_length=255,
+                               null=False, blank=False) 
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    participants = models.ManyToManyField(User, blank=True)    
+    private = models.NullBooleanField()
+    status = models.CharField(_('Chart status'), max_length=10, 
+                              choices=STATUSES, default=OPENED, editable=False,
+                              null=False, db_index=True)
+    documents = GenericRelation(Document, related_query_name='documents')
+
+    class Meta:
+        verbose_name = _('Messages chat')    
+        verbose_name_plural = _('Messages chats')    
+
+
 class Message(models.Model):
+    """
+    Class for inner messages.
+    """
+    DRAFT, READY, READ = 'draft', 'ready', 'read'
+    STATUSES = (
+        (DRAFT, _('Draft')),
+        (READY, _('Ready')),
+        (READ, _('Read')),
+    )
+
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                  related_name='received', null=True,
+                                  blank=True)
+    to_organization = models.ForeignKey('Organization', 
+                                        related_name='messages', null=True, 
+                                        blank=True)
+    chat = models.ForeignKey(MessageChat, related_name='chat_messages',
+                             null=True, blank=True)
     is_read = models.BooleanField(default=False)
+    subject = models.CharField(_('Chat subject'), max_length=255,
+                               null=False, blank=False, db_index=True) 
     content = models.TextField(blank=False, null=False)
+    status = models.CharField(_('Message status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:

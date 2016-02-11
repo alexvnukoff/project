@@ -1168,19 +1168,14 @@ var companyStructure =
     },
 
     edit: function(clickedItem) {
-
         var action = "edit";
-
         if (this.item) {
-
             if (!this.item.parent().hasClass('vacancy')) {
                 this.setDepValues(action);
             } else {
                 this.setVacValues(action);
             }
-
         }
-
         return false;
     },
 
@@ -1202,11 +1197,13 @@ var companyStructure =
         return false;
     },
 
-    setOptions: function(select, options) {
+    setOptions: function(select, options, selected_item) {
         select.find('option').remove();
+
         for (i in options) {
             obj = options[i];
-            select.append('<option value="' + obj.value + '">' + obj.name + '</option>');
+            is_selected = (typeof selected_item !== "undefined" && obj.value == selected_item) ? 'selected' : '';
+            select.append('<option value="' + obj.value + '" ' + is_selected + '>' + obj.name + '</option>');
         }
     },
 
@@ -1262,10 +1259,13 @@ var companyStructure =
 
         var form = $(self.forms.vacancy);
         var input = form.find('#vac-name');
+
         if (typeof STAFFGROUPS !== "undefined") {
             var staffgroup_select = form.find('#staffgroups');
-            self.setOptions(staffgroup_select, 
-                        STAFFGROUP.unshift({'value': '', 'name': '----'}));
+            staffgroup_options = STAFFGROUPS.slice();
+            staffgroup_options.unshift({'value': '', 'name': '----'});
+            selected_id = self.item.data('staffgroupId');
+            self.setOptions(staffgroup_select, staffgroup_options, selected_id);
         }
         
         if (action == 'edit') {//edit
@@ -1278,7 +1278,6 @@ var companyStructure =
                 return false;
             id = self.item.data('item-id');
             staffgroup_value = staffgroup_select.val();
-
             var contentHolder = $('#structure-tab .tpp-dt-content');
             contentHolder.html(self.loader);
             self.hideOverlay();

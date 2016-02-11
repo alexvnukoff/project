@@ -224,6 +224,7 @@ def _tab_structure(request, company, page=1):
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
         request_type = request.POST.get("type", None)
+        staffgroup_id = request.POST.get('staffgroup', None)
 
         if not (request_type in ('department', 'vacancy')) and action is not None:
             return HttpResponseBadRequest()
@@ -234,18 +235,18 @@ def _tab_structure(request, company, page=1):
         if action == "add" and len(name) > 0:
             if request_type == 'department':
                 organization.create_department(name, request.user)
-
             elif item_id is not None:  # new vacancy
                 obj = get_object_or_404(organization.departments, pk=item_id)
-                organization.create_vacancy(name, obj, request.user)
+                organization.create_vacancy(name, obj, request.user,
+                    staffgroup_id=staffgroup_id)
 
         elif action == "edit" and item_id is not None and len(name) > 0:
             if request_type == 'department':
                 obj = get_object_or_404(organization.departments, pk=item_id)
             else:
                 obj = get_object_or_404(organization.vacancies, pk=item_id)
-
             obj.name = name
+            obj.staffgroup_id = staffgroup_id
             obj.save()
         elif action == "remove" and item_id is not None:
             if request_type == 'department':
@@ -396,23 +397,27 @@ def send_message(request):
                 # this condition as temporary design for separation Users and Organizations
                 organization = Company.get_active_objects().get(pk=company_pk)
 
-                if not organization.email:
-                    email = 'admin@tppcenter.com'
-                    subject = _('This message was sent to company with id: ') + str(organization.pk)
+                if request.POST.get('delivery_way') == 'portal':
+                    pass                
                 else:
-                    subject = _('New message')
-                mail = EmailMessage(
-                    subject,
-                    request.POST.get('message', ""),
-                    'noreply@tppcenter.com',
-                    [organization.email]
-                )
-
-                attachment = request.FILES.get('file', False)
-
-                if attachment:
-                    mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                mail.send()
+                    if not organization.email:
+                        email = 'admin@tppcenter.com'
+                        subject = _('This message was sent to '
+                                    'company with id: ') + str(organization.pk)
+                    else:
+                        email = organization.email
+                        subject = _('New message')
+                        
+                    mail = EmailMessage(
+                        subject,
+                        request.POST.get('message', ""),
+                        'noreply@tppcenter.com',
+                        [email]
+                    )
+                    attachment = request.FILES.get('file', False)
+                    if attachment:
+                        mail.attach(attachment.name, attachment.read(), attachment.content_type)
+                    mail.send()
 
                 response = _('You have successfully sent the message.')
 
