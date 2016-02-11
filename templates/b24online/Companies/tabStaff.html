@@ -50,7 +50,14 @@
                         {% endif %}
                         <td>{{ vacancy.department.name }}</td>
                         <td>{{ vacancy.name }}</td>
-                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ vacancy.user.profile.full_name }}" data-id="{{ vacancy.user.pk }}"></i></td>
+                        <td>
+                          <i class="staff-contact-msg img-status contact-us" 
+                            data-name="{{ vacancy.department.organization.name }}" 
+                            data-id="{{ vacancy.department.organization.pk }}"
+                            data-user-name="{% if vacancy.user.profile %}{{ vacancy.user.profile.full_name }}{% else %}{{ vacancy.user.email }}{% endif %}" 
+                            data-user-id="{{ vacancy.user.pk }}">
+                          </i>
+                          </td>
                         <td><i class="staff-status-active img-status"></i></td>
                         {% comment %}
                             {% if status == 'Active' %}

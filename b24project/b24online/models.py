@@ -1263,7 +1263,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     @property
     def full_name(self):
-        return ' '.join(filter(None, [self.first_name, self.middle_name, self.last_name]))
+        return ' ' . join(
+            filter(None, [self.first_name, self.middle_name, self.last_name])
+        )
 
     @staticmethod
     def get_index_model(**kwargs):

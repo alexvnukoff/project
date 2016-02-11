@@ -230,11 +230,19 @@ $(document).ready(function()
         $('#send_succsefuly').hide()
 	    document.getElementById('light-contact').style.display='block';
         document.getElementById('fade-contact').style.display='block';
-        var company_name = $(this).data('name');
+
         var company_id = $(this).data('id');
+        var company_name = $(this).data('name');
         $("#toCompany").val(company_id);
         $('#send_to').text(company_name);
 
+        var user_id = $(this).data('userId');
+        var user_name = $(this).data('userName');
+        $("#toUser").val(user_id);
+        if (typeof user_id !== "undefined") {
+            $('#user-reciever-info').show();
+            $('#send_to_user').text(user_name);
+        }
 	});
      $(document).on('click', "#cancel", function()
      {

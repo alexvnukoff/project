@@ -198,10 +198,15 @@
                 <li style="text-align: center;">
                     <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
                 </li>
-            	<li>
+            	<li id="receiver-info">
                 	<label>{% trans 'Send message to' %}:</label>
-                    <label id="send_to" ></label>
-                </li>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="send_to"></span>
+              </li>
+            	<li id="user-reciever-info" style="display: none;">
+                	<label>{% trans 'For user' %}:</label>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="send_to_user"></span>
+              </li>
+              
             	<li>
                 	<label>{% trans 'Message subject' %}:</label>
                     <div class="">
@@ -216,6 +221,7 @@
                 	<label id="file-title">{% trans 'File' %}</label>
                     <input name="file" id="file-input" type="file" />
                     <input name="company" id="toCompany" type="hidden" />
+                    <input name="company" id="toUser" type="hidden" />
                 </li>
                 <li>
                 	<label id="destination">{% trans 'To' %}</label>
