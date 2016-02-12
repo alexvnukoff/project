@@ -2052,7 +2052,8 @@ class DealItem(models.Model):
         """
         Return the total cost
         """
-        return self.cost * self.quantity
+        return self.cost * self.quantity if self.cost and self.quantity \
+            else 0 
 
 
 @receiver([post_save, post_delete], sender=DealItem)
