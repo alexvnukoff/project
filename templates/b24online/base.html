@@ -194,8 +194,8 @@
         <div class="contact-tablein">
         	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
           <form id="message-to-organization"  enctype="multipart/form-data">
-            <input name="organization_id" id="to-organization" type="hidden" />
-            <input name="recipient_id" id="to-recipient" type="hidden" />
+            <input name="organization" id="organization-id" type="hidden" />
+            <input name="recipient" id="recipient-id" type="hidden" />
             <ul class="contactform">
               <li style="text-align: center;">
                 <label id="send-succsefuly" style="color: #008000;" hidden="hidden">
@@ -204,39 +204,43 @@
               </li>
             	<li id="organization-info">
                 	<label>{% trans 'Send message to' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="send-to"></span>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="organization-name"></span>
               </li>
             	<li id="recipient-info" style="display: none;">
                 	<label>{% trans 'For user' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="send-to-user"></span>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="recipient-name"></span>
               </li>
               
             	<li>
                 	<label>{% trans 'Message subject' %}:</label>
-                    <div class="">
-                        <input name="subject" style="width: 498px;" />
-                    </div>
+                  <div class=""><input name="subject" style="width: 498px;" /></div>
                 </li>
                 <li>
                 	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
-                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                  <div class=""><textarea name="content" style="width: 498px;height: 135px;"></textarea></div>
                 </li>
                 <li>
                 	<label id="file-title">{% trans 'File' %}</label>
-                    <input name="file" id="file-input" type="file" />
+                  <input name="attachment" id="file-input" type="file" />
                 </li>
                 <li>
-                	<label id="destination">{% trans 'To' %}</label>
-                	  <div style="flow: left">
-                	    <div><input name="send_way" type="radio" value="email" /><span>{% trans 'Email' %}</span></div>
-                      <div><input name="send_way" type="radio" value="portal" /><span>{% trans 'Portal messages' %}</span></div>
+                	<label id="destination">{% trans 'Deliver as' %}</label>
+                	<div style="flow: left">
+                    <div>
+                      <input name="delivery_way" selected type="radio" value="message" />
+                      <span>{% trans 'Message' %}</span>
                     </div>
+                	  <div>
+                	    <input name="delivery_way" type="radio" value="email" />
+                	    <span>{% trans 'Email' %}</span>
+                	  </div>
+                  </div>
                 </li>
                 <li class="end">
                 	<div class="newform-button">
-                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
-                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
-                    </div>
+                    <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                    <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                  </div>
                 </li>
             </ul>
           </form>

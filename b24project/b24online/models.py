@@ -9,6 +9,7 @@ from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
+from django.utils.functional import curry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
@@ -1415,14 +1416,13 @@ class MessageChat(models.Model):
         (CLOSED, _('Closed')),
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=False, blank=False) 
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+                               null=True, blank=True) 
     participants = models.ManyToManyField(User, blank=True)    
     private = models.NullBooleanField()
     status = models.CharField(_('Chart status'), max_length=10, 
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
-    documents = GenericRelation(Document, related_query_name='documents')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         verbose_name = _('Messages chat')    
@@ -1450,7 +1450,7 @@ class Message(models.Model):
                              null=True, blank=True)
     is_read = models.BooleanField(default=False)
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=False, blank=False, db_index=True) 
+                               null=True, blank=True, db_index=True) 
     content = models.TextField(blank=False, null=False)
     status = models.CharField(_('Message status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
@@ -1474,6 +1474,22 @@ class Message(models.Model):
 
     def __str__(self):
         return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
+
+
+class MessageAttachment(models.Model):
+    message = models.ForeignKey('Message', related_name='attachments')
+    file = models.FileField(
+        #upload_to=curry(document_upload_path, folder='attachments')
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        related_name='%(class)s_create_user'
+    )
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = 'Message attachment'
+        verbose_name_plural = 'Messages attachments'
 
 
 class BannerBlock(models.Model):

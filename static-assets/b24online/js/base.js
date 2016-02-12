@@ -231,18 +231,17 @@ $(document).ready(function()
 	    document.getElementById('light-contact').style.display='block';
         document.getElementById('fade-contact').style.display='block';
 
-        // 
-        var organization_id = $(this).data('id');
-        var organization_name = $(this).data('name');
-        $("#to-organization").val(organization_id);
-        $('#send-to').text(organization_name);
+        var organization_id = $(this).data('organization-id');
+        var organization_name = $(this).data('organization-name');
+        $("#organization-id").val(organization_id);
+        $('#organization-name').text(organization_name);
 
-        var user_id = $(this).data('userId');
-        var user_name = $(this).data('userName');
-        $("#to-recipient").val(user_id);
-        if (typeof user_id !== "undefined") {
-            $('#user-recipient-info').show();
-            $('#send-to-user').text(user_name);
+        var recipient_id = $(this).data('recipient-id');
+        var recipient_name = $(this).data('recipient-name');
+        $("#recipient-id").val(recipient_id);
+        if (typeof recipient_name !== "undefined") {
+            $('#recipient-name').text(recipient_name);
+            $('#recipient-info').show();
         }
 	});
      $(document).on('click', "#cancel", function()

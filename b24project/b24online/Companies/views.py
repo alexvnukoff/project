@@ -24,6 +24,7 @@ from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
                               BusinessProposal, InnovationProject, 
                               Vacancy, Organization, Branch, Chamber, StaffGroup)
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+from b24online.Messages.forms import MessageForm
 
 logger = logging.getLogger(__name__)
 
@@ -389,45 +390,24 @@ class DeleteCompanyDocument(DeleteDocument):
 
 
 def send_message(request):
-    if request.is_ajax():
-        if not request.user.is_anonymous() and request.user.is_authenticated() and request.POST.get('company', False):
-            if request.POST.get('message', False) or request.FILES.get('file', False):
-                organization_pk = request.POST.get('organization_id')
-                subject = request.POST.get('subject', ''),
-                message_text = request.POST.get('message', ''),
-                attachment = request.FILES.get('file', False)
-                try:
-                    organization = Organization.get_active_objects()\
-                        .get(pk=organization_pk)
-                except Organization.DoesNotExist:
-                    response = _('There is not such Organization')
-                else:
-                    if request.POST.get('delivery_way') == 'portal':
-                        pass
-                    else:
-                        if not organization.email:
-                            email = 'admin@tppcenter.com'
-                            subject = _('This message was sent to '
-                                        'company with id = %{pk}d, '
-                                        'subject: %(subject)s') % \
-                                            (organization.pk, subject)
-                        else:
-                            email = organization.email
-                            subject = _('New message: %{subject}s') % \
-                                {'subject': subject}
-                        mail = EmailMessage(subject, message_text, 
-                                            'noreply@tppcenter.com', [email])
-                        if attachment:
-                            mail.attach(attachment.name, attachment.read(), 
-                                        attachment.content_type)
-                        mail.send()
-                response = _('You have successfully sent the message.')
-            else:
-                response = _('Message or file are required')
+    """
+    Send the message to :class:`Organization` (and `User` as recipient).
+    """
+    logger.debug('Step 11')
+    logger.debug(request.method)
+    if not request.is_ajax() or request.method != 'POST':
+        return HttpResponseBadRequest()
+    elif request.user.is_anonymous() or not request.user.is_authenticated():
+        response_text = _('Only registered users can send the messages')
+    else:
+        logger.debug('Step 12')
+        form = MessageForm(request, data=request.POST, files=request.FILES)    
+        if form.is_valid():
+            response_text = _('You have successfully sent the message')
         else:
-            response = _('Only registered users can send the messages')
-        return HttpResponse(response)
-    return HttpResponseBadRequest()
+            logger.debug(form.errors)
+            response_text = _('Error'),
+        return HttpResponse(response_text)
 
 
 class CompanyUpdate(ItemUpdate):
