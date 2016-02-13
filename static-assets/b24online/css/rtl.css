@@ -106,7 +106,7 @@ body, input, textarea, select{direction:rtl;}
 .custom-contentin .title{ direction:rtl; text-align:right;}
 .company-list li .title .flag{ float:right;}
 .company-list li .company-infor .companycontact{ width:174px;float:left; border-left:0; border-right:1px solid #E1E1E1; padding-right:10px;padding-left:0;}
-.company-list li .company-infor .logocompany, .company-list li .company-infor .desc, .company-list li .company-infor .companycontact .line .iconinfo, .company-list li .company-infor .companycontact .line .nameinfo{ padding-left:0;width:348px;float:right;}
+.company-list li .company-infor .logocompany, .company-list li .company-infor .desc, .company-list li .company-infor .companycontact .line .iconinfo, .company-list li .company-infor .companycontact .line .nameinfo{ padding-left:0;float:right;}
 .logo-details, .social-l{ float:right;}
 .payjoin{ float:left;}
 .social-l{ text-align:right;}
