@@ -1,9 +1,15 @@
+# -*- encoding: utf-8 -*-
+
+import os
+
 from urllib.parse import urljoin
 
+from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.fields.files import ImageFieldFile
 
+from b24online.utils import resize
 
 class CustomImageFieldFile(ImageFieldFile):
 
@@ -32,13 +38,37 @@ class LocalFileStorage(FileSystemStorage):
     """
     Local storage for debugging.
     """
+    SIZES = {
+        'big': 150,
+        'th': 30,
+        'small': 24,
+    }
+
     def url(self, name):
         return self.url_by_size(name, 'original')
 
     def url_by_size(self, name, size):
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")
-        return urljoin(self.base_url, name)
+        size_px = type(self).SIZES.get(size)
+        if size_px:
+            sized_image_path = os.path.join(settings.MEDIA_ROOT, str(size), name)
+            image_path = os.path.join(settings.MEDIA_ROOT, name)
+            if not os.path.exists(sized_image_path) and \
+                os.path.exists(image_path):
+
+                directory = os.path.dirname(sized_image_path)
+                if not os.path.exists(directory):
+                    try:
+                        os.makedirs(directory)
+                    except OSError as e:
+                        if e.errno != errno.EEXIST:
+                            raise
+                resize(image_path, (size_px, size_px), True, sized_image_path) 
+            path = "%s/%s" % (str(size), name)
+        else:
+            path = name
+        return urljoin(self.base_url, path)
 
 
 class S3FileStorage(FileSystemStorage):

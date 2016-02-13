@@ -32,6 +32,7 @@ class MessageForm(forms.ModelForm):
         required=True,
     )
     attachment = forms.FileField(label=_('Message attachment'))
+    is_private = forms.BooleanField()
 
     class Meta:
         model = Message
@@ -41,6 +42,7 @@ class MessageForm(forms.ModelForm):
         super(MessageForm, self).__init__(*args, **kwargs)
         self.request = request
         self.initial['delivery_way'] = type(self).AS_MESSAGE
+        self.initial['is_private'] = False
         self.fields['content'].required = True
 
     def send(self):
@@ -56,6 +58,7 @@ class MessageForm(forms.ModelForm):
         subject = self.cleaned_data.get('subject')
         content = self.cleaned_data.get('content')
         delivery_way = self.cleaned_data.get('delivery_way')
+        is_private = self.cleaned_data.get('is_private')
         attachment = self.cleaned_data.get('attachment')
         logger.debug(attachment)
         if delivery_way == cls.AS_MESSAGE:
@@ -65,6 +68,7 @@ class MessageForm(forms.ModelForm):
                         subject=subject,
                         organization=organization,
                         status=MessageChat.OPENED,
+                        is_private=is_private,
                     )
                     new_message_chat.participants.add(self.request.user)
                     new_message = Message.objects.create(

@@ -15,15 +15,13 @@
     {{ block.super }}
     <script>
         {% getOwner item as owner %}
-
-
-        ga('set', 'dimension1', {{ item.pk }});
-
-        {% if owner %}
-            ga('set', 'dimension3', {{ owner.pk }});
-        {% endif %}
-
-        ga('set', 'dimension2', 'company');
+        if (typeof ga !== "undefined") {
+            ga('set', 'dimension1', {{ item.pk }});
+            {% if owner %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+            ga('set', 'dimension2', 'company');
+        }
     </script>
 
 

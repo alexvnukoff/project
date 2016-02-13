@@ -29,7 +29,7 @@
                     <td>{% trans "Position" %}</td>
                     <td>{% trans "Contact" %}</td>
                     <td>{% trans "Status" %}</td>
-                    <td class="status"></td>
+                    <td class="status"></td>-
                 </tr>
 
                 {% for vacancy in page.object_list %}
@@ -52,6 +52,7 @@
                         <td>{{ vacancy.name }}</td>
                         <td>
                           <i class="staff-contact-msg img-status contact-us" 
+                            data-id="{{ vacancy.user.pk }}"
                             data-organization-id="{{ vacancy.department.organization.pk }}"
                             data-organization-name="{{ vacancy.department.organization.name }}" 
                             data-recipient-id="{{ vacancy.user.pk }}"
