@@ -37,7 +37,8 @@ from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
-from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
+from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
+                              LocalFileStorage)
 from b24online.utils import generate_upload_path, reindex_instance, document_upload_path
 from tpp.celery import app
 
@@ -56,8 +57,12 @@ MEASUREMENT_UNITS = [
     ('pcs', _('Piece'))
 ]
 
-image_storage = S3ImageStorage()
-file_storage = S3FileStorage()
+image_storage = S3ImageStorage() \
+    if not getattr(settings, 'STORE_FILES_LOCAL', False) \
+        else LocalFileStorage()
+file_storage = S3ImageStorage() \
+    if not getattr(settings, 'STORE_FILES_LOCAL', False) \
+        else LocalFileStorage()
 
 logger = logging.getLogger(__name__)
 

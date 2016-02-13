@@ -28,6 +28,19 @@ class CustomImageField(models.ImageField):
         super().__init__(verbose_name, name, **kwargs)
 
 
+class LocalFileStorage(FileSystemStorage):
+    """
+    Local storage for debugging.
+    """
+    def url(self, name):
+        return self.url_by_size(name, 'original')
+
+    def url_by_size(self, name, size):
+        if self.base_url is None:
+            raise ValueError("This file is not accessible via a URL.")
+        return urljoin(self.base_url, name)
+
+
 class S3FileStorage(FileSystemStorage):
     pass
 
