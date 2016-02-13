@@ -80,9 +80,9 @@ $(document).ready(function() {
           {% endif %}
         {% else %}
           <li>
-          <span class="universal-sale">-{{ product.coupon_discount_percent|intword }}%</span>
            {% setContextMenu product update_url=update_url delete_url=delete_url %}
             <div class="thumb">
+                <span class="universal-sale">-{{ product.coupon_discount_percent|intword }}%</span>
                 <a href="{% url 'products:B2CDetail' product.slug product.pk %}">
                     {% if product.image %}
                         <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
