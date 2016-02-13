@@ -1,0 +1,92 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load inclusionTags %}
+
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         {% for style in styles %}
+            <link type="text/css" rel="stylesheet" href="{{ style }}" />
+         {% endfor %}
+            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    {% endblock %}
+
+    {% block js %}
+         {{ block.super }}
+         {% for script in scripts %}
+            <script type="text/javascript" src="{{ script }}"></script>
+         {% endfor %}
+    {% endblock %}
+
+     {% block content %}
+
+<div class="new-details">
+<h1>{% trans 'Terms of Service' %}</h1>
+<br>
+<h3>1. introduction</h3>
+<br>
+<p>1.1. Welcome to B24Online portal (hereafter: "<strong>Portal</strong>"). The Portal is managed by Expert Center (hereafter: "<strong>Company</strong>").</p>
+<p>1.2. The usage of the Portal and its content is conditioned to the terms stated hereafter. Please read them thoroughly and carefully. You do not have to agree to those terms, but if you don't, you are to exit the Portal and cease usage of it immediately. Your usage of the Portal abides you to these Conditions of Use and means that you have agreed to them.</p>
+<br>
+<h3>2. Definitions</h3>
+<br>
+<p>2.1. <strong>Website – the Portal</strong>.</p>
+<p>2.2. Website Administration – Administrators and operators, including employees, founders and owners.</p>
+<p>2.3. <strong>Users</strong> – Website visitors.</p>
+<p>2.4. <strong>Customers – Visitors who have chosen to receive services and/or products from the</strong> Businesses. </p>
+<p>2.5. <strong>Business</strong> – A business who has chosen to offer and grant his service and/or product to the registered customers.</p>
+<p>2.6. <strong>Service</strong> – Free/paid, digital/physical product and/or content.</p>
+<br>
+<h3>3. Website usage</h3>
+<br>
+<p>3.1. The website is meant for usage to persons of all ages. However, Customers must be at least at the age of 18.</p>
+<p>3.2. It is made clear and agreed upon, that the Portal is a social marketing platform, allowing Businesses to introduce, market and sell their Services. Therefore, the Services granted by those Businesses are fully under their responsibility, and Website Administrations has no control and/or ability to supervise the granted Services. Therefore, the usage of the Services is under your full responsibility, and Website Administration will not be held liable by any means for the quality, correctness and update of the Services. In case of any infringement by a Business, you can file a claim only against this violating party, and you will not have, in any condition, any claim against Website Administration.</p>
+<p>3.3. The usage of the website and of its content is being provided AS IS and without any warranty from the Website Administration.</p>
+<p>3.4. Website Administration may take the liberty to close and/or edit the website and its content and or services without any prior warning and you shall have no claim, lawsuit or demand towards Website Administration.
+</p>
+<p>3.5. Website Administration shall not be held liable for any direct or indirect tort or damage, that may be inflicted to the User and/or any third party in regard of the use of any information and/or content and/or cancellation of the before-mentioned, such as interference and/or interruptions in information transfer, whereas those were caused by any third party deliberately or not.</p>
+<p>3.6. Any commercial use of the Website's content is strictly prohibited, unless stated otherwise by the Website Administration in written form.
+</p>
+<p>3.7. Website Administration reserves the right, to their sole discretion, to delete, alter or omit content that infringe the Condition of Use. By doing so, Website Administration shall not be held liable for site's contents and or services as previously stated.</p>
+<p>3.8. When uploading or providing content and or services for publishing on the website, it is the User's and or Business's sole and complete responsibility for any outcome regarding this publication. As an example only, it is strictly prohibited to post:</p>
+<ul style="margin:10px 10px;">
+<li>3.8.1. Any false, misleading, deceptive or that could deceive information.</li>
+<li>3.8.2. Violating or damaging others' proprietary rights, such as trademarks and intellectual property.</li>
+<li>3.8.3. Pornographic or sexually abusive content.</li>
+<li>3.8.4. Any content identification minors, such as their personal data, their address and contact information.</li>
+<li>3.8.5. Slander, violation one's privacy or harms reputation.</li>
+<li>3.8.6. Any content identifying others without their specific consent.</li>
+<li>3.8.7. Disturbing, harassing, intimidating or insulting content.</li>
+<li>3.8.8. Incitement or praise to racism, discrimination or violence.</li>
+<li>3.8.9. Encouraging illegal act.</li>
+<li>3.8.10. Any content violating the common use of the internet or public policy.</li>
+<li>3.8.11. Strict political content.</li>
+<li>3.8.12. Harmful content and/or burdensome on site systems.</li>
+</ul>
+<p>3.9. Website reserves the right, to its sole discretion, to decline any content/service that was initiated for publication, edit or permanently delete any of it, in any case the Conditions of Use were violated, or for any other reason, if the Website Administration assumes the content/service harms and/or could harm in any way Website's functionality.</p>
+<p>3.10. Website Administration does not oblige providing full uptime service, if for the reason of maintenance or because of malfunction. Therefore, Website Administration shall not be held liable, directly or indirectly, for any technical problem that prevents you from using the Website.</p>
+<br>
+<h3>4. Information Security:</h3>
+<br>
+<p>4.1. Website Administration will conduct any reasonable means to protect Users', Customers' and Businesses' data.</p>
+<p>4.2. Although it is made clear, Website Administration is not able to completely secure the Website from any possible, unlawful and harmful security breaches from third parties that Website Administration has no control over. Therefore, any information provided by you is on your fully responsibility.</p>
+<p>4.3. Every User and/or Business is responsible to make backup of their published content.</p>
+<p>4.4. Without limiting the foregoing, for maximum security, any classified information delivered in respect of the use of the Website such as payment details and personal classified information, are not stored in the Website's database but on dedicated secure third party repositories such as Pay Pal.</p>
+<br>
+<h3>5. Privacy Protection</h3>
+<br>
+<p>5.1. Since as mentioned above the Website is an open social platform, Website Administration is not liable for any information provided by you, in respect with section 4 statement, and it is made clear, that this information may be passed to other parties, including Businesses.</p>
+<p>5.2. The Website reserves the right to keep and make usage of the information provided by you and/or pass it to other parties without any identifying details, for statistical purposes (such as analyzing purchasing habits).</p>
+<p>5.3. The Website can make usage of "cookies" that will be stored on your computer, in order to provide better and faster service. It is made clear, that they will contain no classified information.</p>
+<br>
+<h3>6. The Jurisdiction clause:</h3>
+<br>
+<p>6.1. It is agreed, that the local jurisdiction shall be subject to the Court of Beer Sheva (Magistrates or District according to the matter). Nevertheless, The Website has the right of choosing the court.</p>
+<p>6.2. This Condition of Use is translated to English from the Hebrew language. In any contradiction of meaning, the Condition of Use in Hebrew will overcome.</p>
+</div>
+
+{% endblock %}

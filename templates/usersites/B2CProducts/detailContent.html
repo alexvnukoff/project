@@ -5,7 +5,7 @@
 {% load staticfiles %}
 {% load inclusionTags %}
 {% load humanize %}
-{% block title %}{{ object.name }} {{ object.sku }}{% endblock %}
+{% block title %}{{ object.name }}{% endblock %}
 {% block content %}
     {{ block.super }}
 
@@ -14,7 +14,7 @@
         <div class="product_box clearfix">
             {# Register the 'view' event for b2c product #}
             {{ object|register_event:"click"|process_event:request }}
-            <h2>{{ object.name }} {{ object.sku }}</h2>
+            <h2>{{ object.name }}</h2>
             <div class="preview">
                 {% if object.image %}
                   <img src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />

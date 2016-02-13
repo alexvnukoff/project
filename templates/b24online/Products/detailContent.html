@@ -93,7 +93,7 @@
            </li>
            {% endcomment %}
            <li>
-               <a class="bigbuy contact-us" data-name="{{ item.name }}" 
+               <a class="bigbuy contact-us" data-name="{{ item.name }}"
                   data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
            </li>
         </ul>
@@ -169,4 +169,6 @@
          {% endfor %}
     </div>
 </div>
+<div style="clear:both;"></div>
+<div class="fb-comments" data-href="http://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
 {% endblock %}

@@ -5,7 +5,7 @@
 {% load staticfiles %}
 {% load inclusionTags %}
 {% load humanize %}
-{% block title %}{{ object.name }} {{ object.sku }}{% endblock %}
+{% block title %}{{ object.name }}{% endblock %}
 {% block content %}
     {{ block.super }}
 
@@ -13,7 +13,7 @@
    <section class="content__info grid-layout">
 
         <div class="product_box clearfix">
-            <h2>{{ object.name }} {{ object.sku }}</h2>
+            <h2>{{ object.name }}</h2>
             <div class="preview">
                 {% if object.image %}
                   <img src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />
