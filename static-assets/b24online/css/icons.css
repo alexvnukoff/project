@@ -54,12 +54,12 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.social-but {}
-span.icon-facebook-official {color:#445D9A;font-size:17px;display:inline-block;margin:-3px 0 0 0;vertical-align:middle;}
+.social-but {margin:0;}
+span.icon-facebook-official {color:#445D9A;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
 span.icon-facebook-official:hover {text-decoration:none !important;}
-span.icon-gplus-squared {color:#EA4335;font-size:17px;display:inline-block;margin:-3px 0 0 0;vertical-align:middle;}
+span.icon-gplus-squared {color:#EA4335;font-size:18px;display:inline-block;margin:0 5px 0 0;vertical-align:middle;}
 span.icon-gplus-squared:hover  {text-decoration:none !important;}
 
-.icon-clock:before { content: '\e800'; } /* '' */
-.icon-facebook-official:before { content: '\e801'; } /* '' */
-.icon-gplus-squared:before { content: '\e802'; } /* '' */
+.icon-clock:before { content: '\e800'; }
+.icon-facebook-official:before { content: '\e801';margin:0; }
+.icon-gplus-squared:before { content: '\e802';margin:0; }
