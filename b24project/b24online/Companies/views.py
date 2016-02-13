@@ -6,7 +6,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.conf import settings
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -393,21 +393,29 @@ def send_message(request):
     """
     Send the message to :class:`Organization` (and `User` as recipient).
     """
-    logger.debug('Step 11')
-    logger.debug(request.method)
+    response_code = 'error'
+    response_text = 'Error'
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
     elif request.user.is_anonymous() or not request.user.is_authenticated():
         response_text = _('Only registered users can send the messages')
     else:
-        logger.debug('Step 12')
         form = MessageForm(request, data=request.POST, files=request.FILES)    
         if form.is_valid():
-            response_text = _('You have successfully sent the message')
+            try:
+                form.send()        
+
+            except IntegrityError:
+                response_text = _('You have successfully sent the message')
+            else:
+                response_code = 'success'
+                response_text = _('You have successfully sent the message')
         else:
-            logger.debug(form.errors)
-            response_text = _('Error'),
-        return HttpResponse(response_text)
+            response_text = form.get_errors()  
+    return HttpResponse(
+        json.dumps({'code': response_code, 'message': response_text}),
+        content_type='application/json'
+    )
 
 
 class CompanyUpdate(ItemUpdate):

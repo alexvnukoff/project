@@ -166,3 +166,21 @@ def add_message(request, content=None, recipient_id=None):
     Message.add_message(content.strip(), request.user, recipient_id)
 
     return HttpResponse('')
+
+
+@login_required
+def view_chats(request):
+    if not request.is_ajax():
+        # Messages page just opened, not chatting yet
+        contacts = _get_last_message_by_contact(request.user.pk, recipient_id)
+        active = next(iter(contacts), None)
+
+        template_params = {
+            'messages': _get_message_list(request, active),
+            'contacts': contacts,
+            'active': active,
+            'current_section': _('Private messages')
+        }
+
+    return render_to_response("b24online/Messages/chats.html", 
+        template_params, context_instance=RequestContext(request))

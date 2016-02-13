@@ -225,9 +225,23 @@ $(document).ready(function()
 	});
     */
 
+    function show_delivery_msg(msg_text, color) {
+        $('#delivery-result-msg').text(msg_text).css('color', color).show();
+    }
+
+    function append_delivery_msg(extra_text) {
+        var new_msg_text = $('#delivery-result-msg').text() + extra_text;
+        $('#delivery-result-msg').text(new_msg_text);
+    }
+
+    function append_delivery_msg(extra_text) {
+        var new_msg_text = $('#delivery-result-msg').text() + extra_text;
+        $('#delivery-result-msg').text(new_msg_text);
+    }
+
     $(document).on('click', ".contact-us", function()
     {
-        $('#send-succsefuly').hide()
+        $('#delivery-result-msg').hide()
 	    document.getElementById('light-contact').style.display='block';
         document.getElementById('fade-contact').style.display='block';
 
@@ -252,15 +266,30 @@ $(document).ready(function()
 
     $(document).on('click', "#send-message", function()
     {
-        $('#send_succsefuly').text("Please wait to response.....").show();
+        show_delivery_msg("Please wait to response...", '#008000');
         $("#message-to-organization").ajaxSubmit({
             url: '/companies/send/',
             type: 'post',
-            success:function(data) {
-                $('#send_succsefuly').text(data).show()
+            success: function(data) {
+                if (data.code == 'success') {
+                    $("#message-to-organization")[0].reset();
+                    $("#message-to-organization :input").prop("disabled", true);
+                    show_delivery_msg(data.message, 'blue');
+                    var counter = 1;
+                    var current_timer = setInterval(function() {
+                        append_delivery_msg('.');
+                    }, 200);
+                    setTimeout(function() {
+                        clearInterval(current_timer);
+                        document.getElementById('light-contact').style.display='none';
+                        document.getElementById('fade-contact').style.display='none';
+                        $("#message-to-organization :input").prop("disabled", false);
+                    }, 3000);
+                } else {
+                    show_delivery_msg(data.message, 'red');
+                }
             }
         });
-        $("#message-to-organization")[0].reset();
 	});
 
     $(document).on('click', "#send-resume", function()

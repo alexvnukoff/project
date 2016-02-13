@@ -197,8 +197,8 @@
             <input name="organization" id="organization-id" type="hidden" />
             <input name="recipient" id="recipient-id" type="hidden" />
             <ul class="contactform">
-              <li style="text-align: center;">
-                <label id="send-succsefuly" style="color: #008000;" hidden="hidden">
+              <li style="text-align: left; background-color: #f1f1f1; padding: 10px;">
+                <label id="delivery-result-msg" style="color: #008000;" hidden="hidden">
                   {% trans 'You have successfully sent the message.' %}
                 </label>
               </li>
@@ -227,7 +227,7 @@
                 	<label id="destination">{% trans 'Deliver as' %}</label>
                 	<div style="flow: left">
                     <div>
-                      <input name="delivery_way" selected type="radio" value="message" />
+                      <input name="delivery_way" type="radio" value="message" checked />
                       <span>{% trans 'Message' %}</span>
                     </div>
                 	  <div>

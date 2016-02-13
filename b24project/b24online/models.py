@@ -1417,6 +1417,8 @@ class MessageChat(models.Model):
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
                                null=True, blank=True) 
+    organization = models.ForeignKey('Organization', related_name='chats', 
+                                     null=True, blank=True)
     participants = models.ManyToManyField(User, blank=True)    
     private = models.NullBooleanField()
     status = models.CharField(_('Chart status'), max_length=10, 
