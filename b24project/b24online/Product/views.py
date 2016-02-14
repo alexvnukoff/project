@@ -839,25 +839,26 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['deal'] = self.object
+        logger.debug('Step 1')
         if self.object.supplier_company.company_paypal_account:
+            logger.debug('Step 2')
             paypal_dict = {
                 "business": self.object.supplier_company.company_paypal_account,
-                "amount": self.object.cost,
-                #"notify_url": self.request.build_absolute_uri(),
-                #"return_url": self.request.build_absolute_uri(),
-                #"cancel_return": self.request.build_absolute_uri(),
+                "amount": self.object.total_cost,
                 "item_number": self.object,
                 "item_name": self.object,
                 "no_shipping": 0,
                 "quantity": 1,
                 "currency_code": self.object.currency
             }
+            logger.debug('Step 3')
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
-        context.update({
-            'paypal_form': paypal_form,
-            'deal': self.object,
-        })
+            logger.debug('Step 4')
+            context['paypal_form'] = paypal_form
+        logger.debug(context)
         return context
+        
 
 class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem

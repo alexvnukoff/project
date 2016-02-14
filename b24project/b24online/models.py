@@ -2056,15 +2056,31 @@ class DealItem(models.Model):
             else 0 
 
 
-@receiver([post_save, post_delete], sender=DealItem)
-def recalculate_order_cost(sender, instance, *args, **kwargs):
+def recalculate_deal_cost(deal):
     """
-    Recalculate total cost of parents: deal and order
+    Recalculate total cost of deal
     """
-    assert isinstance(instance, DealItem), _('Invalid parameter')
-        
-    instance.deal.total_cost = instance.deal.deal_products\
+    assert isinstance(deal, Deal), _('Invalid parameter')
+    deal.total_cost = deal.deal_products\
         .aggregate(total_cost=Sum(F('cost') * F('quantity'), 
             output_field=models.FloatField())).get('total_cost', 0.0)
-    instance.deal.save()
+    deal.save()
 
+
+@receiver(post_save, sender=DealItem)
+def recalculate_for_update(sender, instance, *args, **kwargs):
+    """
+    Recalculate product's deal cost after update.
+    """
+    recalculate_deal_cost(instance.deal)
+
+
+@receiver(post_delete, sender=DealItem)
+def recalculate_for_delete(sender, instance, *args, **kwargs):
+    """
+    Recalculate product's deal cost after delete.
+    """
+    if instance.deal.deal_products.exists():
+        recalculate_deal_cost(instance.deal)
+    elif instance.deal.status == Deal.DRAFT:
+        instance.deal.delete()
