@@ -1,16 +1,22 @@
+# -*- encoding: utf-8 -*-
+
+import logging
+
 from collections import OrderedDict
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render_to_response, HttpResponse, Http404
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
 
-from b24online.models import Message
-from b24online.utils import deep_merge_dict
+from b24online.models import (Message, MessageChat, MessageAttachment)
+from b24online.utils import deep_merge_dict, get_current_organization
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def view_messages(request, recipient_id=None):
@@ -170,17 +176,33 @@ def add_message(request, content=None, recipient_id=None):
 
 @login_required
 def view_chats(request):
-    if not request.is_ajax():
-        # Messages page just opened, not chatting yet
-        contacts = _get_last_message_by_contact(request.user.pk, recipient_id)
-        active = next(iter(contacts), None)
-
-        template_params = {
-            'messages': _get_message_list(request, active),
-            'contacts': contacts,
-            'active': active,
-            'current_section': _('Private messages')
-        }
-
+    user = request.user
+    current_organization = get_current_organization(request)
+    per_page = 10
+    chats = MessageChat.objects.filter(
+        (Q(participants=user) | \
+         Q(organization=current_organization)) & \
+        ~Q(updated_by=user)
+    ).order_by('-updated_by')
+    context = {
+        'organization_chats': chats.filter(is_private=False)[:per_page],
+        'user_chats': chats.filter(is_private=True)[:per_page],
+    }
     return render_to_response("b24online/Messages/chats.html", 
-        template_params, context_instance=RequestContext(request))
+        context, context_instance=RequestContext(request))
+
+
+@login_required
+def chat_messages(request, item_id):
+    try:
+        chat = MessageChat.objects.get(id=item_id)
+    except MessageChat.DoesNotExist:
+        raise Http404(_('There is not such message chat'))
+    else:
+        context = {'messages': chat.chat_messages.order_by('created_at')}
+        return render_to_response("b24online/Messages/chatMessages.html", 
+            context, context_instance=RequestContext(request))
+
+@login_required
+def add_to_chat(request, item_id):
+    return HttpReposne('OK')

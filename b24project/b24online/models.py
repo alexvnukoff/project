@@ -186,7 +186,7 @@ class AbstractRegisterInfoModel(models.Model):
     created_at = models.DateTimeField(_('Creation time'),
         default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(_('Update time'),
-        auto_now=True)
+        default=timezone.now, db_index=True)
     
     class Meta:
         abstract = True
@@ -1411,7 +1411,7 @@ class Notification(models.Model):
         return self.message
 
 
-class MessageChat(models.Model):
+class MessageChat(AbstractRegisterInfoModel):
     """
     CLass for messages chat.
     """
@@ -1429,7 +1429,6 @@ class MessageChat(models.Model):
     status = models.CharField(_('Chart status'), max_length=10, 
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         verbose_name = _('Messages chat')    
@@ -1485,13 +1484,13 @@ class Message(models.Model):
 
 class MessageAttachment(models.Model):
     message = models.ForeignKey('Message', related_name='attachments')
-    file = models.FileField(
-        #upload_to=curry(document_upload_path, folder='attachments')
-    )
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        related_name='%(class)s_create_user'
-    )
+    file = models.FileField()
+    file_name = models.CharField(_('File name'), max_length=255, null=True,
+                                 blank=True, editable=False)
+    content_type = models.CharField(_('Content type'), max_length=255, 
+                                    null=True, blank=True, editable=False)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                   related_name='%(class)s_create_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -1807,71 +1806,6 @@ class RegisteredEvent(RegisteredEventMixin):
             return None
 
 
-@receiver(pre_save)
-def slugify(sender, instance, **kwargs):
-    fields = [field.name for field in sender._meta.get_fields()]
-
-    if 'slug' in fields:
-        if 'title' in fields:
-            string = instance.title
-        elif 'name' in fields:
-            string = instance.name
-        else:
-            raise NotImplementedError('Unknown source field for slug')
-
-        instance.slug = uuslug(string, instance=instance)  # create_slug(string)
-
-
-@receiver(post_save, sender=Company)
-@receiver(post_save, sender=Chamber)
-def initial_department(sender, instance, created, **kwargs):
-    if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
-        department = instance.create_department('Administration', instance.created_by)
-        vacancy = instance.create_vacancy('Admin', department, instance.created_by)
-        vacancy.assign_employee(instance.created_by, True)
-
-
-@receiver(post_save, sender=Country)
-@receiver(post_save, sender=Branch)
-@receiver(post_save, sender=B2BProductCategory)
-@receiver(post_save, sender=BusinessProposalCategory)
-@receiver(post_save, sender=NewsCategory)
-def index_item(sender, instance, created, **kwargs):
-    instance.reindex()
-
-
-@receiver(user_registered)
-def initial_profile(sender, user, request, **kwargs):
-    Profile.objects.create(user=user, country=Country.objects.first())
-
-
-@receiver(post_save, sender=RegisteredEvent)
-def process_event(sender, instance, created, **kwargs):
-    """
-    Process the registered event.
-    """
-    if instance.event_hash:
-        # Try to get or create stats instance
-        try:
-            stats = RegisteredEventStats.objects \
-                .get(event_type=instance.event_type,
-                     site=instance.site,
-                     content_type=instance.content_type,
-                     object_id=instance.object_id,
-                     registered_at=instance.registered_at.date())
-        except RegisteredEventStats.DoesNotExist:
-            stats = RegisteredEventStats(
-                event_type=instance.event_type,
-                site=instance.site,
-                content_type=instance.content_type,
-                object_id=instance.object_id,
-                registered_at=instance.registered_at.date(),
-                unique_amount=0, total_amount=0)
-
-        # Increase the counters and store GeoIP info
-        stats.store_info(instance)
-
-
 class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The model class for Client Orders to buy Products.
@@ -2144,38 +2078,6 @@ class DealItem(models.Model):
         return self.cost * self.quantity
 
 
-@receiver(post_save, sender=DealItem)
-def reclaculate_order_cost(sender, instance, created, **kwargs):
-    """
-    Recalculate total cost of parents: deal and order
-    """
-    assert isinstance(instance, DealItem), \
-        _('Invalid parameter')
-        
-    if instance.currency and instance.cost and instance.quantity > 0:
-        if instance.deal.status == Deal.DRAFT:
-            data = instance.deal.total_cost_data or {}
-            if instance.currency in data:
-                data[instance.currency] += \
-                    float(instance.cost * instance.quantity)
-            else:
-                data[instance.currency] = \
-                    float(instance.cost * instance.quantity)
-            instance.deal.total_cost_data = data
-            instance.deal.save()
-
-        if instance.deal.deal_order.status == DealOrder.DRAFT:
-            data = instance.deal.deal_order.total_cost_data or {}
-            if instance.currency in data:
-                data[instance.currency] += \
-                    float(instance.cost * instance.quantity)
-            else:
-                data[instance.currency] = \
-                    float(instance.cost * instance.quantity)
-            instance.deal.deal_order.total_cost_data = data
-            instance.deal.deal_order.save()
-
-
 class StaffGroup(models.Model):
     """
     Class for the relations of :class:`auth.models.Group` for 
@@ -2192,3 +2094,82 @@ class StaffGroup(models.Model):
         return ((item.id, item.group.name) \
             for item in cls.objects.select_related('group')\
                 .order_by('group__name'))
+
+
+@receiver(pre_save)
+def slugify(sender, instance, **kwargs):
+    fields = [field.name for field in sender._meta.get_fields()]
+
+    if 'slug' in fields:
+        if 'title' in fields:
+            string = instance.title
+        elif 'name' in fields:
+            string = instance.name
+        else:
+            raise NotImplementedError('Unknown source field for slug')
+
+        instance.slug = uuslug(string, instance=instance)  # create_slug(string)
+
+
+@receiver(post_save, sender=Company)
+@receiver(post_save, sender=Chamber)
+def initial_department(sender, instance, created, **kwargs):
+    if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
+        department = instance.create_department('Administration', instance.created_by)
+        vacancy = instance.create_vacancy('Admin', department, instance.created_by)
+        vacancy.assign_employee(instance.created_by, True)
+
+
+@receiver(post_save, sender=Country)
+@receiver(post_save, sender=Branch)
+@receiver(post_save, sender=B2BProductCategory)
+@receiver(post_save, sender=BusinessProposalCategory)
+@receiver(post_save, sender=NewsCategory)
+def index_item(sender, instance, created, **kwargs):
+    instance.reindex()
+
+
+@receiver(user_registered)
+def initial_profile(sender, user, request, **kwargs):
+    Profile.objects.create(user=user, country=Country.objects.first())
+
+
+@receiver(post_save, sender=RegisteredEvent)
+def process_event(sender, instance, created, **kwargs):
+    """
+    Process the registered event.
+    """
+    if instance.event_hash:
+        # Try to get or create stats instance
+        try:
+            stats = RegisteredEventStats.objects \
+                .get(event_type=instance.event_type,
+                     site=instance.site,
+                     content_type=instance.content_type,
+                     object_id=instance.object_id,
+                     registered_at=instance.registered_at.date())
+        except RegisteredEventStats.DoesNotExist:
+            stats = RegisteredEventStats(
+                event_type=instance.event_type,
+                site=instance.site,
+                content_type=instance.content_type,
+                object_id=instance.object_id,
+                registered_at=instance.registered_at.date(),
+                unique_amount=0, total_amount=0)
+
+        # Increase the counters and store GeoIP info
+        stats.store_info(instance)
+
+
+@receiver(post_save, sender=Message)
+def update_message_chat(sender, instance, created, **kwargs):
+    """
+    Recalculate total cost of parents: deal and order
+    """
+    assert isinstance(instance, Message), \
+        _('Invalid parameter')
+        
+    if created and instance.chat:
+        instance.chat.updated_by = instance.sender
+        instance.chat.updated_at = instance.created_at
+        instance.chat.save()

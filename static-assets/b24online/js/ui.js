@@ -652,15 +652,10 @@ var messagesUI = {
                 },
 
                 success: function( data ) {
-
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
                     messagesUI.bindScroll()
-
-
-
                 },
-
                 dataType: 'html',
                 type: 'GET'
             });
@@ -1551,4 +1546,46 @@ var companyStaff =
 
         this.overlay.hide();
     }
+};
+
+var chatsUI = {
+
+    curChat: 'mess-cur' ,
+    chatList: '.message-tabcontent',
+    messageBox: '.message-box',
+    textArea: '#message-box',
+
+    getMessages: function(container) {
+        if (container.hasClass(chatsUI.curChat))
+            return false;
+        var old = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (old.length > 0) {
+            old.removeClass(chatsUI.curChat);
+        }
+
+        container.addClass(chatsUI.curChat);
+
+        var url = $(container).children('a:first').data('url');
+        $.get(url, function(data) {
+            $('.custom-contentin').html(data);
+        });
+    },
+
+    onSelectChat: function() {
+        var container = $(this);
+        chatsUI.getMessages(container);
+        return false;
+    },
+
+    init: function() {
+        $(".messages-l").tabs();
+        this.messagesLoader = $('.message-loader');
+        $(this.chatList).on('click', 'li.data-item', this.onSelectChat);
+        // $(this.messageBox).on('click', 'a.send-message', this.sendMessage);
+        var current = $('.data-item:first');
+        if (current.length > 0) {
+            this.getMessages(current);
+        }
+    },
+
 };

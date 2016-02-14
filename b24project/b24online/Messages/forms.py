@@ -32,7 +32,7 @@ class MessageForm(forms.ModelForm):
         required=True,
     )
     attachment = forms.FileField(label=_('Message attachment'))
-    is_private = forms.BooleanField()
+    is_private = forms.BooleanField(required=False)
 
     class Meta:
         model = Message
@@ -50,9 +50,6 @@ class MessageForm(forms.ModelForm):
         Send the message by means of selected way.
         """
         cls = type(self)
-        logger.debug(self.data)
-        logger.debug(self.files)
-        logger.debug(self.cleaned_data)
         organization = self.cleaned_data.get('organization')
         recipient = self.cleaned_data.get('recipient')
         subject = self.cleaned_data.get('subject')
@@ -60,7 +57,6 @@ class MessageForm(forms.ModelForm):
         delivery_way = self.cleaned_data.get('delivery_way')
         is_private = self.cleaned_data.get('is_private')
         attachment = self.cleaned_data.get('attachment')
-        logger.debug(attachment)
         if delivery_way == cls.AS_MESSAGE:
             try:
                 with transaction.atomic():
@@ -85,7 +81,9 @@ class MessageForm(forms.ModelForm):
                             .create(
                                 file=handle_uploaded_file(attachment),
                                 message=new_message,
-                                created_by=self.request.user
+                                created_by=self.request.user,
+                                file_name=attachment.name,
+                                content_type=attachment.content_type,
                             )
 
             except IntegrityError as exc:

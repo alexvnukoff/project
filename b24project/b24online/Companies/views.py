@@ -404,9 +404,8 @@ def send_message(request):
         if form.is_valid():
             try:
                 form.send()        
-
-            except IntegrityError:
-                response_text = _('You have successfully sent the message')
+            except IntegrityError as exc:
+                response_text = _('Error during data saving') + str(exc)
             else:
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
