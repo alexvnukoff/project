@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+
+<div class="message-list">
+{% if messages|length < 10 %}
+    <div class="last"></div>
+{% endif %}
+{% for message in messages %}
+    <div class="dateline"><span>{{ message.created_at|date:"d M Y" }}</span></div>
+    <div class="customline" data-message="{{ message.pk }}" data-date="{{ message.created_at|date:"Y-n-d H:m:s.u" }}">
+        <label class="time">
+            {% if message.sender.profile.full_name %}
+                {{ message.sender.profile.full_name }}
+            {% else %}
+                {{ message.sender.email }}
+            {% endif %}
+            {{ message.created_at|date:"d M Y H:I" }}
+        </label>
+
+        <div class="clumnleft">
+            <span class="thumb">
+                <img src="{{ message.sender.profile.avatar.th }}"/>
+            </span>
+        </div>
+        <div class="clumnright">
+            <p>{{ message.content }}</p>
+        </div>
+        {% if message.attachments %}
+        <div class="clumnright">
+          <label>{% trans 'Attached files' %}:</label>
+          {% for attachment in message.attachments.all %}
+          <div>
+              <a href="{{ MEDIA_URL}}{{ attachment.file }}">
+                  {% if attachment.file_name %}
+                      {{ attachment.file_name }}
+                  {% else %}
+                      {{ forloop.counter }}
+                  {% endif %}
+              </a>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
