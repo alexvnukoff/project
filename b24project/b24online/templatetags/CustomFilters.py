@@ -345,10 +345,10 @@ def deal_order_quantity(request):
         orgs = get_permitted_orgs(request.user)
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
             .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
-            ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
-             Q(deal__deal_order__created_by=request.user)) | \
-             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
-             Q(deal__deal_order__customer_organization__in=orgs))))\
+            (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON,
+               deal__deal_order__created_by=request.user) | \
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+                deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
         return None

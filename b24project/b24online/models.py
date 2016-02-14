@@ -433,7 +433,7 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
         assert issubclass(model_klass, models.Model), \
             _('Invalid parameter. Must be a "Model" subclass')
         content_type = ContentType.objects.get_for_model(model_klass) 
-        return self.get_descendants().filter(polymorphic_ctype=content_type)
+        return self.get_descendants().instance_of(model_klass)
 
     @property
     def vacancies(self):

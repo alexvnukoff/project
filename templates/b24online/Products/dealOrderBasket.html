@@ -65,7 +65,7 @@
                         <td rowspan="{{ items_len }}">
                           {{ deal.created_at|date:"d M Y H:i" }}
                         </td>
-                        <td rowspan="{{ items_len }}">
+                        <td rowspan="{{ items_len }}" align="center" nowrap>
                           {% if deal.total_cost %}
                             <span class="bolded">
                               {{ deal.currency|getSymbol }}&nbsp;{{ deal.total_cost }}
@@ -83,7 +83,13 @@
                         </td>
                         {% endif %}
                         <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
-                        <td align="center">{{ deal_item.cost }} {{ deal_item.currency|getSymbol }}</td>
+                        <td align="center" nowrap>
+                          {% if deal_item.cost %}
+                            {{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }} 
+                          {% else %}
+                            -
+                          {% endif %}
+                        </td>
                         <td align="center">{{ item_form.quantity }}</td>
                         <td align="center">{{ item_form.DELETE }}</td>
                       </tr>
