@@ -1554,7 +1554,9 @@ var chatsUI = {
     chatList: '.message-tabcontent',
     messageBox: '.message-box',
     textArea: '#message-box',
-
+    submitSend: '#submit-send-message',
+    messageForm: '#send-message-to-chat',
+    
     getMessages: function(container) {
         if (container.hasClass(chatsUI.curChat))
             return false;
@@ -1562,10 +1564,11 @@ var chatsUI = {
         if (old.length > 0) {
             old.removeClass(chatsUI.curChat);
         }
-
         container.addClass(chatsUI.curChat);
-
-        var url = $(container).children('a:first').data('url');
+        var item_a = $(container).children('a:first');
+        var chat_id = item_a.data('chat-id');
+        $('#chat-id').val(chat_id);
+        var url = item_a.data('url');
         $.get(url, function(data) {
             $('.custom-contentin').html(data);
         });
@@ -1577,15 +1580,27 @@ var chatsUI = {
         return false;
     },
 
+    sendMessage: function() {
+        $(chatsUI.messageForm).ajaxSubmit({
+            url: '/messages/chats/add/',
+            type: 'post',
+            success: function(data) {
+                alert(data);   
+            }
+        });
+        return false;
+    },
+
     init: function() {
         $(".messages-l").tabs();
         this.messagesLoader = $('.message-loader');
         $(this.chatList).on('click', 'li.data-item', this.onSelectChat);
-        // $(this.messageBox).on('click', 'a.send-message', this.sendMessage);
+        $(this.submitSend).on('click', this.sendMessage);
         var current = $('.data-item:first');
         if (current.length > 0) {
             this.getMessages(current);
         }
+        
     },
 
 };

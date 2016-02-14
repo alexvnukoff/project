@@ -98,7 +98,11 @@
               <li id="id-product-cost-row">
                 <label>{% trans 'Product price' %}:</label>
                 <p>
-                  {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
+                  {% if item.cost and item.cost > 0 %}
+                    {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
+                  {% else %}
+                    {% trans 'Contact for price'%}
+                  {% endif %}
                 </p>
               </li>
               <li id="id-customer-type-row">

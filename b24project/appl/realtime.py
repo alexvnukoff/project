@@ -57,7 +57,7 @@ class Connection(SockJSConnection):
 
         yield tornado.gen.Task(self.redis_client.subscribe, [
             'notification',
-            'private_massage',
+            'private_message',
             'partner'
         ])
         self.redis_client.listen(self.on_redis_queue)  # при получении сообщения
@@ -78,6 +78,7 @@ class Connection(SockJSConnection):
         """
         self.django_session = get_session(request.get_cookie('sessionid').value)
         self.user = get_user(self.django_session)
+        print(self.user)
         # self.current_company = get_current_company(self.django_session)
 
     def on_message(self, msg):
@@ -90,20 +91,14 @@ class Connection(SockJSConnection):
         """
         Обновление в списке заказов
         """
-        if message.kind == 'message':  # сообщения у редиса бывают разного типа, 
-            # много сервисных, нам нужны только эти
-            message_body = json.loads(message.body)  # разворачиваем сабж, как вы
-            #  поняли я передаю данные в JSON
-
-            # в зависимости от канала получения распределяем сообщения
-            if message.channel == 'notification' and message_body.get('user', False) == self.user.pk:
+        print(message)
+        if message.kind == 'message':  
+            message_body = json.loads(message.body) 
+            if message.channel == 'notification' and \
+                message_body.get('user', False) == self.user.pk:
                 self.send_notification(message, message_body)
-
-            # send message to recipient
-            if message.channel == 'private_massage':
-
+            elif message.channel == 'private_message':
                 recipient = message_body.get('recipient', False)
-
                 if int(recipient) == self.user.pk:
                     self.send_notification(message, message_body)
 
@@ -116,7 +111,7 @@ class Connection(SockJSConnection):
         """
         self.redis_client.unsubscribe([
             'notification',
-            'private_massage',
+            'private_message',
             'partner'
         ])
         self.redis_client.disconnect()

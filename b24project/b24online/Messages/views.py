@@ -8,7 +8,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, HttpResponse, Http404
+from django.shortcuts import render_to_response
+from django.http import (HttpResponse, HttpResponseBadRequest, Http404)
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
@@ -203,6 +204,11 @@ def chat_messages(request, item_id):
         return render_to_response("b24online/Messages/chatMessages.html", 
             context, context_instance=RequestContext(request))
 
+
 @login_required
-def add_to_chat(request, item_id):
-    return HttpReposne('OK')
+def add_to_chat(request):
+    if request.method == 'POST':
+        logger.debug(request.POST)
+        logger.debug(request.FILES)
+        return HttpResponse('OK')
+    return HttpResponseBadRequest()
