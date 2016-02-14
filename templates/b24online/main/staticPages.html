@@ -8,7 +8,7 @@
     {% for page in pagesDict.about %}
         <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
     {% endfor %}
-
+    <li><a href="{% url 'tos' %}">{% trans 'Terms of Service' %}</a></li>
     <li><a href="{% url "greetings:main" %}">{% trans 'Greetings' %}</a></li>
 </ul>
 
