@@ -3,10 +3,9 @@ from celery import Celery
 
 from django.conf import settings
 
-CELERY_REDIS = getattr(settings, 'CELERY_REDIS', 'localhost')
-CELERY_PORT_REDIS = str(getattr(settings, 'CELERY_PORT_REDIS', 6379))
+CELERY_REDIS = getattr(settings, 'CELERY_REDIS', 'redis://localhost:6379')
 
-app = Celery('tpp',  broker='redis://' + CELERY_REDIS + ':' + CELERY_PORT_REDIS)
+app = Celery('tpp',  broker=CELERY_REDIS)
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.

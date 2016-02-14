@@ -2,32 +2,28 @@
 
 import logging
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
+from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.db.models import Q, Count, Sum
-from django.contrib.contenttypes.models import ContentType
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-
 from django.utils.translation import ugettext_lazy as _
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
     PolymorphicMPTTParentModelAdmin
 
+from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEventType, User)
-from centerpokupok.models import B2CProduct
-
-from b24online.Analytic.forms import SelectPeriodForm
+                              RegisteredEventStats, RegisteredEventType, User, Profile)
 from b24online.stats.utils import convert_date
+from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
 
@@ -172,8 +168,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     context_instance=RequestContext(request))
 
     def get_urls(self):
-        return patterns(
-            '',
+        return [
              url(r'^stats/$',
                  self.show_stats,
                  name='event_stats'),
@@ -181,7 +176,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                  r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
                  self.show_stats_detail,
                  name='event_stats_detail'),
-        ) + super(RegisteredEventStatsAdmin, self).get_urls()
+        ] + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
 class B24UserAdmin(UserAdmin):
@@ -214,4 +209,5 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
+admin.site.register(Profile, ModelAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)

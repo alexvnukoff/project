@@ -12,7 +12,6 @@ import datetime
 import logging
 import uuid
 import hashlib
-import GeoIP
 
 from django.db import models
 from django.conf import settings
@@ -76,6 +75,8 @@ class GeoIPHelper(object):
 
     @classmethod
     def get_geoip_data(cls, ip):
+
+        import GeoIP
         """
         Return the info from GeoIP database for IP address.
         """

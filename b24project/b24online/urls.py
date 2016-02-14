@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from loginas.views import user_login
+from django.views.generic import TemplateView
 
 import b24online.AdminTpp
 import b24online.AdminTpp.urls
@@ -84,6 +85,8 @@ urlpatterns = [
     url(r'^company-manage/', b24online.views.my_companies),
     url(r'^set/(?P<item_id>[0-9]+)/$', b24online.views.set_current, name="setCurrent"),
     url(r'^branch-list$', b24online.views.branch_list, name="branch_list"),
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^tos/$', TemplateView.as_view(template_name="b24online/tos.html"), name="tos"),
 ]
 
 if settings.DEBUG:

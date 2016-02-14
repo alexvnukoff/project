@@ -231,7 +231,7 @@ class ItemsList(HybridListView):
         })
 
         if isinstance(context['object_list'], SearchEngine):
-            object_ids = [hit.django_id for hit in context['object_list'].execute().hits]
+            object_ids = [hit.django_id for hit in context['object_list']]
             context['object_list'] = self.optimize_queryset(self.model.objects.filter(pk__in=object_ids))
 
         return context
