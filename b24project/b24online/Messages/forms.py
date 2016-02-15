@@ -31,7 +31,7 @@ class MessageForm(forms.ModelForm):
         choices=DELIVERY_WAYS,
         required=True,
     )
-    attachment = forms.FileField(label=_('Message attachment'))
+    attachment = forms.FileField(label=_('Message attachment'), required=False)
     is_private = forms.BooleanField(required=False)
 
     class Meta:
@@ -56,7 +56,6 @@ class MessageForm(forms.ModelForm):
         content = self.cleaned_data.get('content')
         delivery_way = self.cleaned_data.get('delivery_way')
         is_private = self.cleaned_data.get('is_private')
-        attachment = self.cleaned_data.get('attachment')
         if delivery_way == cls.AS_MESSAGE:
             try:
                 with transaction.atomic():
@@ -76,15 +75,18 @@ class MessageForm(forms.ModelForm):
                         chat=new_message_chat,
                         content=content,
                     )
-                    if attachment:
-                        new_message_attachment = MessageAttachment.objects\
-                            .create(
-                                file=handle_uploaded_file(attachment),
-                                message=new_message,
-                                created_by=self.request.user,
-                                file_name=attachment.name,
-                                content_type=attachment.content_type,
-                            )
+                    if self.request.FILES \
+                        and 'attachment' in self.request.FILES:
+
+                        for _attachment in self.request.FILES.getlist('attachment'):
+                            new_message_attachment = MessageAttachment.objects\
+                                .create(
+                                    file=handle_uploaded_file(_attachment),
+                                    message=new_message,
+                                    created_by=self.request.user,
+                                    file_name=_attachment.name,
+                                    content_type=_attachment.content_type,
+                                )
 
             except IntegrityError as exc:
                 raise

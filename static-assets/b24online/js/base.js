@@ -274,6 +274,8 @@ $(document).ready(function()
                 if (data.code == 'success') {
                     $("#message-to-organization")[0].reset();
                     $("#message-to-organization :input").prop("disabled", true);
+                    $("#message-to-organization :input").prop("disabled", true);
+                    $(".file-attachment").not(":first").remove();
                     show_delivery_msg(data.message, 'blue');
                     var counter = 1;
                     var current_timer = setInterval(function() {

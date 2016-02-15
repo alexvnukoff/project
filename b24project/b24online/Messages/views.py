@@ -185,10 +185,12 @@ def view_chats(request):
          Q(organization=current_organization)) & \
         ~Q(updated_by=user)
     ).order_by('-updated_by')
+    logger.debug(chats)
     context = {
         'organization_chats': chats.filter(is_private=False)[:per_page],
         'user_chats': chats.filter(is_private=True)[:per_page],
     }
+    logger.debug(context)
     return render_to_response("b24online/Messages/chats.html", 
         context, context_instance=RequestContext(request))
 

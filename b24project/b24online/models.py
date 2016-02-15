@@ -1497,6 +1497,21 @@ class MessageAttachment(models.Model):
         verbose_name = 'Message attachment'
         verbose_name_plural = 'Messages attachments'
 
+    def is_image(self):
+        try:
+            return self.content_type.split('/')[0] == 'image'
+        except IndexError:
+            return False
+
+    def get_shorted_name(self, size=7):
+        try:
+            _file, _ext = self.file_name.split('.')
+            if len(_file) > size:
+                return '%s.%s' % (_file[:size], _ext)
+            else:
+                return self.file_name
+        except ValueError:
+            return self.file_name
 
 class BannerBlock(models.Model):
     code = models.CharField(max_length=255)

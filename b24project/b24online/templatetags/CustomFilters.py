@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 
-from collections import OrderedDict, Iterable
-from copy import copy
-from decimal import Decimal
 import os
 import datetime
 import logging
+from collections import OrderedDict, Iterable
+from copy import copy
+from decimal import Decimal
+from urllib.parse import urljoin
 
 from django.db.models import Q
 from django.conf import settings
@@ -26,6 +27,8 @@ from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
 from b24online.stats.helpers import RegisteredEventHelper
+from b24online.utils import resize
+
 from tpp.SiteUrlMiddleWare import get_request
 import b24online.urls
 
@@ -383,3 +386,50 @@ def get_by_content_type(item):
             except model_class.DoesNotExist:
                 pass
     return None
+
+
+@register.filter
+def thumbnail(img, param_str):
+    """
+    Make and return the path to image thumbnail.
+    """
+    img_url = str(img)
+    try:
+        sizes, cropped = param_str.split('_')
+    except ValueError:
+        pass
+    else:
+        try:
+            size_px, size_py = list(map(int, sizes.split('x')))
+            cropped = bool(int(cropped))
+        except ValueError:
+            pass
+        else:
+            try:
+                _path, _filename = os.path.split(img_url)    
+                _file, _ext = _filename.split('.')
+            except ValueError:
+                pass
+            else:
+                thumbnail_name = r'%s__%s.%s' % (_file, param_str, _ext)
+                thumbnail_path = os.path.join(
+                    settings.MEDIA_ROOT, 
+                    'thumbnails',
+                    _path, 
+                    thumbnail_name
+                )
+                thumbnail_url = urljoin('thumbnails/', _path + '/') + thumbnail_name
+                sized_image_path = os.path.join(settings.MEDIA_ROOT, thumbnail_path)
+                image_path = os.path.join(settings.MEDIA_ROOT, img_url)
+                if not os.path.exists(sized_image_path) and \
+                    os.path.exists(image_path):
+                    directory = os.path.dirname(sized_image_path)
+                    if not os.path.exists(directory):
+                        try:
+                            os.makedirs(directory)
+                        except OSError as e:
+                            if e.errno != errno.EEXIST:
+                                raise
+                    resize(image_path, (size_px, size_px), cropped, sized_image_path) 
+                return urljoin(settings.MEDIA_URL, thumbnail_url)
+    return urljoin(settings.MEDIA_URL, img_url)

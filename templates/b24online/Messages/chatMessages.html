@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 
 <div class="message-list">
 {% if messages|length < 10 %}
@@ -14,7 +15,7 @@
             {% else %}
                 {{ message.sender.email }}
             {% endif %}
-            {{ message.created_at|date:"d M Y H:I" }}
+            {{ message.created_at|date:"d M Y H:i" }}
         </label>
 
         <div class="clumnleft">
@@ -26,17 +27,16 @@
             <p>{{ message.content }}</p>
         </div>
         {% if message.attachments %}
-        <div class="clumnright">
-          <label>{% trans 'Attached files' %}:</label>
+        <div class="clumnright" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
           {% for attachment in message.attachments.all %}
-          <div>
+          <div style="float: left; margin: 5px; border:1px dotted; border-color: #888888; padding:3px;">
               <a href="{{ MEDIA_URL}}{{ attachment.file }}">
-                  {% if attachment.file_name %}
-                      {{ attachment.file_name }}
+                  {% if attachment.is_image %}
+                    <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
                   {% else %}
-                      {{ forloop.counter }}
                   {% endif %}
               </a>
+              <div style="text-align: center;">{{ attachment.get_shorted_name }}</div>
           </div>
           {% endfor %}
         </div>

@@ -90,6 +90,18 @@
             {% endfor %}  
         ];
     </script>
+    <script type="text/javascript">
+        $(function(){
+            function addOneMoreInput() {
+                $('.file-attachment').last().change(function() {
+                    $(this).after('<input name="attachment" class="file-attachment" type="file" />');
+                    $(this).off('change');  
+                    addOneMoreInput();
+                });
+            }
+            addOneMoreInput();
+        });
+    </script>
 
 {% endblock %}
 
