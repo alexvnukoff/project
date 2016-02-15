@@ -19,7 +19,7 @@
         </label>
 
         <div class="clumnleft">
-            <span class="thumb">
+            <span class="thimb">
                 <img src="{{ message.sender.profile.avatar.th }}"/>
             </span>
         </div>
@@ -34,6 +34,7 @@
                   {% if attachment.is_image %}
                     <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
                   {% else %}
+                    <img src="{% static attachment.get_icon %}" height="50px" />
                   {% endif %}
               </a>
               <div style="text-align: center;">{{ attachment.get_shorted_name }}</div>

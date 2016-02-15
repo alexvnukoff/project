@@ -42,6 +42,7 @@ class LocalFileStorage(FileSystemStorage):
         'big': 150,
         'th': 30,
         'small': 24,
+        'middle': 70,
     }
 
     def url(self, name):

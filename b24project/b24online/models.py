@@ -1483,6 +1483,11 @@ class Message(models.Model):
 
 
 class MessageAttachment(models.Model):
+
+    ICONS = {
+        'application/vnd.ms-excel': 'xls.png',
+    }
+
     message = models.ForeignKey('Message', related_name='attachments')
     file = models.FileField()
     file_name = models.CharField(_('File name'), max_length=255, null=True,
@@ -1512,6 +1517,11 @@ class MessageAttachment(models.Model):
                 return self.file_name
         except ValueError:
             return self.file_name
+
+    def get_icon(self):
+        return 'b24online/img/' + \
+            type(self).ICONS.get(self.content_type, 'unknown.png')
+
 
 class BannerBlock(models.Model):
     code = models.CharField(max_length=255)
