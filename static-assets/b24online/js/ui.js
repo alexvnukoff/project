@@ -1574,6 +1574,17 @@ var chatsUI = {
         });
     },
 
+    renewMessages: function() {
+        var container = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (container.length > 0) {
+            var item_a = $(container).children('a:first');
+            var url = item_a.data('url');
+            $.get(url, function(data) {
+                $('.custom-contentin').html(data);
+            });
+        }
+    },
+
     onSelectChat: function() {
         var container = $(this);
         chatsUI.getMessages(container);
@@ -1585,7 +1596,9 @@ var chatsUI = {
             url: '/messages/chats/add/',
             type: 'post',
             success: function(data) {
-                alert(data);   
+                $("#send-message-to-chat")[0].reset();
+                $(".file-message-attachment").not(":first").remove();
+                chatsUI.renewMessages();
             }
         });
         return false;

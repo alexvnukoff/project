@@ -25,6 +25,18 @@
             chatsUI.init();
         });
     </script>
+    <script type="text/javascript">
+        $(function(){
+            function addOneMoreInput() {
+                $('.file-message-attachment').last().change(function() {
+                    $(this).after('<input name="attachment" class="file-message-attachment" type="file" />');
+                    $(this).off('change');  
+                    addOneMoreInput();
+                });
+            }
+            addOneMoreInput();
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -41,6 +53,7 @@
                     </li>
                 </ul>
             </div>
+
             <div id="message-tabs-1">
                 <div class="message-tabcontent message-tabcontent-org">
                     <ul class="custom-ms">
@@ -48,8 +61,8 @@
                         {% for chat in organization_chats %}
                         <li class="data-item">
                             <span class="thumb">
-                                {% if chat.updated_by.profile.avatar %}
-                                    <img src="{{ chat.updated_by.profile.avatar.th }}" />
+                                {% if chat.created_by.profile.avatar %}
+                                    <img src="{{ chat.created_by.profile.avatar.th }}" />
                                 {% else %}
                                     <img style="width: 24px;height: 24px;" 
                                         src="{% static 'b24online/img/profile.jpg' %}" />
@@ -57,10 +70,10 @@
                             </span>
                             <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
                                data-chat-id="{{ chat.pk }}" href="#">
-                                {% if chat.updated_by.profile.full_name %}
-                                    {{ chat.updated_by.profile.full_name }}
+                                {% if chat.created_by.profile.full_name %}
+                                    {{ chat.created_by.profile.full_name }}
                                 {% else %}
-                                    {{ chat.updated_by.email }}
+                                    {{ chat.created_by.email }}
                                 {% endif %}
                             </a>
                         </li>
@@ -70,6 +83,30 @@
            </div>
             <div id="message-tabs-2">
                 <div class="message-tabcontent message-tabcontent-private">
+                    <ul class="custom-ms">
+                        <li style="display: none"><a href="#placeholder"></a> </li>
+                        {% for chat in user_chats %}
+                        <li class="data-item">
+                            <span class="thumb">
+                                {% if chat.created_by.profile.avatar %}
+                                    <img src="{{ chat.created_by.profile.avatar.th }}" />
+                                {% else %}
+                                    <img style="width: 24px;height: 24px;" 
+                                        src="{% static 'b24online/img/profile.jpg' %}" />
+                                {% endif %}
+                            </span>
+                            <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                               data-chat-id="{{ chat.pk }}" href="#">
+                                {% if chat.created_by.profile.full_name %}
+                                    {{ chat.created_by.profile.full_name }}
+                                {% else %}
+                                    {{ chat.created_by.email }}
+                                {% endif %}
+                            <a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
                 </div>
             </div>
         </div>
@@ -78,16 +115,14 @@
             <div class="message-box">
                 <form id="send-message-to-chat"  enctype="multipart/form-data">
                 <input type="hidden" id="chat-id" name="chat" value="" />
+                <input type="hidden" id="delivery-way-id" name="delivery_way" value="message" />
                 <div class="title">{% trans "Send message" %}</div>
                 <div class="customform">
                     <div class="editor">
                         <textarea id="message-box" name="content"></textarea>
                     </div>
                     <div class="editor" style="text-align: left; font-size: 120%;">
-                        <label>{% trans 'Attach file' %}</label>
-                        <div>
-                            <input type="file" id="attach-file" name="attachment" />
-                        </div>
+                      <input name="attachment" class="file-message-attachment" type="file" />
                     </div>
                     <p><a id="submit-send-message" href="#"
                       class="send-message btntype2">{% trans "Send" %}</a></p>

@@ -79,7 +79,8 @@ class Connection(SockJSConnection):
         self.django_session = get_session(request.get_cookie('sessionid').value)
         self.user = get_user(self.django_session)
         print(self.user)
-        # self.current_company = get_current_company(self.django_session)
+        self.current_company = get_current_company(self.django_session)
+        print(self.current_company)
 
     def on_message(self, msg):
         """

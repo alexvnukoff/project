@@ -6,25 +6,22 @@ $(document).ready(function() {
 
     function socket_connect() {
         socket = new SockJS('http://' + window.location.hostname + ':9999/orders');  
-        // ваш порт для асинхронного сервиса
-        // при соединении вызываем событие login, которое будет выполнено на серверной стороне
-
         socket.onmessage = function(msg){
-            var data = msg['data']
-            var data = JSON.parse(data)
-            var type = data.type
-            data = data.data
+            var data = msg['data'];
+            var data = JSON.parse(data);
+            var type = data.type;
+            data = data.data;
 
             if (type == 'notification') {
-                el = $(".imgnews.icon-nt1")
-                num = el.siblings(".num").text()
-                el.siblings(".num").text(parseInt(num)+1)
+                el = $(".imgnews.icon-nt1");
+                num = el.siblings(".num").text();
+                el.siblings(".num").text(parseInt(num) + 1);
             } else if (type == 'private_message') {
-                el = $("#mailcounter")
-                num = el.text()
-                el.text(parseInt(num)+1)
+                el = $("#mailcounter");
+                num = el.text();
+                el.text(parseInt(num) + 1);
                 if(window.location.href.indexOf("messages") > -1){
-                    $(document).trigger('new_message', [data.fromUser])
+                    $(document).trigger('new_message', [data.fromUser]);
                 }
             }
         }

@@ -25,7 +25,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
-                              RegisteredEvent)
+                              RegisteredEvent, MessageChat, Message)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize
 
@@ -240,14 +240,20 @@ def set_notification_count(context):
 
 @register.simple_tag(takes_context=True)
 def set_message_count(context):
+    """
+    Return the number od unread messages.
+    """
     request = context.get('request')
-
     if request.user.is_authenticated():
-        # cab_pk = request.user.objects.get(user=request.user)
-        message = 0  # Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+        message = Message.objects.select_related('chat')\
+            .filter(chat__participants__id__exact=request.user.id,
+                    chat__status=MessageChat.OPENED,
+                    is_read=False)\
+            .filter(~Q(sender=request.user))\
+            .distinct()\
+            .count()
     else:
         message = 0
-
     return message
 
 
@@ -433,3 +439,13 @@ def thumbnail(img, param_str):
                     resize(image_path, (size_px, size_px), cropped, sized_image_path) 
                 return urljoin(settings.MEDIA_URL, thumbnail_url)
     return urljoin(settings.MEDIA_URL, img_url)
+
+
+@register.filter
+def mark_as_read(message):
+    assert isinstance(message, Message), \
+        _('Invalid parameter. Must be :class:`Message`')
+    if message.pk:
+        message.is_read = True
+        message.save()
+    return ''

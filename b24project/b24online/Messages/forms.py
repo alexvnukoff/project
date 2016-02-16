@@ -31,6 +31,8 @@ class MessageForm(forms.ModelForm):
         choices=DELIVERY_WAYS,
         required=True,
     )
+    chat = forms.ModelChoiceField(queryset=MessageChat.objects.all(), 
+                                  required=False)
     attachment = forms.FileField(label=_('Message attachment'), required=False)
     is_private = forms.BooleanField(required=False)
 
@@ -56,6 +58,7 @@ class MessageForm(forms.ModelForm):
         content = self.cleaned_data.get('content')
         delivery_way = self.cleaned_data.get('delivery_way')
         is_private = self.cleaned_data.get('is_private')
+        chat = self.cleaned_data.get('chat')
         if delivery_way == cls.AS_MESSAGE:
             try:
                 with transaction.atomic():
@@ -64,10 +67,10 @@ class MessageForm(forms.ModelForm):
                         organization=organization,
                         status=MessageChat.OPENED,
                         is_private=is_private,
-                    )
-                    new_message_chat.participants.add(self.request.user)
+                        created_by=self.request.user,
+                    ) if not chat else chat
                     new_message = Message.objects.create(
-                        subject=subject,
+                        subject=new_message_chat.subject,
                         status=Message.READY,
                         recipient=recipient,
                         organization=organization,
@@ -75,6 +78,10 @@ class MessageForm(forms.ModelForm):
                         chat=new_message_chat,
                         content=content,
                     )
+                    new_message_chat.participants.add(self.request.user)
+                    if recipient:
+                        new_message_chat.participants.add(recipient)
+
                     if self.request.FILES \
                         and 'attachment' in self.request.FILES:
 

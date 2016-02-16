@@ -1486,6 +1486,8 @@ class MessageAttachment(models.Model):
 
     ICONS = {
         'application/vnd.ms-excel': 'xls.png',
+        'application/msword': 'doc.png',
+        'application/pdf': 'pdf.png',
     }
 
     message = models.ForeignKey('Message', related_name='attachments')

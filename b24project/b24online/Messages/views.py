@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import json
 import logging
 
 from collections import OrderedDict
@@ -16,6 +17,7 @@ from django.utils.dateparse import parse_datetime
 
 from b24online.models import (Message, MessageChat, MessageAttachment)
 from b24online.utils import deep_merge_dict, get_current_organization
+from b24online.Messages.forms import MessageForm
 
 logger = logging.getLogger(__name__)
 
@@ -180,12 +182,13 @@ def view_chats(request):
     user = request.user
     current_organization = get_current_organization(request)
     per_page = 10
-    chats = MessageChat.objects.filter(
-        (Q(participants=user) | \
-         Q(organization=current_organization)) & \
-        ~Q(updated_by=user)
-    ).order_by('-updated_by')
-    logger.debug(chats)
+    chats = MessageChat.objects\
+        .filter(Q(organization=current_organization) | \
+                Q(participants__id__exact=user.id), 
+                status=MessageChat.OPENED)\
+        .distinct()\
+        .order_by('-updated_by')
+
     context = {
         'organization_chats': chats.filter(is_private=False)[:per_page],
         'user_chats': chats.filter(is_private=True)[:per_page],
@@ -209,8 +212,22 @@ def chat_messages(request, item_id):
 
 @login_required
 def add_to_chat(request):
+    response_code = 'error'
+    response_text = 'Error'
     if request.method == 'POST':
-        logger.debug(request.POST)
-        logger.debug(request.FILES)
-        return HttpResponse('OK')
+        form = MessageForm(request, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            try:
+                form.send()        
+            except IntegrityError as exc:
+                response_text = _('Error during data saving') + str(exc)
+            else:
+                response_code = 'success'
+                response_text = _('You have successfully sent the message')
+        else:
+            response_text = form.get_errors()  
+        return HttpResponse(
+            json.dumps({'code': response_code, 'message': response_text}),
+            content_type='application/json'
+        )
     return HttpResponseBadRequest()

@@ -11,7 +11,7 @@ from b24online.Messages.views import (
 )  
 
 urlpatterns = [
-    url(r'^$', view_messages, name='main'),
+    url(r'^$', view_chats, name='main'),
     url(r'^(?P<recipient_id>[0-9]+)/$', view_messages, name="message_item"),
     url(r'^add/$', add_message, name="add"),
     url(r'^chats/$', view_chats, name='chats'),
