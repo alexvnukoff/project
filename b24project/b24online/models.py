@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin, Group
+from django.contrib.auth.models import PermissionsMixin, Group, Permission
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField, 
@@ -746,17 +746,11 @@ class Department(models.Model):
         return reverse('department:detail', args=[self.slug, self.pk])
 
     def create_vacancy(self, name, user, **kwargs):
-        staffgroup_id = kwargs.get('staffgroup_id')
-        try:
-            staffgroup = StaffGroup.objects.get(pk=staffgroup_id)
-        except StaggGroup.DoesNotExist:
-            staffgroup = None        
         return Vacancy.objects.create(
             name=name,
             created_by=user,
             updated_by=user,
             department=self,
-            staffgroup=staffgroup,
         )
 
 
@@ -765,10 +759,12 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    staffgroup = models.ManyToManyField('StaffGroup', 
-                                        related_name='group_vacancies')
     is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
                                         default=False, db_index=True)
+    staffgroup = models.ManyToManyField('StaffGroup', 
+                                        related_name='group_vacancies')
+    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup', 
+                                        related_name='extra_group_vacancies')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1403,7 +1399,7 @@ class Notification(models.Model):
         return self.message
 
 
-class MessageChat(AbstractRegisterInfoModel):
+class MessageChat(models.Model):
     """
     CLass for messages chat.
     """
@@ -1413,7 +1409,7 @@ class MessageChat(AbstractRegisterInfoModel):
         (CLOSED, _('Closed')),
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=False, blank=False) 
+                               null=True, blank=False) 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     participants = models.ManyToManyField(User, blank=True)    
     private = models.NullBooleanField()
@@ -1449,7 +1445,7 @@ class Message(models.Model):
                              null=True, blank=True)
     is_read = models.BooleanField(default=False)
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=False, blank=False, db_index=True) 
+                               null=True, blank=False, db_index=True) 
     content = models.TextField(blank=False, null=False)
     status = models.CharField(_('Message status'), max_length=10, 
                               choices=STATUSES, default=DRAFT, editable=False,
@@ -2168,3 +2164,24 @@ class StaffGroup(models.Model):
         return ((item.id, item.group.name) \
             for item in cls.objects.select_related('group')\
                 .order_by('group__name'))
+
+
+class PermissionsExtraGroup(models.Model):
+    """
+    Class for permission's addiotional groups.
+    """
+    name = models.CharField(_('Group name'), max_length=255, 
+                            blank=False, null=False)
+    permissions = models.ManyToManyField(
+        Permission, 
+        verbose_name=_('Permission extra group')
+    )
+
+    class Meta:
+        verbose_name = _('Permission\'s extra group')
+        verbose_name_plural = _('Permission\'s extra groups')
+
+    @classmethod
+    def get_options(cls):
+        return ((item.id, item.name) \
+            for item in cls.objects.order_by('name'))

@@ -22,7 +22,8 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDea
     DeleteGalleryImage, DeleteDocument, DocumentList
 from b24online.models import (Company, News, Tender, Exhibition, B2BProduct, 
                               BusinessProposal, InnovationProject, 
-                              Vacancy, Organization, Branch, Chamber, StaffGroup)
+                              Vacancy, Organization, Branch, Chamber, StaffGroup,
+                              PermissionsExtraGroup)
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
 
 logger = logging.getLogger(__name__)
@@ -99,6 +100,9 @@ class CompanyDetail(ItemDetail):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update({'staffgroups': StaffGroup.get_options()})
+        context_data.update({
+            'extragroups': PermissionsExtraGroup.get_options()
+        })
         return context_data
 
 
@@ -224,7 +228,6 @@ def _tab_structure(request, company, page=1):
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
         request_type = request.POST.get("type", None)
-        staffgroup_id = request.POST.get('staffgroup', None)
 
         if not (request_type in ('department', 'vacancy')) and action is not None:
             return HttpResponseBadRequest()
@@ -237,8 +240,7 @@ def _tab_structure(request, company, page=1):
                 organization.create_department(name, request.user)
             elif item_id is not None:  # new vacancy
                 obj = get_object_or_404(organization.departments, pk=item_id)
-                organization.create_vacancy(name, obj, request.user,
-                    staffgroup_id=staffgroup_id)
+                organization.create_vacancy(name, obj, request.user)
 
         elif action == "edit" and item_id is not None and len(name) > 0:
             if request_type == 'department':
@@ -246,7 +248,6 @@ def _tab_structure(request, company, page=1):
             else:
                 obj = get_object_or_404(organization.vacancies, pk=item_id)
             obj.name = name
-            obj.staffgroup_id = staffgroup_id
             obj.save()
         elif action == "remove" and item_id is not None:
             if request_type == 'department':
