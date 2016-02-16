@@ -84,7 +84,7 @@ class B2CProductList(UserTemplateMixin, ItemList):
         return self.url_paginator
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().distinct()
 
         if self.category:
             if self.category.is_leaf_node():
