@@ -1605,7 +1605,15 @@ var chatsUI = {
     },
 
     init: function() {
-        $(".messages-l").tabs();
+        $(".messages-l").tabs({
+            activate: function(event, ui) {
+                var url = ui.newTab.find('a').data('url');
+                var currentItem = $(ui.newPanel).find('.data-item:first');
+                if (currentItem.length > 0) {
+                    chatsUI.getMessages(currentItem);
+                }
+            },
+        });
         this.messagesLoader = $('.message-loader');
         $(this.chatList).on('click', 'li.data-item', this.onSelectChat);
         $(this.submitSend).on('click', this.sendMessage);
