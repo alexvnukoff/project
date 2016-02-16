@@ -1413,7 +1413,7 @@ class Notification(models.Model):
 
 class MessageChat(AbstractRegisterInfoModel):
     """
-    CLass for messages chat.
+    Class for messages chat.
     """
     OPENED, CLOSED = 'opened', 'closed'
     STATUSES = (
