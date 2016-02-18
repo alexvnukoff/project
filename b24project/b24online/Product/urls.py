@@ -75,9 +75,12 @@ urlpatterns = [
         DealPayPal.as_view(), name="deal_paypal"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),
+    url(r'^deals/page(?P<page>[0-9]+)?/$', 
+        DealList.as_view(), name="deal_list_paginator"),
     url(r'^deals/(?P<status>draft|ready|paid|ordered)/$', 
         DealList.as_view(), name="deal_filtered_list"),
+    url(r'^deals/(?P<status>draft|ready|paid|ordered)page/(?P<page>[0-9]+)?/$', 
+        DealList.as_view(), name="deal_list_filtered_paginator"),
     url(r'^deals/item/(?P<item_id>[0-9]+)/delete/$', 
         DealItemDelete.as_view(), name="deal_item_delete"),
-
 ]

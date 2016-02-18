@@ -1,16 +1,15 @@
 /**
  * Js for stats
  */
+
 $(function() {
     $( ".date" ).datepicker({
         changeMonth: true,
         changeYear: true,
         yearRange: "1900:",
         dateFormat: "dd/mm/yy"
-      });
-});
+    });
 
-$(document).ready(function () {
     // Stats data table rows toggling
     $('.toggle-child').not('.force-open').each(function () {
         var child_class = '.' + $(this).attr('id') + '-child';
@@ -57,3 +56,4 @@ $(document).ready(function () {
         return false;
     });
 });
+

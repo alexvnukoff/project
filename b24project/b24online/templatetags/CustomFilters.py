@@ -3,7 +3,8 @@
 import datetime
 import logging
 import os
-from collections import OrderedDict, Iterable
+from collections import OrderedDict, Iterable, namedtuple
+
 from copy import copy
 from decimal import Decimal
 
@@ -389,3 +390,27 @@ def apply_handler(context, handler_name, instance):
 @register.filter
 def get_item(container, key):
     return container.get(key, None)
+
+
+# Class for filter form results colorizing
+DataToColorize = namedtuple('DataToColorize', ['value', 'q_name'])
+
+
+@register.filter
+def set_q_name(raw_value, q_name):
+    """
+    Wrap the field value to colorize.
+    """
+    return DataToColorize(raw_value, q_name)
+
+
+@register.filter
+def colorize_by(wrapped_value, filter_form):
+    if isinstance(wrapped_value, DataToColorize):
+        colorize_meth = getattr(filter_form, 'colorize', None)
+        if getattr(filter_form, 'cleaned_data', False) and \
+           colorize_meth and callable(colorize_meth):
+            return colorize_meth(wrapped_value)
+        else:
+            return wrapped_value.value
+    return wrapped_value

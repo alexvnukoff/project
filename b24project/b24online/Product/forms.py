@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import re
 import logging
 
 from django.db import transaction, IntegrityError
@@ -162,14 +163,17 @@ class B2_ProductBuyForm(forms.Form):
         notific_from = getattr(settings, 'ORDER_NOTIFICATION_FROM')
         notific_to = getattr(settings, 'ORDER_NOTIFICATION_TO')
         email = deal_item.deal.supplier_company.email
-        if not notific_disable and all((notific_template, email,
-                                        notific_from, notific_to)):
+        if not notific_disable and all((notific_template, notific_from, 
+                                        notific_to)):
             message = render_to_string(notific_template, 
                                        {'deal_item': deal_item,})
             subject = _('The info about ordered product. %(deal)s') \
                         % {'deal': deal_item.deal}
+            recipients = [notific_to]
+            if email:
+                recipients.append(email)
             mail = EmailMessage(subject, message, notific_from,
-                                [email, notific_to])
+                                recipients)
             mail.send()
 
     def save(self):
@@ -257,7 +261,7 @@ class DealListFilterForm(forms.Form):
     The search form for :class:`Deal`.
     """
     customer_name = forms.CharField(
-        label=_('Customer company'),
+        label=_('Customer (person or company)'),
         required=False
     )
     product_name = forms.CharField(
@@ -286,6 +290,9 @@ class DealListFilterForm(forms.Form):
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
         
     def filter(self, qs):
+        """
+        Filter the qs.
+        """
         customer_name, product_name, start_date, end_date,  = \
             list(map(lambda x: self.cleaned_data.get(x), self.fields.keys()))
         if start_date:
@@ -307,11 +314,65 @@ class DealListFilterForm(forms.Form):
         return qs
 
 
+    def colorize(self, wrapped_value):
+        value = wrapped_value.value
+        q_name = wrapped_value.q_name
+        if q_name == 'customer_name':
+            q = self.cleaned_data.get('customer_name')
+            if q:
+                q_replace = '<span style="color: red;">{0}</span>' . format(q)
+                return str(value).replace(q, q_replace)
+        elif q_name == 'deal_date':
+            start_date = self.cleaned_data.get('start_date')
+            end_date = self.cleaned_data.get('end_date')
+            if start_date or end_date:
+                colorized_value = re.sub(
+                    r'(\d{1,2}\/\d{1,2}\/\d{1,4})', 
+                    r'<span style="color: red;">\1</span>',
+                    value
+                )
+                return colorized_value
+        return value
+
+
 # The formset for products in Basket
 DealItemFormSet = modelformset_factory(
     DealItem, 
     fields=('quantity',), 
     can_delete=True, 
     widgets={'quantity': forms.NumberInput(attrs={'min': '1'}),}, 
+    extra=0
+)
+
+
+class DealOrderedForm(forms.ModelForm):
+
+    paid = forms.BooleanField(
+        label=_('Already paid'),
+        required=False)
+                        
+    reject = forms.BooleanField(
+        label=_('Reject deal'),
+        required=False)
+                        
+    class Meta:
+        model = Deal
+        fields = ()
+
+    def save(self):
+        paid = self.cleaned_data.get('paid')
+        reject = self.cleaned_data.get('reject')
+        if paid or reject:
+            if paid:            
+                self.instance.status = Deal.PAID
+            elif reject:
+                self.instance.status = Deal.REJECTED
+            self.instance.save()
+
+
+DealOrderedFormSet = modelformset_factory(
+    Deal, 
+    fields=(),
+    can_delete=False, 
     extra=0
 )
