@@ -17,7 +17,7 @@
 <div class="container">
     <div class="row mw-header">
 
-        <div class="col-lg-6 head-left-nav">
+        <div class="col-lg-8 head-left-nav">
             <a href="#">{% trans 'Advertisement' %}</a>
             <span>|</span>
             <a href="#">{% trans 'General advices' %}</a>
@@ -29,28 +29,6 @@
             <a href="#">{% trans 'New user' %}</a>
 
         </div>
-
-
-        <div class="col-lg-2" style="text-align:right;">
-
-            <label style="font-size:12px;">{% trans 'Language: ' %}
-            <select id="lang_select" style="border-left-color:#e8e8e8;border-bottom-color:#e8e8e8">
-                <option value="ru">Russian</option>
-                <option value="am">Armenian</option>
-                <option value="bg">Bulgarian</option>
-                <option value="en">English</option>
-                <option value="uk">Ukrainian</option>
-                <option value="he">Hebrew</option>
-                <option value="ar">Arabic</option>
-                <option value="zh">Chinese</option>
-
-            </select>
-             </label>
-
-
-        </div>
-
-
 
         <div class="col-lg-4 head-right-nav">
             {% trans 'Login with '%}
@@ -98,14 +76,27 @@
 </div>
 
 
-<div class="container" style="background:#f5f5f5">
+<div class="container">
+  <ul class="choose-language">
 
-some text
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}">English</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}">Russian</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}">Hebrew</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}">Armenian</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}">Bulgarian</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}">Ukrainian</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}">Arabic</a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}">Chinese</a></li>
 
+  </ul>
 </div>
 
-<div class="container" style="background:#f5f5f5">
-    <div class="row" style="margin:20px 0 0 0;padding:0;">
+
+
+
+
+<div class="container">
+    <div class="row">
 
         <div class="col-lg-8">
 
@@ -125,7 +116,12 @@ some text
                 <div class="item active">
                   <img src="{% static 'b24online/img/slide1.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    ...
+
+                    <div style="height:100px;text-align:left;">
+                      <h1 style="margin:0;">Sign up</h1>
+                      <p style="margin:0;">and get tools for business!</p>
+                    </div>
+
                   </div>
                 </div>
 
@@ -133,7 +129,23 @@ some text
                 <div class="item">
                   <img src="{% static 'b24online/img/slide2.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    ...
+
+
+                    <div style="text-align:left;">
+
+                        <h1 style="margin:0;padding:0;">Registration</h1>
+                        <p style="margin:0;">on the portal will allow you to:</p>
+
+                        <ul style="padding:0;list-style:square;font-size:12px;">
+                          <li>run a business behalf of the company (B2B, B2C)</li>
+                          <li>to buy goods as a private person(B2C)</li>
+                          <li>draw attention toward your projects(BANKIP)</li>
+
+                        </ul>
+
+                    </div>
+
+
                   </div>
                 </div>
 
@@ -142,7 +154,26 @@ some text
                 <div class="item">
                   <img src="{% static 'b24online/img/slide3.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    ...
+
+
+
+                    <div style="background:#efefef;margin-left:90px;text-align:left;">
+
+                        <h1 style="margin:0;padding:0;">Sign up</h1>
+                        <p style="margin:0;">and you will be able:</p>
+
+                        <ul style="padding:0;list-style:square;font-size:12px;">
+                          <li>create your own online shop</li>
+                          <li>to represent your products and services</li>
+                          <li>communicate with potential customers</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+
                   </div>
                 </div>
 
@@ -150,7 +181,20 @@ some text
                 <div class="item">
                   <img src="{% static 'b24online/img/slide4.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    ...
+
+
+
+Registred
+users can
+
+    create their own websites
+    puts advertising on the portal
+    create their own communities of interest
+
+
+
+
+
                   </div>
                 </div>
 
@@ -158,11 +202,11 @@ some text
 
               <!-- Controls -->
               <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="icon-angle-left glyphicon-chevron-left" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
               </a>
               <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="icon-angle-right glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
               </a>
             </div>
