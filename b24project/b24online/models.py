@@ -41,7 +41,6 @@ from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
                               LocalFileStorage)
 from b24online.utils import (generate_upload_path, reindex_instance,
                              document_upload_path, get_current_organization)
->>>>>>> master
 from tpp.celery import app
 
 CURRENCY = [
