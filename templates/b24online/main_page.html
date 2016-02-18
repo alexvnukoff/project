@@ -253,7 +253,7 @@
 
                         {# The deals history #}
                         <li><a href="{% url 'products:deal_list' %}">
-                            {% trans 'Current deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+                            {% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
                         <li><a href="{% url 'products:deal_list' %}">
                             {% trans 'Deals history' %}</a></li>
 

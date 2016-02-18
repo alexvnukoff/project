@@ -7,7 +7,7 @@
     {{ block.super }}
 
 <section class="content__info">
-   {% include 'usersites/Paginator.html' %}
+   {% include 'usersites_templates/default_horizontal_banners/Paginator.html' %}
 
                 <section class="content__info__products">
                     <h2>{% trans 'Search B2C Products' %}</h2>
@@ -44,5 +44,5 @@
                     </ul>
                 </section>
 
-   {% include 'usersites/Paginator.html' %}
+   {% include 'usersites_templates/default_horizontal_banners/Paginator.html' %}
 {% endblock %}

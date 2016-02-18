@@ -1,4 +1,4 @@
-from django.contrib.sites.shortcuts import get_current_site
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -6,9 +6,11 @@ from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
 
+from tpp.DynamicSiteMiddleware import get_current_site
+
 
 def wall(request):
-    organization = get_current_site(request).user_site.organization
+    organization = get_current_site().user_site.organization
     proposals = BusinessProposal.get_active_objects().filter(organization=organization)[:1]
     news = News.get_active_objects().filter(organization=organization)[:1]
 
@@ -27,7 +29,7 @@ def wall(request):
 
     template_params = {
         'current_section': current_section,
-        'title': get_current_site(request).user_site.organization.name,
+        'title': get_current_site().user_site.organization.name,
         'proposals': proposals,
         'news': news,
         'b2c_coupons': b2c_coupons,
@@ -35,7 +37,7 @@ def wall(request):
         'b2b_products': b2b_products
     }
     template_name = "{template_path}/contentPage.html"
-    site = get_current_site(request)
+    site = get_current_site()
     try:
         user_site = site.user_site
         user_site.refresh_from_db()

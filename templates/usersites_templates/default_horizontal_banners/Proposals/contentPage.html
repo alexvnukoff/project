@@ -6,7 +6,7 @@
     {{ block.super }}
 
     <section class="content__info">
-     {% include 'usersites/Paginator.html' %}
+     {% include 'usersites_templates/default_horizontal_banners//Paginator.html' %}
                <section class="content__info__news business-offers clearfix">
         <h2>{% trans 'Business proposals' %}</h2>
 
@@ -25,5 +25,5 @@
         {% endfor %}
 
  </section>
-     {% include 'usersites/Paginator.html' %}
+     {% include 'usersites_templates/default_horizontal_banners//Paginator.html' %}
 {% endblock %}

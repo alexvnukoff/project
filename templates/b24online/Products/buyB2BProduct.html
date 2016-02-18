@@ -1,9 +1,9 @@
 {% extends 'b24online/main_page.html' %}
+
 {% load static from staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
-
 
 {% block header %}
     {% include "b24online/login_header.html" %}
@@ -23,6 +23,7 @@
          $(".goods-details-tab").tabs();
       });
       
+      {% if form and form.has_companies %}
       $(document).ready(
           function() {
               $('input:radio[name=customer_type]').change(function() {
@@ -35,6 +36,7 @@
               });
           }
       );
+      {% endif %}
     </script>
 
 
@@ -85,13 +87,29 @@
             <fieldset class="dcol">
               <legend>{% trans 'Select customer' %}</legend>
               <li id="id-customer-type-row">
-                <label>{{ form.customer_type.label }}:</label>
-                <p>{{ form.customer_type }}</p>
+                {% if form.customer_type.is_hidden %}
+                  {{ form.customer_type }}
+                  <label>{% trans 'Customer' %}:</label>
+                  <p>{{ request.user }}</p>
+                {% else %}
+                  <label>{{ form.customer_type.label }}:</label>
+                  <p>{{ form.customer_type }}</p>
+                {% endif %}
+                {% if form.is_bound and form.customer_type.errors %}
+                  <p class="errors">{{ form.customer_type.errors|striptags }}</p>
+                {% endif %}
               </li>
-              <li id="id-customer-company-row">
+
+              {% if form.has_companies %}
+              <li id="id-customer-company-row" style="display: none;">
                 <label>{{ form.customer_organization.label }}:</label>
                 <p>{{ form.customer_organization }}</p>
+                {% if form.is_bound and form.customer_organization.errors %}
+                  <p class="errors">{{ form.customer_organization.errors|striptags }}</p>
+                {% endif %}
               </li>
+              {% endif %}
+
             </fieldset>
             <fieldset class="dcol">
               <legend>{% trans 'Quantity' %}</legend>
@@ -108,10 +126,13 @@
               <li id="id-customer-type-row">
                 <label>{{ form.quantity.label }}:</label>
                 <p>{{ form.quantity }}</p>
+                {% if form.is_bound and form.quantity.errors %}
+                  <p class="errors">{{ form.quantity.errors|striptags }}</p>
+                {% endif %}
               </li>
             </fieldset>
             <li>
-              <input type="submit" name="save" value="{% trans 'Buy' %}" />
+              <input type="submit" name="save" value="{% trans 'To basket' %}" />
             </li>
         </ul>
         </form>

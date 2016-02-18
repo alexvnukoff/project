@@ -7,7 +7,7 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     B2CProductDetail, B2BProductGalleryImageList, 
     DeleteB2BProductGalleryImage, B2BProductDocumentList, 
     DeleteB2BProductDocument, B2BProductBuy, B2CProductBuy,
-    DealOrderList, DealOrderDetail, DealOrderPayment,
+    DealOrderList, DealOrderDetail, DealOrderPayment, DealPayPal,
     DealList, DealDetail, DealPayment, DealItemDelete)
     
 from b24online.models import B2BProductCategory
@@ -71,11 +71,16 @@ urlpatterns = [
         DealDetail.as_view(), name="deal_detail"),
     url(r'^deals/(?P<item_id>[0-9]+)/pay/$', 
         DealPayment.as_view(), name="deal_payment"),
+    url(r'^deals/(?P<item_id>[0-9]+)/paypal/$', 
+        DealPayPal.as_view(), name="deal_paypal"),
     url(r'^deals/$', 
         DealList.as_view(), name="deal_list"),
+    url(r'^deals/page(?P<page>[0-9]+)?/$', 
+        DealList.as_view(), name="deal_list_paginator"),
     url(r'^deals/(?P<status>draft|ready|paid|ordered)/$', 
         DealList.as_view(), name="deal_filtered_list"),
+    url(r'^deals/(?P<status>draft|ready|paid|ordered)page/(?P<page>[0-9]+)?/$', 
+        DealList.as_view(), name="deal_list_filtered_paginator"),
     url(r'^deals/item/(?P<item_id>[0-9]+)/delete/$', 
         DealItemDelete.as_view(), name="deal_item_delete"),
-
 ]
