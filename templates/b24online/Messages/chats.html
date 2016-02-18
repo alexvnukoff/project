@@ -1,0 +1,127 @@
+{% extends 'b24online/main_page.html' %}
+
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block title %}{% trans 'Messages' %}{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}" />
+    <style>
+        .custom-content {
+            float: left;
+            position: relative;
+            width: 70%;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'b24online/js/ajax.queue.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            chatsUI.init();
+            function addOneMoreInput() {
+                $('.file-message-attachment').last().change(function() {
+                    $(this).after('<input name="attachment" class="file-message-attachment" type="file" />');
+                    $(this).off('change');  
+                    addOneMoreInput();
+                });
+            }
+            addOneMoreInput();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="analytics">
+    <div class="community">
+        <div class="messages-l">
+            <div class="tab-cate">
+                <ul>
+                    <li class="ui-tabs-active">
+                        <a href="#message-tabs-1">{% trans "Organization" %}</a>
+                    </li>
+                    <li>
+                        <a href="#message-tabs-2">{% trans "Private" %}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="message-tabs-1">
+                <div class="message-tabcontent message-tabcontent-org">
+                    <ul class="custom-ms">
+                        <li style="display: none"><a href="#placeholder"></a> </li>
+                        {% for chat in organization_chats %}
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="data-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
+                            <span class="thumb">
+                                {% if other_side.profile.avatar %}
+                                    <img src="{{ other_side.profile.avatar.th }}" />
+                                {% else %}
+                                    <img style="width: 24px;height: 24px;" 
+                                        src="{% static 'b24online/img/profile.jpg' %}" />
+                                {% endif %}
+                            </span>
+                            <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                               data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+           </div>
+            <div id="message-tabs-2">
+                <div class="message-tabcontent message-tabcontent-private">
+                    <ul class="custom-ms">
+                        <li style="display: none"><a href="#placeholder"></a> </li>
+                        {% for chat in user_chats %}
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="data-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
+                            <span class="thumb">
+                                {% if other_side.profile.avatar %}
+                                    <img src="{{ other_side.profile.avatar.th }}" />
+                                {% else %}
+                                    <img style="width: 24px;height: 24px;" 
+                                        src="{% static 'b24online/img/profile.jpg' %}" />
+                                {% endif %}
+                            </span>
+                            <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                               data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="custom-content" id="custom-content">
+            <div class="custom-contentin"></div>
+            <div class="message-box">
+                <form id="send-message-to-chat"  enctype="multipart/form-data">
+                <input type="hidden" id="chat-id" name="chat" value="" />
+                <input type="hidden" id="delivery-way-id" name="delivery_way" value="message" />
+                <div class="title">{% trans "Send message" %}</div>
+                <div class="customform">
+                    <div class="editor">
+                        <textarea id="message-box" name="content"></textarea>
+                    </div>
+                    <div class="editor" style="text-align: left; font-size: 120%;">
+                      <input name="attachment" class="file-message-attachment" type="file" />
+                    </div>
+                    <p><a id="submit-send-message" href="#"
+                      class="send-message btntype2">{% trans "Send" %}</a></p>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div class="message-loader"><img src="/static/b24online/img/messages-loader.gif" /></div>
+    </div>
+</div>
+{% endblock %}
+
+

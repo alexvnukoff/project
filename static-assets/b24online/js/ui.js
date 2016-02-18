@@ -652,15 +652,10 @@ var messagesUI = {
                 },
 
                 success: function( data ) {
-
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
                     messagesUI.bindScroll()
-
-
-
                 },
-
                 dataType: 'html',
                 type: 'GET'
             });
@@ -1551,4 +1546,82 @@ var companyStaff =
 
         this.overlay.hide();
     }
+};
+
+var chatsUI = {
+
+    curChat: 'mess-cur' ,
+    chatList: '.message-tabcontent',
+    messageBox: '.message-box',
+    textArea: '#message-box',
+    submitSend: '#submit-send-message',
+    messageForm: '#send-message-to-chat',
+    
+    getMessages: function(container) {
+        if (container.hasClass(chatsUI.curChat))
+            return false;
+        var old = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (old.length > 0) {
+            old.removeClass(chatsUI.curChat);
+        }
+        container.addClass(chatsUI.curChat);
+        var item_a = $(container).children('a:first');
+        var chat_id = item_a.data('chat-id');
+        $('#chat-id').val(chat_id);
+        var url = item_a.data('url');
+        $.get(url, function(data) {
+            $('.custom-contentin').html(data);
+        });
+    },
+
+    renewMessages: function() {
+        var container = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (container.length > 0) {
+            var item_a = $(container).children('a:first');
+            var url = item_a.data('url');
+            $.get(url, function(data) {
+                $('.custom-contentin').html(data);
+            });
+        }
+    },
+
+    onSelectChat: function() {
+        var container = $(this);
+        chatsUI.getMessages(container);
+        return false;
+    },
+
+    sendMessage: function() {
+        $(chatsUI.messageForm).ajaxSubmit({
+            url: '/messages/chats/add/',
+            type: 'post',
+            success: function(data) {
+                $("#send-message-to-chat")[0].reset();
+                $(".file-message-attachment").not(":first").remove();
+                chatsUI.renewMessages();
+            }
+        });
+        return false;
+    },
+
+    init: function() {
+        $(".messages-l").tabs({
+            activate: function(event, ui) {
+                var url = ui.newTab.find('a').data('url');
+                var currentItem = $(ui.newPanel).find('.data-item:first');
+                if (currentItem.length > 0) {
+                    chatsUI.getMessages(currentItem);
+                }
+            },
+        });
+        this.messagesLoader = $('.message-loader');
+        $(this.chatList).on('click', 'li.data-item', this.onSelectChat);
+        $(this.submitSend).on('click', this.sendMessage);
+        var current = $('.data-item:first');
+        if (current.length > 0) {
+            this.getMessages(current);
+        }
+        
+    },
+
 };

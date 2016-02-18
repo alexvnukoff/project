@@ -6,7 +6,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.conf import settings
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -25,6 +25,7 @@ from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
                               Vacancy, Organization, Branch, Chamber, StaffGroup,
                               PermissionsExtraGroup)
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+from b24online.Messages.forms import MessageForm
 
 logger = logging.getLogger(__name__)
 
@@ -390,46 +391,31 @@ class DeleteCompanyDocument(DeleteDocument):
 
 
 def send_message(request):
-    if request.is_ajax():
-        if not request.user.is_anonymous() and request.user.is_authenticated() and request.POST.get('company', False):
-            if request.POST.get('message', False) or request.FILES.get('file', False):
-                company_pk = request.POST.get('company')
-
-                # this condition as temporary design for separation Users and Organizations
-                organization = Company.get_active_objects().get(pk=company_pk)
-
-                if request.POST.get('delivery_way') == 'portal':
-                    pass                
-                else:
-                    if not organization.email:
-                        email = 'admin@tppcenter.com'
-                        subject = _('This message was sent to '
-                                    'company with id: ') + str(organization.pk)
-                    else:
-                        email = organization.email
-                        subject = _('New message')
-                        
-                    mail = EmailMessage(
-                        subject,
-                        request.POST.get('message', ""),
-                        'noreply@tppcenter.com',
-                        [email]
-                    )
-                    attachment = request.FILES.get('file', False)
-                    if attachment:
-                        mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                    mail.send()
-
-                response = _('You have successfully sent the message.')
-
+    """
+    Send the message to :class:`Organization` (and `User` as recipient).
+    """
+    response_code = 'error'
+    response_text = 'Error'
+    if not request.is_ajax() or request.method != 'POST':
+        return HttpResponseBadRequest()
+    elif request.user.is_anonymous() or not request.user.is_authenticated():
+        response_text = _('Only registered users can send the messages')
+    else:
+        form = MessageForm(request, data=request.POST, files=request.FILES)    
+        if form.is_valid():
+            try:
+                form.send()        
+            except IntegrityError as exc:
+                response_text = _('Error during data saving') + str(exc)
             else:
-                response = _('Message or file are required')
+                response_code = 'success'
+                response_text = _('You have successfully sent the message')
         else:
-            response = _('Only registered users can send the messages')
-
-        return HttpResponse(response)
-
-    return HttpResponseBadRequest()
+            response_text = form.get_errors()  
+    return HttpResponse(
+        json.dumps({'code': response_code, 'message': response_text}),
+        content_type='application/json'
+    )
 
 
 class CompanyUpdate(ItemUpdate):

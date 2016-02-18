@@ -1,14 +1,19 @@
 # -*- encoding: utf-8 -*-
 
+import os
 import datetime
 import logging
-import os
 from collections import OrderedDict, Iterable, namedtuple
+from copy import copy
+from decimal import Decimal
+from urllib.parse import urljoin
+import os
 
 from copy import copy
 from decimal import Decimal
 
 from django import template
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.core.cache import cache
@@ -22,9 +27,10 @@ from lxml.html.clean import clean_html
 
 import b24online.urls
 from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification)
+from b24online.models import (Chamber, Notification, RegisteredEventType,
+                              RegisteredEvent, MessageChat, Message)
 from b24online.stats.helpers import RegisteredEventHelper
-from b24online.utils import get_permitted_orgs
+from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
 from tpp.SiteUrlMiddleWare import get_request
 
@@ -236,14 +242,20 @@ def set_notification_count(context):
 
 @register.simple_tag(takes_context=True)
 def set_message_count(context):
+    """
+    Return the number od unread messages.
+    """
     request = context.get('request')
-
     if request.user.is_authenticated():
-        # cab_pk = request.user.objects.get(user=request.user)
-        message = 0  # Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+        message = Message.objects.select_related('chat')\
+            .filter(chat__participants__id__exact=request.user.id,
+                    chat__status=MessageChat.OPENED,
+                    is_read=False)\
+            .filter(~Q(sender=request.user))\
+            .distinct()\
+            .count()
     else:
         message = 0
-
     return message
 
 
@@ -302,15 +314,17 @@ def get_length(some_list):
     return len(some_list) \
         if isinstance(some_list, Iterable) else 0
 
-# FIXME: (andrey_k) delete it
+
+### FIXME: (andrey_k) delete it ###
 @register.filter()
 def to_list(some_dict):
     return [(k, v) for k, v in some_dict.items()]
 
+
 @register.filter()
 def show_type(instance):
     return type(instance)
-
+### -- ###    
 
 
 @register.filter
@@ -362,6 +376,9 @@ def deal_number(request):
 
 @register.filter
 def get_by_content_type(item):
+    """
+    Return model instance by content_type and object_id.
+    """
     content_type_id = item.get('content_type_id')
     instance_id = item.get('object_id')
     if content_type_id and instance_id:        
@@ -375,6 +392,80 @@ def get_by_content_type(item):
                 return model_class.objects.get(pk=instance_id)
             except model_class.DoesNotExist:
                 pass
+    return None
+
+
+@register.filter
+def thumbnail(img, param_str):
+    """
+    Make and return the path to image thumbnail.
+    """
+    img_url = str(img)
+    try:
+        sizes, cropped = param_str.split('_')
+    except ValueError:
+        pass
+    else:
+        try:
+            size_px, size_py = list(map(int, sizes.split('x')))
+            cropped = bool(int(cropped))
+        except ValueError:
+            pass
+        else:
+            try:
+                _path, _filename = os.path.split(img_url)    
+                _file, _ext = _filename.split('.')
+            except ValueError:
+                pass
+            else:
+                thumbnail_name = r'%s__%s.%s' % (_file, param_str, _ext)
+                thumbnail_path = os.path.join(
+                    settings.MEDIA_ROOT, 
+                    'thumbnails',
+                    _path, 
+                    thumbnail_name
+                )
+                thumbnail_url = urljoin('thumbnails/', _path + '/') + thumbnail_name
+                sized_image_path = os.path.join(settings.MEDIA_ROOT, thumbnail_path)
+                image_path = os.path.join(settings.MEDIA_ROOT, img_url)
+                if not os.path.exists(sized_image_path) and \
+                    os.path.exists(image_path):
+                    directory = os.path.dirname(sized_image_path)
+                    if not os.path.exists(directory):
+                        try:
+                            os.makedirs(directory)
+                        except OSError as e:
+                            if e.errno != errno.EEXIST:
+                                raise
+                    resize(image_path, (size_px, size_px), cropped, sized_image_path) 
+                return urljoin(settings.MEDIA_URL, thumbnail_url)
+    return urljoin(settings.MEDIA_URL, img_url)
+
+
+@register.filter
+def mark_as_read(message):
+    """
+    Make a message as read.
+    """
+    assert isinstance(message, Message), \
+        _('Invalid parameter. Must be :class:`Message`')
+    if message.pk:
+        message.is_read = True
+        message.save()
+    return ''
+
+
+@register.assignment_tag(takes_context=True)
+def get_chat_other_side(context, chat):
+    """
+    Return the chat's 'other side'.
+    """
+    request = context['request']
+    if request.user.is_authenticated():
+        if chat.created_by == request.user:
+            return chat.recipient
+        else:
+            return chat.created_by
     return None
 
 

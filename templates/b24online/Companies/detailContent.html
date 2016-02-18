@@ -15,11 +15,13 @@
     {{ block.super }}
     <script>
         {% getOwner item as owner %}
-        ga('set', 'dimension1', {{ item.pk }});
-        {% if owner %}
-            ga('set', 'dimension3', {{ owner.pk }});
-        {% endif %}
-        ga('set', 'dimension2', 'company');
+        if (typeof ga !== "undefined") {
+            ga('set', 'dimension1', {{ item.pk }});
+            {% if owner %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+            ga('set', 'dimension2', 'company');
+        }
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -91,6 +93,18 @@
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
             {% endfor %}  
         ];
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            function addOneMoreInput() {
+                $('.file-attachment').last().change(function() {
+                    $(this).after('<input name="attachment" class="file-attachment" type="file" />');
+                    $(this).off('change');  
+                    addOneMoreInput();
+                });
+            }
+            addOneMoreInput();
+        });
     </script>
 
 {% endblock %}

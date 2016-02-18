@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
-<script>
+<script type="text/javascript">
     $(function(){
         var STAFFGROUPS = [
             {% for item in staffgroups %}
@@ -29,7 +29,7 @@
                     <td>{% trans "Position" %}</td>
                     <td>{% trans "Contact" %}</td>
                     <td>{% trans "Status" %}</td>
-                    <td class="status"></td>
+                    <td class="status"></td>-
                 </tr>
 
                 {% for vacancy in page.object_list %}
@@ -50,7 +50,15 @@
                         {% endif %}
                         <td>{{ vacancy.department.name }}</td>
                         <td>{{ vacancy.name }}</td>
-                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ vacancy.user.profile.full_name }}" data-id="{{ vacancy.user.pk }}"></i></td>
+                        <td>
+                          <i class="staff-contact-msg img-status contact-us" 
+                            data-id="{{ vacancy.user.pk }}"
+                            data-organization-id="{{ vacancy.department.organization.pk }}"
+                            data-organization-name="{{ vacancy.department.organization.name }}" 
+                            data-recipient-id="{{ vacancy.user.pk }}"
+                            data-recipient-name="{% if vacancy.user.profile and vacancy.user.profile.full_name %}{{ vacancy.user.profile.full_name }}{% else %}{{ vacancy.user.email }}{% endif %}">
+                          </i>
+                        </td>
                         <td><i class="staff-status-active img-status"></i></td>
                         {% comment %}
                             {% if status == 'Active' %}

@@ -68,7 +68,6 @@
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/flags.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/icons.css' %}" />
             <link type="text/css" rel="stylesheet" href='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css' />
-
         {% endblock %}
 
 
@@ -77,10 +76,10 @@
                 var statciPath = '{% static "b24online/" %}';
                 var LANG = {};
             </script>
-            <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-            <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
-            <script  type="text/javascript" src="{% static "b24online/js/base.js"%}"></script>
+            <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <script type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
+            <script type="text/javascript" src="{% static "b24online/js/base.js"%}"></script>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 
         {% endblock %}
@@ -196,36 +195,67 @@
      }
      ga('send', 'pageview');
     </script>
+
 <div style="display: none;" class="white_content" id="light-contact">
     <div class="contact-table">
         <div class="contact-tablein">
-            <a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
-          <form id="messageToCompany"  enctype="multipart/form-data">
-
+        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+          <form id="message-to-organization"  enctype="multipart/form-data">
+            <input name="organization" id="organization-id" type="hidden" />
+            <input name="recipient" id="recipient-id" type="hidden" />
             <ul class="contactform">
-                <li style="text-align: center;">
-                    <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+              <li style="text-align: left; background-color: #f1f1f1; padding: 10px;">
+                <label id="delivery-result-msg" style="color: #008000;" hidden="hidden">
+                  {% trans 'You have successfully sent the message.' %}
+                </label>
+              </li>
+            	<li id="organization-info">
+                	<label>{% trans 'Send message to' %}:</label>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="organization-name"></span>
+              </li>
+            	<li id="recipient-info" style="display: none;">
+                	<label>{% trans 'For user' %}:</label>
+                	<span style="float: left; font-weight: bold; font-size:120%;" id="recipient-name"></span>
+              </li>
+              
+            	<li>
+                	<label>{% trans 'Message subject' %}:</label>
+                  <div class=""><input name="subject" style="width: 498px;" /></div>
                 </li>
-
-
                 <li>
-                    <label>{% trans 'Send message to' %}:</label>
-                    <label id="send_to" ></label>
+                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                  <div class=""><textarea name="content" style="width: 498px;height: 135px;"></textarea></div>
                 </li>
                 <li>
-                    <label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
-                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                	<label id="file-title">{% trans 'File' %}</label>
+                  <input name="attachment" id="file-input" class="file-attachment" type="file" />
                 </li>
                 <li>
-                    <label id="file-title">{% trans 'File' %}</label>
-                    <input name="file" id="file-input" type="file" />
-                    <input name="company" id="toCompany" type="hidden" />
+                	<label id="destination">{% trans 'Deliver as' %}</label>
+                	<div style="flow: left">
+                    <div>
+                      <input name="delivery_way" type="radio" value="message" checked />
+                      <span>{% trans 'Message' %}</span>
+                    </div>
+                	  <div>
+                	    <input name="delivery_way" type="radio" value="email" />
+                	    <span>{% trans 'Email' %}</span>
+                	  </div>
+                  </div>
+                </li>
+                <li>
+                	<label id="destination">{% trans 'Is message private' %}</label>
+                	<div style="flow: left">
+                    <div>
+                      <input name="is_private" type="checkbox" />
+                    </div>
+                  </div>
                 </li>
                 <li class="end">
-                    <div class="newform-button">
-                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
-                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
-                    </div>
+                	<div class="newform-button">
+                    <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                    <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                  </div>
                 </li>
             </ul>
           </form>

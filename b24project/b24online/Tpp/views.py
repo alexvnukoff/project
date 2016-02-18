@@ -330,6 +330,7 @@ def _tab_staff(request, tpp, page=1):
         'url_paginator': url_paginator,
         'url_parameter': tpp,
         'item_pk': tpp,
+        'organization': organization,
         'has_perm': organization.has_perm(request.user)
     }
 

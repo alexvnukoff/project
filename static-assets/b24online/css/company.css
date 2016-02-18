@@ -218,7 +218,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .custom-ms{ position:relative; float:left; width:100%;}
 .custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px; white-space: nowrap;}
 .custom-ms li .thumb{ float:left; width:24px; height:24px; background-color:#afafaf; margin:3px 8px; display:inline;}
-.message-tabcontent .custom-ms li.mess-cur { background:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px; max-width: 100%; overflow: hidden;}
+.message-tabcontent .custom-ms li.mess-cur { background-color:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px; max-width: 100%; overflow: hidden;}
 .message-tabcontent .custom-ms li.mess-cur a{ color:#FFF;}
 .message-tabcontent .custom-ms li.mess-cur:after{ content:""; position:absolute; width:0; height:0; right:0px; top:10px;
 border-style: solid; border-width: 4px 7px 4px 0; border-color: transparent #fafafa transparent transparent;}

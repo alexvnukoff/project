@@ -97,7 +97,7 @@ tr.toggle-child.toggled td.toggler {
     width: 20px;
     height: 20px;
     padding: 5px;
-    background-image: url(../img/basket.svg);
+    background-image: url(../img/basket.png);
     background-repeat: no-repeat;
     text-align: center;
     font-weight: bold;
@@ -199,3 +199,17 @@ tr.without-border td {
     min-width: 100px; 
     text-align: right;
 }
+
+.incoming-chat {  
+    background-image: url("../img/incoming.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+}
+
+.outgoing-chat {  
+    background-image: url("../img/outgoing.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+
+}
+
