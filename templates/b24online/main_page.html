@@ -12,13 +12,27 @@
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
          <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
-         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
-        <style>
+         <style>
             .selected-menu {
                 background-color: #D7D7D9;
                 color: #FFF;
             }
-        </style>
+            .basket {
+                width: 20px;
+                height: 20px;
+                padding: 5px;
+                background-image: url({% static "b24online/img/basket.svg" %});
+                background-repeat: no-repeat;
+                text-align: center;
+                font-weight: bold;
+                background-size: 100% 100%;
+            }
+
+            .basket a {
+                margin: 0px;
+            }
+
+         </style>
     {% endblock %}
 
     {% block js %}
@@ -239,7 +253,7 @@
 
                         {# The deals history #}
                         <li><a href="{% url 'products:deal_list' %}">
-                            {% trans 'Current deals' %} ({{ request|deal_quantity|default:"0" }})</a></li>
+                            {% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
                         <li><a href="{% url 'products:deal_list' %}">
                             {% trans 'Deals history' %}</a></li>
 

@@ -3,21 +3,65 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
+{% if not as_insert%}
+<div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
 <div class="data">
-    <h1>{% trans 'Deals list' %}</h1>
+    {% if form %}
+    <div class="data">
+        <form action="" method="get">
+        <p class="toggle-next {% if is_filtered %}force-open{% endif %}" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
+        <ul class="form-control" {% if not is_filtered %}style="display: none;"{% endif %}>
+            <fieldset class="dcol">
+              {% for field in form %}  
+              <li>
+                <label>{{ field.label }}:</label>
+                <p>{{ field }}</p>
+                {% if form.is_bound and field.errors %}
+                <p class="errors">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </li>
+              {% endfor %}
+              <li>
+                <input type="submit" name="filter" value="{% trans 'Search' %}" />
+              </li>
+            </fieldset>
+        </ul>
+        </form>
+    </div>
+    {% endif %}
+
+    <h1>{% trans 'Deals list' %} {% trans 'for' %} {{ current_organization }}</h1>
     <hr class="hr-divider-one">
     <div class="data">
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Deal' %}</th>
           <th>{% trans 'Customer' %}</th>
+          {% if show_supplier %}
+          <th>{% trans 'Supplier' %}</th>
+          {% endif %}
           <th>{% trans 'Status' %}</th>
           <th>{% trans 'Cost' %}</th>
         </tr>
         {% for deal in object_list %}
         <tr>
-          <td><a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</td>
-          <td>{{ deal.deal_order.get_customer }}</td>
+          <td>
+            <a href="{% url 'products:deal_detail' deal.pk %}">{{ deal }}</a>
+          </td>
+          {% with deal.deal_order.get_customer as customer %}
+          <td>
+            <a href="{{ customer.get_absolute_url }}" target="_blank">
+              {{ customer }}
+            </a>
+          </td>
+          {% endwith %}
+          {% if show_supplier %}
+          <td>
+            <a gref="{{ deal.supplier_company.get_absolute_url }}" target="_blank">
+              {{ deal.supplier_company }}
+            </a>    
+          </td>
+          {% endif %}
           <td>{{ deal.get_status }}</td>
           <td>
             {% with deal.get_total_cost as cost_list %}
@@ -41,3 +85,25 @@
       </table>  
     </div>
 </div>
+{% if not as_insert %}
+</div>
+{% autoescape off %}
+<script  type="text/javascript">
+    $('.toggle-next').not('.force-open').each(
+        function () {
+        $(this).next().hide();
+        });
+    $('.toggle-next.force-open').addClass('toggled');
+    $('.toggle-next').click(
+        function () {
+            $(this).toggleClass('toggled').next().toggle();
+    });
+    $( ".date" ).datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "2010:",
+        dateFormat: "dd/mm/yy"
+    });
+</script>    
+{% endautoescape %}
+{% endif %}

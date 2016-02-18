@@ -158,14 +158,12 @@ class RegisteredEventStatsDetailView(TemplateView):
         data = dict((item['registered_at'], {'unique': item['unique'], 
             'total': item['total']}) for item in qs)
 
-        logger.debug(data)        
         data_grid = []
         for registered_at, item in date_range:
             _data = data.get(registered_at, {'unique': 0, 'total': 0})
             _data.update({'date': registered_at})
             data_grid.append(_data)
                 
-        logger.debug(data_grid)
         context.update({
             'form': form,
             'date_limits': form.date_limits(),
@@ -241,7 +239,6 @@ class RegisteredEventStatsDiagView(TemplateView):
                             _data_1 = stats.get_extra_info(cnt_type)
                             for country, amount, city_distrib in \
                                 stats.get_extra_info(cnt_type):
-                                logger.debug(country)
                                 if country in _data:
                                     _data[country]['amount'] += amount
                                     for k, v in city_distrib:
@@ -334,9 +331,21 @@ class RegisteredEventStatsView(TemplateView):
             model_class = content_type.model_class()
             model_name = model_class.__name__
             content_type_ids[model_name] = content_type.pk                 
-            company_filter = {org_field_name: current_organization}
+
+            if item_model in (B2BProduct, B2CProduct):
+                if isinstance(current_organization, Company):
+                    org_ids = [current_organization.pk,]        
+                else:
+                    org_ids = [item.pk for item in
+                        current_organization.get_descendants_for_model(Company)]
+            else:
+                org_ids = [current_organization.pk,] + \
+                    [item.pk for item in current_organization.get_descendants()]
+
+            organization_filter = {'%s__in' % org_field_name: org_ids}
             ids = [item.id for item in item_model.objects\
-                .filter(**company_filter)]
+                .filter(**organization_filter)]
+
             qs_filter = Q(content_type_id=content_type) & \
                 Q(object_id__in=ids)
             if not qs_filters:

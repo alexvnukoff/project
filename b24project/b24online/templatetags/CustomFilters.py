@@ -25,8 +25,10 @@ from guardian.shortcuts import get_objects_for_user
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, RegisteredEventType,
                               RegisteredEvent)
+from b24online.utils import get_permitted_orgs
 from b24online.stats.helpers import RegisteredEventHelper
 from tpp.SiteUrlMiddleWare import get_request
+
 import b24online.urls
 
 logger = logging.getLogger(__name__)
@@ -329,10 +331,8 @@ def process_event(event_stored_data, request):
     Register the event (define and store attributes values).
     Return empty string.
     """
-    logger.debug(event_stored_data)
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
-
 
 @register.filter
 def deal_order_quantity(request):
@@ -342,29 +342,25 @@ def deal_order_quantity(request):
     from b24online.models import (Organization, DealOrder, Deal, DealItem)
 
     if request.user.is_authenticated():
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), 
-            with_superuser=False)
+        orgs = get_permitted_orgs(request.user)
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
-            .filter(
-                ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
-                ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
-                    Q(deal__deal_order__created_by=request.user)) | \
-                 (Q(deal__deal_order__customer_type=DealOrder.AS_COMPANY) & \
-                    Q(deal__deal_order__customer_company_id__in=org_ids))))\
+            .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
+            (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON,
+               deal__deal_order__created_by=request.user) | \
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+                deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
         return None
 
 
 @register.filter
-def deal_quantity(request):
+def deal_number(request):
     """
     Return the paid deals count.
     """
     from b24online.models import Deal
-    return Deal.get_user_deals(request.user, status=Deal.PAID)\
+    return Deal.get_current_deals(request, statuses=[Deal.PAID, Deal.ORDERED])\
         .count() if request.user.is_authenticated() else 0
 
 
@@ -384,3 +380,17 @@ def get_by_content_type(item):
             except model_class.DoesNotExist:
                 pass
     return None
+
+
+@register.assignment_tag(takes_context=True)
+def apply_handler(context, handler_name, instance):
+    """
+    Apply some handler which was assign in context to instance.
+    """
+    handler = context.get(handler_name)
+    return handler(instance) if handler and callable(handler) else None
+
+
+@register.filter
+def get_item(container, key):
+    return container.get(key, None)

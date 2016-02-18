@@ -163,10 +163,8 @@ class RegisteredEventHelper(object):
         request_uuid = getattr(request, '_uuid', None)
         if request_uuid:
             events_queue_key = cls.get_request_key(request_uuid, 'queue')
-            logger.debug(events_queue_key)
             if events_queue_key:
                 rconn = get_redis_connection()
-                logger.debug(event_stored_key)
                 rconn.lpush(events_queue_key, event_stored_key)
 
     @classmethod

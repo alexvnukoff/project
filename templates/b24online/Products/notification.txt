@@ -1,0 +1,8 @@
+Product Order Info: {{ deal_item.deal }}
+
+Customer: {{ deal_item.deal.deal_order.get_customer }}
+Product: {{ deal_item.item }}
+Product supplier: {{ deal_item.deal.supplier_company }}
+Product price: {{ deal_item.cost }}
+Product price currecy: {{ deal_item.currency }}
+Amount: {{ deal_item.quantity }} 

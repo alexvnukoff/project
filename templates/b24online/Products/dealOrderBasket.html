@@ -24,9 +24,16 @@
         <h1>{% trans 'Your basket' %}</h1>
         <hr class="hr-divider-one">
         <div class="data">
+            <form action="" method="post">
+            {% csrf_token %}
+            {{ item_formset.management_form }}
             {% for deal_order in object_list %}
             <div class="data">
-                <h2>{{ deal_order }} for {{ deal_order.get_customer }}</h2>
+                {% with deal_order.get_customer as customer %}  
+                <h2>{{ deal_order }} for 
+                  <a href="{{ customer.get_absolute_url }}">{{ customer }}</a>
+                </h2>
+                {% endwith %}
                 <hr class="hr-divider-two">
                 <div class="data">
                 <table width="100%" cellspacing="2" cellpadding="2" 
@@ -34,17 +41,22 @@
                     <tr>
                       <th>{% trans 'Product supplier' %}</th>
                       <th>{% trans 'Deal date' %}</th>
+                      <th>{% trans 'Total deal cost' %}</th>
+                      <th>{% trans 'Pay for deal' %}</th>
                       <th>{% trans 'Product' %}</th>
-                      <th>{% trans 'Product amount' %}</th>
                       <th>{% trans 'Product price' %}</th>
-                      <th>{% trans 'Deal cost' %}</th>
-                      <th>&nbsp;</th>
+                      <th>{% trans 'Product amount' %}</th>
+                      <th>{% trans 'Delete item' %}</th>
                     </tr>
                     {% for deal in deal_order.get_draft_deals %}
                       {% with deal.get_items as items %}
                       {% get_length items as items_len %}
 
                       {% for deal_item in deal.get_items %}
+                      {% with item_formset_dict|get_item:deal_item.pk as item_form %}
+                      {% for hidden in item_form.hidden_fields %}
+                        {{ hidden }}  
+                      {% endfor %}
                       <tr valign="top">
                         {% if forloop.first %}
                         <td rowspan="{{ items_len }}">
@@ -53,38 +65,50 @@
                         <td rowspan="{{ items_len }}">
                           {{ deal.created_at|date:"d M Y H:i" }}
                         </td>
-                        {% endif %}
-                        <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
-                        <td align="center">{{ deal_item.quantity}}</td>
-                        <td align="center">{{ deal_item.cost }} {{ deal_item.currency|getSymbol }}</td>
-                        {% if forloop.first %}
-                        <td rowspan="{{ items_len }}>
-                        {% with deal.get_total_cost as cost_list %}
-                          {% if cost_list %}
-                          {% for cost, currency in cost_list %}
-                            <span class="bolded">{{ currency|getSymbol }}&nbsp;{{ cost }}</span>{% if not forloop.last %},&nbsp;{% endif %}
-                          {% endfor %}
+                        <td rowspan="{{ items_len }}" align="center" nowrap>
+                          {% if deal.total_cost %}
+                            <span class="bolded">
+                              {{ deal.currency|getSymbol }}&nbsp;{{ deal.total_cost }}
+                            </span>
                           {% else %}
                             -
                           {% endif %}
-                          {% endwith %}
                         </td>
-                        <td rowspan="{{ items_len }}" nowrap>
+                        <td rowspan="{{ items_len }}" align="center" nowrap>
                           <a class="mediumbuy" href="{% url 'products:deal_payment' deal.pk %}" >{% trans 'Order by Email' %}</a>
                           {% if deal.supplier_company.company_paypal_account %}
                           <br/><br/>
-                          <a class="mediumbuy" href="" >{% trans 'Pay by Paypal' %}</a>
+                          <a class="mediumbuy" href="{% url 'products:deal_paypal' deal.pk %}" >{% trans 'Pay by Paypal' %}</a>
                           {% endif %}
                         </td>
                         {% endif %}
+                        <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
+                        <td align="center" nowrap>
+                          {% if deal_item.cost %}
+                            {{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }} 
+                          {% else %}
+                            -
+                          {% endif %}
+                        </td>
+                        <td align="center">{{ item_form.quantity }}</td>
+                        <td align="center">{{ item_form.DELETE }}</td>
                       </tr>
+                      {% endwith %}
                       {% endfor %}
-                      {% endwith %}  
+                      {% endwith %}
                     {% endfor %}
+                    <tr class="without-border">
+                      <td colspan="6">&nbsp;</td>
+                      <td colspan="2" align="right">
+                        <input type="submit" name="update" value="{% trans 'Save changes' %}">
+                      </td>
+                    </tr>
                 </table> 
                 </div>
             </div>
             {% endfor %}
+            
+            </form>
         </div>
     </div>
 </div>

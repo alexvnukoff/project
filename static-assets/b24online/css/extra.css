@@ -28,10 +28,6 @@ table.table-data th {
     background-color: #B2CFD8;
 }
 
-table.table-data tr:hover td {
-    background-color: #DFEBF1;
-}
-
 table.table-data td {
     border-width: 1px;
     padding: 5px;
@@ -116,18 +112,23 @@ hr.hr-divider-two {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
 }
 
-.mediumbuy { 
+a.mediumbuy { 
     float:left; 
     width:100%; 
-    margin: 0 5px; 
+    margin: 0 2px; 
     font-size:12px; 
-    padding: 2px;
+    padding: 1px;
     background:url(../img/btnbuy.gif) repeat-x; 
     text-align:center; 
-    color:#FFF; 
+    color: #e1e1e1; 
     text-shadow: #-1px -1px 1px #317ca1; 
     border-radius:3px; 
     box-shadow:0px 1px 2px #DDD;
+}
+
+a.mediumbuy:hover {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 p.data-info {
@@ -165,5 +166,14 @@ fieldset.dcol li {
     font-size: 70%;
     padding:4px 25px;
     background: #fee;
-    margin-bottom: 10px;
+    margin: 5px 0 10px 0;
+}
+
+input[type="number"] {
+    width: 60px;
+    text-align: right;
+}
+
+tr.without-border td {
+    border: none;
 }
