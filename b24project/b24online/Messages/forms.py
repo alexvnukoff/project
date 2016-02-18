@@ -14,6 +14,7 @@ from django.utils.html import strip_tags
 
 from b24online.models import MessageChat, Message, MessageAttachment
 from b24online.utils import handle_uploaded_file
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
