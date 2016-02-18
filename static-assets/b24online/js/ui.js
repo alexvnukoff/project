@@ -1331,14 +1331,10 @@ var companyStaff =
         self.setForms();
 
         $('#user-add-button').on('click', function() {
-		console.log(self);
             return self.addNew($(this));
 		});
 
         $('.btnremove-small').on('click', function() {
-console.log(self);
-console.log($(this));
-console.log(this);
             return self.removeStaff($(this));
 		});
     },

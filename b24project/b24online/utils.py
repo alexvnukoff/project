@@ -14,6 +14,7 @@ from django.core.files.move import file_move_safe
 from django.utils import translation
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django.utils.lru_cache import lru_cache
 
 import errno
 from unidecode import unidecode
@@ -208,6 +209,7 @@ def class_for_name(module_name, class_name):
     return c
 
 
+@lru_cache(maxsize=32)
 def get_current_organization(request):
     """
     Return the current organization (stored in request.session)

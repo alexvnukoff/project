@@ -1,0 +1,7 @@
+{% extends 'b24online/Products/dealList.html' %}
+
+{% block deals %}  
+    {% with 1 as as_insert %}
+        {% include "b24online/Products/dealListOrderedBase.html" %}
+    {% endwith %}
+{% endblock %}

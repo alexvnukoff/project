@@ -28,6 +28,14 @@ table.table-data th {
     background-color: #B2CFD8;
 }
 
+table.table-data th.child {
+    border-width: 1px;
+    padding: 5px;
+    border-style: solid;
+    border-color: #517994;
+    background-color: #dddddd;
+}
+
 table.table-data td {
     border-width: 1px;
     padding: 5px;
@@ -176,4 +184,18 @@ input[type="number"] {
 
 tr.without-border td {
     border: none;
+}
+
+.detailinfo {
+    margin: 5px; 
+    font-size: 110%; 
+    font-weight: bold;
+}
+
+.detailinfo label {
+    float: left; 
+    color: #7a7a7a; 
+    padding-right: 15px; 
+    min-width: 100px; 
+    text-align: right;
 }

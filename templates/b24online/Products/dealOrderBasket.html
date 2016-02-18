@@ -29,14 +29,14 @@
             {{ item_formset.management_form }}
             {% for deal_order in object_list %}
             <div class="data">
-                {% with deal_order.get_customer as customer %}  
-                <h2>{{ deal_order }} for 
+                {% with deal_order.get_customer as customer %}
+                <h2>{{ deal_order }} for
                   <a href="{{ customer.get_absolute_url }}">{{ customer }}</a>
                 </h2>
                 {% endwith %}
                 <hr class="hr-divider-two">
                 <div class="data">
-                <table width="100%" cellspacing="2" cellpadding="2" 
+                <table width="100%" cellspacing="2" cellpadding="2"
                     border="0" class="table-data">
                     <tr>
                       <th>{% trans 'Product supplier' %}</th>
@@ -55,7 +55,7 @@
                       {% for deal_item in deal.get_items %}
                       {% with item_formset_dict|get_item:deal_item.pk as item_form %}
                       {% for hidden in item_form.hidden_fields %}
-                        {{ hidden }}  
+                        {{ hidden }}
                       {% endfor %}
                       <tr valign="top">
                         {% if forloop.first %}
@@ -85,7 +85,7 @@
                         <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
                         <td align="center" nowrap>
                           {% if deal_item.cost %}
-                            {{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }} 
+                            {{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }}
                           {% else %}
                             -
                           {% endif %}
@@ -103,13 +103,25 @@
                         <input type="submit" name="update" value="{% trans 'Save changes' %}">
                       </td>
                     </tr>
-                </table> 
+                </table>
                 </div>
             </div>
             {% endfor %}
-            
+
             </form>
         </div>
+        <div class="data">
+            <h1>{% trans 'Total basket cost' %}</h1>
+            <hr class="hr-divider-one">
+            {% if total_cost_data %}
+                {% for currency, cost in total_cost_data.items %}
+                    <div class="detailinfo">
+                        <label>{{ currency }}:</label>{{ cost }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
     </div>
 </div>
 {% endblock %}

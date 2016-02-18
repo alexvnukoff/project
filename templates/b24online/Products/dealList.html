@@ -20,8 +20,13 @@
 {% block js %}
     {{ block.super }}
     <script  type="text/javascript" src="{% static 'b24online/js/deals.js' %}"></script>
+    <script  type="text/javascript">
+        $(document).ready(function () {
+            $('#reset-form').click(function() {
+                $(this).parents('form')[0].reset();
+            });
+        });
     </script>
-    
 {% endblock %}
 
 {% block keywords %}{% endblock %}
@@ -36,9 +41,11 @@
         </ul>
     </div>
     <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">
-      {% with 1 as as_insert %}
-      {% include "b24online/Products/dealListBase.html" %}
-      {% endwith %}
+      {% block deals %}  
+          {% with 1 as as_insert %}
+              {% include "b24online/Products/dealListBase.html" %}
+          {% endwith %}
+      {% endblock %}
     </div>
 </div>
 
