@@ -313,15 +313,17 @@ def get_length(some_list):
     return len(some_list) \
         if isinstance(some_list, Iterable) else 0
 
-# FIXME: (andrey_k) delete it
+
+### FIXME: (andrey_k) delete it ###
 @register.filter()
 def to_list(some_dict):
     return [(k, v) for k, v in some_dict.items()]
 
+
 @register.filter()
 def show_type(instance):
     return type(instance)
-
+### -- ###    
 
 
 @register.filter
@@ -378,6 +380,9 @@ def deal_quantity(request):
 
 @register.filter
 def get_by_content_type(item):
+    """
+    Return model instance by content_type and object_id.
+    """
     content_type_id = item.get('content_type_id')
     instance_id = item.get('object_id')
     if content_type_id and instance_id:        
@@ -443,9 +448,26 @@ def thumbnail(img, param_str):
 
 @register.filter
 def mark_as_read(message):
+    """
+    Make a message as read.
+    """
     assert isinstance(message, Message), \
         _('Invalid parameter. Must be :class:`Message`')
     if message.pk:
         message.is_read = True
         message.save()
     return ''
+
+
+@register.assignment_tag(takes_context=True)
+def get_chat_other_side(context, chat):
+    """
+    Return the chat's 'other side'.
+    """
+    request = context['request']
+    if request.user.is_authenticated():
+        if chat.created_by == request.user:
+            return chat.recipient
+        else:
+            return chat.created_by
+    return None

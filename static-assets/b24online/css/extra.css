@@ -167,3 +167,17 @@ fieldset.dcol li {
     background: #fee;
     margin-bottom: 10px;
 }
+
+.incoming-chat {  
+    background-image: url("../img/incoming.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+}
+
+.outgoing-chat {  
+    background-image: url("../img/outgoing.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+
+}
+

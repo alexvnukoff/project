@@ -1424,6 +1424,9 @@ class MessageChat(AbstractRegisterInfoModel):
                                null=True, blank=True) 
     organization = models.ForeignKey('Organization', related_name='chats', 
                                      null=True, blank=True)
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                  related_name='incoming_chats', null=True,
+                                  blank=True)
     participants = models.ManyToManyField(User, blank=True)    
     is_private = models.NullBooleanField()
     status = models.CharField(_('Chart status'), max_length=10, 
@@ -1434,6 +1437,9 @@ class MessageChat(AbstractRegisterInfoModel):
         verbose_name = _('Messages chat')    
         verbose_name_plural = _('Messages chats')    
 
+    def is_incoming(self, user):
+        return self.created_at.pk == user.pk
+        
 
 class Message(models.Model):
     """
@@ -1446,11 +1452,13 @@ class Message(models.Model):
         (READ, _('Read')),
     )
 
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               related_name='outgoing_messages')
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
-                                  related_name='received', null=True,
+                                  related_name='incoming_messages', null=True,
                                   blank=True)
-    organization = models.ForeignKey('Organization', related_name='messages', 
+    organization = models.ForeignKey('Organization', 
+                                     related_name='organization_messages', 
                                      null=True, blank=True)
     chat = models.ForeignKey(MessageChat, related_name='chat_messages',
                              null=True, blank=True)

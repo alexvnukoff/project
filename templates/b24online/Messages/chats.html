@@ -1,6 +1,8 @@
 {% extends 'b24online/main_page.html' %}
+
 {% load static from staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 
 {% block title %}{% trans 'Messages' %}{% endblock %}
 
@@ -8,6 +10,7 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}" />
     <style>
         .custom-content {
             float: left;
@@ -23,10 +26,6 @@
     <script type="text/javascript">
         $(function() {
             chatsUI.init();
-        });
-    </script>
-    <script type="text/javascript">
-        $(function(){
             function addOneMoreInput() {
                 $('.file-message-attachment').last().change(function() {
                     $(this).after('<input name="attachment" class="file-message-attachment" type="file" />');
@@ -59,24 +58,19 @@
                     <ul class="custom-ms">
                         <li style="display: none"><a href="#placeholder"></a> </li>
                         {% for chat in organization_chats %}
-                        <li class="data-item">
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="data-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
                             <span class="thumb">
-                                {% if chat.created_by.profile.avatar %}
-                                    <img src="{{ chat.created_by.profile.avatar.th }}" />
+                                {% if other_side.profile.avatar %}
+                                    <img src="{{ other_side.profile.avatar.th }}" />
                                 {% else %}
                                     <img style="width: 24px;height: 24px;" 
                                         src="{% static 'b24online/img/profile.jpg' %}" />
                                 {% endif %}
                             </span>
                             <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
-                               data-chat-id="{{ chat.pk }}" href="#">
-                                {% if chat.created_by.profile.full_name %}
-                                    {{ chat.created_by.profile.full_name }}
-                                {% else %}
-                                    {{ chat.created_by.email }}
-                                {% endif %}
-                            </a>
-                        </li>
+                               data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -86,24 +80,19 @@
                     <ul class="custom-ms">
                         <li style="display: none"><a href="#placeholder"></a> </li>
                         {% for chat in user_chats %}
-                        <li class="data-item">
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="data-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
                             <span class="thumb">
-                                {% if chat.created_by.profile.avatar %}
-                                    <img src="{{ chat.created_by.profile.avatar.th }}" />
+                                {% if other_side.profile.avatar %}
+                                    <img src="{{ other_side.profile.avatar.th }}" />
                                 {% else %}
                                     <img style="width: 24px;height: 24px;" 
                                         src="{% static 'b24online/img/profile.jpg' %}" />
                                 {% endif %}
                             </span>
                             <a data-url="{% url 'messages:chat_messages' chat.pk  %}" 
-                               data-chat-id="{{ chat.pk }}" href="#">
-                                {% if chat.created_by.profile.full_name %}
-                                    {{ chat.created_by.profile.full_name }}
-                                {% else %}
-                                    {{ chat.created_by.email }}
-                                {% endif %}
-                            <a>
-                        </li>
+                               data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
                         {% endfor %}
                     </ul>
 
