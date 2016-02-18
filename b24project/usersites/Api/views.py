@@ -1,7 +1,6 @@
 import os
 
 from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
@@ -15,6 +14,7 @@ from rest_framework.response import Response
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
     Banner, AdditionalPage, Company
 from centerpokupok.models import B2CProduct, B2CProductCategory
+from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
@@ -62,7 +62,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
         return queryset.filter(organization=organization)
 
     def get_serializer_class(self):
@@ -79,7 +79,7 @@ class AdditionalPageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AdditionalPage.objects.all()
 
     def get_queryset(self):
-        return get_current_site(self.request).user_site.organization.additional_pages
+        return get_current_site().user_site.organization.additional_pages
 
     def get_serializer_class(self):
         if hasattr(self, 'action'):
@@ -96,7 +96,7 @@ class BusinessProposalViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
         return queryset.filter(organization=organization)
 
     def get_serializer_class(self):
@@ -116,7 +116,7 @@ class GalleryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GalleryImage.objects.all()
 
     def get_queryset(self):
-        return get_current_site(self.request).user_site.organization.gallery_images
+        return get_current_site().user_site.organization.gallery_images
 
 
 class CompanyStructureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -125,7 +125,7 @@ class CompanyStructureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Department.objects.all()
 
     def get_queryset(self):
-        return get_current_site(self.request).user_site.organization.departments.all() \
+        return get_current_site().user_site.organization.departments.all() \
             .prefetch_related('vacancies', 'vacancies__user', 'vacancies__user__profile')
 
 
@@ -136,7 +136,7 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
 
         if isinstance(organization, Company):
             return queryset.filter(company=organization)
@@ -160,7 +160,7 @@ class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
 
         if isinstance(organization, Company):
             return queryset.filter(company=organization)
@@ -207,7 +207,7 @@ class B2BProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     def filter_queryset(self, queryset):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
         return queryset.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
 
@@ -242,7 +242,7 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     def filter_queryset(self, queryset):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
         return queryset.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
 
@@ -250,7 +250,7 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def interface(request):
-    organization = get_current_site(request).user_site.organization
+    organization = get_current_site().user_site.organization
     menu = [{
         'name': _('Home'),
         'href': 'home/'
@@ -307,7 +307,7 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
 
         if isinstance(organization, Company):
             return queryset.filter(company=organization, coupon_dates__contains=now().date(),
@@ -328,7 +328,7 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def settings_api(request):
-    user_site = get_current_site(request).user_site
+    user_site = get_current_site().user_site
     result = {
         'menu': [],
         'slides': [],
@@ -380,7 +380,7 @@ def settings_api(request):
 
     for block in banner_blocks:
         banner = Banner.objects.filter(
-            site_id=get_current_site(request).pk,
+            site_id=get_current_site().pk,
             block__code=block,
             block__block_type='user_site',
             image__isnull=False

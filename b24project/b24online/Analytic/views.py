@@ -1,33 +1,29 @@
 # -*- encoding: utf-8 -*-
 
-import json 
-import re
-import logging
 import datetime
+import json
+import logging
+import re
 from collections import OrderedDict
 
-from django.core.cache import cache
-from django.db.models import Q, Count, Sum
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
+from django.core.urlresolvers import reverse
+from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect, Http404
-from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
-from django.contrib.sites.shortcuts import get_current_site
-from django.views.generic import TemplateView
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from django.views.generic import TemplateView
 
 from appl import func
-from b24online.models import (Organization, Company, Tender, Exhibition,
-    RegisteredEvent, RegisteredEventStats, RegisteredEventType, B2BProduct,
-    InnovationProject, BusinessProposal)
-from centerpokupok.models import B2CProduct
 from b24online.Analytic.forms import SelectPeriodForm
+from b24online.models import (Organization, Company, Tender, Exhibition,
+                              RegisteredEventStats, RegisteredEventType, B2BProduct,
+    InnovationProject, BusinessProposal)
 from b24online.utils import get_current_organization
-from b24online.stats.utils import process_stats_data
+from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
 

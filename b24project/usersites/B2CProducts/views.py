@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-import uuid, re
+import re
 from collections import OrderedDict
-from django.contrib.sites.shortcuts import get_current_site
+
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db.models import F, Sum, IntegerField, FloatField
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.template import loader
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
-from paypal.standard.forms import PayPalPaymentsForm
-from centerpokupok.models import B2CProduct, B2CProductCategory
-from usersites.cbv import ItemDetail, ItemList
-from django.utils.timezone import now
-from centerpokupok.Basket import Basket
 from django.views.generic.edit import FormView
+from paypal.standard.forms import PayPalPaymentsForm
+
+from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
-from django.core.mail import send_mail
-from django.template import loader
-from django.conf import settings
+from centerpokupok.models import B2CProduct, B2CProductCategory
+from tpp.DynamicSiteMiddleware import get_current_site
+from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
 
 
@@ -63,7 +63,7 @@ class B2CProductList(UserTemplateMixin, ItemList):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
         categories = B2CProductCategory.objects.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
 
@@ -123,7 +123,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        domain = get_current_site(self.request).domain
+        domain = get_current_site().domain
 
         if self.object.currency and self.object.cost:
 
@@ -157,10 +157,10 @@ class B2CProductBasket(View):
             paypal_dict = {
                 'business': basket.paypal,
                 'amount': basket.summary,
-                'notify_url': 'http://{0}{1}'.format(get_current_site(request).domain, reverse('paypal-ipn')),
+                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
                 'return_url': request.build_absolute_uri(),
                 'cancel_return': request.build_absolute_uri(),
-                'item_name': _('Products from website ') + get_current_site(request).domain,
+                'item_name': _('Products from website ') + get_current_site().domain,
                 'no_shipping': 0,
                 'quantity': 1,
                 'currency_code': basket.currency
@@ -244,7 +244,7 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
     def form_valid(self, form):
         cd = form.cleaned_data
         basket = Basket(self.request)
-        org_email = get_current_site(self.request).user_site.organization.email
+        org_email = get_current_site().user_site.organization.email
         context = {
             'name': cd['name'],
             'last_name': cd['last_name'],
@@ -252,11 +252,11 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
             'message': cd['message'],
             'basket': dict(src=basket),
             'total': '{0} {1}'.format(basket.summary(), basket.currency()),
-            'org': get_current_site(self.request).user_site.organization,
-            'site': get_current_site(self.request).domain,
+            'org': get_current_site().user_site.organization,
+            'site': get_current_site().domain,
         }
 
-        subject = (_('Order from') + ' {0}').format(get_current_site(self.request).domain)
+        subject = (_('Order from') + ' {0}').format(get_current_site().domain)
         body = loader.render_to_string('usersites/B2CProducts/templateEmail.html', context)
 
         send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,

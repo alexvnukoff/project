@@ -1,24 +1,21 @@
 import os
-
 from django import template
 from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
-
 from appl import func
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
     BusinessProposal, Company, News, Banner, BannerBlock
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement, Resume
+from tpp.DynamicSiteMiddleware import get_current_site
 
 register = template.Library()
 
 
-@register.inclusion_tag('usersites/banner.html', takes_context=True)
-def site_banner(context, side, block):
-    request = context['request']
-    site_pk = get_current_site(request).pk
+@register.inclusion_tag('usersites/banner.html')
+def site_banner(side, block):
+    site_pk = get_current_site().pk
     cache_name = "banner:usersite:%s:%s" % (block, site_pk)
     cached = cache.get(cache_name)
 
@@ -34,10 +31,9 @@ def site_banner(context, side, block):
     return {'banner': banner, 'side': side}
 
 
-@register.inclusion_tag('usersites/tops.html', takes_context=True)
-def site_context_adv(context):
-    request = context['request']
-    organization_id = get_current_site(request).user_site.organization.pk
+@register.inclusion_tag('usersites/tops.html')
+def site_context_adv():
+    organization_id = get_current_site().user_site.organization.pk
     cache_name = "adv:context:%s:%s" % (get_language(), organization_id)
     cached = cache.get(cache_name)
 
@@ -197,11 +193,11 @@ def set_context_menu(context, obj, **kwargs):
 
     return params
 
-@register.inclusion_tag('usersites/slider.html', takes_context=True)
-def site_slider(context):
+
+@register.inclusion_tag('usersites/slider.html')
+def site_slider():
     import glob
-    request = context['request']
-    user_site = get_current_site(request).user_site
+    user_site = get_current_site().user_site
     custom_images = user_site.slider_images
 
     if custom_images:

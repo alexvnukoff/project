@@ -1,10 +1,8 @@
 from threading import current_thread
-from django.contrib.sites.shortcuts import get_current_site
 
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.utils import translation
-from django.conf import settings
-from django.core.cache import cache
 
 
 # class UserBasedExceptionMiddleware(object):
@@ -75,6 +73,8 @@ from django.core.cache import cache
 #         SITE_THREAD_LOCAL.SITE_ID = site.pk
 #
 #         Site.objects.clear_cache()
+from tpp.DynamicSiteMiddleware import get_current_site
+
 
 class SiteLangRedirect:
     """
@@ -87,7 +87,7 @@ class SiteLangRedirect:
         user_lang = getattr(request, 'LANGUAGE_CODE', None)
 
         if lang not in languages and user_lang and user_lang in languages:
-            site = get_current_site(request)
+            site = get_current_site()
             protocol = 'http' if not request.is_secure() else 'https'
             redirect_url = "%s://%s.%s%s" % (protocol, request.LANGUAGE_CODE, site.domain, request.get_full_path())
             

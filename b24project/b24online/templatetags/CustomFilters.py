@@ -1,35 +1,31 @@
 # -*- encoding: utf-8 -*-
 
+import datetime
+import logging
+import os
 from collections import OrderedDict, Iterable
 from copy import copy
 from decimal import Decimal
-import os
-import datetime
-import logging
 
-from django.db.models import Q
-from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.sites.models import Site
+from django import template
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.template.defaultfilters import stringfilter
+from django.utils.html import escape
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
-from django.utils.html import escape
-from django.core.urlresolvers import reverse
-from django import template
-from guardian.shortcuts import get_objects_for_user
-
-from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification, RegisteredEventType,
-                              RegisteredEvent)
-from b24online.utils import get_permitted_orgs
-from b24online.stats.helpers import RegisteredEventHelper
-from tpp.SiteUrlMiddleWare import get_request
 
 import b24online.urls
+from appl.func import currency_symbol
+from b24online.models import (Chamber, Notification)
+from b24online.stats.helpers import RegisteredEventHelper
+from b24online.utils import get_permitted_orgs
+from tpp.DynamicSiteMiddleware import get_current_site
+from tpp.SiteUrlMiddleWare import get_request
 
 logger = logging.getLogger(__name__)
 
@@ -269,10 +265,9 @@ def detail_page_to_tppcenter(url, *args):
     return 'http://%s' % url
 
 
-@register.assignment_tag(takes_context=True)
-def is_chamber_site(context):
-    request = context['request']
-    organization = get_current_site(request).user_site.organization
+@register.assignment_tag
+def is_chamber_site():
+    organization = get_current_site().user_site.organization
     return isinstance(organization, Chamber)
 
 
@@ -339,7 +334,7 @@ def deal_order_quantity(request):
     """
     Return the draft deal orders count.
     """
-    from b24online.models import (Organization, DealOrder, Deal, DealItem)
+    from b24online.models import (DealOrder, Deal, DealItem)
 
     if request.user.is_authenticated():
         orgs = get_permitted_orgs(request.user)

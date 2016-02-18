@@ -7,7 +7,6 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect
@@ -21,9 +20,11 @@ from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
 from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEventType, User, Profile)
+                              RegisteredEventStats, RegisteredEventType, User, Profile, BusinessProposal,
+                              BusinessProposalCategory)
 from b24online.stats.utils import convert_date
 from centerpokupok.models import B2CProduct
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +101,8 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
     show_total_amount.short_description = _('Total amount')
 
     def show_stats_detail(self, request, event_type_id, content_type_id,
-                   instance_id, cnt_type):
-        site = get_current_site(request)
+                          instance_id, cnt_type):
+        site = get_current_site()
         if 'date' in request.GET:
             registered_at = convert_date(request.GET['date'])
             try:
@@ -123,17 +124,17 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     'opts': RegisteredEventStats._meta,
                 }
                 return render_to_response(
-                    'admin/show_stats_detail.html', 
-                    context,    
+                    'admin/show_stats_detail.html',
+                    context,
                     context_instance=RequestContext(request))
 
     def show_stats(self, request):
-        site = get_current_site(request)
+        site = get_current_site()
         b2c_content_type = ContentType.objects.get_for_model(B2CProduct)
         b2b_content_type = ContentType.objects.get_for_model(B2BProduct)
 
         validate_by_form = False
-        if 'start_date' in request.GET and 'end_date' in request.GET: 
+        if 'start_date' in request.GET and 'end_date' in request.GET:
             form = self.form_class(data=request.GET)
             if form.is_valid():
                 validate_by_form = True
@@ -146,11 +147,11 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
             qs = RegisteredEventStats.objects.filter(
                 Q(event_type_id=event_type.pk) \
                 & (Q(content_type_id=b2c_content_type) \
-                | Q(content_type_id=b2b_content_type)))\
-                    .values('content_type_id', 'object_id')\
-                    .annotate(unique=Sum('unique_amount'), 
-                              total=Sum('total_amount'))\
-                    .order_by('-unique') 
+                   | Q(content_type_id=b2b_content_type))) \
+                .values('content_type_id', 'object_id') \
+                .annotate(unique=Sum('unique_amount'),
+                          total=Sum('total_amount')) \
+                .order_by('-unique')
             if validate_by_form:
                 qs = form.filter(qs)
             qs = qs[:20]
@@ -163,20 +164,20 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
         }
 
         return render_to_response(
-                    'admin/show_stats.html', 
-                    context,    
-                    context_instance=RequestContext(request))
+            'admin/show_stats.html',
+            context,
+            context_instance=RequestContext(request))
 
     def get_urls(self):
         return [
-             url(r'^stats/$',
-                 self.show_stats,
-                 name='event_stats'),
-             url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
-                 r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
-                 self.show_stats_detail,
-                 name='event_stats_detail'),
-        ] + super(RegisteredEventStatsAdmin, self).get_urls()
+                   url(r'^stats/$',
+                       self.show_stats,
+                       name='event_stats'),
+                   url(r'^stats/(?P<event_type_id>\d+?)/(?P<content_type_id>\d+?)/'
+                       r'(?P<instance_id>\d+?)/(?P<cnt_type>\w+?)/$',
+                       self.show_stats_detail,
+                       name='event_stats_detail'),
+               ] + super(RegisteredEventStatsAdmin, self).get_urls()
 
 
 class B24UserAdmin(UserAdmin):
@@ -210,4 +211,6 @@ admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
 admin.site.register(Profile, ModelAdmin)
+admin.site.register(BusinessProposal, ModelAdmin)
+admin.site.register(BusinessProposalCategory, ModelAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)

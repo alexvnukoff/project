@@ -1,7 +1,7 @@
-from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import ListView, DetailView
 
 from appl import func
+from tpp.DynamicSiteMiddleware import get_current_site
 
 
 class ItemList(ListView):
@@ -34,7 +34,7 @@ class ItemList(ListView):
         return self.filter_key
 
     def get_filter_kwargs(self):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
 
         return {
             self.get_filter_key(): organization
@@ -51,7 +51,7 @@ class ItemDetail(DetailView):
         return self.filter_key
 
     def get_filter_kwargs(self):
-        organization = get_current_site(self.request).user_site.organization
+        organization = get_current_site().user_site.organization
 
         return {
             self.get_filter_key(): organization
