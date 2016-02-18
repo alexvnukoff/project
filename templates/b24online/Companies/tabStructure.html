@@ -3,9 +3,9 @@
 {% load CustomFilters %}
 
 <script>
-        $(function(){
-            companyStructure.init('{% url "companies:tab_structure" item_pk %}', LANG['structure']);
-        });
+    $(function(){
+        companyStructure.init('{% url "companies:tab_structure" item_pk %}', LANG['structure']);
+    });
 </script>
 
 <div class="tpp-dt-content">
@@ -19,7 +19,16 @@
                             <ul class="sub vacancy">
                                 <li>{{ department.vacancyList}}</li>
                                 {% for vacancy in department.vacancies.all %}
-                                    <li data-type="vacancy" data-item-id="{{ vacancy.pk }}"><span>{{ vacancy.name }}</span></li>
+                                    {% spaceless %}
+                                    <li data-type="vacancy" 
+                                        data-item-id="{{ vacancy.pk }}"
+                                        {% if vacancy.staffgroup %}
+                                          data-staffgroup-id="{{ vacancy.staffgroup.id }}"
+                                        {% endif %}
+                                        {% if vacancy.is_hidden_user %}
+                                          data-is-hidden-user="1"
+                                        {% endif %}><span>{{ vacancy.name }}</span></li>
+                                     {% endspaceless %}
                                 {% endfor %}
                             </ul>
                         </li>

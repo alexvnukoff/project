@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from b24online.Vacancy.views import RequirementList, RequirementCreate, RequirementUpdate, RequirementDelete, \
-    send_resume, RequirementDetail
+    send_resume, RequirementDetail, get_staffgroup_options
 
 urlpatterns = [
     url(r'^$', RequirementList.as_view(), name='main'),
@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^delete/(?P<pk>[0-9]+)/$', RequirementDelete.as_view(), name="delete"),
     url(r'^send/$', send_resume, name="send"),
     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', RequirementDetail.as_view(), name="detail"),
+    url(r'^staffgroup/options/$', get_staffgroup_options, name='staffgroups'),
 ]

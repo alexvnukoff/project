@@ -1,0 +1,51 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="message-list">
+{% if messages|length < 10 %}
+    <div class="last"></div>
+{% endif %}
+{% for message in messages %}
+    {% if not message.is_read and message.sender != request.user %}
+        {# Mark the message as read #}
+        {{ message|mark_as_read }}
+    {% endif %}
+    <div 
+      style="{% if message.sender.pk == request.user.pk %}margin-left: 15px; {% endif %}margin-top: 10px;  border:1px dotted; border-color: #aaaaaa; padding: 5px; background-color: #f1f1f1';" class="customline" data-message="{{ message.pk }}">
+        <label class="time">
+            {% if message.sender.profile.full_name %}
+                {{ message.sender.profile.full_name }}
+            {% else %}
+                {{ message.sender.email }}
+            {% endif %}
+            {{ message.created_at|date:"d M Y H:i" }}
+        </label>
+
+        <div class="clumnleft">
+            <span class="thimb">
+                <img src="{{ message.sender.profile.avatar.th }}"/>
+            </span>
+        </div>
+        <div class="clumnright">
+            <p>{{ message.content }}</p>
+        </div>
+        {% if message.attachments %}
+        <div class="clumnright" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
+          {% for attachment in message.attachments.all %}
+          <div style="text-align: center; float: left; margin: 5px; border:1px dotted; border-color: #888888; padding:3px;">
+              <a href="{{ MEDIA_URL}}{{ attachment.file }}">
+                  {% if attachment.is_image %}
+                    <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
+                  {% else %}
+                    <img src="{% static attachment.get_icon %}" height="50px" />
+                  {% endif %}
+              </a>
+              <div style="text-align: center;">{{ attachment.get_shorted_name }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>

@@ -87,8 +87,8 @@ def generate_upload_path(instance, filename):
     return '%s/%s%s' % (folder, name, ext)
 
 
-def document_upload_path(instance, filename):
-    return "document/%s" % generate_upload_path(instance, filename)
+def document_upload_path(instance, filename, folder='document'):
+    return "%s/%s" % (folder, generate_upload_path(instance, filename))
 
 
 def resize(img, box, fit, out):

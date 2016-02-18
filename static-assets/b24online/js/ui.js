@@ -652,15 +652,10 @@ var messagesUI = {
                 },
 
                 success: function( data ) {
-
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
                     messagesUI.bindScroll()
-
-
-
                 },
-
                 dataType: 'html',
                 type: 'GET'
             });
@@ -1056,9 +1051,14 @@ var companyStructure =
             vacancy:
                 '<div class="vacadd" id="add-vac-popup">' +
                     '<i class="close-formadd imgnews" />' +
-                    '<div class="title">' + LANG['popup_vac'] + '</div>' +
+                    '<div class="title">' + LANG['popup_vac_title'] + '</div>' +
                     '<div class="staffaddin">' +
+                        '<label>' + LANG['popup_vac'] + '</label>' +
                         '<input type="text" name="" id="vac-name" class="textstructure" />' +
+                        '<label>' + LANG['popup_staffgroup'] + '</label>' +
+                        '<select id="staffgroups" style="width: 100%">' +
+                            '<option disabled selected>' + LANG['popup_loading'] + '</option>' +
+                        '</select>' +
                         '<div class="formadd-button">' +
                             '<a class="btntype2" id="btn-add-vacancy" href="#">' + LANG['popup_ok'] + '</a>' +
                             '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
@@ -1163,19 +1163,14 @@ var companyStructure =
     },
 
     edit: function(clickedItem) {
-
         var action = "edit";
-
         if (this.item) {
-
             if (!this.item.parent().hasClass('vacancy')) {
                 this.setDepValues(action);
             } else {
                 this.setVacValues(action);
             }
-
         }
-
         return false;
     },
 
@@ -1195,6 +1190,16 @@ var companyStructure =
         }
 
         return false;
+    },
+
+    setOptions: function(select, options, selected_item) {
+        select.find('option').remove();
+
+        for (i in options) {
+            obj = options[i];
+            is_selected = (typeof selected_item !== "undefined" && obj.value == selected_item) ? 'selected' : '';
+            select.append('<option value="' + obj.value + '" ' + is_selected + '>' + obj.name + '</option>');
+        }
     },
 
     setDepValues: function(action) {
@@ -1250,24 +1255,34 @@ var companyStructure =
         var form = $(self.forms.vacancy);
         var input = form.find('#vac-name');
 
+        if (typeof STAFFGROUPS !== "undefined") {
+            var staffgroup_select = form.find('#staffgroups');
+            staffgroup_options = STAFFGROUPS.slice();
+            staffgroup_options.unshift({'value': '', 'name': '----'});
+            selected_id = self.item.data('staffgroupId');
+            self.setOptions(staffgroup_select, staffgroup_options, selected_id);
+        }
+        
         if (action == 'edit') {//edit
             input.val(self.item.text().trim());
         }
 
         form.on('click','#btn-add-vacancy', function() {
             var name = input.val().trim();
-
             if (!name)
                 return false;
-
             id = self.item.data('item-id');
-
+            staffgroup_value = staffgroup_select.val();
             var contentHolder = $('#structure-tab .tpp-dt-content');
-
             contentHolder.html(self.loader);
             self.hideOverlay();
 
-            $.post(self.structureURL, {name: name, id: id, action: action, type: 'vacancy'}, function(data) {
+            $.post(self.structureURL, {
+                    name: name, 
+                    id: id, 
+                    action: action, type: 'vacancy', 
+                    staffgroup: staffgroup_value
+                }, function(data) {
                     contentHolder.replaceWith(data);
             } , 'html');
 
@@ -1343,6 +1358,15 @@ var companyStaff =
     setForms: function() {
 
         var LANG = this.LANG;
+        var staffgroup_options = '';
+        if (typeof STAFFGROUPS !== "undefined") {
+            staffgroup_options += '<div class="title">' + LANG['extra_permissions_title'] + '</div>';
+            $.each(STAFFGROUPS, function(index, item) {
+                staffgroup_options += '<div class="holder">' +
+                    '<input type="checkbox" id="id-staffgroup-' + item.value + '">' + item.name +
+                '</div>';
+            });
+        }
 
         this.form =
                         '<div class="staffadd" id="add-user-popup">' +
@@ -1360,15 +1384,19 @@ var companyStaff =
                                     '<div class="holder">' +
                                         '<label>' + LANG['popup_vac'] + '</label>' +
                                         '<select id="vacancy-list" style="width:62%;">' +
-                                            '<option disabled selected>' + LANG['select_department'] + '</option>' +
+                                            '<option disabled selected>' + LANG['select_vacancy'] + '</option>' +
                                         '</select>' +
                                     '</div>' +
                                     '<div class="holder">' +
                                         '<input type="checkbox" id="is-admin">' + LANG['popup_administrator'] +
                                     '</div>' +
+                                    '<div class="holder">' +
+                                        '<input type="checkbox" id="is-hidden-user">' + LANG['popup_hidden_user'] +
+                                    '</div>' +
+                                    '<div class="title">' + LANG['popup_user_title'] + '</div>' +
                                     '<div class="inputadd">' +
                                         '<input type="text" id="user-name" class="text" />' +
-                                    '</div>' +
+                                    '</div>' + staffgroup_options +
                                     '<div class="formadd-button">' +
                                         '<a class="btntype2" id="btn-add-user" href="#">' + LANG['popup_add'] + '</a>' +
                                         '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
@@ -1393,12 +1421,9 @@ var companyStaff =
     },
 
     setOptions: function(select, options) {
-
         select.find('option').remove();
-
         for (i in options) {
             obj = options[i];
-
             select.append('<option value="' + obj.value + '">' + obj.name + '</option>');
         }
     },
@@ -1423,13 +1448,12 @@ var companyStaff =
                    var options = self.cache[id];
                    self.setOptions(select, options);
                } else {
-
                    self.setOptions(select, [option_loading]);
-
                    $.get(self.staffURL, {"action": "vacancy", "department": id}, function(options) {
                        self.cache[id] = options;
                        self.setOptions(select, options);
                    }, 'json');
+                   
                }
            }
         });
@@ -1522,4 +1546,82 @@ var companyStaff =
 
         this.overlay.hide();
     }
+};
+
+var chatsUI = {
+
+    curChat: 'mess-cur' ,
+    chatList: '.message-tabcontent',
+    messageBox: '.message-box',
+    textArea: '#message-box',
+    submitSend: '#submit-send-message',
+    messageForm: '#send-message-to-chat',
+    
+    getMessages: function(container) {
+        if (container.hasClass(chatsUI.curChat))
+            return false;
+        var old = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (old.length > 0) {
+            old.removeClass(chatsUI.curChat);
+        }
+        container.addClass(chatsUI.curChat);
+        var item_a = $(container).children('a:first');
+        var chat_id = item_a.data('chat-id');
+        $('#chat-id').val(chat_id);
+        var url = item_a.data('url');
+        $.get(url, function(data) {
+            $('.custom-contentin').html(data);
+        });
+    },
+
+    renewMessages: function() {
+        var container = $(chatsUI.chatList + ' .' + chatsUI.curChat);
+        if (container.length > 0) {
+            var item_a = $(container).children('a:first');
+            var url = item_a.data('url');
+            $.get(url, function(data) {
+                $('.custom-contentin').html(data);
+            });
+        }
+    },
+
+    onSelectChat: function() {
+        var container = $(this);
+        chatsUI.getMessages(container);
+        return false;
+    },
+
+    sendMessage: function() {
+        $(chatsUI.messageForm).ajaxSubmit({
+            url: '/messages/chats/add/',
+            type: 'post',
+            success: function(data) {
+                $("#send-message-to-chat")[0].reset();
+                $(".file-message-attachment").not(":first").remove();
+                chatsUI.renewMessages();
+            }
+        });
+        return false;
+    },
+
+    init: function() {
+        $(".messages-l").tabs({
+            activate: function(event, ui) {
+                var url = ui.newTab.find('a').data('url');
+                var currentItem = $(ui.newPanel).find('.data-item:first');
+                if (currentItem.length > 0) {
+                    chatsUI.getMessages(currentItem);
+                }
+            },
+        });
+        this.messagesLoader = $('.message-loader');
+        $(this.chatList).on('click', 'li.data-item', this.onSelectChat);
+        $(this.submitSend).on('click', this.sendMessage);
+        var current = $('.data-item:first');
+        if (current.length > 0) {
+            this.getMessages(current);
+        }
+        
+    },
+
 };

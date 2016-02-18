@@ -1,9 +1,12 @@
+# -*- encoding: utf -*-
+
 import json
+import logging
 
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.conf import settings
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,9 +20,13 @@ from guardian.shortcuts import get_objects_for_user
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
     DeleteGalleryImage, DeleteDocument, DocumentList
-from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Vacancy, Organization, Branch, Chamber
+from b24online.models import (Company, News, Tender, Exhibition, B2BProduct, 
+                              BusinessProposal, InnovationProject, 
+                              Vacancy, Organization, Branch, Chamber, StaffGroup)
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+from b24online.Messages.forms import MessageForm
+
+logger = logging.getLogger(__name__)
 
 
 class CompanyList(ItemsList):
@@ -89,6 +96,11 @@ class CompanyDetail(ItemDetail):
     def _get_payed_status(self):
         # TODO
         pass
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({'staffgroups': StaffGroup.get_options()})
+        return context_data
 
 
 def _tab_news(request, company, page=1):
@@ -202,14 +214,18 @@ def _tab_innovation_projects(request, company, page=1):
 
 
 def _tab_structure(request, company, page=1):
+    """
+    Company view's tab 'Structure' processing.
+    """
     organization = get_object_or_404(Company, pk=company)
+    if request.is_ajax() and not request.user.is_anonymous() \
+        and request.user.is_authenticated():
 
-    if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
         item_id = request.POST.get("id", None)
-
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
         request_type = request.POST.get("type", None)
+        staffgroup_id = request.POST.get('staffgroup', None)
 
         if not (request_type in ('department', 'vacancy')) and action is not None:
             return HttpResponseBadRequest()
@@ -220,18 +236,18 @@ def _tab_structure(request, company, page=1):
         if action == "add" and len(name) > 0:
             if request_type == 'department':
                 organization.create_department(name, request.user)
-
             elif item_id is not None:  # new vacancy
                 obj = get_object_or_404(organization.departments, pk=item_id)
-                organization.create_vacancy(name, obj, request.user)
+                organization.create_vacancy(name, obj, request.user,
+                    staffgroup_id=staffgroup_id)
 
         elif action == "edit" and item_id is not None and len(name) > 0:
             if request_type == 'department':
                 obj = get_object_or_404(organization.departments, pk=item_id)
             else:
                 obj = get_object_or_404(organization.vacancies, pk=item_id)
-
             obj.name = name
+            obj.staffgroup_id = staffgroup_id
             obj.save()
         elif action == "remove" and item_id is not None:
             if request_type == 'department':
@@ -254,7 +270,7 @@ def _tab_structure(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
-        'item_pk': company
+        'item_pk': company,
     }
 
     return render_to_response('b24online/Companies/tabStructure.html', template_params, context_instance=RequestContext(request))
@@ -339,7 +355,7 @@ def _tab_staff(request, company, page=1):
         'url_paginator': url_paginator,
         'url_parameter': company,
         'item_pk': company,
-        'has_perm': organization.has_perm(request.user)
+        'has_perm': organization.has_perm(request.user),
     }
 
     return render_to_response('b24online/Companies/tabStaff.html', template_params, context_instance=RequestContext(request))
@@ -374,42 +390,31 @@ class DeleteCompanyDocument(DeleteDocument):
 
 
 def send_message(request):
-    if request.is_ajax():
-        if not request.user.is_anonymous() and request.user.is_authenticated() and request.POST.get('company', False):
-            if request.POST.get('message', False) or request.FILES.get('file', False):
-                company_pk = request.POST.get('company')
-
-                # this condition as temporary design for separation Users and Organizations
-                organization = Company.get_active_objects().get(pk=company_pk)
-
-                if not organization.email:
-                    email = 'admin@tppcenter.com'
-                    subject = _('This message was sent to company with id: ') + str(organization.pk)
-                else:
-                    subject = _('New message')
-                mail = EmailMessage(
-                    subject,
-                    request.POST.get('message', ""),
-                    'noreply@tppcenter.com',
-                    [organization.email]
-                )
-
-                attachment = request.FILES.get('file', False)
-
-                if attachment:
-                    mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                mail.send()
-
-                response = _('You have successfully sent the message.')
-
+    """
+    Send the message to :class:`Organization` (and `User` as recipient).
+    """
+    response_code = 'error'
+    response_text = 'Error'
+    if not request.is_ajax() or request.method != 'POST':
+        return HttpResponseBadRequest()
+    elif request.user.is_anonymous() or not request.user.is_authenticated():
+        response_text = _('Only registered users can send the messages')
+    else:
+        form = MessageForm(request, data=request.POST, files=request.FILES)    
+        if form.is_valid():
+            try:
+                form.send()        
+            except IntegrityError as exc:
+                response_text = _('Error during data saving') + str(exc)
             else:
-                response = _('Message or file are required')
+                response_code = 'success'
+                response_text = _('You have successfully sent the message')
         else:
-            response = _('Only registered users can send the messages')
-
-        return HttpResponse(response)
-
-    return HttpResponseBadRequest()
+            response_text = form.get_errors()  
+    return HttpResponse(
+        json.dumps({'code': response_code, 'message': response_text}),
+        content_type='application/json'
+    )
 
 
 class CompanyUpdate(ItemUpdate):

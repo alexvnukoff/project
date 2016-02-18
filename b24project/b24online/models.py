@@ -9,9 +9,10 @@ from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
+from django.utils.functional import curry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, Group
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField,
@@ -36,7 +37,8 @@ from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
-from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
+from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
+                              LocalFileStorage)
 from b24online.utils import (generate_upload_path, reindex_instance,
                              document_upload_path, get_current_organization)
 from tpp.celery import app
@@ -56,8 +58,12 @@ MEASUREMENT_UNITS = [
     ('pcs', _('Piece'))
 ]
 
-image_storage = S3ImageStorage()
-file_storage = S3FileStorage()
+image_storage = S3ImageStorage() \
+    if not getattr(settings, 'STORE_FILES_LOCAL', False) \
+        else LocalFileStorage()
+file_storage = S3ImageStorage() \
+    if not getattr(settings, 'STORE_FILES_LOCAL', False) \
+        else LocalFileStorage()
 
 logger = logging.getLogger(__name__)
 
@@ -414,11 +420,11 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
             organization=self
         )
 
-    def create_vacancy(self, name, department, user):
+    def create_vacancy(self, name, department, user, **kwargs):
         if department.organization != self:
             raise ArgumentError('department', 'Unknown department')
 
-        return department.create_vacancy(name, user)
+        return department.create_vacancy(name, user, **kwargs)
 
     def get_descendants_filtered(self, **filters):
         """
@@ -746,12 +752,18 @@ class Department(models.Model):
     def get_absolute_url(self):
         return reverse('department:detail', args=[self.slug, self.pk])
 
-    def create_vacancy(self, name, user):
+    def create_vacancy(self, name, user, **kwargs):
+        staffgroup_id = kwargs.get('staffgroup_id')
+        try:
+            staffgroup = StaffGroup.objects.get(pk=staffgroup_id)
+        except StaggGroup.DoesNotExist:
+            staffgroup = None        
         return Vacancy.objects.create(
             name=name,
             created_by=user,
             updated_by=user,
-            department=self
+            department=self,
+            staffgroup=staffgroup,
         )
 
 
@@ -760,6 +772,10 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
+    staffgroup = models.ManyToManyField('StaffGroup', 
+                                        related_name='group_vacancies')
+    is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
+                                        default=False, db_index=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1254,7 +1270,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     @property
     def full_name(self):
-        return ' '.join(filter(None, [self.first_name, self.middle_name, self.last_name]))
+        return ' ' . join(
+            filter(None, [self.first_name, self.middle_name, self.last_name])
+        )
 
     @staticmethod
     def get_index_model(**kwargs):
@@ -1394,11 +1412,64 @@ class Notification(models.Model):
         return self.message
 
 
+class MessageChat(AbstractRegisterInfoModel):
+    """
+    Class for messages chat.
+    """
+    OPENED, CLOSED = 'opened', 'closed'
+    STATUSES = (
+        (OPENED, _('Opened')),
+        (CLOSED, _('Closed')),
+    )
+    subject = models.CharField(_('Chat subject'), max_length=255,
+                               null=True, blank=True) 
+    organization = models.ForeignKey('Organization', related_name='chats', 
+                                     null=True, blank=True)
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                  related_name='incoming_chats', null=True,
+                                  blank=True)
+    participants = models.ManyToManyField(User, blank=True)    
+    is_private = models.NullBooleanField()
+    status = models.CharField(_('Chart status'), max_length=10, 
+                              choices=STATUSES, default=OPENED, editable=False,
+                              null=False, db_index=True)
+
+    class Meta:
+        verbose_name = _('Messages chat')    
+        verbose_name_plural = _('Messages chats')    
+
+    def is_incoming(self, user):
+        return self.created_at.pk == user.pk
+        
+
 class Message(models.Model):
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received')
+    """
+    Class for inner messages.
+    """
+    DRAFT, READY, READ = 'draft', 'ready', 'read'
+    STATUSES = (
+        (DRAFT, _('Draft')),
+        (READY, _('Ready')),
+        (READ, _('Read')),
+    )
+
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               related_name='outgoing_messages')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                  related_name='incoming_messages', null=True,
+                                  blank=True)
+    organization = models.ForeignKey('Organization', 
+                                     related_name='organization_messages', 
+                                     null=True, blank=True)
+    chat = models.ForeignKey(MessageChat, related_name='chat_messages',
+                             null=True, blank=True)
     is_read = models.BooleanField(default=False)
+    subject = models.CharField(_('Chat subject'), max_length=255,
+                               null=True, blank=True, db_index=True) 
     content = models.TextField(blank=False, null=False)
+    status = models.CharField(_('Message status'), max_length=10, 
+                              choices=STATUSES, default=DRAFT, editable=False,
+                              null=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -1418,6 +1489,49 @@ class Message(models.Model):
 
     def __str__(self):
         return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
+
+
+class MessageAttachment(models.Model):
+
+    ICONS = {
+        'application/vnd.ms-excel': 'xls.png',
+        'application/msword': 'doc.png',
+        'application/pdf': 'pdf.png',
+    }
+
+    message = models.ForeignKey('Message', related_name='attachments')
+    file = models.FileField()
+    file_name = models.CharField(_('File name'), max_length=255, null=True,
+                                 blank=True, editable=False)
+    content_type = models.CharField(_('Content type'), max_length=255, 
+                                    null=True, blank=True, editable=False)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                   related_name='%(class)s_create_user')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = 'Message attachment'
+        verbose_name_plural = 'Messages attachments'
+
+    def is_image(self):
+        try:
+            return self.content_type.split('/')[0] == 'image'
+        except IndexError:
+            return False
+
+    def get_shorted_name(self, size=7):
+        try:
+            _file, _ext = self.file_name.split('.')
+            if len(_file) > size:
+                return '%s.%s' % (_file[:size], _ext)
+            else:
+                return self.file_name
+        except ValueError:
+            return self.file_name
+
+    def get_icon(self):
+        return 'b24online/img/' + \
+            type(self).ICONS.get(self.content_type, 'unknown.png')
 
 
 class BannerBlock(models.Model):
@@ -1728,71 +1842,6 @@ class RegisteredEvent(RegisteredEventMixin):
             return None
 
 
-@receiver(pre_save)
-def slugify(sender, instance, **kwargs):
-    fields = [field.name for field in sender._meta.get_fields()]
-
-    if 'slug' in fields:
-        if 'title' in fields:
-            string = instance.title
-        elif 'name' in fields:
-            string = instance.name
-        else:
-            raise NotImplementedError('Unknown source field for slug')
-
-        instance.slug = uuslug(string, instance=instance)  # create_slug(string)
-
-
-@receiver(post_save, sender=Company)
-@receiver(post_save, sender=Chamber)
-def initial_department(sender, instance, created, **kwargs):
-    if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
-        department = instance.create_department('Administration', instance.created_by)
-        vacancy = instance.create_vacancy('Admin', department, instance.created_by)
-        vacancy.assign_employee(instance.created_by, True)
-
-
-@receiver(post_save, sender=Country)
-@receiver(post_save, sender=Branch)
-@receiver(post_save, sender=B2BProductCategory)
-@receiver(post_save, sender=BusinessProposalCategory)
-@receiver(post_save, sender=NewsCategory)
-def index_item(sender, instance, created, **kwargs):
-    instance.reindex()
-
-
-@receiver(user_registered)
-def initial_profile(sender, user, request, **kwargs):
-    Profile.objects.create(user=user, country=Country.objects.first())
-
-
-@receiver(post_save, sender=RegisteredEvent)
-def process_event(sender, instance, created, **kwargs):
-    """
-    Process the registered event.
-    """
-    if instance.event_hash:
-        # Try to get or create stats instance
-        try:
-            stats = RegisteredEventStats.objects \
-                .get(event_type=instance.event_type,
-                     site=instance.site,
-                     content_type=instance.content_type,
-                     object_id=instance.object_id,
-                     registered_at=instance.registered_at.date())
-        except RegisteredEventStats.DoesNotExist:
-            stats = RegisteredEventStats(
-                event_type=instance.event_type,
-                site=instance.site,
-                content_type=instance.content_type,
-                object_id=instance.object_id,
-                registered_at=instance.registered_at.date(),
-                unique_amount=0, total_amount=0)
-
-        # Increase the counters and store GeoIP info
-        stats.store_info(instance)
-
-
 class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The model class for Client Orders to buy Products.
@@ -2087,11 +2136,104 @@ def recalculate_deal_cost(deal):
     deal.save()
 
 
-@receiver(post_save, sender=DealItem)
-def recalculate_for_update(sender, instance, *args, **kwargs):
+class StaffGroup(models.Model):
+    """
+    Class for the relations of :class:`auth.models.Group` for 
+    organization's staff vacancies.
+    """
+    group = models.OneToOneField(Group, verbose_name=_('Vacancy group'))
+
+    class Meta:
+        verbose_name = 'Group for staff'
+        verbose_name_plural = 'Groups for staff'
+
+    @classmethod
+    def get_options(cls):
+        return ((item.id, item.group.name) \
+            for item in cls.objects.select_related('group')\
+                .order_by('group__name'))
+
+
+@receiver(pre_save)
+def slugify(sender, instance, **kwargs):
+    fields = [field.name for field in sender._meta.get_fields()]
+
+    if 'slug' in fields:
+        if 'title' in fields:
+            string = instance.title
+        elif 'name' in fields:
+            string = instance.name
+        else:
+            raise NotImplementedError('Unknown source field for slug')
+
+        instance.slug = uuslug(string, instance=instance)  # create_slug(string)
+
+
+@receiver(post_save, sender=Company)
+@receiver(post_save, sender=Chamber)
+def initial_department(sender, instance, created, **kwargs):
+    if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
+        department = instance.create_department('Administration', instance.created_by)
+        vacancy = instance.create_vacancy('Admin', department, instance.created_by)
+        vacancy.assign_employee(instance.created_by, True)
+
+
+@receiver(post_save, sender=Country)
+@receiver(post_save, sender=Branch)
+@receiver(post_save, sender=B2BProductCategory)
+@receiver(post_save, sender=BusinessProposalCategory)
+@receiver(post_save, sender=NewsCategory)
+def index_item(sender, instance, created, **kwargs):
+    instance.reindex()
+
+
+@receiver(user_registered)
+def initial_profile(sender, user, request, **kwargs):
+    Profile.objects.create(user=user, country=Country.objects.first())
+
+
+@receiver(post_save, sender=RegisteredEvent)
+def process_event(sender, instance, created, **kwargs):
+    """
+    Process the registered event.
+    """
+    if instance.event_hash:
+        # Try to get or create stats instance
+        try:
+            stats = RegisteredEventStats.objects \
+                .get(event_type=instance.event_type,
+                     site=instance.site,
+                     content_type=instance.content_type,
+                     object_id=instance.object_id,
+                     registered_at=instance.registered_at.date())
+        except RegisteredEventStats.DoesNotExist:
+            stats = RegisteredEventStats(
+                event_type=instance.event_type,
+                site=instance.site,
+                content_type=instance.content_type,
+                object_id=instance.object_id,
+                registered_at=instance.registered_at.date(),
+                unique_amount=0, total_amount=0)
+
+        # Increase the counters and store GeoIP info
+        stats.store_info(instance)
+
+
+@receiver(post_save, sender=Message)
+def update_message_chat(sender, instance, created, **kwargs):
     """
     Recalculate product's deal cost after update.
     """
+    assert isinstance(instance, Message), \
+        _('Invalid parameter')
+    if created and instance.chat:
+        instance.chat.updated_by = instance.sender
+        instance.chat.updated_at = instance.created_at
+        instance.chat.save()
+
+
+@receiver(post_save, sender=DealItem)
+def recalculate_for_update(sender, instance, *args, **kwargs):
     recalculate_deal_cost(instance.deal)
 
 

@@ -15,21 +15,19 @@
     {{ block.super }}
     <script>
         {% getOwner item as owner %}
-
-
-        ga('set', 'dimension1', {{ item.pk }});
-
-        {% if owner %}
-            ga('set', 'dimension3', {{ owner.pk }});
-        {% endif %}
-
-        ga('set', 'dimension2', 'company');
+        if (typeof ga !== "undefined") {
+            ga('set', 'dimension1', {{ item.pk }});
+            {% if owner %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+            ga('set', 'dimension2', 'company');
+        }
     </script>
 
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-    <script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
-    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script src="{% static 'b24online/js/gmapSearchMarker.js' %}"></script>
+    <script src="{% static 'b24online/js/jquery.uploadify.min.js' %}"></script>
 
     <!-- Google maps -->
     <script type="text/javascript">
@@ -63,7 +61,10 @@
             'popup_ok': '{% trans "OK" %}',
             'popup_cancel': '{% trans "Cancel" %}',
             'popup_dep': '{% trans "Department name" %}',
-            'popup_vac': '{% trans "Vacancy title" %}'
+            'popup_vac': '{% trans "Vacancy title" %}',
+            'popup_vac_title': '{% trans "Add the vacancy" %}',
+            'popup_staffgroup': '{% trans "Related to staff group" %}',
+            'popup_loading': '{% trans "Loading..." %}',
         };
 
         LANG['staff'] = {
@@ -74,9 +75,32 @@
             'popup_vac': '{% trans "Vacancy title" %}',
             'popup_administrator': '{% trans "Administrator" %}',
             'popup_title': '{% trans "Add staff" %}',
+            'popup_user_title': '{% trans "Add user email" %}',
+            'popup_title_edit': '{% trans "Edit staff" %}',
             'popup_loading': '{% trans "Loading..." %}',
-            'select_department': '{% trans "Select department" %}'
+            'select_department': '{% trans "Select department" %}',
+            'select_vacancy': '{% trans "Select vacancy" %}',
+            'popup_hidden_user': '{% trans "Do not show user" %}',
+            'extra_permissions_title': '{% trans "Select additional permissions" %}',
         };
+
+        var STAFFGROUPS = [
+            {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            function addOneMoreInput() {
+                $('.file-attachment').last().change(function() {
+                    $(this).after('<input name="attachment" class="file-attachment" type="file" />');
+                    $(this).off('change');  
+                    addOneMoreInput();
+                });
+            }
+            addOneMoreInput();
+        });
     </script>
 
 {% endblock %}
