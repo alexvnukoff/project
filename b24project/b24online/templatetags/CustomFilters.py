@@ -1,33 +1,32 @@
 # -*- encoding: utf-8 -*-
 
-from collections import OrderedDict, Iterable
-from copy import copy
-from decimal import Decimal
-import os
 import datetime
 import logging
+import os
+from collections import OrderedDict, Iterable, namedtuple
 
-from django.db.models import Q
-from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.sites.models import Site
+from copy import copy
+from decimal import Decimal
+
+from django import template
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.template.defaultfilters import stringfilter
+from django.utils.html import escape
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
-from django.utils.html import escape
-from django.core.urlresolvers import reverse
-from django import template
-from guardian.shortcuts import get_objects_for_user
 
-from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification, RegisteredEventType,
-                              RegisteredEvent)
-from b24online.stats.helpers import RegisteredEventHelper
-from tpp.SiteUrlMiddleWare import get_request
 import b24online.urls
+from appl.func import currency_symbol
+from b24online.models import (Chamber, Notification)
+from b24online.stats.helpers import RegisteredEventHelper
+from b24online.utils import get_permitted_orgs
+from tpp.DynamicSiteMiddleware import get_current_site
+from tpp.SiteUrlMiddleWare import get_request
 
 logger = logging.getLogger(__name__)
 
@@ -267,10 +266,9 @@ def detail_page_to_tppcenter(url, *args):
     return 'http://%s' % url
 
 
-@register.assignment_tag(takes_context=True)
-def is_chamber_site(context):
-    request = context['request']
-    organization = get_current_site(request).user_site.organization
+@register.assignment_tag
+def is_chamber_site():
+    organization = get_current_site().user_site.organization
     return isinstance(organization, Chamber)
 
 
@@ -332,38 +330,33 @@ def process_event(event_stored_data, request):
     RegisteredEventHelper.register(event_stored_data, request)
     return ''
 
-
 @register.filter
 def deal_order_quantity(request):
     """
     Return the draft deal orders count.
     """
-    from b24online.models import (Organization, DealOrder, Deal, DealItem)
+    from b24online.models import (DealOrder, Deal, DealItem)
 
     if request.user.is_authenticated():
-        org_ids = get_objects_for_user(
-            request.user, ['b24online.manage_organization'],
-            Organization.get_active_objects().all(), 
-            with_superuser=False)
+        orgs = get_permitted_orgs(request.user)
         return DealItem.objects.select_related('deal', 'deal__deal_order')\
-            .filter(
-                ~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
-            ((Q(deal__deal_order__customer_type=DealOrder.AS_PERSON) & \
-                Q(deal__deal_order__created_by=request.user)) | \
-            (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION) & \
-                Q(deal__deal_order__customer_organization_id__in=org_ids))))\
+            .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
+            (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON,
+               deal__deal_order__created_by=request.user) | \
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+                deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
         return None
 
 
 @register.filter
-def deal_quantity(request):
+def deal_number(request):
     """
     Return the paid deals count.
     """
     from b24online.models import Deal
-    return Deal.get_user_deals(request.user, status=Deal.PAID)\
+    return Deal.get_current_deals(request, statuses=[Deal.PAID, Deal.ORDERED])\
         .count() if request.user.is_authenticated() else 0
 
 
@@ -383,3 +376,41 @@ def get_by_content_type(item):
             except model_class.DoesNotExist:
                 pass
     return None
+
+
+@register.assignment_tag(takes_context=True)
+def apply_handler(context, handler_name, instance):
+    """
+    Apply some handler which was assign in context to instance.
+    """
+    handler = context.get(handler_name)
+    return handler(instance) if handler and callable(handler) else None
+
+
+@register.filter
+def get_item(container, key):
+    return container.get(key, None)
+
+
+# Class for filter form results colorizing
+DataToColorize = namedtuple('DataToColorize', ['value', 'q_name'])
+
+
+@register.filter
+def set_q_name(raw_value, q_name):
+    """
+    Wrap the field value to colorize.
+    """
+    return DataToColorize(raw_value, q_name)
+
+
+@register.filter
+def colorize_by(wrapped_value, filter_form):
+    if isinstance(wrapped_value, DataToColorize):
+        colorize_meth = getattr(filter_form, 'colorize', None)
+        if getattr(filter_form, 'cleaned_data', False) and \
+           colorize_meth and callable(colorize_meth):
+            return colorize_meth(wrapped_value)
+        else:
+            return wrapped_value.value
+    return wrapped_value

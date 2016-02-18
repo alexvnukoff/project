@@ -27,7 +27,8 @@ class ExternalSiteTemplate(models.Model):
 
 class UserSiteTemplate(models.Model):
     name = models.CharField(max_length=255)
-    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=255)
+    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'],
+                                 max_length=255)
     folder_name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -39,20 +40,19 @@ def uploadTemplateImage(sender, instance, **kwargs):
     from core import tasks
     params = []
     params.append({
-    'file': instance.thumbnail.path,
-    'sizes': {
-        'small': {'box': (200, 200), 'fit': True},
+        'file': instance.thumbnail.path,
+        'sizes': {
+            'small': {'box': (200, 200), 'fit': True},
         }
     })
 
     tasks.upload_images.delay(*params)
 
 
-
 class UserSite(ActiveModelMixing, models.Model):
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     user_template = models.ForeignKey(UserSiteTemplate, blank=True, null=True)
-    organization = models.ForeignKey(Organization)
+    organization = models.ForeignKey(Organization, related_name='user_site')
     slogan = models.CharField(max_length=2048, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -127,3 +127,12 @@ class UserSite(ActiveModelMixing, models.Model):
     def __str__(self):
         return self.domain_part
 
+    def clear_cache(self):
+        if self.site.pk:
+            # Call save signal to clear the cache
+            self.site.save()
+
+
+@receiver(post_save, sender=UserSite)
+def index_item(sender, instance, created, **kwargs):
+    instance.clear_cache()

@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import sys
 import logging
 
 from django.db import transaction
@@ -10,22 +11,25 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.utils.timezone import now
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import (DetailView, ListView, View, 
+                                  TemplateView)
 from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import LoginRequiredMixin
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
-from b24online.models import (B2BProduct, Company, Chamber, Country, 
+from b24online.models import (B2BProduct, Company, Chamber, Country,
     B2BProductCategory, DealOrder, Deal, DealItem, Organization)
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet, 
-    B2CProductForm, B2_ProductBuyForm, DealPaymentForm)
+from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
+    B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
+    DealItemFormSet, DealOrderedFormSet)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import get_managed_org_ids
+from b24online.utils import (get_current_organization, get_permitted_orgs)
+
 
 logger = logging.getLogger(__name__)
 
@@ -613,167 +617,252 @@ class DeleteB2BProductDocument(DeleteDocument):
     owner_model = B2BProduct
 
 
-class B2BProductBuy(ItemDetail):
+class B2_ProductBuy(ItemDetail):
+    model = None
+    template_name = None
+    current_section = None
+    form_class = B2_ProductBuyForm
+
+    def get_queryset(self):
+        return super().get_queryset()\
+            .prefetch_related('company', 'company__countries')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object)
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object, data=request.POST)
+        if form.is_valid():
+            item = form.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def get_context_data(self, request, **kwargs):
+        self.object = self.get_object()
+        return super(B2_ProductBuy, self).get_context_data(**kwargs)
+
+
+class B2BProductBuy(B2_ProductBuy):
     model = B2BProduct
     template_name = 'b24online/Products/buyB2BProduct.html'
     current_section = _('Products B2B')
-    form_class = B2_ProductBuyForm
-    
-    def get_queryset(self):
-        return super().get_queryset()\
-            .prefetch_related('company', 'company__countries')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object)
-        context.update({'form': form})
-        return self.render_to_response(context)
-                    
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object, data=request.POST)
-        if form.is_valid():
-            item = form.save()
-            return HttpResponseRedirect(
-                reverse('products:deal_order_basket'))
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def get_context_data(self, request, **kwargs):
-        self.object = self.get_object()
-        return super(B2BProductBuy, self).get_context_data(**kwargs)
 
 
-class B2CProductBuy(ItemDetail):
+class B2CProductBuy(B2_ProductBuy):
     model = B2CProduct
     template_name = 'b24online/Products/buyB2CProduct.html'
     current_section = _('Products B2C')
-    form_class = B2_ProductBuyForm
-    
-    def get_queryset(self):
-        return super().get_queryset()\
-            .prefetch_related('company', 'company__countries')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object)
-        context.update({'form': form})
-        return self.render_to_response(context)
-                    
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object, data=request.POST)
-        if form.is_valid():
-            item = form.save()
-            return HttpResponseRedirect(
-                reverse('products:deal_order_basket'))
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def get_context_data(self, request, **kwargs):
-        self.object = self.get_object()
-        return super(B2CProductBuy, self).get_context_data(**kwargs)
 
 
-class DealOrderList(ListView):
+class DealOrderList(LoginRequiredMixin, ListView):
     """
     Deal Orders list.
     """
     model = DealOrder
     template_name = 'b24online/Products/dealOrderList.html'
     current_section = _('Basket')
+    item_formset = None
 
-    @method_decorator(login_required)
+    @classmethod
+    def get_deal_items_formset(cls, deal):
+        """
+        Construct the formset for Deal items.
+        """
+        assert isinstance(deal, Deal), _('Invalid parameter')
+        return DealItemFormSet(queryset=deal.get_items())
+
     def dispatch(self, request, *args, **kwargs):
+        """
+        Define if the Order status was has been set for simple filter or
+        basket.
+        
+        If the basket was requested set the template.
+        """
+        self.status = self.kwargs.get('status')
+        self.is_basket = self.status == 'basket'
+        if self.is_basket:
+            self.template_name = 'b24online/Products/dealOrderBasket.html'
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        qs = super(DealOrderList, self).get_queryset()\
-            .prefetch_related('customer_organization', 'created_by')
-        by_status = self.kwargs.get('status')
-        if by_status:
-            if by_status == 'basket':
-                qs = qs.filter(~Q(status=DealOrder.PAID))
-                self.template_name = 'b24online/Products/dealOrderBasket.html'
-            else:
-                qs = qs.filter(status=by_status)
+        qs = super(DealOrderList, self).get_queryset()
+        qs = qs.filter(
+            (Q(customer_type=DealOrder.AS_PERSON) & \
+             Q(created_by=self.request.user)) | \
+            (Q(customer_type=DealOrder.AS_ORGANIZATION) & \
+             Q(customer_organization__in=get_permitted_orgs(
+                 self.request.user))))
+        if self.is_basket:
+            qs = qs.filter(order_deals__status=Deal.DRAFT)\
+                .annotate(deals_amount=Count('order_deals'))\
+                .filter(deals_amount__gt=0)
+        elif self.status:
+            qs = qs.filter(status=self.status)
+        qs = qs.prefetch_related('customer_organization', 'created_by')
+
+        self.items_qs = DealItem.objects.filter(deal__status=Deal.DRAFT,
+            deal__deal_order__in=qs)
+
         return qs
 
+    def get_context_data(self, **kwargs):
+        context = super(DealOrderList, self).get_context_data(**kwargs)
 
-class DealOrderDetail(ItemDetail):
+        # Data: orders, deals and deals products
+        deal_orders = context.get('object_list') or DealOrder.objects.none()
+        total_cost_data = Deal.get_qs_cost(
+            Deal.objects.filter(deal_order__in=deal_orders, status=Deal.DRAFT)
+        )
+        items_qs = DealItem.objects.filter(
+            deal__status=Deal.DRAFT,
+            deal__deal_order__in=deal_orders
+        )
+
+        # Formsets for deals products
+        self.item_formset = DealItemFormSet(
+            queryset=items_qs,
+            data=self.request.POST
+        ) if self.request.method == 'POST' else \
+            DealItemFormSet(queryset=items_qs)
+        item_formset_dict = dict((item_form.instance.pk, item_form) \
+            for item_form in self.item_formset)
+
+        # Updated context
+        context.update({
+            'item_formset': self.item_formset,
+            'item_formset_dict': item_formset_dict,
+            'total_cost_data': total_cost_data,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(**kwargs)
+        if self.item_formset and self.item_formset.is_valid():
+            self.item_formset.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        return self.render_to_response(context)
+
+
+class DealOrderDetail(LoginRequiredMixin, ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
-
-class DealOrderPayment(ItemDetail):
+class DealOrderPayment(LoginRequiredMixin, ItemDetail):
     model = DealOrder
     template_name = 'b24online/Products/dealOrderDetail.html'
     current_section = _('Deals history')
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         item = self.get_object()
         item.pay()
         return HttpResponseRedirect(
-            reverse('products:deal_order_detail', 
+            reverse('products:deal_order_detail',
                 kwargs={'pk': item.pk}))
 
 
-class DealList(ListView):
+class DealList(LoginRequiredMixin, ItemsList):
     model = Deal
     template_name = 'b24online/Products/dealList.html'
     current_section = _('Deals history')
+    form_class = DealListFilterForm
+    url_paginator = 'products:deal_list_paginator'
+    paginate_by = 5
+    sortField1 = 'creatd_at'
+    order1 = 'asc'
+    by_status = None
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            self.template_name = \
-                'b24online/Products/dealListBase.html'
-        return super().dispatch(request, *args, **kwargs)
+    def _get_sorting_params(self):
+        return ['created_at',]
 
     def get_queryset(self):
         qs = super(DealList, self).get_queryset()
-        org_ids = get_managed_org_ids(self.request.user)
-        qs = qs.filter(supplier_company_id__in=org_ids)
-
-        by_status = self.request.GET.get('status')
-        if by_status:
-            qs = qs.filter(status=by_status)
+        current_organization = get_current_organization(self.request)
+        if isinstance(current_organization, Company):
+            qs = qs.filter(supplier_company=current_organization)
+            self.by_status = self.kwargs.get('status') or \
+                self.request.GET.get('status')
+            if self.by_status:
+                qs = qs.filter(status=self.by_status)
+        else:
+            return Deal.objects.none()
         return qs
+
+    def get_context_data(self, **kwargs):
+        qs = self.object_list
+        is_filtered = False
+        if 'filter' in self.request.GET:
+            form = self.form_class(data=self.request.GET)
+            if form.is_valid():
+                is_filtered = True
+                qs = form.filter(qs)
+        else:
+            form = self.form_class()
+        total_cost_data = Deal.get_qs_cost(qs)
+        self.object_list = qs
+        context = super(DealList, self).get_context_data(**kwargs)
+
+        if self.by_status == 'ordered':
+            items_qs = context['page_obj'].object_list
+            deal_formset = DealOrderedFormSet(
+                queryset=items_qs,
+                data=self.request.POST
+            ) if self.request.method == 'POST' else \
+                DealOrderedFormSet(queryset=items_qs)
+            context.update({'deal_formset': deal_formset})
+
+        context.update({
+            'current_organization': get_current_organization(self.request),
+            'form': form,
+            'is_filtered': is_filtered,
+            'total_cost_data': total_cost_data,
+        })
+
+        if self.by_status == Deal.ORDERED:
+            if self.request.is_ajax():
+                self.template_name = \
+                    'b24online/Products/dealListOrderedBase.html'
+            else:
+                self.template_name = 'b24online/Products/dealListOrdered.html'
+        elif self.request.is_ajax():
+            self.template_name = 'b24online/Products/dealListBase.html'
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        return self.response_class(
+            request=self.request,
+            template=self.get_template_names(),
+            context=context,
+            using=self.template_engine,
+            **response_kwargs
+        )
         
 
-class DealDetail(ItemDetail):
+class DealDetail(LoginRequiredMixin, ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('deal_order', 
+        return super().get_queryset().prefetch_related('deal_order',
             'supplier_company')
 
 
-class DealPayment(ItemDetail):
+class DealPayment(LoginRequiredMixin, ItemDetail):
     model = Deal
     template_name = 'b24online/Products/dealPayment.html'
     current_section = _('Deals history')
     form_class = DealPaymentForm
     success_url = reverse_lazy('products:deal_order_basket')
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -782,29 +871,49 @@ class DealPayment(ItemDetail):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(request, instance=self.object, data=request.GET)
+        form = self.form_class(request, instance=self.object, data=request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(self.success_url)
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class DealItemDelete(ItemDetail):
+class DealPayPal(LoginRequiredMixin, ItemDetail):
+    model = Deal
+    template_name = 'b24online/Products/dealPayPal.html'
+    current_section = _('Deals history')
+    success_url = reverse_lazy('products:deal_order_basket')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['deal'] = self.object
+        if self.object.supplier_company.company_paypal_account:
+            paypal_dict = {
+                "business": self.object.supplier_company.company_paypal_account,
+                "amount": self.object.total_cost,
+                "item_number": self.object,
+                "item_name": self.object,
+                "no_shipping": 0,
+                "quantity": 1,
+                "currency_code": self.object.currency
+            }
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+            context['paypal_form'] = paypal_form
+        return context
+        
+
+class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
     current_section = _('Deals history')
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         item = self.get_object()
-        next = request.GET.get('next', 
-            reverse('products:deal_detail', 
-                kwargs={'item_id': item.deal.pk}))        
+        next = request.GET.get('next',
+            reverse('products:deal_detail',
+                kwargs={'item_id': item.deal.pk}))
         if item.deal.status == Deal.DRAFT \
-            and item.deal.deal_order.status == DealOrder.DRAFT:    
+            and item.deal.deal_order.status == DealOrder.DRAFT:
             item.delete()
         return HttpResponseRedirect(next)
 

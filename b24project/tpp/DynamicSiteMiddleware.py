@@ -1,22 +1,33 @@
+import threading
+
 from django.conf import settings
-from django.contrib.sites.models import SITE_CACHE, Site
+from django.contrib.sites.models import Site
 from django.http import HttpResponse, HttpResponseBadRequest
 
 
+def get_current_site():
+    return DynamicSiteMiddleware.get_site()
+
+
 class DynamicSiteMiddleware(object):
+    __sites = {}
+
     def process_request(self, request):
         host = request.get_host()
+        site = self._get_site_from_host(host)
 
-        if host not in SITE_CACHE:
-            site = self._get_site_from_host(host)
+        if isinstance(site, HttpResponse):
+            return site
 
-            if isinstance(site, HttpResponse):
-                return site
+        if site is None:
+            return HttpResponseBadRequest()
 
-            if site is None:
-                return HttpResponseBadRequest()
-            else:
-                SITE_CACHE[host] = site
+        self.__class__.set_site(site)
+
+    def process_response(self, request, response):
+        self.__class__.del_site()
+
+        return response
 
     @staticmethod
     def _get_site_from_host(host):
@@ -48,3 +59,15 @@ class DynamicSiteMiddleware(object):
             return None
 
         return site
+
+    @classmethod
+    def get_site(cls):
+        return cls.__sites.get(threading.current_thread())
+
+    @classmethod
+    def set_site(cls, site):
+        cls.__sites[threading.current_thread()] = site
+
+    @classmethod
+    def del_site(cls):
+        cls.__sites.pop(threading.current_thread(), None)

@@ -24,8 +24,8 @@
         	{% if user.is_authenticated %}
                 <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
             {% else %}
-                <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span>Facebook</a>
-                {% comment %}<a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span>Google</a>{% endcomment %}
+                <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
+                <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
                 <a href="{% url 'auth_login' %}" title="{% trans 'Sign in' %}"><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'registration_register' %}?next={{ request.path }}" title="{% trans 'Sign up' %}"><font>{% trans 'Sign up' %}</font></a>
             {% endif %}
         </div>

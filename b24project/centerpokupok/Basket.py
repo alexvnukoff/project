@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from django.utils.timezone import now
+
 from centerpokupok.models import UserBasket, BasketItem
-from django.contrib.sites.shortcuts import get_current_site
+from tpp.DynamicSiteMiddleware import get_current_site
 
 
 class ItemAlreadyExists(Exception):
@@ -18,7 +18,7 @@ class Basket:
 
         if self.basket_id:
             try:
-                basket = UserBasket.objects.get(user_uuid=self.basket_id, site_id=get_current_site(request).id, checked_out=False)
+                basket = UserBasket.objects.get(user_uuid=self.basket_id, site_id=get_current_site().id, checked_out=False)
             except UserBasket.DoesNotExist:
                 basket = self.new(request)
         else:
@@ -40,7 +40,7 @@ class Basket:
     def new(self, request):
         basket = UserBasket(created=now())
         basket.user_uuid = request.session.get('uuid_hash')
-        basket.site_id = get_current_site(request).id
+        basket.site_id = get_current_site().id
         basket.save()
         return basket
 

@@ -1,11 +1,13 @@
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
+
+from tpp.DynamicSiteMiddleware import get_current_site
+
 DEFAULT_TEMPLATE_PATH = 'usersites'
 
 
 class UserTemplateMixin:
     def get_template_names(self):
-        site = get_current_site(self.request)
+        site = get_current_site()
         try:
             user_site = site.user_site
             user_site.refresh_from_db()
