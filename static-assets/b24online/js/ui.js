@@ -1055,10 +1055,6 @@ var companyStructure =
                     '<div class="staffaddin">' +
                         '<label>' + LANG['popup_vac'] + '</label>' +
                         '<input type="text" name="" id="vac-name" class="textstructure" />' +
-                        '<label>' + LANG['popup_staffgroup'] + '</label>' +
-                        '<select id="staffgroups" style="width: 100%">' +
-                            '<option disabled selected>' + LANG['popup_loading'] + '</option>' +
-                        '</select>' +
                         '<div class="formadd-button">' +
                             '<a class="btntype2" id="btn-add-vacancy" href="#">' + LANG['popup_ok'] + '</a>' +
                             '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
@@ -1255,14 +1251,6 @@ var companyStructure =
         var form = $(self.forms.vacancy);
         var input = form.find('#vac-name');
 
-        if (typeof STAFFGROUPS !== "undefined") {
-            var staffgroup_select = form.find('#staffgroups');
-            staffgroup_options = STAFFGROUPS.slice();
-            staffgroup_options.unshift({'value': '', 'name': '----'});
-            selected_id = self.item.data('staffgroupId');
-            self.setOptions(staffgroup_select, staffgroup_options, selected_id);
-        }
-        
         if (action == 'edit') {//edit
             input.val(self.item.text().trim());
         }
@@ -1272,7 +1260,6 @@ var companyStructure =
             if (!name)
                 return false;
             id = self.item.data('item-id');
-            staffgroup_value = staffgroup_select.val();
             var contentHolder = $('#structure-tab .tpp-dt-content');
             contentHolder.html(self.loader);
             self.hideOverlay();
@@ -1281,7 +1268,6 @@ var companyStructure =
                     name: name, 
                     id: id, 
                     action: action, type: 'vacancy', 
-                    staffgroup: staffgroup_value
                 }, function(data) {
                     contentHolder.replaceWith(data);
             } , 'html');
@@ -1358,13 +1344,18 @@ var companyStaff =
     setForms: function() {
 
         var LANG = this.LANG;
-        var staffgroup_options = '';
+        var staff_options = '';
         if (typeof STAFFGROUPS !== "undefined") {
-            staffgroup_options += '<div class="title">' + LANG['extra_permissions_title'] + '</div>';
             $.each(STAFFGROUPS, function(index, item) {
-                staffgroup_options += '<div class="holder">' +
-                    '<input type="checkbox" id="id-staffgroup-' + item.value + '">' + item.name +
-                '</div>';
+                staff_options += '<option value="' + item.value + '">' + item.name + '</option>';
+            });
+        }
+        var extragroup_options = '';
+        if (typeof EXTRAGROUPS !== "undefined") {
+            $.each(EXTRAGROUPS, function(index, item) {
+                extragroup_options += '<span style="float: left; margin-right: 10px;">' +
+                    '<input type="checkbox" id="id-extragroup-' + item.value + '">' + item.name +
+                '</span>';
             });
         }
 
@@ -1395,8 +1386,17 @@ var companyStaff =
                                     '</div>' +
                                     '<div class="title">' + LANG['popup_user_title'] + '</div>' +
                                     '<div class="inputadd">' +
-                                        '<input type="text" id="user-name" class="text" />' +
-                                    '</div>' + staffgroup_options +
+                                            '<input type="text" id="user-name" class="text" />' +
+                                    '</div>' + 
+                                    '<div class="title">' + LANG['extra_permissions_title'] + '</div>' +
+                                    '<div class="holder">' +
+                                        '<label>' + LANG['popup_staffgroup'] + '</label>' +
+                                            '<select id="staffgroups" style="width: 100%">' +
+                                                staff_options +
+                                            '</select>' +
+                                        '</lable>' +
+                                    '</div>' +
+                                    extragroup_options +
                                     '<div class="formadd-button">' +
                                         '<a class="btntype2" id="btn-add-user" href="#">' + LANG['popup_add'] + '</a>' +
                                         '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +

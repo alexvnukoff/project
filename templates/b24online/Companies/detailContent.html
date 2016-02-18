@@ -24,7 +24,6 @@
         }
     </script>
 
-
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script src="{% static 'b24online/js/gmapSearchMarker.js' %}"></script>
     <script src="{% static 'b24online/js/jquery.uploadify.min.js' %}"></script>
@@ -63,7 +62,6 @@
             'popup_dep': '{% trans "Department name" %}',
             'popup_vac': '{% trans "Vacancy title" %}',
             'popup_vac_title': '{% trans "Add the vacancy" %}',
-            'popup_staffgroup': '{% trans "Related to staff group" %}',
             'popup_loading': '{% trans "Loading..." %}',
         };
 
@@ -82,10 +80,16 @@
             'select_vacancy': '{% trans "Select vacancy" %}',
             'popup_hidden_user': '{% trans "Do not show user" %}',
             'extra_permissions_title': '{% trans "Select additional permissions" %}',
+            'popup_staffgroup': '{% trans "Related to staff group" %}',
         };
 
         var STAFFGROUPS = [
             {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
+        var EXTRAGROUPS = [
+            {% for item in extragroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
             {% endfor %}  
         ];

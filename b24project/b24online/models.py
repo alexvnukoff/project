@@ -12,7 +12,7 @@ from django.conf import settings
 from django.utils.functional import curry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin, Group
+from django.contrib.auth.models import PermissionsMixin, Group, Permission
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField,
@@ -753,17 +753,11 @@ class Department(models.Model):
         return reverse('department:detail', args=[self.slug, self.pk])
 
     def create_vacancy(self, name, user, **kwargs):
-        staffgroup_id = kwargs.get('staffgroup_id')
-        try:
-            staffgroup = StaffGroup.objects.get(pk=staffgroup_id)
-        except StaggGroup.DoesNotExist:
-            staffgroup = None        
         return Vacancy.objects.create(
             name=name,
             created_by=user,
             updated_by=user,
             department=self,
-            staffgroup=staffgroup,
         )
 
 
@@ -772,10 +766,12 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    staffgroup = models.ManyToManyField('StaffGroup', 
-                                        related_name='group_vacancies')
     is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
                                         default=False, db_index=True)
+    staffgroup = models.ManyToManyField('StaffGroup', 
+                                        related_name='group_vacancies')
+    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup', 
+                                        related_name='extra_group_vacancies')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1422,7 +1418,7 @@ class MessageChat(AbstractRegisterInfoModel):
         (CLOSED, _('Closed')),
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=True) 
+                               null=True, blank=False) 
     organization = models.ForeignKey('Organization', related_name='chats', 
                                      null=True, blank=True)
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
@@ -2125,17 +2121,6 @@ class DealItem(models.Model):
             else 0
 
 
-def recalculate_deal_cost(deal):
-    """
-    Recalculate total cost of deal
-    """
-    assert isinstance(deal, Deal), _('Invalid parameter')
-    deal.total_cost = deal.deal_products\
-        .aggregate(total_cost=Sum(F('cost') * F('quantity'),
-            output_field=models.FloatField())).get('total_cost', 0.0)
-    deal.save()
-
-
 class StaffGroup(models.Model):
     """
     Class for the relations of :class:`auth.models.Group` for 
@@ -2152,6 +2137,28 @@ class StaffGroup(models.Model):
         return ((item.id, item.group.name) \
             for item in cls.objects.select_related('group')\
                 .order_by('group__name'))
+
+
+class PermissionsExtraGroup(models.Model):
+    """
+    Class for permission's addiotional groups.
+    """
+    name = models.CharField(_('Group name'), max_length=255, 
+                            blank=False, null=False)
+    permissions = models.ManyToManyField(
+        Permission, 
+        verbose_name=_('Permission extra group')
+    )
+
+    class Meta:
+        verbose_name = _('Permission\'s extra group')
+        verbose_name_plural = _('Permission\'s extra groups')
+
+    @classmethod
+    def get_options(cls):
+        return ((item.id, item.name) \
+            for item in cls.objects.order_by('name'))
+
 
 
 @receiver(pre_save)
@@ -2232,8 +2239,22 @@ def update_message_chat(sender, instance, created, **kwargs):
         instance.chat.save()
 
 
+def recalculate_deal_cost(deal):
+    """
+    Recalculate total cost of deal
+    """
+    assert isinstance(deal, Deal), _('Invalid parameter')
+    deal.total_cost = deal.deal_products\
+        .aggregate(total_cost=Sum(F('cost') * F('quantity'),
+            output_field=models.FloatField())).get('total_cost', 0.0)
+    deal.save()
+
+
 @receiver(post_save, sender=DealItem)
 def recalculate_for_update(sender, instance, *args, **kwargs):
+    """
+    Recalculate product's deal cost after update.
+    """
     recalculate_deal_cost(instance.deal)
 
 
@@ -2246,3 +2267,4 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
         recalculate_deal_cost(instance.deal)
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
+
