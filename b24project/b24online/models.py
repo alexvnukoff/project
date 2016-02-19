@@ -187,7 +187,7 @@ class AbstractRegisterInfoModel(models.Model):
     created_at = models.DateTimeField(_('Creation time'),
         default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(_('Update time'),
-        auto_now=True)
+        auto_now=True, null=True)
 
     class Meta:
         abstract = True

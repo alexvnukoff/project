@@ -1390,6 +1390,9 @@ var companyStaff =
                                     '</div>' + 
                                     '<div class="title">' + LANG['extra_permissions_title'] + '</div>' +
                                     '<div class="holder">' +
+                                        '<input type="checkbox" id="for-children">' + LANG['popup_for_children'] +
+                                    '</div>' +
+                                    '<div class="holder">' +
                                         '<label>' + LANG['popup_staffgroup'] + '</label>' +
                                             '<select id="staffgroups" style="width: 100%">' +
                                                 staff_options +
