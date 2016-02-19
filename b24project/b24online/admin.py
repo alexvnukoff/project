@@ -20,8 +20,10 @@ from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
 from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEventType, User, Profile, BusinessProposal,
-                              BusinessProposalCategory)
+                              RegisteredEventStats, RegisteredEventType, User, 
+                              Profile, BusinessProposal, 
+                              BusinessProposalCategory, DealOrder, Deal, 
+                              DealItem, StaffGroup, PermissionsExtraGroup)
 from b24online.stats.utils import convert_date
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -214,3 +216,8 @@ admin.site.register(Profile, ModelAdmin)
 admin.site.register(BusinessProposal, ModelAdmin)
 admin.site.register(BusinessProposalCategory, ModelAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)
+admin.site.register(DealOrder, ModelAdmin)
+admin.site.register(Deal, ModelAdmin)
+admin.site.register(DealItem, ModelAdmin)
+admin.site.register(StaffGroup, ModelAdmin)
+admin.site.register(PermissionsExtraGroup, ModelAdmin)
