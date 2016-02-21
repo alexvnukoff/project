@@ -128,7 +128,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         if self.object.currency and self.object.cost:
 
             paypal_dict = {
-                "business": '',
+                "business": self.object.company.company_paypal_account or '',
                 "amount":  self.object.get_discount_price,
                 "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
                 "return_url": self.request.build_absolute_uri(),
