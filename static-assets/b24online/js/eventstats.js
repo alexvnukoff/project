@@ -27,9 +27,8 @@ $(function() {
         minWidth: 800,
         minHeight: 400,
         modal: true,
-        create: function () {
-            $(this).addClass("stats-dialog");
-        }
+        dialogClass: 'turnon-ui',
+        title: 'The Events statistics'
     });
     $(".stats_detail").on("click", function(e) {
         e.preventDefault();
@@ -44,9 +43,8 @@ $(function() {
         minWidth: 500,
         minHeight: 500,
         modal: true,
-        create: function () {
-            $(this).parent().addClass("stats-dialog");
-        }
+        dialogClass: 'turnon-ui',
+        title: 'Distributoin by countries',
     });
     $(".stats_diag").on("click", function(e) {
         e.preventDefault();
