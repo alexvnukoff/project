@@ -94,7 +94,6 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def sku(self):
         if self.metadata:
             return self.metadata.get('stock_keeping_unit', None)
-
         return None
 
     @staticmethod
@@ -120,14 +119,12 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def start_coupon_date(self):
         if self.coupon_dates:
             return self.coupon_dates.lower
-
         return None
 
     @property
     def end_coupon_date(self):
         if self.coupon_dates:
             return self.coupon_dates.upper
-
         return None
 
     @property
@@ -149,9 +146,13 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
             discount_percent = self.discount_percent
         return original_price - original_price * Decimal(discount_percent) / 100
 
-    @property
+    def get_profit(self):
+        return self.cost - self.get_discount_price()
+
     def has_discount(self):
         return self.is_coupon or self.discount_percent
+
+
 
 
 class B2CProductComment(MPTTModel):

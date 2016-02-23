@@ -11,7 +11,7 @@
     {% if b2c_coupons %}
 
         <section class="content__info__actions">
-            {% for product in b2c_coupons %}
+            {% for product in b2c_coupons|slice:":1" %}
                 {% if forloop.first %}
                     <div class="main-action">
                         <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
@@ -39,7 +39,7 @@
             {% endfor %}
 
             <div class="actions">
-                {% for product in b2c_coupons %}
+                {% for product in b2c_coupons|slice:":5" %}
                     {% if forloop.first %}{% else %}
                         <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
                         <div class="action square">
@@ -67,7 +67,7 @@
             <h2>{% trans "B2C Products" %}</h2>
             <ul class="products-list">
 
-                {% for product in b2c_products %}
+                {% for product in b2c_products|slice:":4" %}
                     <li class="product">
                         <div class="product__cover vertical">
                             <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
@@ -106,7 +106,7 @@
             <h2>{% trans "B2B Products" %}</h2>
             <ul class="products-list">
 
-                {% for product in b2b_products %}
+                {% for product in b2b_products|slice:":4" %}
                     <li class="product">
                         <div class="product__cover vertical">
                             {% if product.image %}
@@ -139,7 +139,7 @@
 
             <h2>{% trans "Business proposals" %}</h2>
 
-            {% for proposal in proposals %}
+            {% for proposal in proposals|slice:":1" %}
 
                     <article class="news">
                         <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
@@ -157,7 +157,7 @@
         {% if news %}
         <h2>{% trans "News" %}</h2>
 
-        {% for article in news %}
+        {% for article in news|slice:":1" %}
             <article class="news">
                 <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
                 <div class="news__content clearfix">
