@@ -175,6 +175,7 @@ fieldset.dcol li {
     padding:4px 25px;
     background: #fee;
     margin: 5px 0 10px 0;
+    width: 100%;
 }
 
 input[type="number"] {
@@ -248,6 +249,15 @@ tr.without-border td {
     height: 130px;
 }
 
-.sendmessage input { 
+.sendmessage input[type='text'] { 
     width: 400px;
+}
+
+.hide-errors {
+    display: none;
+}
+
+p.form-field {
+    width: 100%; 
+    display: inline-block;
 }

@@ -160,6 +160,10 @@ class MessageSendForm(forms.ModelForm):
         label=_('Send as email'),
         required=False
     ) 
+    redirect_to_chat = forms.BooleanField(
+        label=_('Redirect to new chat right now?'),
+        required=False
+    ) 
 
     class Meta:
         model = Message
@@ -179,6 +183,7 @@ class MessageSendForm(forms.ModelForm):
         self.fields['attachment'].widget.attrs.update(
             {'class': 'file-attachment'}
         )
+        self.initial['send_as_message'] = True
 
         # Process the recipinet if it is defined
         if self.recipient_type == 'user':
@@ -202,16 +207,22 @@ class MessageSendForm(forms.ModelForm):
                 del self.fields['organization']
                 user_ids = [vacancy.user.pk for vacancy in \
                             self.item.vacancies if vacancy.user]
-                if not user_ids:
-                    raise InvalidParametersError(
-                        _('There organization staff is empty')
-                    )
-                    
                 self.fields['recipient'] = forms.ModelChoiceField(
                     label=_('For user'),
                     queryset=User.objects.filter(
-                        pk__in=user_ids)
+                    pk__in=user_ids)
                 )
+                if not user_ids:
+                    self.fields['recipient'].label += \
+                        ', (' + _('the organization staff is empty') + ')'
+                    self.fields['recipient']\
+                        .widget.attrs['disabled'] = 'disabled'
+                    self.initial['send_as_message'] = False
+                    self.initial['send_as_email'] = True
+                    self.fields['send_as_message']\
+                        .widget.attrs['disabled'] = 'disabled'
+                    self.fields['send_as_email']\
+                        .widget.attrs['disabled'] = 'disabled'
                 
     def for_organization(self):
         return self.recipient_type == 'organization'
@@ -238,10 +249,11 @@ class MessageSendForm(forms.ModelForm):
         
         subject = self.cleaned_data.get('subject')
         content = self.cleaned_data.get('content')
-        delivery_way = self.cleaned_data.get('delivery_way')
         is_private = self.cleaned_data.get('is_private')
         chat = self.cleaned_data.get('chat')
-        if delivery_way == cls.AS_MESSAGE:
+        send_as_message = self.cleaned_data.get('send_as_message')
+        send_as_email = self.cleaned_data.get('send_as_email')
+        if send_as_message:
             try:
                 with transaction.atomic():
                     new_message_chat = MessageChat.objects.create(
@@ -279,7 +291,8 @@ class MessageSendForm(forms.ModelForm):
 
             except IntegrityError as exc:
                 raise
-        else:
+                
+        if send_as_email:
             if not organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to '
@@ -303,7 +316,7 @@ class MessageSendForm(forms.ModelForm):
                             attachment.content_type)
             mail.send()
 
-    def get_errors(self):
+    def get_errors_msg(self):
         """
         Return the errors as one string.
         """
@@ -314,6 +327,17 @@ class MessageSendForm(forms.ModelForm):
                     . join(map(lambda x: strip_tags(x), field_messages)))
                 )
         return '; ' . join(errors)
+
+    def get_errors(self):
+        """
+        Return the errors as one string.
+        """
+        errors = {}
+        for field_name, field_messages in self.errors.items():
+            errors[field_name] = ', ' . join(
+                map(lambda x: strip_tags(x), field_messages)
+            )
+        return errors
 
     def save(self, *args, **kwargs):
         pass

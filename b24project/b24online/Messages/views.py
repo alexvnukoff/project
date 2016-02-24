@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
@@ -242,8 +243,35 @@ def send_message(request, recipient_type, item_id, **kwargs):
     """
     template_name = 'b24online/Messages/sendMessage.html'
     if True: #request.is_ajax():
+        data = {}
         if request.method == 'POST':
-            pass
+            form = MessageSendForm(
+                request, 
+                recipient_type=recipient_type,
+                item_id=item_id,
+                data=request.POST, 
+                files=request.FILES
+            )
+            if form.is_valid():
+                try:
+                    form.send()        
+                except IntegrityError as err:
+                    data.update({
+                        'code': 'critical',
+                        'msg': _('Error during data saving: {0}') \
+                            .format(exc)
+                    })
+                else:
+                    data.update({
+                        'code': 'success',
+                        'msg': _('You have successfully sent the message')
+                    })   
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
         else:
             try:
                 form = MessageSendForm(
@@ -252,17 +280,24 @@ def send_message(request, recipient_type, item_id, **kwargs):
                     item_id=item_id
                 )
             except InvalidParametersError as err: 
-                response_code = 'error'            
-                response_text = 'ERROR: {0}' . format(err) 
+                data.update({
+                    'code': 'critical',
+                    'msg': render_to_string(
+                        template_name,
+                        {'error': 'ERROR: {0}' . format(err)},
+                        context_instance=RequestContext(request),
+                    ),
+                })
             else:
-                response_code = 'success'
-                response_text = render_to_string(
-                    template_name, 
-                    {'form': form},
-                )
-            return HttpResponse(
-                json.dumps({'code': response_code, 'html': response_text}),
-                content_type='application/json'
-            )
+                data.update({
+                    'code': 'success',
+                    'msg': render_to_string(
+                        template_name, 
+                        {'form': form, 'request': request},
+                        context_instance=RequestContext(request), 
+                    )
+                })
+        return HttpResponse(json.dumps(data), content_type='application/json')
+        
     return HttpResponseBadRequest()
 

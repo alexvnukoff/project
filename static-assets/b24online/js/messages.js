@@ -29,15 +29,34 @@ $(function() {
     $('.contact-us').click(function(event) {
         event.preventDefault();
         $.getJSON(this.href, function(data) {
-            if ('html' in data) {
-                if (data.code == 'success') {
-                    $(send_message_id).html(data.html).dialog('open');
-                } else if (data.code == 'error') {
-                    var error_msg = '<p class="errors">' + data.html + '</p>';
-                    $(send_message_id).html(error_msg).dialog('open');
-                }
+            if ('msg' in data) {
+                $(send_message_id).html(data.msg).dialog('open');
             }
         });
         return false;
     });                                                    
+
+    $(document).on('click', '#send-chat-message', function(e) {
+        e.preventDefault(); 
+        $('#send-message-form').ajaxSubmit({
+            url: this.href,
+            type: 'post',
+            success: function(data) {
+                if (data.code == 'success') {
+
+                } else if (data.code == 'error') {
+                    $.each(data.errors, function(index, item) {
+                        var p_errors = $('#' + index + '_errors');
+                        if (p_errors.length) {
+                            p_errors.html(item).toggle('hide-errors');
+                        }
+                    });
+                } else {
+                
+                }
+            }
+        });
+        return false;
+	});
+
 });                                                    

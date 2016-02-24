@@ -4,9 +4,11 @@
 {% load i18n %}
 {% load CustomFilters %}
 
+{% if form %}
 <div class="data">
-    {% if form %}
-    <form id="send-message-to-chat"  enctype="multipart/form-data">
+    <form id="send-message-form" method="POST"  enctype="multipart/form-data" 
+        action="{{ request.path }}">
+        {% csrf_token %}
         <div>
             <ul class="sendmessage">
                 <fieldset class="dcol">
@@ -14,9 +16,9 @@
                 	<li>
                 		<label class="required">{{ form.organization.label }}:</label>
                 		<p>{{ form.organization }}</p>
-                	    {% if form.is_bound and form.organization.errors %}
-                	        <p class="errors">{{ form.organization.errors|striptags }}</p>
-                	    {% endif %}
+                        <span id="organization_errors" class="errors hide-errors">
+                            {{ form.organization.errors|striptags }}
+                        </span>
                 	</li>
                 	{% else %}
                 	    {% if form.for_organization and form.item %}
@@ -30,33 +32,33 @@
                 	{% if form.recipient %}
                 	<li>
                 		<label class="required">{{ form.recipient.label }}:</label>
-                		<p>{{ form.recipient }}</p>
-                	    {% if form.is_bound and form.recipient.errors %}
-                	        <p class="errors">{{ form.recipient.errors|striptags }}</p>
-                	    {% endif %}
+                		<p class="form-field">{{ form.recipient }}</p>
+                        <span id="recipient_errors" class="errors hide-errors">
+                            {{ form.recipient.errors|striptags }}
+                        </span>
                 	</li>
                 	{% else %}
                 	{% endif %}
                 	<li>
                 		<label>{{ form.subject.label }}:</label>
-                		<p>{{ form.subject }}</p>
-                	    {% if form.is_bound and form.subject.errors %}
-                	        <p class="errors">{{ form.subject.errors|striptags }}</p>
-                	    {% endif %}
+                		<p class="form-field">{{ form.subject }}</p>
+                        <span class="errors hide-errors">
+                            {{ form.subject.errors|striptags }}
+                        </span>
                 	</li>
                 	<li>
                 		<label class="required">{{ form.content.label }}:</label>
-                		<p>{{ form.content }}</p>
-                	    {% if form.is_bound and form.content.errors %}
-                	        <p class="errors">{{ form.content.errors|striptags }}</p>
-                	    {% endif %}
+                		<p class="form-field">{{ form.content }}</p>
+                        <span id="content_errors" class="errors hide-errors">
+                            {{ form.content.errors|striptags }}
+                        </span>
                 	</li>
                 	<li>
                 		<label>{{ form.attachment.label }}:</label>
-                		<p>{{ form.attachment }}</p>
-                	    {% if form.is_bound and form.attachment.errors %}
-                	        <p class="errors">{{ form.attachment.errors|striptags }}</p>
-                	    {% endif %}
+                		<p class="form-field">{{ form.attachment }}</p>
+                        <span id="attachment_errors" class="errors hide-errors">
+                            {{ form.attachment.errors|striptags }}
+                        </span>
                 	</li>
 
                 	<li>
@@ -74,12 +76,31 @@
                 		  </div>
                 	  </div>
                 	</li>
+
+                	<li>
+                		<label>{{ form.redirect_to_chat.label }}:</label>
+                		<span class="form-field">
+                		    {{ form.redirect_to_chat }}
+                		</span>
+                	</li>
+                    <li class="end">
+                    	<div class="newform-button">
+                        <a id="send-chat-message" class="btntype2" href="{{ request.path }}">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                      </div>
+                    </li>
                 </fieldset>
             </ul>
         </div>
     </form>
-    {% endif %}
 </div>
 <script  type="text/javascript">
     addOneMoreInput('attachment', 'file-attachment');
 </script>    
+{% endif %}
+
+{% if error %}
+<div class="errors">
+    {{ error }}
+</div>
+{% endif %}
