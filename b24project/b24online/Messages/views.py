@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.http import (HttpResponse, HttpResponseBadRequest, Http404)
 from django.utils.timezone import now
@@ -231,3 +232,26 @@ def add_to_chat(request):
             content_type='application/json'
         )
     return HttpResponseBadRequest()
+
+
+@login_required
+def send_message(request, recipient_type, item_id, **kwargs):
+    template_name = 'b24online/Messages/sendMessage.html'
+    if request.method == 'POST':
+        pass
+    else:
+        form = MessageForm(
+            request, 
+            recipient_type=recipient_type,
+            item_id=item_id,
+        )
+        context = {
+            'form': form,
+        }
+        response_text = render_to_string(template_name, context)
+        return HttpResponse(
+            json.dumps({'code': response_code, 'message': response_text}),
+            content_type='application/json'
+        )
+    
+

@@ -32,10 +32,7 @@ $(function() {
     });
     $(".stats_detail").on("click", function(e) {
         e.preventDefault();
-        $("#bardialog").html("");
-        $("#bardialog").dialog("open");
-        $("#bardialog").load(this.href);
-        return false;
+        $("#bardialog").html('').dialog("open").load(this.href);
     });
     
     $('#diagdialog').dialog({
@@ -48,10 +45,6 @@ $(function() {
     });
     $(".stats_diag").on("click", function(e) {
         e.preventDefault();
-        $("#diagdialog").html("");
-        $("#diagdialog").dialog("open");
-        $("#diagdialog").load(this.href);
-        return false;
+        $("#diagdialog").html('').dialog("open").load(this.href);
     });
 });
-

@@ -69,7 +69,9 @@
                             <div class="line">
                                 <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
                                 <div class="nameinfo">
-                                    <a class="contact-us" data-name="{{ company.title }}" data-id="{{ company.pk }}" href="#" >
+                                    <a class="contact-us" data-name="{{ company.title }}" 
+                                        data-id="{{ company.pk }}" 
+                                        href="{% url 'messages:send_message' 'organization' company.pk %}" >
                                         {% trans 'Contact us' %}
                                     </a>
                                 </div>

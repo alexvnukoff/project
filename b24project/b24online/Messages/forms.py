@@ -15,6 +15,7 @@ from django.utils.html import strip_tags
 from b24online.models import MessageChat, Message, MessageAttachment
 from b24online.utils import handle_uploaded_file
 from django.core.mail import EmailMessage
+from b24online.Messages import InvalidDataError
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +28,8 @@ class MessageForm(forms.ModelForm):
         (AS_MESSAGE, _('As message')),
     ) 
 
-    delivery_way = forms.ChoiceField(
-        label=_('Delivery way'), 
-        choices=DELIVERY_WAYS,
-        required=True,
-    )
+    delivery_way = forms.ChoiceField(label=_('Delivery way'), 
+                                     choices=DELIVERY_WAYS, required=True)
     chat = forms.ModelChoiceField(queryset=MessageChat.objects.all(), 
                                   required=False)
     attachment = forms.FileField(label=_('Message attachment'), required=False)
@@ -42,11 +40,21 @@ class MessageForm(forms.ModelForm):
         fields = ('organization', 'recipient', 'subject', 'content')
 
     def __init__(self, request, *args, **kwargs):
+        cls = type(self)
+        recipient_type = kwargs.pop('recipient_type', None)
+        item_id = kwargs.pop('item_id', None)
         super(MessageForm, self).__init__(*args, **kwargs)
         self.request = request
+
         self.initial['delivery_way'] = type(self).AS_MESSAGE
         self.initial['is_private'] = False
         self.fields['content'].required = True
+        if recipient_type == 'organization':
+            try:
+                self._organization = Organization.objects.get(pk=item_id)                                            
+            except Organization.DoesNotExist:
+                raise InvalidDataError(
+                    _('Invalid parameters. There is not such organization'))
 
     def send(self):
         """

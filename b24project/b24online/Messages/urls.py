@@ -8,6 +8,7 @@ from b24online.Messages.views import (
     view_chats, 
     chat_messages,
     add_to_chat,
+    send_message,
 )  
 
 urlpatterns = [
@@ -18,4 +19,6 @@ urlpatterns = [
     url(r'^chats/add/$', add_to_chat, name='add_to_chats'),
     url(r'^chats/(?P<item_id>[0-9]+)/$', chat_messages, 
         name="chat_messages"),
+    url(r'^send/(?P<recipient_type>organization|user)/(?P<item_id>[0-9]+)/$', 
+        send_message, name='send_message'),
 ]
