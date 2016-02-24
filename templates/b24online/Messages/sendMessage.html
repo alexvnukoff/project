@@ -4,14 +4,82 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-<div class="message-box">
+<div class="data">
+    {% if form %}
     <form id="send-message-to-chat"  enctype="multipart/form-data">
-        <div class="title">{% trans "Send message" %}</div>
-        <div class="customform">
-        
-        
+        <div>
+            <ul class="sendmessage">
+                <fieldset class="dcol">
+                	{% if form.organization %}
+                	<li>
+                		<label class="required">{{ form.organization.label }}:</label>
+                		<p>{{ form.organization }}</p>
+                	    {% if form.is_bound and form.organization.errors %}
+                	        <p class="errors">{{ form.organization.errors|striptags }}</p>
+                	    {% endif %}
+                	</li>
+                	{% else %}
+                	    {% if form.for_organization and form.item %}
+                	    <li>
+                	    	<label>{% trans 'For organization' %}:</label>
+                	    	<p>{{ form.item }}</p>
+                	    </li>
+                	    {% endif %}
+                	{% endif %}
+
+                	{% if form.recipient %}
+                	<li>
+                		<label class="required">{{ form.recipient.label }}:</label>
+                		<p>{{ form.recipient }}</p>
+                	    {% if form.is_bound and form.recipient.errors %}
+                	        <p class="errors">{{ form.recipient.errors|striptags }}</p>
+                	    {% endif %}
+                	</li>
+                	{% else %}
+                	{% endif %}
+                	<li>
+                		<label>{{ form.subject.label }}:</label>
+                		<p>{{ form.subject }}</p>
+                	    {% if form.is_bound and form.subject.errors %}
+                	        <p class="errors">{{ form.subject.errors|striptags }}</p>
+                	    {% endif %}
+                	</li>
+                	<li>
+                		<label class="required">{{ form.content.label }}:</label>
+                		<p>{{ form.content }}</p>
+                	    {% if form.is_bound and form.content.errors %}
+                	        <p class="errors">{{ form.content.errors|striptags }}</p>
+                	    {% endif %}
+                	</li>
+                	<li>
+                		<label>{{ form.attachment.label }}:</label>
+                		<p>{{ form.attachment }}</p>
+                	    {% if form.is_bound and form.attachment.errors %}
+                	        <p class="errors">{{ form.attachment.errors|striptags }}</p>
+                	    {% endif %}
+                	</li>
+
+                	<li>
+                		<label id="destination">{% trans 'Deliver as' %}</label>
+                		    <div style="flow: left">
+                	            <div>
+                	                {{ form.send_as_message }}
+                	                <span>{% trans 'Message' %}</span>
+                	            </div>
+                	            <div>
+                	                {{ form.send_as_email }}
+                	                <span>{% trans 'Email' %}</span>
+                	            </div>
+                		    <div>
+                		  </div>
+                	  </div>
+                	</li>
+                </fieldset>
+            </ul>
         </div>
     </form>
+    {% endif %}
 </div>
-
-
+<script  type="text/javascript">
+    addOneMoreInput('attachment', 'file-attachment');
+</script>    

@@ -16,9 +16,10 @@ from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
 
+from b24online import InvalidParametersError
 from b24online.models import (Message, MessageChat, MessageAttachment)
 from b24online.utils import deep_merge_dict, get_current_organization
-from b24online.Messages.forms import MessageForm
+from b24online.Messages.forms import MessageForm, MessageSendForm
 
 logger = logging.getLogger(__name__)
 
@@ -236,22 +237,32 @@ def add_to_chat(request):
 
 @login_required
 def send_message(request, recipient_type, item_id, **kwargs):
+    """
+    Send the message to organization's or user's chats.
+    """
     template_name = 'b24online/Messages/sendMessage.html'
-    if request.method == 'POST':
-        pass
-    else:
-        form = MessageForm(
-            request, 
-            recipient_type=recipient_type,
-            item_id=item_id,
-        )
-        context = {
-            'form': form,
-        }
-        response_text = render_to_string(template_name, context)
-        return HttpResponse(
-            json.dumps({'code': response_code, 'message': response_text}),
-            content_type='application/json'
-        )
-    
+    if True: #request.is_ajax():
+        if request.method == 'POST':
+            pass
+        else:
+            try:
+                form = MessageSendForm(
+                    request, 
+                    recipient_type=recipient_type,
+                    item_id=item_id
+                )
+            except InvalidParametersError as err: 
+                response_code = 'error'            
+                response_text = 'ERROR: {0}' . format(err) 
+            else:
+                response_code = 'success'
+                response_text = render_to_string(
+                    template_name, 
+                    {'form': form},
+                )
+            return HttpResponse(
+                json.dumps({'code': response_code, 'html': response_text}),
+                content_type='application/json'
+            )
+    return HttpResponseBadRequest()
 

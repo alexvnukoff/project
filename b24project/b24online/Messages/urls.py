@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^chats/(?P<item_id>[0-9]+)/$', chat_messages, 
         name="chat_messages"),
     url(r'^send/(?P<recipient_type>organization|user)/(?P<item_id>[0-9]+)/$', 
-        send_message, name='send_message'),
+        send_message, name='send_message_to_recipient'),
+    url(r'^send/$', send_message, name='send_message'),
 ]

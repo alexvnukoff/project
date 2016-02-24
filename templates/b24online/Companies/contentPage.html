@@ -71,7 +71,7 @@
                                 <div class="nameinfo">
                                     <a class="contact-us" data-name="{{ company.title }}" 
                                         data-id="{{ company.pk }}" 
-                                        href="{% url 'messages:send_message' 'organization' company.pk %}" >
+                                        href="{% url 'messages:send_message_to_recipient' 'organization' company.pk %}" >
                                         {% trans 'Contact us' %}
                                     </a>
                                 </div>
