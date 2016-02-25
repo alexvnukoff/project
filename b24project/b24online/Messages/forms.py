@@ -98,6 +98,9 @@ class MessageForm(forms.ModelForm):
 
             except IntegrityError as exc:
                 raise
+            else:
+                new_message.upload_files()
+                
         else:
             if not organization.email:
                 email = 'admin@tppcenter.com'
@@ -294,6 +297,8 @@ class MessageSendForm(forms.ModelForm):
 
             except IntegrityError as exc:
                 raise
+            else:
+                new_message.upload_files()
 
         if send_as_email:
             if not organization.email:
