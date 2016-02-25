@@ -76,7 +76,7 @@ $(function() {
         $.getJSON(url, function(data) {
             if ('msg' in data) {
                 $(send_message_diag).dialog('option', 'title', 'Add new chat participant');
-                $(send_message_diag).dialog('option', 'minHeight', 200);
+                $(send_message_diag).dialog('option', 'minHeight', 300);
                 $(send_message_diag).html(data.msg).dialog('open');
                 $(send_message_diag).dialog("widget").css('height', 'auto');
             }
@@ -84,5 +84,29 @@ $(function() {
         return false;
     });
 
+    $(document).on('click', '#add-new-participant', function(e) {
+        e.preventDefault(); 
+        $('#add-new-participant-form').ajaxSubmit({
+            url: this.href,
+            type: 'post',
+            success: function(data) {
+                if (data.code == 'success') {
+                    if ($(send_message_diag).dialog('isOpen')) {
+                        $(send_message_diag).dialog('close');
+                    }
+                } else if (data.code == 'error') {
+                    $.each(data.errors, function(index, item) {
+                        var p_errors = $('#' + index + '_errors');
+                        if (p_errors.length) {
+                            p_errors.html(item).toggle('hide-errors');
+                        }
+                    });
+                } else {
+                
+                }
+            }
+        });
+        return false;
+	});
 
 });                                                    

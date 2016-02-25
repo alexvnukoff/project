@@ -4,9 +4,32 @@
 {% load i18n %}
 {% load CustomFilters %}
 
+<div class="data">
+    <h1>{% trans 'Participants of chat' %} &laquo;{{ form.chat.subject }}&raquo;</h1>
+    <hr class="hr-divider-one">
+</div>
+
+{% if form.chat %}
+<div class="data">
+    <table width="100%" cellspacing="2" cellpadding="2"
+        border="0" class="table-data">
+        <tr>
+            <th>{% trans 'User' %}</th>
+            <th>{% trans 'Messages' %}</th>
+        </tr>
+        {% for participant in form.chat.get_participants %}
+            <tr>
+                <td>{{ participant }}</td>
+                <td>0</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
 {% if form %}
 <div class="data">
-    <form id="send-message-form" method="POST"  enctype="multipart/form-data" 
+    <form id="add-new-participant-form" method="POST"  enctype="multipart/form-data" 
         action="{{ request.path }}">
         {% csrf_token %}
         <div>
@@ -21,7 +44,7 @@
                 	</li>
                     <li class="end">
                     	<div class="newform-button">
-                        <a id="send-chat-message" class="btntype2" href="{{ request.path }}">{% trans 'Send' %}</a>
+                        <a id="add-new-participant" class="btntype2" href="{{ request.path }}">{% trans 'Add participant' %}</a>
                         <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
                       </div>
                     </li>
@@ -35,13 +58,7 @@
     $("#id_new_user").select2({
         width: '100%',
         allowClear: false,
-        // multiple: false,
-        //ajax: {
-        //    url: "",
-        //    dataType: 'json',
-        //    quietMillis: 100,
-        //});
-    });
+   });
 </script>
 
 {% endif %}

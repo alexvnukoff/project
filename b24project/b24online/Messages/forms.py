@@ -363,4 +363,7 @@ class AddParticipantForm(forms.Form):
             self.chat = None
 
     def save(self):
-        pass
+        new_user = self.cleaned_data.get('new_user')
+        if new_user:
+            self.chat.participants.add(new_user)
+        

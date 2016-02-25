@@ -1437,6 +1437,8 @@ class MessageChat(AbstractRegisterInfoModel):
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
         
+    def get_participants(self):
+        return self.participants.all()
 
 class Message(models.Model):
     """

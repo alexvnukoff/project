@@ -312,17 +312,37 @@ def send_message(request, recipient_type, item_id, **kwargs):
 @login_required
 def add_participant(request, item_id, **kwargs):
     template_name = 'b24online/Messages/addParticipant.html'
-    if True: #request.is_ajax():
+    if request.is_ajax():
         data = {}
-        form = AddParticipantForm(request, item_id=item_id)
-        data.update({
-            'code': 'success',
-            'msg': render_to_string(
-                template_name,
-                {'form': form, 'request': request},
-                context_instance=RequestContext(request),
+        if request.method == 'POST':
+            form = AddParticipantForm(
+                request, 
+                item_id=item_id,
+                data=request.POST,
+                files=request.FILES
             )
-        })
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully add new participant'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+        else:
+            form = AddParticipantForm(request, item_id=item_id)
+            data.update({
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'form': form, 'request': request},
+                    context_instance=RequestContext(request),
+                )
+            })
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponseBadRequest()
     
