@@ -1,0 +1,48 @@
+{# The template for message dialog #}
+
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% if form %}
+<div class="data">
+    <form id="send-message-form" method="POST"  enctype="multipart/form-data" 
+        action="{{ request.path }}">
+        {% csrf_token %}
+        <div>
+            <ul class="sendmessage">
+                <fieldset class="dcol">
+                	<li>
+                		<label>{{ form.new_user.label }}:</label>
+                		<p class="form-field">{{ form.new_user }}</p>
+                        <span class="errors hide-errors">
+                            {{ form.new_user.errors|striptags }}
+                        </span>
+                	</li>
+                    <li class="end">
+                    	<div class="newform-button">
+                        <a id="send-chat-message" class="btntype2" href="{{ request.path }}">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                      </div>
+                    </li>
+                </fieldset>
+            </ul>
+        </div>
+    </form>
+</div>
+
+<script>
+    $("#id_new_user").select2({
+        width: '100%',
+        allowClear: false,
+        // multiple: false,
+        //ajax: {
+        //    url: "",
+        //    dataType: 'json',
+        //    quietMillis: 100,
+        //});
+    });
+</script>
+
+{% endif %}
+

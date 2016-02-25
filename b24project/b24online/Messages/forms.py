@@ -12,7 +12,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 
-from b24online.models import (User, Organization, MessageChat, 
+from b24online.models import (User, Organization, MessageChat,
                               Message, MessageAttachment)
 from b24online.utils import handle_uploaded_file
 from django.core.mail import EmailMessage
@@ -28,11 +28,11 @@ class MessageForm(forms.ModelForm):
     DELIVERY_WAYS = (
         (AS_EMAIL, _('As email')),
         (AS_MESSAGE, _('As message')),
-    ) 
+    )
 
-    delivery_way = forms.ChoiceField(label=_('Delivery way'), 
+    delivery_way = forms.ChoiceField(label=_('Delivery way'),
                                      choices=DELIVERY_WAYS, required=True)
-    chat = forms.ModelChoiceField(queryset=MessageChat.objects.all(), 
+    chat = forms.ModelChoiceField(queryset=MessageChat.objects.all(),
                                   required=False)
     attachment = forms.FileField(label=_('Message attachment'), required=False)
     is_private = forms.BooleanField(required=False)
@@ -104,21 +104,21 @@ class MessageForm(forms.ModelForm):
                 subject = _('This message was sent to '
                     'company with id = %(organization_id)d, '
                     'subject: %(subject)s') % \
-                    {'organization_id': organization.id, 
+                    {'organization_id': organization.id,
                      'subject': subject}
             else:
                 email = organization.email
                 subject = _('New message: %(subject)s') % {'subject': subject}
 
             mail = EmailMessage(
-                subject, 
-                content, 
-                getattr(settings, 'DEFAULT_FROM_EMAIL', 
-                        'noreply@tppcenter.com'), 
+                subject,
+                content,
+                getattr(settings, 'DEFAULT_FROM_EMAIL',
+                        'noreply@tppcenter.com'),
                 [email,]
             )
             if attachment:
-                mail.attach(attachment.name, attachment.read(), 
+                mail.attach(attachment.name, attachment.read(),
                             attachment.content_type)
             mail.send()
 
@@ -142,12 +142,12 @@ class MessageForm(forms.ModelForm):
 class MessageSendForm(forms.ModelForm):
 
     chat = forms.ModelChoiceField(
-        queryset=MessageChat.objects.all(), 
+        queryset=MessageChat.objects.all(),
         required=False
     )
     attachment = forms.FileField(
-        label=_('Message attachment'), 
-        required=False, 
+        label=_('Message attachment'),
+        required=False,
     )
     is_private = forms.BooleanField(
         required=False
@@ -155,15 +155,15 @@ class MessageSendForm(forms.ModelForm):
     send_as_message = forms.BooleanField(
         label=_('Send as message'),
         required=False
-    ) 
+    )
     send_as_email = forms.BooleanField(
         label=_('Send as email'),
         required=False
-    ) 
+    )
     redirect_to_chat = forms.BooleanField(
         label=_('Redirect to new chat right now?'),
         required=False
-    ) 
+    )
 
     class Meta:
         model = Message
@@ -174,7 +174,7 @@ class MessageSendForm(forms.ModelForm):
         # Extract the parameters for recipient instance
         self.recipient_type = kwargs.pop('recipient_type', None)
         item_id = kwargs.pop('item_id', None)
-        
+
         # Prepare the form
         super(MessageSendForm, self).__init__(*args, **kwargs)
         self.request = request
@@ -184,11 +184,12 @@ class MessageSendForm(forms.ModelForm):
             {'class': 'file-attachment'}
         )
         self.initial['send_as_message'] = True
+        self.initial['redirect_to_chat'] = True
 
         # Process the recipinet if it is defined
         if self.recipient_type == 'user':
             try:
-                self.item = User.objects.get(pk=item_id)                                            
+                self.item = User.objects.get(pk=item_id)
             except User.DoesNotExist:
                 raise InvalidParametersError(
                     _('Invalid parameters. There is not such user')
@@ -198,7 +199,7 @@ class MessageSendForm(forms.ModelForm):
                 del self.fields['recipient']
         elif self.recipient_type == 'organization':
             try:
-                self.item = Organization.objects.get(pk=item_id)                                            
+                self.item = Organization.objects.get(pk=item_id)
             except Organization.DoesNotExist:
                 raise InvalidParametersError(
                     _('Invalid parameters. There is not such organization')
@@ -210,7 +211,8 @@ class MessageSendForm(forms.ModelForm):
                 self.fields['recipient'] = forms.ModelChoiceField(
                     label=_('For user'),
                     queryset=User.objects.filter(
-                    pk__in=user_ids)
+                    pk__in=user_ids),
+                    required=False,
                 )
                 if not user_ids:
                     self.fields['recipient'].label += \
@@ -223,7 +225,7 @@ class MessageSendForm(forms.ModelForm):
                         .widget.attrs['disabled'] = 'disabled'
                     self.fields['send_as_email']\
                         .widget.attrs['disabled'] = 'disabled'
-                
+
     def for_organization(self):
         return self.recipient_type == 'organization'
 
@@ -240,13 +242,13 @@ class MessageSendForm(forms.ModelForm):
             organization = None
         else:
             organization = self.cleaned_data.get('organization')
-            
+
         if self.recipient_type == 'user' and \
             self.item and isinstance(self.item, User):
             recipient = self.item
         else:
             recipient = self.cleaned_data.get('recipient')
-        
+
         subject = self.cleaned_data.get('subject')
         content = self.cleaned_data.get('content')
         is_private = self.cleaned_data.get('is_private')
@@ -256,25 +258,26 @@ class MessageSendForm(forms.ModelForm):
         if send_as_message:
             try:
                 with transaction.atomic():
-                    new_message_chat = MessageChat.objects.create(
+                    self.new_message_chat = MessageChat.objects.create(
                         subject=subject,
                         organization=organization,
+                        recipient=recipient,
                         status=MessageChat.OPENED,
                         is_private=is_private,
                         created_by=self.request.user,
                     ) if not chat else chat
                     new_message = Message.objects.create(
-                        subject=new_message_chat.subject,
+                        subject=self.new_message_chat.subject,
                         status=Message.READY,
                         recipient=recipient,
                         organization=organization,
                         sender=self.request.user,
-                        chat=new_message_chat,
+                        chat=self.new_message_chat,
                         content=content,
                     )
-                    new_message_chat.participants.add(self.request.user)
+                    self.new_message_chat.participants.add(self.request.user)
                     if recipient:
-                        new_message_chat.participants.add(recipient)
+                        self.new_message_chat.participants.add(recipient)
 
                     if self.request.FILES \
                         and 'attachment' in self.request.FILES:
@@ -291,28 +294,28 @@ class MessageSendForm(forms.ModelForm):
 
             except IntegrityError as exc:
                 raise
-                
+
         if send_as_email:
             if not organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to '
                     'company with id = %(organization_id)d, '
                     'subject: %(subject)s') % \
-                    {'organization_id': organization.id, 
+                    {'organization_id': organization.id,
                      'subject': subject}
             else:
                 email = organization.email
                 subject = _('New message: %(subject)s') % {'subject': subject}
 
             mail = EmailMessage(
-                subject, 
-                content, 
-                getattr(settings, 'DEFAULT_FROM_EMAIL', 
-                        'noreply@tppcenter.com'), 
+                subject,
+                content,
+                getattr(settings, 'DEFAULT_FROM_EMAIL',
+                        'noreply@tppcenter.com'),
                 [email,]
             )
             if attachment:
-                mail.attach(attachment.name, attachment.read(), 
+                mail.attach(attachment.name, attachment.read(),
                             attachment.content_type)
             mail.send()
 
@@ -343,3 +346,21 @@ class MessageSendForm(forms.ModelForm):
         pass
 
 
+class AddParticipantForm(forms.Form):
+
+    new_user = forms.ModelChoiceField(
+        label=_('Add user to chat'),
+        queryset=User.objects.all(),
+        required=True,
+    )
+
+    def __init__(self, request, item_id, *args, **kwargs):
+        super(AddParticipantForm, self).__init__(*args, **kwargs)
+        self.request = request
+        try:
+            self.chat = MessageChat.objects.get(pk=item_id)
+        except MessageChat.DoesNotExist:
+            self.chat = None
+
+    def save(self):
+        pass

@@ -261,3 +261,11 @@ p.form-field {
     width: 100%; 
     display: inline-block;
 }
+
+.chat-title {
+    font-size: 130%;
+    background: #dddddd;   
+    margin: 5px;
+    padding: 10px;
+}
+
