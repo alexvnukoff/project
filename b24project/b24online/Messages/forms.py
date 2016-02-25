@@ -375,6 +375,13 @@ class UpdateChatForm(forms.Form):
         required=True,
     )
 
+    close_chat = forms.BooleanField(
+        label=_('Close chat'),
+        required=False,
+        help_text=_('Only chat\'s creator has the permission'
+                    ' to close the chat')
+    )
+
     def __init__(self, request, item_id, *args, **kwargs):
         super(UpdateChatForm, self).__init__(*args, **kwargs)
         self.request = request
@@ -383,10 +390,16 @@ class UpdateChatForm(forms.Form):
         except MessageChat.DoesNotExist:
             self.chat = None
         self.initial['subject'] = self.chat.subject
-
+        if not self.can_close():
+            del self.fields['close_chat']
+           
+    def can_close(self):
+        return self.request.user == self.chat.created_by
+        
     def save(self):
         subject = self.cleaned_data.get('subject')
         if subject:
             self.chat.subject = subject
-            self.chat.save()
-        
+        if self.can_close() and self.cleaned_data.get('close_chat'):
+            self.chat.status = MessageChat.CLOSED
+        self.chat.save()

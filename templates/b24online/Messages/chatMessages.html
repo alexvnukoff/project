@@ -3,7 +3,7 @@
 {% load CustomFilters %}
 
 <div class="chat-title">
-    {{ chat.subject|cleanHtml|safe|truncatewords:4 }}
+    <span>{{ chat.subject|truncatewords:4 }}</span>
     <span style="float: right;">
         <a id="add_participant" class="call-process-form" 
             href="{% url 'messages:add_participant' item_id=chat.id %}" 
@@ -17,7 +17,7 @@
             <img src="{% static 'b24online/img/update.png' %}">    
         </a>
         &nbsp;
-        <a id="leave_chat" class="call-process-form" 
+        <a id="leave_chat" class="confirm-process" 
             href="{% url 'messages:leave_chat' item_id=chat.id %}" 
             data-title="Leave chat">
             <img src="{% static 'b24online/img/leave.png' %}">    

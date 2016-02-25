@@ -5,7 +5,7 @@
 {% load CustomFilters %}
 
 <div class="data">
-    <h2>{% trans 'Update chat' %} &laquo;{{ form.chat.subject|cleanHtml|safe|truncatewords:4 }}&raquo;</h2>
+    <h3>{% trans 'Update chat' %} &laquo;{{ form.chat.subject|truncatewords:4 }}&raquo;</h3>
     <hr class="hr-divider-one">
 </div>
 
@@ -24,6 +24,15 @@
                             {{ form.subject.errors|striptags }}
                         </span>
                 	</li>
+                	{% if form.close_chat %}
+                	<li>
+                		<label>{{ form.close_chat.label }}:</label>
+                		<p class="form-field">{{ form.close_chat }}</p>
+                        <span class="errors hide-errors">
+                            {{ form.subject.errors|striptags }}
+                        </span>
+                	</li>
+                	{% endif %}
                     <li class="end">
                     	<div class="newform-button">
                         <a id="process-data-submit" class="btntype2" href="{{ request.path }}">{% trans 'Save' %}</a>

@@ -13,7 +13,8 @@ from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
-from django.http import (HttpResponse, HttpResponseBadRequest, Http404)
+from django.http import (HttpResponse, HttpResponseBadRequest, Http404, 
+                         HttpResponseRedirect)
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
@@ -347,9 +348,6 @@ def add_participant(request, item_id, **kwargs):
     return HttpResponseBadRequest()
     
 
-@login_required
-def leave_chat(request, item_id, **kwargs):
-    return HttpResponse('Leave')
     
 
 @login_required
@@ -390,3 +388,12 @@ def update_chat(request, item_id, **kwargs):
     return HttpResponseBadRequest()
     
     
+@login_required
+def leave_chat(request, item_id, **kwargs):
+    try:
+        chat = MessageChat.objects.get(pk=item_id)
+    except MessageChat.DoesNotExist:
+        pass
+    else:
+        chat.participants.remove(request.user)
+    return HttpResponseRedirect(reverse('messages:main'))

@@ -93,4 +93,17 @@ $(function() {
         });
         return false;
 	});
+
+    $(document).on('click', process_data_cancel_id, function(e) {
+        e.preventDefault(); 
+        if ($(process_data_dialog).dialog('isOpen')) {
+            $(process_data_dialog).dialog('close');
+        }
+        return false;
+	});
+
+    $(document).on('click', '.confirm-process', function(e) {
+        return confirm('Are You sure?');
+	});
+
 });                                                    
