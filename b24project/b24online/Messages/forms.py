@@ -367,3 +367,26 @@ class AddParticipantForm(forms.Form):
         if new_user:
             self.chat.participants.add(new_user)
         
+
+class UpdateChatForm(forms.Form):
+
+    subject = forms.CharField(
+        label=_('Chat subject'),
+        required=True,
+    )
+
+    def __init__(self, request, item_id, *args, **kwargs):
+        super(UpdateChatForm, self).__init__(*args, **kwargs)
+        self.request = request
+        try:
+            self.chat = MessageChat.objects.get(pk=item_id)
+        except MessageChat.DoesNotExist:
+            self.chat = None
+        self.initial['subject'] = self.chat.subject
+
+    def save(self):
+        subject = self.cleaned_data.get('subject')
+        if subject:
+            self.chat.subject = subject
+            self.chat.save()
+        

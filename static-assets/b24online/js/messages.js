@@ -13,8 +13,12 @@ function addOneMoreInput(input_name, cls_selector) {
  
 $(function() {
 
-    var send_message_id = '#send-message-dialog';
-    var send_message_diag = $(send_message_id).dialog({
+    var process_data_dialog_id = '#process-data-dialog',
+        process_data_form_id = '#process-data-form',
+        process_data_submit_id = '#process-data-submit',
+        process_data_cancel_id = '#process-data-cancel';
+    
+    var process_data_dialog = $(process_data_dialog_id).dialog({
         autoOpen: false,
         minHeight: 600,
         minWidth: 520, 
@@ -35,16 +39,36 @@ $(function() {
         }
         $.getJSON(url, function(data) {
             if ('msg' in data) {
-                $(send_message_diag).dialog('option', 'title', 'Send message');
-                $(send_message_diag).html(data.msg).dialog('open');
+                $(process_data_dialog).dialog('option', 'title', 'Send message');
+                $(process_data_dialog).dialog('option', 'minHeight', 600);
+                $(process_data_dialog).html(data.msg).dialog('open');
+                $(process_data_dialog).dialog("widget").css('height', 'auto');
             }
         });
         return false;
     });
 
-    $(document).on('click', '#send-chat-message', function(e) {
+    $(document).on('click', '.call-process-form', function(e) {
+        e.preventDefault();
+        var url = this.href,
+            title = $(this).data('title'),
+            height = $(this).data('height');
+        height = (height) ? height : 300;
+        title = (title) ? title : 'Process data';
+        $.getJSON(url, function(data) {
+            if ('msg' in data) {
+                $(process_data_dialog).dialog('option', 'title', title);
+                $(process_data_dialog).dialog('option', 'minHeight', height);
+                $(process_data_dialog).html(data.msg).dialog('open');
+                $(process_data_dialog).dialog("widget").css('height', 'auto');
+            }
+        });
+        return false;
+    });
+
+    $(document).on('click', process_data_submit_id, function(e) {
         e.preventDefault(); 
-        $('#send-message-form').ajaxSubmit({
+        $(process_data_form_id).ajaxSubmit({
             url: this.href,
             type: 'post',
             success: function(data) {
@@ -52,8 +76,8 @@ $(function() {
                     if ('redirect_to_chat' in data) {
                         window.location.href = data.redirect_to_chat;
                     } 
-                    if ($(send_message_diag).dialog('isOpen')) {
-                        $(send_message_diag).dialog('close');
+                    if ($(process_data_dialog).dialog('isOpen')) {
+                        $(process_data_dialog).dialog('close');
                     }
                 } else if (data.code == 'error') {
                     $.each(data.errors, function(index, item) {
@@ -69,44 +93,4 @@ $(function() {
         });
         return false;
 	});
-
-    $(document).on('click', '#add_participant', function(e) {
-        e.preventDefault();
-        var url = this.href;
-        $.getJSON(url, function(data) {
-            if ('msg' in data) {
-                $(send_message_diag).dialog('option', 'title', 'Add new chat participant');
-                $(send_message_diag).dialog('option', 'minHeight', 300);
-                $(send_message_diag).html(data.msg).dialog('open');
-                $(send_message_diag).dialog("widget").css('height', 'auto');
-            }
-        });
-        return false;
-    });
-
-    $(document).on('click', '#add-new-participant', function(e) {
-        e.preventDefault(); 
-        $('#add-new-participant-form').ajaxSubmit({
-            url: this.href,
-            type: 'post',
-            success: function(data) {
-                if (data.code == 'success') {
-                    if ($(send_message_diag).dialog('isOpen')) {
-                        $(send_message_diag).dialog('close');
-                    }
-                } else if (data.code == 'error') {
-                    $.each(data.errors, function(index, item) {
-                        var p_errors = $('#' + index + '_errors');
-                        if (p_errors.length) {
-                            p_errors.html(item).toggle('hide-errors');
-                        }
-                    });
-                } else {
-                
-                }
-            }
-        });
-        return false;
-	});
-
 });                                                    

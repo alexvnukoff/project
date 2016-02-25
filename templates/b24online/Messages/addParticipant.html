@@ -14,13 +14,25 @@
     <table width="100%" cellspacing="2" cellpadding="2"
         border="0" class="table-data">
         <tr>
-            <th>{% trans 'User' %}</th>
+            <th colspan="2">{% trans 'User' %}</th>
             <th>{% trans 'Messages' %}</th>
         </tr>
         {% for participant in form.chat.get_participants %}
             <tr>
-                <td>{{ participant }}</td>
-                <td>0</td>
+                <td style="border-right: none;">
+                    <span class="thumb">
+                        {% if participant.profile.avatar %}
+                            <img src="{{ participant.profile.avatar.small }}" />
+                        {% else %}
+                            <img style="width: 24px;height: 24px;" 
+                                src="{% static 'b24online/img/profile.jpg' %}" />
+                        {% endif %}
+                    </span>
+                </td>
+                <td width="80%" style="border-left: none;">
+                    <a href="#">{% if participant.profile.full_name %}{{ participant.profile.full_name }}{% else %}{{ participant.email }}{% endif %}</a>
+                </td>
+                <td align="right">0</td>
             </tr>
         {% endfor %}
     </table>
@@ -29,7 +41,7 @@
 
 {% if form %}
 <div class="data">
-    <form id="add-new-participant-form" method="POST"  enctype="multipart/form-data" 
+    <form id="process-data-form" method="POST"  enctype="multipart/form-data" 
         action="{{ request.path }}">
         {% csrf_token %}
         <div>
@@ -44,8 +56,8 @@
                 	</li>
                     <li class="end">
                     	<div class="newform-button">
-                        <a id="add-new-participant" class="btntype2" href="{{ request.path }}">{% trans 'Add participant' %}</a>
-                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                        <a id="process-data-submit" class="btntype2" href="{{ request.path }}">{% trans 'Add participant' %}</a>
+                        <a id="process-data-cancel" class="btntype1" href="#">{% trans 'Cancel' %}</a>
                       </div>
                     </li>
                 </fieldset>

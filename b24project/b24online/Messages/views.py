@@ -22,7 +22,7 @@ from b24online import InvalidParametersError
 from b24online.models import (Message, MessageChat, MessageAttachment)
 from b24online.utils import deep_merge_dict, get_current_organization
 from b24online.Messages.forms import (MessageForm, MessageSendForm, 
-                                      AddParticipantForm)
+                                      AddParticipantForm, UpdateChatForm)
 
 logger = logging.getLogger(__name__)
 
@@ -353,7 +353,40 @@ def leave_chat(request, item_id, **kwargs):
     
 
 @login_required
-def close_chat(request, item_id, **kwargs):
-    return HttpResponse('Close')
+def update_chat(request, item_id, **kwargs):
+    template_name = 'b24online/Messages/updateChat.html'
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = UpdateChatForm(
+                request, 
+                item_id=item_id,
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully updated chat'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+        else:
+            form = UpdateChatForm(request, item_id=item_id)
+            data.update({
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'form': form, 'request': request},
+                    context_instance=RequestContext(request),
+                )
+            })
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponseBadRequest()
     
     
