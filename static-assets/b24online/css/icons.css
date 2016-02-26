@@ -58,7 +58,7 @@
 span.icon-facebook-official {color:#445D9A;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
 span.icon-facebook-official:hover {text-decoration:none !important;}
 span.icon-gplus-squared {color:#EA4335;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
-span.icon-gplus-squared:hover  {text-decoration:none !important;}
+span.icon-gplus-squared:hover {text-decoration:none !important;}
 
 .icon-clock:before { content: '\e800'; } /* '' */
 .icon-facebook-official:before { content: '\e801'; } /* '' */

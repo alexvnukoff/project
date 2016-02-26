@@ -27,14 +27,13 @@
             <a href="#">{% trans 'About us' %}</a>
             <span>|</span>
             <a href="#">{% trans 'New user' %}</a>
-
         </div>
 
         <div class="col-lg-4 col-md-5 head-right-nav">
             {% trans 'Login with '%}
             <a style="padding:0;" href="#"><span class="icon-facebook-official"></span></a>
             <a style="padding:0;" href="#"><span class="icon-gplus-squared"></span></a>
-            <a href="#">Sign In</a> {% trans 'or '%} <a href="#">Sign Up</a>
+            <a href="#">{% trans 'Sign In' %}</a> {% trans 'or '%} <a href="#">{% trans 'Sign Up' %}</a>
         </div>
 
     </div>
@@ -54,55 +53,52 @@
                 <a class="b2c" href="#">
 
                     <i class="icon-basket"></i>
-                    <h2>Shoping center</h2>
-                    <p>get more pleasure from buying</p>
+                    <h2>{% trans 'Shoping center' %}</h2>
+                    <p>{% trans 'get more pleasure from buying' %}</p>
                     </a>
 
                 <a class="b2b" href="#">
                     <i class="icon-briefcase"></i>
-                    <h2>B2B center</h2>
-                    <p>doing business together</p>
+                    <h2>{% trans 'B2B center' %}</h2>
+                    <p>{% trans 'doing business together' %}</p>
                     </a>
 
                 <a class="coupon" href="#">
                     <i class="icon-globe"></i>
-                    <h2>Coupon</h2>
-                    <p>Crazy discounts</p>
+                    <h2>{% trans 'Coupon' %}</h2>
+                    <p>{% trans 'Crazy discounts' %}</p>
                     </a>
             </nav>
         </div>
     </div>
 </div>
 
-
 <div class="container">
   <ul class="choose-language">
 
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}"><span class="hidden-xs">English</span><span class="visible-xs">EN</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}"><span class="hidden-xs">Russian</span><span class="visible-xs">RU</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}"><span class="hidden-xs">Hebrew</span><span class="visible-xs">HE</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}"><span class="hidden-xs">Armenian</span><span class="visible-xs">AM</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}"><span class="hidden-xs">Bulgarian</span><span class="visible-xs">BG</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}"><span class="hidden-xs">Ukrainian</span><span class="visible-xs">UA</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}"><span class="hidden-xs">Arabic</span><span class="visible-xs">AR</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}"><span class="hidden-xs">Chinese</span><span class="visible-xs">ZH</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}"><span class="hidden-xs">{% trans 'English' %}</span><span class="visible-xs">{% trans 'EN' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}"><span class="hidden-xs">{% trans 'Russian' %}</span><span class="visible-xs">{% trans 'RU' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}"><span class="hidden-xs">{% trans 'Hebrew' %}</span><span class="visible-xs">{% trans 'HE' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}"><span class="hidden-xs">{% trans 'Armenian' %}</span><span class="visible-xs">{% trans 'AM' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}"><span class="hidden-xs">{% trans 'Bulgarian' %}</span><span class="visible-xs">{% trans 'BG' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}"><span class="hidden-xs">{% trans 'Ukrainian' %}</span><span class="visible-xs">{% trans 'UA' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}"><span class="hidden-xs">{% trans 'Arabic' %}</span><span class="visible-xs">{% trans 'AR' %}</span></a></li>
+    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}"><span class="hidden-xs">{% trans 'Chinese' %}</span><span class="visible-xs">{% trans 'ZH' %}</span></a></li>
 
   </ul>
 </div>
 
-
 <div class="container">
     <div class="row">
 
-        <div class="col-lg-8">
-
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <div class="col-lg-8 col-md-8 hidden-xs">
+            <div id="carousel-generic" class="carousel slide" data-ride="carousel">
               <!-- Indicators -->
               <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-generic" data-slide-to="2"></li>
+                <li data-target="#carousel-generic" data-slide-to="3"></li>
               </ol>
 
               <!-- Wrapper for slides -->
@@ -111,9 +107,10 @@
                 <div class="item active">
                   <img src="{% static 'b24online/img/slide1.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    <div style="height:100px;text-align:left;margin-left:20px;">
-                      <h1 style="margin:0;">Sign up</h1>
-                      <p style="margin:0;">and get tools for business!</p>
+                    <div class="carousel-text">
+                      <i class="icon-user"></i>
+                      <h2>{% trans 'Sign up' %}</h2>
+                      <p>{% trans 'and get tools for business!' %}</p>
                     </div>
                   </div>
                 </div>
@@ -121,13 +118,12 @@
                 <div class="item">
                   <img src="{% static 'b24online/img/slide2.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    <div style="text-align:left;">
-                        <h1 style="margin:0;padding:0;">Registration</h1>
-                        <p style="margin:0;">on the portal will allow you to:</p>
-                        <ul style="padding:0;list-style:square;font-size:12px;">
-                          <li>run a business behalf of the company (B2B, B2C)</li>
-                          <li>to buy goods as a private person(B2C)</li>
-                          <li>draw attention toward your projects(BANKIP)</li>
+                    <div class="carousel-text">
+                        <h3>{% trans 'Registration on the portal will allow you to:' %}</h3>
+                        <ul>
+                          <li>{% trans 'run a business behalf of the company (B2B, B2C)' %}</li>
+                          <li>{% trans 'to buy goods as a private person(B2C)' %}</li>
+                          <li>{% trans 'draw attention toward your projects(BANKIP)' %}</li>
                         </ul>
                     </div>
                   </div>
@@ -136,13 +132,12 @@
                 <div class="item">
                   <img src="{% static 'b24online/img/slide3.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    <div style="height:165px;margin-left:95px;text-align:left;">
-                        <h1 style="margin:0;padding:0;">Sign up</h1>
-                        <p style="margin:0;">and you will be able:</p>
-                        <ul style="padding:0;list-style:square;font-size:12px;">
-                          <li>create your own online shop</li>
-                          <li>to represent your products and services</li>
-                          <li>communicate with potential customers</li>
+                    <div class="carousel-text">
+                        <h3>{% trans 'Sign up and you will be able:' %}</h3>
+                        <ul>
+                          <li>{% trans 'create your own online shop' %}</li>
+                          <li>{% trans 'to represent your products and services' %}</li>
+                          <li>{% trans 'communicate with potential customers' %}</li>
                         </ul>
                     </div>
                   </div>
@@ -151,119 +146,150 @@
                 <div class="item">
                   <img src="{% static 'b24online/img/slide4.jpg' %}" alt="...">
                   <div class="carousel-caption">
-                    <div style="height:165px;margin-left:95px;text-align:left;">
-                        <h1 style="margin:0;padding:0;">Registred</h1>
-                        <p style="margin:0;">users can:</p>
-                        <ul style="padding:0;list-style:square;font-size:12px;">
-                          <li>create their own websites</li>
-                          <li>puts advertising on the portal</li>
-                          <li>create their own communities of interest</li>
+                    <div class="carousel-text">
+                        <h3>{% trans 'Registred users can:' %}</h3>
+                        <ul>
+                          <li>{% trans 'create their own websites' %}</li>
+                          <li>{% trans 'puts advertising on the portal' %}</li>
+                          <li>{% trans 'create their own communities of interest' %}</li>
                         </ul>
                     </div>
                   </div>
                 </div>
             </div>
-
-              <!-- Controls -->
-              <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+              <!--
+              <a class="left carousel-control" href="#carousel-generic" role="button" data-slide="prev">
                 <span class="icon-angle-left glyphicon-chevron-left" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
               </a>
-              <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+              <a class="right carousel-control" href="#carousel-generic" role="button" data-slide="next">
                 <span class="icon-angle-right glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
-              </a>
+              </a> -->
             </div>
-
         </div>
 
-        <div class="col-lg-4">
-          <img src="{% static 'b24online/bt/blank_365.png' %}">
+        <div class="col-lg-4 col-md-4 m_banner">
+          <a href="#">
+            <img src="{% static 'b24online/bt/layality-plan.jpg' %}">
+          </a>
         </div>
 
     </div>
 </div>
 
 
-
-
-
 <div class="container icons-list">
-  <div class="row">
 
-    <div class="col-lg-4">
+  <div class="row icons-list-inner">
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
-      <i class="icon-bank"></i>
+      <i class="icon-briefcase"></i>
       <h2>Companies</h2>
-      <p>In non congue mi. Nullam eu quam et felis viverra luctus sit amet et turpis. Maecenas nec nunc id lectus viverra sollicitudin vel ac velit.</p>
+      <p>In non congue mi. Nullam eu quam et felis viverra luctus sit amet et turpis.</p>
       </a>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
       <i class="icon-users"></i>
       <h2>Business community</h2>
-      <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin placerat posuere aliquet.</p>
+      <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
       </a>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
       <i class="icon-chart-pie"></i>
       <h2>Tenders</h2>
-      <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc laoreet nisi libero, non varius ligula malesuada et. </p>
+      <p>Class aptent taciti sociosqu ad litora conubia nostra, inceptos himenaeos.</p>
       </a>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
       <i class="icon-lightbulb"></i>
       <h2>Innovative projects</h2>
-      <p>Sed tincidunt posuere venenatis. Maecenas odio nibh, dapibus sit amet mi quis, ultrices posuere eros.</p>
+      <p>Maecenas odio nibh, dapibus ultrices posuere, sit amet mi quis eros.</p>
       </a>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
       <i class="icon-graduation-cap"></i>
       <h2>Jobs</h2>
-      <p>Integer at dignissim lorem, vitae consectetur nisi. Cras finibus lacus et sapien semper tempus molestie in magna.</p>
+      <p>Cras finibus lacus et sapien semper tempus molestie in magna.</p>
       </a>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
       <a href="#">
       <i class="icon-coffee"></i>
       <h2>News</h2>
-      <p>Vivamus risus purus; facilisis ac vulputate et, lobortis vel nibh? Sed turpis leo, tempor vestibulum luctus eu, venenatis vitae magna.</p>
+      <p>Sed turpis leo, tempor vestibulum luctus eu, venenatis vitae magna.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="#">
+      <i class="icon-laptop"></i>
+      <h2>Busines proposals</h2>
+      <p>Maecenas nec nunc id lectus viverra sollicitudin vel ac velit.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="#">
+      <i class="icon-shield"></i>
+      <h2>Organizations</h2>
+      <p> Nunc laoreet nisi libero, non varius ligula malesuada et.</p>
       </a>
     </div>
 
   </div>
 </div>
 
-
-<div style="background:#f7f7f7;height:300px;">
 <div class="container">
 
-  <h1 style="text-align:center;">Greetings</h1>
+<hr>
+
+<h2 class="additional-features">{% trans 'Additional Features' %}</h2>
+
+  <div class="additional-features">
+    <ul>
+      <li>{% trans 'Personal web sites for companies' %}</li>
+      <li>{% trans 'Multi-Languages' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Synchronization with social network' %}</li>
+      <li>{% trans 'Build in CRM system' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Ataytics' %}</li>
+      <li>{% trans 'Team collaboration tool' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Loyalty program and customer club management' %}</li>
+      <li>{% trans 'Special service developments for business' %}*</li>
+    </ul>
+  </div>
+
+  <div class="colg-lg-12" style="padding:10px 0;">
+    <h4 class="additional-features">* {% trans 'Solution developments for insuranse companies, digital printings, payment systems and more' %}</h4>
+  </div>
+
+  <hr>
+
 </div>
-</div>
 
 
+<p style="text-align:center;color:#999">© 2010–2016 TPP-Center — Center of chambers of commerce, associations, unions and guild<s/p>
 
-
-
-
-
-
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-
-
+<br><br>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="{% static 'b24online/bt/js/bootstrap.min.js' %}"></script>
