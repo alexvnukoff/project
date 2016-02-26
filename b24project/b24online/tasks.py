@@ -115,3 +115,14 @@ def process_events_stats():
             stats.unique_amount += _add['unique']
             stats.total_amount += _add['total']
             stats.save()
+
+
+@periodic_task(name='b24online.flush_events_stats',
+               run_every=crontab(**{'hour': '4'}))
+def flush_events_stats():
+    """
+    Flush the events entries in Redis.
+    """
+    rconn = get_redis_connection()
+    if rconn:
+        rconn.flushall()

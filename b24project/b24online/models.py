@@ -1509,10 +1509,8 @@ class Message(models.Model):
                                          str(attachment.file)),
                     'bucket_path': str(attachment.file),
                 })
-        logger.debug(images)
         if images:
             tasks.upload_images(*images)
-        logger.debug(files)
         if files:
             tasks.upload_file(*files)
 

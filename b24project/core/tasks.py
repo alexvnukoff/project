@@ -1,14 +1,19 @@
+# -*- encoding: utf-8 -*-
+
 import os
 
 import boto3
 from boto3.s3.transfer import S3Transfer
 from celery import shared_task
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.utils._os import abspathu
 
 from b24online import utils
 from b24online.models import B2BProduct, BusinessProposal, InnovationProject, News, Tender, Exhibition, \
     Organization
+
+logger = get_task_logger('debug.core.tasks')
 
 #from b24online.forms import ItemForm, BasePhotoGallery, BasePages, custom_field_callback
 #from appl import func
@@ -854,6 +859,8 @@ def upload_file(*args):
     transfer = S3Transfer(client)
 
     for file in args:
+        logger.debug(file)
+        logger.error(file)
         transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], extra_args={'ACL': 'public-read'})
         os.remove(file['file'])
 
