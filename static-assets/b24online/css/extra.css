@@ -175,6 +175,7 @@ fieldset.dcol li {
     padding:4px 25px;
     background: #fee;
     margin: 5px 0 10px 0;
+    width: 100%;
 }
 
 input[type="number"] {
@@ -211,5 +212,60 @@ tr.without-border td {
     background-repeat: no-repeat;
     background-position: 95% 50%;
 
+}
+
+.sendmessage {
+    position:relative; 
+    float:left; 
+    width:100%;
+}
+.sendmessage li{ 
+    position:relative; 
+    float:left; width:80%; 
+    margin:15px 0 0 40px; 
+    color:#595959; 
+    display:inline;
+}
+.sendmessage li label{ 
+    position:relative; 
+    float:left; width:100%; 
+    font-weight:bold; 
+    padding-bottom:6px;
+}
+.sendmessage li .editor{    
+    float:left; 
+    border:1px #bdbdbd solid;
+}
+.sendmessage li.end { 
+    text-align:center;
+}
+.sendmessage li.end .btntype1, .sendmessage li.end .btntype2 { 
+    font-size:17px; 
+    padding:8px 40px;
+}
+
+.sendmessage textarea { 
+    width: 400px;
+    height: 130px;
+}
+
+.sendmessage input[type='text'] { 
+    width: 400px;
+}
+
+.hide-errors {
+    display: none;
+}
+
+p.form-field {
+    width: 100%; 
+    display: inline-block;
+}
+
+.chat-title {
+    font-size: 130%;
+    background: #dddddd;   
+    margin: 5px;
+    padding: 10px;
 }
 

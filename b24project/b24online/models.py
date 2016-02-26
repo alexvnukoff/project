@@ -1437,6 +1437,8 @@ class MessageChat(AbstractRegisterInfoModel):
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
         
+    def get_participants(self):
+        return self.participants.all()
 
 class Message(models.Model):
     """
@@ -1485,6 +1487,34 @@ class Message(models.Model):
 
     def __str__(self):
         return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
+
+    def upload_files(self):
+        from core import tasks
+
+        images = []
+        files = []
+        for attachment in self.attachments.all():
+            if attachment.is_image():
+                images.append({
+                    'file': os.path.join(
+                        abspathu(settings.MEDIA_ROOT), 
+                                 str(attachment.file)),
+                    'sizes': {
+                        'th': {'box': (50, 50), 'fit': True},
+                    },
+                })
+            else:
+                files.append({
+                    'file': os.path.join(settings.MEDIA_ROOT, 
+                                         str(attachment.file)),
+                    'bucket_path': str(attachment.file),
+                })
+        logger.debug(images)
+        if images:
+            tasks.upload_images(*images)
+        logger.debug(files)
+        if files:
+            tasks.upload_file(*files)
 
 
 class MessageAttachment(models.Model):

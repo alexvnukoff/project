@@ -27,16 +27,12 @@ $(function() {
         minWidth: 800,
         minHeight: 400,
         modal: true,
-        create: function () {
-            $(this).addClass("stats-dialog");
-        }
+        dialogClass: 'turnon-ui',
+        title: 'The Events statistics'
     });
     $(".stats_detail").on("click", function(e) {
         e.preventDefault();
-        $("#bardialog").html("");
-        $("#bardialog").dialog("open");
-        $("#bardialog").load(this.href);
-        return false;
+        $("#bardialog").html('').dialog("open").load(this.href);
     });
     
     $('#diagdialog').dialog({
@@ -44,16 +40,11 @@ $(function() {
         minWidth: 500,
         minHeight: 500,
         modal: true,
-        create: function () {
-            $(this).parent().addClass("stats-dialog");
-        }
+        dialogClass: 'turnon-ui',
+        title: 'Distributoin by countries',
     });
     $(".stats_diag").on("click", function(e) {
         e.preventDefault();
-        $("#diagdialog").html("");
-        $("#diagdialog").dialog("open");
-        $("#diagdialog").load(this.href);
-        return false;
+        $("#diagdialog").html('').dialog("open").load(this.href);
     });
 });
-

@@ -5,19 +5,25 @@ import logging
 
 from collections import OrderedDict
 
+from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
-from django.http import (HttpResponse, HttpResponseBadRequest, Http404)
+from django.http import (HttpResponse, HttpResponseBadRequest, Http404, 
+                         HttpResponseRedirect)
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
 
+from b24online import InvalidParametersError
 from b24online.models import (Message, MessageChat, MessageAttachment)
 from b24online.utils import deep_merge_dict, get_current_organization
-from b24online.Messages.forms import MessageForm
+from b24online.Messages.forms import (MessageForm, MessageSendForm, 
+                                      AddParticipantForm, UpdateChatForm)
 
 logger = logging.getLogger(__name__)
 
@@ -179,22 +185,23 @@ def add_message(request, content=None, recipient_id=None):
 
 @login_required
 def view_chats(request):
+    
     user = request.user
     current_organization = get_current_organization(request)
-    per_page = 10
+    per_page = 20
     chats = MessageChat.objects\
         .filter(Q(organization=current_organization) | \
-                Q(participants__id__exact=user.id), 
+                Q(participants__id__exact=user.id),
                 status=MessageChat.OPENED)\
         .distinct()\
-        .order_by('-updated_by')
+        .order_by('-updated_at')
 
     context = {
         'organization_chats': chats.filter(is_private=False)[:per_page],
         'user_chats': chats.filter(is_private=True)[:per_page],
     }
     logger.debug(context)
-    return render_to_response("b24online/Messages/chats.html", 
+    return render_to_response("b24online/Messages/chats.html",
         context, context_instance=RequestContext(request))
 
 
@@ -205,8 +212,11 @@ def chat_messages(request, item_id):
     except MessageChat.DoesNotExist:
         raise Http404(_('There is not such message chat'))
     else:
-        context = {'messages': chat.chat_messages.order_by('created_at')}
-        return render_to_response("b24online/Messages/chatMessages.html", 
+        context = {
+            'chat': chat,
+            'messages': chat.chat_messages.order_by('created_at')
+        }
+        return render_to_response("b24online/Messages/chatMessages.html",
             context, context_instance=RequestContext(request))
 
 
@@ -218,16 +228,172 @@ def add_to_chat(request):
         form = MessageForm(request, data=request.POST, files=request.FILES)
         if form.is_valid():
             try:
-                form.send()        
+                form.send()
             except IntegrityError as exc:
                 response_text = _('Error during data saving') + str(exc)
             else:
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
         else:
-            response_text = form.get_errors()  
+            response_text = form.get_errors()
         return HttpResponse(
             json.dumps({'code': response_code, 'message': response_text}),
             content_type='application/json'
         )
     return HttpResponseBadRequest()
+
+
+@login_required
+def send_message(request, recipient_type, item_id, **kwargs):
+    """
+    Send the message to organization's or user's chats.
+    """
+    template_name = 'b24online/Messages/sendMessage.html'
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = MessageSendForm(
+                request,
+                recipient_type=recipient_type,
+                item_id=item_id,
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                try:
+                    form.send()
+                except IntegrityError as err:
+                    data.update({
+                        'code': 'critical',
+                        'msg': _('Error during data saving: {0}') \
+                            .format(exc)
+                    })
+                else:
+                    data.update({
+                        'code': 'success',
+                        'msg': _('You have successfully sent the message'),
+                    })
+                    if form.cleaned_data.get('redirect_to_chat'):
+                        data['redirect_to_chat'] = reverse('messages:main')
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+        else:
+            try:
+                form = MessageSendForm(
+                    request,
+                    recipient_type=recipient_type,
+                    item_id=item_id
+                )
+            except InvalidParametersError as err:
+                data.update({
+                    'code': 'critical',
+                    'msg': render_to_string(
+                        template_name,
+                        {'error': 'ERROR: {0}' . format(err)},
+                        context_instance=RequestContext(request),
+                    ),
+                })
+            else:
+                data.update({
+                    'code': 'success',
+                    'msg': render_to_string(
+                        template_name,
+                        {'form': form, 'request': request},
+                        context_instance=RequestContext(request),
+                    )
+                })
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponseBadRequest()
+
+
+@login_required
+def add_participant(request, item_id, **kwargs):
+    template_name = 'b24online/Messages/addParticipant.html'
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = AddParticipantForm(
+                request, 
+                item_id=item_id,
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully add new participant'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+        else:
+            form = AddParticipantForm(request, item_id=item_id)
+            data.update({
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'form': form, 'request': request},
+                    context_instance=RequestContext(request),
+                )
+            })
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponseBadRequest()
+    
+
+    
+
+@login_required
+def update_chat(request, item_id, **kwargs):
+    template_name = 'b24online/Messages/updateChat.html'
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = UpdateChatForm(
+                request, 
+                item_id=item_id,
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully updated chat'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+        else:
+            form = UpdateChatForm(request, item_id=item_id)
+            data.update({
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'form': form, 'request': request},
+                    context_instance=RequestContext(request),
+                )
+            })
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponseBadRequest()
+    
+    
+@login_required
+def leave_chat(request, item_id, **kwargs):
+    try:
+        chat = MessageChat.objects.get(pk=item_id)
+    except MessageChat.DoesNotExist:
+        pass
+    else:
+        chat.participants.remove(request.user)
+    return HttpResponseRedirect(reverse('messages:main'))

@@ -1,0 +1,48 @@
+{# The template for message dialog #}
+
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="data">
+    <h3>{% trans 'Update chat' %} &laquo;{{ form.chat.subject|truncatewords:4 }}&raquo;</h3>
+    <hr class="hr-divider-one">
+</div>
+
+{% if form %}
+<div class="data">
+    <form id="process-data-form" method="POST"  enctype="multipart/form-data" 
+        action="{{ request.path }}">
+        {% csrf_token %}
+        <div>
+            <ul class="sendmessage">
+                <fieldset class="dcol">
+                	<li>
+                		<label>{{ form.subject.label }}:</label>
+                		<p class="form-field">{{ form.subject }}</p>
+                        <span class="errors hide-errors">
+                            {{ form.subject.errors|striptags }}
+                        </span>
+                	</li>
+                	{% if form.close_chat %}
+                	<li>
+                		<label>{{ form.close_chat.label }}:</label>
+                		<p class="form-field">{{ form.close_chat }}</p>
+                        <span class="errors hide-errors">
+                            {{ form.subject.errors|striptags }}
+                        </span>
+                	</li>
+                	{% endif %}
+                    <li class="end">
+                    	<div class="newform-button">
+                        <a id="process-data-submit" class="btntype2" href="{{ request.path }}">{% trans 'Save' %}</a>
+                        <a id="process-data-cancel" class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                      </div>
+                    </li>
+                </fieldset>
+            </ul>
+        </div>
+    </form>
+</div>
+{% endif %}
+

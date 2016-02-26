@@ -239,7 +239,7 @@ $(document).ready(function()
         $('#delivery-result-msg').text(new_msg_text);
     }
 
-    $(document).on('click', ".contact-us", function()
+    $(document).on('click', ".contact-us-old", function()
     {
         $('#delivery-result-msg').hide()
 	    document.getElementById('light-contact').style.display='block';
