@@ -41,5 +41,9 @@
         <div class="no-results">{% trans "No results found" %}</div>
     {% endfor %}
     </ul>
-   {% include "b24online/main/paginator.html" %}
+    {% include "b24online/main/paginator.html" %}
+    <div class="data">
+        <hr class="hr-divider-one">
+        {% if is_my %}<a href="{% url 'products:b2b_product_update'%}">{% trans 'To update list' %}</a>{% endif %}
+    </div>   
 </div>

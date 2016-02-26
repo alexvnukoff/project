@@ -376,3 +376,21 @@ DealOrderedFormSet = modelformset_factory(
     can_delete=False, 
     extra=0
 )
+
+
+# The formsets for B2B and B2C products
+B2BProductFormSet = modelformset_factory(
+    B2BProduct, 
+    fields=('name', 'currency', 'cost'), 
+    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),}, 
+    extra=0,
+)
+
+B2CProductFormSet = modelformset_factory(
+    B2CProduct, 
+    fields=('name', 'currency', 'cost'), 
+    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),}, 
+    extra=0
+)
+
+

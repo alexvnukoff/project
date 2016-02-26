@@ -8,7 +8,8 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     DeleteB2BProductGalleryImage, B2BProductDocumentList, 
     DeleteB2BProductDocument, B2BProductBuy, B2CProductBuy,
     DealOrderList, DealOrderDetail, DealOrderPayment, DealPayPal,
-    DealList, DealDetail, DealPayment, DealItemDelete)
+    DealList, DealDetail, DealPayment, DealItemDelete,
+    B2BProductUpdateList, B2CProductUpdateList)
     
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
@@ -18,10 +19,19 @@ urlpatterns = [
     url(r'^page(?P<page>[0-9]+)?/$', B2BProductList.as_view(), name="paginator"),
     url(r'^my/$', B2BProductList.as_view(my=True), name='my_main'),
     url(r'^my/page(?P<page>[0-9]+)?/$', B2BProductList.as_view(my=True), name="my_main_paginator"),
+    url(r'^my/update/$', B2BProductUpdateList.as_view(), 
+        name='b2b_product_update'),
+    url(r'^my/update/page(?P<page>[0-9]+)?/$', B2BProductUpdateList.as_view(), 
+        name="b2b_product_update_paginator"),
     url(r'^b2c/$', B2CProductList.as_view(), name='main_b2c'),
     url(r'^my_b2c/$', B2CProductList.as_view(my=True), name='my_b2c'),
     url(r'^b2c/page(?P<page>[0-9]+)?/$', B2CProductList.as_view(), name="main_b2c_paginator"),
     url(r'^my_b2c/page(?P<page>[0-9]+)?/$', B2CProductList.as_view(my=True), name="my_b2c_paginator"),
+    url(r'^my_b2c/update/$', B2CProductUpdateList.as_view(), 
+        name='b2c_product_update'),
+    url(r'^my_b2c/update/page(?P<page>[0-9]+)?/$', 
+        B2CProductUpdateList.as_view(),
+        name="b2c_product_update_paginator"),
     url(r'^сoupons/$', B2CPCouponsList.as_view(), name='main_сoupons'),
     url(r'^сoupons/page(?P<page>[0-9]+)?/$', B2CPCouponsList.as_view(), name="coupons_paginator"),
     url(r'^add/$', B2BProductCreate.as_view(), name="add"),
