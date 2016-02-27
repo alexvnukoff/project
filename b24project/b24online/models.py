@@ -968,6 +968,9 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    producer = models.ForeignKey('Producer', related_name='b2b_products', 
+                                 verbose_name=_('Producer'), 
+                                 null=True, blank=True)
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
     branches = models.ManyToManyField(Branch)
@@ -2188,6 +2191,30 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
+class Producer(models.Model, IndexedModelMixin):
+    """
+    The model class for goods producers.
+    """
+    name = models.CharField(_('Name'), max_length=255, 
+                            blank=False, null=False)
+    slug = models.SlugField(max_length=255)
+    short_description = models.TextField(_('Short description'), 
+                                         null=True, blank=True)
+    description = models.TextField(_('Descripion'), null=True, blank=True)
+    logo = CustomImageField(upload_to=generate_upload_path, 
+                            storage=image_storage,
+                            sizes=['big', 'small', 'th'],
+                            max_length=255)
+    country = models.CharField(_('Country'), max_length=255, 
+                               blank=False, null=False)
+                               
+    class Meta:
+        verbose_name = _('Products producer')
+        verbose_name_plural = _('Products producers')
+
+    def __str__(self):
+        return self.name
+        
 
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
@@ -2224,7 +2251,7 @@ def index_item(sender, instance, created, **kwargs):
 
 @receiver(user_registered)
 def initial_profile(sender, user, request, **kwargs):
-    Profile.objects.create(user=user, country=Country.objects.first())
+    Profile.objects.create(user=user, country=Countryl.objects.first())
 
 
 @receiver(post_save, sender=RegisteredEvent)

@@ -14,8 +14,10 @@ from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from b24online.custom import CustomImageField
-from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage, IndexedModelMixin, \
-    ActiveModelMixing, GalleryImage
+from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, 
+                              image_storage, IndexedModelMixin, 
+                              ActiveModelMixing, GalleryImage, 
+                              Producer)
 from b24online.utils import generate_upload_path, reindex_instance
 import uuid
 from decimal import Decimal
@@ -54,6 +56,9 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
+    producer = models.ForeignKey(Producer, related_name='b2c_products', 
+                                 verbose_name=_('Producer'), 
+                                 null=True, blank=True)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
