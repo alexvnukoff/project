@@ -1,5 +1,5 @@
-{% load staticfiles %}{% load i18n %}<!doctype html>
-<html lang="en">
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,13 +11,21 @@
     <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
     <link href="{% static 'b24online/bt/css/style.css' %}" rel="stylesheet">
 
+    {% if LANGUAGE_BIDI %}
+    <link href="{% static 'b24online/bt/css/bootstrap-rtl.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/bt/css/style-rtl.css' %}" rel="stylesheet">
+    {% endif %}
 </head>
 <body>
 
-<div class="container">
+  <div class="container">
     <div class="row mw-header">
 
-        <div class="col-lg-8 col-md-7 head-left-nav">
+      <div class="col-lg-8 col-md-7 head-left-nav">
+
+        {% comment %}
+        {% show_top_static_pages %}
+        {% endcomment %}
             <a href="#">{% trans 'Advertisement' %}</a>
             <span>|</span>
             <a href="#">{% trans 'General advices' %}</a>
@@ -31,9 +39,9 @@
 
         <div class="col-lg-4 col-md-5 head-right-nav">
             {% trans 'Login with '%}
-            <a style="padding:0;" href="#"><span class="icon-facebook-official"></span></a>
-            <a style="padding:0;" href="#"><span class="icon-gplus-squared"></span></a>
-            <a href="#">{% trans 'Sign In' %}</a> {% trans 'or '%} <a href="#">{% trans 'Sign Up' %}</a>
+            <a style="padding:0;" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
+            <a style="padding:0;" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
+            <a href="{% url 'auth_login' %}">{% trans 'Sign In' %}</a> {% trans 'or '%} <a href="{% url 'registration_register' %}">{% trans 'Sign Up' %}</a>
         </div>
 
     </div>
@@ -41,29 +49,28 @@
 
 <div class="container">
     <div class="row" style="margin-top:25px;">
-
         <div class="col-lg-3 col-md-3 main-logo">
-            <a href="#">
+          <a href="/" title="{% trans 'B24Online' %}">
                 <img src="{% static 'b24online/img/b24_big.png' %}">
             </a>
         </div>
 
         <div class="col-lg-9 col-md-9" style="padding:0;">
             <nav class="main-fork">
-                <a class="b2c" href="#">
+                <a class="b2c" href="{% url 'products:main_b2c' %}">
 
                     <i class="icon-basket"></i>
                     <h2>{% trans 'Shoping center' %}</h2>
                     <p>{% trans 'get more pleasure from buying' %}</p>
                     </a>
 
-                <a class="b2b" href="#">
+                <a class="b2b" href="{% url 'products:main' %}">
                     <i class="icon-briefcase"></i>
                     <h2>{% trans 'B2B center' %}</h2>
                     <p>{% trans 'doing business together' %}</p>
                     </a>
 
-                <a class="coupon" href="#">
+                    <a class="coupon" href="{% url 'products:main_сoupons' %}">
                     <i class="icon-globe"></i>
                     <h2>{% trans 'Coupon' %}</h2>
                     <p>{% trans 'Crazy discounts' %}</p>
@@ -75,15 +82,14 @@
 
 <div class="container">
   <ul class="choose-language">
-
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}"><span class="hidden-xs">{% trans 'English' %}</span><span class="visible-xs">{% trans 'EN' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}"><span class="hidden-xs">{% trans 'Russian' %}</span><span class="visible-xs">{% trans 'RU' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}"><span class="hidden-xs">{% trans 'Hebrew' %}</span><span class="visible-xs">{% trans 'HE' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}"><span class="hidden-xs">{% trans 'Armenian' %}</span><span class="visible-xs">{% trans 'AM' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}"><span class="hidden-xs">{% trans 'Bulgarian' %}</span><span class="visible-xs">{% trans 'BG' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}"><span class="hidden-xs">{% trans 'Ukrainian' %}</span><span class="visible-xs">{% trans 'UA' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}"><span class="hidden-xs">{% trans 'Arabic' %}</span><span class="visible-xs">{% trans 'AR' %}</span></a></li>
-    <li><a href="#"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}"><span class="hidden-xs">{% trans 'Chinese' %}</span><span class="visible-xs">{% trans 'ZH' %}</span></a></li>
+    <li><a href="http://en.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}"><span class="hidden-xs">{% trans 'English' %}</span><span class="visible-xs">{% trans 'EN' %}</span></a></li>
+    <li><a href="http://ru.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}"><span class="hidden-xs">{% trans 'Russian' %}</span><span class="visible-xs">{% trans 'RU' %}</span></a></li>
+    <li><a href="http://he.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}"><span class="hidden-xs">{% trans 'Hebrew' %}</span><span class="visible-xs">{% trans 'HE' %}</span></a></li>
+    <li><a href="http://am.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}"><span class="hidden-xs">{% trans 'Armenian' %}</span><span class="visible-xs">{% trans 'AM' %}</span></a></li>
+    <li><a href="http://bg.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}"><span class="hidden-xs">{% trans 'Bulgarian' %}</span><span class="visible-xs">{% trans 'BG' %}</span></a></li>
+    <li><a href="http://ua.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}"><span class="hidden-xs">{% trans 'Ukrainian' %}</span><span class="visible-xs">{% trans 'UA' %}</span></a></li>
+    <li><a href="http://ar.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}"><span class="hidden-xs">{% trans 'Arabic' %}</span><span class="visible-xs">{% trans 'AR' %}</span></a></li>
+    <li><a href="http://zh.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}"><span class="hidden-xs">{% trans 'Chinese' %}</span><span class="visible-xs">{% trans 'ZH' %}</span></a></li>
 
   </ul>
 </div>
@@ -121,9 +127,9 @@
                     <div class="carousel-text">
                         <h3>{% trans 'Registration on the portal will allow you to:' %}</h3>
                         <ul>
-                          <li>{% trans 'run a business behalf of the company (B2B, B2C)' %}</li>
-                          <li>{% trans 'to buy goods as a private person(B2C)' %}</li>
-                          <li>{% trans 'draw attention toward your projects(BANKIP)' %}</li>
+                          <li>- {% trans 'run a business behalf of the company (B2B, B2C)' %}</li>
+                          <li>- {% trans 'to buy goods as a private person(B2C)' %}</li>
+                          <li>- {% trans 'draw attention toward your projects(BANKIP)' %}</li>
                         </ul>
                     </div>
                   </div>
@@ -135,9 +141,9 @@
                     <div class="carousel-text">
                         <h3>{% trans 'Sign up and you will be able:' %}</h3>
                         <ul>
-                          <li>{% trans 'create your own online shop' %}</li>
-                          <li>{% trans 'to represent your products and services' %}</li>
-                          <li>{% trans 'communicate with potential customers' %}</li>
+                          <li>- {% trans 'create your own online shop' %}</li>
+                          <li>- {% trans 'to represent your products and services' %}</li>
+                          <li>- {% trans 'communicate with potential customers' %}</li>
                         </ul>
                     </div>
                   </div>
@@ -149,28 +155,19 @@
                     <div class="carousel-text">
                         <h3>{% trans 'Registred users can:' %}</h3>
                         <ul>
-                          <li>{% trans 'create their own websites' %}</li>
-                          <li>{% trans 'puts advertising on the portal' %}</li>
-                          <li>{% trans 'create their own communities of interest' %}</li>
+                          <li>- {% trans 'create their own websites' %}</li>
+                          <li>- {% trans 'puts advertising on the portal' %}</li>
+                          <li>- {% trans 'create their own communities of interest' %}</li>
                         </ul>
                     </div>
                   </div>
                 </div>
             </div>
-              <!--
-              <a class="left carousel-control" href="#carousel-generic" role="button" data-slide="prev">
-                <span class="icon-angle-left glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="right carousel-control" href="#carousel-generic" role="button" data-slide="next">
-                <span class="icon-angle-right glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a> -->
             </div>
         </div>
 
         <div class="col-lg-4 col-md-4 m_banner">
-          <a href="#">
+          <a href="/project/loyalty-program-146699.html">
             <img src="{% static 'b24online/bt/layality-plan.jpg' %}">
           </a>
         </div>
@@ -184,7 +181,7 @@
   <div class="row icons-list-inner">
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'companies:main' %}">
       <i class="icon-briefcase"></i>
       <h2>Companies</h2>
       <p>In non congue mi. Nullam eu quam et felis viverra luctus sit amet et turpis.</p>
@@ -192,7 +189,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'exhibitions:main' %}">
       <i class="icon-users"></i>
       <h2>Business community</h2>
       <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
@@ -200,7 +197,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'tenders:main' %}">
       <i class="icon-chart-pie"></i>
       <h2>Tenders</h2>
       <p>Class aptent taciti sociosqu ad litora conubia nostra, inceptos himenaeos.</p>
@@ -208,7 +205,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'innov:main' %}">
       <i class="icon-lightbulb"></i>
       <h2>Innovative projects</h2>
       <p>Maecenas odio nibh, dapibus ultrices posuere, sit amet mi quis eros.</p>
@@ -216,7 +213,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'vacancy:main' %}">
       <i class="icon-graduation-cap"></i>
       <h2>Jobs</h2>
       <p>Cras finibus lacus et sapien semper tempus molestie in magna.</p>
@@ -224,7 +221,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'news:main' %}">
       <i class="icon-coffee"></i>
       <h2>News</h2>
       <p>Sed turpis leo, tempor vestibulum luctus eu, venenatis vitae magna.</p>
@@ -232,7 +229,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'proposal:main' %}">
       <i class="icon-laptop"></i>
       <h2>Busines proposals</h2>
       <p>Maecenas nec nunc id lectus viverra sollicitudin vel ac velit.</p>
@@ -240,7 +237,7 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="#">
+      <a href="{% url 'tpp:main' %}">
       <i class="icon-shield"></i>
       <h2>Organizations</h2>
       <p> Nunc laoreet nisi libero, non varius ligula malesuada et.</p>
@@ -287,7 +284,7 @@
 </div>
 
 
-<p style="text-align:center;color:#999">© 2010–2016 TPP-Center — Center of chambers of commerce, associations, unions and guild<s/p>
+<p style="text-align:center;color:#999">© 2010–2016 B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
 
 <br><br>
 

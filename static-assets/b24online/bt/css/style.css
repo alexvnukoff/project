@@ -1,9 +1,8 @@
-
 body {background:#fff}
 
 .mw-header {padding:12px 0 5px 0;border-bottom:2px solid #000;}
 .mw-header .head-left-nav a {color:#000;padding:0 5px;}
-.mw-header .head-left-nav span {color:#aeaeae;}
+.mw-header .head-left-nav {color:#aeaeae;}
 
 .mw-header .head-right-nav {text-align:right;}
 .mw-header .head-right-nav a {color:#1c80b2;padding:0 5px;}
@@ -41,8 +40,8 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .flag-icon {border:1px solid #f1f1f1;position:relative;display:inline-block;margin:0 8px;width:27px;vertical-align:top;}
 .carousel-control .icon-prev, .carousel-control .icon-next, .carousel-control .glyphicon-chevron-left, .carousel-control .glyphicon-chevron-right {z-index:5;display:inline-block;}
 .carousel-control {position:absolute;top:0;left:0;bottom:0;width:10%;color:#fff;text-align:center;}
-.carousel-control.left {right: auto;left: 0;background:none;opacity:0.9;}
-.carousel-control.right {left: auto;right: 0;background:none;opacity:0.9;}
+.carousel-control.left {right:auto;left:0;background:none;opacity:0.9;}
+.carousel-control.right {left:auto;right:0;background:none;opacity:0.9;}
 .carousel-indicators {position:absolute;bottom:-45px;left:50%;z-index:15;width:60%;margin-left:-30%;padding-left:0;list-style:none;text-align:center;}
 .carousel-indicators li {display:inline-block;width:10px;height:10px;margin:1px;text-indent:-999px;border:1px solid #aeaeae;border-radius:10px;cursor:pointer;background-color:#f5f5f5;}
 .carousel-indicators .active {margin:0;width:12px;height:12px;background-color:#f1f1f1;}
@@ -55,7 +54,7 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .icons-list a:hover > h2 {color:#555;}
 .icons-list a:hover > p {color:#848484;}
 .icons-list-inner {margin:60px 0 0 0;}
-.icon-box {margin:10px 0;height:175px;}
+.icon-box {margin:10px 0;height:155px;}
 .carousel {width:100%;border:1px solid #dedede;}
 .m_banner img {border:1px solid #dedede;width:365px;height:255px;}
 .carousel-caption {background-color:rgba(0, 0, 0, 0.3);}
@@ -64,16 +63,11 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .carousel-text h3 {margin:0;}
 .carousel-text p {margin:0;}
 .carousel-text ul {margin:10px 0 0 0;}
-.carousel-text ul li {list-style:square;}
+.carousel-text ul li {list-style:none;}
 .carousel i {font-size:47px;}
-.additional-features > ul {display:inline-block;vertical-align:top;padding:0 25px 5px 25px;}
+.additional-features > ul {display:inline-block;vertical-align:top;padding:0 18px 5px 18px;}
 .additional-features > ul li {font-size:15px;list-style:square;}
 h2.additional-features {font-size:33px;font-weight:300;}
-
-
-
-
-
 
 
 /*==========  Non-Mobile First Method  ==========*/
@@ -91,16 +85,15 @@ h2.additional-features {font-size:33px;font-weight:300;}
 .additional-features > ul {width:49%;}
 }
 
-
 /* Medium Devices, Desktops */
 @media only screen and (max-width : 992px) {
 .mw-header {padding:10px 0;}
 .head-left-nav {color:#919191;text-align:center !important;padding:8px 0;}
 .mw-header .head-left-nav a {color:#848484;padding:0 5px;}
 .mw-header .head-left-nav a:hover {color:#000;padding:0 5px;}
-.head-right-nav {font-size:24px;text-align:center !important;}
-span.icon-facebook-official {font-size:24px;}
-span.icon-gplus-squared {font-size:24px;}
+.head-right-nav {font-size:20px;text-align:center !important;}
+span.icon-facebook-official {font-size:20px;}
+span.icon-gplus-squared {font-size:20px;}
 .main-logo {padding:0;text-align:center;}
 .main-logo img {width:286px;margin:0 0 25px 0;}
 .choose-language {padding:0;}
@@ -111,25 +104,25 @@ span.icon-gplus-squared {font-size:24px;}
 .m_banner img {width:100%;height:auto;}
 .icons-list-inner {margin:20px 0 0 0;}
 .additional-features > ul {text-align:center;width:100%;}
+.additional-features > ul li {list-style:none;text-align:center;width:100%;}
 h2.additional-features {text-align:center;font-size:33px;font-weight:300;}
 h4.additional-features {text-align:center;font-size:12px;}
 }
 
-
-
 /* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
+@media only screen and (max-width:768px) {
 .choose-language li {padding:10px 5px;font-size:13px;}
 .flag-icon {margin:0 5px;width:23px;}
 .m_banner img {width:80%;height:auto;}
 nav.main-fork {display:flex;flex-flow:row wrap;justify-content:space-around;}
 nav.main-fork a {width:75%;padding:12px 0;margin:0 0 20px 0;height:auto;}
 .icons-list {text-align:center;}
-.icons-list-inner {margin:20px 0 0 0;}
+.icons-list-inner {margin:30px 0 0 0;}
+.icon-box {height:130px;}
 }
 
 /* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
+@media only screen and (max-width:480px) {
 .icons-list i {color:#006eb9;font-size:33px;display:block;margin:0;}
 .icons-list-inner {margin:0;}
 }
