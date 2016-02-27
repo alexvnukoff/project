@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from django.views.generic import (DetailView, ListView, View, 
+from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import LoginRequiredMixin
@@ -115,6 +115,7 @@ class B2BProductUpdateList(B2BProductList):
             'current_organization': get_current_organization(self.request),
             'item_formset': self.item_formset,
         })
+        logger.debug(context['page'].number)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -777,7 +778,7 @@ class DealOrderList(LoginRequiredMixin, ListView):
         """
         Define if the Order status was has been set for simple filter or
         basket.
-        
+
         If the basket was requested set the template.
         """
         self.status = self.kwargs.get('status')
@@ -941,7 +942,7 @@ class DealList(LoginRequiredMixin, ItemsList):
             using=self.template_engine,
             **response_kwargs
         )
-        
+
 
 class DealDetail(LoginRequiredMixin, ItemDetail):
     model = Deal
@@ -996,7 +997,7 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
             context['paypal_form'] = paypal_form
         return context
-        
+
 
 class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem

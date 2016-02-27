@@ -5,10 +5,22 @@
 
 <div class="container">
 <div class="data">
-    {% include "b24online/main/paginator.html" %}
+
     <div class="data">
         <h1>{% trans 'Company products' %}</h1>
         <hr class="hr-divider-one">
+    </div>
+    <div class="data"> 
+        {% if is_my %}
+            {% include "b24online/main/paginator.html" %}
+            <div style="float:right;" class="data">
+                <a href="{% url 'products:my_main_paginator' page=page.number %}">
+                    <img src="{% static 'b24online/img/as_net.png' %}" />
+                </a>
+            </div>
+         {% else %}
+            {% include "b24online/main/paginator.html" %}
+         {% endif %}
     </div>
     <div class="data">
         <form action="" method="post">

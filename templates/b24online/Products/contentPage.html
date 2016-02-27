@@ -3,9 +3,21 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 <div class="container">
-   {% include "b24online/main/paginator.html" %}
-   {% include "b24online/main/popupFilter.html" %}
-   {% include "b24online/main/local_menu_script.html" %}
+    {% if is_my %}
+    <div> 
+        {% include "b24online/main/paginator.html" %}
+        <div class="data" style="float:right;">
+            <a href="{% url 'products:b2b_product_update_paginator' page=page.number %}">
+                <img src="{% static 'b24online/img/as_list.png' %}" />
+            </a>
+        </div>
+    </div>
+    {% else %}
+        {% include "b24online/main/paginator.html" %}
+    {% endif %}
+
+    {% include "b24online/main/popupFilter.html" %}
+    {% include "b24online/main/local_menu_script.html" %}
     <ul class="listprd">
     {% for product in object_list %}
         <li>
@@ -42,8 +54,4 @@
     {% endfor %}
     </ul>
     {% include "b24online/main/paginator.html" %}
-    <div class="data">
-        <hr class="hr-divider-one">
-        {% if is_my %}<a href="{% url 'products:b2b_product_update'%}">{% trans 'To update list' %}</a>{% endif %}
-    </div>   
 </div>
