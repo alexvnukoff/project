@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 import sys
+import json
 import logging
 
 from django.db import transaction
 from django.db.models import Q, Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
@@ -28,8 +29,8 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import (get_current_organization, get_permitted_orgs)
-
+from b24online.utils import (get_current_organization, get_permitted_orgs,
+                             get_b2c_product_category_tree)
 
 logger = logging.getLogger(__name__)
 
@@ -1014,3 +1015,10 @@ class DealItemDelete(LoginRequiredMixin, ItemDetail):
             item.delete()
         return HttpResponseRedirect(next)
 
+
+def b2c_product_category_tree(request):
+    data = get_b2c_product_category_tree()
+    return HttpResponse(
+        json.dumps(data),
+        content_type='application/json'
+    )

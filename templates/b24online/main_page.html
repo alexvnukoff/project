@@ -280,7 +280,9 @@
         </div>
     {% endblock %}
         {% block center %}
-            <div class="news-center">
+            {% block centerdiv %}
+            <div class="news-center" {% block extra_center_cls %}{% endblock %}>
+            {% endblock centerdiv%}
                 <div  class="keyword">
                     {% block keywords %}
                         <div class="showFilter">

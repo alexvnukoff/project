@@ -210,18 +210,24 @@ def class_for_name(module_name, class_name):
 
 
 @lru_cache(maxsize=32)
+def _get_org(id):
+    from b24online.models import Organization
+    logger.debug('Once more')
+    try:
+        return Organization.objects.get(pk=id)
+    except Organization.DoesNotExist:
+        return None
+
+
 def get_current_organization(request):
     """
     Return the current organization (stored in request.session)
     """
-    from b24online.models import Organization
+
+    logger.debug('Here')    
     current_organization_id = request.session.get('current_company')
-    if current_organization_id:
-        try:
-            return Organization.objects.get(pk=current_organization_id)
-        except Organization.DoesNotExist:
-            pass
-    return None
+    return _get_org(current_organization_id) if current_organization_id \
+        else None
 
 
 def get_permitted_orgs(user, permission='b24online.manage_organization', 
@@ -240,3 +246,29 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
         model_content_type = ContentType.objects.get_for_model(model_klass)
         qs = qs.filter(polymorphic_ctype_id=model_content_type)
     return qs
+
+
+@lru_cache(maxsize=32)
+def get_b2c_product_category_tree():
+    from centerpokupok.models import B2CProductCategory
+
+    def _add_node(node_id, children, names):
+        name = names[node_id] if node_id != 0 else 'root'
+        result = {'id': node_id, 'name': name}
+        node_children = []
+        for child_id in children.get(node_id, []):
+            child_item = _add_node(child_id, children, names)
+            node_children.append(child_item)
+        if node_children:
+            result['children'] = node_children
+        return result
+
+    category_children = {}
+    category_names = {}
+    for item in B2CProductCategory.objects.all():
+        parent_id = item.parent_id or 0
+        category_names[item.id] = item.name
+        category_children.setdefault(parent_id, []).append(item.id)
+    return [_add_node(0, category_children, category_names), ]
+    
+    
