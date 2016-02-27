@@ -227,7 +227,8 @@ class ItemsList(HybridListView):
             'styles': self.styles,
             'scripts': self.scripts,
             'available_filters': list(self.filter_list.keys()),
-            'model': self.model.__name__
+            'model': self.model.__name__,
+            'is_my': self.is_my(),
         })
 
         if isinstance(context['object_list'], SearchEngine):

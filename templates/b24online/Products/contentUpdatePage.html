@@ -1,0 +1,63 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="container">
+<div class="data">
+
+    <div class="data">
+        <h1>{% trans 'Company products' %}</h1>
+        <hr class="hr-divider-one">
+    </div>
+    <div class="data"> 
+        {% if is_my %}
+            {% include "b24online/main/paginator.html" %}
+            <div style="float:right;" class="data">
+                <a href="{% url 'products:my_main_paginator' page=page.number %}">
+                    <img src="{% static 'b24online/img/as_net.png' %}" />
+                </a>
+            </div>
+         {% else %}
+            {% include "b24online/main/paginator.html" %}
+         {% endif %}
+    </div>
+    <div class="data">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ item_formset.management_form }}
+            <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+                <tr>
+                    <th>{% trans 'Product name' %}</th>
+                    <th>{% trans 'Cost' %}</th>
+                    <th>{% trans 'Currency' %}</th>
+                </tr>
+                {% autoescape off %}
+                {% for item_form in item_formset %}
+                    {% for hidden in item_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    {% with item_form.instance as item %}
+                    <tr id="{{ deal.id }}-item" valign="top">
+                        <td>{{ item_form.name }}</td>
+                        <td align="center">{{ item_form.cost }}</td>
+                        <td align="center">{{ item_form.currency }}</td>
+                    </tr>
+                    {% endwith %}
+                {% empty %}
+                    <tr>
+                        <td colspan="3" align="center">
+                            {% trans 'There are no deals' %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% endautoescape %}
+                <tr class="without-border">
+                    <td colspan="3" align="right">
+                        <input type="submit" name="update" value="{% trans 'Save changes' %}">
+                    </td>
+                </tr>
+            </table>    
+        </form>
+    </div>
+    {% include "b24online/main/paginator.html" %}
+</div>
+</div>
