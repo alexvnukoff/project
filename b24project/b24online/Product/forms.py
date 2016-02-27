@@ -17,7 +17,7 @@ from django.conf import settings
 
 from guardian.shortcuts import get_objects_for_user
 
-from b24online.models import (B2BProduct, AdditionalPage, Organization, 
+from b24online.models import (B2BProduct, AdditionalPage, Organization,
     DealOrder, Deal, DealItem, Company)
 from centerpokupok.models import B2CProduct
 from b24online.utils import get_permitted_orgs
@@ -115,24 +115,24 @@ class B2_ProductBuyForm(forms.Form):
     """
     The form to add DealItem.
     """
-    customer_organization = forms.ChoiceField(label=_('Organization'), 
+    customer_organization = forms.ChoiceField(label=_('Organization'),
         required=False, choices=())
-    customer_type = forms.ChoiceField(label=_('Customer type'), required=True, 
+    customer_type = forms.ChoiceField(label=_('Customer type'), required=True,
         widget=forms.RadioSelect, choices=DealOrder.CUSTOMER_TYPES)
-    quantity = forms.IntegerField(label=_('Quantity'), 
-        required=True)        
-    
+    quantity = forms.IntegerField(label=_('Quantity'),
+        required=True)
+
     def __init__(self, request, product, *args, **kwargs):
         """
         Initialize the fields - customer_type and customer_organization
         """
         super(B2_ProductBuyForm, self).__init__(*args, **kwargs)
-        self._request = request        
+        self._request = request
         self._product = product
         self._supplier = product.company
         self.has_companies = False
-        
-        # The 'customer_organization' field choices 
+
+        # The 'customer_organization' field choices
         orgs = get_permitted_orgs(request.user, model_klass=Company)
         self.initial['customer_type'] = DealOrder.AS_PERSON
         if orgs:
@@ -166,9 +166,9 @@ class B2_ProductBuyForm(forms.Form):
         notific_from = getattr(settings, 'ORDER_NOTIFICATION_FROM')
         notific_to = getattr(settings, 'ORDER_NOTIFICATION_TO')
         email = deal_item.deal.supplier_company.email
-        if not notific_disable and all((notific_template, notific_from, 
+        if not notific_disable and all((notific_template, notific_from,
                                         notific_to)):
-            message = render_to_string(notific_template, 
+            message = render_to_string(notific_template,
                                        {'deal_item': deal_item,})
             subject = _('The info about ordered product. %(deal)s') \
                         % {'deal': deal_item.deal}
@@ -189,13 +189,13 @@ class B2_ProductBuyForm(forms.Form):
                     deal_order, created = DealOrder.objects\
                         .get_or_create(
                             customer_type=self._customer_type,
-                            customer_organization_id=self._customer, 
+                            customer_organization_id=self._customer,
                             status=DealOrder.DRAFT)
                 else:
                     deal_order, created = DealOrder.objects\
                         .get_or_create(
                             customer_type=self._customer_type,
-                            created_by=self._customer, 
+                            created_by=self._customer,
                             status=DealOrder.DRAFT)
                 deal_order.created_by = self._request.user
                 deal_order.save()
@@ -221,13 +221,13 @@ class B2_ProductBuyForm(forms.Form):
         else:
             self.send_notification(deal_item)
         return deal_order
-        
+
 
 class DealPaymentForm(forms.ModelForm):
 
     agree = forms.BooleanField(label=_('Agree with license conditions'),
         required=True)
-                        
+
     def __init__(self, request, *args, **kwargs):
         super(DealPaymentForm, self).__init__(*args, **kwargs)
         self.request = request
@@ -252,7 +252,7 @@ class DealPaymentForm(forms.ModelForm):
             'person_email',
             'agree',
         )
-        
+
     def save(self, *args, **kwargs):
         super(DealPaymentForm, self).save(*args, **kwargs)
         self.instance.pay()
@@ -291,7 +291,7 @@ class DealListFilterForm(forms.Form):
         super(DealListFilterForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs.update({'class': 'date'})
         self.fields['end_date'].widget.attrs.update({'class': 'date'})
-        
+
     def filter(self, qs):
         """
         Filter the qs.
@@ -299,18 +299,18 @@ class DealListFilterForm(forms.Form):
         customer_name, product_name, start_date, end_date,  = \
             list(map(lambda x: self.cleaned_data.get(x), self.fields.keys()))
         if start_date:
-            qs = qs.filter(created_at__gte=start_date) 
+            qs = qs.filter(created_at__gte=start_date)
         if end_date:
-            qs = qs.filter(created_at__lte=end_date) 
+            qs = qs.filter(created_at__lte=end_date)
         if customer_name:
             qs = qs.filter(
-                (Q(deal_order__customer_type=DealOrder.AS_PERSON, 
+                (Q(deal_order__customer_type=DealOrder.AS_PERSON,
                    deal_order__created_by__profile__isnull=False) & \
                 (Q(deal_order__created_by__profile__first_name__icontains=\
                     customer_name) | \
                  Q(deal_order__created_by__profile__last_name__icontains=\
                        customer_name))) | \
-                 Q(deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+                 Q(deal_order__customer_type=DealOrder.AS_ORGANIZATION,
                    deal_order__customer_organization__company__isnull=False,
                    deal_order__customer_organization__company__name__icontains=\
                        customer_name))
@@ -330,7 +330,7 @@ class DealListFilterForm(forms.Form):
             end_date = self.cleaned_data.get('end_date')
             if start_date or end_date:
                 colorized_value = re.sub(
-                    r'(\d{1,2}\/\d{1,2}\/\d{1,4})', 
+                    r'(\d{1,2}\/\d{1,2}\/\d{1,4})',
                     r'<span style="color: red;">\1</span>',
                     value
                 )
@@ -340,10 +340,10 @@ class DealListFilterForm(forms.Form):
 
 # The formset for products in Basket
 DealItemFormSet = modelformset_factory(
-    DealItem, 
-    fields=('quantity',), 
-    can_delete=True, 
-    widgets={'quantity': forms.NumberInput(attrs={'min': '1'}),}, 
+    DealItem,
+    fields=('quantity',),
+    can_delete=True,
+    widgets={'quantity': forms.NumberInput(attrs={'min': '1'}),},
     extra=0
 )
 
@@ -353,11 +353,11 @@ class DealOrderedForm(forms.ModelForm):
     paid = forms.BooleanField(
         label=_('Already paid'),
         required=False)
-                        
+
     reject = forms.BooleanField(
         label=_('Reject deal'),
         required=False)
-                        
+
     class Meta:
         model = Deal
         fields = ()
@@ -366,7 +366,7 @@ class DealOrderedForm(forms.ModelForm):
         paid = self.cleaned_data.get('paid')
         reject = self.cleaned_data.get('reject')
         if paid or reject:
-            if paid:            
+            if paid:
                 self.instance.status = Deal.PAID
             elif reject:
                 self.instance.status = Deal.REJECTED
@@ -374,8 +374,26 @@ class DealOrderedForm(forms.ModelForm):
 
 
 DealOrderedFormSet = modelformset_factory(
-    Deal, 
+    Deal,
     fields=(),
-    can_delete=False, 
+    can_delete=False,
     extra=0
 )
+
+
+# The formsets for B2B and B2C products
+B2BProductFormSet = modelformset_factory(
+    B2BProduct,
+    fields=('name', 'currency', 'cost'),
+    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),},
+    extra=0,
+)
+
+B2CProductFormSet = modelformset_factory(
+    B2CProduct,
+    fields=('name', 'currency', 'cost'),
+    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),},
+    extra=0
+)
+
+

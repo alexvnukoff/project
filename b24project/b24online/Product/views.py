@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from django.views.generic import (DetailView, ListView, View, 
+from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import LoginRequiredMixin
@@ -25,7 +25,7 @@ from b24online.models import (B2BProduct, Company, Chamber, Country,
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
-    DealItemFormSet, DealOrderedFormSet)
+    DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from b24online.utils import (get_current_organization, get_permitted_orgs)
@@ -74,8 +74,57 @@ class B2BProductList(ItemsList):
                 .order_by(*self._get_sorting_params())
             else:
                 queryset = queryset.none()
-
         return queryset
+
+
+class B2BProductUpdateList(B2BProductList):
+    url_paginator = "products:b2b_product_update_paginator"
+    paginate_by = 20
+    template_name = 'b24online/Products/contentUpdate.html'
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/contentUpdatePage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/contentUpdate.html'
+
+    def get_queryset(self):
+        queryset = super(B2BProductUpdateList, self).get_queryset()
+        current_org = self._current_organization
+        if current_org is not None:
+            queryset = self.model.get_active_objects()\
+                .filter(company_id=current_org)\
+                .order_by(*self._get_sorting_params())
+        else:
+            queryset = queryset.none()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(B2BProductUpdateList, self).get_context_data(**kwargs)
+
+        self.item_formset = B2BProductFormSet(
+            queryset=context['page_obj'].object_list,
+            data=self.request.POST,
+            files=self.request.FILES,
+        ) if self.request.method == 'POST' else \
+            B2BProductFormSet(
+                queryset=context['page_obj'].object_list
+            )
+
+        context.update({
+            'current_organization': get_current_organization(self.request),
+            'item_formset': self.item_formset,
+        })
+        logger.debug(context['page'].number)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(**kwargs)
+        if self.item_formset.is_valid():
+            self.item_formset.save()
+            return HttpResponseRedirect(self.request.path)
+        return self.render_to_response(context)
 
 
 class B2CProductList(ItemsList):
@@ -137,6 +186,54 @@ class B2CProductList(ItemsList):
 
         return queryset
 
+
+class B2CProductUpdateList(B2CProductList):
+    url_paginator = "products:b2c_product_update_paginator"
+    paginate_by = 10
+    template_name = 'b24online/Products/contentUpdateB2C.html'
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/contentUpdatePageB2C.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/contentUpdateB2C.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        current_org = self._current_organization
+        if current_org is not None:
+            queryset = self.model.get_active_objects()\
+                .filter(company_id=current_org)\
+                .order_by(*self._get_sorting_params())
+        else:
+            queryset = queryset.none()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        self.item_formset = B2CProductFormSet(
+            queryset=context['page_obj'].object_list,
+            data=self.request.POST,
+            files=self.request.FILES,
+        ) if self.request.method == 'POST' else \
+            B2CProductFormSet(
+                queryset=context['page_obj'].object_list
+            )
+
+        context.update({
+            'current_organization': get_current_organization(self.request),
+            'item_formset': self.item_formset,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(**kwargs)
+        if self.item_formset.is_valid():
+            self.item_formset.save()
+            return HttpResponseRedirect(self.request.path)
+        return self.render_to_response(context)
 
 
 class B2CPCouponsList(ItemsList):
@@ -681,7 +778,7 @@ class DealOrderList(LoginRequiredMixin, ListView):
         """
         Define if the Order status was has been set for simple filter or
         basket.
-        
+
         If the basket was requested set the template.
         """
         self.status = self.kwargs.get('status')
@@ -845,7 +942,7 @@ class DealList(LoginRequiredMixin, ItemsList):
             using=self.template_engine,
             **response_kwargs
         )
-        
+
 
 class DealDetail(LoginRequiredMixin, ItemDetail):
     model = Deal
@@ -900,7 +997,7 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
             context['paypal_form'] = paypal_form
         return context
-        
+
 
 class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
