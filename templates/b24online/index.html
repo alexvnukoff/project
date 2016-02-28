@@ -1,405 +1,348 @@
-{% extends 'b24online/base.html' %}
-{% load staticfiles %}
-{% load CustomFilters %}
-{% load i18n %}
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='yandex-verification' content='7036efbb8c82d0da' />
+    <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
+                     <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
+                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
+                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
+                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
+                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
+                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
+                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
+                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
+                 
+    <meta property="og:site_name" content="{% trans 'B24Online' %}"/>
 
-{% block title %}{% trans 'B24Online' %}{% endblock %}
+    <title>{% block title %}{% trans 'B24Online' %}{% endblock %}</title>
 
-{% block styles %}
-    {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}" >
-{% endblock %}
+     <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+     <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
 
-{% block js %}
-    {{  block.super }}
+    <link href="{% static 'b24online/bt/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/bt/css/style.css' %}" rel="stylesheet">
 
-    <script type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js'%}" ></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-          $('.bxslider').bxSlider();
-          $('.homeslide').bxSlider({
-                pager: true,
-                controls: false,
-                auto: true
-          });
-          $('.greetings').bxSlider();
-        });
-        $(document).ready(function() {
-            $(".various").fancybox({
-                maxWidth	: 800,
-                maxHeight	: 600,
-                fitToView	: false,
-                width		: '70%',
-                height		: '70%',
-                autoSize	: false,
-                closeClick	: false,
-                openEffect	: 'none',
-                closeEffect	: 'none'
-            });
-        });
-    </script>
-{% endblock %}
+    {% if LANGUAGE_BIDI %}
+    <link href="{% static 'b24online/bt/css/bootstrap-rtl.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/bt/css/style-rtl.css' %}" rel="stylesheet">
+    {% endif %}
+</head>
+<body>
 
+  <div class="container">
+    <div class="row mw-header">
 
-{% block header %}
-    {% include "b24online/main_header.html" %}
-{% endblock %}
+      <div class="col-lg-8 col-md-7 head-left-nav">
 
-{% block body %}
-<div class="header">
-    <div class="wrapper">
-        <a href="#"><i class="logo-main" id="logo"></i></a>
-        <ul class="header-r">
-                <li>
-                    <a href="{% url 'products:main_b2c' %}">
-                        <div class="icon-l"><i class="iconsv1 imgmain"></i></div>
-                        <div class="text-r">{% trans 'B2C center' %}</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://bankip.com">
-                        <div class="icon-l"><i class="iconsv2 imgmain"></i></div>
-                        <div class="text-r">{% trans 'Innovation projects' %}</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url "project:detail" "payment-system" "140824" %}">
-                        <div class="icon-l"><i class="iconsv3 imgmain"></i></div>
-                        <div class="text-r">{% trans 'Payment System' %}</div>
-                    </a>
-                </li>
-            </ul>
+        {% comment %}
+        {% show_top_static_pages %}
+        {% endcomment %}
+            <a href="#">{% trans 'Advertisement' %}</a>
+            <span>|</span>
+            <a href="#">{% trans 'General advices' %}</a>
+            <span>|</span>
+            <a href="#">{% trans 'Public Offer' %}</a>
+            <span>|</span>
+            <a href="#">{% trans 'About us' %}</a>
+            <span>|</span>
+            <a href="#">{% trans 'New user' %}</a>
+        </div>
+
+        <div class="col-lg-4 col-md-5 head-right-nav">
+            {% trans 'Login with '%}
+            <a style="padding:0;" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
+            <a style="padding:0;" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
+            <a href="{% url 'auth_login' %}">{% trans 'Sign In' %}</a> {% trans 'or '%} <a href="{% url 'registration_register' %}">{% trans 'Sign Up' %}</a>
+        </div>
+
     </div>
 </div>
-<div class="wrapper">
-    <div class="main">
-    	<div class="sideleft">
-          <select id="lang_select" style="height: 24px;width: 200px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
-                        <option>{% trans 'Mother tongue' %}</option>
-                        {% get_available_languages as LANGUAGES %}
-                        {% for code, lang in LANGUAGES %}
-                            <option value="{{ code }}">{{ lang }}</option>
-                        {% endfor %}
-                    </select>
 
-                    <script>
-                        var path = (window.location.host).split('.');
-                        var lang = path[0];
-
-                        if (lang.length != 2) {
-                            lang = 'ru';
-                        }
-
-
-
-                        $("#lang_select").find('option').each(function( i, opt ) {
-                            if( opt.value === lang )
-                                $(opt).attr('selected', 'selected');
-                        });
-
-                        $( "#lang_select" ).change(function(e) {
-
-                            if (!$( this ).val())
-                                return;
-
-                            path = (window.location.host).split('.');
-
-                            if (path[0] == 'www'){
-                                delete path[0]
-                            }
-
-                            if (path.length > 2){
-                                host = path[1] + '.' + path[2]
-                            } else {
-                                host = window.location.host
-                            }
-
-                            var lang = $( this ).val() + '.';
-
-                            window.location.href = window.location.protocol + "//" + lang + host  +
-                                window.location.pathname + window.location.search + window.location.hash;
-
-                        });
-                </script>
-
-                <!-- Google Translate injection -->
-                <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
-                    <script type="text/javascript">
-                        function googleTranslateElementInit() {
-                            new google.translate.TranslateElement({
-                                pageLanguage: 'en',
-                                multilanguagePage: true}, 'google_translate_element_main');
-                        }
-                    </script>
-                    <style type="text/css">
-                    .goog-te-combo {
-                      width: 200px;
-                    }
-                    </style>
-                    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                </div>
-            <!-- /Google Translate injection -->
-
-        	<div class="community">
-            	<span class="title">{% trans 'Community' %}</span>
-                <div class="slide-comm">
-                    <ul class="bxslider">
-                        {% for org in organizationsList %}
-                                 {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
-                                    <li>
-                                 {% endif %}
-                                 <a title="{{ org.name }}" href="{{ org.get_absolute_url }}" class="items">
-                                     <img src="{{ org.flag_url }}" alt="{% trans 'Work with' %}{{ org.name }}" title="{{ org.name }}" />
-                                 </a>
-                            	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
-                                    </li>
-                                 {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-
-
-
-            <ul class="services">
-            	<li>
-                    <div class="imgmain imgservice sv1"></div>
-                    <div class="nameservice"><a href="{% url 'products:main' %}">{% trans 'Producst and services' %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv2"></div>
-                    <div class="nameservice"><a href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv3"></div>
-                    <div class="nameservice"><a href="{% url 'tpp:main' %}">{% trans "Business community" %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv4"></div>
-                    <div class="nameservice"><a href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv5"></div>
-                    <div class="nameservice"><a href="{% url 'innov:main' %}">{% trans 'Innovative projects' %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv6"></div>
-                    <div class="nameservice"><a href="{% url 'vacancy:main' %}">{% trans 'Jobs' %}</a></div>
-                </li>
-                <li>
-                    <div class="imgmain imgservice sv7"></div>
-                    <div class="nameservice"><a href="{% url 'news:main' %}">{% trans "News" %}</a></div>
-                </li>
-            </ul>
+<div class="container">
+    <div class="row" style="margin-top:25px;">
+        <div class="col-lg-3 col-md-3 main-logo">
+          <a href="/" title="{% trans 'B24Online' %}">
+                <img src="{% static 'b24online/img/b24_big.png' %}">
+            </a>
         </div>
-        <div class="mainright">
 
-            <div class="homeslider">
-            	<ul class="homeslide">
-                    <li>
-                       <div class="slide1">
-                       		<div class="desc">
-                            	<h2>{% trans 'Sign up' %}</h2>
-                                <span class="text">{% trans 'and get tools for business' %}</span>
-                            </div>
-                            <span class="note">* {% trans 'In 2014, Portal TPP-Center was marked by the reward sign "Business Leader of the CIS" for his contribution to the development of economic integration' %}.</span>
-                       </div>
-                    </li>
-                    <li>
-                       <div class="slide2">
-                       		<div class="desc">
-                            	<h2>{% trans 'Registration' %}</h2>
-                                <h3>{% trans 'on the portal will allow you to' %}</h3>
-                                <ul class="list">
-                                	<li>{% trans 'run a business behalf of the company' %}  (B2B, B2C)</li>
-                                    <li>{% trans 'to buy goods as a private person' %}(B2C)</li>
-                                    <li>{% trans 'draw attention toward your projects' %}(BANKIP)</li>
-                                </ul>
-                            </div>
-                       </div>
-                    </li>
-                    <li>
-                       <div class="slide3">
-                       		<div class="desc">
-                            	<h2>{% trans 'Sign up' %}</h2>
-                                <h3>{% trans 'and you will be able' %}</h3>
-                                <ul class="list">
-                                	<li>{% trans 'create your own online shop' %}</li>
-                                    <li>{% trans 'to represent your products and services' %}</li>
-                                    <li>{% trans 'communicate with potential customers' %}</li>
-                                </ul>
-                            </div>
-                       </div>
-                    </li>
-                    <li>
-                       <div class="slide4">
-                       		<div class="desc">
-                            	<h2>{% trans 'Registred' %}</h2>
-                                <h3>{% trans 'users can' %}</h3>
-                                <ul class="list">
-                                	<li>{% trans 'create their own websites' %}</li>
-                                    <li>{% trans 'puts advertising on the portal' %}</li>
-                                    <li>{% trans 'create their own communities of interest' %}</li>
-                                </ul>
-                            </div>
-                       </div>
-                    </li>
-                </ul>
-                <div class="register">
-                	<div class="title">
-                    	<p><b>{% trans 'Sign up' %}</b></p>
-                        {% trans 'right now' %}
+        <div class="col-lg-9 col-md-9" style="padding:0;">
+            <nav class="main-fork">
+                <a class="b2c" href="{% url 'products:main_b2c' %}">
+
+                    <i class="icon-basket"></i>
+                    <h2>{% trans 'Shoping center' %}</h2>
+                    <p>{% trans 'get more pleasure from buying' %}</p>
+                    </a>
+
+                <a class="b2b" href="{% url 'products:main' %}">
+                    <i class="icon-briefcase"></i>
+                    <h2>{% trans 'B2B center' %}</h2>
+                    <p>{% trans 'doing business together' %}</p>
+                    </a>
+
+                    <a class="coupon" href="{% url 'products:main_сoupons' %}">
+                    <i class="icon-globe"></i>
+                    <h2>{% trans 'Coupon' %}</h2>
+                    <p>{% trans 'Crazy discounts' %}</p>
+                    </a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+  <ul class="choose-language">
+    <li><a href="http://en.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/english.png' %}"><span class="hidden-xs">{% trans 'English' %}</span><span class="visible-xs">{% trans 'EN' %}</span></a></li>
+    <li><a href="http://ru.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/russian.png' %}"><span class="hidden-xs">{% trans 'Russian' %}</span><span class="visible-xs">{% trans 'RU' %}</span></a></li>
+    <li><a href="http://he.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/hebrew.png' %}"><span class="hidden-xs">{% trans 'Hebrew' %}</span><span class="visible-xs">{% trans 'HE' %}</span></a></li>
+    <li><a href="http://am.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/armenian.png' %}"><span class="hidden-xs">{% trans 'Armenian' %}</span><span class="visible-xs">{% trans 'AM' %}</span></a></li>
+    <li><a href="http://bg.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/bulgarian.png' %}"><span class="hidden-xs">{% trans 'Bulgarian' %}</span><span class="visible-xs">{% trans 'BG' %}</span></a></li>
+    <li><a href="http://ua.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/ukrainian.png' %}"><span class="hidden-xs">{% trans 'Ukrainian' %}</span><span class="visible-xs">{% trans 'UA' %}</span></a></li>
+    <li><a href="http://ar.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/arabic.png' %}"><span class="hidden-xs">{% trans 'Arabic' %}</span><span class="visible-xs">{% trans 'AR' %}</span></a></li>
+    <li><a href="http://zh.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/chinese.png' %}"><span class="hidden-xs">{% trans 'Chinese' %}</span><span class="visible-xs">{% trans 'ZH' %}</span></a></li>
+
+  </ul>
+</div>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-8 col-md-8 hidden-xs">
+            <div id="carousel-generic" class="carousel slide" data-ride="carousel">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-generic" data-slide-to="2"></li>
+                <li data-target="#carousel-generic" data-slide-to="3"></li>
+              </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner" role="listbox">
+
+                <div class="item active">
+                  <img src="{% static 'b24online/img/slide1.jpg' %}" alt="...">
+                  <div class="carousel-caption">
+                    <div class="carousel-text">
+                      <i class="icon-user"></i>
+                      <h2>{% trans 'Sign up' %}</h2>
+                      <p>{% trans 'and get tools for business!' %}</p>
                     </div>
-
-                    <form method='post' action='{% url "registration_register" %}'>
-                     {% csrf_token %}
-                     <ul class="formregister">
-                    	<li><input id="id_email"  class="text"  name="email" type="email" placeholder="E-mail"/></li>
-                        <li> <input id="id_password1" type="password"  class="text "  name="password1" placeholder="{% trans 'Password' %}"/></li>
-                        <li><input id="id_password2" type="password"  class="text"  name="password2" placeholder="{% trans 'Confirm password' %}"/></li>
-                        <li>
-                        	<input type="checkbox" name="tos" />
-                            {% trans 'I agree to' %} <a href="#">{% trans 'the term' %}</a>
-                        </li>
-
-                        <li class="end"><input type="submit" name="Register" class="btnreg" value="{% trans "Sign up" %}"></li>
-                    </ul>
-                   </form>
+                  </div>
                 </div>
-            </div>
-            <div class="content-l">
-            	<span class="best-title">{% trans 'Best deals' %}</span>
-                <ul class="pr-best-price">
-                	{% for prod in productsList %}
-                    <li>
-                    	<a href="{{ prod.get_absolute_url }}">
-                            <div class="thumb">
-                                {% if prod.image %}
-                                     <img src="{{ prod.image.big }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
-                                {% else %}
-                                     <img src="{% static 'b24online/img/item.jpg' %}"  />
-                                {% endif %}
-                            </div>
-                        </a>
-                        <div class="location">
-                            <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.name }}"></i>
-                            <a style="width: 75%;" href="{{ prod.get_absolute_url }}">{{ prod.name }}</a>
-                        </div>
-                    </li>
-                    {% endfor %}
 
-                </ul>
-                <div class="review">
-                	<div class="review-l">
-                    	<h3>{% trans "Affiche" %}</h3>
-                        <ul class="listcm">
-                          {% for exh in exhibitionsList %}
-                                <li>
-                                    <div class="topcm">
-                                        <i class="flag sprite {{ exh.country.flag }}" title="{{ exh.country.name }}"></i>
-                                        <div class="date">
-                                            <p><b>{{ exh.start_date|date:"d M Y"}}</b></p>
-                                            <p>{{ exh.country.name }}  {{ exh.city }}</p>
-                                        </div>
-                                    </div>
-                                    <p class="linkcm"><a href="{{ exh.get_absolute_url }}">{{ exh.title }}</a></p>
-                                </li>
-                          {% endfor %}
+                <div class="item">
+                  <img src="{% static 'b24online/img/slide2.jpg' %}" alt="...">
+                  <div class="carousel-caption">
+                    <div class="carousel-text">
+                        <h3>{% trans 'Registration on the portal will allow you to:' %}</h3>
+                        <ul>
+                          <li>- {% trans 'run a business behalf of the company (B2B, B2C)' %}</li>
+                          <li>- {% trans 'to buy goods as a private person(B2C)' %}</li>
+                          <li>- {% trans 'draw attention toward your projects(BANKIP)' %}</li>
                         </ul>
-                        <a href="{% url 'exhibitions:main' %}" class="btnview">{% trans "All exhibitions and forums" %} &rarr;</a>
                     </div>
-                    <div class="review-l review-r">
-                    	<h3>{% trans "Business offers" %}</h3>
-                        <ul class="listcm">
-                        {% for srvc in serviceList %}
-                        	<li>
-                            	<div class="topcm">
-                                        {% if srvc.country %}
-                                            <i class="flag sprite {{ srvc.country.flag }}" title="{{ srvc.country.name }}"></i>
-                                        {% elif srvc.organization.flag %}
-                                            <img src="{{ srvc.organization.flag_url }}" width="18" height="12" class="flag" alt="{{ srvc.organization.name }}" title="{{ srvc.organization.name }}" />
-                                        {% endif %}
-                                        <p><b>{{ srvc.country.name }}</b></p>
-                                    <div class="date">
+                  </div>
+                </div>
 
-                                        <p>{{ srvc.organization.name }}</p>
-                                    </div>
-                                </div>
-                                <p class="linkcm"><a href="{{ srvc.get_absolute_url }}">{{ srvc.title }}</a></p>
-                            </li>
-                        {% endfor %}
-
+                <div class="item">
+                  <img src="{% static 'b24online/img/slide3.jpg' %}" alt="...">
+                  <div class="carousel-caption">
+                    <div class="carousel-text">
+                        <h3>{% trans 'Sign up and you will be able:' %}</h3>
+                        <ul>
+                          <li>- {% trans 'create your own online shop' %}</li>
+                          <li>- {% trans 'to represent your products and services' %}</li>
+                          <li>- {% trans 'communicate with potential customers' %}</li>
                         </ul>
-                        <a href="{% url 'proposal:main' %}" class="btnview">{% trans "All business offers" %} &rarr;</a>
                     </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <img src="{% static 'b24online/img/slide4.jpg' %}" alt="...">
+                  <div class="carousel-caption">
+                    <div class="carousel-text">
+                        <h3>{% trans 'Registred users can:' %}</h3>
+                        <ul>
+                          <li>- {% trans 'create their own websites' %}</li>
+                          <li>- {% trans 'puts advertising on the portal' %}</li>
+                          <li>- {% trans 'create their own communities of interest' %}</li>
+                        </ul>
+                    </div>
+                  </div>
                 </div>
             </div>
-            <div class="content-r">
-                 <span class="titlevideo">{% trans 'Introduction to London Markets' %}</span>
-                 <div class="media">
-
-                         <img width="220px" height="80px" src="{% static 'b24online/img/london_logo.png' %}" />
-                          <div class="pdfdownload">
-                	        <img src="{% static "b24online/img/pdf.png" %}" alt="" />
-                              <span class="fileinfo">
-                            	<a href="{% static "b24online/img/LSEG_2014.pdf"%}">{% trans 'Download Presentation' %} </a>
-                              </span>
-                          </div>
-
-
-                 </div>
-
-
-                <span class="titlevideo">{% trans 'Videoreference of V.Migirov' %}</span>
-                 <div class="media">
-                          <a class="various fancybox.iframe" href="http://www.youtube.com/embed/q9a0bDMf2qM?autoplay=1">
-                         <img width="220" height="160" src="http://img.youtube.com/vi/q9a0bDMf2qM/0.jpg" /></a>
-                 </div>
-
-
-
-                <div class="pdfdownload">
-                	<img src="{% static "b24online/img/pdf.png" %}" alt="" />
-                    <span class="fileinfo">
-                    	<a href="{% static "b24online/img/guide.pdf"%}">{% trans 'Download Guide Site' %} </a>
-                        <p>({% trans "pdf-document" %}, 320 Кб)</p>
-                    </span>
-                </div>
             </div>
         </div>
+
+        <div class="col-lg-4 col-md-4 m_banner">
+          <a href="/project/loyalty-program-146699.html">
+            <img src="{% static 'b24online/bt/layality-plan.jpg' %}">
+          </a>
+        </div>
+
     </div>
 </div>
 
-<div class="peoples">
-	<div class="wrapper">
-    	<span class="title">{% trans 'Greetings' %}</span>
-        <div class="people-slide">
-        	<ul class="greetings">
-               {% for greet in greetingsList %}
-                  {% if forloop.counter|add:-1|divisibleby:"6" or forloop.counter0 == 0 %}
-                          <li>
-                  {% endif %}
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">{{ greet.organization_name }}</div>
-                        </div>
-                    	<a href="{{ greet.get_absolute_url }}">
-                            <img src="{{ greet.photo.big }}" alt="{{ greet.name }}" class="avatar" title="{{ greet.name }}" />
-                        </a>
-                        <div class="name">
-                        	<a href="{{ greet.get_absolute_url }}">{{ greet.name }}</a>
-                            {{ greet.position_name }}
-                        </div>
-                    </div>
 
-                  {% if forloop.counter|divisibleby:"6" or forloop.counter == greetingsList|length %}
-                       </li>
-                  {% endif %}
-               {% endfor %}
+<div class="container icons-list">
 
-            </ul>
-        </div>
+  <div class="row icons-list-inner">
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'companies:main' %}">
+      <i class="icon-briefcase"></i>
+      <h2>Companies</h2>
+      <p>Personal interactive business card, including personal profile and versatile modules to boost your business.</p>
+      </a>
     </div>
-</div>
-{% endblock %}
 
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'exhibitions:main' %}">
+      <i class="icon-users"></i>
+      <h2>Business community</h2>
+      <p>Social network enabled intranet, providing vast communication platform for your personnel, partners and clients.</p>
+        
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'tenders:main' %}">
+      <i class="icon-chart-pie"></i>
+      <h2>Tenders</h2>
+      <p>Conduct and participate in various tenders and auctions.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'innov:main' %}">
+      <i class="icon-lightbulb"></i>
+      <h2>Innovative projects</h2>
+      <p>Present and describe your projects and portfolio, in order to attract potential business partners.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'vacancy:main' %}">
+      <i class="icon-graduation-cap"></i>
+      <h2>Jobs</h2>
+      <p>Fully customizable enterprise recruiting platform, enabling your to post or to search vacancies, either from your company or anonymously.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'news:main' %}">
+      <i class="icon-coffee"></i>
+      <h2>News</h2>
+      <p>News blocks that lets you introduce your latest news.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'proposal:main' %}">
+      <i class="icon-laptop"></i>
+      <h2>Busines proposals</h2>
+      <p>Make public offers to your targeted audience worldwide. Each module includes independent, templates-based, responsive mini site.</p>
+      </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
+      <a href="{% url 'tpp:main' %}">
+      <i class="icon-shield"></i>
+      <h2>Organizations</h2>
+      <p>Chamber of Commerce, Business Centers and other international business communities.</p>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+
+<hr>
+
+<h2 class="additional-features">{% trans 'Additional Features' %}</h2>
+
+  <div class="additional-features">
+    <ul>
+      <li>{% trans 'Personal web sites for companies' %}</li>
+      <li>{% trans 'Multi-Languages' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Synchronization with social network' %}</li>
+      <li>{% trans 'Build in CRM system' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Ataytics' %}</li>
+      <li>{% trans 'Team collaboration tool' %}</li>
+    </ul>
+
+    <ul>
+      <li>{% trans 'Loyalty program and customer club management' %}</li>
+      <li>{% trans 'Special service developments for business' %}*</li>
+    </ul>
+  </div>
+
+  <div class="colg-lg-12" style="padding:10px 0;">
+    <h4 class="additional-features">* {% trans 'Solution developments for insuranse companies, digital printings, payment systems and more' %}</h4>
+  </div>
+
+  <hr>
+
+</div>
+
+<p style="text-align:center;color:#999">© 2010–{% now 'Y' %} B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
+
+<br><br>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static 'b24online/bt/js/bootstrap.min.js' %}"></script>
+
+             <!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function (d, w, c) {
+                (w[c] = w[c] || []).push(function() {
+                    try {
+                        w.yaCounter22547614 = new Ya.Metrika({id:22547614,
+                                webvisor:true,
+                                clickmap:true,
+                                trackLinks:true,
+                                accurateTrackBounce:true});
+                    } catch(e) { }
+                });
+                var n = d.getElementsByTagName("script")[0],
+                    s = d.createElement("script"),
+                    f = function () { n.parentNode.insertBefore(s, n); };
+                s.type = "text/javascript";
+                s.async = true;
+                s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+                if (w.opera == "[object Opera]") {
+                    d.addEventListener("DOMContentLoaded", f, false);
+                } else { f(); }
+            })(document, window, "yandex_metrika_callbacks");
+        </script>
+        <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        <!-- /Yandex.Metrika counter -->
+
+
+        <!-- Google analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-68656058-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+        <!-- /Google analytics -->
+
+</body>
+</html>
