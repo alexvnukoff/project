@@ -2212,6 +2212,11 @@ class Producer(models.Model, IndexedModelMixin):
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
 
+    @staticmethod
+    def get_index_model(**kwargs):
+        from b24online.search_indexes import ProducerIndex
+        return ProducerIndex
+
     def __str__(self):
         return self.name
         
