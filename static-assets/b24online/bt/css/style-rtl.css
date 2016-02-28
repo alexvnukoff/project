@@ -5,7 +5,6 @@
 .additional-features > ul {display:inline-block;vertical-align:top;padding:0 18px 5px 18px;}
 .additional-features > ul li {font-size:15px;list-style:square;}
 
-
 /*==========  Non-Mobile First Method  ==========*/
 
 /* Large Devices, Wide Screens */
@@ -19,6 +18,7 @@
 .carousel-text p {margin:0;}
 .carousel-text h3 {font-size:24px;}
 .additional-features > ul {width:49%;}
+.icon-box {height:200px;}
 }
 
 /* Medium Devices, Desktops */
@@ -43,6 +43,7 @@ span.icon-gplus-squared {font-size:20px;}
 .additional-features > ul li {list-style:none;text-align:center;width:100%;}
 h2.additional-features {text-align:center;font-size:33px;font-weight:300;}
 h4.additional-features {text-align:center;font-size:12px;}
+.icon-box {height:160px;}
 }
 
 /* Small Devices, Tablets */
@@ -54,7 +55,7 @@ nav.main-fork {display:flex;flex-flow:row wrap;justify-content:space-around;}
 nav.main-fork a {width:75%;padding:12px 0;margin:0 0 20px 0;height:auto;}
 .icons-list {text-align:center;}
 .icons-list-inner {margin:30px 0 0 0;}
-.icon-box {height:130px;}
+.icon-box {height:140px;}
 }
 
 /* Extra Small Devices, Phones */

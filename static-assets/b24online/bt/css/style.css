@@ -54,7 +54,7 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .icons-list a:hover > h2 {color:#555;}
 .icons-list a:hover > p {color:#848484;}
 .icons-list-inner {margin:60px 0 0 0;}
-.icon-box {margin:10px 0;height:155px;}
+.icon-box {margin:10px 0;height:180px;}
 .carousel {width:100%;border:1px solid #dedede;}
 .m_banner img {border:1px solid #dedede;width:365px;height:255px;}
 .carousel-caption {background-color:rgba(0, 0, 0, 0.3);}
@@ -83,6 +83,7 @@ h2.additional-features {font-size:33px;font-weight:300;}
 .carousel-text p {margin:0;}
 .carousel-text h3 {font-size:24px;}
 .additional-features > ul {width:49%;}
+.icon-box {height:200px;}
 }
 
 /* Medium Devices, Desktops */
@@ -107,6 +108,7 @@ span.icon-gplus-squared {font-size:20px;}
 .additional-features > ul li {list-style:none;text-align:center;width:100%;}
 h2.additional-features {text-align:center;font-size:33px;font-weight:300;}
 h4.additional-features {text-align:center;font-size:12px;}
+.icon-box {height:160px;}
 }
 
 /* Small Devices, Tablets */
@@ -118,7 +120,7 @@ nav.main-fork {display:flex;flex-flow:row wrap;justify-content:space-around;}
 nav.main-fork a {width:75%;padding:12px 0;margin:0 0 20px 0;height:auto;}
 .icons-list {text-align:center;}
 .icons-list-inner {margin:30px 0 0 0;}
-.icon-box {height:130px;}
+.icon-box {height:140px;}
 }
 
 /* Extra Small Devices, Phones */

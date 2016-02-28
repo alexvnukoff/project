@@ -4,8 +4,23 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='yandex-verification' content='7036efbb8c82d0da' />
+    <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
+                     <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
+                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
+                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
+                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
+                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
+                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
+                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
+                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
+                 
+    <meta property="og:site_name" content="{% trans 'B24Online' %}"/>
 
     <title>{% block title %}{% trans 'B24Online' %}{% endblock %}</title>
+
+     <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+     <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
 
     <link href="{% static 'b24online/bt/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
@@ -184,7 +199,7 @@
       <a href="{% url 'companies:main' %}">
       <i class="icon-briefcase"></i>
       <h2>Companies</h2>
-      <p>In non congue mi. Nullam eu quam et felis viverra luctus sit amet et turpis.</p>
+      <p>Personal interactive business card, including personal profile and versatile modules to boost your business.</p>
       </a>
     </div>
 
@@ -192,7 +207,8 @@
       <a href="{% url 'exhibitions:main' %}">
       <i class="icon-users"></i>
       <h2>Business community</h2>
-      <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
+      <p>Social network enabled intranet, providing vast communication platform for your personnel, partners and clients.</p>
+        
       </a>
     </div>
 
@@ -200,7 +216,7 @@
       <a href="{% url 'tenders:main' %}">
       <i class="icon-chart-pie"></i>
       <h2>Tenders</h2>
-      <p>Class aptent taciti sociosqu ad litora conubia nostra, inceptos himenaeos.</p>
+      <p>Conduct and participate in various tenders and auctions.</p>
       </a>
     </div>
 
@@ -208,7 +224,7 @@
       <a href="{% url 'innov:main' %}">
       <i class="icon-lightbulb"></i>
       <h2>Innovative projects</h2>
-      <p>Maecenas odio nibh, dapibus ultrices posuere, sit amet mi quis eros.</p>
+      <p>Present and describe your projects and portfolio, in order to attract potential business partners.</p>
       </a>
     </div>
 
@@ -216,7 +232,7 @@
       <a href="{% url 'vacancy:main' %}">
       <i class="icon-graduation-cap"></i>
       <h2>Jobs</h2>
-      <p>Cras finibus lacus et sapien semper tempus molestie in magna.</p>
+      <p>Fully customizable enterprise recruiting platform, enabling your to post or to search vacancies, either from your company or anonymously.</p>
       </a>
     </div>
 
@@ -224,7 +240,7 @@
       <a href="{% url 'news:main' %}">
       <i class="icon-coffee"></i>
       <h2>News</h2>
-      <p>Sed turpis leo, tempor vestibulum luctus eu, venenatis vitae magna.</p>
+      <p>News blocks that lets you introduce your latest news.</p>
       </a>
     </div>
 
@@ -232,7 +248,7 @@
       <a href="{% url 'proposal:main' %}">
       <i class="icon-laptop"></i>
       <h2>Busines proposals</h2>
-      <p>Maecenas nec nunc id lectus viverra sollicitudin vel ac velit.</p>
+      <p>Make public offers to your targeted audience worldwide. Each module includes independent, templates-based, responsive mini site.</p>
       </a>
     </div>
 
@@ -240,7 +256,7 @@
       <a href="{% url 'tpp:main' %}">
       <i class="icon-shield"></i>
       <h2>Organizations</h2>
-      <p> Nunc laoreet nisi libero, non varius ligula malesuada et.</p>
+      <p>Chamber of Commerce, Business Centers and other international business communities.</p>
       </a>
     </div>
 
@@ -283,13 +299,50 @@
 
 </div>
 
-
-<p style="text-align:center;color:#999">© 2010–2016 B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
+<p style="text-align:center;color:#999">© 2010–{% now 'Y' %} B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
 
 <br><br>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="{% static 'b24online/bt/js/bootstrap.min.js' %}"></script>
+
+             <!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function (d, w, c) {
+                (w[c] = w[c] || []).push(function() {
+                    try {
+                        w.yaCounter22547614 = new Ya.Metrika({id:22547614,
+                                webvisor:true,
+                                clickmap:true,
+                                trackLinks:true,
+                                accurateTrackBounce:true});
+                    } catch(e) { }
+                });
+                var n = d.getElementsByTagName("script")[0],
+                    s = d.createElement("script"),
+                    f = function () { n.parentNode.insertBefore(s, n); };
+                s.type = "text/javascript";
+                s.async = true;
+                s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+                if (w.opera == "[object Opera]") {
+                    d.addEventListener("DOMContentLoaded", f, false);
+                } else { f(); }
+            })(document, window, "yandex_metrika_callbacks");
+        </script>
+        <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        <!-- /Yandex.Metrika counter -->
+
+
+        <!-- Google analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-68656058-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+        <!-- /Google analytics -->
 
 </body>
 </html>
