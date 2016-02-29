@@ -125,4 +125,5 @@ def flush_events_stats():
     """
     rconn = get_redis_connection()
     if rconn:
-        rconn.flushall()
+        for item_key in rconn.keys('registered*'):
+            rconn.delete(item_key)
