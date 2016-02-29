@@ -38,9 +38,9 @@
 
       <div class="col-lg-8 col-md-7 head-left-nav">
 
-        {% comment %}
         {% show_top_static_pages %}
-        {% endcomment %}
+
+        {% comment %}
             <a href="#">{% trans 'Advertisement' %}</a>
             <span>|</span>
             <a href="#">{% trans 'General advices' %}</a>
@@ -50,7 +50,8 @@
             <a href="#">{% trans 'About us' %}</a>
             <span>|</span>
             <a href="#">{% trans 'New user' %}</a>
-        </div>
+        {% endcomment %}
+          </div>
 
         <div class="col-lg-4 col-md-5 head-right-nav">
             {% trans 'Login with '%}
