@@ -330,6 +330,7 @@ class ChamberIndex(DocType):
 class B2BProductIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    name_auto = String(index_analyzer=autocomplete)
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     branches = Integer(multi=True)
@@ -354,6 +355,7 @@ class B2BProductIndex(DocType):
         index_instance = cls(
             django_id=obj.pk,
             name=obj.name,
+            name_auto=obj.name,
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,
@@ -377,6 +379,7 @@ class B2BProductIndex(DocType):
 class B2cProductIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    name_auto = String(index_analyzer=autocomplete)
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     b2c_categories = Integer(multi=True)
@@ -400,6 +403,7 @@ class B2cProductIndex(DocType):
         index_instance = cls(
             django_id=obj.pk,
             name=obj.name,
+            name_auto=obj.name,
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,

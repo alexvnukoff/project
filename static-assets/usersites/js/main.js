@@ -260,4 +260,11 @@ $('#search_q').autocomplete({
             response(data);
         });
     }
-});
+}).data('ui-autocomplete')._renderItem = function(ul, item) {
+    return $('<li></li>')
+        .data('item.autocomplete', item)
+        .append('<img style="margin: 5px; height="20" src="' + item.img + '" />')
+        .append(item.label)
+        .appendTo(ul);
+};
+

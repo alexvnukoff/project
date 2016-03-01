@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import json 
+import logging
 
 from collections import OrderedDict
 
@@ -11,6 +12,8 @@ from b24online.models import B2BProduct, B2BProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
+
+logger = logging.getLogger(__name__)
 
 
 class B2BProductList(UserTemplateMixin, ItemList):
@@ -94,9 +97,17 @@ def get_b2bproduct_json(request):
     """
     Return the B2BProduct data json.
     """
-    qs = B2BProduct.objects.order_by('name')
+    from b24online.search_indexes import B2BProductIndex, SearchEngine
+
     term = request.GET.get('term')
-    qs = qs.filter(name__istartswith=term) if term else B2BProduct.objects.none()
-    data = [{'id': item.id, 'value': item.name} \
+    if term and len(term) > 2:
+        se_qs = SearchEngine(B2BProductIndex).query('match', name_auto=term)
+        qs = B2BProduct.objects.filter(
+            id__in=(item.django_id for item in se_qs),
+            is_active=True
+        ).order_by('name')
+    else:
+        qs = B2BProduct.objects.none()
+    data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
         for item in qs]
     return HttpResponse(json.dumps(data), content_type='application/json')
