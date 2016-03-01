@@ -133,7 +133,6 @@ class B2CProductBasket(View):
             basket.update(B2CProduct.objects.get(id=product_id), quantity)
         return HttpResponseRedirect((reverse('b2c_products:basket')))
 
-
 class B2CProductByEmail(UserTemplateMixin, FormView):
     template_name = '{template_path}/B2CProducts/orderByEmail.html'
     form_class = OrderEmailForm

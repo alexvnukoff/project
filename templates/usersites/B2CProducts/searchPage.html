@@ -2,5 +2,6 @@
 {% load content_tags %}
 {% block content %}
     {{ block.super }}
+
     {% b2c_products 'B2CProducts/search_content.html' 1 page category request.GET.s %}
 {% endblock %}
