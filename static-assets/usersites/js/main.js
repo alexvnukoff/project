@@ -246,3 +246,18 @@ $(function(){
   });
 };
 
+var search_cache = {};
+$('#search_q').autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+        var term = request.term;
+        if (term in search_cache) {
+            response(search_cache[term]);
+            return;
+        }
+        $.getJSON('/b2b-products/json/', request, function(data, status, xhr) {
+            search_cache[term] = data;
+            response(data);
+        });
+    }
+});

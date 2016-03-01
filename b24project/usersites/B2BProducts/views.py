@@ -1,11 +1,17 @@
+# -*- encoding: utf-8 -*-
+
+import json 
+
 from collections import OrderedDict
 
 from django.utils.translation import ugettext as _
+from django.http import HttpResponse
 
 from b24online.models import B2BProduct, B2BProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
+
 
 class B2BProductList(UserTemplateMixin, ItemList):
     model = B2BProduct
@@ -82,3 +88,15 @@ class B2BProductListDetail(UserTemplateMixin, ItemDetail):
     model = B2BProduct
     filter_key = 'company'
     template_name = '{template_path}/B2BProducts/detailContent.html'
+
+
+def get_b2bproduct_json(request):
+    """
+    Return the B2BProduct data json.
+    """
+    qs = B2BProduct.objects.order_by('name')
+    term = request.GET.get('term')
+    qs = qs.filter(name__istartswith=term) if term else B2BProduct.objects.none()
+    data = [{'id': item.id, 'value': item.name} \
+        for item in qs]
+    return HttpResponse(json.dumps(data), content_type='application/json')
