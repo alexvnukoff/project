@@ -174,7 +174,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
     return extended_context
 
 
-@register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
+register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def b2c_products(context, template_name, on_page, page=1, selected_category=None, search_query=None):
     if search_query is None:
         url_paginator = "b2c_products:category_paged" if selected_category else "b2c_products:paginator"
@@ -191,7 +191,6 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
         current_page=page,
         url_paginator=url_paginator,
         queryset_key='products').result_data
-
 
 @register.simple_tag
 def b2b_categories():

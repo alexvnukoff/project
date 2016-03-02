@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+from collections import OrderedDict
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -12,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from paypal.standard.forms import PayPalPaymentsForm
+
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
@@ -71,7 +74,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
 
 class B2CProductBasket(View):
-    template_name = 'B2CProducts/basket.html'
+
     def get(self, request):
         basket = Basket(request)
         del_product = request.GET.get('del')
@@ -132,6 +135,7 @@ class B2CProductBasket(View):
 
             basket.update(B2CProduct.objects.get(id=product_id), quantity)
         return HttpResponseRedirect((reverse('b2c_products:basket')))
+
 
 class B2CProductByEmail(UserTemplateMixin, FormView):
     template_name = '{template_path}/B2CProducts/orderByEmail.html'
