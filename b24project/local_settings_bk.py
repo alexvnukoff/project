@@ -2,17 +2,17 @@ import os
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-         'NAME': 'tppdb',
-         'USER': 'taxi',
-         'PASSWORD': 'taxipassword',
-         'HOST': 'localhost',
-         'PORT': '5432'
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'b24onlinestage',
+        'USER': 'b24onlinestage',
+        'PASSWORD': 'b24onlinestage',
+        'HOST': 'b24onlinestage.cd9dany2mtft.eu-west-1.rds.amazonaws.com',
+        'PORT': '5432'
     }
 }
 
-CELERY_REDIS = 'localhost'
-ORDERS_REDIS_HOST = 'localhost'
+CELERY_REDIS = 'django://'
+ORDERS_REDIS_HOST = '52.48.158.37'
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -38,18 +38,11 @@ TEMPLATES = [
     },
 ]
 
-HAYSTACK_CONNECTIONS = {
-    'default':{
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'localhost:9200',
-        'INDEX_NAME': 'lang-test',
-    },
-}
 # DEBUG_
 # OOLBAR_CONFIG = {
 #     'SHOW_TOOLBAR_CALLBACK': lambda x: True
 # }
-ELASTIC_SEARCH_HOSTS = ['127.0.0.1']
+ELASTIC_SEARCH_HOSTS = ['52.48.158.37']
 
 CACHES = {
     'default': {
@@ -68,13 +61,12 @@ USER_SITES_DOMAIN = 'tpp.dev'
 SITE_ID = None
 ALLOWED_HOSTS = ['*']
 
-#ROOT_URLCONF = 'centerpokupok.urls'
-#WSGI_APPLICATION = 'usersites.wsgi.application'
-#ROOT_URLCONF = 'usersites.urls'
+# ROOT_URLCONF = 'centerpokupok.urls'
+# WSGI_APPLICATION = 'usersites.wsgi.application'
+ROOT_URLCONF = 'usersites.urls'
 
 PARTIALS_URL = '/partials/'
 PARTIALS_PATH = os.path.join(BASE_DIR, 'templates', 'usersites_angular', 'partials').replace('\\', '/')
-
 
 # django
 DJANGO_APPS = (
@@ -88,8 +80,8 @@ DJANGO_APPS = (
     'django.contrib.humanize',
 )
 
-
 LOCAL_APPS = (
+    'social.apps.django_app.default',
     'b24online',
     'jobs',
     'centerpokupok',
@@ -97,6 +89,7 @@ LOCAL_APPS = (
 )
 
 EXTERNAL_APPS = (
+    'kombu.transport.django',
     'debug_toolbar',
     'djcelery',
     'loginas',
@@ -114,5 +107,5 @@ EXTERNAL_APPS = (
 
 # the order is important!
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + EXTERNAL_APPS
-EVENT_STORE_REDIS_URL = 'redis://localhost/1'
+EVENT_STORE_REDIS_URL = 'redis://52.48.158.37/1'
 ANALYTIC = False

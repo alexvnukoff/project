@@ -1,16 +1,12 @@
 # -*- encoding: utf-8 -*-
 
-import os
 import datetime
 import logging
+import os
 from collections import OrderedDict, Iterable, namedtuple
 from copy import copy
 from decimal import Decimal
 from urllib.parse import urljoin
-import os
-
-from copy import copy
-from decimal import Decimal
 
 from django import template
 from django.conf import settings
@@ -27,8 +23,7 @@ from lxml.html.clean import clean_html
 
 import b24online.urls
 from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification, RegisteredEventType,
-                              RegisteredEvent, MessageChat, Message)
+from b24online.models import (Chamber, Notification, MessageChat, Message)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site

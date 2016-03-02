@@ -1,11 +1,10 @@
 from collections import OrderedDict
-
 from django.utils.translation import ugettext as _
-
 from b24online.models import B2BProduct, B2BProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
+
 
 class B2BProductList(UserTemplateMixin, ItemList):
     model = B2BProduct
@@ -48,7 +47,7 @@ class B2BProductList(UserTemplateMixin, ItemList):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         organization = get_current_site().user_site.organization
-        categories = B2BProductCategory.objects.filter(products__company_id=organization.pk)\
+        categories = B2BProductCategory.objects.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
 
         context_data['categories'] = OrderedDict(sorted(

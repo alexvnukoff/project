@@ -1,15 +1,20 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
+from django.utils.translation import ugettext as _
 
-from usersites.B2CProducts.views import B2CProductList, B2CProductDetail, B2CProductBasket, B2CProductSearch, \
-    B2CProductByEmail
+from usersites.B2CProducts.views import B2CProductDetail, B2CProductBasket, B2CProductSearch, \
+    B2CProductByEmail, render_page
 
 urlpatterns = [
-    url(r'^$', B2CProductList.as_view(), name='main'),
-    url(r'^page(?P<page>[0-9]+)?/$', B2CProductList.as_view(), name="paginator"),
-    url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)?/$', B2CProductList.as_view(), name="category"),
-    url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)?/page(?P<page>[0-9]+)?/$', B2CProductList.as_view(),
-        name="category_paged"),
+    url(r'^$', render_page,
+        kwargs={'template': 'B2CProducts/contentPage.html', 'title': _("B2C Products")}, name='main'),
+    url(r'^page(?P<page>[0-9]+)?/$', render_page,
+        kwargs={'template': 'B2CProducts/contentPage.html', 'title': _("B2C Products")}, name="paginator"),
+    url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<category>[0-9]+)?/$', render_page,
+        kwargs={'template': 'B2CProducts/contentPage.html', 'title': _("B2C Products")}, name="category"),
+    url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<category>[0-9]+)?/page(?P<page>[0-9]+)?/$', render_page,
+        kwargs={'template': 'B2CProducts/contentPage.html', 'title': _("B2C Products")}, name="category_paged"),
+
     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', B2CProductDetail.as_view(), name='detail'),
     url(r'^basket\.html$', B2CProductBasket.as_view(), name='basket'),
     url(r'^search/$', B2CProductSearch.as_view(), name="search"),
