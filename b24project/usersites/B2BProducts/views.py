@@ -9,9 +9,12 @@ from django.utils.translation import ugettext as _
 from django.http import HttpResponse
 
 from b24online.models import B2BProduct, B2BProductCategory
+from b24online.search_indexes import B2BProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
+from usersites.views import ProductJsonData
+
 
 logger = logging.getLogger(__name__)
 
@@ -93,21 +96,6 @@ class B2BProductListDetail(UserTemplateMixin, ItemDetail):
     template_name = '{template_path}/B2BProducts/detailContent.html'
 
 
-def get_b2bproduct_json(request):
-    """
-    Return the B2BProduct data json.
-    """
-    from b24online.search_indexes import B2BProductIndex, SearchEngine
-
-    term = request.GET.get('term')
-    if term and len(term) > 2:
-        se_qs = SearchEngine(B2BProductIndex).query('match', name_auto=term)
-        qs = B2BProduct.objects.filter(
-            id__in=(item.django_id for item in se_qs),
-            is_active=True
-        ).order_by('name')
-    else:
-        qs = B2BProduct.objects.none()
-    data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
-        for item in qs]
-    return HttpResponse(json.dumps(data), content_type='application/json')
+class B2BProductJsonData(ProductJsonData):
+    model_class = B2BProduct
+    search_index_class = B2BProductIndex

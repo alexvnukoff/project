@@ -1,8 +1,9 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
 
-from usersites.B2CProducts.views import B2CProductList, B2CProductDetail, B2CProductBasket, B2CProductSearch, \
-    B2CProductByEmail
+from usersites.B2CProducts.views import (B2CProductList, B2CProductDetail, 
+                                         B2CProductBasket, B2CProductSearch,
+                                         B2CProductByEmail, B2CProductJsonData)
 
 urlpatterns = [
     url(r'^$', B2CProductList.as_view(), name='main'),
@@ -17,4 +18,5 @@ urlpatterns = [
     url(r'^order\.html$', B2CProductByEmail.as_view(), name='order_by_email'),
     url(r'^order_done\.html$', TemplateView.as_view(template_name='usersites/B2CProducts/orderDone.html',
                                                     content_type='text/html'), name='order_done'),
+    url(r'^json/$', B2CProductJsonData.as_view(), name='b2c_product_json'),
 ]
