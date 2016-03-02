@@ -5,7 +5,6 @@ import os
 import uuid
 import logging
 from PIL import Image
-
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -15,9 +14,10 @@ from django.utils import translation
 from django.utils.text import slugify
 from django.utils.timezone import now
 from django.utils.lru_cache import lru_cache
-
 import errno
 from unidecode import unidecode
+
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
@@ -224,7 +224,7 @@ def get_current_organization(request):
     return None
 
 
-def get_permitted_orgs(user, permission='b24online.manage_organization', 
+def get_permitted_orgs(user, permission='b24online.manage_organization',
                        model_klass=None):
     """
     Return the queryset if permitted Organizations.
@@ -234,9 +234,40 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
     from guardian.shortcuts import get_objects_for_user
 
     qs = get_objects_for_user(user, [permission],
-        Organization.get_active_objects().all(), with_superuser=False)
+                              Organization.get_active_objects().all(), with_superuser=False)
 
     if model_klass and issubclass(model_klass, models.Model):
         model_content_type = ContentType.objects.get_for_model(model_klass)
         qs = qs.filter(polymorphic_ctype_id=model_content_type)
     return qs
+
+
+def get_template_with_base_path(template_name):
+    user_site = get_current_site().user_site
+
+    if user_site.user_template is not None:
+        folder_template = user_site.user_template.folder_name
+    else:  # Deprecated
+        folder_template = 'usersites'
+
+    return "%s/%s" % (folder_template, template_name)
+
+
+def load_category_hierarchy(model, categories, loaded_categories=None):
+
+    if not loaded_categories:
+        loaded_categories = {}
+
+    categories_to_load = []
+
+    for category in categories:
+        loaded_categories[category.pk] = category
+
+        if category.parent_id and category.parent_id not in loaded_categories:
+            categories_to_load.append(category.parent_id)
+
+    if categories_to_load:
+        queryset = model.objects.filter(pk__in=categories_to_load).order_by('level')
+        loaded_categories = load_category_hierarchy(queryset, loaded_categories)
+
+    return loaded_categories
