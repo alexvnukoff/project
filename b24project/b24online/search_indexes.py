@@ -640,24 +640,6 @@ class RequirementIndex(DocType):
         return index_instance
 
 
-class ProducerIndex(DocType):
-    django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
-
-    @staticmethod
-    def get_model():
-        from b24online.models import Producer
-        return Producer
-
-    @classmethod
-    def to_index(cls, obj):
-        index_instance = cls(
-            django_id=obj.pk,
-            name_auto=obj.name
-        )
-        return index_instance
-
-
 class SearchEngine(Search):
     _cached_connection = None
 

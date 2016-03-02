@@ -897,7 +897,6 @@ def upload_images(*args, async=True):
         images.append({
             'file': image['file'],
             'bucket_path': "original%s" % bucket_path,
-            'content_type': 'image/jpg',
         })
 
     if async:
