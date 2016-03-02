@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -13,7 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from paypal.standard.forms import PayPalPaymentsForm
-
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
@@ -25,25 +23,6 @@ from usersites.mixins import UserTemplateMixin
 
 def render_page(request, template, **kwargs):
     return render_to_response(get_template_with_base_path(template), kwargs, context_instance=RequestContext(request))
-
-class B2CProductList(UserTemplateMixin, ItemList):
-    model = B2CProduct
-    template_name = '{template_path}/B2CProducts/contentPage.html'
-    paginate_by = 1
-    filter_key = 'company'
-    url_paginator = "b2c_products:paginator"
-    current_section = _("B2C Products")
-    title = _("B2C Products")
-
-    def dispatch(self, request, *args, **kwargs):
-        self.selected_category = kwargs.pop('pk', None)
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['selected_category'] = self.selected_category
-
-        return context_data
 
 
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
@@ -149,25 +128,6 @@ class B2CProductBasket(View):
 
             basket.update(B2CProduct.objects.get(id=product_id), quantity)
         return HttpResponseRedirect((reverse('b2c_products:basket')))
-
-
-class B2CProductSearch(UserTemplateMixin, ItemList):
-    model = B2CProduct
-    template_name = '{template_path}/B2CProducts/searchPage.html'
-    paginate_by = 16
-    filter_key = 'company'
-    url_paginator = "b2c_products:serch_paginator"
-    current_section = _("B2C Products")
-    title = _("B2C Products")
-
-    def get_url_paginator(self):
-        return self.url_paginator
-
-    def get_queryset(self):
-        q = self.request.GET.get('s') or None
-        if q and not re.match("[\!@#$%^&'*]+", q):
-            return self.model.get_active_objects().filter(name__icontains=q.strip(), **self.get_filter_kwargs())
-        return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 
 
 class B2CProductByEmail(UserTemplateMixin, FormView):
