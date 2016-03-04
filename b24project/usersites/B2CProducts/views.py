@@ -37,9 +37,9 @@ class B2CProductList(UserTemplateMixin, ItemList):
     def dispatch(self, request, *args, **kwargs):
         category_pk = kwargs.pop('pk', None)
 
-        if category_pk:
+        try:
             self.category = B2CProductCategory.objects.get(pk=category_pk)
-        else:
+        except B2CProductCategory.DoesNotExist:
             self.category = None
 
         return super().dispatch(request, *args, **kwargs)
