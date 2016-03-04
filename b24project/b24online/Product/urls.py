@@ -10,7 +10,7 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     DealOrderList, DealOrderDetail, DealOrderPayment, DealPayPal,
     DealList, DealDetail, DealPayment, DealItemDelete,
     B2BProductUpdateList, B2CProductUpdateList,
-    b2c_product_category_tree)
+    category_tree_json, category_tree_demo)
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
 
@@ -95,7 +95,10 @@ urlpatterns = [
         DealList.as_view(), name="deal_list_filtered_paginator"),
     url(r'^deals/item/(?P<item_id>[0-9]+)/delete/$',
         DealItemDelete.as_view(), name="deal_item_delete"),
-    url(r'^b2c/category/tree/$', b2c_product_category_tree, 
-        name='b2c_category_tree'),
+    url(r'^category/tree/(?P<b2_type>b2b|b2c)/$', category_tree_json, 
+        name='category_tree_json'),
+    url(r'^category/tree/demo/(?P<b2_type>b2b|b2c)/$', 
+        category_tree_demo, 
+        name='category_tree_demo'),
 
 ]
