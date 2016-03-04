@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.generic import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
@@ -70,12 +70,12 @@ class ProductJsonData(View):
         term = request.GET.get('term')
         organization = get_current_site().user_site.organization
         if term and len(term) > 2:
-            se_qs = SearchEngine(cls.search_index_model)\
-                .query('match', name_auto=term)
-            ##qs = cls.model_class.objects.filter(
-            ##    id__in=(item.django_id for item in se_qs),
-            ##    is_active=True
-            ##).order_by('name')
+            ## se_qs = SearchEngine(cls.search_index_model)\
+            ##     .query('match', name_auto=term)
+            ## qs = cls.model_class.objects.filter(
+            ##     id__in=(item.django_id for item in se_qs),
+            ##     is_active=True
+            ## ).order_by('name')
             qs = cls.model_class.objects.filter(
                 name__icontains=term,
                 is_active=True,
@@ -85,4 +85,4 @@ class ProductJsonData(View):
             qs = cls.model_class.objects.none()
         data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
             for item in qs]
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data, safe=False)
