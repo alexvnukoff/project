@@ -529,9 +529,8 @@ msgstr "Лучшие предложения"
 #: b24project/b24online/Product/views.py:751
 #: templates/b24online/main_page.html:201
 #: templates/b24online/main_page.html:235
-#, fuzzy
 msgid "Products B2B"
-msgstr "Товары"
+msgstr "B2B Центр"
 
 #: b24project/b24online/Product/views.py:141
 #: b24project/b24online/Product/views.py:248
@@ -539,9 +538,8 @@ msgstr "Товары"
 #: b24project/b24online/Product/views.py:757
 #: templates/b24online/main_page.html:202
 #: templates/b24online/main_page.html:236
-#, fuzzy
 msgid "Products B2C"
-msgstr "Товары"
+msgstr "Центр покупок"
 
 #: b24project/b24online/Product/views.py:766
 #: b24project/centerpokupok/models.py:181
@@ -4103,7 +4101,7 @@ msgstr "Больше удовольствия от покупок"
 
 #: templates/b24online/index.html:86
 msgid "B2B center"
-msgstr "B2B центер"
+msgstr "B2B центр"
 
 #: templates/b24online/index.html:87
 msgid "Doing business together"
@@ -4531,8 +4529,6 @@ msgid "Add"
 msgstr "Добавить"
 
 #: templates/b24online/main_page.html:203
-#, fuzzy
-#| msgid "Coupons"
 msgid "Online Coupons"
 msgstr "Купоны"
 
