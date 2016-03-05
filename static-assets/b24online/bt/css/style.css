@@ -62,7 +62,7 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .carousel-text h2 {margin:0;}
 .carousel-text h3 {margin:0;}
 .carousel-text p {margin:0;}
-.carousel-text ul {margin:10px 0 0 0;}
+.carousel-text ul {padding:0;margin:10px 0 0 0;}
 .carousel-text ul li {list-style:none;}
 .carousel i {font-size:47px;}
 .additional-features > ul {display:inline-block;vertical-align:top;padding:0 18px 5px 18px;}
