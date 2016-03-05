@@ -65,7 +65,7 @@ nav.main-fork a.coupon:hover > p {color:#fff;}
 .carousel-text ul {padding:0;margin:10px 0 0 0;}
 .carousel-text ul li {list-style:none;}
 .carousel i {font-size:47px;}
-.additional-features > ul {display:inline-block;vertical-align:top;padding:0 18px 5px 18px;}
+.additional-features > ul {width:100%;display:inline-block;vertical-align:top;padding:0 18px 5px 18px;}
 .additional-features > ul li {font-size:15px;list-style:square;}
 h2.additional-features {font-size:33px;font-weight:300;}
 
@@ -82,7 +82,6 @@ h2.additional-features {font-size:33px;font-weight:300;}
 .carousel-text h2 {font-size:20px;margin:0;}
 .carousel-text p {margin:0;}
 .carousel-text h3 {font-size:24px;}
-.additional-features > ul {width:49%;}
 .icon-box {height:200px;}
 }
 

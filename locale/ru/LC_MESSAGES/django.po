@@ -4083,7 +4083,7 @@ msgstr ""
 
 #: templates/b24online/index.html:58
 msgid "Login with "
-msgstr "Войти"
+msgstr "Вход "
 
 #: templates/b24online/index.html:61
 msgid "Sign In"
@@ -4213,7 +4213,7 @@ msgid ""
 "Personal interactive business card, including personal profile and versatile "
 "modules to boost your business."
 msgstr ""
-"Интерактивная карточка вашей Компании, а также неограниченный доступ к уникальным модулям увелечения продаж."
+"Интерактивная карточка вашей Компании, а также неограниченный доступ к уникальным модулям увеличения продаж."
 
 #: templates/b24online/index.html:211 templates/b24online/job_index.html:192
 msgid "Business community"
@@ -4224,12 +4224,12 @@ msgid ""
 "Social network enabled intranet, providing vast communication platform for "
 "your personnel, partners and clients."
 msgstr ""
-"Мультиязычная социальная сеть обеспечивающая коммунакиции между сотрудниками, клиентами "
+"Мультиязычная социальная сеть обеспечивающая коммуникации между сотрудниками, клиентами "
 "и партнёрами вашей Компании."
 
 #: templates/b24online/index.html:221
 msgid "Conduct and participate in various tenders and auctions."
-msgstr "Возможность проведения, а также участия в различных тендерах и акуционах по всему миру."
+msgstr "Возможность проведения, а также участия в различных тендерах и аукционах по всему миру."
 
 #: templates/b24online/index.html:228 templates/b24online/job_index.html:200
 msgid "Innovative projects"
@@ -4250,7 +4250,7 @@ msgid ""
 "Fully customizable enterprise recruiting platform, enabling your to post or "
 "to search vacancies, either from your company or anonymously."
 msgstr ""
-"Гибкая рекрутинговая платформа для размещения ваканский и поиску специалистов по всему миру."
+"Гибкая рекрутинговая платформа для размещения вакансий и поиску специалистов по всему миру."
 
 #: templates/b24online/index.html:245
 msgid "News blocks that lets you introduce your latest news."
@@ -4315,7 +4315,7 @@ msgid ""
 "Solution developments for insurance companies, digital printings, payment "
 "systems and more"
 msgstr ""
-"Разработка бизнес решений для страховых компаний, платёжных систсем и других, высокотехнологичных отраслей."
+"Разработка бизнес решений для страховых компаний, платёжных систсем и других высокотехнологичных отраслей."
 
 #: templates/b24online/index.html:304
 msgid "Center of chambers of commerce, associations, unions and guilds."
