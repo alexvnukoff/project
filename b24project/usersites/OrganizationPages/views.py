@@ -92,4 +92,3 @@ class Gallery(UserTemplateMixin, TemplateView):
 
     def get_queryset(self):
         return get_current_site().user_site.organization.additional_pages.all()
-
