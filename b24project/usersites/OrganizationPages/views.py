@@ -3,7 +3,7 @@ from collections import OrderedDict
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.utils.translation import ugettext as _
 
 from b24online.models import AdditionalPage, Department
@@ -76,3 +76,22 @@ class Structure(UserTemplateMixin, ListView):
         context_data['departments'] = departments
 
         return context_data
+
+
+class About(UserTemplateMixin, TemplateView):
+    model = AdditionalPage
+    template_name = '{template_path}/OrganizationPages/about.html'
+
+    def get_queryset(self):
+        return get_current_site().user_site.organization.additional_pages.all()
+
+
+class Gallery(UserTemplateMixin, TemplateView):
+    model = AdditionalPage
+    template_name = '{template_path}/OrganizationPages/gallery.html'
+
+    def get_queryset(self):
+        return get_current_site().user_site.organization.additional_pages.all()
+
+
+

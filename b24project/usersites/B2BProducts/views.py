@@ -6,6 +6,10 @@ from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
 
 
+def render_page(request, template, **kwargs):
+    return render_to_response(get_template_with_base_path(template), kwargs, context_instance=RequestContext(request))
+
+
 class B2BProductList(UserTemplateMixin, ItemList):
     model = B2BProduct
     template_name = '{template_path}/B2BProducts/contentPage.html'
@@ -81,3 +85,4 @@ class B2BProductListDetail(UserTemplateMixin, ItemDetail):
     model = B2BProduct
     filter_key = 'company'
     template_name = '{template_path}/B2BProducts/detailContent.html'
+
