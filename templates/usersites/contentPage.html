@@ -58,40 +58,8 @@
         </section>
     {% endif %}
 
-    {% b2c_products 'B2CProducts/main_products.html' 10 1 None %}
-
-     {% if b2b_products %}
-        <section class="content__info__products">
-
-            <h2>{% trans "B2B Products" %}</h2>
-            <ul class="products-list">
-
-                {% for product in b2b_products|slice:":3" %}
-                    <li class="product">
-                        <div class="product__cover vertical">
-                            {% if product.image %}
-                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
-                            {% else %}
-                                <img src="{% static 'b24online/img/item.jpg' %}" />
-                            {% endif %}
-                        </div>
-                        <div class="product__about">
-                            {# Register the 'view' event for b2b product #}
-                            {{ product|register_event:"view"|process_event:request }}
-                            <p class="desc"><strong>{{ product.name|truncatewords:8 }}</strong></p>
-                            {% if product.cost %}
-                            <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
-                            {% else %}
-                            <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
-                            {% endif %}
-                        </div>
-                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
-                    </li>
-                {% endfor %}
-
-            </ul>
-        </section>
-    {% endif %}
+    {% b2c_products 'B2CProducts/main_products.html' 3 %}
+    {% b2b_products 'B2BProducts/main_products.html' 3 %}
 
 
     <section class="content__info__news">
