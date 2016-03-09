@@ -11,7 +11,6 @@ from django.http import HttpResponse, JsonResponse
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
-from b24online.search_indexes import SearchEngine
 from tpp.DynamicSiteMiddleware import get_current_site
 
 
@@ -70,12 +69,6 @@ class ProductJsonData(View):
         term = request.GET.get('term')
         organization = get_current_site().user_site.organization
         if term and len(term) > 2:
-            ## se_qs = SearchEngine(cls.search_index_model)\
-            ##     .query('match', name_auto=term)
-            ## qs = cls.model_class.objects.filter(
-            ##     id__in=(item.django_id for item in se_qs),
-            ##     is_active=True
-            ## ).order_by('name')
             qs = cls.model_class.objects.filter(
                 name__icontains=term,
                 is_active=True,
