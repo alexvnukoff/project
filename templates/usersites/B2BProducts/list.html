@@ -3,17 +3,17 @@
 {% load staticfiles %}
 {% load humanize %}
 <section class="content__info">
-   {% include 'usersites/B2CProducts/paginator.html' %}
+   {% include 'usersites/B2BProducts/paginator.html' %}
 
                 <section class="content__info__products">
-                    <h2>{% trans 'B2C Products' %}</h2>
+                    <h2>{% trans 'B2B Products' %}</h2>
                     <ul class="products-list">
 
                         {% for product in products %}
 
                         <li class="product">
                             <div class="product__cover vertical">
-                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
                             {% if product.image %}
                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                             {% else %}
@@ -22,18 +22,17 @@
                         </a>
                             </div>
                             <div class="product__about">
-                                {# Register the 'view' event for b2c product #}
+                                {# Register the 'view' event for b2b product #}
                                 {{ product|register_event:"view"|process_event:request }}
                                 <p class="desc">
-                                    <strong>{{ product.name|truncatechars:80 }}</strong></p>
+                                <strong>{{ product.name|truncatechars:80 }}</strong></p>
                                 {% if product.cost %}
-                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                <p class="price"><span class="value">{{ product.cost|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                                 {% else %}
                                 <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                                 {% endif %}
-
                             </div>
-                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                            <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
                         </li>
 
                         {% endfor %}
@@ -41,5 +40,5 @@
                     </ul>
                 </section>
 
-   {% include 'usersites/B2CProducts/paginator.html' %}
+   {% include 'usersites/B2BProducts/paginator.html' %}
     </section>

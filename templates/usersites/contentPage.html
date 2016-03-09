@@ -9,108 +9,15 @@
 
 <section class="content__info grid-layout">
 
-    {% if b2c_coupons %}
-        <section class="content__info__actions">
-            {% for product in b2c_coupons|slice:":1" %}
-                {% if forloop.first %}
-                    <div class="main-action">
-                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                        <div class="main-action__cover" style="background-image: url({{ product.image.big }})">
-                            <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
-                        </div>
-                        </a>
-
-                        <div class="main-action__info">
-                            <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
-                            <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                            <div class="timer" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-
-                            <div class="offer vertical">
-                                <p class="price"><strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike></p>
-                                <p class="economy">
-                                    <span>{% trans 'Current price' %}</span>
-                                    <span class="value">{{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}</span>
-                                </p>
-                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="buy"><span>{% trans "Buy" %}</span></a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-            <div class="actions">
-                {% for product in b2c_coupons|slice:":5" %}
-                    {% if forloop.first %}{% else %}
-                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                        <div class="action square">
-                            <div class="action__cover" style="background-image: url({{ product.image.big }})">
-                                <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
-                            </div>
-                        </a>
-                            <div class="action__info">
-                                <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
-                                <p><span class="old-price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</span><span class="new-price">{{ product.get_discount_price }} {{ product.currency|getSymbol }}</span></p>
-                                <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </section>
-    {% endif %}
-
-    {% b2c_products 'B2CProducts/main_products.html' 3 %}
-    {% b2b_products 'B2BProducts/main_products.html' 3 %}
+    {% coupons 'B2CProducts/main_coupons.html' 4 %}
+    {% b2c_products 'B2CProducts/main_products.html' 5 %}
+    {% b2b_products 'B2BProducts/main_products.html' 5 %}
 
 
     <section class="content__info__news">
-        {% if proposals %}
 
-            <h2>{% trans "Business proposals" %}</h2>
-
-            {% for proposal in proposals|slice:":1" %}
-
-                    <article class="news">
-                        <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
-                        <div class="news__content clearfix">
-                            <div class="news__content__desc clearfix">
-                                <p class="date">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
-                                <p class="text">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"30" }}</p>
-                            </div>
-                            <a href="{{ proposal.get_absolute_url }}" class="more vertical"><span>{% trans 'More' %}</span></a>
-                        </div>
-                    </article>
-            {% endfor %}
-        {% endif %}
-
-        {% if news %}
-        <h2>{% trans "News" %}</h2>
-
-        {% for article in news|slice:":1" %}
-            <article class="news">
-                <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
-                <div class="news__content clearfix">
-                    <div class="news__content__cover">
-                        {% if article.image %}
-                        <img src="{{ article.image.small }}" alt="">
-                        {% endif %}
-                    </div>
-                    <div class="news__content__desc clearfix">
-                        <p class="date">{% trans 'Date' %}: {{ article.created_at|date:'d M Y' }}</p>
-
-                    {% if article.short_description %}
-                         <p class="text">{{ article.short_description|force_escape|linebreaks }}</p>
-                    {% else %}
-                         <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"30" }}</p>
-                    {% endif %}
-
-                    </div>
-                    <a href="{% url 'news:detail' article.slug article.pk %}" class="more vertical"><span>{% trans 'More' %}</span></a>
-                </div>
-            </article>
-        {% endfor %}
-        {% endif %}
+        {% proposal 'Proposals/wall.html' 1 %}
+        {% news 'News/wall.html' 1 %}
 
     </section>
  </section>
