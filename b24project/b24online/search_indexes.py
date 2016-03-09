@@ -330,7 +330,6 @@ class ChamberIndex(DocType):
 class B2BProductIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
-    name_auto = String(index_analyzer=autocomplete)
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     branches = Integer(multi=True)
@@ -355,7 +354,6 @@ class B2BProductIndex(DocType):
         index_instance = cls(
             django_id=obj.pk,
             name=obj.name,
-            name_auto=obj.name,
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,
@@ -379,7 +377,6 @@ class B2BProductIndex(DocType):
 class B2cProductIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
-    name_auto = String(index_analyzer=autocomplete)
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     b2c_categories = Integer(multi=True)
@@ -403,7 +400,6 @@ class B2cProductIndex(DocType):
         index_instance = cls(
             django_id=obj.pk,
             name=obj.name,
-            name_auto=obj.name,
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,
@@ -641,24 +637,6 @@ class RequirementIndex(DocType):
             created_at=obj.created_at
         )
 
-        return index_instance
-
-
-class ProducerIndex(DocType):
-    django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
-
-    @staticmethod
-    def get_model():
-        from b24online.models import Producer
-        return Producer
-
-    @classmethod
-    def to_index(cls, obj):
-        index_instance = cls(
-            django_id=obj.pk,
-            name_auto=obj.name
-        )
         return index_instance
 
 
