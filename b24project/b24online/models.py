@@ -1768,14 +1768,14 @@ class RegisteredEventStats(RegisteredEventMixin):
             data = {}
             for item_key, item_value in self.extra_data.items():
                 item_key_list = item_key.split(':')
-                country_name, city, cnt_type = item_key_list[1:]
+                country_name, city, a_cnt_type = item_key_list[1:]
                 try:
                     _value = int(item_value)
                 except TypeError:
                     continue
                 else:
                     data.setdefault(country_name, {}) \
-                        .setdefault(city, {})[cnt_type] = _value
+                        .setdefault(city, {})[a_cnt_type] = _value
             extra_info = []
             for country_name, data_1 in data.items():
                 cities = []
