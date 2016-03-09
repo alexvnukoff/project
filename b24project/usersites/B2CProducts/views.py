@@ -35,9 +35,9 @@ class B2CProductList(UserTemplateMixin, ItemList):
     def dispatch(self, request, *args, **kwargs):
         category_pk = kwargs.pop('pk', None)
 
-        if category_pk:
+        try:
             self.category = B2CProductCategory.objects.get(pk=category_pk)
-        else:
+        except B2CProductCategory.DoesNotExist:
             self.category = None
 
         return super().dispatch(request, *args, **kwargs)
@@ -222,8 +222,8 @@ class B2CProductSearch(UserTemplateMixin, ItemList):
 
     def get_queryset(self):
         q = self.request.GET.get('s') or None
-        if q and re.match('\w+', q):
-            return self.model.get_active_objects().filter(name__icontains=q, **self.get_filter_kwargs())
+        if q and not re.match("[\!@#$%^&'*]+", q):
+            return self.model.get_active_objects().filter(name__icontains=q.strip(), **self.get_filter_kwargs())
         return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 
 

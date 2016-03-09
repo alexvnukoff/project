@@ -39,8 +39,9 @@ class B2BProductForm(forms.ModelForm):
 
     class Meta:
         model = B2BProduct
-        fields = ('name', 'description', 'keywords', 'short_description', 'image',
-                  'currency', 'measurement_unit', 'cost', 'categories')
+        fields = ('name', 'description', 'keywords', 'short_description', 
+                  'image', 'currency', 'measurement_unit', 'cost', 
+                  'producer', 'categories')
 
 
 class B2CProductForm(forms.ModelForm):
@@ -102,8 +103,10 @@ class B2CProductForm(forms.ModelForm):
 
     class Meta:
         model = B2CProduct
-        fields = ('name', 'description', 'keywords', 'short_description', 'image',
-                  'currency', 'cost', 'categories', 'coupon_discount_percent', 'discount_percent')
+        fields = ('name', 'description', 'keywords', 'short_description', 
+                  'image', 'currency', 'cost', 'categories', 
+                  'coupon_discount_percent', 'discount_percent',
+                  'producer')
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
