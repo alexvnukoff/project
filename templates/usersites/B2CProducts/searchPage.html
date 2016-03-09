@@ -17,7 +17,7 @@
 
                         <li class="product">
                             <div class="product__cover vertical">
-                        <a href="">
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
                             {% if product.image %}
                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                             {% else %}
