@@ -14,26 +14,26 @@ class BannerForm(forms.ModelForm):
         self.block = kwargs.pop("block")
         super().__init__(*args, **kwargs)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get("start_date", None)
-        end_date = cleaned_data.get("end_date", None)
-        branches = cleaned_data.get("branches", None)
-        chambers = cleaned_data.get("chamber", None)
-        countries = cleaned_data.get("country", None)
-        image = self.cleaned_data.get('image', None)
+   # def clean(self):
+   #    cleaned_data = super().clean()
+   #     start_date = cleaned_data.get("start_date", None)
+   #     end_date = cleaned_data.get("end_date", None)
+   #     branches = cleaned_data.get("branches", None)
+   #     chambers = cleaned_data.get("chamber", None)
+   #     countries = cleaned_data.get("country", None)
+   #     image = self.cleaned_data.get('image', None)
 
-        if image and image.size > 200 * 1024:
-            self.add_error('image', "Image file too large")
+   #     if image and image.size > 200 * 1024:
+   #         self.add_error('image', "Image file too large")
 
-        if image and (image.image.width != self.block.width or image.image.height != self.block.height):
-            self.add_error('image', "Required dimensions are: %s x %s" % (self.block.width, self.block.height))
+   #     if image and (image.image.width != self.block.width or image.image.height != self.block.height):
+   #         self.add_error('image', "Required dimensions are: %s x %s" % (self.block.width, self.block.height))
 
-        if start_date and end_date and start_date >= end_date:
-            self.add_error('start_date', _('Starting date should be earlier than ending date'))
+   #     if start_date and end_date and start_date >= end_date:
+   #         self.add_error('start_date', _('Starting date should be earlier than ending date'))
 
-        if not branches and not chambers and not countries:
-            raise forms.ValidationError(_('At least one filter should be specified'))
+   #    if not branches and not chambers and not countries:
+   #         raise forms.ValidationError(_('At least one filter should be specified'))
 
     class Meta:
         model = Banner
