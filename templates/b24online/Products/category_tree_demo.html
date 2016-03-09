@@ -1,0 +1,41 @@
+{% extends 'b24online/main_page.html' %}
+
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block title %}Tree demo{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/css/company.css" %}' />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}" />
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/css/extra.css" %}' />
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/js/jstree/themes/default/style.css" %}' />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script  type="text/javascript" src="{% static 'b24online/js/jstree/jstree.min.js' %}"></script>
+    <script  type="text/javascript">
+        $(document).ready(function () {
+            var tree_data = {{ tree_data|safe }};
+            var tree_container = $("div#tree");
+            if (tree_data != undefined) {
+                $(tree_container).jstree({
+                    core: {
+                        data: tree_data,
+                    },
+                    plugins: ['checkbox',]
+                });
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="data">
+    <div id="tree"></div>
+</div>
+{% endblock %}
