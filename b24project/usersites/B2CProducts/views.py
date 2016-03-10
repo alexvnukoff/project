@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 from paypal.standard.forms import PayPalPaymentsForm
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
@@ -269,3 +270,12 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                 [org_email, 'migirov@gmail.com'], fail_silently=False)
 
         return super(B2CProductByEmail, self).form_valid(form)
+
+
+
+class B2C_orderDone(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/B2CProducts/orderDone.html'
+
+    def get_queryset(self):
+        return get_current_site().user_site.organization.additional_pages.all()
+
