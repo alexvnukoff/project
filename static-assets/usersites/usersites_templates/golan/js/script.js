@@ -1,6 +1,3 @@
-
-
-
 $(document).ready( function() {
 	//$('.main-navbar .navbar-nav li').first().addClass('active');
 

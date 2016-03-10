@@ -18,18 +18,18 @@
         <div class="row">
             <div class="col-md-12 about-main">
 
-                <div class="col-md-6 about-main__text">
+                <div class="col-md-12 about-main__text">
                     <h2>{{ site.user_site.organization.name }}</h2>
                     <p>
                     {{ site.user_site.organization.description|cleanHtml|safe }}
                     </p>
                 </div>
 
-                {# adding a youtube movie link #}
-                <div class="col-md-6 about-main__movie hidden-xs hidden-sm">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>
+                {#TASK adding a youtube movie link - changing the prev div to be 6 col #}
+{#                <div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+{#                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
                     {#  <img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
-                </div>
+{#                </div>#}
 
             </div>
         </div>
@@ -112,11 +112,9 @@
             <div class="col-md-6 col-sm-12 col-xs-12 banner-ad-main-collection">
 
                 <div class="col-md-6 col-sm-6 col-xs-12 banner-main-page">
-{#                    <div class="banners left">#}
-{#                        {% site_banner "SITES RIGHT 1" %}#}
-{#                        {% site_banner "SITES RIGHT 2" %}#}
-{#                    </div>#}
-{#                    {% site_banner "SITES RIGHT 1" %}#}
+                    <div class="banners right">
+                        {% site_banner "SITES RIGHT 1" "right" %}
+                    </div>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 banner-main-page">
 {#                   {% site_banner "SITES RIGHT 2" %}#}
@@ -221,7 +219,7 @@
                                 {# Product category #}
 {#                                <p class="product__cat">gym equipment</p>#}
                                 {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
-                                <p class="product__desc">{{ product.short_description|truncatechars:180 }}</p>
+                                <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
 
                                 {# Button to go the details - attached to the bottom of the thumbnail #}
                                 <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans 'Read More' %}</a>
