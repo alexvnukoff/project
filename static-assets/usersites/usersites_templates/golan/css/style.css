@@ -36,6 +36,10 @@
 	float: left;
 }
 /*---------- Product Styling ----------*/
+.main-coupons{
+	float: left;
+}
+
 .product{
 	float: left;
 }
@@ -76,6 +80,9 @@
   	/* content:"\e251"; */
 }
 
+.banner-ad-main-collection{
+	float: right;
+}
 /*---------- News Styling ----------*/
 .news-wrapper{
 	padding-left: 15px;

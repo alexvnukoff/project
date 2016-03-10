@@ -179,6 +179,10 @@ h2.page-header.inner-page{
 }
 
 /*---------- Product Styling ----------*/
+.main-coupons{
+	position: relative;
+}
+
 .product{
 	padding: 0 5px;
 	position: relative;
@@ -268,6 +272,9 @@ h2.page-header.inner-page{
 	position: relative;
 }
 
+.banner-ad-main-collection{
+	position: relative;
+}
 /*---------- News Styling ----------*/
 .news{
     margin-bottom: 20px;

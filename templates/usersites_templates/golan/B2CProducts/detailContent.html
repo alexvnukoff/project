@@ -29,7 +29,7 @@
             </div>
 
             <div class="col-md-6 item-price-table">
-                <p>{% trans "Price" %}:<br/> </p>
+                <p>{% trans "Price" %}:<br/></p>
                 <div class="item-page__price">
                   {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
                 </div>
@@ -70,9 +70,7 @@
 
                 {# display the timer only if coupon #}
                 {% if object.coupon_discount_percent %}
-                    <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}">
-
-                    </div>
+                    <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
                 {% endif %}
 
                 <a href="item.html" class="btn button more special_offer__btn coupon-panel__btn">
