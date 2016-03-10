@@ -2191,7 +2191,7 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model, IndexedModelMixin):
+class Producer(models.Model):
     """
     The model class for goods producers.
     """
@@ -2212,13 +2212,142 @@ class Producer(models.Model, IndexedModelMixin):
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
 
-    @staticmethod
-    def get_index_model(**kwargs):
-        from b24online.search_indexes import ProducerIndex
-        return ProducerIndex
+    def __str__(self):
+        return self.name
+
+
+##
+# Models for Questionnaries
+##
+class Questionnaire(models.Model):
+    """
+    The main model class for Questionnaire sub-app.
+    """
+    # The content types are limited by set (B2BProduct, B2CProduct)
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
+        models.Q(app_label='centerpokupok', model='b2cproduct')
+
+    name = models.CharField(_('Name'), max_length=255, 
+                            blank=False, null=False)
+    short_description = models.TextField(_('Short description'), 
+                                         null=True, blank=True)
+    description = models.TextField(_('Descripion'), null=True, blank=True)
+    image = CustomImageField(upload_to=generate_upload_path, 
+                            storage=image_storage,
+                            sizes=['big', 'small', 'th'],
+                            max_length=255)
+    content_type = models.ForeignKey(ContentType,
+                                     limit_choices_to=CONTENT_TYPE_LIMIT,
+                                     on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    participants = models.ManyToManyField(User, blank=True)    
+        
+    class Meta:
+        verbose_name = _('Questionnaire')
+        verbose_name_plural = _('Questionnairies')
 
     def __str__(self):
         return self.name
+
+
+class Question(AbstractRegisterInfoModel):
+    """
+    The 'Question' models class.    
+    """
+    # Who created the question
+    BY_AUTHOR, BY_MEMBER = 'author', 'member'
+    WHO_CREATED = (
+        (BY_AUTHOR, _('By author')),
+        (BY_MEMBER, _('By member')),
+    )
+    
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='questions',
+    )
+    who_created = models.CharField(
+        _('Who is the author'), 
+        max_length=10,
+        choices=WHO_CREATED, 
+        default=BY_AUTHOR, 
+        null=True, 
+        blank=True
+    )
+    question_text = models.TextField(
+        _('Question text'), 
+        blank=False, 
+        null=False
+    )
+    description = models.TextField(
+        _('Descripion'), 
+        null=True, 
+        blank=True
+    )
+    score_positive = models.IntegerField(
+        _('The question positive answer score'),
+        null=True,
+        blank=True,
+    )
+    score_negative = models.IntegerField(
+        _('The question negative answer score'),
+        null=True,
+        blank=True,
+    )
+    position = models.PositiveIntegerField(
+        _('The question position in the set'),
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = _('Question')
+        verbose_name_plural = _('Questions')
+        
+    def __str__(self):
+        return self.question_text
+        
+
+class Answer(AbstractRegisterInfoModel):
+    """
+    The 'Question answer' models class.    
+    """
+    ANSWER_YES, ANSWER_NO, ANSWER_OWN = 'author', 'member', 'own'
+    ANSWER_TYPES = (
+        (ANSWER_YES, _('Yes')),
+        (ANSWER_NO, _('No')),
+        (ANSWER_OWN, _('Own answer text'))
+    )
+    question = models.ForeignKey(
+        Question, 
+        related_name='questions',
+        verbose_name=_('Question'),
+    )
+    participant = models.ForeignKey(
+        User, 
+        related_name='answers',
+        verbose_name=_('Answer author'),
+    )
+    answer_type = models.CharField(
+        _('Answer type'), 
+        max_length=10,
+        choices=ANSWER_TYPES, 
+        default=ANSWER_YES, 
+        null=True, 
+        blank=True
+    )
+    answer_text = models.TextField(
+        _('Question text'), 
+        blank=False, 
+        null=False
+    )
+    
+    class Meta:
+        verbose_name = _('Question answer')
+        verbose_name_plural = _('Questions answers')
+
+    def __str__(self):
+        return self.answer_text
         
 
 @receiver(pre_save)

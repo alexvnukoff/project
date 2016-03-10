@@ -50,6 +50,15 @@
                     </a>
                 </div>
             {% endif %}
+            {% if add_smth_url %}
+                 <div class="tender-action">
+                     <i class="imgnews noty icon-action"></i>
+                     <a href="{% url url_namespace|add:':'|add:add_smth_url obj.pk %}?next={{ current_path }}">
+                         <span class="deletext">{% trans 'Advertise' %}</span>
+                     </a>
+                 </div>
+            {% endif %}
+
         </div>
     </div>
 {% endif %}
