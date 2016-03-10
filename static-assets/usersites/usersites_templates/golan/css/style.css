@@ -1,0 +1,178 @@
+/*---------- General Styling ----------*/
+
+/*---------- Navigation Styling ----------*/
+.navbar-nav{
+	float: right!important;
+    margin-right: -15px;
+}
+
+.navbar-nav>li{
+	float: left;
+}
+
+.cust-nav{
+  top:50px;
+  left:0px;
+}
+
+.cust-nav>.cust-nav__btn{
+	float: left;
+}
+
+.navbar-brand{
+	float: left;
+}
+
+.cust-nav ul li{
+	float: left;
+}
+
+/*---------- about-banner Styling ----------*/
+.about-main__movie{
+	float: right;
+}
+
+.about-main__text{
+	float: left;
+}
+/*---------- Product Styling ----------*/
+.product{
+	float: left;
+}
+
+.product__price__coupon{
+	right: 6px;
+}
+
+
+.product__discount{
+	right: 6px;
+	float: right;
+}
+
+.product__btn{
+	right: 15px;
+}
+
+.product__deleted-price{
+	padding-left: 10px;
+}
+
+.product__price{
+	left: 15px;
+}
+
+.coupon-timer{
+	left: 15px;
+}
+
+.go-to-full{
+	float: right;
+}
+
+.go-to-full:after{
+	font-family: "Glyphicons Halflings";
+  	content: "\e250";
+  	/* content:"\e251"; */
+}
+
+/*---------- News Styling ----------*/
+.news-wrapper{
+	padding-left: 15px;
+}
+
+.main-proposal{
+	float: left;
+}
+
+.main-news{
+	float: right;
+}
+
+.proposal{
+	float: left;
+}
+
+.news__img{
+	float: left;
+	padding-right: 20px;
+}
+
+.news__text{
+	/*float: right;*/
+}
+
+.news__btn{
+	float: right;
+}
+
+/*---------- Jobs Styling ----------*/
+.jobs-content{
+	float: left;
+}
+
+.jobs-btn{
+	float: right;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner__member{
+	float: left;
+}
+
+.membership-banner__ad{
+	float: right;
+}
+
+.membership-banner__member img{
+	float: left;
+}
+
+.membership-banner__member-text{
+	float: left;
+}
+
+/*---------- Banners Styling ----------*/
+.banner-main-page img{
+    padding: 0px 20px 20px 0;
+}
+
+/*---------- Footer Styling ----------*/
+footer span{
+	margin-right: 5px;
+}
+
+.footer-col{
+	float: left;
+}
+
+/*---------- Item Styling ----------*/
+.item{
+	float: left;
+}
+
+.item-page{
+	float: left;
+}
+
+.item-price-table{
+	float: right;
+}
+
+.item-page__price span{
+	padding-left: 20px;
+}
+
+.item-page__coupon div{
+	float: left;
+	padding-right: 30px;
+}
+
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    float: left;
+}
+
+#timer-detail-page > div{
+    float: left;
+}
