@@ -854,21 +854,24 @@ from usersites.models import UserSite
 
 @shared_task
 def upload_file(*args):
-    client = boto3.client('s3', settings.BUCKET_REGION, aws_access_key_id=settings.AWS_SID,
+    client = boto3.client('s3', settings.BUCKET_REGION, 
+                          aws_access_key_id=settings.AWS_SID,
                           aws_secret_access_key=settings.AWS_SECRET)
     transfer = S3Transfer(client)
-
     for file in args:
-        logger.debug(file)
-        logger.error(file)
-        transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], extra_args={'ACL': 'public-read'})
+        extra_args = {'ACL': 'public-read'}
+        content_type = file.get('content_type')
+        if content_type:
+            extra_args.update({'ContentType': content_type})
+        
+        transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], 
+                             extra_args=extra_args)
         os.remove(file['file'])
 
 
 @shared_task
 def upload_images(*args, async=True):
     images = []
-
     for image in args:
         abs_path = abspathu(settings.MEDIA_ROOT)
 
@@ -887,18 +890,19 @@ def upload_images(*args, async=True):
                 utils.resize(image['file'], out=out, **size_data)
                 images.append({
                     'file': out,
-                    'bucket_path': "%s%s" % (size_name, bucket_path)
+                    'bucket_path': "%s%s" % (size_name, bucket_path),
+                    'content_type': 'image/png',
                 })
 
         images.append({
             'file': image['file'],
-            'bucket_path': "original%s" % bucket_path
+            'bucket_path': "original%s" % bucket_path,
         })
 
     if async:
         upload_file.delay(*images)
     else:
-        upload_file.apply(*images)
+        upload_file.apply(args=images)
 
 
 @shared_task
