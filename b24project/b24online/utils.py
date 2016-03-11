@@ -20,6 +20,7 @@ from mptt.utils import get_cached_trees
 
 import errno
 from unidecode import unidecode
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
@@ -328,3 +329,12 @@ class MTTPTreeBuilder(object):
                         
     def __call__(self, filter_ids=[], opened=[]):
         return self.process_node(filter_ids=filter_ids, opened=opened)
+
+
+def get_template_with_base_path(template_name):
+    user_site = get_current_site().user_site
+    if user_site.user_template is not None:
+        folder_template = user_site.user_template.folder_name
+    else:  # Deprecated
+        folder_template = 'usersites'
+    return "{0}/{1}".format(folder_template, template_name)
