@@ -3,6 +3,13 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+
+{% block before_js %}
+    <script  type="text/javascript">
+        var SEARCH_Q_URL = '{% url "b2b_products:b2b_product_json" %}';
+    </script>
+{% endblock%}
+
 {% block content %}
     {{ block.super }}
 

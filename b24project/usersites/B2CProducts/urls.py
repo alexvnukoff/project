@@ -1,7 +1,9 @@
 from django.conf.urls import url
 
-from usersites.B2CProducts.views import (B2CProductList, B2CProductDetail,
-        B2CProductBasket, B2CProductSearch, B2CProductByEmail, B2C_orderDone)
+from usersites.B2CProducts.views import (B2CProductList, B2CProductDetail, 
+                                         B2CProductBasket, B2CProductSearch,
+                                         B2CProductByEmail, B2CProductJsonData,
+                                         B2C_orderDone)
 
 urlpatterns = [
     url(r'^$', B2CProductList.as_view(), name='main'),
@@ -14,5 +16,6 @@ urlpatterns = [
     url(r'^search/$', B2CProductSearch.as_view(), name="search"),
     url(r'^search/page(?P<page>[0-9]+)?/$', B2CProductSearch.as_view(), name="serch_paginator"),
     url(r'^order\.html$', B2CProductByEmail.as_view(), name='order_by_email'),
+    url(r'^json/$', B2CProductJsonData.as_view(), name='b2c_product_json'),
     url(r'^order_done\.html$', B2C_orderDone.as_view(), name='order_done'),
 ]
