@@ -29,6 +29,7 @@
             <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
                 <tr>
                     <th>{% trans 'Product name' %}</th>
+                    <th>{% trans 'Categories' %}</th>
                     <th>{% trans 'Cost' %}</th>
                     <th>{% trans 'Currency' %}</th>
                 </tr>
@@ -38,6 +39,7 @@
                     {% with item_form.instance as item %}
                     <tr id="{{ deal.id }}-item" valign="top">
                         <td>{{ item_form.name }}</td>
+                        <td align="center">{{ item_form.categories }}</td>
                         <td align="center">{{ item_form.cost }}</td>
                         <td align="center">{{ item_form.currency }}</td>
                     </tr>
