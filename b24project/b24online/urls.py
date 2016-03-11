@@ -26,6 +26,7 @@ import b24online.Product.urls
 import b24online.Profile.urls
 import b24online.Project
 import b24online.Project.urls
+import b24online.Questionnaires.urls
 import b24online.Resume.urls
 import b24online.Tenders.urls
 import b24online.Tpp.urls
@@ -59,6 +60,9 @@ urlpatterns = [
     url(r'^site/', include(b24online.UserSites.urls, namespace='site')),
     url(r'^users/', include(b24online.Users.urls, namespace='users')),
     url(r'^payments/', include(b24online.Payments.urls, namespace='payments')),
+    url(r'^questionnaires/', 
+        include(b24online.Questionnaires.urls, 
+        namespace='questionnaires')),
 
     url(r'^admin-tpp/', include(b24online.AdminTpp.urls, namespace='AdminTpp')),
 

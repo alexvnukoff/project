@@ -2217,7 +2217,7 @@ class Producer(models.Model):
 
 
 ##
-# Models for Questionnaries
+# Models for Questionnaires
 ##
 class Questionnaire(models.Model):
     """
@@ -2245,7 +2245,7 @@ class Questionnaire(models.Model):
         
     class Meta:
         verbose_name = _('Questionnaire')
-        verbose_name_plural = _('Questionnairies')
+        verbose_name_plural = _('Questionnaires')
 
     def __str__(self):
         return self.name
