@@ -18,6 +18,7 @@ from django.utils.lru_cache import lru_cache
 
 import errno
 from unidecode import unidecode
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
@@ -240,3 +241,13 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
         model_content_type = ContentType.objects.get_for_model(model_klass)
         qs = qs.filter(polymorphic_ctype_id=model_content_type)
     return qs
+
+
+def get_template_with_base_path(template_name):
+    user_site = get_current_site().user_site
+    if user_site.user_template is not None:
+        folder_template = user_site.user_template.folder_name
+    else:  # Deprecated
+        folder_template = 'usersites'
+    return "{0}/{1}".format(folder_template, template_name)
+

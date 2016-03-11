@@ -1,0 +1,282 @@
+/* style.css and he_style.css is styling the direction of the site. */
+@charset "utf-8";
+
+/*---------- General Styling ----------*/
+body{
+	direction: rtl;
+}
+
+/*---------- logo Styling ----------*/
+.navbar-brand>img{
+    padding: 0 10px 0 0;
+}
+
+
+/*---------- Navigation Styling ----------*/
+.navbar-nav{
+	float: left!important;
+    margin-left: -15px;
+}
+
+.navbar-nav>li{
+	float: right;
+}
+
+.cust-nav{
+  top:50px;
+  right:0px;
+}
+
+.cust-nav>.cust-nav__btn{
+	float: right;
+}
+
+.navbar-brand{
+	float: right;
+}
+
+/*---------- Slider Styling ----------*/
+
+.carousel-caption{
+	bottom: 0;
+	right: 10%;
+}
+
+/*---------- Special offer Styling ----------*/
+.offer-content{
+	float: right;
+}
+
+.offer-btn{
+	float: left;
+}
+
+/*---------- about-banner Styling ----------*/
+.about-main__movie{
+	float: left;
+}
+
+.about-main__text{
+	float: right;
+}
+
+/*---------- Products Styling ----------*/
+.main-coupons{
+	float: right;
+}
+
+.products-thumb .thumbnail .btn-bott{
+    right: 0;
+}
+
+.product__btn{
+	left: 15px;
+}
+
+.product__price{
+	right: 15px;
+}
+
+.coupon-timer{
+	right: 15px;
+}
+
+.item h4 span,
+.item h3 span{
+	float: left;
+}
+
+.go-to-full{
+	float: left;
+}
+
+.go-to-full:after{
+	font-family: "Glyphicons Halflings";
+  	/*content: "\e250";*/
+  	 content:"\e251"; 
+}
+
+.page-products .thumbnail .btn-bott,
+.main-products .thumbnail .btn-bott{
+    margin: 10px 0px 10px 10px;
+}
+
+.banner-ad-main-collection{
+	float: left;
+}
+/*---------- Coupons Styling ----------*/
+
+.coupon-panel{
+	float: right;
+}
+
+.coupon-panel__price{
+    float: right;
+    border-left-width: 1px;
+    border-right: none;
+}
+
+.coupon-panel__date{
+    float: right;
+}
+
+.price-after-coupon span.after-dis{
+	padding-left: 50px;
+}
+
+.price-after-coupon .after-dis{
+	float: right;
+	padding-right: 40px;
+}
+
+.price-after-coupon .before-dis{
+	float: left;
+	padding-left: 40px;
+}
+
+.coupon{
+	float: right;
+}
+
+/*---------- News Styling ----------*/
+.main-news{
+	float: left;
+}
+
+.main-news .img-pos,
+.news__img{
+	float: right;
+	padding-left: 10px;
+}
+
+.news__img{
+	padding-left: 20px;
+}
+
+.proposal{
+	float: right;
+}
+
+.main-proposal{
+	float: right;
+}
+
+.main-news{
+	float: left;
+}
+
+.news__btn{
+	float: left;
+}
+
+
+/*---------- Jobs Styling ----------*/
+.jobs-content{
+	float: right;
+}
+
+.jobs-btn{
+	float: left;
+}
+
+.jobs-head:after{
+	font-family: "Glyphicons Halflings";
+  	content:"\e128";
+}
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner__member{
+	float: right;
+}
+
+.membership-banner__ad{
+	float: left;
+}
+
+.membership-banner__member img{
+	float: right; 
+}
+
+.membership-banner__member-text{
+	float: right;
+}
+
+/*---------- Footer Styling ----------*/
+footer span{
+	margin-left: 5px;
+}
+
+.footer-col{
+	float: right;
+}
+
+/*---------- Item Styling ----------*/
+.item{
+	float: right;
+}
+
+.item-page{
+	float: right;
+}
+
+.item-price-table{
+	float: left;
+}
+
+.item-page__price span{
+	padding-left: 20px;
+}
+
+.item-page__coupon div{
+	float: right;
+	padding-left: 30px;
+}
+
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    float: right;
+}
+
+#timer-detail-page > div{
+    float: left;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination, .pagination>li{
+	float: right;
+}
+
+/*---------- about Styling ----------*/
+.about-img{
+	float: right;
+}
+
+.about-text{
+	float: left;
+}
+
+/*---------- table Cart Styling ----------*/
+.cart-sum-field{
+	float: left;
+}
+
+th, td{
+	text-align: right;
+}
+
+.cart-sum-field dt{
+	float: right;
+}
+
+.cart-sum-field dd{
+	float: left;
+	margin-left: 50px;
+}
+
+.panel-footer .special_offer__btn{
+	float: left;
+}
+
+/*---------- Banners Styling ----------*/
+.banner-main-page img{
+    padding: 0px 0px 20px 20px;
+}

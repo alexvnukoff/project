@@ -21,11 +21,21 @@ from appl import func
 from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (Organization, Company, Tender, Exhibition,
                               RegisteredEventStats, RegisteredEventType, B2BProduct,
-    InnovationProject, BusinessProposal)
+                              InnovationProject, BusinessProposal)
 from b24online.utils import get_current_organization
 from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
+
+PROCESSED_MODELS = (
+    (B2BProduct, 'company_id'),
+    (B2CProduct, 'company_id'),
+    (BusinessProposal, 'organization_id'),
+    (InnovationProject, 'organization_id'),
+    (Tender, 'organization_id'),
+    (Exhibition, 'organization_id'),
+)
+
 
 @login_required
 def main(request):
@@ -108,7 +118,7 @@ class RegisteredEventStatsDetailView(TemplateView):
             map(lambda x: self.kwargs.get(x), 
                 ('event_type_id', 'content_type_id', 
                 'instance_id', 'cnt_type'))
-
+        current_organization = get_current_organization(request)
         try:
             event_type = RegisteredEventType.objects.get(id=event_type_id)
         except RegisteredEventType.DoesNotExist:
@@ -141,10 +151,30 @@ class RegisteredEventStatsDetailView(TemplateView):
             
         date_range = list(form.date_range())
 
+
         qs = qs.filter(content_type_id=content_type_id, 
                 event_type_id=event_type_id)
         if instance_id:
             qs = qs.filter(object_id=instance_id)
+        org_field_name = dict(PROCESSED_MODELS).get(model_class)
+        if org_field_name:
+            if model_class in (B2BProduct, B2CProduct):
+                if isinstance(current_organization, Company):
+                    org_ids = [current_organization.pk,]        
+                else:
+                    org_ids = [item.pk for item in
+                        current_organization\
+                            .get_descendants_for_model(Company)]
+            else:
+                org_ids = [current_organization.pk,] + \
+                    [item.pk for item in current_organization\
+                        .get_descendants()]
+            organization_filter = {'%s__in' % org_field_name: org_ids}
+            ids = [item.id for item in model_class.objects\
+                .filter(**organization_filter)]
+            if ids:
+                qs = qs.filter(object_id__in=ids)
+
         qs = qs.values('registered_at')\
             .annotate(unique=Sum('unique_amount'), 
                 total=Sum('total_amount'))\
@@ -170,6 +200,7 @@ class RegisteredEventStatsDetailView(TemplateView):
             'instance_type': model_name, 
             'data_grid': data_grid,
             'instance_id': instance_id,
+            'instance': instance,
         })
         return context
 
@@ -186,6 +217,8 @@ class RegisteredEventStatsDiagView(TemplateView):
                 ('event_type_id', 'content_type_id', 
                 'instance_id', 'cnt_type'))
         data_str = self.request.GET.get('date', None)
+        current_organization = get_current_organization(self.request)
+
         if all((event_type_id, content_type_id, 
            cnt_type, data_str)):
             _m = date_re.match(data_str)
@@ -220,16 +253,36 @@ class RegisteredEventStatsDiagView(TemplateView):
                         'instance_type': model_name, 
                         'instance': instance,
                         'xdate': xdate})
-                
+
                     qs = RegisteredEventStats.objects.filter(
                         event_type_id=event_type_id, 
                         content_type_id=content_type_id,
                         registered_at=xdate)
+
                     if instance_id:
                         qs = qs.filter(object_id=instance_id)
                         stats = qs[0]
                         data_grid = stats.get_extra_info(cnt_type)
                     else:
+                        org_field_name = dict(PROCESSED_MODELS).get(model_class)
+                        if org_field_name:
+                            if model_class in (B2BProduct, B2CProduct):
+                                if isinstance(current_organization, Company):
+                                    org_ids = [current_organization.pk,]        
+                                else:
+                                    org_ids = [item.pk for item in
+                                        current_organization\
+                                            .get_descendants_for_model(Company)]
+                            else:
+                                org_ids = [current_organization.pk,] + \
+                                    [item.pk for item in current_organization\
+                                        .get_descendants()]
+                            organization_filter = {'%s__in' % org_field_name: org_ids}
+                            ids = [item.id for item in model_class.objects\
+                                .filter(**organization_filter)]
+                            if ids:
+                                qs = qs.filter(object_id__in=ids)
+
                         _data = {}
                         for stats in qs:
                             _data_1 = stats.get_extra_info(cnt_type)
@@ -251,8 +304,7 @@ class RegisteredEventStatsDiagView(TemplateView):
                             for k, v in _data.items():
                                 data_grid.append([k, v['amount'], 
                                     [(k1, v1) for k1, v1 in v['cities'].items()]])
-                        context['data_grid'] = data_grid
-
+                    context['data_grid'] = data_grid
                     break
         return context
 
@@ -260,15 +312,6 @@ class RegisteredEventStatsDiagView(TemplateView):
 class RegisteredEventStatsView(TemplateView):
     template_name = 'b24online/Analytic/registered_event_stats.html'
     form_class = SelectPeriodForm
-
-    PROCESSED_MODELS = (
-        (B2BProduct, 'company_id'),
-        (B2CProduct, 'company_id'),
-        (BusinessProposal, 'organization_id'),
-        (InnovationProject, 'organization_id'),
-        (Tender, 'organization_id'),
-        (Exhibition, 'organization_id'),
-    )
     
     STATS_ITEMS = (
         ('B2BProduct', _('B2B Products')),
@@ -321,7 +364,7 @@ class RegisteredEventStatsView(TemplateView):
         # Construct the query
         qs_filters = None
         content_type_ids = {}
-        for item_model, org_field_name in cls.PROCESSED_MODELS:
+        for item_model, org_field_name in PROCESSED_MODELS:
             content_type = ContentType.objects\
                 .get_for_model(item_model)
             model_class = content_type.model_class()

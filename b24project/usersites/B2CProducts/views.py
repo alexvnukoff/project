@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 import re
+
 from collections import OrderedDict
 
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template import loader, RequestContext
 from django.template import loader
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 from paypal.standard.forms import PayPalPaymentsForm
-
+from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -149,7 +152,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
 
 class B2CProductBasket(View):
-
+    template_name = 'B2CProducts/basket.html'
     def get(self, request):
         basket      = Basket(request)
         del_product = request.GET.get('del')
@@ -190,7 +193,12 @@ class B2CProductBasket(View):
                 return HttpResponseRedirect((reverse('b2c_products:basket')))
             return HttpResponseNotFound()
 
-        return render(request, 'usersites/B2CProducts/basket.html', data)
+        return render_to_response(
+                 get_template_with_base_path(self.template_name),
+                 data,
+                 context_instance=RequestContext(request)
+                 )
+
 
     def post(self, request):
         basket     = Basket(request)
@@ -270,3 +278,10 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
 class B2CProductJsonData(ProductJsonData):
     model_class = B2CProduct
     search_index_class = B2cProductIndex
+
+
+class B2C_orderDone(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/B2CProducts/orderDone.html'
+
+    def get_queryset(self):
+        return get_current_site().user_site.organization.additional_pages.all()
