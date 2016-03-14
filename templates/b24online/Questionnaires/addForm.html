@@ -14,53 +14,18 @@
 <div class="newsform form-container">
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
-        <div class="uploadimgage">
-            <div class="imgbig">
-                <label class="sapce">{{ form.image.label }}</label>
-                {% if form.bound and form.errors.image %}
-                    <div class="error-handler">
-                        <div class="formserror">{{ form.errors.image.0 }}</div>
-                    </div>
-                {% endif %}
-                {% if form.initial.image %}
-                    <div>
-                        <div><img src="{{ form.initial.image.small }}"></div>
-                    </div>
-                {% endif %}
-                <div class="fileinputs">
-                    {{ form.image }}
-                </div>
-            </div>
-        </div>
-
         <ul class="uploadconfig">
+            {% for field in form %}
             <li>
-                <label class="required">{{ form.name.label }}</label>
-                {% if form.errors.name %}
+                <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}</label>
+                {% if form.bound and .content_type %}
                 <div class="error-handler">
-                    <div class="formserror">{{ form.errors.name.0 }}</div>
+                    <div class="formserror">{{ field.errors|striptags }}</div>
                 </div>
                 {% endif %}
-                {{ form.name }}
-           </li>
-            <li>
-                <label>{{ form.short_description.label }}</label>
-                {% if form.errors.short_description %}
-                <div class="error-handler">
-                    <div class="formserror">{{ form.errors.short_description.0 }}</div>
-                </div>
-                {% endif %}
-                {{ form.short_description }}
+                {{ field }}
             </li>
-            <li>
-                <label>{{ form.description.label }}</label>
-                {% if form.errors.description %}
-                <div class="error-handler">
-                    <div class="formserror">{{ form.errors.description.0 }}</div>
-                </div>
-                {% endif %}
-                {{ form.description }}
-            </li>
+            {% endfor %}
         </ul>
     </form>
 </div>

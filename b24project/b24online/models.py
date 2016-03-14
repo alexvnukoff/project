@@ -2240,18 +2240,19 @@ class Questionnaire(models.Model):
     CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
         models.Q(app_label='centerpokupok', model='b2cproduct')
 
-    name = models.CharField(_('Name'), max_length=255, 
+    name = models.CharField(_('Questionnaire title'), max_length=255, 
                             blank=False, null=False)
     short_description = models.TextField(_('Short description'), 
                                          null=True, blank=True)
     description = models.TextField(_('Descripion'), null=True, blank=True)
     image = CustomImageField(upload_to=generate_upload_path, 
-                            storage=image_storage,
-                            sizes=['big', 'small', 'th'],
-                            max_length=255)
+                             storage=image_storage,
+                             sizes=['big', 'small', 'th'],
+                             max_length=255, null=True, blank=True)
     content_type = models.ForeignKey(ContentType,
                                      limit_choices_to=CONTENT_TYPE_LIMIT,
-                                     on_delete=models.CASCADE)
+                                     on_delete=models.CASCADE,
+                                     null=False, blank=False)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     participants = models.ManyToManyField(User, blank=True)    

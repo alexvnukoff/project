@@ -215,7 +215,6 @@ def class_for_name(module_name, class_name):
 @lru_cache(maxsize=32)
 def _get_org(id):
     from b24online.models import Organization
-    logger.debug('Once more')
     try:
         return Organization.objects.get(pk=id)
     except Organization.DoesNotExist:
@@ -227,7 +226,6 @@ def get_current_organization(request):
     Return the current organization (stored in request.session)
     """
 
-    logger.debug('Here')    
     current_organization_id = request.session.get('current_company')
     return _get_org(current_organization_id) if current_organization_id \
         else None
