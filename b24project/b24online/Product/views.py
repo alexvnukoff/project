@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 import sys
+import json
 import logging
 
 from django.db import transaction
 from django.db.models import Q, Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
@@ -28,8 +29,8 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import (get_current_organization, get_permitted_orgs)
-
+from b24online.utils import (get_current_organization, get_permitted_orgs,
+                             MTTPTreeBuilder)
 
 logger = logging.getLogger(__name__)
 
@@ -1013,4 +1014,42 @@ class DealItemDelete(LoginRequiredMixin, ItemDetail):
             and item.deal.deal_order.status == DealOrder.DRAFT:
             item.delete()
         return HttpResponseRedirect(next)
+
+
+def category_tree_json(request, b2_type='b2b'):
+    model_class = B2CProductCategory if b2_type == 'b2c' \
+        else B2BProductCategory
+    tree_builder = MTTPTreeBuilder(model_class)
+    data = tree_builder()
+    
+    return HttpResponse(
+        json.dumps(data),
+        content_type='application/json'
+    )
+
+
+@login_required
+def category_tree_demo(request, b2_type='b2b'):
+    
+    def extract_data_fn(node):
+        return {
+            'id': node.id,
+            'text': node.name,
+        }
+    
+    context = {}
+    model_class = B2CProductCategory if b2_type == 'b2c' \
+        else B2BProductCategory
+    tree_builder = MTTPTreeBuilder(
+        model_class,
+        extract_data_fn=extract_data_fn,
+    )
+    data = tree_builder()
+    logger.debug(data)
+    context.update({'tree_data': json.dumps(data)})    
+    return render_to_response(
+        'b24online/Products/category_tree_demo.html', 
+        context, 
+        context_instance=RequestContext(request)
+    )
 

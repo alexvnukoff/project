@@ -63,13 +63,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                        <div class="tmp_search">
+                        <div class="tmp_search hideitplease">
                         <form action="{% url 'b2c_products:search' %}">
-                            <input type="text" placeholder="Search" name="s">
+                            <input id="search_q" type="text" placeholder="Search" name="s">
                         </form>
                         </div>
 
-                    <div class="select -lang">
+                    <div class="select -lang hideitplease">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
@@ -125,6 +125,12 @@
     {% include 'usersites/footer.html' %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
+    {% block before_js %}
+        <script  type="text/javascript">
+            // For search autocomplete 1
+            var SEARCH_Q_URL = '{% url "b2c_products:b2c_product_json" %}';
+        </script>
+    {% endblock %}
 
         <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
         <script src="{% static 'usersites/js/angular.min.js' %}"></script>

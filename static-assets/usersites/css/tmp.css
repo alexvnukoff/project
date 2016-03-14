@@ -473,13 +473,21 @@ a.green-btn-sale:hover {
 
 @media only screen and (max-width:1250px){
 
-.sidebar {
+/* .sidebar {
   display:none;
 }
-
 .adv, .banners {
   display:none;
 }
+*/
+
+.hideitplease {
+display:none !important;
+}
+.hideitplease select, input {
+display:none !important;
+}
+
 
 .wrapper {
   width:100%;

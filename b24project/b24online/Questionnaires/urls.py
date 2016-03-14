@@ -14,5 +14,8 @@ from b24online.Questionnaires.views import (
 
 urlpatterns = [
      url(r'^$', QuestionnaireList.as_view(), name='main'),
+     url(r'^add/(?P<content_type_id>\d+?)/(?P<instance_id>\d+?)/$',
+         QuestionnaireCreate.as_view, 
+         name='add_for_instance'),
      url(r'^add/$', QuestionnaireCreate.as_view(), name='add'),
 ]

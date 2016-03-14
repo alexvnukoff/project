@@ -1,4 +1,7 @@
+# -*- encoding: utf-8 -*-
+
 import json
+import logging
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,6 +18,8 @@ from django.core.mail import send_mail
 
 from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
 from appl import func
+
+logger = logging.getLogger(__name__)
 
 
 @csrf_protect
@@ -352,7 +357,7 @@ def my_companies(request):
 
 def json_filter(request):
     filter_key = request.GET.get('type', None)
-
+    
     if filter_key is None:
         return HttpResponseBadRequest()
 

@@ -15,8 +15,10 @@ from guardian.shortcuts import get_objects_for_user
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, DeleteGalleryImage, GalleryImageList, \
     DocumentList, DeleteDocument
-from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
-    Organization, Vacancy
+from b24online.models import (Chamber, Company, News, Tender, Exhibition, 
+                              BusinessProposal, InnovationProject, 
+                              Organization, Vacancy, StaffGroup,
+                              PermissionsExtraGroup)
 from b24online.utils import handle_uploaded_file
 from b24online.Tpp.forms import AdditionalPageFormSet, ChamberForm
 
@@ -81,8 +83,15 @@ class ChamberDetail(ItemDetail):
     def get_add_url(self):
         if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
             return self.addUrl
-
         return None
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({'staffgroups': StaffGroup.get_options()})
+        context_data.update({
+            'extragroups': PermissionsExtraGroup.get_options()
+        })
+        return context_data
 
 
 def _tab_companies(request, tpp, page=1):
