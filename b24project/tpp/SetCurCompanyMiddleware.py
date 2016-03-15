@@ -34,5 +34,5 @@ class SetCurCompany:
                     if not organization.has_perm(request.user):
                         return HttpResponseRedirect(reverse('denied'))
 
-                    get_current_organization.cache_clear()
+                    # get_current_organization.cache_clear()
                     request.session['current_company'] = organization_id
