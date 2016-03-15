@@ -1,0 +1,58 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if coupons %}
+    <section class="content__info__actions">
+        {% for product in coupons %}
+            {% if forloop.first %}
+                <div class="main-action">
+                    <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                    <div class="main-action__cover" style="background-image: url({{ product.image.big }})">
+                        <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
+                    </div>
+                    </a>
+
+                    <div class="main-action__info">
+                        <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
+                        <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                        <div class="timer" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+
+                        <div class="offer vertical">
+                            <p class="price"><strike>{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</strike></p>
+                            <p class="economy">
+                                <span>{% trans 'Current price' %}</span>
+                                <span class="value">{{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}</span>
+                            </p>
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="buy"><span>{% trans "Buy" %}</span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+            {% else %}
+                    <div class="action square">
+
+                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        <div class="action__cover" style="background-image: url({{ product.image.big }})">
+                            <div class="sale"><span>-{{ product.coupon_discount_percent|intword }}%</span></div>
+                        </div>
+
+                </a>
+                <div class="action__info">
+                    <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a></h3>
+                    <p><span class="old-price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</span><span class="new-price">{{ product.get_discount_price }} {{ product.currency|getSymbol }}</span></p>
+                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                </div>
+
+                    </div>
+
+            {% endif %}
+            {% if forloop.first %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endif %}

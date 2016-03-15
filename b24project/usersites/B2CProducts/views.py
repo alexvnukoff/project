@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import re
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 from django.template import loader, RequestContext
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
@@ -12,17 +11,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from paypal.standard.forms import PayPalPaymentsForm
+
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
-from usersites.cbv import ItemDetail, ItemList
+from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
-
-
-def render_page(request, template, **kwargs):
-    return render_to_response(get_template_with_base_path(template), kwargs, context_instance=RequestContext(request))
 
 
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
@@ -169,3 +165,4 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                   [org_email, 'migirov@gmail.com'], fail_silently=False)
 
         return super(B2CProductByEmail, self).form_valid(form)
+

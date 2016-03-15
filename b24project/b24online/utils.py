@@ -16,6 +16,9 @@ from django.utils.timezone import now
 from django.utils.lru_cache import lru_cache
 import errno
 from unidecode import unidecode
+from tpp.DynamicSiteMiddleware import get_current_site
+
+from tpp.DynamicSiteMiddleware import get_current_site
 
 from tpp.DynamicSiteMiddleware import get_current_site
 

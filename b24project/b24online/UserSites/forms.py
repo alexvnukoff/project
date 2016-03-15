@@ -111,16 +111,16 @@ class GalleryForm(forms.ModelForm):
         model = GalleryImage
         fields = ('image',)
 
-    def clean_image(self):
-        image_obj = self.cleaned_data.get('image', None)
+   # def clean_image(self):
+   #     image_obj = self.cleaned_data.get('image', None)
 
-        if 'image' not in self.changed_data:
-            return image_obj
+   #     if 'image' not in self.changed_data:
+   #         return image_obj
 
-        if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
-            raise ValidationError(_('Image dimensions not equals required dimension'))
+   #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
+   #         raise ValidationError(_('Image dimensions not equals required dimension'))
 
-        return image_obj
+   #     return image_obj
 
 
 class BannerForm(forms.ModelForm):
@@ -128,18 +128,18 @@ class BannerForm(forms.ModelForm):
         model = Banner
         fields = ('image', 'block', 'advertisement_ptr', 'link',)
 
-    def clean(self):
-        cleaned_data = super().clean()
+    #def clean(self):
+    #    cleaned_data = super().clean()
 
-        if 'image' in self.changed_data:
-            image_obj = cleaned_data.get('image', None)
-            block = cleaned_data.get('block', None)
+    #    if 'image' in self.changed_data:
+    #        image_obj = cleaned_data.get('image', None)
+    #        block = cleaned_data.get('block', None)
 
-            if image_obj and block:
-                if block.width and image_obj.image.width != block.width:
-                    self.add_error('image', _("Image width don't meet the requirements (%s px)" % block.width))
-                if block.height and image_obj.image.height != block.height:
-                    self.add_error('image', _("Image height don't meet the requirements (%s px)" % block.height))
+    #        if image_obj and block:
+    #            if block.width and image_obj.image.width != block.width:
+    #                self.add_error('image', _("Image width don't meet the requirements (%s px)" % block.width))
+    #            if block.height and image_obj.image.height != block.height:
+    #                self.add_error('image', _("Image height don't meet the requirements (%s px)" % block.height))
 
 
 

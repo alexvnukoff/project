@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if news %}
+        <h2>{% trans "News" %}</h2>
+
+        {% for article in news %}
+            <article class="news">
+                <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
+                <div class="news__content clearfix">
+                    <div class="news__content__cover">
+                        {% if article.image %}
+                        <img src="{{ article.image.small }}" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{% trans 'Date' %}: {{ article.created_at|date:'d M Y' }}</p>
+
+                    {% if article.short_description %}
+                         <p class="text">{{ article.short_description|force_escape|linebreaks }}</p>
+                    {% else %}
+                         <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"30" }}</p>
+                    {% endif %}
+
+                    </div>
+                    <a href="{% url 'news:detail' article.slug article.pk %}" class="more vertical"><span>{% trans 'More' %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+{% endif %}
