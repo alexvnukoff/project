@@ -3,7 +3,8 @@ from modeltranslation.translator import TranslationOptions
 
 from b24online.models import Country, Branch, Chamber, Company, Department, Vacancy, BusinessProposalCategory, \
     InnovationProject, B2BProductCategory, B2BProduct, NewsCategory, Greeting, News, Tender, \
-    Profile, Exhibition, StaticPage, BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner
+    Profile, Exhibition, StaticPage, BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner, \
+    Producer
 
 
 @register(Gallery)
@@ -121,3 +122,6 @@ class BannerTranslationOptions(TranslationOptions):
     fields = ('title', )
 
 
+@register(Producer)
+class ProducerTranslationOptions(TranslationOptions):
+    fields = ('name', 'slug', 'short_description')

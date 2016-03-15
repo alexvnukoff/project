@@ -246,3 +246,27 @@ $(function(){
   });
 };
 
+if (typeof SEARCH_Q_URL !== 'undefined') {
+    var search_cache = {};
+    $('#search_q').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            var term = request.term;
+            if (term in search_cache) {
+                response(search_cache[term]);
+                return;
+            }
+            $.getJSON(SEARCH_Q_URL, request, function(data, status, xhr) {
+                search_cache[term] = data;
+                response(data);
+            });
+        }
+    }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li></li>')
+            .data('item.autocomplete', item)
+            .append('<img style="margin: 5px; height="20" src="' + item.img + '" />')
+            .append(item.label)
+            .appendTo(ul);
+    };
+}
+

@@ -1443,6 +1443,7 @@ class MessageChat(AbstractRegisterInfoModel):
     def get_participants(self):
         return self.participants.all()
 
+
 class Message(models.Model):
     """
     Class for inner messages.
@@ -1503,7 +1504,7 @@ class Message(models.Model):
                         abspathu(settings.MEDIA_ROOT), 
                                  str(attachment.file)),
                     'sizes': {
-                        'th': {'box': (50, 50), 'fit': True},
+                        'th': {'box': (50, 50), 'fit': False},
                     },
                 })
             else:
@@ -2204,9 +2205,9 @@ class Producer(models.Model, IndexedModelMixin):
     logo = CustomImageField(upload_to=generate_upload_path, 
                             storage=image_storage,
                             sizes=['big', 'small', 'th'],
-                            max_length=255)
+                            max_length=255, null=True, blank=True)
     country = models.CharField(_('Country'), max_length=255, 
-                               blank=False, null=False)
+                               null=True, blank=True)
                                
     class Meta:
         verbose_name = _('Products producer')
@@ -2219,6 +2220,19 @@ class Producer(models.Model, IndexedModelMixin):
 
     def __str__(self):
         return self.name
+
+    def upload_logo(self, changed_data=None):
+        from core import tasks
+        params = []
+        if (changed_data is None or 'logo' in changed_data) and self.logo:
+            params.append({
+                'file': self.logo.path,
+                'sizes': {
+                    'small': {'box': (24, 24), 'fit': False},
+                    'th': {'box': (50, 50), 'fit': False}
+                }
+            })
+        tasks.upload_images(*params, async=False)
         
 
 @receiver(pre_save)
@@ -2293,6 +2307,7 @@ def update_message_chat(sender, instance, created, **kwargs):
     """
     assert isinstance(instance, Message), \
         _('Invalid parameter')
+
     if created and instance.chat:
         instance.chat.updated_by = instance.sender
         instance.chat.updated_at = instance.created_at
@@ -2328,3 +2343,13 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
 
+
+@receiver(post_save, sender=Producer)
+def upload_producer_logo(sender, instance, created, **kwargs):
+    """
+    Recalculate product's deal cost after update.
+    """
+    assert isinstance(instance, Producer), \
+        _('Invalid parameter')
+
+    instance.upload_logo()

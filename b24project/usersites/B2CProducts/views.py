@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+from collections import OrderedDict
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -10,15 +12,17 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 from paypal.standard.forms import PayPalPaymentsForm
-
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
-from centerpokupok.models import B2CProduct
+from centerpokupok.models import B2CProduct, B2CProductCategory
+from b24online.search_indexes import B2cProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
+from usersites.views import ProductJsonData
 
 
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
@@ -165,4 +169,16 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                   [org_email, 'migirov@gmail.com'], fail_silently=False)
 
         return super(B2CProductByEmail, self).form_valid(form)
+
+
+class B2CProductJsonData(ProductJsonData):
+    model_class = B2CProduct
+    search_index_class = B2cProductIndex
+
+
+class B2C_orderDone(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/B2CProducts/orderDone.html'
+
+    def get_queryset(self):
+        return get_current_site().user_site.organization.additional_pages.all()
 

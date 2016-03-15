@@ -397,7 +397,7 @@ def thumbnail(img, param_str):
     """
     img_url = str(img)
     if not getattr(settings, 'STORE_FILES_LOCAL', False):
-        return urljoin(settings.MEDIA_URL, 'th/', img_url)
+        return urljoin(settings.MEDIA_URL, 'th/' + img_url)
     else:
         try:
             sizes, cropped = param_str.split('_')

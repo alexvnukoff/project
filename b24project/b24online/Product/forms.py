@@ -384,15 +384,22 @@ DealOrderedFormSet = modelformset_factory(
 # The formsets for B2B and B2C products
 B2BProductFormSet = modelformset_factory(
     B2BProduct,
-    fields=('name', 'currency', 'cost'),
-    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),},
+    fields=('name', 'categories', 'currency', 'cost'),
+    widgets={
+        'name': forms.Textarea(attrs={'rows': '3', 'cols': '30'}),
+        'categories': forms.SelectMultiple(attrs={'class': 'select-categories'}),
+    },
     extra=0,
 )
 
 B2CProductFormSet = modelformset_factory(
     B2CProduct,
-    fields=('name', 'currency', 'cost'),
-    widgets={'name': forms.Textarea(attrs={'rows': '2', 'cols': '50'}),},
+    fields=('name', 'categories', 'currency', 'cost'),
+    widgets={
+        'name': forms.Textarea(attrs={'rows': '3', 'cols': '30'}),
+        #'categories': forms.TextInput(attrs={'class': 'select-categories'}),
+        'categories': forms.SelectMultiple(attrs={'class': 'select-categories'}),
+    },
     extra=0
 )
 

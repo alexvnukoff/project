@@ -1,12 +1,21 @@
+# -*- encoding: utf-8 -*-
+
+import json
+import logging
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.views.generic import View
+from django.http import HttpResponse, JsonResponse
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
-
 from tpp.DynamicSiteMiddleware import get_current_site
+
+
+logger = logging.getLogger(__name__)
 
 
 def render_page(request, template, **kwargs):
@@ -55,3 +64,25 @@ def wall(request):
         template_name = template_name.format(template_path='usersites')
 
     return render_to_response(template_name, template_params, context_instance=RequestContext(request))
+
+
+class ProductJsonData(View):
+    model_class = None
+    search_index_model = None
+
+    def get(self, request):
+        cls = type(self)
+        term = request.GET.get('term')
+        organization = get_current_site().user_site.organization
+        if term and len(term) > 2:
+            qs = cls.model_class.objects.filter(
+                name__icontains=term,
+                is_active=True,
+                company=organization,
+            ).order_by('name')
+        else:
+            qs = cls.model_class.objects.none()
+        data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
+            for item in qs]
+        return JsonResponse(data, safe=False)
+

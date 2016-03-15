@@ -57,13 +57,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                        <div class="tmp_search">
+                        <div class="tmp_search hideitplease">
                         <form action="{% url 'b2c_products:search' %}">
                             <input type="text" placeholder="Search" name="s">
                         </form>
                         </div>
 
-                    <div class="select -lang">
+                    <div class="select -lang hideitplease">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
