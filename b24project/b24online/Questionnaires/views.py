@@ -19,10 +19,10 @@ from b24online.Questionnaires.forms import QuestionnaireForm
 logger = logging.getLogger(__name__)
 
 
-class QuestionnaireCreate(ItemCreate):
+class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
     model = Questionnaire
     form_class = QuestionnaireForm
-    template_name = 'b24online/Questionnaires/addForm.html'
+    template_name = 'b24online/Questionnaires/form.html'
     success_url = reverse_lazy('questionnaires:main')
 
     def get(self, request, *args, **kwargs):
@@ -55,5 +55,11 @@ class QuestionnaireCreate(ItemCreate):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class QuestionnaireList(TemplateView):
-    template_name = 'b24online/Questionnaires/index.html'
+class QuestionnaireList(LoginRequiredMixin, ItemsList):
+    model = Questionnaire
+    template_name = 'b24online/Questionnaires/list.html'
+
+
+class QuestionnaireUpdate(TemplateView):
+    template_name = 'b24online/Questionnaires/form.html'
+

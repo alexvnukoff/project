@@ -50,13 +50,15 @@
                     </a>
                 </div>
             {% endif %}
-            {% if add_smth_url %}
+            {% if extra_options %}
+                {% for option_url, option_title in extra_options %}
                  <div class="tender-action">
                      <i class="imgnews noty icon-action"></i>
-                     <a href="{% url url_namespace|add:':'|add:add_smth_url obj.pk %}?next={{ current_path }}">
-                         <span class="deletext">{% trans 'Advertise' %}</span>
+                     <a href="{{ option_url }}?next={{ current_path }}">
+                         <span class="deletext">{{ option_title }}</span>
                      </a>
                  </div>
+                 {% endfor %}
             {% endif %}
 
         </div>
