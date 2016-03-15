@@ -875,7 +875,7 @@ class DealList(LoginRequiredMixin, ItemsList):
     form_class = DealListFilterForm
     url_paginator = 'products:deal_list_paginator'
     paginate_by = 5
-    sortField1 = 'creatd_at'
+    sortField1 = 'created_at'
     order1 = 'asc'
     by_status = None
 

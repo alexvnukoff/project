@@ -336,3 +336,20 @@ def get_template_with_base_path(template_name):
     else:  # Deprecated
         folder_template = 'usersites'
     return "{0}/{1}".format(folder_template, template_name)
+
+
+def get_by_content_type(content_type_id, instance_id):
+    """
+    Return the instance by content_type_id and id.
+    """
+    try:
+        content_type = ContentType.objects.get(pk=content_type_id)
+    except ContentType.DoesNotExist:
+        pass
+    else:
+        model_class = content_type.model_class()
+        try:
+            return model_class.objects.get(pk=instance_id)
+        except model_class.DoesNotExist:
+            pass
+    return None

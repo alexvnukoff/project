@@ -157,7 +157,16 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def has_discount(self):
         return self.is_coupon or self.discount_percent
 
-
+    def get_contextmenu_options(self, context):
+        """
+        Return extra options for context menu.
+        """
+        model_type = ContentType.objects.get_for_model(self)
+        if getattr(self, 'pk', False):
+            yield (reverse('questionnaires:list_for_item',
+                           kwargs={'content_type_id': model_type.id, 
+                                   'item_id': self.id}),
+                   _('Questionnaire'))
 
 
 class B2CProductComment(MPTTModel):

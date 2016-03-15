@@ -18,6 +18,10 @@ urlpatterns = [
      url(r'^list/(?P<content_type_id>\d+?)/(?P<item_id>\d+?)/$',
          QuestionnaireList.as_view(), 
          name='list_for_item'),
+     url(r'^list/(?P<content_type_id>\d+?)/(?P<item_id>\d+?)'
+         r'/page(?P<page>[0-9]+)?/$',
+         QuestionnaireList.as_view(), 
+         name="list_for_item_paginator"),
      url(r'^add/(?P<content_type_id>\d+?)/(?P<item_id>\d+?)/$',
          QuestionnaireCreate.as_view(), 
          name='add_for_item'),

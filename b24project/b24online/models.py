@@ -1044,7 +1044,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         # FIXME: (andrus) add the conditions for site
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:add_for_item',
+            yield (reverse('questionnaires:list_for_item',
                            kwargs={'content_type_id': model_type.id, 
                                    'item_id': self.id}),
                    _('Questionnaire'))
@@ -2245,7 +2245,7 @@ class Producer(models.Model):
 ##
 # Models for Questionnaires
 ##
-class Questionnaire(models.Model):
+class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The main model class for Questionnaire sub-app.
     """
@@ -2268,6 +2268,8 @@ class Questionnaire(models.Model):
                                      null=False, blank=False)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     participants = models.ManyToManyField(User, blank=True)    
         
     class Meta:
@@ -2291,7 +2293,7 @@ class Questionnaire(models.Model):
         tasks.upload_images(*params, async=False)
 
 
-class Question(AbstractRegisterInfoModel):
+class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Question' models class.    
     """
@@ -2339,6 +2341,8 @@ class Question(AbstractRegisterInfoModel):
         null=True,
         blank=True,
     )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('Question')
@@ -2348,7 +2352,42 @@ class Question(AbstractRegisterInfoModel):
         return self.question_text
         
 
-class Answer(AbstractRegisterInfoModel):
+class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Recommendation' models class.    
+    """
+    name = models.CharField(
+        _('Name'), 
+        max_length=255, 
+        blank=False, 
+        null=False
+    )
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='recommendations',
+    )
+    description = models.TextField(
+        _('Descripion'), 
+        null=True, 
+        blank=True
+    )
+    coincidences = models.IntegerField(
+        _('How many coincidences'),
+        null=True,
+        blank=True,
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Recommendation')
+        verbose_name_plural = _('Recommendations')
+        
+    def __str__(self):
+        return self.question_text
+        
+
+class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Question answer' models class.    
     """
@@ -2388,7 +2427,6 @@ class Answer(AbstractRegisterInfoModel):
 
     def __str__(self):
         return self.answer_text
-
         
 
 @receiver(pre_save)
