@@ -22,7 +22,7 @@
                   {% endfor %}
                 </ul>
              {%  if page_obj.has_next %}
-                <a href="{% dynurl url_paginator url_parameter page_obj.next_page_number%}" class="paginator__next"></a>
+                <a href="{% dynurl url_paginator url_parameter page_obj.next_page_number %}" class="paginator__next"></a>
              {% endif %}
         </div>
     {% endif %}

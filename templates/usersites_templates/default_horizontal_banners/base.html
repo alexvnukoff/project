@@ -24,9 +24,9 @@
 
 </head>
 
-<body{% if request.path == "/" %} id="main"{% endif %} class="{% if LANGUAGE_BIDI %} hebrew{% endif %}">
+<body{% if request.path == "/" %} id="main"{% endif %}{% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-    {% include 'usersites_templates/default_horizontal_banners/header.html' %}
+    {% include 'usersites/header.html' %}
 
         <section class="offer">
             <div class="wrapper">
@@ -137,8 +137,6 @@
         <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
-
-
 
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>

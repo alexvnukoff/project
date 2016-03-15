@@ -4,7 +4,7 @@
 {% load humanize %}
 
 <section class="content__info">
-   {% include 'usersites/News/paginator.html' %}
+   {% include 'usersites_templates/default_no_banners/News/paginator.html' %}
        <section class="content__info__news news-page">
         <h2>{% trans 'News' %}</h2>
 
@@ -32,5 +32,5 @@
             </article>
         {% endfor %}
         </section>
-    {% include 'usersites/News/paginator.html' %}
+    {% include 'usersites_templates/default_no_banners/News/paginator.html' %}
     </section>

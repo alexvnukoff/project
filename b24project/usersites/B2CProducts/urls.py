@@ -2,8 +2,8 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from django.utils.translation import ugettext as _
 
-from usersites.B2CProducts.views import B2CProductDetail, B2CProductBasket, \
-    B2CProductByEmail
+from usersites.B2CProducts.views import (B2CProductDetail, B2CProductBasket,
+    B2CProductByEmail)
 from usersites.views import render_page
 
 urlpatterns = [
