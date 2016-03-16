@@ -5,25 +5,32 @@
     <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
             <th>{% trans 'Name' %}</th>
-            <th>{% trans 'Created at' %}</th>
-            <th>{% trans 'Created by' %}</th>
-            <th>{% trans 'Questions' %}</th>
-            <th>{% trans 'Recommendations' %}</th>
-            <th>{% trans 'Status' %}</th>
+            <th>{% trans 'Author' %}</th>
+            <th>{% trans 'Date' %}</th>
+            <th>&nbsp;</th>
         </tr>
     
         {% for item in page_obj.object_list %}
         <tr id="{{ item.id }}-item" class="toggle-child">
-            <td>{{ item.name }}</td>
-            <td>{{ item.created_by }}</td>
+            <td><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></td>
+            <td>
+                {% if item.created_by %}
+                    {{ item.created_by.profile.get_full_name|default:item.created_by }}</a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
             <td>{{ item.created_at|date:"d/m/Y H:i" }}</td>
-            <td>{{ item.hm_questions|default:"0" }}</td>
-            <td>{{ item.hm_recommendations|default:"0" }}</td>
-            <td>-</td>
+            <td class="data-action">
+                {% if request.user == item.created_by %}
+                    <a class="imgnews edit icon-action" href="{% url 'questionnaires:update' item_id=item.id %}"></a>
+                    <a class="imgnews remove icon-action" href="{% url 'questionnaires:delete' item_id=item.id %}"></a>
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="6" align="center">
+            <td colspan="7" align="center">
             {% trans 'There are no questinnaires' %}
             </td>
         </tr>

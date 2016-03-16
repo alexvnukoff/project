@@ -23,9 +23,14 @@
 <div class="goods-details">
     <div class="data">
         <h1>{% trans 'Questionnaire list' %}
-        {% if product %}{% trans 'for' %} <a href="{{ product.get_absolute_url }}">{{ product }}</a>{% endif %}
+        {% if product %}{% trans 'for' %}: <a href="{{ product.get_absolute_url }}">{{ product }}</a>{% endif %}
         </h1>
         <hr class="hr-divider-one">
+        <span style="float: right; margin: 5px;">
+            <a href="{% url 'questionnaires:add' content_type_id=content_type_id item_id=product.id %}">
+                {% trans 'Add new questionnaire' %}
+            </a>
+        </span>
         <div class="data">
             {% include "b24online/Questionnaires/listPage.html" %}
         </div>

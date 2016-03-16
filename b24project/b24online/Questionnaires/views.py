@@ -1,5 +1,9 @@
 # -*- encoding: utf-8 -*-
 
+"""
+The views for Questionnaires, Questions etc
+"""
+
 import logging
 
 from django.http import HttpResponse, Http404
@@ -11,6 +15,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
+from django.contrib.contenttypes.models import ContentType
 
 from b24online.models import Questionnaire, Question, Answer
 from guardian.mixins import LoginRequiredMixin
@@ -23,6 +28,9 @@ logger = logging.getLogger(__name__)
 
 
 class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
+    """
+    The view for creatting.
+    """
     model = Questionnaire
     form_class = QuestionnaireForm
     template_name = 'b24online/Questionnaires/form.html'
@@ -54,7 +62,13 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         )
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(self.success_url)
+            success_url = reverse(
+                'questionnaires:list', 
+                kwargs={
+                    'content_type_id': content_type_id, 
+                    'item_id': item_id,
+                })
+            return HttpResponseRedirect(success_url)
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -70,7 +84,6 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
     order1 = 'asc'
 
     def dispatch(self, request, *args, **kwargs):
-        logger.debug('OKOKOKOKo')
         self.content_type_id = self.kwargs.get('content_type_id')
         self.product_id = self.kwargs.get('item_id')
         self.product = None
@@ -86,7 +99,6 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
 
     def get_queryset(self):
         qs = super(QuestionnaireList, self).get_queryset()
-        logger.debug(qs)
         if self.product:
             qs = qs.filter(
                 content_type_id=self.content_type_id,
@@ -95,16 +107,38 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
         return qs
 
     def get_context_data(self, **kwargs):
-        logger.debug('Step 1')
         context = super(QuestionnaireList, self).get_context_data(**kwargs)
-        logger.debug(context)
         context.update({
             'product': self.product,
+            'content_type_id': self.content_type_id,
         })
         return context
         
 
+class QuestionnaireDetail(ItemDetail):
+    model = Questionnaire
+    template_name = 'b24online/Questionnaires/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionnaireDetail, self).get_context_data(**kwargs)
+        questionnaire = context.get('item')
+        self._product = questionnaire.item
+        context.update({
+            'product': self._product,
+        })
+        return context
+
+
 class QuestionnaireUpdate(TemplateView):
+    template_name = 'b24online/Questionnaires/form.html'
+
+class QuestionnaireDelete(TemplateView):
+    template_name = 'b24online/Questionnaires/form.html'
+
+class QuestionList(TemplateView):
+    template_name = 'b24online/Questionnaires/form.html'
+
+class QuestionCreate(TemplateView):
     template_name = 'b24online/Questionnaires/form.html'
 
 

@@ -1044,7 +1044,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         # FIXME: (andrus) add the conditions for site
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:list_for_item',
+            yield (reverse('questionnaires:list',
                            kwargs={'content_type_id': model_type.id, 
                                    'item_id': self.id}),
                    _('Questionnaire'))
@@ -2291,6 +2291,9 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                 }
             })
         tasks.upload_images(*params, async=False)
+
+    def get_absolute_url(self):
+        return reverse('questionnaires:detail', kwargs={'item_id': self.pk})
 
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):

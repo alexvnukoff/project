@@ -163,7 +163,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         """
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:list_for_item',
+            yield (reverse('questionnaires:list',
                            kwargs={'content_type_id': model_type.id, 
                                    'item_id': self.id}),
                    _('Questionnaire'))

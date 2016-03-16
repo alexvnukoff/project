@@ -189,13 +189,9 @@ def set_context_menu(context, obj, **kwargs):
         'set_current': set_current,
         'delete': delete
     }
-
-    logger.debug(obj)
     if isinstance(obj, models.Model):
-        logger.debug('Step 0')
         extra_options_meth = getattr(obj, 'get_contextmenu_options', None)
         if extra_options_meth and callable(extra_options_meth):
-            logger.debug('Step 1')
             params['extra_options'] = extra_options_meth(context)
 
     has_perm = getattr(obj, 'has_perm', None)

@@ -49,6 +49,7 @@ class QuestionnaireForm(forms.ModelForm):
         instance = super(QuestionnaireForm, self).save(commit=False)
         instance.content_type = self._content_type
         instance.item = self.item
+        instance.created_by = self.request.user
         if commit:
             instance.save()
         return instance
