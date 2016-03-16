@@ -23,8 +23,8 @@
             <td>{{ item.created_at|date:"d/m/Y H:i" }}</td>
             <td class="data-action">
                 {% if request.user == item.created_by %}
-                    <a class="imgnews edit icon-action" href="{% url 'questionnaires:update' item_id=item.id %}"></a>
-                    <a class="imgnews remove icon-action" href="{% url 'questionnaires:delete' item_id=item.id %}"></a>
+                    <a class="imgnews edit icon-action" href="{% url 'questionnaires:update' pk=item.id %}"></a>
+                    <a class="imgnews remove icon-action" href="{% url 'questionnaires:delete' pk=item.id %}"></a>
                 {% endif %}
             </td>
         </tr>

@@ -28,28 +28,34 @@ class QuestionnaireForm(forms.ModelForm):
         cls = type(self)
         super(QuestionnaireForm, self).__init__(*args, **kwargs)
         self.request = request
-        try:
-            self._content_type = ContentType.objects.get(
-                pk=content_type_id
-            )
-        except ContentType.DoesNotExist:
-            raise InvalidParametersError(
-                _('Invalid ContentType ID')
-            )
+        if self.instance and self.instance.pk:
+            self.item = self.instance.item
         else:
-            model_class = self._content_type.model_class()
             try:
-                self.item = model_class.objects.get(pk=item_id)
-            except model_class.DoesNotExist:
-                raise InvalidParametersError(
-                    _('Invalid Object ID')
+                self._content_type = ContentType.objects.get(
+                    pk=content_type_id
                 )
+            except ContentType.DoesNotExist:
+                raise InvalidParametersError(
+                    _('Invalid ContentType ID')
+                )
+            else:
+                model_class = self._content_type.model_class()
+                try:
+                    self.item = model_class.objects.get(pk=item_id)
+                except model_class.DoesNotExist:
+                    raise InvalidParametersError(
+                        _('Invalid Object ID')
+                    )
 
     def save(self, commit=True):
         instance = super(QuestionnaireForm, self).save(commit=False)
-        instance.content_type = self._content_type
-        instance.item = self.item
-        instance.created_by = self.request.user
+        if instance.pk:
+            instance.updated_by = self.request.user
+        else:
+            instance.content_type = self._content_type
+            instance.item = self.item
+            instance.created_by = self.request.user
         if commit:
             instance.save()
         return instance

@@ -72,6 +72,45 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
+    """
+    The view for creatting.
+    """
+    model = Questionnaire
+    form_class = QuestionnaireForm
+    template_name = 'b24online/Questionnaires/form.html'
+    success_url = reverse_lazy('questionnaires:main')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(
+            request, 
+            instance=self.object,
+        )
+        return self.render_to_response(
+            self.get_context_data(form=form)
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(
+            request, 
+            instance=self.object,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:list', 
+                kwargs={
+                    'content_type_id': self.object.content_type_id, 
+                    'item_id': self.object.object_id,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
 class QuestionnaireList(LoginRequiredMixin, ItemsList):
     """
     The Questionnaire list view.
@@ -128,9 +167,6 @@ class QuestionnaireDetail(ItemDetail):
         })
         return context
 
-
-class QuestionnaireUpdate(TemplateView):
-    template_name = 'b24online/Questionnaires/form.html'
 
 class QuestionnaireDelete(TemplateView):
     template_name = 'b24online/Questionnaires/form.html'

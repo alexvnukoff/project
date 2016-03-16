@@ -2295,6 +2295,9 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     def get_absolute_url(self):
         return reverse('questionnaires:detail', kwargs={'item_id': self.pk})
 
+    def has_perm(self, user):
+        return True
+
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """
