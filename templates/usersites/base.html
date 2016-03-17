@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
-
+    {% block after_css %}{% endblock %}
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">

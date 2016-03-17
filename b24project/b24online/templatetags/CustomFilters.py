@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Model
 from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
@@ -23,7 +23,8 @@ from lxml.html.clean import clean_html
 
 import b24online.urls
 from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification, MessageChat, Message)
+from b24online.models import (Chamber, Notification, MessageChat, Message,
+                              Questionnaire)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -503,3 +504,15 @@ def colorize_by(wrapped_value, filter_form):
         else:
             return wrapped_value.value
     return wrapped_value
+
+
+@register.assignment_tag()
+def questionnaire_for_product(item):
+    if isinstance(item, Model) and item.pk:
+        content_type = ContentType.objects.get_for_model(item)
+        if content_type:
+            return Questionnaire.get_active_objects().filter(
+                content_type_id=content_type.id,
+                object_id=item.id            
+            )
+    return Questionnaire.objects.none()

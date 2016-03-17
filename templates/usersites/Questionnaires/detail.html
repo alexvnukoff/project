@@ -1,0 +1,112 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+   <section class="content__info grid-layout">
+        <div class="product_box clearfix">
+            <h2>{{ product.name }} {{ product.sku }}</h2>
+            <div class="preview">
+                {% if product.image %}
+                  <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                {% else %}
+                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="InfoTabs">
+            <ul>
+                <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
+                <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
+                <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
+                <li><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
+            </ul>
+            <div id="tabs-1">
+                {{ product.description|cleanHtml|safe }}
+            </div>
+            <div id="tabs-2">
+                <ul class="tpp-gallery gallery">
+                    {% for document_obj in product.documents.all %}
+                    <li>
+                        <div class="b-img">
+                            <a target="_blank" href="{{ document_obj.document.url }}">
+                                <img src="{% static "b24online/img/file_icon.png" %}" />
+                            </a>
+                            <div class="viewimge">
+                                <a target="_blank" href="{{ document_obj.document.url }}">
+                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
+                                </a>
+                            </div>
+                            <div class="gray-img"></div>
+                        </div>
+                        <div>{{ document_obj.name }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="tabs-3">
+                <ul class="gallery">
+                {% for gallery_obj in product.gallery_images %}
+                    <figure>
+                            <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
+                                <img alt="" src="{{ gallery_obj.image.big }}" />
+                            </a>
+                    </figure>
+                {% endfor %}
+                 </ul>
+            </div>
+            
+            <div id="tabs-4">
+                <h3>{{ object.name }}</h3>
+                <hr class="hr-divider-one">
+                <p style="font-size: 100%;">{{ object.short_description }}</p>
+                <div class="data">
+                    <table width="100%" cellspacing="2" cellpadding="2"
+                        border="0" class="table-data">
+                        <tr>
+                            <th>{% trans 'Theme/Problem' %}</th>
+                            <th align="center">{% trans 'Yes' %}</th>
+                            <th align="center">{% trans 'No' %}</th>
+                        </tr>
+                        {% for question in object.questions.all %}                
+                        <tr valign="top">
+                            <td align="left">{{ question.question_text }}</td>
+                            <td align="center"><input type="checkbox"></td>
+                            <td align="center"><input type="checkbox"></td>
+                        </tr>
+                        {% endfor %}
+                        <tr valign="top">
+                            <td align="left">
+                                {% trans 'Write Your problem' %}:
+                                <br>
+                                <textarea rows="2" cols="60"></textarea>
+                            </td>
+                            <td align="center"><input type="checkbox"></td>
+                            <td align="center"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="right">
+                                <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -84,7 +84,7 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        return super(QuestionnaireCreate, self)\
+        return super(QuestionnaireUpdate, self)\
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

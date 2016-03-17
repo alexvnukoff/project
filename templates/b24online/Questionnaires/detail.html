@@ -81,7 +81,8 @@
                 <tr>
                     <th>{% trans 'Name' %}</th>
                     <th>{% trans 'Desctiption' %}</th>
-                    <th>{% trans 'Coincedences' %}</th>
+                    <th>{% trans 'Answers are coincided?' %}</th>
+                    <th>{% trans 'Answers are positive?' %}</th>
                     {% if request.user == item.created_by %}
                     <th>&nbsp;</th>
                     {% endif %}
@@ -90,7 +91,8 @@
                 <tr valign="top">
                     <td>{{ recommendation.name }}</td>
                     <td>{{ recommendation.description|truncatewords:40 }}</td>
-                    <td align="center">{{ recommendation.coincidences|default:"0" }}</td>
+                    <td align="center">{{ recommendation.is_coincided }}</td>
+                    <td align="center">{{ recommendation.is_positive_answer }}</td>
                     {% if request.user == item.created_by %}
                     <td class="data-action">
                         <a class="imgnews edit icon-action" 

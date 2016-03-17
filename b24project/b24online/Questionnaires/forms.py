@@ -98,7 +98,7 @@ class RecommendationForm(forms.ModelForm):
 
     class Meta:
         model = Recommendation
-        fields = ['name', 'description', 'coincidences']
+        fields = ['name', 'description', 'is_coincided', 'is_positive_answer']
 
     def __init__(self, request, item_id=None, *args, **kwargs):
         cls = type(self)

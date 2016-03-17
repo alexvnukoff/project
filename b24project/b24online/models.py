@@ -2379,11 +2379,15 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True, 
         blank=True
     )
-    coincidences = models.IntegerField(
-        _('How many coincidences'),
-        null=True,
-        blank=True,
+    is_coincided = models.BooleanField(
+        _('If answers have been coincided'),
+        default=False,
     )
+    is_positive_answer = models.BooleanField(
+        _('If answers are positive'),
+        default=False,
+    )
+
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
