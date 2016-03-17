@@ -2270,7 +2270,6 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    participants = models.ManyToManyField(User, blank=True)    
         
     class Meta:
         verbose_name = _('Questionnaire')
@@ -2359,7 +2358,7 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def has_perm(self, user):
         return True
-        
+
 
 class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     """
@@ -2399,6 +2398,27 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         return True
         
 
+class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Questionnaire' case models class.    
+    """
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='cases',
+    )
+    participants = models.ManyToManyField(User, blank=True)    
+    extra_questions = models.ManyToManyField(Question, blank=True)    
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Questionnaire case')
+        verbose_name_plural = _('Questionnaire cases')
+        
+    def has_perm(self, user):
+        return True
+        
+
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Question answer' models class.    
@@ -2413,6 +2433,13 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
         Question, 
         related_name='questions',
         verbose_name=_('Question'),
+        null=True,
+    )
+    questionnaire_case = models.ForeignKey(
+        QuestionnaireCase, 
+        related_name='questionnaire_cases',
+        verbose_name=_('Questionnaire cases'),
+        null=True,
     )
     participant = models.ForeignKey(
         User, 

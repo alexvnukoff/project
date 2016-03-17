@@ -50,8 +50,8 @@
                 <tr>
                     <td>{{ question.question_text }}</td>
                     <td>{{ question.created_by }}</td>
-                    <td align="center">{{ question.score_positive }}</td>
-                    <td align="center">{{ question.score_negative }}</td>
+                    <td align="center">{{ question.score_positive|default:"0" }}</td>
+                    <td align="center">{{ question.score_negative|default:"0" }}</td>
                     {% if request.user == item.created_by %}
                     <td class="data-action">
                         <a class="imgnews edit icon-action" 
@@ -89,8 +89,8 @@
                 {% for recommendation in item.recommendations.all %}                
                 <tr valign="top">
                     <td>{{ recommendation.name }}</td>
-                    <td>{{ recommendation.description }}</td>
-                    <td align="center">{{ recommendation.coincidences }}</td>
+                    <td>{{ recommendation.description|truncatewords:40 }}</td>
+                    <td align="center">{{ recommendation.coincidences|default:"0" }}</td>
                     {% if request.user == item.created_by %}
                     <td class="data-action">
                         <a class="imgnews edit icon-action" 

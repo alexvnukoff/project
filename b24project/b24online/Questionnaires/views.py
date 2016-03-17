@@ -56,7 +56,7 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
     def post(self, request, *args, **kwargs):
         form = self.form_class(
             request, 
-            content_type_id=content_type_id,
+            content_type_id=self.content_type_id,
             item_id=self.item_id,
             data=request.POST,
             files=request.FILES
@@ -66,8 +66,8 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
             success_url = reverse(
                 'questionnaires:list', 
                 kwargs={
-                    'content_type_id': content_type_id, 
-                    'item_id': item_id,
+                    'content_type_id': self.content_type_id, 
+                    'item_id': self.item_id,
                 })
             return HttpResponseRedirect(success_url)
         return self.render_to_response(self.get_context_data(form=form))
@@ -172,16 +172,16 @@ class QuestionnaireDetail(ItemDetail):
         return context
 
 
-class QuestionnaireDelete(TemplateView):
-    template_name = 'b24online/Questionnaires/form.html'
+class QuestionnaireDelete(ItemDeactivate):
+    model = Questionnaire
 
 
-class QuestionDelete(TemplateView):
-    template_name = 'b24online/Questionnaires/form.html'
+class QuestionDelete(ItemDeactivate):
+    model = Question
 
 
-class RecommendationDelete(TemplateView):
-    template_name = 'b24online/Questionnaires/form.html'
+class RecommendationDelete(ItemDeactivate):
+    model = Recommendation
 
 
 class QuestionCreate(LoginRequiredMixin, ItemCreate):
