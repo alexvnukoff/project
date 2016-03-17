@@ -233,7 +233,7 @@ def get_current_organization(request):
         else None
 
 
-def get_permitted_orgs(user, permission='b24online.manage_organization', 
+def get_permitted_orgs(user, permission='b24online.manage_organization',
                        model_klass=None):
     """
     Return the queryset if permitted Organizations.
@@ -243,7 +243,7 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
     from guardian.shortcuts import get_objects_for_user
 
     qs = get_objects_for_user(user, [permission],
-        Organization.get_active_objects().all(), with_superuser=False)
+                              Organization.get_active_objects().all(), with_superuser=False)
 
     if model_klass and issubclass(model_klass, models.Model):
         model_content_type = ContentType.objects.get_for_model(model_klass)
@@ -326,7 +326,7 @@ class MTTPTreeBuilder(object):
             children.append(child_data)
         result['children'] = children
         return result
-                        
+
     def __call__(self, filter_ids=[], opened=[]):
         return self.process_node(filter_ids=filter_ids, opened=opened)
 
@@ -337,4 +337,24 @@ def get_template_with_base_path(template_name):
         folder_template = user_site.user_template.folder_name
     else:  # Deprecated
         folder_template = 'usersites'
+    return "%s/%s" % (folder_template, template_name)
+
+
+def load_category_hierarchy(model, categories, loaded_categories=None):
+    if not loaded_categories:
+        loaded_categories = {}
+    categories_to_load = []
+
+    for category in categories:
+        loaded_categories[category.pk] = category
+
+        if category.parent_id and category.parent_id not in loaded_categories:
+            categories_to_load.append(category.parent_id)
+
+    if categories_to_load:
+        queryset = model.objects.filter(pk__in=categories_to_load).order_by('level')
+        loaded_categories = load_category_hierarchy(queryset, loaded_categories)
+
+    return loaded_categories
     return "{0}/{1}".format(folder_template, template_name)
+
