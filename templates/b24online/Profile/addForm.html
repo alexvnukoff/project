@@ -6,6 +6,7 @@
 <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 {% csrf_token %}
     <div class="user-profile">
+      <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
         <div class="profile-l">
             <div class="avatar">
                 {% if form.initial.avatar %}
