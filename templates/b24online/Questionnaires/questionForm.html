@@ -14,10 +14,6 @@
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
         <ul class="uploadconfig">
-            <li>
-                <label>{{ form.item_label }}</label>
-                <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>
-            </li>
             {% for field in form %}
             <li>
                 <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}:</label>
@@ -41,5 +37,4 @@
         </div>
     </form>
 </div>
-
 {% endblock %}

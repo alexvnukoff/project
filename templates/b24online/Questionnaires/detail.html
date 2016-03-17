@@ -39,12 +39,75 @@
                 border="0" class="table-data">
                 <tr>
                     <th>{% trans 'Question' %}</th>
+                    <th>{% trans 'Created by' %}</th>
                     <th>{% trans 'Score (if "Yes")' %}</th>
                     <th>{% trans 'Score (if "No")' %}</th>
+                    {% if request.user == item.created_by %}
+                    <th>&nbsp;</th>
+                    {% endif %}
                 </tr>
-                {% for question in item.questions %}                
+                {% for question in item.questions.all %}                
+                <tr>
+                    <td>{{ question.question_text }}</td>
+                    <td>{{ question.created_by }}</td>
+                    <td align="center">{{ question.score_positive }}</td>
+                    <td align="center">{{ question.score_negative }}</td>
+                    {% if request.user == item.created_by %}
+                    <td class="data-action">
+                        <a class="imgnews edit icon-action" 
+                            href="{% url 'questionnaires:update_question' pk=question.id %}"></a>
+                        <a class="imgnews remove icon-action" 
+                            href="{% url 'questionnaires:delete_question' pk=question.id %}"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td align="center" colspan="{{ colspan }}">{% trans 'There are no records' %}</td>
+                </tr>
+                {% endfor %}
             </table> 
         </div>
+
+        <div class="data">
+            <h3>{% trans 'Recommendations' %}</h3>
+            <span style="float: right; margin: 5px;">
+                <a href="{% url 'questionnaires:add_recommendation' item_id=item.id %}">
+                    {% trans 'Add new recommendation' %}
+                </a>
+            </span>
+            <table width="100%" cellspacing="2" cellpadding="2"
+                border="0" class="table-data">
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Desctiption' %}</th>
+                    <th>{% trans 'Coincedences' %}</th>
+                    {% if request.user == item.created_by %}
+                    <th>&nbsp;</th>
+                    {% endif %}
+                </tr>
+                {% for recommendation in item.recommendations.all %}                
+                <tr valign="top">
+                    <td>{{ recommendation.name }}</td>
+                    <td>{{ recommendation.description }}</td>
+                    <td align="center">{{ recommendation.coincidences }}</td>
+                    {% if request.user == item.created_by %}
+                    <td class="data-action">
+                        <a class="imgnews edit icon-action" 
+                            href="{% url 'questionnaires:update_recommendation' pk=recommendation.id %}"></a>
+                        <a class="imgnews remove icon-action" 
+                            href="{% url 'questionnaires:delete_recommendation' pk=recommendation.id %}"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td align="center" colspan="{{ colspan|add:'-1' }}">{% trans 'There are no records' %}</td>
+                </tr>
+                {% endfor %}
+            </table> 
+        </div>
+
     </div>
 </div>
 {% endblock %}

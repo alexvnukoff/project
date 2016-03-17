@@ -9,7 +9,8 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 from b24online import InvalidParametersError
-from b24online.models import (Questionnaire, Question, Answer, B2BProduct)
+from b24online.models import (Questionnaire, Question, Answer, B2BProduct,
+                              Recommendation)
 from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,70 @@ class QuestionnaireForm(forms.ModelForm):
         else:
             instance.content_type = self._content_type
             instance.item = self.item
+            instance.created_by = self.request.user
+        if commit:
+            instance.save()
+        return instance
+
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['question_text', 'score_positive', 'score_negative']
+
+    def __init__(self, request, item_id=None, *args, **kwargs):
+        cls = type(self)
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        self.request = request
+        if self.instance and self.instance.pk:
+            self.item = self.instance.questionnaire
+        else:
+            try:
+                self.item = Questionnaire.objects.get(pk=item_id)
+            except Questionnaire.DoesNotExist:
+                raise InvalidParametersError(
+                    _('Invalid Object ID')
+                )
+
+    def save(self, commit=True):
+        instance = super(QuestionForm, self).save(commit=False)
+        if instance.pk:
+            instance.updated_by = self.request.user
+        else:
+            instance.questionnaire = self.item
+            instance.created_by = self.request.user
+        if commit:
+            instance.save()
+        return instance
+
+
+class RecommendationForm(forms.ModelForm):
+
+    class Meta:
+        model = Recommendation
+        fields = ['name', 'description', 'coincidences']
+
+    def __init__(self, request, item_id=None, *args, **kwargs):
+        cls = type(self)
+        super(RecommendationForm, self).__init__(*args, **kwargs)
+        self.request = request
+        if self.instance and self.instance.pk:
+            self.item = self.instance.questionnaire
+        else:
+            try:
+                self.item = Questionnaire.objects.get(pk=item_id)
+            except Questionnaire.DoesNotExist:
+                raise InvalidParametersError(
+                    _('Invalid Object ID')
+                )
+
+    def save(self, commit=True):
+        instance = super(RecommendationForm, self).save(commit=False)
+        if instance.pk:
+            instance.updated_by = self.request.user
+        else:
+            instance.questionnaire = self.item
             instance.created_by = self.request.user
         if commit:
             instance.save()

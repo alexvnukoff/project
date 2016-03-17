@@ -17,11 +17,13 @@ from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from django.contrib.contenttypes.models import ContentType
 
-from b24online.models import Questionnaire, Question, Answer
+from b24online.models import (Questionnaire, Question, Answer, 
+                              Recommendation)
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, 
                            ItemDeactivate)
-from b24online.Questionnaires.forms import QuestionnaireForm
+from b24online.Questionnaires.forms import (QuestionnaireForm, QuestionForm,
+                                            RecommendationForm)
 from b24online.utils import get_by_content_type
 
 logger = logging.getLogger(__name__)
@@ -36,27 +38,26 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
     template_name = 'b24online/Questionnaires/form.html'
     success_url = reverse_lazy('questionnaires:main')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.object = None
-        content_type_id = kwargs.pop('content_type_id')
-        item_id = kwargs.pop('item_id')
+        self.content_type_id = kwargs.pop('content_type_id')
+        self.item_id = kwargs.pop('item_id')
+        return super(QuestionnaireCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
         form = self.form_class(
             request, 
-            content_type_id=content_type_id,
-            item_id=item_id,
+            content_type_id=self.content_type_id,
+            item_id=self.item_id
         )
-        return self.render_to_response(
-            self.get_context_data(form=form)
-        )
+        return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
-        self.object = None
-        content_type_id = kwargs.pop('content_type_id')
-        item_id = kwargs.pop('item_id')
         form = self.form_class(
             request, 
             content_type_id=content_type_id,
-            item_id=item_id,
+            item_id=self.item_id,
             data=request.POST,
             files=request.FILES
         )
@@ -74,25 +75,26 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
 
 class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
     """
-    The view for creatting.
+    The view for creating.
     """
     model = Questionnaire
     form_class = QuestionnaireForm
     template_name = 'b24online/Questionnaires/form.html'
     success_url = reverse_lazy('questionnaires:main')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
+        return super(QuestionnaireCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
         form = self.form_class(
             request, 
             instance=self.object,
         )
-        return self.render_to_response(
-            self.get_context_data(form=form)
-        )
+        return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         form = self.form_class(
             request, 
             instance=self.object,
@@ -164,6 +166,8 @@ class QuestionnaireDetail(ItemDetail):
         self._product = questionnaire.item
         context.update({
             'product': self._product,
+            'colspan': 5 if self.request.user == questionnaire.created_by \
+                else 4,
         })
         return context
 
@@ -171,10 +175,168 @@ class QuestionnaireDetail(ItemDetail):
 class QuestionnaireDelete(TemplateView):
     template_name = 'b24online/Questionnaires/form.html'
 
-class QuestionList(TemplateView):
+
+class QuestionDelete(TemplateView):
     template_name = 'b24online/Questionnaires/form.html'
 
-class QuestionCreate(TemplateView):
+
+class RecommendationDelete(TemplateView):
     template_name = 'b24online/Questionnaires/form.html'
 
 
+class QuestionCreate(LoginRequiredMixin, ItemCreate):
+    """
+    The view for creating.
+    """
+    model = Question
+    form_class = QuestionForm
+    template_name = 'b24online/Questionnaires/questionForm.html'
+    success_url = reverse_lazy('questionnaires:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = None
+        self.item_id = kwargs.pop('item_id')
+        return super(QuestionCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            item_id=self.item_id
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            item_id=self.item_id,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail', 
+                kwargs={
+                    'item_id': self.item_id,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
+    """
+    The view for creating.
+    """
+    model = Question
+    form_class = QuestionForm
+    template_name = 'b24online/Questionnaires/questionForm.html'
+    success_url = reverse_lazy('questionnaires:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(QuestionUpdate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            instance=self.object,
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            instance=self.object,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail', 
+                kwargs={
+                    'item_id': self.object.questionnaire.id,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class RecommendationCreate(LoginRequiredMixin, ItemCreate):
+    """
+    The view for creating.
+    """
+    model = Recommendation
+    form_class = RecommendationForm
+    template_name = 'b24online/Questionnaires/recommendationForm.html'
+    success_url = reverse_lazy('questionnaires:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = None
+        self.item_id = kwargs.pop('item_id')
+        return super(RecommendationCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            item_id=self.item_id
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            item_id=self.item_id,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail', 
+                kwargs={
+                    'item_id': self.item_id,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
+    """
+    The view for creating.
+    """
+    model = Recommendation
+    form_class = RecommendationForm
+    template_name = 'b24online/Questionnaires/recommendationForm.html'
+    success_url = reverse_lazy('questionnaires:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(RecommendationUpdate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            instance=self.object,
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request, 
+            instance=self.object,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail', 
+                kwargs={
+                    'item_id': self.object.questionnaire.id,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))

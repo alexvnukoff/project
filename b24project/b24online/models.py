@@ -2356,6 +2356,9 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         
     def __str__(self):
         return self.question_text
+
+    def has_perm(self, user):
+        return True
         
 
 class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2391,6 +2394,9 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         
     def __str__(self):
         return self.question_text
+
+    def has_perm(self, user):
+        return True
         
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):

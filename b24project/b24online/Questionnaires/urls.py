@@ -12,8 +12,12 @@ from b24online.Questionnaires.views import (
      QuestionnaireDetail,
      QuestionnaireUpdate,
      QuestionnaireDelete,
-     QuestionList,
      QuestionCreate,
+     QuestionUpdate,
+     QuestionDelete,
+     RecommendationCreate,
+     RecommendationUpdate,
+     RecommendationDelete,
 )
 
 
@@ -38,10 +42,24 @@ urlpatterns = [
      url(r'^delete/(?P<pk>\d+?)/$',
          QuestionnaireDelete.as_view(), 
          name='delete'),
-     url(r'^detail/(?P<item_id>\d+?)/questions/$',
-         QuestionList.as_view(), 
-         name='questions'),
      url(r'^detail/(?P<item_id>\d+?)/questions/add/$',
          QuestionCreate.as_view(), 
          name='add_question'),
+     url(r'^questions/update/(?P<pk>\d+?)/$',
+         QuestionUpdate.as_view(), 
+         name='update_question'),
+     url(r'^questions/delete/(?P<pk>\d+?)/$',
+         QuestionDelete.as_view(), 
+         name='delete_question'),
+
+     url(r'^detail/(?P<item_id>\d+?)/recommendations/add/$',
+         RecommendationCreate.as_view(), 
+         name='add_recommendation'),
+     url(r'^recommendations/update/(?P<pk>\d+?)/$',
+         RecommendationUpdate.as_view(), 
+         name='update_recommendation'),
+     url(r'^recommendations/delete/(?P<pk>\d+?)/$',
+         RecommendationDelete.as_view(), 
+         name='delete_recommendation'),
+ 
 ]

@@ -213,7 +213,7 @@ def class_for_name(module_name, class_name):
 
 
 @lru_cache(maxsize=32)
-def _get_org(id):
+def get_org_by_id(id):
     from b24online.models import Organization
     try:
         return Organization.objects.get(pk=id)
@@ -225,9 +225,8 @@ def get_current_organization(request):
     """
     Return the current organization (stored in request.session)
     """
-
     current_organization_id = request.session.get('current_company')
-    return _get_org(current_organization_id) if current_organization_id \
+    return get_org_by_id(current_organization_id) if current_organization_id \
         else None
 
 
