@@ -33,7 +33,7 @@
                 <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
                 <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
                 <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
-                <li><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
+                <li class="ui-tabs-active"><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
             </ul>
             <div id="tabs-1">
                 {{ product.description|cleanHtml|safe }}
@@ -99,7 +99,13 @@
                             <td align="center"><input type="checkbox"></td>
                             <td align="center"><input type="checkbox"></td>
                         </tr>
-                        <tr>
+                        <tr class="without-border">
+                            <td align="right">{% trans 'Invite partner' %}:</td>
+                            <td colspan="2">
+                                <input type="text" name="invite_email" value="" size="60">
+                            </td>
+                        </tr>
+                        <tr class="without-border">
                             <td colspan="3" align="right">
                                 <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
                             </td>
