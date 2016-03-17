@@ -1,9 +1,9 @@
+# -*- encoding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from loginas.views import user_login
 from django.views.generic import TemplateView
-
 import b24online.AdminTpp
 import b24online.AdminTpp.urls
 import b24online.AdvBanner
