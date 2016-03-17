@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if proposals %}
+
+            <h2>{% trans "Business proposals" %}</h2>
+
+            {% for proposal in proposals %}
+
+                    <article class="news">
+                        <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
+                        <div class="news__content clearfix">
+                            <div class="news__content__desc clearfix">
+                                <p class="date">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
+                                <p class="text">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"30" }}</p>
+                            </div>
+                            <a href="{{ proposal.get_absolute_url }}" class="more vertical"><span>{% trans 'More' %}</span></a>
+                        </div>
+                    </article>
+            {% endfor %}
+        {% endif %}

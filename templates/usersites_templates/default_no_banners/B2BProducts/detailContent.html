@@ -9,8 +9,9 @@
 {% block content %}
     {{ block.super }}
 
-
    <section class="content__info grid-layout">
+        {# Register the 'view' event for b2c product #}
+        {{ object|register_event:"click"|process_event:request }}
 
         <div class="product_box clearfix">
             <h2>{{ object.name }} {{ object.sku }}</h2>

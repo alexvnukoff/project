@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
+from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -65,12 +66,20 @@ class ChamberList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                return queryset.filter(pk=current_org)
+                queryset = self.model.get_active_objects().filter(Q(parent_id=current_org) | Q(pk=current_org))
             else:
                 queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
                                                 Organization.get_active_objects().all()).instance_of(Chamber)
 
         return queryset
+
+            #if current_org is not None:
+            #    return queryset.filter(pk=current_org)
+            #else:
+            #    queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
+            #                                    Organization.get_active_objects().all()).instance_of(Chamber)
+
+        #return queryset
 
 
 class ChamberDetail(ItemDetail):

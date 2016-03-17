@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+<section class="content__info">
+   {% include 'usersites_templates/default_no_banners/News/paginator.html' %}
+       <section class="content__info__news news-page">
+        <h2>{% trans 'News' %}</h2>
+
+        {% for article in news %}
+            <article class="news">
+                <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
+                <div class="news__content clearfix">
+                    <div class="news__content__cover">
+            {% if article.image %}
+                <img src="{{ article.image.small }} " alt="{{ article.title }}" title="{{ article.title }}"/>
+            {% endif %}
+            </div>
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+                        <p class="text">
+                            {% if article.short_description %}
+                                 {{ article.short_description|force_escape|linebreaks|removetags:"p" }}
+                            {% else %}
+                                 {{ article.content|safe|truncatewords_html:"30"|removetags:"p" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'news:detail' article.slug article.pk %}" class="more vertical"><span>{% trans "More" %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+        </section>
+    {% include 'usersites_templates/default_no_banners/News/paginator.html' %}
+    </section>
