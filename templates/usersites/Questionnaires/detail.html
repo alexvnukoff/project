@@ -8,15 +8,14 @@
 
 {% block after_css %}
     <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
-
 {% endblock %}
 
 {% block title %}{{ object.name }}{% endblock %}
 
 {% block content %}
     {{ block.super }}
-
-   <section class="content__info grid-layout">
+    {% with object.item as product %}
+    <section class="content__info grid-layout">
         <div class="product_box clearfix">
             <h2>{{ product.name }} {{ product.sku }}</h2>
             <div class="preview">
@@ -76,6 +75,9 @@
                 <hr class="hr-divider-one">
                 <p style="font-size: 100%;">{{ object.short_description }}</p>
                 <div class="data">
+                    <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.answer_formset.management_form }}
                     <table width="100%" cellspacing="2" cellpadding="2"
                         border="0" class="table-data">
                         <tr>
@@ -83,26 +85,30 @@
                             <th align="center">{% trans 'Yes' %}</th>
                             <th align="center">{% trans 'No' %}</th>
                         </tr>
-                        {% for question in object.questions.all %}                
-                        <tr valign="top">
-                            <td align="left">{{ question.question_text }}</td>
-                            <td align="center"><input type="checkbox"></td>
-                            <td align="center"><input type="checkbox"></td>
-                        </tr>
-                        {% endfor %}
+                        {% for q_form in form.answer_formset %} 
+                        {% for hidden in q_form.hidden_fields %}{{ hidden }}{% endfor %}
                         <tr valign="top">
                             <td align="left">
-                                {% trans 'Write Your problem' %}:
-                                <br>
-                                <textarea rows="2" cols="60"></textarea>
+                                {% if q_form.question %}
+                                    {{ q_form.question.question_text }}
+                                {% else %}
+                                    {{ q_form.question_text }}
+                                {% endif %}
                             </td>
-                            <td align="center"><input type="checkbox"></td>
-                            <td align="center"><input type="checkbox"></td>
+                            <td align="center">
+                                <input id="id_{{ q_form.prefix }}-agree_0" 
+                                    name="{{ q_form.prefix }}-agree" type="radio" value="yes">                                
+                            </td>
+                            <td align="center">
+                                <input checked="checked" id="id_{{ q_form.prefix }}-agree_1" 
+                                    name="{{ q_form.prefix }}-agree" type="radio" value="no">                                
+                            </td>
                         </tr>
+                        {% endfor %}
                         <tr class="without-border">
-                            <td align="right">{% trans 'Invite partner' %}:</td>
-                            <td colspan="2">
-                                <input type="text" name="invite_email" value="" size="60">
+                            <td align="left" colspan=>
+                                {% trans 'Invite partner by Email' %}:
+                                <span>{{ form.invite_by_email }}</span>
                             </td>
                         </tr>
                         <tr class="without-border">
@@ -115,4 +121,5 @@
             </div>
         </div>
     </section>
+    {% endwith %}
 {% endblock %}

@@ -3,6 +3,7 @@
 import os
 import datetime
 import hashlib
+import uuid
 import logging
 
 from argparse import ArgumentError
@@ -2409,6 +2410,11 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     questionnaire = models.ForeignKey(
         Questionnaire, 
         related_name='cases',
+    )
+    case_uuid = models.UUIDField(
+        default=uuid.uuid4, 
+        editable=False,
+        db_index=True,
     )
     participants = models.ManyToManyField(User, blank=True)    
     extra_questions = models.ManyToManyField(Question, blank=True)    

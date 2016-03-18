@@ -12,7 +12,7 @@ from b24online.models import Questionnaire
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
-
+from usersites.Questionnaires.forms import InviteForm
 
 logger = logging.getLogger(__name__)
         
@@ -21,11 +21,20 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
     model = Questionnaire
     template_name = '{template_path}/Questionnaires/detail.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionnaireDetail, self).get_context_data(**kwargs)
-        questionnaire = context.get('item')
-        self._product = questionnaire.item
-        context.update({
-            'product': self._product,
-        })
-        return context
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = InviteForm(self.object)
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = InviteForm(
+            self.object,
+            data=self.request.POST
+        )
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+

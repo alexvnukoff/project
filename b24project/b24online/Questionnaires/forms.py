@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.forms import formset_factory
 
 from b24online import InvalidParametersError
 from b24online.models import (Questionnaire, Question, Answer, B2BProduct,
@@ -124,3 +125,4 @@ class RecommendationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+

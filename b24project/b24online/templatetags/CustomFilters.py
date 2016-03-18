@@ -313,13 +313,11 @@ def get_length(some_list):
 
 ### FIXME: (andrey_k) delete it ###
 @register.filter()
-def to_list(some_dict):
-    return [(k, v) for k, v in some_dict.items()]
-
-
-@register.filter()
-def show_type(instance):
-    return type(instance)
+def log_instance(instance):
+    logger.debug(instance)
+    logger.debug(type(instance))
+    logger.debug(dir(instance))
+    return ''
 ### -- ###    
 
 

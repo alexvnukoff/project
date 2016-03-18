@@ -402,5 +402,3 @@ B2CProductFormSet = modelformset_factory(
     },
     extra=0
 )
-
-
