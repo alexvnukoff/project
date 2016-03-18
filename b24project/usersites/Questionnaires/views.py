@@ -23,7 +23,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = InviteForm(self.object)
+        form = InviteForm(self.request, self.object)
         return self.render_to_response(
             self.get_context_data(form=form, *args, **kwargs)
         )
@@ -31,9 +31,13 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = InviteForm(
+            self.request,
             self.object,
             data=self.request.POST
         )
+        if form.is_valid():
+            form.save()
+            
         return self.render_to_response(
             self.get_context_data(form=form, *args, **kwargs)
         )

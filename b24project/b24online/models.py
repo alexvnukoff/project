@@ -2286,6 +2286,7 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
             params.append({
                 'file': self.image.path,
                 'sizes': {
+                    'big': {'box': (250, 250), 'fit': False},
                     'small': {'box': (24, 24), 'fit': False},
                     'th': {'box': (50, 50), 'fit': False}
                 }
@@ -2401,6 +2402,18 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def has_perm(self, user):
         return True
+
+
+class QuestionnaireParticipant(ActiveModelMixing, models.Model):
+    email = models.EmailField(verbose_name='E-mail', max_length=255, 
+                              db_index=True)
+    user = models.ForeignKey(User, related_name='qustionnaire_cases',
+                             null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = _('Questionnaire participant')
+        verbose_name_plural = _('Questionnaire participants')
         
 
 class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2416,7 +2429,10 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         editable=False,
         db_index=True,
     )
-    participants = models.ManyToManyField(User, blank=True)    
+    participants = models.ManyToManyField(
+        QuestionnaireParticipant, 
+        blank=True
+    )    
     extra_questions = models.ManyToManyField(Question, blank=True)    
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -2433,7 +2449,7 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Question answer' models class.    
     """
-    ANSWER_YES, ANSWER_NO, ANSWER_OWN = 'author', 'member', 'own'
+    ANSWER_YES, ANSWER_NO, ANSWER_OWN = 'yes', 'no', 'own'
     ANSWER_TYPES = (
         (ANSWER_YES, _('Yes')),
         (ANSWER_NO, _('No')),
@@ -2452,7 +2468,7 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True,
     )
     participant = models.ForeignKey(
-        User, 
+        QuestionnaireParticipant, 
         related_name='answers',
         verbose_name=_('Answer author'),
     )

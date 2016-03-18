@@ -20,7 +20,7 @@
             <h2>{{ product.name }} {{ product.sku }}</h2>
             <div class="preview">
                 {% if product.image %}
-                  <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                  <img src="{{ product.image.small }}" alt="{{ product.name }}" title="{{ product.name }}" />
                 {% else %}
                   <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
                 {% endif %}
@@ -73,7 +73,10 @@
             <div id="tabs-4">
                 <h3>{{ object.name }}</h3>
                 <hr class="hr-divider-one">
-                <p style="font-size: 100%;">{{ object.short_description }}</p>
+                <p style="font-size: 100%;">
+                    {% if object.image %}<div style="float: left;"><img src="{{ object.image.big }}" /></div>{% endif %}
+                    <div style="margin-left: 20px; overflow: auto; text-align: left;">{{ object.short_description }}</div>
+                </p>
                 <div class="data">
                     <form action="" method="post">
                     {% csrf_token %}
@@ -96,21 +99,38 @@
                                 {% endif %}
                             </td>
                             <td align="center">
-                                <input id="id_{{ q_form.prefix }}-agree_0" 
+                                <input {% if q_form.agree.value == 'yes' or not q_form.agree.value %}checked{% endif %} 
+                                    id="id_{{ q_form.prefix }}-agree_0" 
                                     name="{{ q_form.prefix }}-agree" type="radio" value="yes">                                
                             </td>
                             <td align="center">
-                                <input checked="checked" id="id_{{ q_form.prefix }}-agree_1" 
+                                <input {% if q_form.agree.value == 'no' %}checked{% endif %}  
+                                    id="id_{{ q_form.prefix }}-agree_1" 
                                     name="{{ q_form.prefix }}-agree" type="radio" value="no">                                
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if form.inviter_email %}
                         <tr class="without-border">
-                            <td align="left" colspan=>
-                                {% trans 'Invite partner by Email' %}:
-                                <span>{{ form.invite_by_email }}</span>
+                            <td align="left" colspan="3">
+                                <span style="width: 33%;">{% trans 'Your Email' %}:</span>
+                                <span>{{ form.inviter_email }}</span>
+                                {% if form.is_bound and form.inviter_email.errors %}
+                                    <p class="errors">{{ form.inviter_email.errors|striptags }}</p>
+                                {% endif %}
                             </td>
                         </tr>
+                        {% endif %}
+                        <tr class="without-border">
+                            <td align="left" colspan="3">
+                                <span style="width: 33%;">{% trans 'Invite partner by Email' %}:</span>
+                                <span>{{ form.invite_by_email }}</span>
+                                {% if form.is_bound and form.invite_by_email.errors %}
+                                    <p class="errors">{{ form.invite_by_email.errors|striptags }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+
                         <tr class="without-border">
                             <td colspan="3" align="right">
                                 <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
