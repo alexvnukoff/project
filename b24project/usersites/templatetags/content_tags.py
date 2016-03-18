@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.utils.timezone import now
 
 from appl import func
-from b24online.models import B2BProduct, B2BProductCategory, News, BusinessProposal
+from b24online.models import B2BProduct, B2BProductCategory, News, BusinessProposal, Company
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_template_with_base_path, load_category_hierarchy
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -118,7 +118,12 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
     else:
         url_paginator = "b2c_products:search_paginator"
 
-    queryset = B2BProduct.get_active_objects().filter(company=get_current_site().user_site.organization)
+    organization = get_current_site().user_site.organization
+
+    if isinstance(organization, Company):
+        queryset = B2BProduct.get_active_objects().filter(company=get_current_site().user_site.organization)
+    else:
+        queryset = B2BProduct.objects.none()
 
     return ProductsTag(
         order_by=order_by,
@@ -141,7 +146,12 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
     else:
         url_paginator = "b2c_products:search_paginator"
 
-    queryset = B2CProduct.get_active_objects().filter(company=get_current_site().user_site.organization)
+    organization = get_current_site().user_site.organization
+
+    if isinstance(organization, Company):
+        queryset = B2CProduct.get_active_objects().filter(company=organization)
+    else:
+        queryset = B2CProduct.objects.none()
 
     return ProductsTag(
         order_by=order_by,
@@ -160,9 +170,14 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
 def coupons(context, template_name, on_page, page=1, selected_category=None, order_by='-created_at'):
     # TODO
     url_paginator = None if selected_category else None
-    queryset = B2CProduct.get_active_objects().filter(company=get_current_site().user_site.organization,
+    organization = get_current_site().user_site.organization
+
+    if isinstance(organization, Company):
+        queryset = B2CProduct.get_active_objects().filter(company=organization,
                                                       coupon_dates__contains=now().date(),
                                                       coupon_discount_percent__gt=0)
+    else:
+        queryset = B2CProduct.objects.none()
 
     return ProductsTag(
         order_by=order_by,
