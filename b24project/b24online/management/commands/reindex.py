@@ -1,16 +1,18 @@
+from math import ceil
+
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.utils.translation import activate, deactivate
 from elasticsearch.helpers import bulk
-from math import ceil
 from elasticsearch_dsl import Index, DocType
+
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_index_name
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         languages = [lan[0] for lan in settings.LANGUAGES]
         conn = SearchEngine.get_connection()
 

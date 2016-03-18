@@ -81,7 +81,7 @@ class ProductsTag(ItemsTag):
 
         if self.search_query:
             s = SearchEngine(doc_type=self.queryset.model.get_index_model())
-            s.query('match', name=self.search_query) \
+            s = s.query('match', name=self.search_query) \
                 .query('match', is_active=True) \
                 .query('match', is_deleted=False) \
                 .query('match', organization=get_current_site().user_site.organization.pk)
@@ -174,8 +174,8 @@ def coupons(context, template_name, on_page, page=1, selected_category=None, ord
 
     if isinstance(organization, Company):
         queryset = B2CProduct.get_active_objects().filter(company=organization,
-                                                      coupon_dates__contains=now().date(),
-                                                      coupon_discount_percent__gt=0)
+                                                          coupon_dates__contains=now().date(),
+                                                          coupon_discount_percent__gt=0)
     else:
         queryset = B2CProduct.objects.none()
 
@@ -239,4 +239,3 @@ def b2c_categories():
 
     return OrderedDict(sorted(
         load_category_hierarchy(B2CProductCategory, categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
-
