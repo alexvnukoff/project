@@ -104,7 +104,7 @@ class ProductsTag(ItemsTag):
             extended_context['url_parameter'] = [self.category.slug, self.category.pk]
 
         if self.search_query:
-            objects_on_page = [hit.django_id for hit in extended_context[self.queryset]]
+            objects_on_page = [hit.django_id for hit in extended_context[self.queryset_key]]
             extended_context[self.queryset_key] = self.queryset.model.objects.filter(pk__in=objects_on_page)
 
         return extended_context
