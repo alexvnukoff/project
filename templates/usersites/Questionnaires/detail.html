@@ -121,6 +121,7 @@
                             </td>
                         </tr>
                         {% endif %}
+                        {% if form.invite_by_email %}
                         <tr class="without-border">
                             <td align="left" colspan="3">
                                 <span style="width: 33%;">{% trans 'Invite partner by Email' %}:</span>
@@ -130,6 +131,7 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% endif %}
 
                         <tr class="without-border">
                             <td colspan="3" align="right">

@@ -2409,6 +2409,7 @@ class QuestionnaireParticipant(ActiveModelMixing, models.Model):
                               db_index=True)
     user = models.ForeignKey(User, related_name='qustionnaire_cases',
                              null=True, blank=True)
+    is_invited = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     
     class Meta:
@@ -2420,6 +2421,14 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Questionnaire' case models class.    
     """
+    DRAFT, READY, ACTIVE, FINISHED = 'draft', 'ready', 'active', 'FINISHED'
+    STATUSES = (
+        (DRAFT, _('Draft')),
+        (READY, _('Ready')),
+        (ACTIVE, _('Actiive')),
+        (FINISHED, _('Finished')),
+    )
+    
     questionnaire = models.ForeignKey(
         Questionnaire, 
         related_name='cases',
@@ -2427,13 +2436,22 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     case_uuid = models.UUIDField(
         default=uuid.uuid4, 
         editable=False,
-        db_index=True,
+        unique=True,
     )
-    participants = models.ManyToManyField(
-        QuestionnaireParticipant, 
-        blank=True
-    )    
-    extra_questions = models.ManyToManyField(Question, blank=True)    
+    status = models.CharField(
+        _('Status'), 
+        max_length=20, 
+        choices=STATUSES, 
+        default=DRAFT, 
+        editable=False,
+        null=False, 
+        db_index=True
+    )
+
+    participants = models.ManyToManyField(QuestionnaireParticipant)    
+    extra_questions = models.ManyToManyField(Question)    
+    recommendations = models.ManyToManyField(Recommendation)
+        
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 

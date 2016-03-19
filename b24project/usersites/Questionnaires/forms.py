@@ -3,6 +3,7 @@
 import logging
 
 from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.db import transaction, IntegrityError
 from django import forms
 from django.utils.translation import gettext as _
@@ -27,6 +28,7 @@ class AnswerForm(forms.Form):
     question_id = forms.IntegerField(
         label=_('Question ID'),
         widget=forms.HiddenInput, 
+        required=False,
     )
     question_text = forms.CharField(
         label=_('Your answer'),
@@ -72,10 +74,12 @@ class InviteForm(forms.Form):
     
     def __init__(self, request, questionnaire, *args, **kwargs):
         self.instance = kwargs.pop('instance', None)
+        self.is_invited = True if self.instance else False
         super(InviteForm, self).__init__(*args, **kwargs)
         self.request = request
         if self.instance:
             del self.fields['inviter_email']
+            del self.fields['invite_by_email']
         self.questionnaire = questionnaire
         params = {
             'initial': [{'question_id': question.id, 'question': question} \
@@ -94,9 +98,14 @@ class InviteForm(forms.Form):
 ##        return email
 
     def is_valid(self):
+        logger.debug('S1')
         it_is_valid = super(InviteForm, self).is_valid()
+        logger.debug(it_is_valid)
         for q_form in self.answer_formset:
             it_is_valid = it_is_valid and q_form.is_valid()
+            logger.debug(q_form.errors)
+        logger.debug(it_is_valid)
+            
         return it_is_valid
 
     def save(self):
@@ -104,26 +113,38 @@ class InviteForm(forms.Form):
             with transaction.atomic():
                 if not self.instance:
                     self.instance = QuestionnaireCase.objects.create(
-                        questionnaire=self.questionnaire
+                        questionnaire=self.questionnaire,
+                        status=QuestionnaireCase.DRAFT,
                     )
-
-                responsive = None
-                
-                invited_by_email = self.cleaned_data.get('invited_by_email')
-                if invited_by_email:
-                    invited_participant = QuestionnaireParticipant.objects\
-                        .create(email=invited_by_email)
-                    responsive = invited_participant
-
-                inviter_email = self.cleaned_data.get('inviter_email')
-                if inviter_email:
-                    inviter_participant = QuestionnaireParticipant(
-                        email=inviter_email,
-                    )
-                    if self.request.user.is_authenticated():
-                        inviter_participant.user = self.request.user
-                    inviter_participant.save()
-                    responsive = inviter_participant
+                if self.is_invited:
+                    try:
+                        responsive = self.instance.participants.filter(
+                            is_invited=True
+                        )[0]
+                    except IndexError:
+                        raise Http404(_('There is no suitable participant'))
+                        
+                else:
+                    invite_by_email = self.cleaned_data\
+                        .get('invite_by_email')
+                    if invite_by_email:
+                        invited_participant = QuestionnaireParticipant.objects\
+                            .create(
+                                email=invite_by_email,
+                                is_invited=True
+                            )
+                        self.instance.participants.add(invited_participant)
+                    inviter_email = self.cleaned_data.get('inviter_email')
+                    if inviter_email:
+                        inviter_participant = QuestionnaireParticipant(
+                            email=inviter_email,
+                            is_invited=False,
+                        )
+                        if self.request.user.is_authenticated():
+                            inviter_participant.user = self.request.user
+                        inviter_participant.save()
+                        self.instance.participants.add(inviter_participant)
+                        responsive = inviter_participant
 
                 for q_form in self.answer_formset:
                     if 'agree' in q_form.cleaned_data:
