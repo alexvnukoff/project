@@ -117,6 +117,6 @@ urlpatterns = [
         name='producer_update'),
     url(r'^producers/delete/(?P<pk>[0-9]+)/$', 
         ProducerDelete.as_view(), 
-        name='delete'),
+        name='producer_delete'),
         
 ]

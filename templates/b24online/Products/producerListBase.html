@@ -14,17 +14,18 @@
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Name' %}</th>
+          <th>&nbsp;</th>
         </tr>
-        {% for producer in page_obj.object_list %}
-        <tr id="item-{{ producer.id }}">
-          <td>
-            <a href="{{ producer.get_absolute_url }}" target="_blank">
-              {{ producer.name }}
-            </a>
-          </td>
+        {% for item in page_obj.object_list %}
+        <tr id="item-{{ item.id }}">
+            <td>{{ item.name }}</a></td>
+            <td class="data-action">
+                <a class="imgnews edit icon-action" href="{% url 'products:producer_update' pk=item.id %}"></a>
+                <a class="imgnews remove icon-action" href="{% url 'products:producer_delete' pk=item.id %}"></a>
+            </td>
         {% empty %}
         <tr>
-          <td align="center">
+          <td align="center" colspan="2">
           {% trans 'There are no producers' %}
           </td>
         </tr>
