@@ -2407,7 +2407,7 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
 class QuestionnaireParticipant(ActiveModelMixing, models.Model):
     email = models.EmailField(verbose_name='E-mail', max_length=255, 
                               db_index=True)
-    user = models.ForeignKey(User, related_name='qustionnaire_cases',
+    user = models.ForeignKey(User, related_name='questionnaire_cases',
                              null=True, blank=True)
     is_invited = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -2510,7 +2510,10 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def __str__(self):
         return self.answer_text
-        
+
+    def get_answer(self):
+        return type(self).ANSWER_TYPES.get(self.answer_type)
+
 
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):

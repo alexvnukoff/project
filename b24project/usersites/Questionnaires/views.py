@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import TemplateView
 
-from b24online.models import (Questionnaire, QuestionnaireCase)
+from b24online.models import (Questionnaire, QuestionnaireCase, Answer)
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
@@ -133,6 +133,81 @@ class QuestionnaireActivate(UserTemplateMixin, TemplateView):
 
 
 class QuestionnaireResults(UserTemplateMixin, TemplateView):
-    template_name = '{template_path}/Questionnaires/activate.html'
+    template_name = '{template_path}/Questionnaires/results.html'
 
+    # FIXME: divide on get_context_data and get by itself
+    def get(self, request, *args, **kwargs):
+        
+        participant_type = kwargs.get('participant')
+        case_uuid = kwargs.get('uuid')
+        if case_uuid:
+            try:
+                self.case = QuestionnaireCase.objects.get(case_uuid=case_uuid)
+            except QuestionnaireCase.DoesNotExist:
+                pass
+            else:
+                if self.case.status == QuestionnaireCase.ACTIVE:
+                    self.case.status = QuestionnaireCase.FINISHED
+                    self.case.save()
+                    
+                kwargs.update({
+                    'object': self.case.questionnaire,
+                    'case': self.case,
+                })
+
+                participants = list(self.case.participants\
+                    .order_by('is_invited'))
+                is_correct = True
+                logger.debug(participants)
+                if len(participants) == 2:
+                    inviter, invited = participants
+                    if inviter.is_invited or not invited.is_invited:
+                        is_correct = False
+                    
+                else:
+                    is_correct = False
+                if not is_correct:
+                    raise Http404(_('There are some errors in'
+                                    ' Questionnaire Case'))                
+                if participant_type == 'inviter':
+                    iam_inviter = True
+                elif participant_type == 'invited':
+                    iam_inviter = False
+
+                answers = {}
+                for answer in Answer.objects.filter(
+                    questionnaire_case=self.case):
+                    if not answer.question:
+                        continue
+                    logger.debug(answer.id)
+                    logger.debug(answer.question.id)
+                    logger.debug(answer.participant)
+                    answers.setdefault(
+                        answer.question.id, {})[answer.participant.pk] = answer
+                    
+                q_items = []
+                for question in self.case.questionnaire.questions.all():
+                    q_item = {'question': question,}
+                    if iam_inviter:
+                        answer = answers.get(question.id, {}).get(inviter.id)                    
+                    else:
+                        answer = answers.get(question.id, {}).get(invited.id)                    
+                    q_item.update({'your': answer})
+                    if iam_inviter:
+                        answer = answers.get(question.id, {}).get(invited.id)                    
+                    else:
+                        answer = answers.get(question.id, {}).get(inviter.id)                    
+                    q_item.update({'partner': answer})
+                        
+                    logger.debug(q_item)
+                    q_items.append(q_items)
+                kwargs.update({
+                    'inviter': inviter,
+                    'invited': invited,
+                    'q_items': q_items,
+                })
+                return self.render_to_response(
+                    self.get_context_data(*args, **kwargs)
+                )
+        raise Http404(_('There is no such Questionnaire'))
 

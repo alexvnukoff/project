@@ -23,7 +23,7 @@ urlpatterns = [
      url(r'^activate/(?P<uuid>.+?)/$',
          QuestionnaireActivate.as_view(), 
          name='activate'),
-     url(r'^results/(?P<uuid>.+?)/(?P<participant>[inviter|invited])/$',
+     url(r'^results/(?P<uuid>.+?)/(?P<participant>inviter|invited)/$',
          QuestionnaireResults.as_view(), 
          name='results'),
 ]
