@@ -1,0 +1,77 @@
+{% load i18n %}{% load staticfiles %}
+{% load CustomFilters %}
+    <header>
+        <!-- Navigation -->
+      <nav class="navbar navbar-inverse navbar-fixed-top main-navbar" role="navigation">
+          <div class="container">
+
+            <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+              </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <a class="navbar-brand" href="/"><img class="logo" src="{{ site.user_site.logo.big }}" /></a>
+
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
+                    <li class="active"><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
+                    <li><a href="{% url 'pages:about' %}">{% trans 'About Us' %}</a></li>
+
+                    {% if not is_chamber %}
+                        {% if site.user_site.organization.b2c_products.exists %}
+                            <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if site.user_site.organization.proposals.exists %}
+                        <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
+                    {% endif %}
+
+                    {% if site.user_site.organization.news.exists %}
+                        <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>
+                    {% endif %}
+
+                    {% if site.user_site.organization.galleries.exists %}
+                        <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>
+                    {% endif %}
+
+                    <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
+
+                    <!-- A language list - loading the available ones. -->
+                    <li class="dropdown select-lang">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-flag"><span><b class="caret"></b></a>
+                            <div class="select -lang dropdown-menu">
+                                <form>
+                                    <select name="lang" id="lang_select">
+                                        <option>{% trans 'Mother tongue' %}</option>
+                                        {% get_available_languages as LANGUAGES %}
+                                        {% for code, lang in LANGUAGES %}
+                                            <option value="{{ code }}">{{ lang }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+
+                    </li>
+
+                </ul>
+
+
+
+{#            <div class="tel vertical">#}
+{#                <img src="{% static 'usersites/images/svg/tel.svg' %}" alt="">#}
+{#                <a href="tel:{{ site.user_site.organization.phone }}">{{ site.user_site.organization.phone }}</a>#}
+{#            </div>#}
+            </div><!-- /.navbar-collapse -->
+
+          </div><!-- /.container -->
+      </nav>
+    </header>
+

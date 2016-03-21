@@ -1,0 +1,593 @@
+/* general.css is styling the things that will not change fron a language or theme. */
+
+/*---------- General Styling ----------*/
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-width: 100%;
+}
+
+.content{
+	flex: 1;
+}
+.center-wrap {
+  line-height: 120px;
+  text-align: center;
+}
+
+.clearfix:after { 
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+h1.page-header{
+	padding-top: 30px;
+}
+
+/*---------- logo Styling ----------*/
+.navbar-brand{
+    width: auto;
+    padding: 0;
+}
+
+.navbar-brand>img{
+    height: 95%;
+}
+
+.navbar-nav, .navbar-brand{
+	position: relative;
+}
+
+.navbar-nav>li{
+	position: relative;
+}
+
+/*---------- Navigation Styling ----------*/
+.main-navbar{
+	border: none;
+}
+
+.cust-nav{
+  width:100%;
+  background: rgba(0, 0, 0, 0);
+  z-index: 1;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cust-nav__btn{
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+
+.select select{
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	color: #000;
+}
+
+/*---------- Slider Styling ----------*/
+
+.carousel-caption{
+	padding: 0 10px 0 10px;
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	text-align: center;	
+  	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+
+}
+
+.carousel-caption__header{
+	font-weight: bold;
+	break-after: always;
+}
+
+.carousel-caption p{
+	break-after: always;
+}
+
+/*---------- Special offer Styling ----------*/
+.special_offer{
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.special_offer__header{
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.special_offer__p{
+	font-size: 1em !important;
+}
+
+.offer-content{
+	position: relative;
+}
+
+.offer-btn{
+	position: relative;
+}
+
+.banner-ad-main-collection{
+	margin-top: 20px;
+	text-align: justify;
+}
+
+.banner-ad-main-collection:after{
+	content: "";
+    width: 100%;
+    display: inline-block;
+}
+
+.banner-main-page{
+	/*width: 285px; !* Declare your value. Can be in relative units. *!*/
+    display: inline-block;
+    vertical-align: top;
+	zoom: 1;
+}
+
+/*---------- Products Styling ----------*/
+.main-products .thumbnail{
+	height: 400px;
+	position: relative;
+}
+
+.main-products .thumbnail .btn-bott{
+	position: absolute;
+    bottom: 0;
+    margin: 10px;
+	left: 10px;
+}
+
+.page-products-thumb .thumbnail .btn-bott{
+	position: absolute;
+    bottom: 0;
+}
+
+.section-header{
+	margin-top: 20px;
+}
+
+.section-header>a{
+	text-decoration: none;
+}
+
+.item a{
+	text-decoration: none;
+}
+
+.main-products .thumbnail img{
+	max-height: 164px;
+}
+
+.product__price,
+.item h3 span{
+	position: relative;
+}
+
+.product__price{
+	font-size: 18px;
+}
+.product__deleted-price{
+	color: #c1c1c1;
+	text-decoration: line-through;
+	position: relative;
+}
+
+.item .desc{
+	margin-top: 35px;
+}
+
+
+.go-to-full{
+	position: relative;
+}
+
+.page-products-thumb .thumbnail{
+	height: 400px;
+	position: relative;
+}
+
+.page-products-thumb .thumbnail img{
+	width: 350px;
+	max-height: 230px;
+}
+
+/*---------- Coupons Styling ----------*/
+.coupon-panel{
+	position: relative;
+}
+
+.coupon-panel__img{
+	height: auto;
+    max-width: 325px;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0;
+}
+
+.coupon-panel__price{
+	width: 49%;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 1.5em;
+    font-weight: bold;
+    border-style: solid;
+    border-bottom: none;
+    border-top: none;
+}
+
+.coupon-panel__date{
+	width: 49%;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 1.5em;
+}
+
+.coupon-panel__btn{
+	width: 100%;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.price-after-coupon{
+	font-size: 1.7em;
+	text-align: center;
+}
+
+.price-after-coupon .after-dis{
+	color: green;
+}
+
+.price-after-coupon .before-dis{
+	color: #aaa;
+	text-decoration: line-through;
+}
+
+.coupon{
+	position: relative;
+}
+
+.panel-body p{
+	height: 70px;
+}
+/*---------- News Styling ----------*/
+.news-panel{
+	position: relative;
+}
+
+.media-body h4{
+	margin: 0;
+}
+
+.news-panel .img-pos,
+.news__img{
+	position: relative;
+}
+
+.news__img{
+	padding-top: 2%;
+	max-width: 100%;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.jobs-content{
+	position: relative;
+}
+
+.jobs-btn{
+	position: relative;
+}
+
+.job_offer__header{
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.job_offer__p{
+	font-size: 1em !important;
+	padding-top: 20px;
+}
+
+.job_offer__span{
+	font-weight: bold;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner{
+	padding: 0;
+	text-align: center;	
+}
+
+.membership-banner__member{
+	height: 100%;
+	padding: 0;
+	display: table;
+	position: relative;
+}
+
+.membership-banner__member img{
+	width: auto;
+	max-height: 100px;
+	padding: 10px;
+	display: inline; 
+	position: relative;
+}
+
+.membership-banner__member-text{
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+	padding: 0 10px;
+	position: relative;
+	padding-top: 5%;
+}
+
+.membership-banner__member h4{
+	padding-top: 10px;
+	font-size: 1em;
+}
+
+.membership-banner__member p{
+	font-size: 0.7em;
+}
+
+.membership-banner__ad{
+	padding: 0;
+	margin: 10px 0;
+	height: 100px;
+	position: relative;
+}
+
+.membership-banner__ad img{
+	max-width: 100%;
+	height: auto;
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+@media \0screen {
+  img { 
+  	width: auto; /* for ie 8 */
+  }
+}
+
+/*---------- Footer Styling ----------*/
+footer{
+	margin-top: 20px;
+}
+
+footer .row{
+	padding-bottom: 10px;
+}
+
+footer a{
+	text-decoration: none;
+}
+
+footer a:hover,
+footer a:active{
+	text-decoration: none;
+}
+
+footer ul{
+	list-style: none;
+	padding: 0;
+}
+
+footer img{
+	width: 100%;
+}
+
+footer .btn-default{
+	margin-top: 10px;
+}
+
+.footer-col{
+	position: relative;
+}
+
+/*---------- Gallery Styling ----------*/
+.gallery{
+	margin-bottom: 20px;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination{
+	text-align: center;
+	padding: 0;
+}
+
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	text-decoration: none;
+}
+
+/*---------- Item Styling ----------*/
+.item-page, .item-price-table{
+	position: relative;
+}
+
+.item-page__price{
+	font-size: 2em;
+	color: green;
+	font-weight: bold;
+}
+
+.item-page__coupon{
+	font-size: 1em;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+	padding-top: 10px;
+}
+
+.item-page__coupon div{
+	position: relative;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.item-price-table .coupon-panel__btn{
+	font-weight: bold;
+	font-size: 1.8em;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+.item-price-table .coupon-panel__btn span{
+	padding: 0 20px;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+/*---------- Counter Styling ----------*/
+#clockdiv{
+    font-family: sans-serif;
+    color: #000;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border: 1px solid #a00c0b;
+    border-radius: 3px;
+}
+
+#clockdiv > div{
+    padding: 10px;
+    
+    background: #fff;
+    display: inline-block;
+    
+    position: relative;
+}
+
+#clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #fff;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+    color: #000;
+}
+
+/*---------- about Styling ----------*/
+.about-img{
+	position: relative;
+}
+
+.about-text{
+	position: relative;
+}
+
+/*---------- table Cart Styling ----------*/
+.cart-sum-field{
+	position: relative;
+}
+
+.panel-footer .special_offer__btn{
+	position: relative;
+}
+
+.table{
+	margin-bottom: 0;
+}
+
+.tb-pic{
+	width: 8em;
+}
+
+.tb-item{
+	width: 25em;
+}
+
+.tb-qty{
+	width: 3em;
+}
+
+.tb-price{
+	width: 10em;
+}
+
+.tb-total{
+	width: 10em;
+}
+
+.tb-remove{
+	width: 5em;
+}
+
+.tb-img{
+	width: 75px;
+	height: auto;
+}
+
+.tb-hr{
+	margin-top: 5px;
+}
+
+.tb-in-qty{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+@media (min-width: 600px) {
+  	.tb-in-qty{
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+}

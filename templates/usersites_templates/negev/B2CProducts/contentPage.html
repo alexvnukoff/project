@@ -1,0 +1,56 @@
+{% extends 'usersites_templates/negev/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block content %}
+    {{ block.super }}
+
+
+
+<!-- Page Content -->
+      <div class="container">
+        {% include 'usersites_templates/default_no_banners/Paginator.html' %}
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="page-header">{% trans 'B2C Products' %}</h1>
+          </div>
+        </div><!-- /.row -->
+
+      <div class="row page-products-thumb">
+        {% for product in object_list %}
+
+            <div class="col-sm-6 col-md-4 item">
+              <div class="thumbnail">
+
+                {% if product.image %}
+                     <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                {% else %}
+                     <img src="{% static 'b24online/img/item.jpg' %}" />
+                {% endif %}
+
+                <div class="caption">
+                  <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                      <h4>{{ product.name|truncatechars:25 }}
+                        {% if product.cost %}
+                            <span>{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span>
+                        {% else %}
+                            <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                        {% endif %}
+                      </h4>
+                  </a>
+
+                    <p>{{ product.short_description|truncatechars:90 }}</p>
+                    <p class="btn-bott"><a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="btn btn-default btn-bott" role="button">{% trans 'Order Now' %}</a></p>
+                </div>
+              </div>
+            </div>
+
+        {% endfor %}
+      </div><!-- /Products modoul --><!-- /row -->
+      {% include 'usersites_templates/default_no_banners/Paginator.html' %}
+      </div>
+
+
+{% endblock %}
