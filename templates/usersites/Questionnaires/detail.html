@@ -8,6 +8,63 @@
 
 {% block after_css %}
     <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <style type="text/css">
+        #description {
+            margin: 20px 0; 
+            padding: 10px;
+            text-align: left; 
+            font-size: 120%;
+            border: 1px dashed #aaaaaa;
+            background-color: #eeeeee;
+            position: relative;
+            overflow: auto;
+        }
+        
+        #item_image {
+            float: left; 
+            margin: 0 10px 10px 0 ; 
+        }    
+
+        table.q_data td {
+            border: none;
+            font-size: 120%;
+            text-shadow: -1px -1px white, 1px 1px #333;
+        }
+        
+        table.q_data td input {
+            width: auto;
+        }
+        
+        table.q_data tr.header {
+            border: none;
+        }
+
+        table.q_data tr td {
+            font-size: 120%;
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        table.q_data tr.header td {
+            border-bottom: 2px dashed #0089bc;
+            font-size: 150%;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        table.q_data tr:nth-last-child(1) td {
+            border-bottom: 2px dashed #0089bc;
+        }
+
+        table.q_data tr {
+            background-color: #ffffff;
+        }
+        
+        #questions tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+        
+    </style>
 {% endblock %}
 
 {% block title %}{{ object.name }}{% endblock %}
@@ -16,130 +73,75 @@
     {{ block.super }}
     {% with object.item as product %}
     <section class="content__info grid-layout">
-        <div class="product_box clearfix">
-            <h2>{{ product.name }} {{ product.sku }}</h2>
-            <div class="preview">
-                {% if product.image %}
-                  <img src="{{ product.image.small }}" alt="{{ product.name }}" title="{{ product.name }}" />
-                {% else %}
-                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
+        <div class="data">
+            <h2>{% trans 'Questionnaire' %}: {{ object.name }}</h2>
+            <hr class="hr-divider-one">
+            <div id="description">
+                {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
+                {{ object.short_description }}
             </div>
-        </div>
-
-        <div class="InfoTabs">
-            <ul>
-                <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
-                <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
-                <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
-                <li class="ui-tabs-active"><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
-            </ul>
-            <div id="tabs-1">
-                {{ product.description|cleanHtml|safe }}
-            </div>
-            <div id="tabs-2">
-                <ul class="tpp-gallery gallery">
-                    {% for document_obj in product.documents.all %}
-                    <li>
-                        <div class="b-img">
-                            <a target="_blank" href="{{ document_obj.document.url }}">
-                                <img src="{% static "b24online/img/file_icon.png" %}" />
-                            </a>
-                            <div class="viewimge">
-                                <a target="_blank" href="{{ document_obj.document.url }}">
-                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
-                                </a>
-                            </div>
-                            <div class="gray-img"></div>
-                        </div>
-                        <div>{{ document_obj.name }}</div>
-                    </li>
+            <div class="data">
+                <form action="" method="post">
+                {% csrf_token %}
+                {{ form.answer_formset.management_form }}
+                {% for hidden in q_form.hidden_fields %}{{ hidden }}{% endfor %}
+                <table id="questions" class="q_data" width="100%">
+                    <tr class="header">
+                        <td colspan="2">{% trans 'Answer the questions'%}:</td>
+                    </tr>
+                    {% for q_form in form.answer_formset %} 
+                    
+                    <tr valign="top">
+                        <td align="left">
+                            {% if q_form.question %}
+                                {{ q_form.question.question_text }}
+                            {% else %}
+                                {{ q_form.question_text }}
+                            {% endif %}
+                        </td>
+                        <td align="center">
+                            <input id="id_{{ q_form.prefix }}-agree_0" 
+                                name="{{ q_form.prefix }}-agree" type="checkbox" value="yes" /> 
+                        </td>
+                    </tr>
                     {% endfor %}
-                </ul>
-            </div>
+                </table>
+                <br/>
+                <table class="q_data" width="100%">
+                    {% if form.inviter_email %}
+                    <tr>
+                        <td align="right">
+                            {% trans 'Your Email' %}:
+                        </td>
+                        <td>
+                            <span>{{ form.inviter_email }}</span>
+                            {% if form.is_bound and form.inviter_email.errors %}
+                                <p class="errors">{{ form.inviter_email.errors|striptags }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if form.invite_by_email %}
+                    <tr>
+                        <td align="right">
+                            {% trans 'Invite partner by Email' %}:
+                        </td>
+                        <td>
+                            <span>{{ form.invite_by_email }}</span>
+                            {% if form.is_bound and form.invite_by_email.errors %}
+                                <p class="errors">{{ form.invite_by_email.errors|striptags }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
 
-            <div id="tabs-3">
-                <ul class="gallery">
-                {% for gallery_obj in product.gallery_images %}
-                    <figure>
-                            <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
-                                <img alt="" src="{{ gallery_obj.image.big }}" />
-                            </a>
-                    </figure>
-                {% endfor %}
-                 </ul>
-            </div>
-            
-            <div id="tabs-4">
-                <h3>{{ object.name }}</h3>
-                <hr class="hr-divider-one">
-                <p style="font-size: 100%;">
-                    {% if object.image %}<div style="float: left;"><img src="{{ object.image.big }}" /></div>{% endif %}
-                    <div style="margin-left: 20px; overflow: auto; text-align: left;">{{ object.short_description }}</div>
-                </p>
-                <div class="data">
-                    <form action="" method="post">
-                    {% csrf_token %}
-                    {{ form.answer_formset.management_form }}
-                    <table width="100%" cellspacing="2" cellpadding="2"
-                        border="0" class="table-data">
-                        <tr>
-                            <th>{% trans 'Theme/Problem' %}</th>
-                            <th align="center">{% trans 'Yes' %}</th>
-                            <th align="center">{% trans 'No' %}</th>
-                        </tr>
-                        {% for q_form in form.answer_formset %} 
-                        {% for hidden in q_form.hidden_fields %}{{ hidden }}{% endfor %}
-                        <tr valign="top">
-                            <td align="left">
-                                {% if q_form.question %}
-                                    {{ q_form.question.question_text }}
-                                {% else %}
-                                    {{ q_form.question_text }}
-                                {% endif %}
-                            </td>
-                            <td align="center">
-                                <input {% if q_form.agree.value == 'yes' or not q_form.agree.value %}checked{% endif %} 
-                                    id="id_{{ q_form.prefix }}-agree_0" 
-                                    name="{{ q_form.prefix }}-agree" type="radio" value="yes">                                
-                            </td>
-                            <td align="center">
-                                <input {% if q_form.agree.value == 'no' %}checked{% endif %}  
-                                    id="id_{{ q_form.prefix }}-agree_1" 
-                                    name="{{ q_form.prefix }}-agree" type="radio" value="no">                                
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% if form.inviter_email %}
-                        <tr class="without-border">
-                            <td align="left" colspan="3">
-                                <span style="width: 33%;">{% trans 'Your Email' %}:</span>
-                                <span>{{ form.inviter_email }}</span>
-                                {% if form.is_bound and form.inviter_email.errors %}
-                                    <p class="errors">{{ form.inviter_email.errors|striptags }}</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% if form.invite_by_email %}
-                        <tr class="without-border">
-                            <td align="left" colspan="3">
-                                <span style="width: 33%;">{% trans 'Invite partner by Email' %}:</span>
-                                <span>{{ form.invite_by_email }}</span>
-                                {% if form.is_bound and form.invite_by_email.errors %}
-                                    <p class="errors">{{ form.invite_by_email.errors|striptags }}</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-
-                        <tr class="without-border">
-                            <td colspan="3" align="right">
-                                <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
-                            </td>
-                        </tr>
-                    </table> 
-                </div>
+                    <tr>
+                        <td colspan="2" align="right">
+                            <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
+                        </td>
+                    </tr>
+                </table> 
             </div>
         </div>
     </section>

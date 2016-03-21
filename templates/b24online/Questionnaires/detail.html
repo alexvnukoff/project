@@ -40,9 +40,8 @@
                 <tr>
                     <th>{% trans 'Question' %}</th>
                     <th>{% trans 'Created by' %}</th>
-                    <th>{% trans 'Score (if "Yes")' %}</th>
-                    <th>{% trans 'Score (if "No")' %}</th>
                     {% if request.user == item.created_by %}
+                    <th>{% trans 'Position' %}</th>
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
@@ -50,9 +49,11 @@
                 <tr>
                     <td>{{ question.question_text }}</td>
                     <td>{{ question.created_by }}</td>
-                    <td align="center">{{ question.score_positive|default:"0" }}</td>
-                    <td align="center">{{ question.score_negative|default:"0" }}</td>
                     {% if request.user == item.created_by %}
+                    <td align="center" style="font-size: 130%;">
+                        <a href="{{ request.path }}?move=up&question_id={{ question.id }}">&#8681;</a>
+                        <a href="{{ request.path }}?move=down&question_id={{ question.id }}">&#8679;</a>
+                    </td>
                     <td class="data-action">
                         <a class="imgnews edit icon-action" 
                             href="{% url 'questionnaires:update_question' pk=question.id %}"></a>
@@ -68,8 +69,7 @@
                 {% endfor %}
             </table> 
         </div>
-
-        <div class="data">
+        <div class="data" style="margin-top: 40px;">
             <h3>{% trans 'Recommendations' %}</h3>
             <span style="float: right; margin: 5px;">
                 <a href="{% url 'questionnaires:add_recommendation' item_id=item.id %}">
@@ -79,20 +79,18 @@
             <table width="100%" cellspacing="2" cellpadding="2"
                 border="0" class="table-data">
                 <tr>
+                    <th>{% trans 'Question' %}</th>
                     <th>{% trans 'Name' %}</th>
                     <th>{% trans 'Desctiption' %}</th>
-                    <th>{% trans 'Answers are coincided?' %}</th>
-                    <th>{% trans 'Answers are positive?' %}</th>
                     {% if request.user == item.created_by %}
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
-                {% for recommendation in item.recommendations.all %}                
+                {% for recommendation in item.recommendations %}                
                 <tr valign="top">
+                    <td>{{ recommendation.question }}</td>
                     <td>{{ recommendation.name }}</td>
                     <td>{{ recommendation.description|truncatewords:40 }}</td>
-                    <td align="center">{{ recommendation.is_coincided }}</td>
-                    <td align="center">{{ recommendation.is_positive_answer }}</td>
                     {% if request.user == item.created_by %}
                     <td class="data-action">
                         <a class="imgnews edit icon-action" 

@@ -11,6 +11,7 @@ from urllib.parse import urljoin
 
 from django.conf import settings
 from django.utils.functional import curry
+from django.db.models import Max
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group, Permission
@@ -2299,6 +2300,10 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     def has_perm(self, user):
         return True
 
+    def recommendations(self):
+        return Recommendation.objects.filter(question__questionnaire=self)\
+            .order_by('question__position')
+
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """
@@ -2333,16 +2338,6 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True, 
         blank=True
     )
-    score_positive = models.IntegerField(
-        _('The question positive answer score'),
-        null=True,
-        blank=True,
-    )
-    score_negative = models.IntegerField(
-        _('The question negative answer score'),
-        null=True,
-        blank=True,
-    )
     position = models.PositiveIntegerField(
         _('The question position in the set'),
         null=True,
@@ -2358,7 +2353,18 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     def __str__(self):
         return self.question_text
 
+    def save(self, *args, **kwargs):        
+        """
+        Save th instance.
+        """
+        max_position = type(self).objects.aggregate(Max('position'))\
+            .get('position_max') or 0
+        self.position = max_position + 1
+        super(Question, self).save(*args, **kwargs)
+    
     def has_perm(self, user):
+        """The stub for using in views.
+        """
         return True
 
 
@@ -2366,30 +2372,24 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Recommendation' models class.    
     """
+
+    question = models.ForeignKey(
+        Question, 
+        related_name='recommendations',
+        null=True,
+        blank=True
+    )
     name = models.CharField(
         _('Name'), 
         max_length=255, 
-        blank=False, 
-        null=False
-    )
-    questionnaire = models.ForeignKey(
-        Questionnaire, 
-        related_name='recommendations',
+        null=True,
+        blank=True, 
     )
     description = models.TextField(
         _('Descripion'), 
         null=True, 
-        blank=True
+        blank=True,
     )
-    is_coincided = models.BooleanField(
-        _('If answers have been coincided'),
-        default=False,
-    )
-    is_positive_answer = models.BooleanField(
-        _('If answers are positive'),
-        default=False,
-    )
-
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -2403,6 +2403,10 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     def has_perm(self, user):
         return True
 
+    def recommendations(self):
+        return Recommendation.objects.filter(question__questionnaire=self)\
+            .order_by('question__position')
+            
 
 class QuestionnaireParticipant(ActiveModelMixing, models.Model):
     email = models.EmailField(verbose_name='E-mail', max_length=255, 

@@ -67,7 +67,7 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ['question_text', 'score_positive', 'score_negative']
+        fields = ['question_text', ]
 
     def __init__(self, request, item_id=None, *args, **kwargs):
         cls = type(self)
@@ -99,7 +99,7 @@ class RecommendationForm(forms.ModelForm):
 
     class Meta:
         model = Recommendation
-        fields = ['name', 'description', 'is_coincided', 'is_positive_answer']
+        fields = ['question', 'name', 'description',]
 
     def __init__(self, request, item_id=None, *args, **kwargs):
         cls = type(self)
@@ -114,6 +114,10 @@ class RecommendationForm(forms.ModelForm):
                 raise InvalidParametersError(
                     _('Invalid Object ID')
                 )
+        self.fields['question'].queryset = Question.objects\
+            .filter(questionnaire=self.item)
+        self.fields['question'].required = True
+        self.fields['description'].required = True
 
     def save(self, commit=True):
         instance = super(RecommendationForm, self).save(commit=False)

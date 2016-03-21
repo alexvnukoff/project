@@ -138,7 +138,11 @@
                     <li>
                     <div class="b-img">
                         <a target="_blank" href="">
-                            <img src="{% static "b24online/img/file_icon.png" %}" />
+                            {% if questionnaire.image %}
+                                {{ questionnaire.image.big }}                        
+                            {% else %}
+                                <img src="{% static "b24online/img/file_icon.png" %}" />
+                            {% endif %}
                         </a>
                         <div class="gray-img"></div>
                     </div>
