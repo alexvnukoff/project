@@ -4,18 +4,6 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-{% if not as_insert %}
-<div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
-<div class="data">
-    <h1>{% trans 'Producer list' %} 
-        {% trans 'for' %} 
-        <a href="{{ current_organization.get_absolute_url }}" target="_blank">
-            {{ current_organization }}
-        </a>
-    </h1>
-    <hr class="hr-divider-one">
-    <div class="data">
-      {% block deals_base %}  
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Name' %}</th>
@@ -36,10 +24,7 @@
         </tr>
         {% endfor %}
       </table>  
-      {% endblock %}
       {% with page_obj as page %}
         {% include 'b24online/main/paginator.html' %}
       {% endwith %}  
-    </div>
-</div>
 

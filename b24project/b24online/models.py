@@ -2232,6 +2232,9 @@ class Producer(models.Model):
                 }
             })
         tasks.upload_images(*params, async=False)
+
+    def has_perm(self, user):
+        return True
         
 
 @receiver(pre_save)
@@ -2341,14 +2344,3 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
         recalculate_deal_cost(instance.deal)
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
-
-
-@receiver(post_save, sender=Producer)
-def upload_producer_logo(sender, instance, created, **kwargs):
-    """
-    Recalculate product's deal cost after update.
-    """
-    assert isinstance(instance, Producer), \
-        _('Invalid parameter')
-
-    instance.upload_logo()

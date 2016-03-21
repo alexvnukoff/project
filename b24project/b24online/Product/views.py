@@ -1068,15 +1068,16 @@ class ProducerList(LoginRequiredMixin, ItemsList):
     def get_queryset(self):
         self.current_organization = get_current_organization(self.request)
         if isinstance(self.current_organization, Company):
-            # Current company products producers IDs list
-            producer_ids = [item.producer.id for item \
-                in B2BProduct.objects.filter(
-                    company=self.current_organization,
-                    producer__isnull=False)] + [item.producer.id for item \
-                in B2BProduct.objects.filter(
-                    company=self.current_organization,
-                    producer__isnull=False)]
-            return Producer.objects.filter(id__in=producer_ids)
+            return Producer.objects.all()
+            ## Current company products producers IDs list
+            #producer_ids = [item.producer.id for item \
+            #    in B2BProduct.objects.filter(
+            #        company=self.current_organization,
+            #        producer__isnull=False)] + [item.producer.id for item \
+            #    in B2BProduct.objects.filter(
+            #        company=self.current_organization,
+            #        producer__isnull=False)]
+            #return Producer.objects.filter(id__in=producer_ids)
         else:
             return Producer.objects.none()
 
@@ -1088,13 +1089,70 @@ class ProducerList(LoginRequiredMixin, ItemsList):
         return context
 
 
-class ProducerCreate(TemplateView):
-    template_name = 'b24online/Products/producerList.html'
+class ProducerCreate(LoginRequiredMixin, ItemCreate):
+    model = Producer
+    form_class = ProducerForm
+    template_name = 'b24online/Products/producerForm.html'
+    success_url = reverse_lazy('products:producer_list')
+    current_section = _('Producers')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = None
+        return super(ProducerCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form))
     
 
-class ProducerUpdate(TemplateView):
-    template_name = 'b24online/Products/producerList.html'
+class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
+    model = Producer
+    form_class = ProducerForm
+    template_name = 'b24online/Products/producerForm.html'
+    success_url = reverse_lazy('products:producer_list')
+    current_section = _('Producers')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(ProducerUpdate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(instance=self.object)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            instance=self.object,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form))
     
 
-class ProducerDelete(TemplateView):
-    template_name = 'b24online/Products/producerList.html'
+class ProducerDelete(LoginRequiredMixin, DetailView):
+    model = Producer
+    template_name = 'b24online/Products/producerForm.html'
+    current_section = _('Producers')
+
+    def get(self, request, *args, **kwargs):
+        # FIXME: add the notification
+        item = self.get_object()
+        if item:
+            item.delete()
+        next = reverse('products:producer_list')
+        return HttpResponseRedirect(next)
