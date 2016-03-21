@@ -117,7 +117,6 @@ class B2BProductUpdateList(B2BProductList):
             'current_organization': get_current_organization(self.request),
             'item_formset': self.item_formset,
         })
-        logger.debug(context['page'].number)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -1046,7 +1045,6 @@ def category_tree_demo(request, b2_type='b2b'):
         extract_data_fn=extract_data_fn,
     )
     data = tree_builder()
-    logger.debug(data)
     context.update({'tree_data': json.dumps(data)})    
     return render_to_response(
         'b24online/Products/category_tree_demo.html', 
@@ -1068,19 +1066,26 @@ class ProducerList(LoginRequiredMixin, ItemsList):
         return ['name',]
 
     def get_queryset(self):
-        current_organization = get_current_organization(self.request)
-        if isinstance(current_organization, Company):
+        self.current_organization = get_current_organization(self.request)
+        if isinstance(self.current_organization, Company):
             # Current company products producers IDs list
             producer_ids = [item.producer.id for item \
                 in B2BProduct.objects.filter(
-                    company=current_organization,
+                    company=self.current_organization,
                     producer__isnull=False)] + [item.producer.id for item \
                 in B2BProduct.objects.filter(
-                    company=current_organization,
+                    company=self.current_organization,
                     producer__isnull=False)]
             return Producer.objects.filter(id__in=producer_ids)
         else:
             return Producer.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super(ProducerList, self).get_context_data(**kwargs)
+        context.update({
+            'current_organization': self.current_organization,
+        })
+        return context
 
 
 class ProducerCreate(TemplateView):

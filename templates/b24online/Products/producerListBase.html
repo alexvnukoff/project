@@ -7,7 +7,12 @@
 {% if not as_insert %}
 <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
 <div class="data">
-    <h1>{% trans 'Producer list' %} {% trans 'for' %} {{ current_organization }}</h1>
+    <h1>{% trans 'Producer list' %} 
+        {% trans 'for' %} 
+        <a href="{{ current_organization.get_absolute_url }}" target="_blank">
+            {{ current_organization }}
+        </a>
+    </h1>
     <hr class="hr-divider-one">
     <div class="data">
       {% block deals_base %}  
@@ -18,7 +23,7 @@
         </tr>
         {% for item in page_obj.object_list %}
         <tr id="item-{{ item.id }}">
-            <td>{{ item.name }}</a></td>
+            <td width="80%">{{ item.name }}</a></td>
             <td class="data-action">
                 <a class="imgnews edit icon-action" href="{% url 'products:producer_update' pk=item.id %}"></a>
                 <a class="imgnews remove icon-action" href="{% url 'products:producer_delete' pk=item.id %}"></a>
