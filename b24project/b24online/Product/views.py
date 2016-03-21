@@ -22,11 +22,12 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
 from b24online.models import (B2BProduct, Company, Chamber, Country,
-    B2BProductCategory, DealOrder, Deal, DealItem, Organization)
+    B2BProductCategory, DealOrder, Deal, DealItem, Organization, Producer)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
-    DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet)
+    DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
+    ProducerForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
 from b24online.utils import (get_current_organization, get_permitted_orgs,
@@ -875,7 +876,7 @@ class DealList(LoginRequiredMixin, ItemsList):
     form_class = DealListFilterForm
     url_paginator = 'products:deal_list_paginator'
     paginate_by = 5
-    sortField1 = 'creatd_at'
+    sortField1 = 'created_at'
     order1 = 'asc'
     by_status = None
 
@@ -1053,3 +1054,42 @@ def category_tree_demo(request, b2_type='b2b'):
         context_instance=RequestContext(request)
     )
 
+
+class ProducerList(LoginRequiredMixin, ItemsList):
+    model = Producer
+    template_name = 'b24online/Products/producerList.html'
+    current_section = _('Producers')
+    url_paginator = 'products:producer_list_paginator'
+    paginate_by = 10
+    sortField1 = 'name'
+    order1 = 'asc'
+
+    def _get_sorting_params(self):
+        return ['name',]
+
+    def get_queryset(self):
+        current_organization = get_current_organization(self.request)
+        if isinstance(current_organization, Company):
+            # Current company products producers IDs list
+            producer_ids = [item.producer.id for item \
+                in B2BProduct.objects.filter(
+                    company=current_organization,
+                    producer__isnull=False)] + [item.producer.id for item \
+                in B2BProduct.objects.filter(
+                    company=current_organization,
+                    producer__isnull=False)]
+            return Producer.objects.filter(id__in=producer_ids)
+        else:
+            return Producer.objects.none()
+
+
+class ProducerCreate(TemplateView):
+    template_name = 'b24online/Products/producerList.html'
+    
+
+class ProducerUpdate(TemplateView):
+    template_name = 'b24online/Products/producerList.html'
+    
+
+class ProducerDelete(TemplateView):
+    template_name = 'b24online/Products/producerList.html'

@@ -2192,7 +2192,7 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model, IndexedModelMixin):
+class Producer(models.Model):
     """
     The model class for goods producers.
     """
@@ -2213,11 +2213,10 @@ class Producer(models.Model, IndexedModelMixin):
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
 
-    @staticmethod
-    def get_index_model(**kwargs):
-        from b24online.search_indexes import ProducerIndex
-        return ProducerIndex
-
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+        
     def __str__(self):
         return self.name
 

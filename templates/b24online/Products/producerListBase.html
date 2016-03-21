@@ -1,0 +1,39 @@
+{% load static from staticfiles %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% if not as_insert %}
+<div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
+<div class="data">
+    <h1>{% trans 'Producer list' %} {% trans 'for' %} {{ current_organization }}</h1>
+    <hr class="hr-divider-one">
+    <div class="data">
+      {% block deals_base %}  
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+          <th>{% trans 'Name' %}</th>
+        </tr>
+        {% for producer in page_obj.object_list %}
+        <tr id="item-{{ producer.id }}">
+          <td>
+            <a href="{{ producer.get_absolute_url }}" target="_blank">
+              {{ producer.name }}
+            </a>
+          </td>
+        {% empty %}
+        <tr>
+          <td align="center">
+          {% trans 'There are no producers' %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>  
+      {% endblock %}
+      {% with page_obj as page %}
+        {% include 'b24online/main/paginator.html' %}
+      {% endwith %}  
+    </div>
+</div>
+

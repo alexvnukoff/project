@@ -10,7 +10,9 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     DealOrderList, DealOrderDetail, DealOrderPayment, DealPayPal,
     DealList, DealDetail, DealPayment, DealItemDelete,
     B2BProductUpdateList, B2CProductUpdateList,
-    category_tree_json, category_tree_demo)
+    category_tree_json, category_tree_demo,
+    ProducerList, ProducerCreate, ProducerUpdate, ProducerDelete)
+    
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
 
@@ -100,5 +102,21 @@ urlpatterns = [
     url(r'^category/tree/demo/(?P<b2_type>b2b|b2c)/$', 
         category_tree_demo, 
         name='category_tree_demo'),
-
+    # Prodict's producers
+    url(r'^producers/$',
+        ProducerList.as_view(), 
+        name='producer_list'),
+    url(r'^producers/page(?P<page>[0-9]+)?/$',
+        ProducerList.as_view(), 
+        name='producer_list_paginator'),
+    url(r'^producers/add/$', 
+        ProducerCreate.as_view(), 
+        name='producer_add'),
+    url(r'^producers/update/(?P<pk>[0-9]+)/$', 
+        ProducerUpdate.as_view(), 
+        name='producer_update'),
+    url(r'^producers/delete/(?P<pk>[0-9]+)/$', 
+        ProducerDelete.as_view(), 
+        name='delete'),
+        
 ]
