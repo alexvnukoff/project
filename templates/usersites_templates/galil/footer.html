@@ -1,0 +1,73 @@
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load staticfiles %}
+{% load i18n %}
+{% is_chamber_site as is_chamber %}
+
+{# ------------------------------------------------- #}
+
+
+{# -------------------------------------------------- #}
+<footer>
+    <div class="row membership-banner clearfix">
+        <div class="container">
+          <div class="col-lg-4 col-md-12 col-xs-12 membership-banner__member hidden-sm hidden-xs">
+{#            <img src="{{ site.user_site.logo.big }}" alt="" />#}
+            <img src="{% static 'usersites/images/tmp/bizz_logo_wt.png' %}" alt="" />
+              {% if not is_chamber and site.user_site.organization.parent %}
+                <div class="membership-banner__member-text">
+                  <h4>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h4>
+                  <p>{% blocktrans %}Copyright © 2011 - 2016 Expert Center, All Rights Reserved.{% endblocktrans %}</p>
+                </div>
+              {% endif %}
+          </div>
+
+          <div class="col-lg-8 col-md -12 col-xs-12 membership-banner__ad hidden-xs">
+            <a href="b24online.com">
+{#                <img src="images/ban3.jpg" class="center-block pagination-centered"/></a>#}
+                <img src="{% static 'usersites/images/tmp/ban3.jpg' %}" class="center-block pagination-centered" alt="" /></a>
+          </div>
+        </div><!-- /container -->
+    </div><!-- banner modoul -->
+    <div class="container clearfix">
+
+        <div class="row">
+
+          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+            <h4>On the Site:</h4>
+            <ul class="footer-menu">
+              <li><a href="#">Home Page</a></li>
+              <li><a href="#">About</a></li>
+                {% for page in site.user_site.organization.additional_pages.all %}
+                    <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
+                {% endfor %}
+
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+            <h4>Contact Us:</h4>
+            <span class="glyphicon glyphicon-home"></span>Sed vitae purus quis est aliquet dignissim. <br/>Etiam pretium porttitor elit<br/>
+            <span class="glyphicon glyphicon-phone-alt"></span>077-7448512<br/>
+            <span class="glyphicon glyphicon-envelope"></span>office@mysite.com<br/>
+
+            <br/>
+            <div class="tmp_search clearfix">
+                <form action="{% url 'b2c_products:search' %}">
+                    <input type="text" placeholder="Search" name="s">
+                </form>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+            <h4>Location:</h4>
+            <img src="images/map.jpg" />
+          </div>
+
+        </div><!-- /row -->
+
+        All rights reserved © <a href="b24online.com">b24online.com</a> 2011-2016
+
+
+        </div><!-- /container -->
+      </footer>

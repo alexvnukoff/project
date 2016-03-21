@@ -1,0 +1,224 @@
+/* theme.css is styling the colors so the theme can be changed easily. */
+
+/*---------- General Styling ----------*/
+h1.page-header{
+	color: #a00c0b;
+}
+
+/*---------- Navigation Styling ----------*/
+.main-navbar{
+	background-color: #a00c0b;
+}
+
+.navbar-inverse .navbar-nav>li>a{
+	color: #fff;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>li>a:active{
+	background-color: #262626;
+}
+
+.navbar-nav>li>a.active {
+	background-color: #262626;
+}
+
+.dropdown-menu>li>a{
+	color: #fff;
+}
+
+.navbar-nav>li>.dropdown-menu{
+	background-color: #a00c0b;
+	color: #fff;
+}
+
+.dropdown-menu>li>a:hover{
+	background-color: #262626;
+	color: #fff;
+}
+
+.cust-nav__btn{
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.cust-nav__btn a{
+	color: #fff;
+    text-decoration: none;
+}
+
+.cust-nav__btn:hover,
+.cust-nav__btn:focus,
+.cust-nav__btn:active{
+	background: rgba(160, 12, 11, 0.8);
+	color: #fff;
+	border-color: #000;
+}
+
+.cust-nav__ul>li>a{
+	color: #fff;
+}
+
+.cust-nav__ul>li.active>a, 
+.cust-nav__ul>li.active>a:focus, 
+.cust-nav__ul>li.active>a:hover,
+.cust-nav__ul>li.active>a:active{
+	color: #fff;
+	background-color: #a00c0b;
+}
+
+.cust-nav__ul>li>a:focus,
+.cust-nav__ul>li>a:active, 
+.cust-nav__ul>li>a:hover{
+	color: #fff;
+	background-color: #a00c0b;
+}
+
+/*---------- Slider Styling ----------*/
+
+.carousel-caption{
+	background: rgba(0, 0, 0, 0.7);
+}
+
+
+/*---------- Special offer Styling ----------*/
+.special_offer{
+	background-color: #262626;
+}
+
+.special_offer__header{
+	color: #ece9d6;
+}
+
+.special_offer__p{
+	color: #ece9d6;
+}
+
+.special_offer__btn, .job_offer__btn{
+	background-color: #a00c0b;
+    border-color: #5c0100;
+    color: #fff;
+}
+
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active{
+	background-color: #262626;
+    border-color: #ece9d6;
+    color: #fff;
+}
+
+/*---------- Products Styling ----------*/
+.section-header{
+	color: #a00c0b;
+}
+
+.section-header>a{
+	color: #a00c0b;
+}
+
+.section-header>a:hover,
+.section-header>a:active{
+	color: #080808;
+}
+
+h4 a:hover,
+.item h3:hover{
+	color: #000;
+}
+
+h4 a,
+.item h3{
+	color: #a00c0b;
+}
+
+.product__price,
+.item h3 span{
+	color: #000;
+}
+
+.thumbnail .btn-bott a{
+	background-color: #a00c0b !important;
+	color: #fff !important;
+}
+
+.thumbnail .btn-bott a:hover,
+.thumbnail .btn-bott a:focus,
+.thumbnail .btn-bott a:active {
+	background-color: #262626 !important;
+}
+/*---------- Coupons Styling ----------*/
+.coupon-panel__header{
+	background-color: #a00c0b !important;
+	color: #ece9d6 !important;
+}
+
+.coupon-panel__price{
+    float: left;
+    border-color: #aaa;
+    color: #a00c0b;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	background-color: #eee;
+}
+
+.job_offer__header{
+	color: #a00c0b;
+}
+
+.job_offer__p{
+	color: #262626;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner{
+	background-color: #262626;
+}
+
+.membership-banner__member-text{
+	color: #fff;
+}
+
+/*---------- Footer Styling ----------*/
+footer{
+	background-color: #262626;
+	color: #fff;
+}
+
+footer .row{
+	border-bottom: 1px #fff dotted;
+}
+
+footer a{
+	color: #fff;
+}
+
+footer a:hover,
+footer a:active{
+	color: #a00c0b;
+}
+
+.tmp_search{
+	color: #000;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination>li>a, .pagination>li>span{
+	color: #a00c0b;
+}
+
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	background-color: #a00c0b;
+	color: #fff;
+	border: 1px solid #ddd;
+}

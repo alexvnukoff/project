@@ -28,7 +28,7 @@ h2.page-header,
 .job_offer__header,
 footer a:hover,
 footer a:active{
-	color: #f70000 !important;
+	color: #930303 !important;
 }
 
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
@@ -57,7 +57,8 @@ footer a,
 .job_offer__btn:active,
 .item-price-table,
 .membership-banner__member-text,
-.coupon-timer{
+.coupon-timer,
+.cust-nav__btn a{
 	color: #fff !important;
 }
 
@@ -78,7 +79,8 @@ footer a,
 /*---------- Background color Styling ----------*/
 .navbar-inverse,
 #timer-detail-page > div,
-#timer-detail-page div > span{
+#timer-detail-page div > span,
+.cust-nav__btn{
 	background-color: #000;
 }
 
@@ -87,7 +89,7 @@ footer a,
 a.product__btn,
 .news__btn,
 .special_offer__btn, .job_offer__btn{
-	background-color: #f70000;
+	background-color: #930303;
 }
 
 /*---------- More custome Styling ----------*/
@@ -139,12 +141,11 @@ a.coupon__btn{
 }
 
 /*---------- Footer Styling ----------*/
-footer,
-.membership-banner{
-	background-color: #0a0a0a;
+footer{
+	background-color: #272727;
 }
 
-footer .row{
+footer .membership-banner{
 	border-bottom: 1px #fff dotted;
 }
 
@@ -172,6 +173,6 @@ footer .row{
 }
 
 #timer-detail-page{
-    border: 1px solid #f70000;
+    border: 1px solid #930303;
 }
 
