@@ -6,10 +6,12 @@ The views for Questionnaires, Questions etc
 
 import logging
 
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import TemplateView
+from django.core.mail import EmailMessage
 
 from b24online.models import (Questionnaire, QuestionnaireCase, Answer)
 from guardian.mixins import LoginRequiredMixin
@@ -63,14 +65,44 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
             q_case = form.save()
             if q_case.case_uuid:
                 if form.is_invited:
+                    # Invited answered
+                    next_url = reverse(
+                        'questionnaries:results', 
+                        kwargs={
+                            'uuid': q_case.case_uuid,
+                            'participant': 'inviter'
+                        }
+                    )
+                    email = q_case.get_inviter()
+                    subject = _('The questionnaire results')
+                    message = 'Href: %s' % next_url
+                    mail = EmailMessage(subject, message, 
+                                        settings.DEFAULT_FROM_EMAIL, [email,])
+                    # mail.send()
+
                     form.process_answers()
                     success_url = reverse(
                         'questionnaires:results', 
                         kwargs={
                             'uuid': q_case.case_uuid,
                             'participant': 'invited', 
-                        })
+                        }
+                    )
                 else:
+                    # Inviter answed
+                    next_url = reverse(
+                        'questionnaries:activate', 
+                        kwargs={
+                            'uuid': q_case.case_uuid,
+                        }
+                    )
+                    email = q_case.get_invited()
+                    subject = _('Invite to answer the questions')
+                    message = 'Href: %s' % next_url
+                    mail = EmailMessage(subject, message, 
+                                        settings.DEFAULT_FROM_EMAIL, [email,])
+                    # mail.send()
+
                     success_url = reverse(
                         'questionnaires:ready', 
                         kwargs={'uuid': q_case.case_uuid})

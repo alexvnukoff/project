@@ -2481,6 +2481,12 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         else:
             raise RuntimeError(_('The participants are invalid'))
 
+    def get_inviter(self):
+        return self.get_participants()[0]
+
+    def get_invited(self):
+        return self.get_participants()[1]
+
     def get_coincedences(self):
         answers = {}
         for answer in Answer.objects.filter(
