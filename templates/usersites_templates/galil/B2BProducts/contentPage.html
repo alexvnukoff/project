@@ -1,0 +1,47 @@
+{% extends 'uusersites_templates/default_no_banners/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block content %}
+    {{ block.super }}
+
+<section class="content__info">
+   {% include 'uusersites_templates/default_no_banners/Paginator.html' %}
+
+                <section class="content__info__products">
+                    <h2>{% trans 'B2B Products' %}</h2>
+                    <ul class="products-list">
+
+                        {% for product in object_list %}
+
+                        <li class="product">
+                            <div class="product__cover vertical">
+                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
+                            {% if product.image %}
+                              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                            {% else %}
+                              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </a>
+                            </div>
+                            <div class="product__about">
+
+                                <p class="desc">
+                                <strong>{{ product.name|truncatechars:80 }}</strong></p>
+                                {% if product.cost %}
+                                <p class="price"><span class="value">{{ product.cost|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                {% else %}
+                                <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+                </section>
+
+   {% include 'uusersites_templates/default_no_banners/Paginator.html' %}
+{% endblock %}

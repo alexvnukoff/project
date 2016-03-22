@@ -18,7 +18,7 @@ from django.conf import settings
 from guardian.shortcuts import get_objects_for_user
 
 from b24online.models import (B2BProduct, AdditionalPage, Organization,
-    DealOrder, Deal, DealItem, Company)
+    DealOrder, Deal, DealItem, Company, Producer)
 from centerpokupok.models import B2CProduct
 from b24online.utils import get_permitted_orgs
 
@@ -402,3 +402,10 @@ B2CProductFormSet = modelformset_factory(
     },
     extra=0
 )
+
+
+class ProducerForm(forms.ModelForm):
+
+    class Meta:
+        model = Producer
+        fields = ['name', 'logo',]

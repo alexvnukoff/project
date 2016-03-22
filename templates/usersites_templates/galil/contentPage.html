@@ -1,0 +1,229 @@
+{% extends 'usersites_templates/golan/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block slider %}
+       {% include 'usersites_templates/galil/slider.html' %}
+{% endblock %}
+
+{% block sidebar %}
+       {% include 'usersites_templates/galil/site_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {# here loading banners #}
+        <div class="banner">
+            <img src="images/banner1.jpg" />
+        </div>
+        <div class="banner">
+            <img src="images/banner1.jpg" />
+        </div>
+        <div class="banner">
+            <img src="images/banner1.jpg" />
+        </div>
+
+    </div>{# end of side navigation panel #}
+
+
+    {# coupons side #}
+    <div class="col-md-9 col-sm-6 col-xs-12 coupons">
+        {% if b2c_coupons %}
+          <h2 class="page-header section-header"><a href="{% url 'b2c_products:main' %}">{% trans 'Coupons' %}</a></h2>
+
+            <div class="row">
+
+                {% for product in b2c_coupons|slice:":4" %}
+                  <div class="col-sm-12 col-md-6 product">
+                    <div class="thumbnail ">
+                      {% if product.image %}
+                        {#   <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">#}
+                        <img src="{% static 'usersites/images/tmp/thumb3.jpg' %}" class="product__img" />
+                        {% else %}
+                        {#  <img src="{% static 'b24online/img/item.jpg' %}" />#}
+                        <img src="{% static 'usersites/images/tmp/thumb3.jpg' %}" />
+                      {% endif %}
+
+                      <div class="coupon-badge product__badge">
+                      <div class="coupon_persent">
+                        {{ product.coupon_discount_percent|intword }}<span class="percent">%</span>
+                      </div>
+                    </div>
+
+                      <div class="caption">
+
+                        <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+
+                        <p>{{ product.short_description|truncatechars:85 }}</p>
+                        <div class="btn-group product__btn" role="group" aria-label="btn-product">
+                          <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart"></span></button>
+                          <button type="button" class="btn btn-default" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "More" %}</button>
+                        </div>
+
+                        {% if product.cost %}
+                            <p class="product__price__coupon">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                {% if product.cost != product.get_discount_price %}
+                                    <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</span></p>
+                                {% endif %}
+
+                        {% else %}
+                                {# There is an option to put contact us instead of the price. Here I will display nothing. #}
+                        {% endif %}
+
+                        <p class="product__valid__coupon">{% trans 'Valid until' %}: <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div></p>
+
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+      </div>{# end of coupons modoul #}
+
+      <hr class="divider">
+
+    </div>{# end of side menu and coupons container, starts in sidebar file #}
+
+    {# products line #}
+    <div class="container">
+        {% if b2c_products %}
+            <div class="row ">
+                <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'Products' %}</a></h2>
+
+                {% for product in b2c_products|slice:":4" %}
+
+                    <div class="col-sm-6 col-md-3 product">
+                        <div class="thumbnail ">
+
+                            {% if product.image %}
+                                {#   <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">#}
+                                <img src="{% static 'usersites/images/tmp/thumb3.jpg' %}" />
+                            {% else %}
+                                {#  <img src="{% static 'b24online/img/item.jpg' %}" />#}
+                                <img src="{% static 'usersites/images/tmp/thumb3.jpg' %}" />
+                            {% endif %}
+
+                          <div class="caption">
+                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                            <p class="product__cat">Dresses</p>
+
+                            {% if product.cost %}
+                                <p class="product__price__coupon">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                    {% if product.cost != product.get_discount_price %}
+                                        <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                {# There is an option to put contact us instead of the price. Here I will display nothing. #}
+                            {% endif %}
+
+                          </div>
+                        </div>
+                      </div>
+
+                {% endfor %}
+
+            {% endif %}
+          </div>{# end of products modoul #}
+    </div>
+
+    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
+    {# The proposals will have the same design as the news, so i am using the news styles. #}
+    <div class="container">
+
+        {# Start of the bp model. There are 2 bp. #}
+        <div class="row news">
+            {% if proposals %}
+
+                <div class="col-sm-12 col-md-8">
+
+                    <h2 class="page-header"><a href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></h2>
+
+                    {% for proposal in proposals|slice:":2" %}
+                        <div class="col-sm-12 col-md-12">
+                          <div class="thumbnail">
+                            <h2 class="news__title">{{ proposal.title }}</h2>
+                            <p class="news__text">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"220" }}</p>
+                            <a class="btn btn-blog" href="{% url 'proposal:main' %}" role="button">{% trans 'Learn more' %}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+
+            <div class="col-sm-12 col-md-4">
+                {% if news %}
+                  <h2 class="page-header"><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h2>
+                    <div class="row">
+
+                      <div class="col-12-md">
+                        <div class="news-wrapper">
+
+                            <ul class="media-list">
+                                {% for article in news|slice:":3" %}
+                                    <li class="media">
+                                        <a href="#" class="news__img">
+                                            {#   {% if article.image %}#}
+                                            {#   <img src="{{ article.image.small }}" alt="">#}
+                                            {#   {% endif %}#}
+                                            <img src="{% static 'usersites/images/tmp/news2.jpg' %}" class="img-rounded" alt="" />
+                                        </a>
+                                        <div class="media-body">
+                                            <h4>{{ article.title }}</h4>
+                                            {% if article.short_description %}
+                                                <p>
+                                                    {{ article.short_description|force_escape|linebreaks|truncatewords_html:"30" }}
+                                                </p>
+                                                {% else %}
+                                                <p>{{ article.content|cleanHtml|safe|truncatewords_html:"30" }}</p>
+                                            {% endif %}
+                                            <p>
+                                                {{ article.short_description|force_escape|linebreaks|truncatewords_html:"30" }}
+                                            </p>
+                                            <a type="button" class="btn btn-default news__btn" href="{% url 'news:main' %}" role="button">{% trans 'Learn more' %}</a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+                      </div>
+
+                    </div>
+                {% endif %}
+            </div>
+
+        </div><!-- end of news modoul -->
+    </div>
+
+    <hr class="divider">
+
+    {# About section of the company on the front page. Description + video. #}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 about-main">
+
+                <div class="col-md-6 about-main__text">
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <p>
+                    {{ site.user_site.organization.description|cleanHtml|safe }}
+                    </p>
+                </div>
+
+                {# adding a youtube movie link #}
+                <div class="col-md-6 about-main__movie hidden-xs hidden-sm">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>
+                    {#  <img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+{% endblock %}

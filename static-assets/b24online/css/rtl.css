@@ -4,7 +4,7 @@ body, input, textarea, select{direction:rtl;}
 .tophead-l{ text-align:left;}
 .services li .imgservice{ float:right; border-left: 1px solid #D2D4D8; border-right:0;}
 .services li .nameservice{ border-right:1px #FFF solid; border-left:0; text-align:right!important; padding:0px 10px 0 0;}
-.slide-comm, .bx-wrapper{ direction:ltr!important;}
+.bx-wrapper .bx-viewport{ direction:ltr!important;}
 .sprite{margin-right: 0;margin-left: 10px;}
 .review-l ul.listcm li .topcm .flag{ float:right; margin-right:0;}
 .review-l ul.listcm li .topcm .date{ float:right; padding-right:8px;}
@@ -228,3 +228,4 @@ li.big-coupon .top .sale {left:470px !important;}
 
 .coupon-big .coupon-image{float:right;width:200px;}
 .change-passwd-link {text-align:left !important;}
+

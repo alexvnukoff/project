@@ -1,4 +1,5 @@
 /*---------- General Styling ----------*/
+
 html {
   height: 100%;
   box-sizing: border-box;
@@ -8,6 +9,8 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+	max-width: 100%;
+	/*overflow-x: hidden;*/
 }
 
 .content{
@@ -115,6 +118,7 @@ h2.page-header.inner-page{
 
 .cust-nav ul{
 	list-style: none;
+	background-color: transparent;
 }
 
 .lang_list.hidden{
@@ -124,6 +128,10 @@ h2.page-header.inner-page{
 .cust-nav ul li a{
 	font-weight: bold;
 	text-decoration: none;
+}
+
+.cust-nav__btn a{
+	font-size: 16px;
 }
 
 /*---------- carousel Styling ----------*/
@@ -377,6 +385,7 @@ h2.page-header.inner-page{
 /*---------- Footer Styling ----------*/
 footer{
 	margin-top: 20px;
+	margin-bottom: 0;
 }
 
 footer .row{

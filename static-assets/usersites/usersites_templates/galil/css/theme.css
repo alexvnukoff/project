@@ -1,0 +1,217 @@
+/*---------- General Styling ----------*/
+h2.page-header a{
+	color: #000;
+}
+
+.section-header{
+	color: #000;
+    border-bottom: 1px solid #eee;
+}
+
+.gallery-header-rest{
+	color: #a00c0b;
+
+}
+
+/*---------- Navigation Styling ----------*/
+.main-nav{
+	background: #ED1C24;
+}
+
+.main-nav .active{
+	background: #000;
+}
+
+.main-nav>ul>li>a{
+	color: #fff !important;
+}
+
+.main-nav>ul>li>a:hover,
+.main-nav>ul>li>a:focus,
+.main-nav>ul>li>a:active{
+	background: #000 !important;
+}
+
+.side-bar a{
+	color: #000;
+}
+
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active{
+	color: #ebb66a;
+}
+
+/*---------- Slider Styling ----------*/
+.carousel-caption{
+	background: rgba(0, 0, 0, 0.7);
+}
+
+/*******************************/
+.circle {
+    background: red;
+    color: white;
+}
+
+.coupon_persent{
+    color: #000;
+}
+
+.full-banner{
+	border-top: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
+}
+
+.product__cat{
+	color: #979797;
+}
+
+.product__valid__coupon {
+	color: #979797;
+}
+
+.product__deleted-price {
+	color: #979797;
+}
+
+.product__discount{
+	background: #f0ad4e;
+	color: #fff;
+}
+
+.product__btn .btn{
+	background-color: #ED1C24;
+	color: #fff;
+	border-color: #5c0609;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	background-color: #fff;
+	border: 1px solid #979797;
+}
+
+.job_offer__header{
+	color: #a00c0b;
+}
+
+.job_offer__p{
+	color: #262626;
+}
+
+/*---------- News Styling ----------*/
+.btn-blog{
+	background-color: #ED1C24;
+	color: #fff;
+}
+
+/*---------- Footer Styling ----------*/
+footer{
+	background-color: #262626;
+	color: #fff;
+}
+
+footer a{
+	color: #fff;
+}
+
+footer a:hover,
+footer a:active{
+	color: #a00c0b;
+}
+
+.rights{
+	border-top: 1px solid #fff;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination>li>a, .pagination>li>span{
+	color: #ebb66a;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	background-color: #a00c0b;
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+/*********************************************************/
+/* Responsive Sidebar Menu */
+/********************************************/
+
+/*Remove rounded coners*/
+
+nav.navbar.sidebar {
+
+	color: #000 !important;
+}
+
+nav.sidebar{
+	color: #000;
+}
+
+.sidebar .navbar-toggle{
+	color: #000 !important;
+	border-color: #ddd;
+}
+
+.sidebar .navbar-toggle .icon-bar {
+    background-color: #000;
+}
+
+.sidebar a{
+	color: #000;
+}
+
+/* .....NavBar: Icon only with coloring/layout.....*/
+
+/*small/medium side display*/
+@media (min-width: 768px) {
+
+	/*Center Icons*/
+	nav.sidebar a{
+		color: #000;
+	}
+
+	nav.sidebar ul li a:hover,
+	nav.sidebar ul li a:focus,
+	nav.sidebar ul li a:active{
+		color: #fff !important;
+		background: #ebb66a !important;
+	}
+
+	nav.sidebar ul li ul li a:hover,
+	nav.sidebar ul li ul li a:focus,
+	nav.sidebar ul li ul li a:active{
+		color: #ebb66a !important;
+		background: #fff !important;
+	}
+
+	/*adds border top to first nav box */
+	nav.sidebar .navbar-nav > li:first-child{
+		border-top: 1px #e5e5e5 solid;
+	}
+
+	/*adds border to bottom nav boxes*/
+	nav.sidebar .navbar-nav > li{
+		border-bottom: 1px #e5e5e5 solid;
+	}
+
+	/*colors dropdown box text */
+	.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+		color: #777;
+	}
+
+}
+
+nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
+	color: #CCC;
+}
+
+/* End of Responsive Sidebar Menu */
+/********************************************/
