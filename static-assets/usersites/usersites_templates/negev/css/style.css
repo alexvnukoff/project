@@ -1,0 +1,225 @@
+/* style.css and he_style.css is styling the direction of the site. */
+
+/*---------- General Styling ----------*/
+
+
+
+/*---------- logo Styling ----------*/
+.navbar-brand>img{
+    padding: 0 0 0 10px;
+}
+
+
+/*---------- Navigation Styling ----------*/
+.navbar-nav{
+	float: right!important;
+    margin-right: -15px;
+}
+
+.navbar-nav>li{
+	float: left;
+}
+
+.cust-nav{
+  top:50px;
+  left:0px;
+}
+
+.cust-nav>.cust-nav__btn{
+	float: left;
+}
+
+.navbar-brand{
+	float: left;
+}
+
+.lang_list.hidden{
+	display: none;
+}
+
+/*---------- Slider Styling ----------*/
+
+.carousel-caption{
+	bottom: 0;
+	left: 10%;
+}
+
+/*---------- Special offer Styling ----------*/
+.offer-content{
+	float: left;
+}
+
+.offer-btn{
+	float: right;
+}
+
+/*---------- Products Styling ----------*/
+.thumbnail .btn-bott{
+    left: 0;
+}
+
+.product__price,
+.item h3 span{
+	float: right;
+}
+
+.product__deleted-price{
+	padding-right: 15px;
+	float: left;
+}
+
+.go-to-full{
+	float: right;
+}
+
+.go-to-full:after{
+	font-family: "Glyphicons Halflings";
+  	content: "\e250";
+  	/* content:"\e251"; */
+}
+
+.page-products-thumb .thumbnail .btn-bott,
+.main-products-thumb .thumbnail .btn-bott{
+    margin: 10px 10px 10px 0px;
+}
+
+
+/*---------- Coupons Styling ----------*/
+.coupon-panel{
+	float: left;
+}
+
+.coupon-panel__price{
+    float: left;
+    border-right-width: 1px;
+    border-left: none;   
+}
+
+.coupon-panel__date{
+    float: left;
+}
+
+.price-after-coupon .after-dis{
+	float: left;
+	padding-left: 40px;
+}
+
+.price-after-coupon .before-dis{
+	float: right;
+	padding-right: 40px;
+}
+
+.coupon{
+	float: left;
+}
+
+/*---------- News Styling ----------*/
+.news-panel{
+	float: right;
+}
+
+.news-panel .img-pos,
+.news__img{
+	float: left;
+	padding-right: 10px;
+}
+
+.news__img{
+	padding-right: 20px;
+}
+
+/*---------- Jobs Styling ----------*/
+.jobs-content{
+	float: left;
+}
+
+.jobs-btn{
+	float: right;
+}
+
+.jobs-head:after{
+	font-family: "Glyphicons Halflings";
+  	content:"\e127";
+  	/* content:"\e251"; */
+}
+
+
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner__member{
+	float: left;
+}
+
+.membership-banner__ad{
+	float: right;
+}
+
+.membership-banner__member img{
+	float: left; 
+}
+
+.membership-banner__member-text{
+	float: right;
+}
+
+/*---------- Footer Styling ----------*/
+footer span{
+	margin-right: 5px;
+}
+
+.footer-col{
+	float: left;
+}
+
+/*---------- Item Styling ----------*/
+.item{
+	float: left;
+}
+
+.item-page{
+	float: left;
+}
+
+.item-price-table{
+	float: right;
+}
+
+.item-page__price span{
+	padding-left: 20px;
+}
+
+.item-page__coupon div{
+	float: left;
+	padding-right: 30px;
+}
+
+/*---------- Counter Styling ----------*/
+#clockdiv{
+    float: left;
+}
+
+#clockdiv > div{
+    float: left;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination, .pagination>li{
+	float: left;
+}
+
+/*---------- about Styling ----------*/
+.about-img{
+	float: left;
+}
+
+.about-text{
+	float: right;
+}
+
+/*---------- table Cart Styling ----------*/
+.cart-sum-field{
+	float: right;
+}
+
+.panel-footer .special_offer__btn{
+	float: right;
+}

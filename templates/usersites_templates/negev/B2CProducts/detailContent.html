@@ -1,0 +1,150 @@
+{% extends 'usersites_templates/default_no_banners/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    {# Page Content - the info will come from businness proposals #}
+      <div class="container">
+
+          <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ object.name }}</h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Proposal Content -->
+        <div class="row">
+            <div class="col-md-6 item-page">
+                {% if product.image %}
+{#                           <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">#}
+                    <img src="{% static 'usersites/images/tmp/thumb1.jpg' %}" />
+                {% else %}
+{#                            <img src="{% static 'b24online/img/item.jpg' %}" />#}
+                    <img src="{% static 'usersites/images/tmp/thumb1.jpg' %}" />
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 item-price-table">
+                <p>{% trans "Price" %}:<br/> </p>
+                <div class="item-page__price">
+                  {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
+                </div>
+
+                {# This div will show only if there is a discount #}
+                {% if object.discount_percent or object.coupon_discount_percent %}
+                    <div class="item-page__coupon clearfix">
+                      <div class="item-page__regular">
+                        {% trans 'Original Price' %}:<br/>
+                        {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
+                      </div>
+                      <div class="item-page__discount">
+                        {% trans 'Discount' %}:<br/>
+                          {% if object.discount_percent %}
+                            % {{ object.discount_percent|formatPrice }}
+                          {% elif object.coupon_discount_percent %}
+                              % {{ object.coupon_discount_percent|formatPrice }}
+                          {% endif %}
+                      </div>
+                      <div class="item-page__save">
+{#                        {% trans 'You save' %}:<br/>#}
+{#                        {{ object.original_price|mul: object.discount_percent }}#}
+                      </div>
+                    </div>
+                {% endif %}
+
+                <div class="item-page__qty">
+
+                  <form class="form-inline">
+                    <div class="form-group">
+                      <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+                        <input type="text" id="product-qty" value="1" class="item-page__qty-box">
+                      <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                  </form>
+
+                </div>
+
+                {# display the timer only if coupon #}
+                {% if object.coupon_discount_percent %}
+                    <div class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}" hidden="True"></div>
+
+                    <div id="clockdiv" date="{{ object.end_coupon_date|date:'Y-m-d' }}">
+                      <div>
+                        <span class="days"></span>
+                        <div class="smalltext">Days</div>
+                      </div>
+                      <div>
+                        <span class="hours"></span>
+                        <div class="smalltext">Hours</div>
+                      </div>
+                      <div>
+                        <span class="minutes"></span>
+                        <div class="smalltext">Minutes</div>
+                      </div>
+                      <div>
+                        <span class="seconds"></span>
+                        <div class="smalltext">Seconds</div>
+                      </div>
+                    </div>
+                {% endif %}
+
+                <a href="item.html" class="btn button more special_offer__btn coupon-panel__btn">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>{% blocktrans %}Add to cart{% endblocktrans %}
+                </a>
+
+                {% if paypal_form %}
+                    <div style="">{{ paypal_form.render }}</div>
+                {% else %}
+                    <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                {% endif %}
+
+                <h4>{% blocktrans %}Details:{% endblocktrans %}</h4>
+
+                <p>{{ object.description|cleanHtml|safe }}</p>
+
+
+
+            </div>
+        </div><!-- /.row --><!-- /Proposal Content -->
+
+      </div><!-- /.container -->
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(".inc").on("click", function() {
+
+          var $button = $(this);
+          var oldValue = document.getElementById('product-qty').value;
+
+          var newVal = parseFloat(oldValue) + 1;
+
+          document.getElementById('product-qty').value = newVal;
+        });
+
+        $(".dec").on("click", function() {
+
+          var $button = $(this);
+          var oldValue = document.getElementById('product-qty').value;
+
+           // Don't allow decrementing below zero
+           if (oldValue > 1) {
+              var newVal = oldValue - 1;
+           } else {
+              newVal = 1;
+           }
+
+          document.getElementById('product-qty').value = newVal;
+
+        });
+    </script>
+{% endblock %}

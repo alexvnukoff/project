@@ -1,0 +1,119 @@
+{% extends 'usersites_templates/negev/index.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+    {{ block.super }}
+    {# ---------------------------------------------------------------------- #}
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ object.name }}</h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Map Column -->
+            <div class="col-md-8">
+                <!-- Embedded Google Map -->
+                <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll=37.0625,-95.677068&amp;spn=56.506174,79.013672&amp;t=m&amp;z=4&amp;output=embed"></iframe>
+            </div>
+            <!-- Contact Details Column -->
+            <div class="col-md-4">
+                <h2 class="page-header section-header-rest">{% trans 'Ask a question' %}</h2>
+                <p>
+                    {% trans 'Address' %}:&nbsp;{{ object.address }}<br>
+                </p>
+                <p><i class="fa fa-phone"></i>
+                    {{ object.phone }}
+                </p>
+                <p><i class="fa fa-envelope-o"></i>
+                    {{ object.email }}
+                </p>
+
+{#                <p><i class="fa fa-clock-o"></i>#}
+{#                    <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM#}
+{#                </p>#}
+
+{#                <ul class="list-unstyled list-inline list-social-icons">#}
+{#                    <li>#}
+{#                        <a href="#"><i class="fa fa-facebook-square fa-2x"></i></a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#"><i class="fa fa-linkedin-square fa-2x"></i></a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#"><i class="fa fa-google-plus-square fa-2x"></i></a>#}
+{#                    </li>#}
+{#                </ul>#}
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Contact Form -->
+        <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
+        <div class="row">
+            <div class="col-md-8">
+                <h3>Send us a Message</h3>
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>{% trans 'Full Name' %}:</label>
+                            <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" id="name" name="name" placeholder="{% trans 'Your name' %}">
+                            <p class="help-block"></p>
+                        </div>
+                    </div>
+{#                    <div class="control-group form-group">#}
+{#                        <div class="controls">#}
+{#                            <label>{% trans 'Phone Number' %}:</label>#}
+{#                            <input type="tel" class="form-control" id="phone" required data-validation-required-message="Please enter your phone number.">#}
+{#                        </div>#}
+{#                    </div>#}
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>{% trans 'Email Address' %}:</label>
+                            <input type="email" class="form-control" id="email" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>{% trans 'Message' %}:</label>
+                            <textarea name="message" rows="10" cols="100" class="form-control" id="message" maxlength="999" style="resize:none" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <button type="submit" class="btn special_offer__btn">{% trans 'Send' %}</button>
+                </form>
+
+                {% if form.errors.name %}
+                    <p style="color:red;">{{ form.errors.name.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.email %}
+                    <p style="color:red;">{{ form.errors.email.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.message %}
+                    <p style="color:red;">{{ form.errors.message.0 }}</p>
+                {% endif %}
+
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+        <hr>
+      </div>
+
+    {# --------------------------------------------------------------------- #}
+
+{% endblock %}

@@ -1,0 +1,118 @@
+/*---------- General Styling ----------*/
+
+/*---------- Navigation Styling ----------*/
+.side-nav-wrapper{
+	float: left;
+}
+
+.upper-nav{
+	float: right;
+}
+
+/*---------- Slider Styling ----------*/
+.carousel-caption{
+	float: left;
+	left: 0;
+}
+
+.carousel-caption__header{
+	float: left;
+}
+
+.carousel-caption p{
+	float: left;
+	text-align: left;
+}
+
+.carousel-indicators {
+    left: 92%;
+    padding-left: 0;
+    margin-left: -30%;
+}
+/*---------- Product Styling ----------*/
+.coupon{
+	float: right;
+}
+
+.product__deleted-price{
+	padding-left: 10px;
+}
+
+.product__btn{
+	float: right;
+}
+
+/*---------- News Styling ----------*/
+.news__img {
+	float: left;
+}
+
+.btn-blog{
+	float: right;
+}
+
+/* .....NavBar: Icon only with coloring/layout.....*/
+
+/*small/medium side display*/
+@media (min-width: 768px) {
+
+	/*Allow main to be next to Nav*/
+	.main{
+		margin-left: 40px;
+		float: right;
+	}
+
+	/*Center Brand*/
+	nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+		margin-left: 0px;
+	}
+
+	/*Center Brand*/
+	nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
+		text-align: left;
+		margin-left: 0px;
+	}
+
+	/*Center Icons*/
+	nav.sidebar a{
+		padding-right: 13px;
+	}
+
+	/*adds border top to first nav box */
+	nav.sidebar .navbar-nav > li:first-child{
+		border-top: 1px #e5e5e5 solid;
+	}
+
+	/*adds border to bottom nav boxes*/
+	nav.sidebar .navbar-nav > li{
+		border-bottom: 1px #e5e5e5 solid;
+	}
+
+	/*gives sidebar width/height*/
+	nav.sidebar{
+		float: left;
+	}
+
+	/* Move nav to full on mouse over*/
+	nav.sidebar:hover{
+		margin-left: 0px;
+	}
+}
+
+@media (min-width: 1330px) {
+
+	/*Allow main to be next to Nav*/
+	.main{
+		margin-left: 200px;
+	}
+
+	/*Show all nav*/
+	nav.sidebar{
+		margin-left: 0px;
+		float: left;
+	}
+}
+
+section{
+	padding-left: 15px;
+}

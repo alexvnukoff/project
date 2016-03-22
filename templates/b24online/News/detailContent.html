@@ -135,7 +135,9 @@
                     {% if item.video_code %}
                         <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
                     {% endif %}
-                    </div>
+                      <div style="clear:both;"></div>
+                      <div class="fb-comments" data-href="http://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
+                  </div>
 
                     <div class="related-news">
                         <span class="title">{% trans 'Similar news' %}</span>
@@ -160,4 +162,5 @@
                     </div>
 
       </div>
+
 {% endblock %}
