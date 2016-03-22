@@ -15,6 +15,22 @@
             font-weight: bold;            
             text-indent: 0;
         }
+        #description {
+            margin: 20px 0; 
+            padding: 10px;
+            text-align: left; 
+            font-size: 120%;
+            border: 1px dashed #aaaaaa;
+            background-color: #eeeeee;
+            position: relative;
+            overflow: auto;
+        }
+        
+        #item_image {
+            float: left; 
+            margin: 0 10px 10px 0 ; 
+        }    
+
     </style>
     
 {% endblock %}
@@ -25,85 +41,29 @@
     {{ block.super }}
     {% with object.item as product %}
     <section class="content__info grid-layout">
-        <div class="product_box clearfix">
-            <h2>{{ product.name }} {{ product.sku }}</h2>
-            <div class="preview">
-                {% if product.image %}
-                  <img src="{{ product.image.small }}" alt="{{ product.name }}" title="{{ product.name }}" />
+        <div class="data">
+            <h2>{{ object.name }}</h2>
+            <hr class="hr-divider-one">
+            <div id="description">
+                {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
+                {{ object.short_description }}
+            </div>
+            <div class="data">
+                {% if already %}
+                    <p class="notify">
+                        {% trans 'You have activated this questionnaire case already' %}.
+                    </p>
                 {% else %}
-                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="InfoTabs">
-            <ul>
-                <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
-                <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
-                <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
-                <li class="ui-tabs-active"><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
-            </ul>
-            <div id="tabs-1">
-                {{ product.description|cleanHtml|safe }}
-            </div>
-            <div id="tabs-2">
-                <ul class="tpp-gallery gallery">
-                    {% for document_obj in product.documents.all %}
-                    <li>
-                        <div class="b-img">
-                            <a target="_blank" href="{{ document_obj.document.url }}">
-                                <img src="{% static "b24online/img/file_icon.png" %}" />
-                            </a>
-                            <div class="viewimge">
-                                <a target="_blank" href="{{ document_obj.document.url }}">
-                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
-                                </a>
-                            </div>
-                            <div class="gray-img"></div>
-                        </div>
-                        <div>{{ document_obj.name }}</div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div id="tabs-3">
-                <ul class="gallery">
-                {% for gallery_obj in product.gallery_images %}
-                    <figure>
-                            <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
-                                <img alt="" src="{{ gallery_obj.image.big }}" />
-                            </a>
-                    </figure>
-                {% endfor %}
-                 </ul>
-            </div>
-            
-            <div id="tabs-4">
-                <h3>{{ object.name }}</h3>
-                <hr class="hr-divider-one">
-                <p style="font-size: 100%;">
-                    {% if object.image %}<div style="float: left;"><img src="{{ object.image.big }}" /></div>{% endif %}
-                    <div style="margin-left: 20px; overflow: auto; text-align: left;">{{ object.short_description }}</div>
-                </p>
-
-                <div class="data">
-                    {% if already %}
-                        <p class="notify">
-                            {% trans 'You have activated this questionnaire case already' %}.
-                        </p>
-                    {% else %}
-                        <p class="notify">
+                    <p class="notify">
                             {% trans 'Your answers for this questionnaire have been registered' %}.
-                        </p>
-                        <p class="notify">
+                    </p>
+                    <p class="notify">
                             {% trans 'The invitation to answer the same questions has been sent to Your friend' %}.
-                        </p>
-                        <p class="notify">
+                    </p>
+                    <p class="notify">
                             {% trans 'We will notify You abouy the results' %}.
-                        </p>
-                    {% endif %}
-                </div>
+                    </p>
+                {% endif %}
             </div>
         </div>
     </section>

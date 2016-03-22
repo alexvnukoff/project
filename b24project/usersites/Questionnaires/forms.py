@@ -19,12 +19,6 @@ logger = logging.getLogger(__name__)
 
 class AnswerForm(forms.Form):
     
-    ANSWER_YES, ANSWER_NO = 'yes', 'no'
-    ANSWERS = (
-        (ANSWER_YES, _('Yes')),
-        (ANSWER_NO, _('No')),
-    )
-    
     question_id = forms.IntegerField(
         label=_('Question ID'),
         widget=forms.HiddenInput, 
@@ -35,11 +29,9 @@ class AnswerForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={'rows': '2', 'cols': '40'}),
     )
-    agree = forms.ChoiceField(
+    agree = forms.BooleanField(
         label=_('Your answer'),
-        choices=ANSWERS,
-        required=True,
-        widget=forms.RadioSelect,
+        required=False
     )
 
     def __init__(self, *args, **kwargs):
@@ -49,13 +41,12 @@ class AnswerForm(forms.Form):
         else:
             self.question = None
         super(AnswerForm, self).__init__(*args, **kwargs)
-        self.initial['agree'] = self.ANSWER_YES
         
     def save(self):
         pass
 
 
-AnswerFormset = formset_factory(AnswerForm, extra=1, max_num=10)
+AnswerFormset = formset_factory(AnswerForm, extra=1, max_num=30)
 
 
 class InviteForm(forms.Form):
@@ -89,23 +80,10 @@ class InviteForm(forms.Form):
             params.update({'data': self.data})
         self.answer_formset = AnswerFormset(**params)
 
-##    def clean_invite_by_email(self):
-##        email = self.cleaned_data['invite_by_email']
-##        try:
-##            user = User.objects.get(email=email)
-##        except User.DoesNotExist:
-##            raise ValidationError(_('There is no such user'))
-##        return email
-
     def is_valid(self):
-        logger.debug('S1')
         it_is_valid = super(InviteForm, self).is_valid()
-        logger.debug(it_is_valid)
         for q_form in self.answer_formset:
             it_is_valid = it_is_valid and q_form.is_valid()
-            logger.debug(q_form.errors)
-        logger.debug(it_is_valid)
-            
         return it_is_valid
 
     def save(self):
@@ -147,15 +125,28 @@ class InviteForm(forms.Form):
                         responsive = inviter_participant
 
                 for q_form in self.answer_formset:
-                    if 'agree' in q_form.cleaned_data:
+                    if 'agree' in q_form.cleaned_data and \
+                        q_form.cleaned_data['agree']:
                         new_answer = Answer.objects.create(
                             questionnaire_case=self.instance,
                             question=q_form.question,
                             participant=responsive,
-                            answer_type=q_form.cleaned_data['agree']
+                            answer=True
                         )                                            
         except IntegrityError:
             raise
         else:          
             return self.instance
+
+
+    def process_answers(self):
+        existed_ids = [r.id for r in self.case.recommendations.all()]                
+        for item in self.case.get_coincedences():
+            if item.get('is_coincedence'):
+                question = item.get('question')
+                for r_item in Recommendation.objects.filter(
+                    question=question):
+                    if r_item not in existed_ids:
+                        qc.recommendations.add(r_item)
+        
         

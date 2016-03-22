@@ -59,13 +59,22 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
             instance=self.case,    
             data=self.request.POST
         )
-        logger.debug('Step 1')
         if form.is_valid():
             q_case = form.save()
             if q_case.case_uuid:
-                success_url = reverse(
-                    'questionnaires:ready', 
-                    kwargs={'uuid': q_case.case_uuid})
+                if form.is_invited:
+                    form.process_answers()
+                    success_url = reverse(
+                        'questionnaires:results', 
+                        kwargs={
+                            'uuid': q_case.case_uuid,
+                            'participant': 'invited', 
+                        })
+                else:
+                    success_url = reverse(
+                        'questionnaires:ready', 
+                        kwargs={'uuid': q_case.case_uuid})
+
                 return HttpResponseRedirect(success_url)
             else:
                 raise Http404(_('Unfortunately Your answers have'
@@ -149,65 +158,25 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
                 if self.case.status == QuestionnaireCase.ACTIVE:
                     self.case.status = QuestionnaireCase.FINISHED
                     self.case.save()
+
+                data = list(self.case.get_coincedences())
+                coincedences = len([item for item in data \
+                    if item.get('is_coincedence')])
                     
+                colors = ['grey', 'grey', 'green']
+                if coincedences == 2:
+                    colors = ['grey', 'yellow', 'grey']
+                elif coincedences > 2:
+                    colors = ['red', 'grey', 'grey']
+                
                 kwargs.update({
                     'object': self.case.questionnaire,
                     'case': self.case,
+                    'q_items': data,
+                    'q_colors': colors,
                 })
 
-                participants = list(self.case.participants\
-                    .order_by('is_invited'))
-                is_correct = True
-                logger.debug(participants)
-                if len(participants) == 2:
-                    inviter, invited = participants
-                    if inviter.is_invited or not invited.is_invited:
-                        is_correct = False
-                    
-                else:
-                    is_correct = False
-                if not is_correct:
-                    raise Http404(_('There are some errors in'
-                                    ' Questionnaire Case'))                
-                if participant_type == 'inviter':
-                    iam_inviter = True
-                elif participant_type == 'invited':
-                    iam_inviter = False
-
-                answers = {}
-                for answer in Answer.objects.filter(
-                    questionnaire_case=self.case):
-                    if not answer.question:
-                        continue
-                    logger.debug(answer.id)
-                    logger.debug(answer.question.id)
-                    logger.debug(answer.participant)
-                    answers.setdefault(
-                        answer.question.id, {})[answer.participant.pk] = answer
-                    
-                q_items = []
-                for question in self.case.questionnaire.questions.all():
-                    q_item = {'question': question,}
-                    if iam_inviter:
-                        answer = answers.get(question.id, {}).get(inviter.id)                    
-                    else:
-                        answer = answers.get(question.id, {}).get(invited.id)                    
-                    q_item.update({'your': answer})
-                    if iam_inviter:
-                        answer = answers.get(question.id, {}).get(invited.id)                    
-                    else:
-                        answer = answers.get(question.id, {}).get(inviter.id)                    
-                    q_item.update({'partner': answer})
-                        
-                    logger.debug(q_item)
-                    q_items.append(q_items)
-                kwargs.update({
-                    'inviter': inviter,
-                    'invited': invited,
-                    'q_items': q_items,
-                })
                 return self.render_to_response(
                     self.get_context_data(*args, **kwargs)
                 )
         raise Http404(_('There is no such Questionnaire'))
-

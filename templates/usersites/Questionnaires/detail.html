@@ -31,8 +31,14 @@
             text-shadow: -1px -1px white, 1px 1px #333;
         }
         
+        table.q_data td input[type=checkbox] {
+            width: 150%;
+            height: 150%;
+        }
+
         table.q_data td input {
             width: auto;
+            height: 200%;
         }
         
         table.q_data tr.header {
@@ -74,7 +80,7 @@
     {% with object.item as product %}
     <section class="content__info grid-layout">
         <div class="data">
-            <h2>{% trans 'Questionnaire' %}: {{ object.name }}</h2>
+            <h2>{{ object.name }}</h2>
             <hr class="hr-divider-one">
             <div id="description">
                 {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}

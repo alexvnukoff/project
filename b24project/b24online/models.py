@@ -2398,7 +2398,7 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         verbose_name_plural = _('Recommendations')
         
     def __str__(self):
-        return self.question_text
+        return self.description
 
     def has_perm(self, user):
         return True
@@ -2465,18 +2465,48 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         
     def has_perm(self, user):
         return True
+
+    def get_participants(self):
+        participants = list(self.participants\
+            .order_by('is_invited'))
+        is_correct = True
+        if len(participants) == 2:
+            inviter, invited = participants
+            if inviter.is_invited or not invited.is_invited:
+                is_correct = False
+        else:
+            is_correct = False
+        if is_correct:
+            return (inviter, invited)
+        else:
+            raise RuntimeError(_('The participants are invalid'))
+
+    def get_coincedences(self):
+        answers = {}
+        for answer in Answer.objects.filter(
+            questionnaire_case=self):
+            if not answer.question:
+                continue
+            answers.setdefault(
+                answer.question.id, {})[answer.participant.pk] = answer.answer
+        inviter, invited = self.get_participants()
+        if all((inviter, invited)):
+            for question in self.questionnaire.questions.order_by('position'):
+                data = {
+                    'question': question,
+                    'inviter': answers.get(question.id, {}).get(inviter.id),
+                    'invited': answers.get(question.id, {}).get(invited.id),
+                }
+                data.update({
+                    'is_coincedence': data.get('inviter') and data.get('invited')
+                })
+                yield data
         
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Question answer' models class.    
     """
-    ANSWER_YES, ANSWER_NO, ANSWER_OWN = 'yes', 'no', 'own'
-    ANSWER_TYPES = (
-        (ANSWER_YES, _('Yes')),
-        (ANSWER_NO, _('No')),
-        (ANSWER_OWN, _('Own answer text'))
-    )
     question = models.ForeignKey(
         Question, 
         related_name='questions',
@@ -2494,18 +2524,11 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
         related_name='answers',
         verbose_name=_('Answer author'),
     )
-    answer_type = models.CharField(
-        _('Answer type'), 
-        max_length=10,
-        choices=ANSWER_TYPES, 
-        default=ANSWER_YES, 
+    answer = models.NullBooleanField(
+        _('Answer'), 
+        default=False,
         null=True, 
         blank=True
-    )
-    answer_text = models.TextField(
-        _('Question text'), 
-        blank=False, 
-        null=False
     )
     
     class Meta:
@@ -2513,10 +2536,10 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
         verbose_name_plural = _('Questions answers')
 
     def __str__(self):
-        return self.answer_text
+        return 'Yes' if self.answer else 'No'
 
     def get_answer(self):
-        return type(self).ANSWER_TYPES.get(self.answer_type)
+        return str(self)
 
 
 @receiver(pre_save)
