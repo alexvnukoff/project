@@ -1,0 +1,30 @@
+{% load static from staticfiles %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+          <th>{% trans 'Name' %}</th>
+          <th>&nbsp;</th>
+        </tr>
+        {% for item in page_obj.object_list %}
+        <tr id="item-{{ item.id }}">
+            <td width="80%">{{ item.name }}</a></td>
+            <td class="data-action">
+                <a class="imgnews edit icon-action" href="{% url 'products:producer_update' pk=item.id %}"></a>
+                <a class="imgnews remove icon-action" href="{% url 'products:producer_delete' pk=item.id %}"></a>
+            </td>
+        {% empty %}
+        <tr>
+          <td align="center" colspan="2">
+          {% trans 'There are no producers' %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>  
+      {% with page_obj as page %}
+        {% include 'b24online/main/paginator.html' %}
+      {% endwith %}  
+

@@ -2192,7 +2192,7 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model, IndexedModelMixin):
+class Producer(models.Model):
     """
     The model class for goods producers.
     """
@@ -2213,11 +2213,10 @@ class Producer(models.Model, IndexedModelMixin):
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
 
-    @staticmethod
-    def get_index_model(**kwargs):
-        from b24online.search_indexes import ProducerIndex
-        return ProducerIndex
-
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+        
     def __str__(self):
         return self.name
 
@@ -2233,6 +2232,9 @@ class Producer(models.Model, IndexedModelMixin):
                 }
             })
         tasks.upload_images(*params, async=False)
+
+    def has_perm(self, user):
+        return True
         
 
 @receiver(pre_save)
@@ -2342,14 +2344,3 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
         recalculate_deal_cost(instance.deal)
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
-
-
-@receiver(post_save, sender=Producer)
-def upload_producer_logo(sender, instance, created, **kwargs):
-    """
-    Recalculate product's deal cost after update.
-    """
-    assert isinstance(instance, Producer), \
-        _('Invalid parameter')
-
-    instance.upload_logo()
