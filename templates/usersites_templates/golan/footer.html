@@ -45,8 +45,8 @@
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
             <h4>On the Site:</h4>
             <ul class="footer-menu">
-              <li><a href="#">Home Page</a></li>
-              <li><a href="#">About</a></li>
+              <li><a href="#">{% trans 'Home' %}<</a></li>
+              <li><a href="#">{% trans 'About us' %}</a></li>
                 {% for page in site.user_site.organization.additional_pages.all %}
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                 {% endfor %}

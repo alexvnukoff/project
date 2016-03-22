@@ -142,11 +142,11 @@ a.coupon__btn{
 
 /*---------- Footer Styling ----------*/
 footer{
-	background-color: #272727;
+	background-color: #000;
 }
 
-footer .membership-banner{
-	border-bottom: 1px #fff dotted;
+.membership-banner{
+	background-color: #272727;
 }
 
 .rights{
@@ -167,7 +167,16 @@ footer .membership-banner{
 .special_offer__btn:active,
 .job_offer__btn:hover,
 .job_offer__btn:focus,
-.job_offer__btn:active{
+.job_offer__btn:active,
+.coupon__btn:hover,
+.coupon__btn:focus,
+.coupon__btn:active,
+.product__btn:hover,
+.product__btn:focus,
+.product__btn:active,
+.news__btn:hover,
+.news__btn:focus,
+.news__btn:active{
 	background-color: #262626;
     border-color: #ece9d6;
 }
