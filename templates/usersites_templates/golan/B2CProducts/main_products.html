@@ -45,7 +45,7 @@
                             <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
 
                             {# Button to go the details - attached to the bottom of the thumbnail #}
-                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans 'Read More' %}</a>
+                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {# Displaying a price if there is one. Cheching if there is a discount too. #}
                             {% if product.cost %}
@@ -58,7 +58,7 @@
                                 </p>
 
                                 {% else %}
-                                {# There is an option to put contact us instead of the price. Here I will display nothing. #}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
                         </div>
@@ -69,7 +69,7 @@
             {% endfor %}
         </div>
 
-        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Products{% endblocktrans %} </a>
+{#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Products{% endblocktrans %} </a>#}
         <br/><br/>
 
     </div>

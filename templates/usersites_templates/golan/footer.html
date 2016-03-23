@@ -5,15 +5,10 @@
 
 {% is_chamber_site as is_chamber %}
 
-{# ------------------------------------------------- #}
-
-
-{# -------------------------------------------------- #}
-
 <div class="container">
     <div class="row membership-banner clearfix">
 
-          <div class="col-lg-4 col-md-12 col-xs-12 membership-banner__member hidden-sm hidden-xs">
+          <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__member hidden-sm hidden-xs">
             {% if site.user_site.logo %}
               <img src="{{ site.user_site.logo.big }}" alt="" />
             {% else %}
@@ -28,10 +23,8 @@
               {% endif %}
           </div>
 
-          <div class="col-lg-8 col-md -12 col-xs-12 membership-banner__ad hidden-xs">
-            <a href="http://www.b24online.com">
-{#                <img src="images/ban3.jpg" class="center-block pagination-centered"/></a>#}
-                <img src="{% static 'usersites/usersites_templates/golan/images/ban3.jpg' %}" class="center-block pagination-centered" alt="" /></a>
+          <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__ad hidden-xs">
+              {% site_banner "footer" "SITES FOOTER" %}
           </div>
         </div><!-- /container -->
     </div><!-- banner modoul -->
@@ -43,9 +36,8 @@
         <div class="row footer-cols clearfix">
 
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
-            <h4>On the Site:</h4>
             <ul class="footer-menu">
-              <li><a href="#">{% trans 'Home' %}<</a></li>
+              <li><a href="#">{% trans 'Home' %}</a></li>
               <li><a href="#">{% trans 'About us' %}</a></li>
                 {% for page in site.user_site.organization.additional_pages.all %}
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
@@ -55,7 +47,7 @@
           </div>
 
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
-            <h4>Contact Us:</h4>
+            <h4>{% trans 'Contact us' %}:</h4>
             <span class="glyphicon glyphicon-home"></span>{{ site.user_site.organization.address }}<br/>
             <span class="glyphicon glyphicon-phone-alt"></span>{{ site.user_site.organization.phone }}<br/>
             <span class="glyphicon glyphicon-envelope"></span>{{ site.user_site.organization.email }}<br/>
@@ -69,7 +61,6 @@
           </div>
 
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
-            <h4>Location:</h4>
             <div class="map" id="map" long="" lat="">
           </div><!-- /row -->
 

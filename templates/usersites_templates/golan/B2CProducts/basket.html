@@ -25,21 +25,21 @@
                                         <thead>
                                           <tr>
                                             <th class="tb-pic"></th>
-                                            <th class="tb-item">Item</th>
-                                            <th class="tb-qty">Price</th>
-                                            <th class="tb-price">Quantity</th>
+                                            <th class="tb-item"></th>
+                                            <th class="tb-qty">{% trans "Price" %}</th>
+                                            <th class="tb-price">{% trans 'Amount' %}</th>
                                             <th class="tb-remove"></th>
                                           </tr>
                                         </thead>
 
                                         <tbody>
                                             {% for row in basket.src %}
-                                                {% if row.product.currency != request.session.basket_currency %}{% else %}
+{#                                                {% if row.product.currency != request.session.basket_currency %}{% else %}#}
 
                                                     <tr>
                                                         <td>
                                                             {% if row.product.image %}
-                                                                <img src="{{ row.product.image.small }}" alt="row.product.name" class="tb-img">
+                                                                <img src="{{ row.product.image.big }}" alt="row.product.name" class="tb-img">
                                                             {% else %}
                                                                 <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
                                                             {% endif %}
@@ -52,7 +52,6 @@
 
                                                         <td>
                                                             {% if row.product.cost %}
-                                                                <p>{% trans 'Price' %}:</p>
                                                                 <span>{{ row.product.get_discount_price|formatPrice }} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
                                                             {% else %}
                                                                  <a style="display:block;background:none!important;color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
@@ -69,35 +68,39 @@
                                                         </td>
                                                     </tr>
 
-                                                {% endif %}
+{#                                                {% endif %}#}
                                             {% endfor %}
                                         </tbody>
 
                                         <tfoot>
-                                            <tr class="dl-horizontal cart-sum-field">
+                                            <tr class="dl-horizontal cart-sum-field" >
                                                 <td></td>
                                                 <td></td>
-                                                <td><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></td>
+                                                <td></td>
+                                                <td ><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></td>
+                                                <td></td>
                                             </tr>
                                         </tfoot>
                                     </table>
 
-                                    <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">Clean bascket</a>
-                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
-                                    <button class="update btn-info btn-sm">Update price</button>
+                                    <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
+{#                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>#}
+                                    <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
+
+                                    <div class="pay">
+                                        {% if paypal_form %}
+                                            {{ paypal_form.render }}
+                                        {% else %}
+                                            <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
+                                        {% endif %}
+                                    </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="pay">
-                    {% if paypal_form %}
-                        {{ paypal_form.render }}
-                    {% else %}
-                        <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
-                    {% endif %}
-                </div>
+
 
             {% else %}
                 <br/>

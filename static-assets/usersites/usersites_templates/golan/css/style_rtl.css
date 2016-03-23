@@ -65,6 +65,10 @@ body{
 	float: right;
 }
 
+.product{
+	float: right;
+}
+
 .products-thumb .thumbnail .btn-bott{
     right: 0;
 }
@@ -200,6 +204,11 @@ body{
 	float: right;
 }
 
+/*---------- Contact Styling ----------*/
+.contact-info, .contact-fields{
+	float: right;
+}
+
 /*---------- Footer Styling ----------*/
 footer span{
 	margin-left: 5px;
@@ -255,7 +264,7 @@ footer span{
 }
 
 /*---------- table Cart Styling ----------*/
-.cart-sum-field{
+.pay{
 	float: left;
 }
 
