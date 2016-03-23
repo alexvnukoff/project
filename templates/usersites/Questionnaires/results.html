@@ -8,138 +8,7 @@
 
 {% block after_css %}
     <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
-    <style type="text/css">
-        p.notify {
-            text-align: left; 
-            font-size: 150%; 
-            font-weight: bold;            
-            text-indent: 0;
-        }
-
-        #description {
-            margin: 20px 0; 
-            padding: 10px;
-            text-align: left; 
-            font-size: 120%;
-            border: 1px dashed #aaaaaa;
-            background-color: #eeeeee;
-            position: relative;
-            overflow: auto;
-        }
-        
-        #item_image {
-            float: left; 
-            margin: 0 10px 10px 0 ; 
-        }    
-        table.q_data td {
-            border: none;
-            font-size: 120%;
-            text-shadow: -1px -1px white, 1px 1px #333;
-        }
-        
-        table.q_data td input[type=checkbox] {
-            width: 150%;
-            height: 150%;
-        }
-
-        table.q_data td input {
-            width: auto;
-            height: 200%;
-        }
-        
-        table.q_data tr.header {
-            border: none;
-        }
-
-        table.q_data tr td {
-            font-size: 120%;
-            padding: 10px;
-            vertical-align: middle;
-        }
-
-        table.q_data tr.header td {
-            border-bottom: 2px dashed #0089bc;
-            font-size: 150%;
-            font-weight: bold;
-            padding: 10px;
-        }
-
-        table.q_data tr:nth-last-child(1) td {
-            border-bottom: 2px dashed #0089bc;
-        }
-
-        table.q_data tr {
-            background-color: #ffffff;
-        }
-        
-        #questions tr:nth-child(even) {
-            background-color: #f7f7f7;
-        }
-
-        #questions tr.is_coincedence {
-            background-color: #cce5ed;
-        }
-        
-        .red {
-            background: red;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            margin: 10px; 
-        }
-        .yellow {
-            background: yellow;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px; 
-            margin: 10px; 
-        }
-        .green {
-            background: green;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px; 
-            margin: 10px; 
-        }
-        .lightred {
-            background: #ffc2b3;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            margin: 10px; 
-        }
-        .lightyellow {
-            background: #ffffb3;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px; 
-            margin: 10px; 
-        }
-        .lightgreen {
-            background: #ccffdd;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px; 
-            margin: 10px; 
-        }
-        .grey {
-            background: #aaaaaa;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px; 
-            margin: 10px; 
-        }
-        
-        #lights {
-            overflow-y: auto; 
-            width: 60px; 
-            background: #222222; 
-            border: 2px solid #000000;
-            border-radius: 10px;"
-        }
-
-    </style>
-    
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
 {% endblock %}
 
 {% block title %}{{ object.name }}{% endblock %}
@@ -155,18 +24,26 @@
                 {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
                 {{ object.short_description }}
             </div>
-            <div class="data" id="lights">
-                {% for q_color in q_colors %}
-                <div class="{{ q_color}}"></div>
-                {% endfor %}
+            <div class="data" id="recommendations">
+                <span id="lights">
+                    {% for q_color in q_colors %}
+                    <div class="{{ q_color}}"></div>
+                    {% endfor %}
+                </span>
+                <span id="r_items">
+                    <p ></p>
+                    {% for r_item in case.recommendations.all %} 
+                    <p class="r_item">{{ r_item.description }}</p>
+                    {% endfor %}
+                </span>
             </div>
             <div class="data">
                 <table id="questions" class="q_data" width="100%">
                     <tr class="header">
-                        <td colspan="3">{% trans 'Questions answers'%}:</td>
+                        <td colspan="3">{% trans 'The matched answers'%}:</td>
                     </tr>
                     {% for q_item in q_items %} 
-                    <tr valign="top" {% if q_item.is_coincedence %} class="is_coincedence"{% endif %}>
+                    <tr valign="top">
                         <td align="left">
                             {{ q_item.question.question_text }}
                         </td>
@@ -175,20 +52,6 @@
                         </td>
                         <td align="center">
                             {% if q_item.invited %}{% trans 'Yes' %}{% else %}-{% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            <div class="data">
-                <table id="questions" class="q_data" width="100%">
-                    <tr class="header">
-                        <td>{% trans 'Recommendations' %}:</td>
-                    </tr>
-                    {% for r_item in case.recommendations.all %} 
-                    <tr valign="top">
-                        <td align="left">
-                            {{ r_item.description }}
                         </td>
                     </tr>
                     {% endfor %}

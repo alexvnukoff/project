@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -17,7 +18,7 @@ from b24online.custom import CustomImageField
 from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, 
                               image_storage, IndexedModelMixin, 
                               ActiveModelMixing, GalleryImage, 
-                              Producer)
+                              Producer, Questionnaire)
 from b24online.utils import generate_upload_path, reindex_instance
 import uuid
 from decimal import Decimal

@@ -15,7 +15,7 @@ from django.core.mail import EmailMessage
 
 from b24online.models import (Questionnaire, QuestionnaireCase, Answer)
 from guardian.mixins import LoginRequiredMixin
-from b24online.cbv import ItemDetail
+from b24online.cbv import ItemDetail, ItemsList
 from usersites.mixins import UserTemplateMixin
 from usersites.Questionnaires.forms import InviteForm
 
@@ -67,7 +67,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                 if form.is_invited:
                     # Invited answered
                     next_url = reverse(
-                        'questionnaries:results', 
+                        'questionnaires:results', 
                         kwargs={
                             'uuid': q_case.case_uuid,
                             'participant': 'inviter'
@@ -75,7 +75,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     )
                     email = q_case.get_inviter()
                     subject = _('The questionnaire results')
-                    message = 'Href: %s' % next_url
+                    message = 'The questionnaire results Url: %s' % next_url
                     mail = EmailMessage(subject, message, 
                                         settings.DEFAULT_FROM_EMAIL, [email,])
                     # mail.send()
@@ -91,14 +91,14 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                 else:
                     # Inviter answed
                     next_url = reverse(
-                        'questionnaries:activate', 
+                        'questionnaires:activate', 
                         kwargs={
                             'uuid': q_case.case_uuid,
                         }
                     )
                     email = q_case.get_invited()
                     subject = _('Invite to answer the questions')
-                    message = 'Href: %s' % next_url
+                    message = 'The Questionnaire activation Url: %s' % next_url
                     mail = EmailMessage(subject, message, 
                                         settings.DEFAULT_FROM_EMAIL, [email,])
                     # mail.send()
@@ -176,9 +176,7 @@ class QuestionnaireActivate(UserTemplateMixin, TemplateView):
 class QuestionnaireResults(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/Questionnaires/results.html'
 
-    # FIXME: divide on get_context_data and get by itself
     def get(self, request, *args, **kwargs):
-        
         participant_type = kwargs.get('participant')
         case_uuid = kwargs.get('uuid')
         if case_uuid:
@@ -204,7 +202,8 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
                 kwargs.update({
                     'object': self.case.questionnaire,
                     'case': self.case,
-                    'q_items': data,
+                    'q_items': [q_item for q_item in data \
+                        if q_item.get('is_coincedence')],
                     'q_colors': colors,
                 })
 
@@ -212,3 +211,30 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
                     self.get_context_data(*args, **kwargs)
                 )
         raise Http404(_('There is no such Questionnaire'))
+
+
+class QuestionnaireCaseList(UserTemplateMixin, ItemsList):
+    """
+    The Questionnaire list view.
+    """
+    model = QuestionnaireCase
+    template_name = '{template_path}/Questionnaires/caseList.html'
+    url_paginator = 'questionnaires:case_list_paginator'
+    paginate_by = 10
+    sortField1 = 'created_at'
+    order1 = 'asc'
+
+    def get_queryset(self):
+        return super(QuestionnaireCaseList, self).get_queryset()
+        if self._email:
+            return QuestionnaireCase.objects.filter(
+                participants__email=self._email
+            )
+        else:
+            return QuestionnaireCase.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        self._email = request.GET.get('email')
+        if not self._email:
+            return HttpResponseRedirect(reverse('main'))
+        return super().get(request, *args, **kwargs)

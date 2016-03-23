@@ -12,7 +12,8 @@ from django.forms import formset_factory
 
 from b24online import InvalidParametersError
 from b24online.models import (User, Questionnaire, QuestionnaireCase,
-                              QuestionnaireParticipant, Question, Answer)
+                              QuestionnaireParticipant, Question, Answer,
+                              Recommendation)
 
 logger = logging.getLogger(__name__)
 
@@ -140,13 +141,13 @@ class InviteForm(forms.Form):
 
 
     def process_answers(self):
-        existed_ids = [r.id for r in self.case.recommendations.all()]                
-        for item in self.case.get_coincedences():
+        existed_ids = [r.id for r in self.instance.recommendations.all()]                
+        for item in self.instance.get_coincedences():
             if item.get('is_coincedence'):
                 question = item.get('question')
                 for r_item in Recommendation.objects.filter(
                     question=question):
                     if r_item not in existed_ids:
-                        qc.recommendations.add(r_item)
+                        self.instance.recommendations.add(r_item)
         
         

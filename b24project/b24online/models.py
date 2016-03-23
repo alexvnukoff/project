@@ -1042,15 +1042,13 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         """
         Return extra options for context menu.
         """
-        
-        # FIXME: (andrus) add the conditions for site
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
             yield (reverse('questionnaires:list',
                            kwargs={'content_type_id': model_type.id, 
                                    'item_id': self.id}),
                    _('Questionnaire'))
-            
+
 
 class B2BProductComment(MPTTModel):
     content = models.TextField()
@@ -2276,6 +2274,24 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
+
+    @classmethod
+    def get_questionnaire(cls, instance):
+        """
+        Return True if the instance has a Questionnaire.
+        """
+        model_type = ContentType.objects.get_for_model(instance)
+        if model_type and getattr(instance, 'id', False):
+            try:
+                qs = cls.get_active_objects().filter(
+                        content_type=model_type,
+                        object_id=instance.id
+                    )
+                return qs[0]
+            except IndexError:
+                pass
+        return None
+    
 
     def has_perm(self, user):
         return True

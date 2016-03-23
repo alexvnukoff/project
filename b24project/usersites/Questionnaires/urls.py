@@ -6,11 +6,18 @@ from usersites.Questionnaires.views import (
     QuestionnaireDetail,
     QuestionnaireReady,
     QuestionnaireActivate,
-    QuestionnaireResults
+    QuestionnaireResults,
+    QuestionnaireCaseList,
 )    
     
 
 urlpatterns = [
+     url(r'^cases/$',
+         QuestionnaireCaseList.as_view(), 
+         name='case_list'),
+     url(r'^cases/page(?P<page>[0-9]+)?/$',
+         QuestionnaireCaseList.as_view(), 
+         name='case_list_paginator'),
      url(r'^detail/(?P<item_id>\d+?)/$',
          QuestionnaireDetail.as_view(), 
          name='detail'),

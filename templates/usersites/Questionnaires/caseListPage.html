@@ -6,13 +6,22 @@
 <div class="data">
     <table id="questions" class="q_data" width="100%">
         <tr class="header">
-            <td colspan="2">{% trans 'Your questionnaires' %}</td>
+            <td colspan="3">{% trans 'Your questionnaires' %}</td>
         </tr>
         {% for item in page_obj.object_list %}
         <tr valign="top">
             <td align="left">
-                {{ item.questionnaire.name }}
+                <a href="{% url 'questionnaires:results' uuid=item.case_uuid participant='inviter' %}">
+                    {{ item.questionnaire.name }}
+                </a>
             </td>
+            <td align="center">
+                {{ item.get_inviter.email }}
+            </td>
+            <td align="center">
+                {{ item.get_invited.email }}
+            </td>
+            
         </tr>
         {% endfor %}
     </table> 

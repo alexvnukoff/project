@@ -8,31 +8,7 @@
 
 {% block after_css %}
     <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
-    <style type="text/css">
-        p.notify {
-            text-align: left; 
-            font-size: 150%; 
-            font-weight: bold;            
-            text-indent: 0;
-        }
-        #description {
-            margin: 20px 0; 
-            padding: 10px;
-            text-align: left; 
-            font-size: 120%;
-            border: 1px dashed #aaaaaa;
-            background-color: #eeeeee;
-            position: relative;
-            overflow: auto;
-        }
-        
-        #item_image {
-            float: left; 
-            margin: 0 10px 10px 0 ; 
-        }    
-
-    </style>
-    
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
 {% endblock %}
 
 {% block title %}{{ object.name }}{% endblock %}
