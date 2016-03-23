@@ -36,9 +36,9 @@
 
                             {# If the product is a coupon, the color of the button will be diff #}
                             {% if product.coupon_discount_percent %}
-                                <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans 'Read More' %}</a>
+                                <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
                             {% else %}
-                                <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans 'Read More' %}</a>
+                                <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
                             {% endif %}
 
                             {# If there is one, display the cost. If there is a discount, display it too. #}
@@ -48,6 +48,8 @@
                                         <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
                                     {% endif %}
                                 </p>
+                            {% else %}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
                             {# If the product is a coupon, display the timer #}

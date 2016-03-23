@@ -3,8 +3,8 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% block content %}
-    {{ block.super }}
-    {# ---------------------------------------------------------------------- #}
+
+
 
     <!-- Page Content -->
     <div class="container">
@@ -19,13 +19,9 @@
 
         <!-- Content Row -->
         <div class="row">
-            <!-- Map Column -->
-            <div class="col-md-8">
-                <!-- Embedded Google Map -->
-                <div class="map" id="map" long="" lat=""></div>
-            </div>
+
             <!-- Contact Details Column -->
-            <div class="col-md-4">
+            <div class="col-md-4 contact-info">
                 <h2 class="page-header section-header-rest">{% trans 'Ask a question' %}</h2>
                 <p>
                     {% trans 'Address' %}:&nbsp;{{ object.address }}<br>
@@ -56,18 +52,15 @@
 {#                    </li>#}
 {#                </ul>#}
             </div>
-        </div>
         <!-- /.row -->
 
         <!-- Contact Form -->
         <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
-        <div class="row">
-            <div class="col-md-8">
-                <h3>Send us a Message</h3>
+            <div class="col-md-8 contact-fields">
                 <form name="sentMessage" id="contactForm" novalidate>
                     <div class="control-group form-group">
                         <div class="controls">
-                            <label>{% trans 'Full Name' %}:</label>
+                            <label>{% trans 'Your name' %}:</label>
                             <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" id="name" name="name" placeholder="{% trans 'Your name' %}">
                             <p class="help-block"></p>
                         </div>
@@ -80,7 +73,7 @@
 {#                    </div>#}
                     <div class="control-group form-group">
                         <div class="controls">
-                            <label>{% trans 'Email Address' %}:</label>
+                            <label>{% trans 'Your email' %}:</label>
                             <input type="email" class="form-control" id="email" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
                         </div>
                     </div>

@@ -10,7 +10,7 @@
 
         <!-- Coupons header -->
         <div class="col-md-12 col-sm-12">
-            <h2 class="page-header"><a href="#">{% trans 'Coupons' %}</a></h2>
+            <h2 class="page-header">{% trans 'Coupons' %}</h2>
         </div>
 
         {# Coupons display. Template display 2 coupons. #}
@@ -46,7 +46,7 @@
                             <p class="product__desc">{{ product.short_description|truncatechars:105 }}</p>
 
                             {# The button will lead to the product details. #}
-                            <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans 'Read More' %}</a>
+                            <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {# Dispaly the product price if there is one, else display contact us #}
                             {% if product.cost %}
@@ -60,7 +60,7 @@
                                 </p>
 
                                 {% else %}
-                                {# There is an option to put contact us instead of the price. Here I will display nothing. #}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
                             {# Diisplay the coupon timer #}
@@ -76,7 +76,7 @@
             {% endfor %}
         </div>
 
-        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>
+{#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>#}
         <br/><br/>
 
     </div>{# /Coupons modoul #}

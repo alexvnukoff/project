@@ -144,6 +144,11 @@
     padding: 0px 20px 20px 0;
 }
 
+/*---------- Contact Styling ----------*/
+.contact-info, .contact-fields{
+	float: left;
+}
+
 /*---------- Footer Styling ----------*/
 footer span{
 	margin-right: 5px;
@@ -157,6 +162,11 @@ footer span{
 .item{
 	float: left;
 }
+
+.pay{
+	float: right;
+}
+
 
 .item-page{
 	float: left;
