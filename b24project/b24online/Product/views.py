@@ -1112,6 +1112,7 @@ class ProducerCreate(LoginRequiredMixin, ItemCreate):
         )
         if form.is_valid():
             form.save()
+            form.instance.upload_logo()
             return HttpResponseRedirect(self.success_url)
         return self.render_to_response(self.get_context_data(form=form))
     
@@ -1140,6 +1141,7 @@ class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
         )
         if form.is_valid():
             form.save()
+            form.instance.upload_logo()
             return HttpResponseRedirect(self.success_url)
         return self.render_to_response(self.get_context_data(form=form))
     
