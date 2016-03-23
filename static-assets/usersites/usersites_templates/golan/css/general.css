@@ -17,6 +17,10 @@ body {
 	flex: 1;
 }
 
+.icon-ok:before {
+	font-family: "Glyphicons Halflings";
+    content:"\e013";
+}
 /***/
 .center-wrap {
   line-height: 120px;
@@ -56,8 +60,9 @@ body {
 }
 
 h2.page-header a,
-h1.page-header{
+h1.page-header, h2{
 	text-decoration: none;
+	font-weight: bold;
 }
 
 h2.page-header.inner-page{
@@ -382,6 +387,14 @@ h2.page-header.inner-page{
     width: 100%;
 }
 
+/*--------- contact form --------------*/
+.contact-info, .contact-fields{
+	position: relative;
+}
+
+.contact-fields{
+	margin-top: 80px;
+}
 /*---------- Footer Styling ----------*/
 footer{
 	margin-top: 20px;
@@ -434,7 +447,7 @@ footer .btn-default{
 
 .membership-banner__member img{
 	width: auto;
-	max-height: 100px;
+	max-height: 80px;
 	margin: 10px;
 	display: inline;
 	position: relative;
@@ -460,18 +473,14 @@ footer .btn-default{
 .membership-banner__ad{
 	padding: 0;
 	margin: 10px 0;
-	height: 100px;
+	height: 80px;
 	position: relative;
 }
 
 .membership-banner__ad img{
 	max-width: 100%;
 	height: auto;
-	position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+	vertical-align: middle;
     margin: auto;
 }
 
@@ -504,6 +513,13 @@ footer .btn-default{
 
 /*---------- table Styling ----------*/
 /* The bable is used in the cart page to display the shoppings table */
+.pay{
+	position: relative;
+}
+
+.cart{
+	margin-top: 50px;
+}
 .table{
 	margin-bottom: 0;
 }
@@ -533,7 +549,7 @@ footer .btn-default{
 }
 
 .tb-img{
-	width: 75px;
+	width: 125px;
 	height: auto;
 }
 
@@ -551,6 +567,10 @@ footer .btn-default{
 		padding-right: 10px;
 		padding-left: 10px;
 	}
+}
+
+.table h3{
+	margin-top: 0px;
 }
 
 /*---------- Item Styling ----------*/

@@ -27,9 +27,11 @@ h2.page-header,
 .go-to-full:focus,
 .job_offer__header,
 footer a:hover,
-footer a:active{
-	color: #930303 !important;
+footer a:active,
+.table h3 a{
+	color: #a40000 !important;
 }
+
 
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
 .navbar-nav>li>a,
@@ -65,7 +67,8 @@ footer a,
 /*---------- Text Styling - Black text ----------*/
 .side-bar a,
 .select-lang,
-.item-page__qty-box{
+.item-page__qty-box,
+.cart{
 	color: #000;
 }
 
@@ -122,12 +125,12 @@ a.product__btn,
 .product__btn .btn,
 a.product__btn,
 .news__btn{
-	border-color: #2c4807;
+	border-color: #000;
 }
 
 a.coupon__btn{
 	background-color: #f7b400;
-	border-color: #144968;
+	border-color: #8b6500;
 }
 
 /*---------- Jobs Styling ----------*/

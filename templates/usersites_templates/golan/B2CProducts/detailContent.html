@@ -73,14 +73,14 @@
 
                     <div class="item-page__qty">
 
-                      <form class="form-inline">
+{#                      <form class="form-inline">#}
                         <div class="form-group">
                           <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
                             <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
                           <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
                         </div>
                           {% b2b_social_buttons object.image object.name object.description %}
-                      </form>
+{#                      </form>#}
 
                     </div>
 
@@ -99,7 +99,7 @@
                         <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                     {% endif %}
 
-                    <h4>{% blocktrans %}Details:{% endblocktrans %}</h4>
+                    <h4>{% trans 'About Company' %}</h4>
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
 

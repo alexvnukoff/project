@@ -2241,7 +2241,8 @@ class Producer(models.Model):
                 'file': self.logo.path,
                 'sizes': {
                     'small': {'box': (24, 24), 'fit': False},
-                    'th': {'box': (50, 50), 'fit': False}
+                    'th': {'box': (30, 30), 'fit': False},
+                    'big': {'box': (150, 150), 'fit': False},
                 }
             })
         tasks.upload_images(*params, async=False)
