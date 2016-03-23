@@ -4,9 +4,10 @@
 {% load staticfiles %}
 
 <div class="data">
+    {% if email %}
     <table id="questions" class="q_data" width="100%">
         <tr class="header">
-            <td colspan="3">{% trans 'Your questionnaires' %}</td>
+            <td colspan="4">{% trans 'Your questionnaires' %}</td>
         </tr>
         {% for item in page_obj.object_list %}
         <tr valign="top">
@@ -16,13 +17,35 @@
                 </a>
             </td>
             <td align="center">
+                {{ item.created_at|date:"d M Y H:i" }}
+            </td>
+            <td align="center">
                 {{ item.get_inviter.email }}
             </td>
             <td align="center">
                 {{ item.get_invited.email }}
             </td>
-            
         </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" align="center">{% trans 'There is no any data' %}
+        </td>
         {% endfor %}
     </table> 
+    {% else %}
+        <form method="get">
+        <table class="q_data" width="100%">
+            <tr>
+                <td align="right">{% trans 'Your Email' %}:</td>
+                <td align="left"><input type="text" size="50" name="email"></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td align="left">
+                    <input type="submit" class="btntype2" name="submit" value="{% trans 'Show' %}">
+                </td>
+            </tr>
+        </table> 
+        </form>
+    {% endif %}
 </div>

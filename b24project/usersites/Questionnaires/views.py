@@ -235,6 +235,11 @@ class QuestionnaireCaseList(UserTemplateMixin, ItemsList):
 
     def get(self, request, *args, **kwargs):
         self._email = request.GET.get('email')
-        if not self._email:
-            return HttpResponseRedirect(reverse('main'))
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionnaireCaseList, self).get_context_data(**kwargs)
+        context.update({
+            'email': self._email,
+        })
+        return context
