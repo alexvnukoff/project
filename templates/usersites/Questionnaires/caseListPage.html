@@ -1,0 +1,19 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+
+<div class="data">
+    <table id="questions" class="q_data" width="100%">
+        <tr class="header">
+            <td colspan="2">{% trans 'Your questionnaires' %}</td>
+        </tr>
+        {% for item in page_obj.object_list %}
+        <tr valign="top">
+            <td align="left">
+                {{ item.questionnaire.name }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table> 
+</div>

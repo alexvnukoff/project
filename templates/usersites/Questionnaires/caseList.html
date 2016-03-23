@@ -1,0 +1,27 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Questionnaire cases list' %}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <section class="content__info grid-layout">
+        <div class="data">
+            <h2>{% trans 'Questionnaire cases list' %}</h2>
+            <hr class="hr-divider-one">
+            <div class="data">
+                {% include "usersites/Questionnaires/caseListPage.html" %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
