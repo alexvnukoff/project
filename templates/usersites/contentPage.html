@@ -7,8 +7,23 @@
 
 {% block content %}
 
+{% b2c_categories as categories %}
 <section class="content__info grid-layout">
+<section class="content__info__actions">
 
+  <div style="padding:0 5px;" class="header vertical clearfix main-b2c-cat-rl">
+    <span class="small-grey-text">{% trans 'B2C categories:' %}&nbsp;</span>
+        <select class="category-selector">
+              <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
+                  {% for pk, category in categories.items %}
+                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                      {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                      </option>
+                  {% endfor %}
+        </select>
+   </div>
+
+</section>
     {% coupons 'B2CProducts/main_coupons.html' 5 %}
     {% b2c_products 'B2CProducts/main_products.html' 6 %}
     {% b2b_products 'B2BProducts/main_products.html' 6 %}
