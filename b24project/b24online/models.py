@@ -2205,7 +2205,7 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model):
+class Producer(ActiveModelMixing, models.Model):
     """
     The model class for goods producers.
     """
@@ -2221,7 +2221,14 @@ class Producer(models.Model):
                             max_length=255, null=True, blank=True)
     country = models.CharField(_('Country'), max_length=255, 
                                null=True, blank=True)
-                               
+    b2b_categories = models.ManyToManyField(B2BProductCategory, 
+                                            related_name='producers')
+    b2c_categories = models.ManyToManyField('centerpokupok.B2CProductCategory', 
+                                            related_name='producers')
+    is_approved = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
