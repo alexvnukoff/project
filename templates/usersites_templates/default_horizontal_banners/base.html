@@ -24,7 +24,7 @@
 
 </head>
 
-<body{% if request.path == "/" %} id="main"{% endif %}{% if LANGUAGE_BIDI %} hebrew{% endif %}">
+<body{% if request.path == "/" %} id="main"{% endif %} {% if LANGUAGE_BIDI %}class="hebrew{% endif %}">
 
     {% include 'usersites/header.html' %}
 
