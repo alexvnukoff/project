@@ -10,6 +10,10 @@
             dateFormat: "dd/mm/yy"
         });
         setTiny('textarea[class="tiny"]');
+        $('#id_producer').select2({
+            width: '100%',
+            allowClear: false,
+       });
     });
 
     $(document).on('click', '#select-cat', function() {
@@ -93,7 +97,15 @@
                     <input name="image" type="file" style="width: 100%"  />
                 </div>
             </div>
-
+            <div>
+                <label class="sapce">{% trans 'Product producer' %}</label>
+                {% if form.errors.producer %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.producer.0 }}</div>
+                    </div>
+                {% endif %}
+                {{ form.producer }}
+            </div>
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
                 {% if form.errors.keywords %}
