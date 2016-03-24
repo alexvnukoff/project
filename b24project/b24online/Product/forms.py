@@ -409,3 +409,9 @@ class ProducerForm(forms.ModelForm):
     class Meta:
         model = Producer
         fields = ['name', 'logo',]
+        
+    def __init__(self, *args, **kwargs):
+        super(ProducerForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget = forms.Textarea(
+            attrs={'rows': '2', 'cols': '50'}
+        ) 
