@@ -80,16 +80,13 @@ class QuestionForm(forms.ModelForm):
                     _('Invalid Object ID')
                 )
 
-    def save(self, commit=True):
-        instance = super(QuestionForm, self).save(commit=False)
-        if instance.pk:
-            instance.updated_by = self.request.user
+    def save(self, *args, **kwargs):
+        if self.instance.pk:
+            self.instance.updated_by = self.request.user
         else:
-            instance.questionnaire = self.item
-            instance.created_by = self.request.user
-        if commit:
-            instance.save()
-        return instance
+            self.instance.questionnaire = self.item
+            self.instance.created_by = self.request.user
+        return super(QuestionForm, self).save(*args, **kwargs)
 
 
 class RecommendationForm(forms.ModelForm):
@@ -116,14 +113,10 @@ class RecommendationForm(forms.ModelForm):
         self.fields['question'].required = True
         self.fields['description'].required = True
 
-    def save(self, commit=True):
-        instance = super(RecommendationForm, self).save(commit=False)
-        if instance.pk:
-            instance.updated_by = self.request.user
+    def save(self, *args, **kwargs):
+        if self.instance.pk:
+            self.instance.updated_by = self.request.user
         else:
-            instance.questionnaire = self.item
-            instance.created_by = self.request.user
-        if commit:
-            instance.save()
-        return instance
-
+            self.instance.questionnaire = self.item
+            self.instance.created_by = self.request.user
+        return super(RecommendationForm, self).save(*args, **kwargs)
