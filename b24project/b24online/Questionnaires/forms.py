@@ -50,17 +50,14 @@ class QuestionnaireForm(forms.ModelForm):
                         _('Invalid Object ID')
                     )
 
-    def save(self, commit=True):
-        instance = super(QuestionnaireForm, self).save(commit=False)
-        if instance.pk:
-            instance.updated_by = self.request.user
+    def save(self, *args, **kwargs):
+        if self.instance.pk:
+            self.instance.updated_by = self.request.user
         else:
-            instance.content_type = self._content_type
-            instance.item = self.item
-            instance.created_by = self.request.user
-        if commit:
-            instance.save()
-        return instance
+            self.instance.content_type = self._content_type
+            self.instance.item = self.item
+            self.instance.created_by = self.request.user
+        return super(QuestionnaireForm, self).save(*args, **kwargs)
 
 
 class QuestionForm(forms.ModelForm):
