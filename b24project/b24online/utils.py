@@ -350,7 +350,7 @@ def load_category_hierarchy(model, categories, loaded_categories=None):
 
     if categories_to_load:
         queryset = model.objects.filter(pk__in=categories_to_load).order_by('level')
-        loaded_categories = load_category_hierarchy(queryset, loaded_categories)
+        loaded_categories = load_category_hierarchy(model, queryset, loaded_categories)
 
     return loaded_categories
     return "{0}/{1}".format(folder_template, template_name)
