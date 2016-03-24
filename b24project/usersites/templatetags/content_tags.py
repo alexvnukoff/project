@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.utils.timezone import now
 
 from appl import func
-from b24online.models import B2BProduct, B2BProductCategory, News, BusinessProposal, Company
+from b24online.models import B2BProduct, B2BProductCategory, News, BusinessProposal, Company, Producer
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_template_with_base_path, load_category_hierarchy
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -61,6 +61,7 @@ class ProductsTag(ItemsTag):
     def __init__(self, selected_category, search_query=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.category = self.get_category_model().objects.get(pk=selected_category) if selected_category else None
+        self.selected_category = self.category
         self.search_query = search_query.strip() if search_query else None
 
     def get_category_model(self):
@@ -100,6 +101,9 @@ class ProductsTag(ItemsTag):
     def result_data(self):
         extended_context = super().result_data
 
+        if self.selected_category:
+            extended_context['selected_category'] = self.category
+
         if self.category:
             extended_context['url_parameter'] = [self.category.slug, self.category.pk]
 
@@ -116,7 +120,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
     if search_query is None:
         url_paginator = "b2b_products:category_paged" if selected_category else "b2b_products:paginator"
     else:
-        url_paginator = "b2c_products:search_paginator"
+        url_paginator = "b2b_products:search_paginator"
 
     organization = get_current_site().user_site.organization
 
@@ -239,3 +243,20 @@ def b2c_categories():
 
     return OrderedDict(sorted(
         load_category_hierarchy(B2CProductCategory, categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
+
+
+@register.simple_tag
+def b2b_producers():
+    organization = get_current_site().user_site.organization
+    producers = B2BProduct.objects.filter(company_id=organization.pk).filter(
+            producer__isnull=False).values_list('producer__name', 'producer__slug').distinct()
+    return producers
+
+
+@register.simple_tag
+def b2c_producers():
+    organization = get_current_site().user_site.organization
+    producers = B2CProduct.objects.filter(company_id=organization.pk).filter(
+            producer__isnull=False).values_list('producer__name', 'producer__slug').distinct()
+    return producers
+

@@ -1,6 +1,6 @@
 {% extends 'usersites/index.html' %}
 {% load content_tags %}
 {% block content %}
-    {{ block.super }}
+{{ block.super }}
     {% b2b_products 'B2BProducts/list.html' 15 page category %}
 {% endblock %}
