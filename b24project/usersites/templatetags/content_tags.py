@@ -249,7 +249,7 @@ def b2c_categories():
 def b2b_producers():
     organization = get_current_site().user_site.organization
     producers = B2BProduct.objects.filter(company_id=organization.pk).filter(
-            producer__isnull=False).values_list('producer__name', 'producer__slug').distinct()
+            producer__isnull=False).values_list('producer__pk', 'producer__name').distinct()
     return producers
 
 
@@ -257,6 +257,13 @@ def b2b_producers():
 def b2c_producers():
     organization = get_current_site().user_site.organization
     producers = B2CProduct.objects.filter(company_id=organization.pk).filter(
-            producer__isnull=False).values_list('producer__name', 'producer__slug').distinct()
+            producer__isnull=False).values_list('producer__pk', 'producer__name').distinct()
     return producers
+
+
+@register.filter
+def check_pr_contain(producer_pk, uri):
+    if '/?pr={0}'.format(producer_pk) in uri:
+        return True
+    return False
 

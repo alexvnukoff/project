@@ -10,18 +10,18 @@
         <button class="display-square active"></button>
     </div>
 
-    <div style="padding:0 10px;" class="select category">
+    <div style="width:170px;padding:0 10px;" class="select category">
         <select class="category-selector">
               <option value="{% url 'b2b_products:main' %}">{% trans 'Select Producer' %}</option>
                   {% for i in prods %}
-                  <option value="#">
-                      -&nbsp;{{ i.0 }}
+                  <option {% if i.0|check_pr_contain:request.get_full_path %}selected="selected"{% endif %} value="?pr={{ i.0 }}">
+                      -&nbsp;{{ i.1 }}
                       </option>
                   {% endfor %}
         </select>
     </div>
 
-    <div style="padding:0 10px;" class="select category">
+    <div style="width:170px;padding:0 10px;" class="select category">
         <select class="category-selector">
             {% if 'b2b-products' in request.path %}
                 <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
@@ -40,5 +40,6 @@
             {% endif %}
         </select>
     </div>
+
     {{ block.super }}
 {% endblock %}

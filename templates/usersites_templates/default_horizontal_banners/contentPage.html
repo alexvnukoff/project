@@ -13,10 +13,10 @@
 
   <div style="padding:0 5px;" class="header vertical clearfix main-b2c-cat-rl">
     <span class="small-grey-text">{% trans 'B2C categories:' %}&nbsp;</span>
-        <select class="category-selector">
+        <select style="width:170px" class="category-selector">
               <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
                   {% for pk, category in categories.items %}
-                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">
                       {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
                       </option>
                   {% endfor %}
