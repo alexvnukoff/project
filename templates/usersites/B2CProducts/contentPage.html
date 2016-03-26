@@ -2,5 +2,5 @@
 {% load content_tags %}
 {% block content %}
     {{ block.super }}
-    {% b2c_products 'B2CProducts/list.html' 15 page category %}
+    {% b2c_products 'B2CProducts/list.html' 15 page category request.GET.pk %}
 {% endblock %}

@@ -63,6 +63,7 @@ class ProductsTag(ItemsTag):
         self.category = self.get_category_model().objects.get(pk=selected_category) if selected_category else None
         self.selected_category = self.category
         self.search_query = search_query.strip() if search_query else None
+        self.producer = self.context['request'].GET.get('pr', False)
 
     def get_category_model(self):
         for field in self.queryset.model._meta.get_fields():
@@ -92,8 +93,14 @@ class ProductsTag(ItemsTag):
 
             return s.sort(self.order_by)
         else:
-            if categories:
+            if categories and self.producer:
+                return self.queryset.filter(categories__in=categories, producer__pk=self.producer)
+
+            elif categories and not self.producer:
                 return self.queryset.filter(categories__in=categories)
+
+            elif not categories and self.producer:
+                return self.queryset.filter(producer__pk=self.producer)
 
             return self.queryset.order_by(self.order_by)
 
@@ -106,6 +113,9 @@ class ProductsTag(ItemsTag):
 
         if self.category:
             extended_context['url_parameter'] = [self.category.slug, self.category.pk]
+
+        if self.producer:
+            extended_context['selected_producer'] = self.producer
 
         if self.search_query:
             objects_on_page = [hit.django_id for hit in extended_context[self.queryset_key]]
