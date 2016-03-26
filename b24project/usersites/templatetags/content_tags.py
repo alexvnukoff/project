@@ -117,6 +117,7 @@ class ProductsTag(ItemsTag):
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def b2b_products(context, template_name, on_page, page=1, selected_category=None, search_query=None,
                  order_by='-created_at'):
+
     if search_query is None:
         url_paginator = "b2b_products:category_paged" if selected_category else "b2b_products:paginator"
     else:
@@ -125,7 +126,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
     organization = get_current_site().user_site.organization
 
     if isinstance(organization, Company):
-        queryset = B2BProduct.get_active_objects().filter(company=get_current_site().user_site.organization)
+        queryset = B2BProduct.get_active_objects().filter(company=organization)
     else:
         queryset = B2BProduct.objects.none()
 
@@ -145,6 +146,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def b2c_products(context, template_name, on_page, page=1, selected_category=None, search_query=None,
                  order_by='-created_at'):
+
     if search_query is None:
         url_paginator = "b2c_products:category_paged" if selected_category else "b2c_products:paginator"
     else:
