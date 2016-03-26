@@ -18,7 +18,7 @@
         <select class="category-selector">
               <option value="{% url 'b2c_products:main' %}">{% trans 'Select Producer' %}</option>
                   {% for i in prods %}
-                  <option {% if i.0|check_pr_contain:request.get_full_path %}selected="selected"{% endif %} value="?pr={{ i.0 }}">
+                  <option {% if i.0|check_pr_contain:request.get_full_path %}selected="selected"{% endif %} value="{% url 'b2c_products:main' %}?pr={{ i.0 }}">
                       -&nbsp;{{ i.1 }}
                       </option>
                   {% endfor %}
