@@ -97,10 +97,10 @@ class InviteForm(forms.Form):
                     )
                 if self.is_invited:
                     try:
-                        responsive = self.instance.participants.filter(
+                        responsive = self.instance.participants.get(
                             is_invited=True
-                        )[0]
-                    except IndexError:
+                        )
+                    except QuestionnaireCase.DoesNotExist:
                         raise Http404(_('There is no suitable participant'))
                         
                 else:
