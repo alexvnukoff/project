@@ -139,15 +139,15 @@ class InviteForm(forms.Form):
         else:          
             return self.instance
 
-
     def process_answers(self):
         existed_ids = [r.id for r in self.instance.recommendations.all()]                
-        for item in self.instance.get_coincedences():
-            if item.get('is_coincedence'):
-                question = item.get('question')
-                for r_item in Recommendation.objects.filter(
-                    question=question):
-                    if r_item not in existed_ids:
-                        self.instance.recommendations.add(r_item)
+        question_ids = filter(
+            lambda x: x not in existed_ids, 
+            [item['question'].pk for item in \
+                self.instance.get_coincedences() \
+                    if item.get('is_coincedence') and 'question' in item]
+        )
+        items = Recommendation.objects.filter(question__id__in=question_ids)
+        self.instance.recommendations.add(*items)
         
         

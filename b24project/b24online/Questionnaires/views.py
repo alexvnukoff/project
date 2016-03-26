@@ -164,11 +164,7 @@ class QuestionnaireDetail(ItemDetail):
         context = super(QuestionnaireDetail, self).get_context_data(**kwargs)
         questionnaire = context.get('item')
         self._product = questionnaire.item
-        context.update({
-            'product': self._product,
-            'colspan': 5 if self.request.user == questionnaire.created_by \
-                else 4,
-        })
+        context.update({'product': self._product,})
         return context
 
 

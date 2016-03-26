@@ -30,11 +30,13 @@
         </div>
         <div class="data">
             <h3>{% trans 'Questions' %}</h3>
+            {% if request.user == item.created_by %}
             <span style="float: right; margin: 5px;">
                 <a href="{% url 'questionnaires:add_question' item_id=item.id %}">
                     {% trans 'Add new question' %}
                 </a>
             </span>
+            {% endif %}
             <table width="100%" cellspacing="2" cellpadding="2"
                 border="0" class="table-data">
                 <tr>
@@ -64,18 +66,23 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td align="center" colspan="{{ colspan }}">{% trans 'There are no records' %}</td>
+                    <td align="center" 
+                        colspan="{% if request.user == item.created_by %}4{% else %}2{% endif %}">
+                        {% trans 'There are no records' %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table> 
         </div>
         <div class="data" style="margin-top: 40px;">
             <h3>{% trans 'Recommendations' %}</h3>
+            {% if request.user == item.created_by %}
             <span style="float: right; margin: 5px;">
                 <a href="{% url 'questionnaires:add_recommendation' item_id=item.id %}">
                     {% trans 'Add new recommendation' %}
                 </a>
             </span>
+            {% endif %}
             <table width="100%" cellspacing="2" cellpadding="2"
                 border="0" class="table-data">
                 <tr>
@@ -102,7 +109,10 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td align="center" colspan="{{ colspan|add:'-1' }}">{% trans 'There are no records' %}</td>
+                    <td align="center" 
+                        colspan="{% if request.user == item.created_by %}4{% else %}3{% endif %}">
+                        {% trans 'There are no records' %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table> 
