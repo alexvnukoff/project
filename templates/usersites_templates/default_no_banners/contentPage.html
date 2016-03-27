@@ -7,24 +7,37 @@
 
 {% block content %}
 
-{% b2c_categories as categories %}
+    {% b2c_categories as categories %}
+    {% b2c_producers as prods %}
+
 <section class="content__info grid-layout">
 <section class="content__info__actions">
 
-  <div style="padding:0 5px;" class="header vertical clearfix main-b2c-cat-rl">
-    <span class="small-grey-text">{% trans 'B2C categories:' %}&nbsp;</span>
+  <div class="header vertical clearfix main-b2c-cat-rl">
+    <div style="width:170px;padding:0 10px;" class="select category">
+        <select class="category-selector">
+              <option value="{% url 'b2c_products:main' %}">{% trans 'Select Producer' %}</option>
+                  {% for i in prods %}
+                  <option {% if i.0|check_pr_contain:request.get_full_path %}selected="selected"{% endif %} value="{% url 'b2c_products:main' %}?pr={{ i.0 }}">
+                      -&nbsp;{{ i.1 }}
+                      </option>
+                  {% endfor %}
+        </select>
+    </div>
+
+    <div style="width:170px;padding:0 10px;" class="select category">
         <select class="category-selector">
               <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
                   {% for pk, category in categories.items %}
-                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">
                       {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
                       </option>
                   {% endfor %}
         </select>
    </div>
-
+ </div>
 </section>
-    {% coupons 'B2CProducts/main_coupons.html' 4 %}
+    {% coupons 'B2CProducts/main_coupons.html' 5 %}
     {% b2c_products 'B2CProducts/main_products.html' 6 %}
     {% b2b_products 'B2BProducts/main_products.html' 6 %}
 
