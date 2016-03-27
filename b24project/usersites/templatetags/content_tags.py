@@ -96,10 +96,10 @@ class ProductsTag(ItemsTag):
             if categories and self.producer:
                 return self.queryset.filter(categories__in=categories, producer__pk=self.producer)
 
-            elif categories and not self.producer:
+            if categories and not self.producer:
                 return self.queryset.filter(categories__in=categories)
 
-            elif not categories and self.producer:
+            if not categories and self.producer:
                 return self.queryset.filter(producer__pk=self.producer)
 
             return self.queryset.order_by(self.order_by)
