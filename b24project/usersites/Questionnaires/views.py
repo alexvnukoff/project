@@ -78,7 +78,8 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     message = 'The questionnaire results Url: %s' % next_url
                     mail = EmailMessage(subject, message, 
                                         settings.DEFAULT_FROM_EMAIL, [email,])
-                    # mail.send()
+                    if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                        mail.send()
 
                     form.process_answers()
                     success_url = reverse(
@@ -101,7 +102,8 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     message = 'The Questionnaire activation Url: %s' % next_url
                     mail = EmailMessage(subject, message, 
                                         settings.DEFAULT_FROM_EMAIL, [email,])
-                    # mail.send()
+                    if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                        mail.send()
 
                     success_url = reverse(
                         'questionnaires:ready', 

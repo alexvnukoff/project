@@ -5,6 +5,7 @@ import logging
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.db import transaction, IntegrityError
+from django.db.models import Q
 from django import forms
 from django.utils.translation import gettext as _
 from django.conf import settings
@@ -47,9 +48,6 @@ class AnswerForm(forms.Form):
         pass
 
 
-AnswerFormset = formset_factory(AnswerForm, extra=1, max_num=30)
-
-
 class InviteForm(forms.Form):
     
     inviter_email = forms.EmailField(
@@ -73,13 +71,30 @@ class InviteForm(forms.Form):
             del self.fields['inviter_email']
             del self.fields['invite_by_email']
         self.questionnaire = questionnaire
-        params = {
-            'initial': [{'question_id': question.id, 'question': question} \
-                for question in self.questionnaire.questions.all()]
-        }
+        if self.is_invited:
+            extra_ids = [q.id for q in self.instance.extra_questions.all()]
+            params = {
+                'initial': [{'question_id': question.id, 'question': question} \
+                for question in self.questionnaire.questions.filter(
+                    Q(who_created=Question.BY_AUTHOR) | Q(id__in=extra_ids)
+                )]
+            }    
+        else:
+            params = {
+                'initial': [{'question_id': question.id, 'question': question} \
+                for question in self.questionnaire.questions.filter(
+                    who_created=Question.BY_AUTHOR
+                )]
+            }
         if self.data:
             params.update({'data': self.data})
-        self.answer_formset = AnswerFormset(**params)
+
+        extra = 0 if self.is_invited else 1
+        self.answer_formset = formset_factory(
+            AnswerForm, 
+            extra=extra, 
+            max_num=100
+        )(**params)
 
     def is_valid(self):
         it_is_valid = super(InviteForm, self).is_valid()
@@ -126,14 +141,25 @@ class InviteForm(forms.Form):
                         responsive = inviter_participant
 
                 for q_form in self.answer_formset:
+                    if not q_form.question:
+                        question = Question.objects.create(
+                            questionnaire=self.questionnaire,
+                            who_created=Question.BY_MEMBER,
+                            question_text=q_form.cleaned_data['question_text']
+                        )
+                        self.instance.extra_questions.add(question)
+                    else:
+                        question = q_form.question
+
                     if 'agree' in q_form.cleaned_data and \
                         q_form.cleaned_data['agree']:
                         new_answer = Answer.objects.create(
                             questionnaire_case=self.instance,
-                            question=q_form.question,
+                            question=question,
                             participant=responsive,
                             answer=True
-                        )                                            
+                        )
+                                                                    
         except IntegrityError:
             raise
         else:          
