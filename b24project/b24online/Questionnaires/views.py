@@ -147,14 +147,6 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
             )    
         return qs
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionnaireList, self).get_context_data(**kwargs)
-        context.update({
-            'product': self.product,
-            'content_type_id': self.content_type_id,
-        })
-        return context
-        
 
 class QuestionnaireDetail(ItemDetail):
     model = Questionnaire

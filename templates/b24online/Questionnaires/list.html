@@ -23,11 +23,11 @@
 <div class="goods-details">
     <div class="data">
         <h1>{% trans 'Questionnaire list' %}
-        {% if product %}{% trans 'for' %}: <a href="{{ product.get_absolute_url }}">{{ product }}</a>{% endif %}
+        {% if view.product %}{% trans 'for' %}: <a href="{{ view.product.get_absolute_url }}">{{ view.product }}</a>{% endif %}
         </h1>
         <hr class="hr-divider-one">
         <span style="float: right; margin: 5px;">
-            <a href="{% url 'questionnaires:add' content_type_id=content_type_id item_id=product.id %}">
+            <a href="{% url 'questionnaires:add' content_type_id=view.content_type_id item_id=view.product.id %}">
                 {% trans 'Add new questionnaire' %}
             </a>
         </span>
