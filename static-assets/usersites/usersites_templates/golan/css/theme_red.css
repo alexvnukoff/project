@@ -28,7 +28,8 @@ h2.page-header,
 .job_offer__header,
 footer a:hover,
 footer a:active,
-.table h3 a{
+.table h3 a,
+.product__price a{
 	color: #a40000 !important;
 }
 
@@ -160,6 +161,10 @@ footer{
 	color: #000;
 }
 
+.top_search input{
+	background-color: #000;
+	border: 1px solid #fff;
+}
 /*---------- Page Item Styling ----------*/
 .special_offer__btn, .job_offer__btn{
     border-color: #004400;
@@ -186,5 +191,25 @@ footer{
 
 #timer-detail-page{
     border: 1px solid #930303;
+}
+
+.pagination>li>a, .pagination>li>span{
+	color: #930303;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	background-color: #a00c0b;
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+.category{
+	background-color: #fff;
+	color: #000;
 }
 

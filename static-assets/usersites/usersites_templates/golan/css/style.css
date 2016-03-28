@@ -144,6 +144,10 @@
     padding: 0px 20px 20px 0;
 }
 
+.banner-main-page{
+	float: left;
+}
+
 /*---------- Contact Styling ----------*/
 .contact-info, .contact-fields{
 	float: left;
@@ -156,6 +160,14 @@ footer span{
 
 .footer-col{
 	float: left;
+}
+
+.top_search{
+	float: right;
+}
+
+.paginator, .category{
+	float: right;
 }
 
 /*---------- Item Styling ----------*/

@@ -25,23 +25,6 @@ $(document).ready( function() {
 	});
 
 	//Attach events to menu
-  $('.main-navbar .navbar-nav li').on('click', function(e){
-	  //e.preventDefault();
-	  //$('li').removeClass('active');
-	  //$(this).addClass('active');
-	  //var siblings =($(this).siblings());
-      //
-	  ////Remove active class on all buttons
-	  //siblings.each(function (){
-		//  $(this).removeClass('active');
-		//})
-      //
-      //
-	  ////Add the clicked button class
-	  //$(this).addClass('active');
-
-
-	//$(".navbar-nav li").click(make_button_active);
-  });
+	$('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
 
 });
