@@ -167,6 +167,12 @@ class QuestionnaireDelete(ItemDeactivate):
 class QuestionDelete(ItemDeactivate):
     model = Question
 
+    def get_success_url(self):
+        return reverse(
+            'questionnaires:detail', 
+            kwargs={'item_id': self.object.questionnaire.pk}
+        )
+        
 
 class RecommendationDelete(ItemDeactivate):
     model = Recommendation

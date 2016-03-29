@@ -2254,6 +2254,7 @@ class Producer(ActiveModelMixing, models.Model):
             })
         tasks.upload_images(*params, async=False)
 
+
 ##
 # Models for Questionnaires
 ##
@@ -2280,6 +2281,20 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                                      null=False, blank=False)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
+
+    red_level = models.PositiveIntegerField(
+        _('How many coincedences for \'red\' color'),
+        default=0, null=False, blank=False,
+    )
+    yellow_level = models.PositiveIntegerField(
+        _('How many coincedences for \'yellow\' color'),
+        default=0, null=False, blank=False,
+    )
+    green_level = models.PositiveIntegerField(
+        _('How many coincedences for \'green\' color'),
+        default=0, null=False, blank=False,
+    )
+    
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -2331,9 +2346,14 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     def has_perm(self, user):
         return True
 
-    def recommendations(self):
-        return Recommendation.objects.filter(question__questionnaire=self)\
-            .order_by('question__position')
+    def actual_questions(self):
+        return Question.get_active_objects()\
+            .filter(questionnaire=self)\
+            .order_by('position')
+
+    def actual_recommendations(self):
+        return Recommendation.get_active_objects()\
+            .filter(questionnaire=self)
 
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2403,13 +2423,31 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     """
     The 'Recommendation' models class.    
     """
-
+    
+    RED, YELLOW, GREEN = 'red', 'yellow', 'green'
+    COLORS = (
+        (RED, _('Red')),
+        (YELLOW, _('Yellow')),
+        (GREEN, _('Green')),
+    )
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='recommendations',
+        null=False,
+        blank=False,
+    )
     question = models.ForeignKey(
         Question, 
         related_name='recommendations',
         null=True,
         blank=True
     )
+    for_color = models.CharField(
+        _('For what color'), 
+        max_length=10, 
+        choices=COLORS, 
+        null=True, 
+        blank=True)
     name = models.CharField(
         _('Name'), 
         max_length=255, 

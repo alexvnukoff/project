@@ -1,9 +1,11 @@
 import threading
+import logging
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.http import HttpResponse, HttpResponseBadRequest
 
+logger = logging.getLogger('debug')
 
 def get_current_site():
     return DynamicSiteMiddleware.get_site()
@@ -53,6 +55,7 @@ class DynamicSiteMiddleware(object):
 
         host = '.'.join(host)
 
+        logger.debug(host)
         try:
             site = Site.objects.get(domain__iexact=host)
         except Site.DoesNotExist:

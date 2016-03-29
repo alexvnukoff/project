@@ -47,7 +47,7 @@
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
-                {% for question in item.questions.all %}                
+                {% for question in item.actual_questions %}                
                 <tr>
                     <td>{{ question.question_text }}</td>
                     <td>{{ question.created_by }}</td>
@@ -93,7 +93,7 @@
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
-                {% for recommendation in item.recommendations %}                
+                {% for recommendation in item.actual_recommendations %}                
                 <tr valign="top">
                     <td>{{ recommendation.question }}</td>
                     <td>{{ recommendation.name }}</td>

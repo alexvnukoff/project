@@ -4,7 +4,11 @@
 Change cookie domain to accept form sub domains( Lang sub domains )
 """
 
+import logging
+
 from django.conf import settings
+
+logger = logging.getLogger('debug')
 
 
 class ChangeCsrfCookieDomainMiddleware:
@@ -12,6 +16,7 @@ class ChangeCsrfCookieDomainMiddleware:
         current_domain = request.get_host().split(':')[0]
         current_domain_list = current_domain.split('.')
 
+        logger.debug(current_domain_list)
         if current_domain_list[0] in [item[0] for item in settings.LANGUAGES]:
             # Check the language prefix
             current_domain_list = current_domain_list[1:]
@@ -20,6 +25,8 @@ class ChangeCsrfCookieDomainMiddleware:
             current_domain_list = current_domain_list[1:]
         current_domain = "." . join([''] + current_domain_list)
         allowed = settings.ALLOWED_HOSTS
+        logger.debug(current_domain)
         if current_domain in allowed or "*" in allowed:
+            logger.debug('OK')
             settings.CSRF_COOKIE_DOMAIN = current_domain
             settings.SESSION_COOKIE_DOMAIN = current_domain

@@ -23,7 +23,9 @@ class QuestionnaireForm(forms.ModelForm):
 
     class Meta:
         model = Questionnaire
-        fields = ['name', 'short_description', 'description', 'image']
+        fields = ['name', 'short_description', 'description', 
+                  'red_level', 'yellow_level', 'green_level',
+                  'image']
 
     def __init__(self, request, content_type_id=None, item_id=None, 
                  *args, **kwargs):
@@ -93,7 +95,7 @@ class RecommendationForm(forms.ModelForm):
 
     class Meta:
         model = Recommendation
-        fields = ['question', 'name', 'description',]
+        fields = ['question', 'name', 'description', 'for_color']
 
     def __init__(self, request, item_id=None, *args, **kwargs):
         cls = type(self)
@@ -110,7 +112,7 @@ class RecommendationForm(forms.ModelForm):
                 )
         self.fields['question'].queryset = Question.objects\
             .filter(questionnaire=self.item)
-        self.fields['question'].required = True
+        #self.fields['question'].required = True
         self.fields['description'].required = True
 
     def save(self, *args, **kwargs):
