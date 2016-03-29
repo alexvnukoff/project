@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from django.conf.urls import url
+from django.utils.translation import ugettext as _
 
+from usersites.views import render_page
 from usersites.Questionnaires.views import (
     QuestionnaireDetail,
     QuestionnaireReady,

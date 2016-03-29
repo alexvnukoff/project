@@ -215,33 +215,24 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
         raise Http404(_('There is no such Questionnaire'))
 
 
-class QuestionnaireCaseList(UserTemplateMixin, ItemsList):
+class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
     """
     The Questionnaire list view.
     """
     model = QuestionnaireCase
-    template_name = '{template_path}/Questionnaires/caseList.html'
-    url_paginator = 'questionnaires:case_list_paginator'
-    paginate_by = 10
-    sortField1 = 'created_at'
-    order1 = 'asc'
-
-    def get_queryset(self):
-        return super(QuestionnaireCaseList, self).get_queryset()
-        if self._email:
-            return QuestionnaireCase.objects.filter(
-                participants__email=self._email
-            )
-        else:
-            return QuestionnaireCase.objects.none()
+    template_name = '{template_path}/Questionnaires/contentPage.html'
 
     def get(self, request, *args, **kwargs):
-        self._email = request.GET.get('email')
+        from django.core.validators import validate_email
+        from django import forms    
+
+        _email = request.GET.get('email')
+        if _email:
+            try:
+                validate_email(_email)
+            except forms.ValidationError:
+                pass
+            else:
+                self.email = _email
         return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionnaireCaseList, self).get_context_data(**kwargs)
-        context.update({
-            'email': self._email,
-        })
-        return context
