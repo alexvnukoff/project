@@ -542,6 +542,7 @@ footer .btn-default{
 .top_search{
 	position: relative;
 	clear: both;
+	margin-top: 10px;
 }
 
 .category{

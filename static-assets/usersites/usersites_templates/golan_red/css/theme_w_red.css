@@ -30,7 +30,7 @@ h2.page-header,
 .product__price a,
 .cust-nav__btn a,
 .product__title{
-	color: #002061 !important;
+	color: #a40000 !important;
 }
 
 
@@ -77,7 +77,7 @@ footer a,
 .navbar-inverse .navbar-nav>.active a:hover,
 .navbar-inverse .navbar-nav>.active a:focus,
 .navbar-inverse .navbar-nav>.active a:active{
-	background-color: #002061;
+	background-color: #a40000;
 	color: #fff!important;
 }
 
@@ -103,14 +103,14 @@ footer a,
 .navbar-inverse,
 #timer-detail-page > div,
 #timer-detail-page div > span{
-	background-color: #002061;
+	background-color: #a40000;
 }
 
 /*---------- More custome Styling ----------*/
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active{
-	background-color: #005d89 !important;
+	background-color: #a40000 !important;
 }
 
 /*---------- carousel Styling ----------*/
@@ -130,7 +130,7 @@ footer a,
 }
 
 .product__discount{
-	color: #59caff;
+	color: #5a0000;
 }
 
 .product__btn .btn,
@@ -139,14 +139,14 @@ a.product__btn,
 .special_offer__btn, .job_offer__btn,
 .news__btn,
 .special_offer__btn, .job_offer__btn{
-	border-color: #002061;
+	border-color: #a40000;
 	color: #fff;
-	background-color: #002061
+	background-color: #a40000
 }
 
 a.coupon__btn{
-	background-color: #59caff;
-	border-color: #005d89;
+	background-color: #5a0000;
+	border-color: #a40000;
 }
 
 .coupon__btn:hover,
@@ -164,8 +164,8 @@ a.coupon__btn{
 .job_offer__btn:active,
 .news__btn:focus,
 .news__btn:active{
-	background-color: #005d89;
-	border-color: #59caff;
+	background-color: #5a0000;
+	border-color: #a40000;
 	color: #fff!important;
 }
 /*---------- Jobs Styling ----------*/
@@ -190,7 +190,7 @@ footer,
 
 footer a:hover,
 footer a:active{
-	color: #59caff!important;
+	color: #a40000!important;
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{
@@ -199,7 +199,7 @@ footer a:active{
 
 .top_search input,
 .top_search input:focus{
-	background-color: #002061;
+	background-color: #a40000;
 	border: 1px solid #fff;
 	color: #fff;
 }
@@ -219,11 +219,11 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #0036a4;
+    border: 1px solid #a40000;
 }
 
 .pagination>li>a, .pagination>li>span{
-	color: #0036a4;
+	color: #a40000;
 }
 
 .pagination>.active>a,
@@ -232,7 +232,7 @@ footer a:active{
 .pagination>.active>span,
 .pagination>.active>span:focus,
 .pagination>.active>span:hover{
-	background-color: #0036a4;
+	background-color: #a40000;
 	color: #fff;
 	border: 1px solid #ddd;
 }
@@ -250,6 +250,7 @@ footer a:active{
 
 .navbar-collapse{
 	padding-top: 10px;
+	background-color: #a40000;
 }
 
 #myCarousel{
