@@ -253,7 +253,7 @@ def questionnaires_history(context, template_name, on_page, page=1, email=None, 
         on_page=on_page,
         current_page=page,
         url_paginator='questionnaires:case_list_paginator',
-        queryset_key='cases').result_data
+        queryset_key='email').result_data
 
 
 @register.simple_tag
