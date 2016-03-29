@@ -232,6 +232,7 @@ h2.page-header.inner-page{
 	bottom: 90px;
 }
 
+
 .product__desc{
 	font-size: 16px;
 }
@@ -375,16 +376,17 @@ h2.page-header.inner-page{
 /*---------- Banners Styling ----------*/
 /* The custom banners on the main page */
 .banner-ad-main-collection{
-    margin-top: 4.5%;
+    margin-top: 5.5%;
     padding: 30px;
 }
 
 .banner-main-page{
     padding: 0;
+	position: relative;
 }
 
 .banner-main-page img{
-    width: 100%;
+    /*width: 100%;*/
 }
 
 /*--------- contact form --------------*/
@@ -394,6 +396,34 @@ h2.page-header.inner-page{
 
 .contact-fields{
 	margin-top: 80px;
+}
+
+.contact-fields-email{
+	margin: 20px 0;
+}
+
+.contact-fields-email .controls input,
+.contact-fields-email .controls textarea{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.contact-fields-email .controls textarea{
+	height: auto;
 }
 /*---------- Footer Styling ----------*/
 footer{
@@ -493,24 +523,45 @@ footer .btn-default{
 /*---------- Pagination Styling ----------*/
 .pagination{
 	text-align: center;
+	position: relative;
 }
 
-.pagination>li>a, .pagination>li>span{
-	color: #ebb66a;
-}
-
-.pagination>.active>a, 
+.pagination>.active>a,
 .pagination>.active>a:focus, 
 .pagination>.active>a:hover, 
 .pagination>.active>span, 
 .pagination>.active>span:focus, 
 .pagination>.active>span:hover{
-	background-color: #a00c0b;
-	color: #fff;
 	text-decoration: none;
-	border: 1px solid #ddd;
 }
 
+.top_search{
+	position: relative;
+}
+
+.category{
+	/*position: relative;*/
+}
+
+.category select{
+	/*margin: 0 10px;*/
+	display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
 /*---------- table Styling ----------*/
 /* The bable is used in the cart page to display the shoppings table */
 .pay{

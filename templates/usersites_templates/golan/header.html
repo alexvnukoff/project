@@ -26,9 +26,11 @@
 {#                {% endif %}#}
               </a>
 
+
+
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
-                    <li class="active"><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
+                    <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
                     <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
 
                     {% if not is_chamber %}
@@ -74,6 +76,12 @@
                     </li>
 
                 </ul>
+
+               <div class="tmp_search  top_search clearfix">
+                <form action="{% url 'b2c_products:search' %}">
+                    <input type="text" placeholder="Search" name="s">
+                </form>
+            </div>
 
 
 

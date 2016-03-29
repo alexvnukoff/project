@@ -263,6 +263,17 @@ footer span{
 	float: left;
 }
 
+.top_search{
+	float: left;
+}
+
+.paginator, .category{
+	float: left;
+}
+
+.pagination li{
+	float: left;
+}
 /*---------- table Cart Styling ----------*/
 .pay{
 	float: left;
@@ -288,4 +299,8 @@ th, td{
 /*---------- Banners Styling ----------*/
 .banner-main-page img{
     padding: 0px 0px 20px 20px;
+}
+
+.banner-main-page{
+	float: right;
 }

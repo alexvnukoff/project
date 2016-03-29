@@ -1,15 +1,11 @@
-{% extends 'usersites/Paginator.html' %}
+{% extends 'usersites_templates/golan/Paginator.html' %}
 {% load CustomFilters %}
 {% load i18n %}
 {% load content_tags %}
 {% block after_paginator %}
     {% b2c_categories as categories %}
-    <div class="view vertical">
-        <button class="display-list"></button>
-        <button class="display-square active"></button>
-    </div>
 
-    <div class="select category">
+    <div class="select pagination category">
         <select class="category-selector">
             {% if 'b2c-products' in request.path %}
                 <option value="{% url 'b2c_products:main' %}">{% trans 'Select Category' %}</option>

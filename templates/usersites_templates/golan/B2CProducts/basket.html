@@ -77,25 +77,26 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td ><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></td>
+                                                <td ><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></p></td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>
                                     </table>
 
                                     <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
-{#                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>#}
+                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
                                     <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
 
 
                                 </form>
-                            <div class="pay">
-                                        {% if paypal_form %}
-                                            {{ paypal_form.render }}
-                                        {% else %}
-                                            <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
-                                        {% endif %}
-                                    </div>
+
+                                <div class="pay">
+                                    {% if paypal_form %}
+                                        {{ paypal_form.render }}
+                                    {% else %}
+                                        <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
