@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+<div class="container">
+    {% include 'usersites/Proposals/paginator.html' %}
+
+    {# Page Heading/Breadcrumbs #}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{% trans 'Business proposals' %}</h1>
+        </div>
+    </div>
+    {# /.row #}
+
+    {# Proposal Content #}
+    <div class="row">
+        {% for proposal in proposals %}
+
+            {# Register the 'view' event for b2b product #}
+            {{ proposal|register_event:"view"|process_event:request }}
+            <div class="col-md-12">
+                <h2 class="page-header">{{ proposal.title }}</h2>
+
+                <p class="date">{{ proposal.created_at|date:'d M Y' }}</p>
+                <p>{{ proposal.description|cleanHtml }}</p>
+            </div>
+
+        {% endfor %}
+    </div>{# /.row #}{# /Proposal Content #}
+
+    {% include 'usersites/Proposals/paginator.html' %}
+</div>{# /.container #}
+
