@@ -1,0 +1,149 @@
+p.notify {
+    text-align: left; 
+    font-size: 150%; 
+    font-weight: bold;            
+    text-indent: 0;
+}
+
+#description {
+    margin: 20px 0; 
+    padding: 10px;
+    text-align: left; 
+    font-size: 120%;
+    position: relative;
+    overflow: auto;
+    border: 1px dashed #aaaaaa;
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#item_image {
+    float: left; 
+    margin: 0 10px 10px 0 ; 
+}    
+table.q_data td {
+    border: none;
+    font-size: 120%;
+    text-shadow: -1px -1px white, 1px 1px #333;
+}
+
+table.q_data td input[type=checkbox] {
+    width: 150%;
+    height: 150%;
+}
+
+table.q_data td input {
+    width: auto;
+    height: 200%;
+}
+
+table.q_data tr.header {
+    border: none;
+}
+
+table.q_data tr td {
+    font-size: 120%;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+table.q_data tr.header td {
+    border-bottom: 2px dashed #0089bc;
+    font-size: 150%;
+    font-weight: bold;
+    padding: 10px;
+}
+
+table.q_data tr:nth-last-child(1) td {
+    border-bottom: 2px dashed #0089bc;
+}
+
+table.q_data tr {
+    background-color: #ffffff;
+}
+
+#questions tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+#questions tr.is_coincedence {
+    background-color: #cce5ed;
+}
+
+.red {
+    background: red;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 10px; 
+}
+.yellow {
+    background: yellow;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    margin: 10px; 
+}
+.green {
+    background: green;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    margin: 10px; 
+}
+.lightred {
+    background: #ffc2b3;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 10px; 
+}
+.lightyellow {
+    background: #ffffb3;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    margin: 10px; 
+}
+.lightgreen {
+    background: #ccffdd;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    margin: 10px; 
+}
+.grey {
+    background: #aaaaaa;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    margin: 10px; 
+}
+
+#lights {
+    float: left;
+    overflow-y: auto; 
+    width: 60px; 
+    background: #222222; 
+    border: 2px solid #000000;
+    border-radius: 10px;
+    margin: 0 10px 10px 0; 
+}
+
+#recommendations {
+    overflow: auto; 
+    border: 1px dashed #aaaaaa;
+    background: #f1f1f1;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 120%;
+    text-shadow: -1px -1px white, 1px 1px #777;
+}
+
+#r_items p:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.r_item {
+    padding: 10px;
+}

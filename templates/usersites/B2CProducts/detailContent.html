@@ -100,19 +100,20 @@
             </li>
             {% endcomment %}
 
+        {% questionnaire_for_product object as questionnaires %}
+        {% with questionnaires.count as hm_questionnaires %}
         <div class="InfoTabs">
             <ul>
                 <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
                 <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
                 <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
+                {% if hm_questionnaires %}
+                    <li><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
+                {% endif %}
             </ul>
-
-
             <div id="tabs-1">
                 {{ object.description|cleanHtml|safe }}
             </div>
-
-
             <div id="tabs-2">
                 <ul class="tpp-gallery gallery">
                     {% for document_obj in object.documents.all %}
@@ -146,7 +147,32 @@
                 {% endfor %}
                  </ul>
             </div>
+
+            {% if hm_questionnaires %}
+            <div id="tabs-4">
+                <ul class="tpp-gallery gallery">
+                {% for questionnaire in questionnaires %}    
+                    <li>
+                    <div class="b-img">
+                        <a target="_blank" href="{% url 'questionnaires:detail' item_id=questionnaire.id %}">
+                            {% if questionnaire.image %}
+                                <img src="{{ questionnaire.image.big }}" />
+                            {% else %}
+                                <img src="{% static 'b24online/img/file_icon.png' %}" />
+                            {% endif %}
+                        </a>
+                        <div class="gray-img"></div>
+                    </div>
+                    <div>
+                        <a href="{% url 'questionnaires:detail' item_id=questionnaire.id %}">{{ questionnaire.name }}</a>
+                    </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
+        {% endwith %}
     </section>
 
 

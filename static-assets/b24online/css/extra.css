@@ -269,6 +269,17 @@ p.form-field {
     padding: 10px;
 }
 
+label.required::after {
+    content: "*";
+    color: red;
+    font-weight: bold;    
+}
+
+.form-container .uploadconfig input[type=text] {
+    height: 23px;
+    width: 90%;
+}
+
 .data-action .icon-action { float: left; width:20px; height: 20px; margin: 4px;}
 .data-action .remove {background-position: -120px -60px;}
 .data-action .edit {background-position: -216px -60px;}

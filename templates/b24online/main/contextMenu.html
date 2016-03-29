@@ -50,6 +50,17 @@
                     </a>
                 </div>
             {% endif %}
+            {% if extra_options %}
+                {% for option_url, option_title in extra_options %}
+                 <div class="tender-action">
+                     <i class="imgnews noty icon-action"></i>
+                     <a href="{{ option_url }}?next={{ current_path }}">
+                         <span class="deletext">{{ option_title }}</span>
+                     </a>
+                 </div>
+                 {% endfor %}
+            {% endif %}
+
         </div>
     </div>
 {% endif %}

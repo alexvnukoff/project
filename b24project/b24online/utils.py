@@ -213,9 +213,8 @@ def class_for_name(module_name, class_name):
 
 
 @lru_cache(maxsize=32)
-def _get_org(id):
+def get_org_by_id(id):
     from b24online.models import Organization
-    logger.debug('Once more')
     try:
         return Organization.objects.get(pk=id)
     except Organization.DoesNotExist:
@@ -226,10 +225,8 @@ def get_current_organization(request):
     """
     Return the current organization (stored in request.session)
     """
-
-    logger.debug('Here')    
     current_organization_id = request.session.get('current_company')
-    return _get_org(current_organization_id) if current_organization_id \
+    return get_org_by_id(current_organization_id) if current_organization_id \
         else None
 
 
@@ -358,3 +355,19 @@ def load_category_hierarchy(model, categories, loaded_categories=None):
     return loaded_categories
     return "{0}/{1}".format(folder_template, template_name)
 
+
+def get_by_content_type(content_type_id, instance_id):
+    """
+    Return the instance by content_type_id and id.
+    """
+    try:
+        content_type = ContentType.objects.get(pk=content_type_id)
+    except ContentType.DoesNotExist:
+        pass
+    else:
+        model_class = content_type.model_class()
+        try:
+            return model_class.objects.get(pk=instance_id)
+        except model_class.DoesNotExist:
+            pass
+    return None

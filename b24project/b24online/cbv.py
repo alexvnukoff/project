@@ -67,8 +67,8 @@ class ItemDeactivate(DeleteView):
         success_url = self.get_success_url()
         self.object.is_deleted = True
         self.object.save()
-        self.object.reindex(is_active_changed=True)
-
+        if hasattr(self.object, 'reindex'):
+            self.object.reindex(is_active_changed=True)
         return HttpResponseRedirect(success_url)
 
 

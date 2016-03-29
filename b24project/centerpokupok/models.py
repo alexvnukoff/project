@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -17,7 +18,7 @@ from b24online.custom import CustomImageField
 from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, 
                               image_storage, IndexedModelMixin, 
                               ActiveModelMixing, GalleryImage, 
-                              Producer)
+                              Producer, Questionnaire)
 from b24online.utils import generate_upload_path, reindex_instance
 import uuid
 from decimal import Decimal
@@ -157,7 +158,16 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def has_discount(self):
         return self.is_coupon or self.discount_percent
 
-
+    def get_contextmenu_options(self, context):
+        """
+        Return extra options for context menu.
+        """
+        model_type = ContentType.objects.get_for_model(self)
+        if getattr(self, 'pk', False):
+            yield (reverse('questionnaires:list',
+                           kwargs={'content_type_id': model_type.id, 
+                                   'item_id': self.id}),
+                   _('Questionnaire'))
 
 
 class B2CProductComment(MPTTModel):

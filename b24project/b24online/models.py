@@ -3,6 +3,7 @@
 import os
 import datetime
 import hashlib
+import uuid
 import logging
 
 from argparse import ArgumentError
@@ -10,6 +11,7 @@ from urllib.parse import urljoin
 
 from django.conf import settings
 from django.utils.functional import curry
+from django.db.models import Max
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group, Permission
@@ -1035,6 +1037,17 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def gallery_images(self):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
+    def get_contextmenu_options(self, context):
+        """
+        Return extra options for context menu.
+        """
+        model_type = ContentType.objects.get_for_model(self)
+        if getattr(self, 'pk', False):
+            yield (reverse('questionnaires:list',
+                           kwargs={'content_type_id': model_type.id, 
+                                   'item_id': self.id}),
+                   _('Questionnaire'))
 
 
 class B2BProductComment(MPTTModel):
@@ -2192,7 +2205,7 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model):
+class Producer(ActiveModelMixing, models.Model):
     """
     The model class for goods producers.
     """
@@ -2208,7 +2221,14 @@ class Producer(models.Model):
                             max_length=255, null=True, blank=True)
     country = models.CharField(_('Country'), max_length=255, 
                                null=True, blank=True)
-                               
+    b2b_categories = models.ManyToManyField(B2BProductCategory, 
+                                            related_name='producers')
+    b2c_categories = models.ManyToManyField('centerpokupok.B2CProductCategory', 
+                                            related_name='producers')
+    is_approved = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
@@ -2234,9 +2254,330 @@ class Producer(models.Model):
             })
         tasks.upload_images(*params, async=False)
 
+##
+# Models for Questionnaires
+##
+class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The main model class for Questionnaire sub-app.
+    """
+    # The content types are limited by set (B2BProduct, B2CProduct)
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
+        models.Q(app_label='centerpokupok', model='b2cproduct')
+
+    name = models.CharField(_('Questionnaire title'), max_length=255, 
+                            blank=False, null=False)
+    short_description = models.TextField(_('Short description'), 
+                                         null=True, blank=True)
+    description = models.TextField(_('Descripion'), null=True, blank=True)
+    image = CustomImageField(upload_to=generate_upload_path, 
+                             storage=image_storage,
+                             sizes=['big', 'small', 'th'],
+                             max_length=255, null=True, blank=True)
+    content_type = models.ForeignKey(ContentType,
+                                     limit_choices_to=CONTENT_TYPE_LIMIT,
+                                     on_delete=models.CASCADE,
+                                     null=False, blank=False)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    @classmethod
+    def get_questionnaire(cls, instance):
+        """
+        Return True if the instance has a Questionnaire.
+        """
+        model_type = ContentType.objects.get_for_model(instance)
+        if model_type and getattr(instance, 'id', False):
+            try:
+                qs = cls.get_active_objects().filter(
+                        content_type=model_type,
+                        object_id=instance.id
+                    )
+                return qs[0]
+            except IndexError:
+                pass
+        return None
+    
+
     def has_perm(self, user):
         return True
         
+    class Meta:
+        verbose_name = _('Questionnaire')
+        verbose_name_plural = _('Questionnaires')
+
+    def __str__(self):
+        return self.name
+
+    def upload_image(self, changed_data=None):
+        from core import tasks
+        params = []
+        if (changed_data is None or 'image' in changed_data) and self.image:
+            params.append({
+                'file': self.image.path,
+                'sizes': {
+                    'big': {'box': (250, 250), 'fit': False},
+                    'small': {'box': (24, 24), 'fit': False},
+                    'th': {'box': (50, 50), 'fit': False}
+                }
+            })
+        tasks.upload_images(*params, async=False)
+
+    def get_absolute_url(self):
+        return reverse('questionnaires:detail', kwargs={'item_id': self.pk})
+
+    def has_perm(self, user):
+        return True
+
+    def recommendations(self):
+        return Recommendation.objects.filter(question__questionnaire=self)\
+            .order_by('question__position')
+
+
+class Question(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Question' models class.    
+    """
+    # Who created the question
+    BY_AUTHOR, BY_MEMBER = 'author', 'member'
+    WHO_CREATED = (
+        (BY_AUTHOR, _('By author')),
+        (BY_MEMBER, _('By member')),
+    )
+    
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='questions',
+    )
+    who_created = models.CharField(
+        _('Who is the author'), 
+        max_length=10,
+        choices=WHO_CREATED, 
+        default=BY_AUTHOR, 
+        null=True, 
+        blank=True
+    )
+    question_text = models.TextField(
+        _('Question text'), 
+        blank=False, 
+        null=False
+    )
+    description = models.TextField(
+        _('Descripion'), 
+        null=True, 
+        blank=True
+    )
+    position = models.PositiveIntegerField(
+        _('The question position in the set'),
+        null=True,
+        blank=True,
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Question')
+        verbose_name_plural = _('Questions')
+        
+    def __str__(self):
+        return self.question_text
+
+    def save(self, *args, **kwargs):        
+        """
+        Save th instance.
+        """
+        max_position = type(self).objects.aggregate(Max('position'))\
+            .get('position_max') or 0
+        self.position = max_position + 1
+        super(Question, self).save(*args, **kwargs)
+    
+    def has_perm(self, user):
+        """The stub for using in views.
+        """
+        return True
+
+
+class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Recommendation' models class.    
+    """
+
+    question = models.ForeignKey(
+        Question, 
+        related_name='recommendations',
+        null=True,
+        blank=True
+    )
+    name = models.CharField(
+        _('Name'), 
+        max_length=255, 
+        null=True,
+        blank=True, 
+    )
+    description = models.TextField(
+        _('Descripion'), 
+        null=True, 
+        blank=True,
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Recommendation')
+        verbose_name_plural = _('Recommendations')
+        
+    def __str__(self):
+        return self.description
+
+    def has_perm(self, user):
+        return True
+
+    def recommendations(self):
+        return Recommendation.objects.filter(question__questionnaire=self)\
+            .order_by('question__position')
+            
+
+class QuestionnaireParticipant(ActiveModelMixing, models.Model):
+    email = models.EmailField(verbose_name='E-mail', max_length=255, 
+                              db_index=True)
+    user = models.ForeignKey(User, related_name='questionnaire_cases',
+                             null=True, blank=True)
+    is_invited = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = _('Questionnaire participant')
+        verbose_name_plural = _('Questionnaire participants')
+        
+
+class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Questionnaire' case models class.    
+    """
+    DRAFT, READY, ACTIVE, FINISHED = 'draft', 'ready', 'active', 'FINISHED'
+    STATUSES = (
+        (DRAFT, _('Draft')),
+        (READY, _('Ready')),
+        (ACTIVE, _('Actiive')),
+        (FINISHED, _('Finished')),
+    )
+    
+    questionnaire = models.ForeignKey(
+        Questionnaire, 
+        related_name='cases',
+    )
+    case_uuid = models.UUIDField(
+        default=uuid.uuid4, 
+        editable=False,
+        unique=True,
+    )
+    status = models.CharField(
+        _('Status'), 
+        max_length=20, 
+        choices=STATUSES, 
+        default=DRAFT, 
+        editable=False,
+        null=False, 
+        db_index=True
+    )
+
+    participants = models.ManyToManyField(QuestionnaireParticipant)    
+    extra_questions = models.ManyToManyField(Question)    
+    recommendations = models.ManyToManyField(Recommendation)
+        
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Questionnaire case')
+        verbose_name_plural = _('Questionnaire cases')
+        
+    def has_perm(self, user):
+        return True
+
+    def get_participants(self):
+        participants = list(self.participants\
+            .order_by('is_invited'))
+        is_correct = True
+        if len(participants) == 2:
+            inviter, invited = participants
+            if inviter.is_invited or not invited.is_invited:
+                is_correct = False
+        else:
+            is_correct = False
+        if is_correct:
+            return (inviter, invited)
+        else:
+            raise RuntimeError(_('The participants are invalid'))
+
+    def get_inviter(self):
+        return self.get_participants()[0]
+
+    def get_invited(self):
+        return self.get_participants()[1]
+
+    def get_coincedences(self):
+        answers = {}
+        for answer in Answer.objects.filter(
+            questionnaire_case=self):
+            if not answer.question:
+                continue
+            answers.setdefault(
+                answer.question.id, {})[answer.participant.pk] = answer.answer
+        inviter, invited = self.get_participants()
+        if all((inviter, invited)):
+            for question in self.questionnaire.questions.order_by('position'):
+                data = {
+                    'question': question,
+                    'inviter': answers.get(question.id, {}).get(inviter.id),
+                    'invited': answers.get(question.id, {}).get(invited.id),
+                }
+                data.update({
+                    'is_coincedence': data.get('inviter') and data.get('invited')
+                })
+                yield data
+        
+
+class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Question answer' models class.    
+    """
+    question = models.ForeignKey(
+        Question, 
+        related_name='questions',
+        verbose_name=_('Question'),
+        null=True,
+    )
+    questionnaire_case = models.ForeignKey(
+        QuestionnaireCase, 
+        related_name='questionnaire_cases',
+        verbose_name=_('Questionnaire cases'),
+        null=True,
+    )
+    participant = models.ForeignKey(
+        QuestionnaireParticipant, 
+        related_name='answers',
+        verbose_name=_('Answer author'),
+    )
+    answer = models.NullBooleanField(
+        _('Answer'), 
+        default=False,
+        null=True, 
+        blank=True
+    )
+    
+    class Meta:
+        verbose_name = _('Question answer')
+        verbose_name_plural = _('Questions answers')
+
+    def __str__(self):
+        return 'Yes' if self.answer else 'No'
+
+    def get_answer(self):
+        return str(self)
+
 
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):

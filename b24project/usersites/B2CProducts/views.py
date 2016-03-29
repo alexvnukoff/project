@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import re
+import logging
+
 from collections import OrderedDict
 from django.conf import settings
 from django.core.mail import send_mail
@@ -18,12 +21,14 @@ from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
+from b24online.models import Questionnaire
 from b24online.search_indexes import B2cProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
 from usersites.views import ProductJsonData
 
+logger = logging.getLogger(__name__)
 
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
     model = B2CProduct
@@ -33,6 +38,21 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        logger.debug('Step 1')
+        #if self.object and getattr(self.object, 'cost', False): 
+        if self.object: 
+            logger.debug(self.object)
+            questionnaire = Questionnaire.get_questionnaire(self.object)
+            logger.debug(questionnaire)
+            if questionnaire:
+                return HttpResponseRedirect(reverse(
+                    'questionnaires:detail',
+                    kwargs={'item_id': questionnaire.id}
+                ))
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if not request.session.get('basket_currency'):
