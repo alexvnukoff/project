@@ -1,0 +1,110 @@
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+
+    <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
+    <meta http-equiv="ImageResize" content="no">
+    <meta http-equiv="ImageToolbar" content="no">
+    <meta name="MSSmartTagsPreventParsing" content="true">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
+
+    <!--<link rel="shortcut icon" href="images/favicon.ico">-->
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
+    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan_blue/css/theme_w_blue.css' %}">
+
+    {% if LANGUAGE_BIDI %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
+    {% else %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
+    {% endif %}
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+</head>
+
+<body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
+
+    {# Include the header file, the header will put the main menu on top of every page #}
+    {% include 'usersites_templates/golan/header.html' %}
+
+    {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
+    {% block slider %}  {% endblock %}
+
+    {# Content will be in the contant page. #}
+    <section class="content">
+        <div class="wrapper">
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
+    {% block footer %}
+        {% include 'usersites_templates/golan/footer.html' %}
+    {% endblock %}
+
+<!-- //////////////////////////////////////////////////////////////////////// -->
+
+        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'usersites/js/basket.js' %}"></script>
+        <script src="{% static 'usersites/js/main.js' %}"></script>
+        <script src="{% static 'usersites/usersites_templates/golan/js/script.js' %}"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+
+
+    <script>
+    function initMap() {
+        {% if site.user_site.organization.location %}
+          {% with site.user_site.organization.location|split:"," as LatLng %}
+            var myLatLng = { lat: {{ LatLng.0 }}, lng: {{ LatLng.1 }} };
+          {% endwith %}
+        {% endif %}
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        disableDefaultUI: true,
+        scrollwheel: false,
+        navigationControl: false,
+        mapTypeControl: false,
+        zoomControl: true,
+        scaleControl: true,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map
+      });
+    }
+
+    </script>
+
+{% block js %}{% endblock %}
+
+</body>
+

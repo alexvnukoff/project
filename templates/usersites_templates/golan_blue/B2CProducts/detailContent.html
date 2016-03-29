@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan/index.html' %}
+{% extends 'usersites_templates/golan_blue/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -104,7 +104,7 @@
                     {% else %}
                         <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                     {% endif %}
-
+            
                     <p>{{ object.description|cleanHtml|safe }}</p>
 
             </div>{# end of details table #}
