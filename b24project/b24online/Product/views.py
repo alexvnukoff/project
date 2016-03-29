@@ -269,11 +269,16 @@ class B2CPCouponsList(ItemsList):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
     def get_queryset(self):
-        queryset = super(B2CPCouponsList, self).get_queryset().filter(\
-                                  coupon_dates__contains=now().date())\
-                        .exclude(coupon_discount_percent__isnull=True)
-        return queryset
+        if self.is_filtered():
+            return self.get_filtered_items().sort(*self._get_sorting_params())
 
+        queryset = self.model.get_active_objects().filter(
+                is_active=True,
+                coupon_dates__contains=now().date(),
+                coupon_discount_percent__gt=0
+                ).order_by(*self._get_sorting_params())
+
+        return self.optimize_queryset(queryset)
 
 
 class B2BProductDetail(ItemDetail):

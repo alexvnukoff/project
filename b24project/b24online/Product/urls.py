@@ -27,7 +27,7 @@ urlpatterns = [
         B2BProductUpdateList.as_view(my=True),
         name="b2b_product_update_paginator"),
     url(r'^b2c/$', B2CProductList.as_view(), name='main_b2c'),
-    url(r'^b2c/category/tree$', B2CProductList.as_view(), name='main_b2c'),
+    #url(r'^b2c/category/tree$', B2CProductList.as_view(), name='main_b2c'),
     url(r'^my_b2c/$', B2CProductList.as_view(my=True), name='my_b2c'),
     url(r'^b2c/page(?P<page>[0-9]+)?/$', B2CProductList.as_view(), name="main_b2c_paginator"),
     url(r'^my_b2c/page(?P<page>[0-9]+)?/$', B2CProductList.as_view(my=True), name="my_b2c_paginator"),
