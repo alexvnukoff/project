@@ -24,7 +24,7 @@
 
 
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/theme_red.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan_red/css/theme_w_red.css' %}">
 
     {% if LANGUAGE_BIDI %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
@@ -39,7 +39,7 @@
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {# Include the header file, the header will put the main menu on top of every page #}
-    {% include 'usersites_templates/golan/header.html' %}
+    {% include 'usersites_templates/golan_red/header.html' %}
 
     {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
     {% block slider %}  {% endblock %}
@@ -53,7 +53,7 @@
 
     {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
     {% block footer %}
-        {% include 'usersites_templates/golan/footer.html' %}
+        {% include 'usersites_templates/golan_red/footer.html' %}
     {% endblock %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->

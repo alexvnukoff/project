@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan/index.html' %}
+{% extends 'usersites_templates/golan_red/index.html' %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
@@ -8,7 +8,7 @@
 
 {# including the slider. The slider will apear only on the main page. #}
 {% block slider %}
-       {% include 'usersites_templates/golan/slider.html' %}
+       {% include 'usersites_templates/golan_red/slider.html' %}
 {% endblock %}
 
 {% block content %}
@@ -95,7 +95,7 @@
 
         <div class="row ">
 
-            {% proposal 'Proposals/wall.html' 1 %}
+            {% proposal 'Proposals/wall.html' 2 %}
 
             {% news 'News/wall.html' 2 %}
 

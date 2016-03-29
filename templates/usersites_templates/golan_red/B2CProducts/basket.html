@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan/index.html' %}
+{% extends 'usersites_templates/golan_red/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -108,7 +108,10 @@
                 <br/>
                 <br/>
                 <br/>
-                <p>{% trans 'Your basket is empty.' %}</p>
+                <div class="empty-basket">
+                    <span class="glyphicon glyphicon-shopping-cart "></span>
+                    <p>{% trans 'Your basket is empty' %}</p>
+                </div>
             {% endif %}
         </div>
 
