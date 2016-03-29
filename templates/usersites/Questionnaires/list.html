@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% include 'usersites/Questionnaires/paginator.html' %}
+<section class="content__info__news business-offers clearfix">
+<table id="questions" class="q_data" width="100%">
+    <tr class="header">
+        <td colspan="4">{% trans 'Your questionnaires' %}</td>
+    </tr>
+    {% for item in page_obj.object_list %}
+    <tr valign="top">
+        <td align="left">
+            <a href="{% url 'questionnaires:results' uuid=item.case_uuid participant='inviter' %}">
+                {{ item.questionnaire.name }}
+            </a>
+        </td>
+        <td align="center">
+            {{ item.created_at|date:"d M Y H:i" }}
+        </td>
+        <td align="center">
+            {{ item.get_inviter.email }}
+        </td>
+        <td align="center">
+            {{ item.get_invited.email }}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" align="center">{% trans 'There is no any data' %}
+    </td>
+    {% endfor %}
+</table> 
+</section>

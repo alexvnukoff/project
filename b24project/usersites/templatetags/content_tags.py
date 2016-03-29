@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from copy import copy
+
 from django import template
 from django.core.paginator import Paginator
 from django.utils.timezone import now
@@ -242,7 +243,7 @@ def proposal(context, template_name, on_page, page=1, order_by='-created_at'):
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def questionnaires_history(context, template_name, on_page, page=1, email=None, order_by='-created_at'):
     queryset = QuestionnaireCase.get_active_objects()\
-        .filter(participants__email=email)
+        .filter(participants__email=email).distinct()
 
     return ItemsTag(
         order_by=order_by,
