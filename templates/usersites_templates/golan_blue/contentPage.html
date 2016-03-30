@@ -25,7 +25,7 @@
                     <h2>{{ site.user_site.organization.name }}</h2>
                     <p>
                         {# Organization description #}
-                        {{ site.user_site.organization.description|cleanHtml|safe }}
+                        {{ site.user_site.organization.short_description|cleanHtml|safe }}
                     </p>
                 </div>
 
@@ -72,7 +72,7 @@
                         {% site_banner "top" "SITES RIGHT 1" %}
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 21" %}
+                        {% site_banner "top" "SITES RIGHT 2" %}
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
                         {% site_banner "top" "SITES RIGHT 3" %}

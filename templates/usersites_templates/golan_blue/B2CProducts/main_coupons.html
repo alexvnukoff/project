@@ -8,9 +8,11 @@
 {% if b2c_coupons %}
     <div class="col-md-6 col-sm-12 col-xs-12 main-coupons ">
 
-        <!-- Coupons header -->
-        <div class="col-md-12 col-sm-12">
-            <h2 class="page-header">{% trans 'Coupons' %}</h2>
+        <div class="row">
+            <!-- Coupons header -->
+            <div class="col-md-12 col-sm-12">
+                <h2 class="page-header">{% trans 'Coupons' %}</h2>
+            </div>
         </div>
 
         {# Coupons display. Template display 2 coupons. #}
@@ -77,7 +79,6 @@
         </div>
 
 {#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>#}
-        <br/><br/>
 
     </div>{# /Coupons modoul #}
 {% endif %}

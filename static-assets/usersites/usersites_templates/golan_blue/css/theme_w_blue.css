@@ -242,16 +242,6 @@ footer a:active{
 	color: #000;
 }
 
-/* General settings */
-.navbar-inverse{
-	margin-top: 0;
-	height: 110px;
-}
-
-.navbar-collapse{
-	padding-top: 10px;
-	background-color: #0036a4;
-}
 
 #myCarousel{
 	margin-top: 20px;
