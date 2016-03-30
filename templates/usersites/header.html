@@ -11,7 +11,13 @@
                     {% for page in site.user_site.organization.additional_pages.all %}
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                     {% endfor %}
-                    <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
+
+                    {# If any company products have questionnaires #}
+                    {% questionnaire_for_company_products as company_questionnaires %}
+                    {% if company_questionnaires.count %}
+                        <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
+                    {% endif %}
+
                 </ul>
                 <div class="busket vertical">
                     <span ngCloak><a href="{% url 'b2c_products:basket' %}">{{ request|basket_quantity }}</a></span>
