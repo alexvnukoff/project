@@ -78,7 +78,8 @@ $(document).ready(function() {
             </div>
           </li>
           {% endif %}
-        {% else %}
+          {% else %}
+          {% if product.is_coupon %}
           <li>
            {% setContextMenu product update_url=update_url delete_url=delete_url %}
             <div class="thumb">
@@ -107,7 +108,8 @@ $(document).ready(function() {
                   {% endif %}
               </div>
               <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="coupon_btnbuy">{% trans 'Buy' %}</a>
-          </li>
+            </li>
+            {% endif %}
         {% endif %}
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

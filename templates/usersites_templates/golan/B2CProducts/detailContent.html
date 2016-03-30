@@ -40,14 +40,16 @@
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
                     <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
 
-                    <p>{% trans "Price" %}:<br/></p>
-                    <div class="item-page__price">
-                      {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
-                        {% if object.measurement_unit %}
-                            <br/>
-                            {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
-                        {% endif %}
-                    </div>
+                    {% if object.cost %}
+                        <p>{% trans "Price" %}:<br/></p>
+                        <div class="item-page__price">
+                          {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
+                            {% if object.measurement_unit %}
+                                <br/>
+                                {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
 
                     {# This div will show only if there is a discount #}
                     {% if object.discount_percent or object.coupon_discount_percent %}
@@ -71,25 +73,29 @@
                         </div>
                     {% endif %}
 
-                    <div class="item-page__qty">
+                    {% if object.cost %}
+                        <div class="item-page__qty">
 
-{#                      <form class="form-inline">#}
-                        <div class="form-group">
-                          <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                            <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
-                          <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+    {#                      <form class="form-inline">#}
+                            <div class="form-group">
+                              <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+                                <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
+                              <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                            </div>
+                              {% b2b_social_buttons object.image object.name object.description %}
+    {#                      </form>#}
+
                         </div>
-                          {% b2b_social_buttons object.image object.name object.description %}
-{#                      </form>#}
-
-                    </div>
+                    {% endif %}
 
                     {# display the timer only if coupon #}
                     {% if object.coupon_discount_percent %}
                         <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
                     {% endif %}
 
-                    <button id="result" class="button more special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                    {% if object.cost %}
+                        <button id="result" class="button more special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                    {% endif %}
 
                 </form>
 
@@ -98,8 +104,6 @@
                     {% else %}
                         <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                     {% endif %}
-
-                    <h4>{% trans 'About Company' %}</h4>
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
 

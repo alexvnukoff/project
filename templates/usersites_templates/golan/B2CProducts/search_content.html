@@ -3,42 +3,69 @@
 {% load staticfiles %}
 {% load humanize %}
 <section class="content__info">
-   {% include 'usersites/Paginator.html' %}
+    <div class="container">
+       {% include 'usersites_templates/golan/b2cproducts/Paginator.html' %}
 
-                <section class="content__info__products">
-                    <h2>{% trans 'Search B2C Products' %}</h2>
-                    <ul class="products-list">
+                    <section class="content__info__products">
+                        <h2 class="page-header">{% trans 'Search B2C Products' %}</h2>
 
-                        {% for product in products %}
 
-                        <li class="product">
-                            <div class="product__cover vertical">
-                        <a href="">
-                            {% if product.image %}
-                              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
-                            {% else %}
-                              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                            {% endif %}
-                        </a>
-                            </div>
-                            <div class="product__about">
+                            {% for product in products %}
 
-                                <p class="desc">
-                                    <strong>{{ product.name|truncatechars:80 }}</strong></p>
-                                {% if product.cost %}
-                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
-                                {% else %}
-                                <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
-                                {% endif %}
 
-                            </div>
-                            <a href="" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
-                        </li>
+                                <div class="col-sm-6 col-xs-6 col-md-3 col-xs-12 product">
+                                    <div class="thumbnail">
 
-                        {% endfor %}
+                                        {% if product.image %}
+                                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                        {% else %}
+                                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                                        {% endif %}
 
-                    </ul>
-                </section>
+                                        {# Product details #}
+                                        <div class="product__caption">
 
-    {% include 'usersites/Paginator.html' %}
-    </section>
+                                            {# Product title - up 20 char to keep design #}
+                                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+
+                                            {# KRN here i want the product category to be #}
+                                            {% comment %}
+                                            {% for category in product.categories %}
+                                                <p class="product__cat">{{ category|truncatechars:20 }}</p>
+                                            {% endfor %}
+                                            {% endcomment %}
+
+                                            {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
+                                            <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
+
+                                            {# Button to go the details - attached to the bottom of the thumbnail #}
+                                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+
+                                            {# Displaying a price if there is one. Cheching if there is a discount too. #}
+                                            {% if product.cost %}
+                                                <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+
+                                                {% if product.cost != product.get_discount_price %}
+                                                    <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                                {% endif %}
+
+                                                </p>
+
+                                                {% else %}
+                                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            {% endfor %}
+
+
+                    </section>
+
+        {% include 'usersites_templates/golan/b2cproducts/Paginator.html' %}
+    </div>
+</section>
