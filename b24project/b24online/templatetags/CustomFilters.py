@@ -24,7 +24,7 @@ from lxml.html.clean import clean_html
 import b24online.urls
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, MessageChat, Message,
-                              Questionnaire)
+                              Questionnaire, Company)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -506,6 +506,9 @@ def colorize_by(wrapped_value, filter_form):
 
 @register.assignment_tag()
 def questionnaire_for_product(item):
+    """
+    Return the Questionnarie's qs for selected product.
+    """
     if isinstance(item, Model) and item.pk:
         content_type = ContentType.objects.get_for_model(item)
         if content_type:
@@ -514,3 +517,31 @@ def questionnaire_for_product(item):
                 object_id=item.id            
             )
     return Questionnaire.objects.none()
+
+
+@register.assignment_tag()
+def questionnaire_for_company_products():
+    """
+    Return the Questionnarie's qs for current company products.
+    """
+    from b24online.models import B2BProduct
+    from centerpokupok.models import B2CProduct
+    
+    organization = get_current_site().user_site.organization
+    logger.debug(organization)
+    logger.debug(organization.id)
+    if isinstance(organization, Company):
+        b2b_content_type, b2c_content_type = map(
+            lambda model_class: ContentType.objects.get_for_model(model_class),
+                 (B2BProduct, B2CProduct))
+        b2b_ids, b2c_ids = map(
+            lambda model_class: \
+                [item.id for item in model_class.get_active_objects()\
+                    .filter(company=organization)],
+                 (B2BProduct, B2CProduct))
+        return Questionnaire.get_active_objects().filter(
+            (Q(content_type=b2b_content_type) & Q(object_id__in=b2b_ids)) | \
+            (Q(content_type=b2c_content_type) & Q(object_id__in=b2c_ids))
+        )
+    else:
+        return Questionnaire.objects.none()
