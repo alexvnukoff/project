@@ -16,7 +16,7 @@
         <div class="row main-products-thumb">
             {% for product in products %}
 
-                <div class="col-sm-6 col-md-3 product ">
+                <div class="col-sm-6 col-xs-12 col-md-3 product ">
                     <div class="thumbnail ">
                         {% if product.image %}
                             <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
@@ -32,7 +32,7 @@
 
                         <div class="caption">
                             <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
-                            <p class="product__desc">{{ product.short_description|truncatechars:120 }}</p>
+                            <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
 
                             {# If the product is a coupon, the color of the button will be diff #}
                             {% if product.coupon_discount_percent %}
