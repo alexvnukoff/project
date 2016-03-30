@@ -2576,7 +2576,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                     'is_coincedence': data.get('inviter') and data.get('invited')
                 })
                 yield data
-        
+
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
