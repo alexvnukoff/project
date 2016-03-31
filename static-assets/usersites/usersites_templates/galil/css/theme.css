@@ -1,88 +1,131 @@
 /*---------- General Styling ----------*/
-h2.page-header a{
-	color: #000;
+body {
+	background-color: #000;
+    color: #fff;
+    /* main color: color: #83ba3a */
 }
 
-.section-header{
-	color: #000;
-    border-bottom: 1px solid #eee;
+/*---------- Text Styling - The theme main color ----------*/
+h2.page-header a,
+h1.page-header,
+h2.page-header,
+.section-header,
+.navbar-nav>li.active a,
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus,
+.navbar-nav>li>a:active,
+.cust-nav ul li a:hover,
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus,
+.carousel-text li.active,
+.cust-nav ul li a:hover,
+.about-main h2,
+.product__price,
+.go-to-full:hover,
+.go-to-full:active,
+.go-to-full:focus,
+.job_offer__header,
+footer a:hover,
+footer a:active{
+	color: #83ba3a !important;
 }
 
-.gallery-header-rest{
-	color: #a00c0b;
-
-}
-
-/*---------- Navigation Styling ----------*/
-.main-nav{
-	background: #ED1C24;
-}
-
-.main-nav .active{
-	background: #000;
-}
-
-.main-nav>ul>li>a{
+/*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
+.navbar-nav>li>a,
+.cust-nav ul li a,
+.about-main,
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active,
+.product .thumbnail,
+.product__title,
+.product__desc,
+.product__btn .btn,
+a.product__btn,
+.news__btn,
+.go-to-full,
+footer a,
+.special_offer__btn, .job_offer__btn,
+#timer-detail-page,
+.smalltext,
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active,
+.item-price-table,
+.membership-banner__member-text,
+.coupon-timer{
 	color: #fff !important;
 }
 
-.main-nav>ul>li>a:hover,
-.main-nav>ul>li>a:focus,
-.main-nav>ul>li>a:active{
-	background: #000 !important;
-}
-
-.side-bar a{
+/*---------- Text Styling - Black text ----------*/
+.side-bar a,
+.select-lang,
+.item-page__qty-box{
 	color: #000;
 }
 
+/*---------- Text Styling - Dimming with gray ----------*/
+.product__cat,
+.product__valid__coupon,
+.product__deleted-price{
+	color: #979797;
+}
+
+/*---------- Background color Styling ----------*/
+.navbar-inverse,
+#timer-detail-page > div,
+#timer-detail-page div > span{
+	background-color: #000;
+}
+
+/*---------- Background theme color Styling ----------*/
+.product__btn .btn,
+a.product__btn,
+.news__btn,
+.special_offer__btn, .job_offer__btn{
+	background-color: #83ba3a;
+}
+
+/*---------- More custome Styling ----------*/
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active{
-	color: #ebb66a;
+	background-color: #ebb66a !important;
 }
 
-/*---------- Slider Styling ----------*/
-.carousel-caption{
-	background: rgba(0, 0, 0, 0.7);
+/*---------- carousel Styling ----------*/
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus {
+    background: rgba(0,0,0,0);
 }
 
-/*******************************/
-.circle {
-    background: red;
-    color: white;
+/*---------- Product Styling ----------*/
+.product .thumbnail{
+	background-color: #262626;
 }
 
-.coupon_persent{
-    color: #000;
-}
-
-.full-banner{
-	border-top: 2px solid #ccc;
-	border-bottom: 2px solid #ccc;
-}
-
-.product__cat{
-	color: #979797;
-}
-
-.product__valid__coupon {
-	color: #979797;
-}
-
-.product__deleted-price {
-	color: #979797;
+.product__title{
+	border-bottom: 1px solid #fff;
 }
 
 .product__discount{
-	background: #f0ad4e;
-	color: #fff;
+	color: #3a8bba;
 }
 
-.product__btn .btn{
-	background-color: #ED1C24;
-	color: #fff;
-	border-color: #5c0609;
+.product__btn .btn,
+a.product__btn,
+.news__btn{
+	border-color: #2c4807;
+}
+
+a.coupon__btn{
+	background-color: #3a8bba;
+	border-color: #144968;
 }
 
 /*---------- Jobs Styling ----------*/
@@ -91,127 +134,44 @@ h2.page-header a{
 	border: 1px solid #979797;
 }
 
-.job_offer__header{
-	color: #a00c0b;
-}
-
 .job_offer__p{
 	color: #262626;
 }
 
-/*---------- News Styling ----------*/
-.btn-blog{
-	background-color: #ED1C24;
-	color: #fff;
-}
-
 /*---------- Footer Styling ----------*/
-footer{
-	background-color: #262626;
-	color: #fff;
+footer,
+.membership-banner{
+	background-color: #0a0a0a;
 }
 
-footer a{
-	color: #fff;
-}
-
-footer a:hover,
-footer a:active{
-	color: #a00c0b;
+footer .row{
+	border-bottom: 1px #fff dotted;
 }
 
 .rights{
 	border-top: 1px solid #fff;
 }
 
-/*---------- Pagination Styling ----------*/
-.pagination>li>a, .pagination>li>span{
-	color: #ebb66a;
-}
-
-.pagination>.active>a,
-.pagination>.active>a:focus,
-.pagination>.active>a:hover,
-.pagination>.active>span,
-.pagination>.active>span:focus,
-.pagination>.active>span:hover{
-	background-color: #a00c0b;
-	color: #fff;
-	border: 1px solid #ddd;
-}
-
-/*********************************************************/
-/* Responsive Sidebar Menu */
-/********************************************/
-
-/*Remove rounded coners*/
-
-nav.navbar.sidebar {
-
-	color: #000 !important;
-}
-
-nav.sidebar{
+.tmp_search{
 	color: #000;
 }
 
-.sidebar .navbar-toggle{
-	color: #000 !important;
-	border-color: #ddd;
+/*---------- Page Item Styling ----------*/
+.special_offer__btn, .job_offer__btn{
+    border-color: #004400;
 }
 
-.sidebar .navbar-toggle .icon-bar {
-    background-color: #000;
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active{
+	background-color: #262626;
+    border-color: #ece9d6;
 }
 
-.sidebar a{
-	color: #000;
+#timer-detail-page{
+    border: 1px solid #83ba3a;
 }
 
-/* .....NavBar: Icon only with coloring/layout.....*/
-
-/*small/medium side display*/
-@media (min-width: 768px) {
-
-	/*Center Icons*/
-	nav.sidebar a{
-		color: #000;
-	}
-
-	nav.sidebar ul li a:hover,
-	nav.sidebar ul li a:focus,
-	nav.sidebar ul li a:active{
-		color: #fff !important;
-		background: #ebb66a !important;
-	}
-
-	nav.sidebar ul li ul li a:hover,
-	nav.sidebar ul li ul li a:focus,
-	nav.sidebar ul li ul li a:active{
-		color: #ebb66a !important;
-		background: #fff !important;
-	}
-
-	/*adds border top to first nav box */
-	nav.sidebar .navbar-nav > li:first-child{
-		border-top: 1px #e5e5e5 solid;
-	}
-
-	/*adds border to bottom nav boxes*/
-	nav.sidebar .navbar-nav > li{
-		border-bottom: 1px #e5e5e5 solid;
-	}
-
-	/*colors dropdown box text */
-	.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
-		color: #777;
-	}
-
-}
-
-nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
-	color: #CCC;
-}
-
-/* End of Responsive Sidebar Menu */
-/********************************************/

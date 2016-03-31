@@ -32,7 +32,8 @@ body {
     float: none;
 }
 
-h2.page-header a{
+h2.page-header a,
+h2.page-header{
 	text-decoration: none;
 	font-weight: bold;
 	font-family: 'Oswald', sans-serif;
@@ -44,11 +45,11 @@ h2.page-header.inner-page{
 }
 
 .section-header{
-    border: none;
+	border: none;
+	color: #a00c0b;
+	margin-top: 10px;
+	margin-bottom: 5px;
 	padding-top: 5px;
-	padding-bottom: 9px;
-    margin: 24px 0 5px 0;
-    text-transform: uppercase;
 }
 
 .glyphicon{
@@ -61,6 +62,16 @@ h2.page-header.inner-page{
     padding: 0 5%;
 }
 
+.top_search{
+	position: relative;
+	clear: both;
+	margin-top: 10px;
+}
+
+.top-nav{
+	position: relative;
+}
+
 /*---------- Navigation Styling ----------*/
 .main-nav{
 	min-height: 10px;
@@ -69,7 +80,7 @@ h2.page-header.inner-page{
 
 .main-nav>ul>li>a{
 	font-family: 'Oswald', sans-serif;
-	font-size: 24px;
+	font-size: 20px;
 	font-weight: 400;
 }
 
@@ -83,28 +94,43 @@ h2.page-header.inner-page{
 	font-weight: bold;
 }
 
+.banner{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.banner img{
+	width: 100%;
+	height: auto;
+	padding: 0;
+}
+
 .side-nav-wrapper{
 	position: relative;
 }
-
-.upper-nav{
-    position: relative;
-}
-
 /*---------- Slider Styling ----------*/
 .slider-wrapper{
 	margin-top: 10px;
 }
 
 .carousel-caption{
+	float: left;
+	background: rgba(0, 0, 0, 0.7);
 	padding-top: 0;
 	padding-bottom: 0;
 	bottom: 0;
+	left: 0;
 	width: 100%;
 }
 
 .carousel-caption__header{
 	font-weight: bold;
+	float: left;
+}
+
+.carousel-caption p{
+	float: left;
+	text-align: left;
 }
 
 .carousel-caption__header,
@@ -127,62 +153,37 @@ h2.page-header.inner-page{
 }
 
 .carousel-indicators {
+    left: 92%;
     z-index: 15;
     width: 60%;
+    padding-left: 0;
+    margin-left: -30%;
     text-align: center;
     list-style: none;
 }
 
 
 /*******************************/
-.banner-slider-side{
-	margin-bottom: 10px;
-	margin-top: 10px;
-}
-
-.banner-slider-side img{
-	width: 100%;
-	height: auto;
-	padding: 0;
-}
-
-.banner-slider-side .s-desc {
+.banner .s-desc {
     width: 100%;
     height: 100%;
     background: url(../images/bg-header-module.png) repeat-x scroll 0 bottom;
 }
 
-.banner-slider-side .s-desc {
+.banner .s-desc {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.banner-slider-side>div {
+.banner>div {
     position: relative;
     overflow: visible;
     line-height: 0;
 }
 
-.circle {
-    border-radius: 100%;
-    height: 150px;
-    font-weight: bold;
-    width: 150px;
-    display: table;
-    margin: 20px auto;
-}
 
-.circle div {
-    vertical-align: middle;
-    display: table-cell;
-    color: #fff !important;
-}
-
-.circle div h1{
-    font-size: 14px;
-}
 
 .slide-wrapper{
 	padding: 0 10px 0 0;
@@ -205,34 +206,36 @@ h2.page-header.inner-page{
 .main-coupon img{
 }
 
-.coupon-badge{
+.coupons>.row>.product>.thumbnail>img{
+	min-height: 285px;
+	width: auto;
+}
+
+.product__badge>.coupon-badge{
 	position: absolute;
     right: 10px;
-    bottom: 10px;
-	z-index: 100;
-	background-image: url("../images/discount_badge.png");
-	background-repeat: no-repeat;
+    top: 10px;
+	z-index: 20;
+	/*background-image: url('/static-assets/usersites/usersites_templates/galil/css/images/discount_badge.png');*/
+	/*background-repeat: no-repeat;*/
 	width: 130px;
-    height: 130px;
+    height: 128px;
 }
 
 .product__badge{
 	top: 10px;
 }
 
-.coupon_persent{
+.product__badge .coupon_persent{
 	position: absolute;
-	top: 25px;
+	top: 8px;
+	right: 5px;
     font-weight: 400;
     font-family: 'Oswald', sans-serif;
     text-align: center;
     font-size: 2.5em;
     padding: 40px;
-    z-index: 4;
-}
-
-.product__badge .coupon_persent{
-	top: 0;
+    z-index: 30;
 }
 
 span.percent{
@@ -243,6 +246,12 @@ span.percent{
 	margin: 10px 0;
 	padding: 0;
 }
+.section-header{
+	padding-bottom: 9px;
+    margin: 24px 0 20px 0;
+    border-bottom: 1px solid #eee;
+    text-transform: uppercase;
+}
 
 .product{
 	padding: 0 1px;
@@ -250,6 +259,39 @@ span.percent{
 
 .coupon{
 	position: relative;
+}
+
+.main-products>.row>.product>.thumbnail>img{
+	min-height: 185px;
+}
+
+.main-products .product{
+	min-height: 400px;
+}
+
+.main-products .product .thumbnail{
+	min-height: 385px;
+}
+
+/* Portrait tablets and small desktops */
+@media (max-width: 991px) {
+	.main-products .product .thumbnail{
+		min-height: 412px;
+		max-width: 370px;
+	}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.main-products .product .thumbnail{
+		min-height: 412px;
+		max-width: 767px;
+	}
+
+	.main-products>.row>.product>.thumbnail>img{
+		min-height: 185px;
+		width:100%;
+	}
 }
 
 .product__title{
@@ -274,37 +316,48 @@ span.percent{
 }
 
 .product__valid__coupon{
+	color: #979797;
 	font-size: 12px;
 }
 
 .product__deleted-price{
+	color: #979797;
 	text-decoration: line-through;
 	font-size: 18px;
 	font-weight: normal;
+	padding-left: 10px;
 }
 
 .product__discount{
+	background: #f0ad4e;
+	color: #fff;
 	padding: 0 5%;
 	font-size: 16px;
 }
 
 .product__btn{
 	margin-top: 3px;
-	position: relative;
+	position: absolute;
+	bottom: 25px;
 }
+
 
 /*---------- Jobs Styling ----------*/
 .job_offer{
 	padding-top: 0;
 	padding-bottom: 0;
+	background-color: #fff;
+	border: 1px solid #979797;
 }
 
 .job_offer__header{
+	color: #a00c0b;
 	text-transform: uppercase;
 	font-weight: bold;
 }
 
 .job_offer__p{
+	color: #262626;
 	font-size: 1em !important;
 	padding-top: 20px;
 }
@@ -318,6 +371,11 @@ span.percent{
 	border: none;
 }
 
+.news__img img{
+	position: relative;
+	width: 130px;
+}
+
 .news_page h2{
 	margin-top: 0;
 }
@@ -326,14 +384,16 @@ span.percent{
 	text-align: center;
 }
 
-.news__img{
-    position: relative;
+/*---------- Footer Styling ----------*/
+footer{
+	margin-top: 20px;
+	margin-bottom: 0;
 }
 
-.btn-blog{
-    position: relative;
+footer .row{
+	padding-bottom: 10px;
 }
-/*---------- Footer Styling ----------*/
+
 footer a{
 	text-decoration: none;
 }
@@ -348,8 +408,38 @@ footer ul{
 	padding: 0;
 }
 
-footer span{
-	margin-right: 5px;
+footer img{
+	width: 100%;
+}
+
+footer .btn-default{
+	margin-top: 10px;
+}
+
+.footer-col{
+	position: relative;
+}/*---------- Footer Styling ----------*/
+footer{
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+footer .row{
+	padding-bottom: 10px;
+}
+
+footer a{
+	text-decoration: none;
+}
+
+footer a:hover,
+footer a:active{
+	text-decoration: none;
+}
+
+footer ul{
+	list-style: none;
+	padding: 0;
 }
 
 footer img{
@@ -360,8 +450,8 @@ footer .btn-default{
 	margin-top: 10px;
 }
 
-.rights{
-	border-top: 1px solid #fff;
+.footer-col{
+	position: relative;
 }
 
 /*---------- News Styling ----------*/
@@ -374,53 +464,54 @@ footer .btn-default{
 }
 
 /*---------- Banner Advertisment Styling ----------*/
-/* The banner above the footer */
-.membership-banner{
+.banner-ad{
+	height: 150px;
+	width: 100%;
+	background-color: ##fffcf7;
+	margin-bottom: 20px;
+	border: none;
 	padding: 0;
-	text-align: center;
+	margin-left: 1px;
 }
 
-.membership-banner__member{
+.shadow {
+  -webkit-box-shadow: 0px 0px 26px -1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 26px -1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 26px -1px rgba(0,0,0,0.75);
+}
+
+.banner-ad__member{
+	border: 1px solid #aaa;
 	height: 100%;
 	padding: 0;
-	display: table;
-	position: relative;
+
 }
 
-.membership-banner__member img{
+.banner-ad__member img{
 	width: auto;
-	max-height: 100px;
+	height: 100%;
+	max-height: 100%;
 	padding: 10px;
-	display: inline;
-	position: relative;
+	float:left;
+	display:inline;
 }
 
-.membership-banner__member-text{
-	display: table-cell;
-    vertical-align: middle;
-    text-align: center;
+.banner-ad__member h4,
+.banner-ad__member p {
+	text-align: center;
 	padding: 0 10px;
-	position: relative;
-	padding-top: 5%;
 }
 
-.membership-banner__member h4{
-	padding-top: 10px;
-	font-size: 1em;
+.banner-ad__member h4{
+	padding-top: 10%;
 }
 
-.membership-banner__member p{
-	font-size: 0.7em;
-}
-
-.membership-banner__ad{
+.banner-ad__ad{
 	padding: 0;
-	margin: 10px 0;
-	height: 100px;
-	position: relative;
+	height: 150px;
 }
 
-.membership-banner__ad img{
+.banner-ad__ad img{
 	max-width: 100%;
 	height: auto;
 	position: absolute;
@@ -436,7 +527,6 @@ footer .btn-default{
   	width: auto; /* for ie 8 */
   }
 }
-
 
 /*---------- Pagination Styling ----------*/
 .pagination{
@@ -503,3 +593,91 @@ footer .btn-default{
 }
 
 
+
+
+/*small/medium side display*/
+@media (min-width: 768px) {
+
+	/*Allow main to be next to Nav*/
+	.main{
+		position: absolute;
+		width: calc(100% - 40px); /*keeps 100% minus nav size*/
+		margin-left: 40px;
+		float: right;
+	}
+
+
+
+#accordion .glyphicon { margin-right:10px; }
+      .panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
+      .panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
+      .panel-collapse>.list-group {margin-bottom: 0;}
+      .panel-collapse .list-group-item {border-radius:0;}
+
+      .panel-collapse .list-group .list-group {margin: 0;margin-top: 10px;}
+      .panel-collapse .list-group-item li.list-group-item {margin: 0 -15px;border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
+      .panel-collapse .list-group-item li.list-group-item:last-child {padding-bottom: 0;}
+
+      .panel-collapse div.list-group div.list-group{margin: 0;}
+      .panel-collapse div.list-group .list-group a.list-group-item {border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
+      .panel-collapse .list-group-item li.list-group-item {border-top: 1px solid #DDD !important;}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+.membership-banner{
+	padding: 0;
+	text-align: center;
+}
+
+.membership-banner__member{
+	height: 100%;
+	padding: 0;
+	display: table;
+	position: relative;
+}
+
+.membership-banner__member img{
+	width: auto;
+	max-height: 80px;
+	margin: 10px;
+	display: inline;
+	position: relative;
+}
+
+.membership-banner__member-text{
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+	padding: 0 10px;
+	position: relative;
+}
+
+.membership-banner__member h4{
+	padding-top: 10px;
+	font-size: 1em;
+}
+
+.membership-banner__member p{
+	font-size: 0.7em;
+}
+
+.membership-banner__ad{
+	padding: 0;
+	margin: 0;
+	height: 80px;
+	position: relative;
+}
+
+.membership-banner__ad img{
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+    margin: auto;
+	padding: 10px;
+}
+
+@media \0screen {
+  img {
+  	width: auto; /* for ie 8 */
+  }
+}
