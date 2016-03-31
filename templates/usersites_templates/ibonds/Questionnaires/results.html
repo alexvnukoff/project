@@ -1,0 +1,66 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% with object.item as product %}
+    <section class="content__info grid-layout">
+        <div class="container">
+            <div class="data">
+            <h2 class="page-header">{{ object.name }}</h2>
+            <hr class="hr-divider-one">
+            <div id="description">
+                {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
+                {{ object.short_description }}
+            </div>
+            <div class="data" id="recommendations">
+                <span id="lights">
+                    {% for q_color in q_colors %}
+                    <div class="{{ q_color}}"></div>
+                    {% endfor %}
+                </span>
+                <span id="r_items">
+                    <p ></p>
+                    {% for r_item in case.recommendations.all %} 
+                    <p class="r_item">{{ r_item.description }}</p>
+                    {% endfor %}
+                </span>
+            </div>
+            <div class="data">
+                <table id="questions" class="q_data" width="100%">
+                    <tr class="header">
+                        <td colspan="3">{% trans 'The matched answers'%}:</td>
+                    </tr>
+                    {% for q_item in q_items %} 
+                    <tr valign="top">
+                        <td align="left">
+                            {{ q_item.question.question_text }}
+                        </td>
+                        <td align="center">
+                            {% if q_item.inviter %}{% trans 'Yes' %}{% else %}-{% endif %}
+                        </td>
+                        <td align="center">
+                            {% if q_item.invited %}{% trans 'Yes' %}{% else %}-{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        </div>
+    </section>
+    {% endwith %}
+{% endblock %}

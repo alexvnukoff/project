@@ -28,8 +28,8 @@ table.q_data td {
 }
 
 table.q_data td input[type=checkbox] {
-    width: 150%;
-    height: 150%;
+    width: 25px;
+    height: 25x;
 }
 
 table.q_data td input {
