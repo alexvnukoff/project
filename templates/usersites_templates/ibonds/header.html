@@ -33,6 +33,9 @@
                                 </form>
                             </div>
                     </li>
+                    {% for page in site.user_site.organization.additional_pages.all %}
+                    <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
+                    {% endfor %}
                     {# If any company products have questionnaires #}
                     {% questionnaire_for_company_products as company_questionnaires %}
                     {% if company_questionnaires.count %}
