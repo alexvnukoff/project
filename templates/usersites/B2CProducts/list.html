@@ -33,7 +33,7 @@
                                 <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                                 {% else %}
                                     {% if has_questionnaires %}
-                                    <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Free' %}</a></p>
+                                    <p class="price"><a style="color:#000" href="{% url 'b2c_products:detail' product.slug product.pk %}" >{% trans 'Free' %}</a></p>
                                     {% else %}
                                     <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                                     {% endif %}

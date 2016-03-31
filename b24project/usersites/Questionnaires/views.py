@@ -65,7 +65,6 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
             q_case = form.save()
             if q_case.case_uuid:
                 if form.is_invited:
-                    # Invited answered
                     next_url = reverse(
                         'questionnaires:results',
                         kwargs={
@@ -73,13 +72,20 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                             'participant': 'inviter'
                         }
                     )
-                    email = q_case.get_inviter()
-                    subject = _('The questionnaire results')
-                    message = 'The questionnaire results Url: %s' % next_url
-                    mail = EmailMessage(subject, message,
-                                        settings.DEFAULT_FROM_EMAIL, [email,])
-                    if not getattr(settings, 'NOT_SEND_EMAIL', False):
-                        mail.send()
+                    inviter = q_case.get_inviter()
+                    if inviter and inviter.email:
+                        subject = _('The questionnaire results')
+                        message = 'The questionnaire results Url: %s' % next_url
+                        mail = EmailMessage(
+                            subject, 
+                            message,
+                            settings.DEFAULT_FROM_EMAIL, 
+                            [inviter.email,]
+                        )
+                        logger.debug('Step 1')
+                        logger.debug(inviter.email)
+                        if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                            mail.send()
 
                     form.process_answers()
                     success_url = reverse(
@@ -90,20 +96,26 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                         }
                     )
                 else:
-                    # Inviter answed
                     next_url = reverse(
                         'questionnaires:activate',
                         kwargs={
                             'uuid': q_case.case_uuid,
                         }
                     )
-                    email = q_case.get_invited()
-                    subject = _('Invite to answer the questions')
-                    message = 'The Questionnaire activation Url: %s' % next_url
-                    mail = EmailMessage(subject, message,
-                                        settings.DEFAULT_FROM_EMAIL, [email,])
-                    if not getattr(settings, 'NOT_SEND_EMAIL', False):
-                        mail.send()
+                    invited = q_case.get_invited()
+                    if invited and invited.email:
+                        subject = _('Invite to answer the questions')
+                        message = 'The Questionnaire activation Url: %s' % next_url
+                        mail = EmailMessage(
+                            subject, 
+                            message,
+                            settings.DEFAULT_FROM_EMAIL, 
+                            [invited.email,]
+                        )
+                        logger.debug('Step 1')
+                        logger.debug(invited.email)
+                        if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                            mail.send()
 
                     success_url = reverse(
                         'questionnaires:ready',

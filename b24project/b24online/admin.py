@@ -24,7 +24,8 @@ from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Profile, BusinessProposal, 
                               BusinessProposalCategory, DealOrder, Deal, 
                               DealItem, StaffGroup, PermissionsExtraGroup,
-                              MessageChat, Message, Producer)
+                              MessageChat, Message, Producer,
+                              Questionnaire, Question, Recommendation)
 from b24online.stats.utils import convert_date
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -225,3 +226,6 @@ admin.site.register(PermissionsExtraGroup, ModelAdmin)
 admin.site.register(MessageChat, ModelAdmin)
 admin.site.register(Message, ModelAdmin)
 admin.site.register(Producer, ModelAdmin)
+admin.site.register(Questionnaire, ModelAdmin)
+admin.site.register(Question, ModelAdmin)
+admin.site.register(Recommendation, ModelAdmin)

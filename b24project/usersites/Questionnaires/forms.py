@@ -29,7 +29,13 @@ class AnswerForm(forms.Form):
     question_text = forms.CharField(
         label=_('Your answer'),
         required=False,
-        widget=forms.Textarea(attrs={'rows': '2', 'cols': '40'}),
+        widget=forms.Textarea(
+            attrs={
+                'rows': '2', 
+                'cols': '40',
+                'placeholder': _('Ask Your own question'),
+            }
+        ),
     )
     agree = forms.BooleanField(
         label=_('Your answer'),
