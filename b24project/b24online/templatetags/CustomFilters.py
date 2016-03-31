@@ -528,8 +528,6 @@ def questionnaire_for_company_products():
     from centerpokupok.models import B2CProduct
     
     organization = get_current_site().user_site.organization
-    logger.debug(organization)
-    logger.debug(organization.id)
     if isinstance(organization, Company):
         b2b_content_type, b2c_content_type = map(
             lambda model_class: ContentType.objects.get_for_model(model_class),

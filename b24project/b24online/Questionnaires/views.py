@@ -63,6 +63,8 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         )
         if form.is_valid():
             form.save()
+            if form.changed_data and 'image' in form.changed_data:
+                form.instance.upload_image()
             success_url = reverse(
                 'questionnaires:list', 
                 kwargs={
@@ -103,6 +105,8 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
         )
         if form.is_valid():
             form.save()
+            if form.changed_data and 'image' in form.changed_data:
+                form.instance.upload_image()
             success_url = reverse(
                 'questionnaires:list', 
                 kwargs={
