@@ -1,9 +1,11 @@
 import threading
+import logging
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.http import HttpResponse, HttpResponseBadRequest
 
+logger = logging.getLogger(__name__)
 
 def get_current_site():
     return DynamicSiteMiddleware.get_site()

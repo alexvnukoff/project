@@ -20,10 +20,10 @@ logger = logging.getLogger(__name__)
 
 
 class AnswerForm(forms.Form):
-    
+
     question_id = forms.IntegerField(
         label=_('Question ID'),
-        widget=forms.HiddenInput, 
+        widget=forms.HiddenInput,
         required=False,
     )
     question_text = forms.CharField(
@@ -43,25 +43,25 @@ class AnswerForm(forms.Form):
         else:
             self.question = None
         super(AnswerForm, self).__init__(*args, **kwargs)
-        
+
     def save(self):
         pass
 
 
 class InviteForm(forms.Form):
-    
+
     inviter_email = forms.EmailField(
         label=_('Your Email'),
         widget=forms.TextInput(attrs={'size': 60}),
         required=True,
     )
-    
+
     invite_by_email = forms.EmailField(
         label=_('Invite User by Email'),
         widget=forms.TextInput(attrs={'size': 60}),
         required=True,
     )
-    
+
     def __init__(self, request, questionnaire, *args, **kwargs):
         self.instance = kwargs.pop('instance', None)
         self.is_invited = True if self.instance else False
@@ -73,26 +73,27 @@ class InviteForm(forms.Form):
         self.questionnaire = questionnaire
         if self.is_invited:
             extra_ids = [q.id for q in self.instance.extra_questions.all()]
+            logger.debug(extra_ids)
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
-                for question in self.questionnaire.questions.filter(
-                    Q(who_created=Question.BY_AUTHOR) | Q(id__in=extra_ids)
-                )]
-            }    
+                for question in self.questionnaire.questions\
+                    .filter(Q(is_active=True) & Q(is_deleted=False) &\
+                            (Q(who_created=Question.BY_AUTHOR) | Q(id__in=extra_ids)))]
+            }
         else:
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
-                for question in self.questionnaire.questions.filter(
-                    who_created=Question.BY_AUTHOR
-                )]
+                for question in self.questionnaire.questions\
+                    .filter(who_created=Question.BY_AUTHOR, 
+                            is_deleted=False, is_active=True)]
             }
         if self.data:
             params.update({'data': self.data})
 
         extra = 0 if self.is_invited else 1
         self.answer_formset = formset_factory(
-            AnswerForm, 
-            extra=extra, 
+            AnswerForm,
+            extra=extra,
             max_num=100
         )(**params)
 
@@ -117,7 +118,7 @@ class InviteForm(forms.Form):
                         )
                     except QuestionnaireCase.DoesNotExist:
                         raise Http404(_('There is no suitable participant'))
-                        
+
                 else:
                     invite_by_email = self.cleaned_data\
                         .get('invite_by_email')
@@ -142,6 +143,8 @@ class InviteForm(forms.Form):
 
                 for q_form in self.answer_formset:
                     if not q_form.question:
+                        if 'question_text' not in q_form.cleaned_data:
+                            continue
                         question = Question.objects.create(
                             questionnaire=self.questionnaire,
                             who_created=Question.BY_MEMBER,
@@ -159,21 +162,39 @@ class InviteForm(forms.Form):
                             participant=responsive,
                             answer=True
                         )
-                                                                    
+
         except IntegrityError:
             raise
-        else:          
+        else:
             return self.instance
 
     def process_answers(self):
-        existed_ids = [r.id for r in self.instance.recommendations.all()]                
-        question_ids = filter(
-            lambda x: x not in existed_ids, 
-            [item['question'].pk for item in \
-                self.instance.get_coincedences() \
+        data = list(self.instance.get_coincedences())
+        coincedences = len([item for item in data \
+            if item.get('is_coincedence')])
+        q_colors = sorted((
+            ('red', self.questionnaire.red_level),
+            ('yellow', self.questionnaire.yellow_level),
+            ('green', self.questionnaire.green_level)
+        ), key=lambda x: x[1], reverse=True)
+
+        color = None
+        for (_color, hm) in q_colors:
+            if coincedences > hm or (hm == 0 and coincedences >= hm):
+                color = _color
+                break
+
+        existed_ids = [r.id for r in self.instance.recommendations.all()]
+        
+        items = [item['question'].pk for item in \
+                list(self.instance.get_coincedences()) \
                     if item.get('is_coincedence') and 'question' in item]
+        question_ids = filter(lambda x: x not in existed_ids, items)
+        ritems = Recommendation.objects.filter(
+            Q(questionnaire=self.questionnaire) & (
+            Q(question__id__in=question_ids) | \
+            Q(for_color=color))
         )
-        items = Recommendation.objects.filter(question__id__in=question_ids)
-        self.instance.recommendations.add(*items)
-        
-        
+        logger.debug(ritems)
+        self.instance.recommendations.add(*ritems)
+

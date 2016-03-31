@@ -47,7 +47,7 @@
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
-                {% for question in item.questions.all %}                
+                {% for question in item.actual_questions %}                
                 <tr>
                     <td>{{ question.question_text }}</td>
                     <td>{{ question.created_by }}</td>
@@ -87,16 +87,18 @@
                 border="0" class="table-data">
                 <tr>
                     <th>{% trans 'Question' %}</th>
+                    <th>{% trans 'Color' %}</th>
                     <th>{% trans 'Name' %}</th>
                     <th>{% trans 'Desctiption' %}</th>
                     {% if request.user == item.created_by %}
                     <th>&nbsp;</th>
                     {% endif %}
                 </tr>
-                {% for recommendation in item.recommendations %}                
+                {% for recommendation in item.actual_recommendations %}                
                 <tr valign="top">
-                    <td>{{ recommendation.question }}</td>
-                    <td>{{ recommendation.name }}</td>
+                    <td>{{ recommendation.question|default:"" }}</td>
+                    <td>{{ recommendation.for_color|default:"" }}</td>
+                    <td>{{ recommendation.name|default:"" }}</td>
                     <td>{{ recommendation.description|truncatewords:40 }}</td>
                     {% if request.user == item.created_by %}
                     <td class="data-action">

@@ -20,7 +20,7 @@ from usersites.mixins import UserTemplateMixin
 from usersites.Questionnaires.forms import InviteForm
 
 logger = logging.getLogger(__name__)
-        
+
 
 class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
     model = Questionnaire
@@ -45,8 +45,8 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = InviteForm(
-            self.request, 
-            self.object, 
+            self.request,
+            self.object,
             instance=self.case
         )
         return self.render_to_response(
@@ -58,7 +58,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
         form = InviteForm(
             self.request,
             self.object,
-            instance=self.case,    
+            instance=self.case,
             data=self.request.POST
         )
         if form.is_valid():
@@ -67,7 +67,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                 if form.is_invited:
                     # Invited answered
                     next_url = reverse(
-                        'questionnaires:results', 
+                        'questionnaires:results',
                         kwargs={
                             'uuid': q_case.case_uuid,
                             'participant': 'inviter'
@@ -76,23 +76,23 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     email = q_case.get_inviter()
                     subject = _('The questionnaire results')
                     message = 'The questionnaire results Url: %s' % next_url
-                    mail = EmailMessage(subject, message, 
+                    mail = EmailMessage(subject, message,
                                         settings.DEFAULT_FROM_EMAIL, [email,])
                     if not getattr(settings, 'NOT_SEND_EMAIL', False):
                         mail.send()
 
                     form.process_answers()
                     success_url = reverse(
-                        'questionnaires:results', 
+                        'questionnaires:results',
                         kwargs={
                             'uuid': q_case.case_uuid,
-                            'participant': 'invited', 
+                            'participant': 'invited',
                         }
                     )
                 else:
                     # Inviter answed
                     next_url = reverse(
-                        'questionnaires:activate', 
+                        'questionnaires:activate',
                         kwargs={
                             'uuid': q_case.case_uuid,
                         }
@@ -100,13 +100,13 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     email = q_case.get_invited()
                     subject = _('Invite to answer the questions')
                     message = 'The Questionnaire activation Url: %s' % next_url
-                    mail = EmailMessage(subject, message, 
+                    mail = EmailMessage(subject, message,
                                         settings.DEFAULT_FROM_EMAIL, [email,])
                     if not getattr(settings, 'NOT_SEND_EMAIL', False):
                         mail.send()
 
                     success_url = reverse(
-                        'questionnaires:ready', 
+                        'questionnaires:ready',
                         kwargs={'uuid': q_case.case_uuid})
 
                 return HttpResponseRedirect(success_url)
@@ -142,11 +142,11 @@ class QuestionnaireReady(UserTemplateMixin, TemplateView):
                     self.get_context_data(*args, **kwargs)
                 )
         raise Http404(_('There is no such Questionnaire'))
-    
+
 
 class QuestionnaireActivate(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/Questionnaires/active.html'
-        
+
     def get(self, request, *args, **kwargs):
         case_uuid = kwargs.get('uuid')
         if case_uuid:
@@ -194,13 +194,22 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
                 data = list(self.case.get_coincedences())
                 coincedences = len([item for item in data \
                     if item.get('is_coincedence')])
-                    
-                colors = ['grey', 'grey', 'green']
-                if coincedences == 2:
-                    colors = ['grey', 'yellow', 'grey']
-                elif coincedences > 2:
-                    colors = ['red', 'grey', 'grey']
-                
+
+                q_colors = sorted((
+                    (['red', 'grey', 'grey'],
+                     self.case.questionnaire.red_level),
+                    (['grey', 'yellow',' grey'],
+                     self.case.questionnaire.yellow_level),
+                    (['grey', 'grey', 'green'],
+                     self.case.questionnaire.green_level),
+                ), key=lambda x: x[1], reverse=True)
+
+                colors = ['grey', 'grey', 'grey']
+                for (_colors, hm) in q_colors:
+                    if coincedences > hm or (hm == 0 and coincedences >= hm):
+                        colors = _colors
+                        break
+
                 kwargs.update({
                     'object': self.case.questionnaire,
                     'case': self.case,
@@ -224,7 +233,7 @@ class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         from django.core.validators import validate_email
-        from django import forms    
+        from django import forms
 
         _email = request.GET.get('email')
         if _email:
