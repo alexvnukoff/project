@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 import importlib
 import os
 import uuid
@@ -252,10 +251,10 @@ class MTTPTreeBuilder(object):
     """
     Json tree builder fo MTTPModel subclasses.
     """
-    
+
     default_attrs = ('id', 'name', 'image.small')
-    
-    def __init__(self, model_class, node_id=None,  
+
+    def __init__(self, model_class, node_id=None,
                  attrs=(), extract_data_fn=False):
         """
         Init the Builder instance.
@@ -282,7 +281,7 @@ class MTTPTreeBuilder(object):
         self._root_children = get_cached_trees(
             model_class.objects.all()
         )
-    
+
     @classmethod
     def get_composite_attr(cls, instance, attr_name):
         """
@@ -298,7 +297,7 @@ class MTTPTreeBuilder(object):
             return gettatr(instance, attr_name_parts[0], None)
         else:
             return None
-        
+
     @classmethod
     def default_extract_data(cls, node):
         data = {}
@@ -353,7 +352,6 @@ def load_category_hierarchy(model, categories, loaded_categories=None):
         loaded_categories = load_category_hierarchy(model, queryset, loaded_categories)
 
     return loaded_categories
-    return "{0}/{1}".format(folder_template, template_name)
 
 
 def get_by_content_type(content_type_id, instance_id):
