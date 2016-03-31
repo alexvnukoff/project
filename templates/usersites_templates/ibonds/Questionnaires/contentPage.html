@@ -1,4 +1,4 @@
-{% extends 'usersites/index.html' %}
+{% extends 'usersites_templates/ibonds/index.html' %}
 
 {% load i18n %}
 {% load CustomFilters %}
@@ -15,13 +15,14 @@
 {% block content %}
     {{ block.super }}
     <section class="content__info grid-layout">
-        <div class="data">
-            <h2>{% trans 'Questionnaire cases list' %}</h2>
-            <hr class="hr-divider-one">
+        <div class="container">
             <div class="data">
-                {% if view.email %}
-                    {% questionnaires_history 'Questionnaires/list.html' 10 page email=view.email %}
-                {% else %}
+                <h2 class="page-header">{% trans 'Questionnaire cases list' %}</h2>
+                <hr class="hr-divider-one">
+                <div class="data">
+                    {% if view.email %}
+                        {% questionnaires_history 'Questionnaires/list.html' 10 page email=view.email %}
+                    {% else %}
                     <form method="get">
                     <table class="q_data" width="100%">
                         <tr>
@@ -36,7 +37,8 @@
                         </tr>
                     </table> 
                     </form>
-                {% endif %}
+                    {% endif %}
+                 </div>
             </div>
         </div>
     </section>
