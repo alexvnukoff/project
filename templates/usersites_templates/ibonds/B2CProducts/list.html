@@ -1,0 +1,73 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+<section class="content__info">
+
+    {# Products page content #}
+    <div class="container">
+        {% include 'usersites_templates/ibonds/Paginator.html' %}
+
+        {# Page title #}
+        <div class="col-lg-12">
+            <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
+        </div>
+
+        <div class="row main-products-thumb">
+            {% for product in products %}
+
+                <div class="col-xs-12 col-sm-6 col-md-3 product ">
+                    <div class="thumbnail ">
+                        {% if product.image %}
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                        {% endif %}
+
+                        {% if product.coupon_discount_percent %}
+                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                            {# img for the corner of the coupon discount % display. #}
+                            <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">
+                        {% endif %}
+
+                        <div class="caption">
+                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                            <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
+
+                            {# If the product is a coupon, the color of the button will be diff #}
+                            {% if product.coupon_discount_percent %}
+                                <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            {% else %}
+                                <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            {% endif %}
+
+                            {# If there is one, display the cost. If there is a discount, display it too. #}
+                            {% if product.cost %}
+                                <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                    {% if product.cost != product.get_discount_price %}
+                                        <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
+
+                            {# If the product is a coupon, display the timer #}
+                            {% if product.coupon_discount_percent %}
+                                <div class="coupon-timer">
+                                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div><!-- /Products modoul --><!-- /row -->
+
+        {% include 'usersites_templates/ibonds/Paginator.html' %}
+    </div>
+
+</section>

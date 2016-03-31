@@ -1,0 +1,153 @@
+/*---------- General Styling ----------*/
+h2.page-header a,
+h2.page-header{
+	color: #000;
+}
+
+.section-header{
+	color: #a00c0b;
+    border-bottom: 1px solid #eee;
+}
+
+.gallery-header-rest{
+	color: #a00c0b;
+}
+
+/*---------- Navigation Styling ----------*/
+.main-nav{
+	background: #ED1C24;
+}
+
+.main-nav .active{
+	background: #000;
+}
+
+.main-nav>ul>li>a{
+	color: #fff !important;
+}
+
+.main-nav>ul>li>a:hover,
+.main-nav>ul>li>a:focus,
+.main-nav>ul>li>a:active{
+	background: #000 !important;
+}
+
+
+
+.side-bar a{
+	color: #000;
+}
+
+.side-bar ul li a:hover,
+.side-bar ul li a:focus,
+.side-bar ul li a:active{
+	color: #ebb66a;
+}
+
+/*---------- Product Styling ----------*/
+.product__badge .coupon_persent{
+    color: #000;
+}
+
+.full-banner{
+	border-top: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
+}
+
+.product__cat{
+	color: #979797;
+}
+
+.product__valid__coupon{
+	color: #979797;
+}
+
+.product__deleted-price{
+	color: #979797;
+}
+
+.product__discount{
+	background: #f0ad4e;
+	color: #fff;
+}
+
+.product__btn .btn{
+	background-color: #ED1C24;
+	color: #fff;
+	border-color: #5c0609;
+}
+
+.btn-blog{
+	background-color: #ED1C24;
+	color: #fff;
+}
+/*---------- Search Item Styling ----------*/
+.tmp_search{
+	color: #000;
+}
+
+.top_search input,
+.top_search input:focus{
+	border: 1px solid #AAAAAA;
+	color: #000;
+}
+
+.top_search input:focus{
+	box-shadow: 0 0 5px 1px #969696;
+}
+
+.top_search input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+    -webkit-text-fill-color: #333;
+}
+.top_search input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px white inset;
+    -webkit-text-fill-color: #333;
+}
+
+/*---------- Custom navigation Styling ----------*/
+.cust-nav__btn{
+	background-color: #fff;
+}
+
+.cust-nav__btn a{
+	text-decoration: none;
+	color: #000;
+}
+
+.cust-nav__btn a:hover,
+.cust-nav__btn a:active
+.cust-nav__btn a:focus{
+	color: #ED1C24;
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination>li>a, .pagination>li>span{
+	color: #ebb66a;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	background-color: #a00c0b;
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+/*---------- Footer Styling ----------*/
+footer,
+.membership-banner{
+	background-color: #f2f2f2;
+}
+
+.rights{
+	border-top: 1px solid #fff;
+}
+
+footer a:hover,
+footer a:active{
+	color: #a40000!important;
+}

@@ -1,0 +1,32 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{# including the slider. The slider will apear only on the main page. #}
+{% block slider %}
+{% endblock %}
+
+{% block content %}
+
+<section class="content__info grid-layout">
+
+    {# About section of the company on the front page. Description + video. #}
+
+
+
+    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
+    {# The proposals will have the same design as the news, so i am using the news styles. #}
+    <div class="container">
+
+        {% b2c_products 'B2CProducts/list.html' 15 page category %}
+
+    </div>
+
+
+</section>
+
+{% endblock %}

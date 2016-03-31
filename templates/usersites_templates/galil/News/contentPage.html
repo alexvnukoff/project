@@ -1,59 +1,12 @@
-{% extends 'usersites_templates/default_no_banners/index.html' %}
+{% extends 'usersites_templates/galil/index.html' %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
+{% load content_tags %}
+
 {% block content %}
+
     {{ block.super }}
-
-    {# ------------------------------------------------------------------ #}
-
-    <!-- Page Content - the info will come from businness proposals-->
-      <div class="container">
-       {% include 'usersites_templates/default_no_banners/Paginator.html' %}
-
-          <!-- Page Heading/Breadcrumbs -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">{% trans 'News' %}</h1>
-            </div>
-        </div>
-        <!-- /.row -->
-
-        <!-- News Content -->
-      {% for news in object_list %}
-        <div class="row news">
-
-            <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs news__img">
-                {% if product.image %}
-    {#                           <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">#}
-                    <img class="coupon-panel__img" src="{% static 'usersites/images/tmp/news1.jpg' %}" />
-                {% else %}
-    {#                            <img src="{% static 'b24online/img/item.jpg' %}" />#}
-                    <img class="coupon-panel__img" src="{% static 'usersites/images/tmp/news1.jpg' %}" />
-                {% endif %}
-            </div>
-
-            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 news__text">
-                <h2 class="page-header section-header">{{ news.title }}</h2>
-                <p class="date">{{ news.created_at|date:'d M Y' }}</p>
-
-                <p>
-                    {% if news.short_description %}
-                         {{ news.short_description|force_escape|linebreaks|removetags:"p" }}
-                        <br/>
-                        <br/>
-{#                    {% else %}#}
-{#                         {{ news.content|cleanHtml|safe|removetags:"p" }}#}
-                    {% endif %}
-                </p>
-
-                <p>{{ news.content|cleanHtml|safe }}</p>
-
-            </div>
-        </div>
-      {% endfor %}
-   {% include 'usersites_templates/default_no_banners/Paginator.html' %}
-
-       </div><!-- /.container -->
+    {% news 'News/list.html' 10 page %}
 
 {% endblock %}

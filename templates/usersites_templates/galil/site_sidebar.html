@@ -2,41 +2,54 @@
 {% load CustomFilters %}
 {% load cache %}
 {% load inclusionTags %}
-{% is_chamber_site as is_chamber %}
+{% load content_tags %}
 {% load mptt_tags %}
 
-{% if categories %}
-    <h2 class="page-header section-header"><a href="#">Categories</a></h2>
+<h2 class="page-header section-header"><a href="#">Categories</a></h2>
 
-    <div class="panel-group sidebar side-bar" id="accordion">
+{% b2c_categories as categories %}
 
-    <div class="panel panel-default">
-        {% for pk, category in categories.items %}
-            {% recursetree nodes %}
+<div class="panel-group sidebar side-bar" id="accordion">
 
-              <div class="panel-heading">
-                    <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-plus-sign">
-                        </span>{{ category.name }}</a>
-                    </h4>
-              </div>
+{#    {% recursetree categories.items %}#}
+{#        <li>#}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">#}
+{#                            <span class="glyphicon glyphicon-plus-sign"></span>#}
+{#                            {{ categories.items.name }}#}
+{#                         </a>#}
+{#                    </h4>#}
+{#                </div>#}
+{##}
+{#                <div id="collapseOne" class="panel-collapse collapse ">#}
+{##}
+{#                    {% if not categories.items.is_leaf_node %}#}
+{#                        <ul class="list-group">#}
+{#                            {{ children }}#}
+{#                        </ul>#}
+{#                    {% endif %}#}
+{##}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#        </li>#}
+{#    {% endrecursetree %}#}
 
-                <div id="collapse{{ pk }}" class="panel-collapse collapse ">
+</div>
 
-                    {% if not node.is_leaf_node %}
-                        <ul class="list-group">
-                          <li class="list-group-item">
-                              <a href="{% url 'b2c_products:category' category.slug pk %}">{{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}</a>
-                          </li>
-    {#                    {{ children }}#}
-                        </ul>
-                    {% endif %}
+<ul class="root">
+    {% recursetree categories.items %}
+        <li>
+            {{ categories.items.name }}
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
 
-                </div>
-            {% endrecursetree %}
-        {% endfor %}
-    </div>
-
-  </div>
-
-{% endif %}
+</div>
