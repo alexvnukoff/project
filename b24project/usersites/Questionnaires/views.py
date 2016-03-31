@@ -18,6 +18,7 @@ from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import ItemDetail, ItemsList
 from usersites.mixins import UserTemplateMixin
 from usersites.Questionnaires.forms import InviteForm
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
@@ -65,25 +66,29 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
             q_case = form.save()
             if q_case.case_uuid:
                 if form.is_invited:
-                    next_url = reverse(
-                        'questionnaires:results',
-                        kwargs={
-                            'uuid': q_case.case_uuid,
-                            'participant': 'inviter'
-                        }
+                    domain = get_current_site().domain
+                    next_url = 'http://{0}{1}' . format(
+                        domain,
+                        reverse('questionnaires:results',
+                                kwargs={'uuid': q_case.case_uuid,
+                                        'participant': 'inviter'})
                     )
+                    result_href = '<a href="{0}">{1}</a>' . format(
+                        next_url,
+                        _('Results')
+                    )
+                   
                     inviter = q_case.get_inviter()
                     if inviter and inviter.email:
                         subject = _('The questionnaire results')
-                        message = 'The questionnaire results Url: %s' % next_url
+                        message = 'The questionnaire results Url: {0}' \
+                            . format(result_href)
                         mail = EmailMessage(
                             subject, 
                             message,
                             settings.DEFAULT_FROM_EMAIL, 
                             [inviter.email,]
                         )
-                        logger.debug('Step 1')
-                        logger.debug(inviter.email)
                         if not getattr(settings, 'NOT_SEND_EMAIL', False):
                             mail.send()
 
@@ -96,24 +101,27 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                         }
                     )
                 else:
-                    next_url = reverse(
-                        'questionnaires:activate',
-                        kwargs={
-                            'uuid': q_case.case_uuid,
-                        }
+                    domain = get_current_site().domain
+                    next_url = 'http://{0}{1}' . format(
+                        domain,
+                        reverse('questionnaires:activate',
+                                kwargs={'uuid': q_case.case_uuid,})
+                    )          
+                    result_href = '<a href="{0}">{1}</a>' . format(
+                        next_url,
+                        _('Answer the questions')
                     )
                     invited = q_case.get_invited()
                     if invited and invited.email:
                         subject = _('Invite to answer the questions')
-                        message = 'The Questionnaire activation Url: %s' % next_url
+                        message = 'The Questionnaire activation Url: {0}' \
+                            . format(result_href)
                         mail = EmailMessage(
                             subject, 
                             message,
                             settings.DEFAULT_FROM_EMAIL, 
                             [invited.email,]
                         )
-                        logger.debug('Step 1')
-                        logger.debug(invited.email)
                         if not getattr(settings, 'NOT_SEND_EMAIL', False):
                             mail.send()
 
