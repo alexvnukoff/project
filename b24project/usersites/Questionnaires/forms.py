@@ -41,6 +41,10 @@ class AnswerForm(forms.Form):
         label=_('Your answer'),
         required=False
     )
+    show = forms.BooleanField(
+        label=_('Show the answer'),
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         data = kwargs.get('initial')
@@ -160,14 +164,23 @@ class InviteForm(forms.Form):
                     else:
                         question = q_form.question
 
-                    if 'agree' in q_form.cleaned_data and \
-                        q_form.cleaned_data['agree']:
+                    if self.questionnaire.use_show_result:
                         new_answer = Answer.objects.create(
                             questionnaire_case=self.instance,
                             question=question,
                             participant=responsive,
-                            answer=True
+                            answer=q_form.cleaned_data.get('agree', False),
+                            show_answer=q_form.cleaned_data.get('show', False),
                         )
+                    else:
+                        if 'agree' in q_form.cleaned_data and \
+                            q_form.cleaned_data['agree']:
+                            new_answer = Answer.objects.create(
+                                questionnaire_case=self.instance,
+                                question=question,
+                                participant=responsive,
+                                answer=True,
+                            )
 
         except IntegrityError:
             raise

@@ -2294,7 +2294,10 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
         _('How many coincedences for \'green\' color'),
         default=0, null=False, blank=False,
     )
-    
+    use_show_result = models.BooleanField(
+        _('Use the option "Show the question if someone selected"'),
+        default=False,
+    )
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -2558,12 +2561,17 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_coincedences(self):
         answers = {}
+        shows = {}
         for answer in Answer.objects.filter(
             questionnaire_case=self):
             if not answer.question:
                 continue
             answers.setdefault(
-                answer.question.id, {})[answer.participant.pk] = answer.answer
+                answer.question.id, {})[answer.participant.pk] = \
+                    answer.answer
+            shows.setdefault(
+                answer.question.id, {})[answer.participant.pk] = \
+                    answer.show_answer
         inviter, invited = self.get_participants()
         if all((inviter, invited)):
             for question in self.questionnaire.questions.order_by('position'):
@@ -2571,9 +2579,13 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                     'question': question,
                     'inviter': answers.get(question.id, {}).get(inviter.id),
                     'invited': answers.get(question.id, {}).get(invited.id),
+                    'inviter_show': shows.get(question.id, {}).get(inviter.id),
+                    'invited_show': shows.get(question.id, {}).get(invited.id),
                 }
                 data.update({
-                    'is_coincedence': data.get('inviter') and data.get('invited')
+                    'is_coincedence': data.get('inviter') and data.get('invited'),
+                    'need_show': (data.get('inviter') and data.get('invited')) or \
+                        (data.get('inviter_show') or data.get('invited_show')),
                 })
                 yield data
 
@@ -2601,6 +2613,12 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     )
     answer = models.NullBooleanField(
         _('Answer'), 
+        default=False,
+        null=True, 
+        blank=True
+    )
+    show_answer = models.NullBooleanField(
+        _('Show'), 
         default=False,
         null=True, 
         blank=True

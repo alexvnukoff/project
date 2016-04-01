@@ -184,7 +184,7 @@ class QuestionnaireDetail(ItemDetail):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireCreate, self)\
+        return super(QuestionnaireDetail, self)\
             .dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -198,11 +198,20 @@ class QuestionnaireDetail(ItemDetail):
 class QuestionnaireDelete(ItemDeactivate):
     model = Questionnaire
 
+    def get_success_url(self):
+        return reverse(
+            'questionnaires:list', 
+            kwargs={
+                'content_type_id': self.object.content_type_id,
+                'item_id': self.object.item.pk
+            }
+        )
+
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireCreate, self)\
+        return super(QuestionnaireDelete, self)\
             .dispatch(request, *args, **kwargs)
 
 
@@ -214,7 +223,7 @@ class QuestionDelete(ItemDeactivate):
         if not can_manage_product(request.user, 
             self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireCreate, self)\
+        return super(QuestionDelete, self)\
             .dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -231,7 +240,7 @@ class RecommendationDelete(ItemDeactivate):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.quetionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireCreate, self)\
+        return super(RecommendationDelete, self)\
             .dispatch(request, *args, **kwargs)
 
 
