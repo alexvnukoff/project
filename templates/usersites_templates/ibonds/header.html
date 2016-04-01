@@ -26,6 +26,10 @@
                     {% if company_questionnaires.count %}
                         <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
                     {% endif %}
+                    {% if site.user_site.organization.b2c_products.exists %}
+                        <li><a href="{% url 'b2c_products:main' %}">{% trans 'Themes' %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
                     <!-- A language list - loading the available ones. -->
                     <li class="dropdown select-lang">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-flag"><span><b class="caret"></b></a>
