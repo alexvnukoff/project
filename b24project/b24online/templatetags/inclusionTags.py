@@ -257,11 +257,12 @@ def show_top_static_pages(site_type='b2b'):
 
 
 @register.inclusion_tag('b24online/main/socialShare.html', takes_context=True)
-def b2b_social_buttons(context, image, title, text):
+def b2b_social_buttons(context, image, title, text, item_id=None):
     return {
         'image': image,
         'title': title,
-        'text': text
+        'text': text,
+        'item_id': item_id or '',
     }
 
 
