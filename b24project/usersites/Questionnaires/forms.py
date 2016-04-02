@@ -31,9 +31,9 @@ class AnswerForm(forms.Form):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'rows': '2', 
-                'cols': '40',
+                'rows': '3', 
                 'placeholder': _('Ask Your own question'),
+                'style': 'min-width: 150px; max-width: 350px; width: 250px;'
             }
         ),
     )
@@ -62,13 +62,17 @@ class InviteForm(forms.Form):
 
     inviter_email = forms.EmailField(
         label=_('Your Email'),
-        widget=forms.TextInput(attrs={'size': 60}),
+        widget=forms.TextInput(
+            attrs={'style': 'min-width: 150px; max-width: 350px; width: 250px;'}
+        ),
         required=True,
     )
 
     invite_by_email = forms.EmailField(
         label=_('Invite User by Email'),
-        widget=forms.TextInput(attrs={'size': 60}),
+        widget=forms.TextInput(
+            attrs={'style': 'min-width: 150px; max-width: 350px; width: 250px;'}
+        ),
         required=True,
     )
 

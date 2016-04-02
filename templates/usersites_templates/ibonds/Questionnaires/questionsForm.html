@@ -39,9 +39,11 @@
     <table class="q_data" width="100%">
         {% if form.inviter_email %}
         <tr>
-            <td align="right">
+            <td align="left">
                 {% trans 'Your Email' %}:
             </td>
+        </tr>
+        <tr>
             <td>
                 <span>{{ form.inviter_email }}</span>
                 {% if form.is_bound and form.inviter_email.errors %}
@@ -53,9 +55,11 @@
         
         {% if form.invite_by_email %}
         <tr>
-            <td align="right">
+            <td align="left">
                 {% trans 'Invite partner by Email' %}:
             </td>
+        </tr>
+        <tr>
             <td>
                 <span>{{ form.invite_by_email }}</span>
                 {% if form.is_bound and form.invite_by_email.errors %}
@@ -66,7 +70,7 @@
         {% endif %}
 
         <tr>
-            <td colspan="2" align="right">
+            <td align="left">
                 <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
             </td>
         </tr>
