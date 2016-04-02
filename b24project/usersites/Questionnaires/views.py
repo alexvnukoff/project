@@ -230,11 +230,16 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
                         colors = _colors
                         break
 
+                if self.case.questionnaire.use_show_result:
+                    q_items = [q_item for q_item in data \
+                        if q_item.get('need_show')]
+                else:
+                    q_items = [q_item for q_item in data \
+                        if q_item.get('is_coincedence')]
                 kwargs.update({
                     'object': self.case.questionnaire,
                     'case': self.case,
-                    'q_items': [q_item for q_item in data \
-                        if q_item.get('is_coincedence')],
+                    'q_items': q_items,
                     'q_colors': colors,
                 })
 

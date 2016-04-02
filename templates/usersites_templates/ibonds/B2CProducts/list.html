@@ -68,7 +68,7 @@
                                 {% endif %}
                             {% endif %}
                             <div style="float: right;">
-                            {% b2b_social_buttons product.image product.name product.description %}
+                            {% b2b_social_buttons product.image product.name product.description item_id=product.id %}
                             </div>
                             {# If the product is a coupon, display the timer #}
                             {% if product.coupon_discount_percent %}

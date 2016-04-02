@@ -6,7 +6,11 @@
 <div class="data">
     <table id="questions" class="q_data" width="100%">
         <tr class="header">
-            <td colspan="2">{% trans 'Answer the questions'%}:</td>
+            <td>{% trans 'Answer the questions'%}:</td>
+            <td align="center">{% trans 'Select' %}</td>
+            {% if form.questionnaire.use_show_result %}
+            <td align="center">{% trans 'Show' %}</td>
+            {% endif %}
         </tr>
         {% for q_form in form.answer_formset %} 
         
@@ -22,6 +26,12 @@
                 <input id="id_{{ q_form.prefix }}-agree_0" 
                     name="{{ q_form.prefix }}-agree" type="checkbox" value="yes" /> 
             </td>
+            {% if form.questionnaire.use_show_result %}
+            <td align="center">
+                <input id="id_{{ q_form.prefix }}-show_0" 
+                    name="{{ q_form.prefix }}-show" type="checkbox" value="yes" /> 
+            </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

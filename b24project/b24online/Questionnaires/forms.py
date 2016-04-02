@@ -25,7 +25,7 @@ class QuestionnaireForm(forms.ModelForm):
         model = Questionnaire
         fields = ['name', 'short_description', 'description', 
                   'red_level', 'yellow_level', 'green_level',
-                  'image']
+                  'image', 'use_show_result']
 
     def __init__(self, request, content_type_id=None, item_id=None, 
                  *args, **kwargs):
@@ -66,7 +66,7 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ['question_text', ]
+        fields = ['question_text',]
 
     def __init__(self, request, item_id=None, *args, **kwargs):
         cls = type(self)

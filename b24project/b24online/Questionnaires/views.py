@@ -17,16 +17,29 @@ from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from django.contrib.contenttypes.models import ContentType
 
-from b24online.models import (Questionnaire, Question, Answer, 
-                              Recommendation)
+from b24online.models import (Company, B2BProduct, Questionnaire, 
+                              Question, Answer, Recommendation)
+from centerpokupok.models import B2CProduct
+                              
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, 
                            ItemDeactivate)
 from b24online.Questionnaires.forms import (QuestionnaireForm, QuestionForm,
                                             RecommendationForm)
-from b24online.utils import get_by_content_type
+from b24online.utils import (get_by_content_type, get_permitted_orgs)
+
 
 logger = logging.getLogger(__name__)
+
+
+def can_manage_product(user, item):
+    """
+    Return if the user can manage the product.
+    """
+    if isinstance(item, (B2BProduct, B2CProduct)) and item.id and item.company\
+        and item.company in get_permitted_orgs(user, model_klass=Company):
+        return True
+    return False
 
 
 class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
@@ -42,6 +55,10 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         self.object = None
         self.content_type_id = kwargs.pop('content_type_id')
         self.item_id = kwargs.pop('item_id')
+        if not can_manage_product(request.user, 
+            get_by_content_type(self.content_type_id, self.item_id)):
+            return HttpResponseRedirect(reverse('denied'))
+
         return super(QuestionnaireCreate, self)\
             .dispatch(request, *args, **kwargs)
 
@@ -86,6 +103,10 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
+
+        if not can_manage_product(request.user, self.object.item):
+            return HttpResponseRedirect(reverse('denied'))
+
         return super(QuestionnaireUpdate, self)\
             .dispatch(request, *args, **kwargs)
 
@@ -137,6 +158,9 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
                 self.content_type_id, 
                 self.product_id
             )
+            if not can_manage_product(request.user, self.product):
+                return HttpResponseRedirect(reverse('denied'))
+
             if not self.product:
                 raise Http404(_('There is no such instance'))
         
@@ -156,6 +180,13 @@ class QuestionnaireDetail(ItemDetail):
     model = Questionnaire
     template_name = 'b24online/Questionnaires/detail.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not can_manage_product(request.user, self.object.item):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(QuestionnaireDetail, self)\
+            .dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(QuestionnaireDetail, self).get_context_data(**kwargs)
         questionnaire = context.get('item')
@@ -167,9 +198,33 @@ class QuestionnaireDetail(ItemDetail):
 class QuestionnaireDelete(ItemDeactivate):
     model = Questionnaire
 
+    def get_success_url(self):
+        return reverse(
+            'questionnaires:list', 
+            kwargs={
+                'content_type_id': self.object.content_type_id,
+                'item_id': self.object.item.pk
+            }
+        )
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not can_manage_product(request.user, self.object.item):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(QuestionnaireDelete, self)\
+            .dispatch(request, *args, **kwargs)
+
 
 class QuestionDelete(ItemDeactivate):
     model = Question
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not can_manage_product(request.user, 
+            self.object.questionnaire.item):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(QuestionDelete, self)\
+            .dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse(
@@ -180,6 +235,13 @@ class QuestionDelete(ItemDeactivate):
 
 class RecommendationDelete(ItemDeactivate):
     model = Recommendation
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not can_manage_product(request.user, self.object.quetionnaire.item):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(RecommendationDelete, self)\
+            .dispatch(request, *args, **kwargs)
 
 
 class QuestionCreate(LoginRequiredMixin, ItemCreate):
@@ -194,6 +256,14 @@ class QuestionCreate(LoginRequiredMixin, ItemCreate):
     def dispatch(self, request, *args, **kwargs):
         self.object = None
         self.item_id = kwargs.pop('item_id')
+        try:
+            _questionnaire = Questionnaire.objects.get(pk=self.item_id)
+        except:
+            return HttpResponseRedirect(reverse('denied'))
+        else:
+            if not can_manage_product(request.user, _quetionnaire):
+                return HttpResponseRedirect(reverse('denied'))
+
         return super(QuestionCreate, self)\
             .dispatch(request, *args, **kwargs)
 
@@ -233,6 +303,9 @@ class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not can_manage_product(request.user, 
+            self.object.questionnaire.item):
+            return HttpResponseRedirect(reverse('denied'))
         return super(QuestionUpdate, self)\
             .dispatch(request, *args, **kwargs)
 
@@ -273,6 +346,14 @@ class RecommendationCreate(LoginRequiredMixin, ItemCreate):
     def dispatch(self, request, *args, **kwargs):
         self.object = None
         self.item_id = kwargs.pop('item_id')
+        try:
+            _questionnaire = Questionnaire.objects.get(pk=self.item_id)
+        except:
+            return HttpResponseRedirect(reverse('denied'))
+        else:
+            if not can_manage_product(request.user, _quetionnaire):
+                return HttpResponseRedirect(reverse('denied'))
+
         return super(RecommendationCreate, self)\
             .dispatch(request, *args, **kwargs)
 
@@ -312,6 +393,9 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not can_manage_product(request.user, 
+            self.object.questionnaire.item):
+            return HttpResponseRedirect(reverse('denied'))
         return super(RecommendationUpdate, self)\
             .dispatch(request, *args, **kwargs)
 

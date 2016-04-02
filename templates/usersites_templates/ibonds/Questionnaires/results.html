@@ -50,10 +50,10 @@
                             {{ q_item.question.question_text }}
                         </td>
                         <td align="center">
-                            {% if q_item.inviter %}{% trans 'Yes' %}{% else %}-{% endif %}
+                            {% if q_item.inviter %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
                         </td>
                         <td align="center">
-                            {% if q_item.invited %}{% trans 'Yes' %}{% else %}-{% endif %}
+                            {% if q_item.invited %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
                         </td>
                     </tr>
                     {% endfor %}
