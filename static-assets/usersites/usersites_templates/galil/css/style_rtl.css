@@ -62,6 +62,30 @@ body{
 	right: 10%;
 }
 
+.slider-wrapper{
+	float: right;
+}
+
+#banner1{
+	float: left;
+}
+
+.side-nav-wrapper{
+	float: right;
+}
+
+.coupons{
+	float: left;
+}
+
+.banner{
+	float: right;
+}
+
+.sidebar-list .lvl0-sidebar span{
+	padding-left: 5px;
+}
+
 /*---------- Special offer Styling ----------*/
 .offer-content{
 	float: right;
@@ -128,6 +152,8 @@ body{
 .banner-ad-main-collection{
 	float: left;
 }
+
+
 /*---------- Coupons Styling ----------*/
 
 .coupon-panel{
@@ -292,7 +318,7 @@ footer span{
 }
 
 .paginator, .category{
-	float: left;
+	float: right;
 }
 
 .pagination li{

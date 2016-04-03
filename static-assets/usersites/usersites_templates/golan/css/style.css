@@ -2,8 +2,7 @@
 
 /*---------- Navigation Styling ----------*/
 .navbar-nav{
-	/*float: right!important;*/
-    margin-left: -15px;
+    margin-left: 15px;
 	margin-right: 0;
 }
 

@@ -766,6 +766,14 @@ footer .btn-default{
     height: 40px;
     margin-top: 20px;
 }
+
+.cust-page p img{
+	max-width: 100%;
+    float: none;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
 /*---------- Counter Styling ----------*/
 #timer-detail-page{
     font-family: sans-serif;

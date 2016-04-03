@@ -6,7 +6,7 @@
 
     {# Products page content #}
     <div class="container">
-        {% include 'usersites_templates/galil/B2CProducts/paginator.html' %}
+        {% include 'usersites_templates/galil/B2CProducts/Paginator.html' %}
 
         {# Page title #}
         <div class="col-lg-12">
@@ -25,9 +25,13 @@
                         {% endif %}
 
                         {% if product.coupon_discount_percent %}
-                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
-                            {# img for the corner of the coupon discount % display. #}
-                            <img src="{% static 'usersites/usersites_templates/galil/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">
+                            <div class=" product__badge">
+                                <img src="{% static 'usersites/usersites_templates/galil/css/images/discount_badge.png' %}" class="coupon-badge" >
+                                <div class="coupon_persent">
+                                    {{ product.coupon_discount_percent|intword }}<span class="percent">%</span>
+                                </div>
+
+                            </div>
                         {% endif %}
 
                         <div class="caption">
@@ -35,11 +39,17 @@
                             <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
 
                             {# If the product is a coupon, the color of the button will be diff #}
-                            {% if product.coupon_discount_percent %}
-                                <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                            {% else %}
-                                <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                            {% endif %}
+{#                            {% if product.coupon_discount_percent %}#}
+{#                                <div class="btn-group product__btn" role="group" aria-label="btn-product">#}
+{#                                  <button type="button" class="btn btn-default" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</button>#}
+{#                                </div>#}
+{#                            {% else %}#}
+{#                                <div class="btn-group product__btn" role="group" aria-label="btn-product">#}
+{#                                  <button type="button" class="btn btn-default" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</button>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+
+                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {# If there is one, display the cost. If there is a discount, display it too. #}
                             {% if product.cost %}
@@ -67,7 +77,7 @@
             {% endfor %}
         </div><!-- /Products modoul --><!-- /row -->
 
-        {% include 'usersites_templates/galil/B2CProducts/paginator.html' %}
+        {% include 'usersites_templates/galil/B2CProducts/Paginator.html' %}
     </div>
 
 </section>
