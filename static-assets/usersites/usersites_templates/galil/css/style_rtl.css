@@ -329,6 +329,10 @@ footer span{
 	float: left;
 }
 
+.news__btn{
+	float: left;
+}
+
 th, td{
 	text-align: right;
 }

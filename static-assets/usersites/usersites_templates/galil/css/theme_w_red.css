@@ -81,6 +81,12 @@ h2.page-header{
 	background-color: #ED1C24;
 	color: #fff;
 }
+
+.news__btn{
+	background-color: #ED1C24;
+	color: #fff;
+	border-color: #5c0609;
+}
 /*---------- Search Item Styling ----------*/
 .tmp_search{
 	color: #000;

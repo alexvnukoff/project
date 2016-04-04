@@ -45,6 +45,11 @@
 .product__btn{
 	right: 15px;
 }
+
+.item-page__coupon div {
+    float: left;
+    padding-right: 30px;
+}
 /*---------- Product Styling ----------*/
 .coupon{
 	float: right;
@@ -64,6 +69,13 @@ footer span{
 	float: left;
 }
 
+.pay{
+	float: right;
+}
+
+.news__btn{
+	float: right;
+}
 /*---------- Banner Advertisment Styling ----------*/
 .membership-banner__member{
 	float: left;
