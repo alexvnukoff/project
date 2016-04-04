@@ -97,9 +97,10 @@ h2.page-header.inner-page{
 	max-height: 100px;
 }
 
+
 /* Landscape tablets and medium desktops
 collapse the menu on 991px. */
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
 	.navbar-header {
         float: none;
     }

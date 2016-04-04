@@ -32,6 +32,10 @@
 	float: left;
 }
 
+.navbar-collapse{
+	clear: right;
+}
+
 /*---------- about-banner Styling ----------*/
 .about-main__movie{
 	float: right;

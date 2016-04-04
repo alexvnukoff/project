@@ -22,6 +22,19 @@
         </div>
         <!-- Collection of nav links and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
+        <div>
+            <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
+                    <li>
+                        <div class="tmp_search  top_search clearfix">
+                            <form action="{% url 'b2c_products:search' %}">
+                                <input type="text" placeholder="Search" name="s">
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+        </div>
+
             <ul class="nav navbar-nav">
                     <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
                     <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
@@ -68,16 +81,7 @@
 
                     </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
-                <li>
-                    <div class="tmp_search  top_search clearfix">
-                        <form action="{% url 'b2c_products:search' %}">
-                            <input type="text" placeholder="Search" name="s">
-                        </form>
-                    </div>
-                </li>
-            </ul>
+
         </div>
     </div>
     </nav>
