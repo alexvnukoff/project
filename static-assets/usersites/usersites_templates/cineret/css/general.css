@@ -1,0 +1,231 @@
+/*---------- General Styling ----------*/
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.content{
+	flex: 1;
+}
+
+body {
+    height: 100%;
+}
+
+body {
+    /*padding-top: 50px; !* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. *!*/
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* ----------- Navigation Styling -------------------- */
+.navbar-default{
+    padding: 5px 0;
+    background-color: #222222;
+    border-color: transparent;
+}
+
+.navbar-default .navbar-toggle {
+    background-color: #fed136;
+    border-color: #fed136;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.navbar-default .navbar-collapse {
+    border-color: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-default .navbar-nav > .active > a {
+    border-radius: 0;
+    color: white;
+    background-color: #fed136;
+}
+
+.navbar-default .nav li a {
+    font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.navbar-default .nav li a:hover,
+.navbar-default .nav li a:focus {
+  color: #fed136;
+  outline: none;
+}
+
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: #fec503;
+}
+
+.navbar-brand>img {
+    max-height: 85px;
+}
+
+.overlay {
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: auto;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+}
+
+.cust-nav__btn{
+    background-color: #fff;
+    padding: 10px 5px;
+}
+
+.cust-nav__btn a{
+    color: #000;
+    text-decoration: none;
+}
+
+.navbar-right{
+    margin-right: 0;
+}
+
+@media (min-width: 768px) {
+    .navbar-default {
+        background-color: rgba(0,0,0,.7); // Tint color
+        background-blend-mode: multiply;
+        padding: 10px 0;
+        -webkit-transition: padding 0.3s;
+        -moz-transition: padding 0.3s;
+        transition: padding 0.3s;
+        border: none;
+    }
+}
+
+@media (min-width: 768px){
+    .navbar-default .navbar-nav > .active > a {
+        border-radius: 3px;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default .navbar-brand {
+        font-size: 1em;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .navbar-default .navbar-brand {
+        color: #fed136;
+        font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default.navbar-shrink {
+        background-color: #222222;
+        padding: 10px 0;
+    }
+}
+
+.top_search{
+    margin-top: 10px;
+}
+
+/* ----------- -- Styling -------------------- */
+
+.img-portfolio {
+    margin-bottom: 30px;
+}
+
+.img-hover:hover {
+    opacity: 0.8;
+}
+
+/* Home Page Carousel */
+
+header.carousel {
+    height: 100%;
+}
+
+header.carousel .item,
+header.carousel .item.active,
+header.carousel .carousel-inner {
+    height: 100%;
+}
+
+header.carousel .fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+
+/* 404 Page Styles */
+
+.error-404 {
+    font-size: 100px;
+}
+
+/* Pricing Page Styles */
+
+.price {
+    display: block;
+    font-size: 50px;
+    line-height: 50px;
+}
+
+.price sup {
+    top: -20px;
+    left: 2px;
+    font-size: 20px;
+}
+
+.period {
+    display: block;
+    font-style: italic;
+}
+
+/* Footer Styles */
+
+footer {
+    margin: 50px 0;
+}
+
+/* Responsive Styles */
+
+@media(max-width:991px) {
+    .customer-img,
+    .img-related {
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width:767px) {
+    .img-portfolio {
+        margin-bottom: 15px;
+    }
+
+    header.carousel .carousel {
+        height: 70%;
+    }
+}
+

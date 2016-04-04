@@ -71,7 +71,7 @@ h2.page-header{
 	color: #fff;
 }
 
-.product__btn .btn{
+.product__btn{
 	background-color: #ED1C24;
 	color: #fff;
 	border-color: #5c0609;
@@ -80,6 +80,12 @@ h2.page-header{
 .btn-blog{
 	background-color: #ED1C24;
 	color: #fff;
+}
+
+.news__btn{
+	background-color: #ED1C24;
+	color: #fff;
+	border-color: #5c0609;
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{

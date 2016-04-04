@@ -1,5 +1,19 @@
 /*---------- General Styling ----------*/
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
 body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+	max-width: 100%;
+	/*overflow-x: hidden;*/
+}
+
+.content{
+	flex: 1;
 }
 
 .center-wrap {
@@ -97,6 +111,20 @@ h2.page-header.inner-page{
 .banner{
 	margin-bottom: 10px;
 	margin-top: 10px;
+	position: relative;
+	width: 280px;
+	margin-right: 7px;
+	padding: 0;
+	height: auto;
+}
+
+.banner:last-child{
+	margin-right: 0;
+}
+
+.banners-pack{
+	margin-right: -15px;
+    margin-left: -15px;
 }
 
 .banner img{
@@ -105,9 +133,34 @@ h2.page-header.inner-page{
 	padding: 0;
 }
 
-.side-nav-wrapper{
+#banner1,
+.slider-wrapper,
+.side-nav-wrapper,
+.coupons{
 	position: relative;
 }
+
+/*---------- Sidebar Styling ----------*/
+.sidebar-list{
+	text-decoration: none;
+	list-style: none;
+	font-size: 16px;
+	padding: 0;
+}
+
+.sidebar-list li{
+	padding: 10px 5px;
+	border: 1px solid #ddd;
+	margin-bottom: 2px;
+}
+
+.sidebar-list .lvl0-sidebar{
+	color: #333;
+    background-color: #f5f5f5;
+	font-weight: bold;
+}
+
+
 /*---------- Slider Styling ----------*/
 .slider-wrapper{
 	margin-top: 10px;
@@ -255,6 +308,67 @@ span.percent{
 
 .product{
 	padding: 0 1px;
+}
+
+.product .thumbnail{
+	height: 420px;
+}
+
+.main-products-thumb .product .thumbnail>img{
+	max-width: 281px;
+	height: 187px;
+}
+
+@media (max-width: 767px) {
+	.main-products-thumb>.product>.thumbnaill {
+		height: 500px;
+	}
+}
+
+.coupons .product .thumbnail{
+	height: 540px;
+}
+
+.category{
+	position: relative;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+	.coupons .product .thumbnail{
+		height: 560px;
+	}
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+	.product .thumbnail{
+		height: 450px;
+	}
+
+	.coupons .product .thumbnail{
+		height: 560px;
+	}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.product .thumbnail{
+		height: 620px;
+	}
+
+	.coupons .product .thumbnail{
+		height: 600px;
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.product .thumbnail{
+		height: 450px;
+	}
 }
 
 .coupon{
@@ -542,6 +656,152 @@ footer .btn-default{
 	text-decoration: none;
 }
 
+/*---------- Item Styling ----------*/
+.item-page, .item-price-table{
+	position: relative;
+}
+
+.item-page img{
+	max-height: 365px;
+	width: auto;
+	margin: auto;
+}
+
+.item-page__price{
+	font-size: 2em;
+	color: green;
+	font-weight: bold;
+}
+
+.item-page__coupon{
+	font-size: 1em;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+	padding-top: 10px;
+}
+
+.item-page__coupon div{
+	position: relative;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.item-price-table .coupon-panel__btn{
+	font-weight: bold;
+	font-size: 1.8em;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+.item-price-table .coupon-panel__btn span{
+	padding: 0 20px;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.coupon-panel__btn{
+	width: 100%;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.cust-page p img{
+	max-width: 100%;
+    float: none;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    font-family: sans-serif;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border-radius: 3px;
+	padding: 10px;
+}
+
+#timer-detail-page > div{
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+}
+
+#timer-detail-page div > span{
+    padding: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.map {
+    height: 250px;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ccc;
+}
+/*--------- contact form --------------*/
+.contact-info, .contact-fields{
+	position: relative;
+}
+
+.contact-fields{
+	margin-top: 80px;
+}
+
+.contact-fields-email{
+	margin: 20px 0;
+}
+
+.contact-fields-email .controls input,
+.contact-fields-email .controls textarea{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.contact-fields-email .controls textarea{
+	height: auto;
+}
+
+.pay{
+	position: relative;
+}
+
+.news__btn{
+	position: relative;
+}
 /*---------- table Styling ----------*/
 .table{
 	margin-bottom: 0;
@@ -592,6 +852,13 @@ footer .btn-default{
 	}
 }
 
+.cust-page p img {
+		max-width: 100%;
+		float: none;
+		height: auto;
+		margin: 10px auto;
+		display: block;
+	}
 
 
 
@@ -599,85 +866,122 @@ footer .btn-default{
 @media (min-width: 768px) {
 
 	/*Allow main to be next to Nav*/
-	.main{
+	.main {
 		position: absolute;
 		width: calc(100% - 40px); /*keeps 100% minus nav size*/
 		margin-left: 40px;
 		float: right;
 	}
 
+	#accordion .glyphicon {
+		margin-right: 10px;
+	}
 
+	.panel-collapse > .list-group .list-group-item:first-child {
+		border-top-right-radius: 0;
+		border-top-left-radius: 0;
+	}
 
-#accordion .glyphicon { margin-right:10px; }
-      .panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
-      .panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
-      .panel-collapse>.list-group {margin-bottom: 0;}
-      .panel-collapse .list-group-item {border-radius:0;}
+	.panel-collapse > .list-group .list-group-item {
+		border-width: 1px 0;
+	}
 
-      .panel-collapse .list-group .list-group {margin: 0;margin-top: 10px;}
-      .panel-collapse .list-group-item li.list-group-item {margin: 0 -15px;border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
-      .panel-collapse .list-group-item li.list-group-item:last-child {padding-bottom: 0;}
+	.panel-collapse > .list-group {
+		margin-bottom: 0;
+	}
 
-      .panel-collapse div.list-group div.list-group{margin: 0;}
-      .panel-collapse div.list-group .list-group a.list-group-item {border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
-      .panel-collapse .list-group-item li.list-group-item {border-top: 1px solid #DDD !important;}
+	.panel-collapse .list-group-item {
+		border-radius: 0;
+	}
 
-/*---------- Banner Advertisment Styling ----------*/
-/* The banner above the footer */
-.membership-banner{
-	padding: 0;
-	text-align: center;
+	.panel-collapse .list-group .list-group {
+		margin: 0;
+		margin-top: 10px;
+	}
+
+	.panel-collapse .list-group-item li.list-group-item {
+		margin: 0 -15px;
+		border-top: 1px solid #ddd !important;
+		border-bottom: 0;
+		padding-left: 30px;
+	}
+
+	.panel-collapse .list-group-item li.list-group-item:last-child {
+		padding-bottom: 0;
+	}
+
+	.panel-collapse div.list-group div.list-group {
+		margin: 0;
+	}
+
+	.panel-collapse div.list-group .list-group a.list-group-item {
+		border-top: 1px solid #ddd !important;
+		border-bottom: 0;
+		padding-left: 30px;
+	}
+
+	.panel-collapse .list-group-item li.list-group-item {
+		border-top: 1px solid #DDD !important;
+	}
+
+	/*---------- Banner Advertisment Styling ----------*/
+	/* The banner above the footer */
+	.membership-banner {
+		padding: 0;
+		text-align: center;
+	}
+
+	.membership-banner__member {
+		height: 100%;
+		padding: 0;
+		display: table;
+		position: relative;
+	}
+
+	.membership-banner__member img {
+		width: auto;
+		max-height: 80px;
+		margin: 10px;
+		display: inline;
+		position: relative;
+	}
+
+	.membership-banner__member-text {
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.membership-banner__member h4 {
+		padding-top: 10px;
+		font-size: 1em;
+	}
+
+	.membership-banner__member p {
+		font-size: 0.7em;
+	}
+
+	.membership-banner__ad {
+		padding: 0;
+		margin: 0;
+		height: 80px;
+		position: relative;
+	}
+
+	.membership-banner__ad img {
+		max-width: 100%;
+		height: auto;
+		vertical-align: middle;
+		margin: auto;
+		padding: 10px;
+	}
+
+	@media \0screen {
+		img {
+			width: auto; /* for ie 8 */
+		}
+	}
 }
 
-.membership-banner__member{
-	height: 100%;
-	padding: 0;
-	display: table;
-	position: relative;
-}
-
-.membership-banner__member img{
-	width: auto;
-	max-height: 80px;
-	margin: 10px;
-	display: inline;
-	position: relative;
-}
-
-.membership-banner__member-text{
-	display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-	padding: 0 10px;
-	position: relative;
-}
-
-.membership-banner__member h4{
-	padding-top: 10px;
-	font-size: 1em;
-}
-
-.membership-banner__member p{
-	font-size: 0.7em;
-}
-
-.membership-banner__ad{
-	padding: 0;
-	margin: 0;
-	height: 80px;
-	position: relative;
-}
-
-.membership-banner__ad img{
-	max-width: 100%;
-	height: auto;
-	vertical-align: middle;
-    margin: auto;
-	padding: 10px;
-}
-
-@media \0screen {
-  img {
-  	width: auto; /* for ie 8 */
-  }
-}

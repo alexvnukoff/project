@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# Start of the bp model. There are 2 bp. #}
+{% if proposals %}
+
+        {% for proposal in proposals %}
+
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-check"></i> {{ proposal.title }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"23" }}</p>
+                        <a href="{% url 'proposal:main' %}" class="btn btn-default">{% trans 'More' %}</a>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+{% endif %}
+
