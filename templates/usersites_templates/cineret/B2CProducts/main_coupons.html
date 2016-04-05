@@ -6,7 +6,8 @@
 {# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
 {# the coupon will take 50% of the page. #}
 {% if b2c_coupons %}
-    <div class="col-md-6 col-sm-12 col-xs-12 main-coupons ">
+    <div class="container">
+    <div class="col-md-12 col-sm-12 col-xs-12 main-coupons ">
 
         <div class="row">
             <!-- Coupons header -->
@@ -21,21 +22,23 @@
             {# Looping the coupons. #}
             {% for product in coupons %}
 
-                <div class="col-sm-6 col-md-6 col-xs-12 product coupon">
-                    <div class="thumbnail">
-                        <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                <div class="col-sm-12 col-md-12 col-xs-12 product coupon">
 
-                        {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
-                        {% else %}
-                            <img src="{% static 'b24online/img/item.jpg' %}" />
-                        {% endif %}
+                        <div class="col-sm-3 col-md-3 hidden-xs">
 
-                        {# img for the corner of the coupon discount % display. #}
-                        <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">
+                            {% if product.image %}
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" class="img-responsive" >
+                            {% endif %}
 
-                        <div class="product__caption">
-                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-xs-6">
+
+                            <div class="product__caption">
+
+                             <h3 class="product__title ">{{ product.name|truncatechars:20 }}</h3>
 
                             {# KRN here i want the product category to be #}
                             {% comment %}
@@ -47,10 +50,19 @@
                             {# Description of the coupon product #}
                             <p class="product__desc">{{ product.short_description|truncatechars:105 }}</p>
 
-                            {# The button will lead to the product details. #}
-                            <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            <div class="coupon-timer">
+                                <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                            </div>
 
-                            {# Dispaly the product price if there is one, else display contact us #}
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+
+                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+
                             {% if product.cost %}
                                 <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
 
@@ -65,14 +77,12 @@
                                     <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
-                            {# Diisplay the coupon timer #}
-                            <div class="coupon-timer">
-                                <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                            </div>
+                            {# The button will lead to the product details. #}
+                            <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                         </div>
-                    </div>
+
+
                 </div>
 
             {% endfor %}
@@ -81,4 +91,5 @@
 {#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>#}
 
     </div>{# /Coupons modoul #}
+    </div>
 {% endif %}

@@ -109,6 +109,10 @@
 	float: left;
 }
 
+.proposal-link{
+    float: right;
+}
+
 .news__img{
 	float: left;
 	padding-right: 20px;
