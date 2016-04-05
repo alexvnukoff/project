@@ -44,8 +44,6 @@
                             {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
                             <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
 
-                            {# Button to go the details - attached to the bottom of the thumbnail #}
-                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {# Displaying a price if there is one. Cheching if there is a discount too. #}
                             {% if product.cost %}
@@ -60,6 +58,10 @@
                                 {% else %}
                                     <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
+
+                            {# Button to go the details - attached to the bottom of the thumbnail #}
+                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+
 
                         </div>
 

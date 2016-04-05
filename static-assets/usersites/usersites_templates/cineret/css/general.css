@@ -32,9 +32,22 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
+h4{
+    font-size: 1.2em;
+}
+
+.page-header,
+.page-header a{
+    color: #fed136;
+    text-decoration: none;
+}
+
+.in-page{
+    margin-top: 10%;
+}
 /* ----------- Navigation Styling -------------------- */
 .navbar-default{
-    padding: 5px 0;
+    padding: 0;
     background-color: #222222;
     border-color: transparent;
 }
@@ -64,6 +77,8 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
     letter-spacing: 1px;
     color: white;
+    font-size: 0.9em;
+    padding: 10px 5px;
 }
 
 .navbar-default .nav li a:hover,
@@ -78,8 +93,22 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #fec503;
 }
 
+.navbar-brand{
+    display: table;
+    padding: 5px 5px;
+}
+
 .navbar-brand>img {
     max-height: 85px;
+    height: auto;
+    display: table-cell;
+    vertical-align: middle;
+    max-width: 200px;
+    padding: 0;
+}
+
+.navbar-right{
+    clear: right;
 }
 
 .overlay {
@@ -111,7 +140,7 @@ h1, h2, h3, h4, h5, h6 {
     .navbar-default {
         background-color: rgba(0,0,0,.7); // Tint color
         background-blend-mode: multiply;
-        padding: 10px 0;
+        padding: 0;
         -webkit-transition: padding 0.3s;
         -moz-transition: padding 0.3s;
         transition: padding 0.3s;
@@ -146,11 +175,366 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* Landscape tablets and medium desktops */
+@media (max-width: 992px){
+    .navbar-brand>img {
+        max-height: 55px;
+        max-width: 200px;
+    }
+}
+
 .top_search{
     margin-top: 10px;
 }
 
-/* ----------- -- Styling -------------------- */
+/* ----------- Proposal Styling -------------------- */
+.proposal-thumb .panel-body>p{
+    font-size: 1em;
+}
+
+.proposal-thumb h4{
+    text-align: center;
+}
+
+.proposal-thumb {
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+.proposal-link{
+    position: relative;
+    float: right;
+    color: #000;
+}
+
+.proposal-link span{
+    position: relative;
+    float: left;
+    padding-right: 5px;
+}
+
+/* ----------- News Styling -------------------- */
+.main-news{
+    position: relative;
+    float: right;
+}
+
+.news__img{
+    position: relative;
+    float: left;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    max-width: 150px;
+}
+
+.news__text{
+    /*position: relative;*/
+    /*float: right;*/
+}
+
+/* ----------- Coupons Styling -------------------- */
+.coupon {
+    width: 100%;
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+
+}
+
+.coupon img{
+    max-width: 100%;
+    max-height: 165px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5px;
+}
+
+.coupon .product__desc{
+    font-weight: bold;
+}
+
+.product__discount{
+    background-color: #fed136;
+    padding: 0;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.coupon .product__price,
+.coupon .product__deleted-price{
+    margin-top: 50px;
+}
+
+.coupon__btn{
+    margin-top: 5px;
+}
+
+/* ----------- Product Styling -------------------- */
+.product__title{
+    color: #fed136;
+    margin-top: 10px;
+}
+
+.product__price,
+.product__deleted-price{
+    font-size: 18px;
+}
+
+.product__deleted-price{
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.product__btn{
+    background-color: #fed136;
+}
+
+.product{
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+.product .thumbnail{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.pin .product__price,
+.pin .product__deleted-price{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.category{
+    position: relative;
+    float: left;
+    padding-left: 10px;
+    display: inline;
+    margin: 10px;
+}
+
+.pagination {
+    display: inline;
+    margin: 0 0 20px 0;
+}
+/* ----------- Counter Styling -------------------- */
+#timer-detail-page{
+    font-family: sans-serif;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border-radius: 3px;
+	padding: 10px;
+}
+
+#timer-detail-page > div{
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+}
+
+#timer-detail-page div > span{
+    padding: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.map {
+    height: 250px;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ccc;
+}
+
+/*---------- Footer Styling ----------*/
+footer{
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+footer .row{
+	padding-bottom: 10px;
+}
+
+footer a{
+	text-decoration: none;
+}
+
+footer a:hover,
+footer a:active{
+	text-decoration: none;
+}
+
+footer ul{
+	list-style: none;
+	padding: 0;
+}
+
+footer img{
+	width: 100%;
+}
+
+footer .btn-default{
+	margin-top: 10px;
+}
+
+.footer-col{
+	position: relative;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+.membership-banner{
+	padding: 0;
+	text-align: center;
+}
+
+.membership-banner__member{
+	height: 100%;
+	padding: 0;
+	display: table;
+	position: relative;
+}
+
+.membership-banner__member img{
+	width: auto;
+	max-height: 80px;
+	margin: 10px;
+	display: inline;
+	position: relative;
+}
+
+.membership-banner__member-text{
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+	padding: 0 10px;
+	position: relative;
+}
+
+.membership-banner__member h4{
+	padding-top: 10px;
+	font-size: 1em;
+}
+
+.membership-banner__member p{
+	font-size: 0.7em;
+}
+
+.membership-banner__ad{
+	padding: 0;
+	margin: 0;
+	height: 80px;
+	position: relative;
+}
+
+.membership-banner__ad img{
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+    margin: auto;
+	padding: 10px;
+}
+
+@media \0screen {
+  img {
+  	width: auto; /* for ie 8 */
+  }
+}
+
+/* ----------- Product list Styling -------------------- */
+#wrapper {
+	width: 90%;
+	max-width: 1100px;
+	min-width: 800px;
+	margin: 50px auto;
+}
+
+#columns {
+	-webkit-column-count: 3;
+	-webkit-column-gap: 10px;
+	-webkit-column-fill: auto;
+	-moz-column-count: 3;
+	-moz-column-gap: 10px;
+	-moz-column-fill: auto;
+	column-count: 3;
+	column-gap: 15px;
+	column-fill: auto;
+}
+
+.pin {
+	display: inline-block;
+	background: #FEFEFE;
+	border: 2px solid #FAFAFA;
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+	margin: 0 2px 15px;
+	-webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	column-break-inside: avoid;
+	padding: 15px;
+	padding-bottom: 5px;
+	background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
+	opacity: 1;
+
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+.pin img {
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+	margin-bottom: 5px;
+}
+
+.pin p {
+	font: 12px/18px Arial, sans-serif;
+	color: #333;
+	margin: 0;
+}
+
+@media (min-width: 960px) {
+	#columns {
+		-webkit-column-count: 4;
+		-moz-column-count: 4;
+		column-count: 4;
+	}
+}
+
+@media (min-width: 1100px) {
+	#columns {
+		-webkit-column-count: 5;
+		-moz-column-count: 5;
+		column-count: 5;
+	}
+
+
+}
+
+/* ----------- Product list Styling -------------------- */
+/* ----------- Product list Styling -------------------- */
+/* ----------- Product list Styling -------------------- */
+
+
 
 .img-portfolio {
     margin-bottom: 30px;
@@ -207,7 +591,7 @@ header.carousel .fill {
 /* Footer Styles */
 
 footer {
-    margin: 50px 0;
+    margin: 20px 0 0 0;
 }
 
 /* Responsive Styles */
