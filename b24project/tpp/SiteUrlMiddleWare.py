@@ -1,9 +1,10 @@
 from threading import current_thread
-
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.utils import translation
-
+from tpp.DynamicSiteMiddleware import get_current_site
+from django.core.cache import cache
+from django.contrib.sites.models import Site
 
 # class UserBasedExceptionMiddleware(object):
 #     '''
@@ -73,7 +74,6 @@ from django.utils import translation
 #         SITE_THREAD_LOCAL.SITE_ID = site.pk
 #
 #         Site.objects.clear_cache()
-from tpp.DynamicSiteMiddleware import get_current_site
 
 
 class SiteLangRedirect:
@@ -82,15 +82,34 @@ class SiteLangRedirect:
     """
 
     def process_request(self, request):
+
         lang = request.get_host().split('.')[0]
         languages = [lan[0] for lan in settings.LANGUAGES]
-        user_lang = getattr(request, 'LANGUAGE_CODE', None)
+        site = get_current_site()
+        site_cache = 'usersite_lang_{0}'.format(site.pk)
 
-        if lang not in languages and user_lang and user_lang in languages:
-            site = get_current_site()
+        if cache.get(site_cache):
+            site_lang = cache.get(site_cache)
+        else:
+            s = Site.objects.get(domain=site.domain)
+            try:
+                assert s.user_site
+                has_site = True
+            except:
+                has_site = False
+
+            if has_site:
+                site_lang = s.user_site.language
+                if site_lang == 'auto':
+                    site_lang = getattr(request, 'LANGUAGE_CODE', None)
+                cache.set(site_cache, site_lang, 60*60*12)
+            else:
+                site_lang = getattr(request, 'LANGUAGE_CODE', None)
+
+        if lang not in languages and site_lang and site_lang in languages:
             protocol = 'http' if not request.is_secure() else 'https'
-            redirect_url = "%s://%s.%s%s" % (protocol, request.LANGUAGE_CODE, site.domain, request.get_full_path())
-            
+            redirect_url = "%s://%s.%s%s" % (protocol, site_lang, site.domain, request.get_full_path())
+
             return HttpResponseRedirect(redirect_url)
 
 

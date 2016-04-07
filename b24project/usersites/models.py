@@ -12,6 +12,7 @@ from b24online.utils import generate_upload_path
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.cache import cache
 
 
 class ExternalSiteTemplate(models.Model):
@@ -50,10 +51,14 @@ def uploadTemplateImage(sender, instance, **kwargs):
 
 
 class UserSite(ActiveModelMixing, models.Model):
+
+    lang_list = [('auto', 'Auto')] + list(settings.LANGUAGES)
+
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     user_template = models.ForeignKey(UserSiteTemplate, blank=True, null=True)
     organization = models.ForeignKey(Organization, related_name='user_site')
     slogan = models.CharField(max_length=2048, blank=True, null=True)
+    language = models.CharField(max_length=4, choices=lang_list, default='auto')
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)
@@ -131,6 +136,9 @@ class UserSite(ActiveModelMixing, models.Model):
         if self.site.pk:
             # Call save signal to clear the cache
             self.site.save()
+        site_cache = 'usersite_lang_{0}'.format(self.site.pk)
+        if cache.get(site_cache):
+            cache.delete(site_cache)
 
 
 @receiver(post_save, sender=UserSite)
