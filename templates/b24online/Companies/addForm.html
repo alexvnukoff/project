@@ -182,8 +182,9 @@
                 <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
                   {% if form.errors.short_description %}
                       <div class="error-handler"> <div class="formserror">{{ form.errors.short_description.0 }}</div></div>
-                  {% endif %}
-                <textarea rows="5" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
+                      {% endif %}
+                      <br /><br />
+                <textarea class="tiny" rows="15" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
             </li>
             <li>
                 <label>{% trans 'Detail description' %}</label>
