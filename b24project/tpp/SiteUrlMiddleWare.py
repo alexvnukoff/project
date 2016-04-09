@@ -102,7 +102,8 @@ class SiteLangRedirect:
                 site_lang = s.user_site.language
                 if site_lang == 'auto':
                     site_lang = getattr(request, 'LANGUAGE_CODE', None)
-                cache.set(site_cache, site_lang, 60*60*12)
+                else:
+                    cache.set(site_cache, site_lang, 60*60*12)
             else:
                 site_lang = getattr(request, 'LANGUAGE_CODE', None)
 
