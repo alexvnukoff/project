@@ -12,6 +12,7 @@ from django.utils._os import abspathu
 from b24online import utils
 from b24online.models import B2BProduct, BusinessProposal, InnovationProject, News, Tender, Exhibition, \
     Organization
+from b24online.utils import upload_to_S3
 
 logger = get_task_logger('debug.core.tasks')
 
@@ -854,19 +855,7 @@ from usersites.models import UserSite
 
 @shared_task
 def upload_file(*args):
-    client = boto3.client('s3', settings.BUCKET_REGION, 
-                          aws_access_key_id=settings.AWS_SID,
-                          aws_secret_access_key=settings.AWS_SECRET)
-    transfer = S3Transfer(client)
-    for file in args:
-        extra_args = {'ACL': 'public-read'}
-        content_type = file.get('content_type')
-        if content_type:
-            extra_args.update({'ContentType': content_type})
-        
-        transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], 
-                             extra_args=extra_args)
-        os.remove(file['file'])
+    upload_to_S3(*args)
 
 
 @shared_task
@@ -879,6 +868,8 @@ def upload_images(*args, async=True):
             bucket_path = image['file'][len(abs_path):]
         else:
             bucket_path = image['file']
+
+        bucket_path = bucket_path.replace('\\', '/')
 
         filename = os.path.basename(image['file'])
         filepath = os.path.dirname(image['file'])
@@ -897,12 +888,10 @@ def upload_images(*args, async=True):
         images.append({
             'file': image['file'],
             'bucket_path': "original%s" % bucket_path,
+            'content_type': 'image/png'
         })
 
-    if async:
-        upload_file.delay(*images)
-    else:
-        upload_file.apply(args=images)
+        upload_to_S3(*images)
 
 
 @shared_task
