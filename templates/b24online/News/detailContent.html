@@ -94,7 +94,7 @@
                                {% endfor %}
                             </div>
                         </div>
-                        <p>{{ item.content|cleanHtml|safe }} </p>
+                        <p>{{ item.content|safe }} </p>
                     </div>
                     {% b2b_social_buttons  item.image item.title item.content %}
                     <!-- Яндекс.Директ -->

@@ -8,13 +8,13 @@
 
         {% for proposal in proposals %}
 
-            <div class="col-md-4">
+            <div class="col-md-3 proposal-thumb">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-check"></i> {{ proposal.title }}</h4>
+                        <h4><i class="fa fa-fw fa-check"></i> {{ proposal.title|truncatechars_html:18 }}</h4>
                     </div>
                     <div class="panel-body">
-                        <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"23" }}</p>
+                        <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"20" }}</p>
                         <a href="{% url 'proposal:main' %}" class="btn btn-default">{% trans 'More' %}</a>
                     </div>
                 </div>
@@ -22,6 +22,7 @@
 
         {% endfor %}
 
-    </div>
+    <a class="proposal-link"><span class="glyphicon glyphicon-paperclip proposal-clip"></span>{% trans 'More' %} {% trans 'Business proposals' %}</a>
+
 {% endif %}
 

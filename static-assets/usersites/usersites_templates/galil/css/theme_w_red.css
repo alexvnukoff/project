@@ -34,8 +34,16 @@ h2.page-header{
 
 
 
-.side-bar a{
+.side-bar a {
 	color: #000;
+}
+
+.navbar-toggle{
+	background-color: #000;
+}
+
+.navbar-toggle span{
+	background-color: #fff;
 }
 
 .side-bar ul li a:hover,

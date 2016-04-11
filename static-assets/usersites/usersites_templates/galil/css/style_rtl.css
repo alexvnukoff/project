@@ -67,7 +67,8 @@ body{
 }
 
 #banner1{
-	float: left;
+	float: right;
+	padding-right: 10px;
 }
 
 .side-nav-wrapper{

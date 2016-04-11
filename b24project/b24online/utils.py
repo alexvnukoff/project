@@ -3,7 +3,10 @@ import importlib
 import os
 import uuid
 import logging
+
+import boto3
 from PIL import Image
+from boto3.s3.transfer import S3Transfer
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -270,7 +273,7 @@ class MTTPTreeBuilder(object):
             try:
                 self.root_node = model_class.objects.get(pk=node_id)
             except ObjectDoesNotExist:
-                raise 'There is no such node with id=<{0}>' . format(node_id)
+                raise 'There is no such node with id=<{0}>'.format(node_id)
         else:
             self.root_node = None
         self.attrs = attrs if attrs else type(self).default_attrs
@@ -291,7 +294,7 @@ class MTTPTreeBuilder(object):
         attr_name_parts = attr_name.split('.')
         parts_len = len(attr_name_parts)
         if parts_len > 1:
-            child_key = '.' . join(attr_name_parts[1:])
+            child_key = '.'.join(attr_name_parts[1:])
             cls.get_composite_attr(instance, child_key)
         elif parts_len == 1:
             return gettatr(instance, attr_name_parts[0], None)
@@ -304,7 +307,7 @@ class MTTPTreeBuilder(object):
         if node:
             data.update(
                 dict([(attr_name, getattr(node, attr_name, None)) \
-                    for attr_name in cls.default_attrs])
+                      for attr_name in cls.default_attrs])
             )
         return data
 
@@ -369,3 +372,20 @@ def get_by_content_type(content_type_id, instance_id):
         except model_class.DoesNotExist:
             pass
     return None
+
+
+def upload_to_S3(*files):
+    client = boto3.client('s3', settings.BUCKET_REGION,
+                          aws_access_key_id=settings.AWS_SID,
+                          aws_secret_access_key=settings.AWS_SECRET)
+
+    transfer = S3Transfer(client)
+    for file in files:
+        extra_args = {'ACL': 'public-read'}
+        content_type = file.get('content_type', None)
+
+        if content_type:
+            extra_args.update({'ContentType': content_type})
+
+        transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], extra_args=extra_args)
+        os.remove(file['file'])
