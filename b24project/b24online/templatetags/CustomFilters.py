@@ -19,7 +19,7 @@ from django.db.models import Q, Model
 from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
-from lxml.html.clean import clean_html
+from lxml.html.clean import Cleaner
 
 import b24online.urls
 from appl.func import currency_symbol
@@ -33,6 +33,8 @@ from tpp.SiteUrlMiddleWare import get_request
 logger = logging.getLogger(__name__)
 
 register = template.Library()
+
+cleaner = Cleaner(embedded=False)
 
 
 @register.filter()
@@ -106,7 +108,7 @@ def remove_whitespaces(sentence):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
     if value is not None and len(value) > 0:
-        return clean_html(value)
+        return cleaner.clean_html(value)
     else:
         return ""
 
