@@ -24,7 +24,13 @@
         <!-- Intro Content -->
         <div class="row cust-page">
             <div class="col-md-12">
-                <p>{{ object.content|cleanHtml|safe }}</p>
+                {% if object.created_by.is_superuser %}
+                    {% autoescape off %}
+                    {{ object.content }}
+                    {% endautoescape %}
+                {% else %}
+                    <p>{{ object.content|cleanHtml|safe }}</p>
+                {% endif %}
             </div>
         </div>
         <!-- /.row -->
