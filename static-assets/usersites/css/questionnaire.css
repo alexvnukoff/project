@@ -34,7 +34,6 @@ table.q_data td input[type=checkbox] {
 
 table.q_data td input {
     width: auto;
-#    height: 200%;
 }
 
 table.q_data tr.header {
@@ -42,16 +41,16 @@ table.q_data tr.header {
 }
 
 table.q_data tr td {
-    font-size: 120%;
+    font-size: 100%;
     padding: 10px;
     vertical-align: middle;
 }
 
 table.q_data tr.header td {
     border-bottom: 2px dashed #0089bc;
-    font-size: 150%;
     font-weight: bold;
     padding: 10px;
+    font-size: 110%;
 }
 
 table.q_data tr:nth-last-child(1) td {
