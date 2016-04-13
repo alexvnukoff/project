@@ -138,7 +138,14 @@ collapse the menu on 991px. */
     }
 }
 
-
+.navbar-inverse .navbar-nav>li>a,
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>li>a:active {
+	margin-right: 3px;
+	margin-left: 3px;
+}
 /*.logo{*/
     /*width: auto;*/
     /*height: 50px;*/
