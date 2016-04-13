@@ -715,8 +715,8 @@ footer .btn-default{
 }
 
 .item-page img{
-	max-height: 365px;
-	width: auto;
+	/*max-height: 365px;*/
+	max-width: 100%;
 	margin: auto;
 }
 

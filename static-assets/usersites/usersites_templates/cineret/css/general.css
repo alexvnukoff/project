@@ -11,7 +11,7 @@ body {
   flex-direction: column;
   max-width: 100%;
   overflow-x: hidden;
-  font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /*font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 }
 
 .content{
@@ -37,38 +37,53 @@ h4{
 }
 
 .page-header,
-.page-header a{
-    color: #fed136;
+.page-header a,
+h3 a{
     text-decoration: none;
+}
+
+h3 a:hover,
+h3 a:active,
+h3 a:focus{
+    text-decoration: underline;
 }
 
 .in-page{
     margin-top: 10%;
 }
+
+@media (max-width: 480px) {
+	.in-page {
+		margin-top: 20%;
+	}
+}
+
+@media (min-width: 481px) and (max-width: 991px) {
+	.in-page {
+		margin-top: 18%;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.in-page {
+		margin-top: 12%;
+	}
+}
+
+@media (min-width: 1199px) {
+	.in-page {
+		margin-top: 10%;
+	}
+}
+
 /* ----------- Navigation Styling -------------------- */
 .navbar-default{
     padding: 0;
-    background-color: #222222;
     border-color: transparent;
-}
-
-.navbar-default .navbar-toggle {
-    background-color: #fed136;
-    border-color: #fed136;
-}
-
-.navbar-default .navbar-toggle .icon-bar {
-    background-color: white;
-}
-
-.navbar-default .navbar-collapse {
-    border-color: rgba(255, 255, 255, 0.02);
 }
 
 .navbar-default .navbar-nav > .active > a {
     border-radius: 0;
-    color: white;
-    background-color: #fed136;
 }
 
 .navbar-default .nav li a {
@@ -76,21 +91,13 @@ h4{
     text-transform: uppercase;
     font-weight: 400;
     letter-spacing: 1px;
-    color: white;
     font-size: 0.9em;
     padding: 10px 5px;
 }
 
 .navbar-default .nav li a:hover,
 .navbar-default .nav li a:focus {
-  color: #fed136;
   outline: none;
-}
-
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: white;
-  background-color: #fec503;
 }
 
 .navbar-brand{
@@ -107,19 +114,13 @@ h4{
     padding: 0;
 }
 
-.navbar-right{
-    clear: right;
-}
-
 .overlay {
     z-index: 100;
     height: 100%;
     width: 100%;
     position: fixed;
     overflow: auto;
-    top: 0px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+    top: 0;
 }
 
 .cust-nav__btn{
@@ -128,17 +129,11 @@ h4{
 }
 
 .cust-nav__btn a{
-    color: #000;
     text-decoration: none;
-}
-
-.navbar-right{
-    margin-right: 0;
 }
 
 @media (min-width: 768px) {
     .navbar-default {
-        background-color: rgba(0,0,0,.7); // Tint color
         background-blend-mode: multiply;
         padding: 0;
         -webkit-transition: padding 0.3s;
@@ -163,14 +158,12 @@ h4{
     }
 
     .navbar-default .navbar-brand {
-        color: #fed136;
         font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
     }
 }
 
 @media (min-width: 768px) {
     .navbar-default.navbar-shrink {
-        background-color: #222222;
         padding: 10px 0;
     }
 }
@@ -203,33 +196,39 @@ h4{
 
 .proposal-link{
     position: relative;
-    float: right;
-    color: #000;
 }
 
 .proposal-link span{
     position: relative;
-    float: left;
-    padding-right: 5px;
 }
 
+.desc-detail-page p{
+    line-height: 1.7em;
+}
 /* ----------- News Styling -------------------- */
 .main-news{
     position: relative;
-    float: right;
 }
 
 .news__img{
     position: relative;
-    float: left;
-    padding-right: 10px;
     padding-bottom: 10px;
+}
+
+.news__img img{
     max-width: 150px;
+    max-height: 150px;
 }
 
 .news__text{
     /*position: relative;*/
     /*float: right;*/
+}
+
+.news-details img{
+    max-width: 100%;
+    max-height: 330px;
+
 }
 
 /* ----------- Coupons Styling -------------------- */
@@ -239,13 +238,15 @@ h4{
     padding: 4px;
     margin-bottom: 20px;
     line-height: 1.42857143;
-    background-color: #fff;
-    border: 1px solid #ddd;
     border-radius: 4px;
     -webkit-transition: border .2s ease-in-out;
     -o-transition: border .2s ease-in-out;
     transition: border .2s ease-in-out;
 
+}
+
+.coupon-div{
+    position: relative;
 }
 
 .coupon img{
@@ -254,7 +255,6 @@ h4{
     display: block;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 5px;
 }
 
 .coupon .product__desc{
@@ -262,7 +262,6 @@ h4{
 }
 
 .product__discount{
-    background-color: #fed136;
     padding: 0;
     text-align: center;
     font-size: 2em;
@@ -280,7 +279,6 @@ h4{
 
 /* ----------- Product Styling -------------------- */
 .product__title{
-    color: #fed136;
     margin-top: 10px;
 }
 
@@ -291,33 +289,42 @@ h4{
 
 .product__deleted-price{
     text-decoration: line-through;
-    color: #aaa;
 }
 
-.product__btn{
-    background-color: #fed136;
+
+.main-products .product__btn{
+    float: none;
+    width: 100%;
 }
 
 .product{
-    padding-right: 2px;
-    padding-left: 2px;
+    padding: 0 2px;
 }
 
 .product .thumbnail{
-    padding-right: 10px;
-    padding-left: 10px;
+    padding: 0;
 }
 
-.pin .product__price,
+.product .product__caption{
+    padding: 4px;
+}
+
 .pin .product__deleted-price{
     font-size: 14px;
     font-weight: bold;
 }
 
+.pin .product__price{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.pin p{
+    line-height: 1.5em;
+}
+
 .category{
     position: relative;
-    float: left;
-    padding-left: 10px;
     display: inline;
     margin: 10px;
 }
@@ -326,6 +333,74 @@ h4{
     display: inline;
     margin: 0 0 20px 0;
 }
+
+.btn-mail-order{
+    position: relative;
+}
+
+
+/* Landscape phones and portrait tablets */
+@media (min-width: 479px) and (max-width: 767px) {
+    .product{
+        padding: 0;
+    }
+}
+
+.item-page,
+.item-price-table{
+    position: relative;
+}
+
+/* ----------- Ad banners Styling -------------------- */
+.banner-main-page{
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    padding: 3px;
+}
+
+.banner-main-page img{
+    max-width: 100%;
+    height: auto;
+}
+/* ----------- Contact Styling -------------------- */
+.contact-fields-email {
+    margin-top: 10px;
+}
+
+.contact-fields .main-contact-btn{
+    font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 3px;
+    font-size: 18px;
+    padding: 10px 80px;
+    text-align: center;
+    float: none;
+    margin: 0 auto;
+}
+
+.main-contact{
+    padding: 20px 0 40px 0;
+    text-align: center;
+    background-image: url('../static-assets/usersites/usersites_templates/cineret/css/images/World_Mapbg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.contact-info,
+.contact-fields{
+    position: relative;
+}
+
+.contact-fields{
+    margin-top: 80px;
+}
+
+.main-contact .contact-fields{
+    margin-top: 10px;
+}
+
 /* ----------- Counter Styling -------------------- */
 #timer-detail-page{
     font-family: sans-serif;
@@ -360,7 +435,6 @@ h4{
     display: block;
     width: 100%;
     margin-top: 20px;
-    background-color: #ccc;
 }
 
 /*---------- Footer Styling ----------*/
@@ -404,6 +478,7 @@ footer .btn-default{
 .membership-banner{
 	padding: 0;
 	text-align: center;
+    margin-top: 15px;
 }
 
 .membership-banner__member{
@@ -459,12 +534,13 @@ footer .btn-default{
   }
 }
 
+
 /* ----------- Product list Styling -------------------- */
 #wrapper {
-	width: 90%;
-	max-width: 1100px;
-	min-width: 800px;
-	margin: 50px auto;
+	width: 100%;
+	/*max-width: 1100px;*/
+	/*min-width: 800px;*/
+	margin: 20px auto;
 }
 
 #columns {
@@ -481,16 +557,12 @@ footer .btn-default{
 
 .pin {
 	display: inline-block;
-	background: #FEFEFE;
-	border: 2px solid #FAFAFA;
-	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
 	margin: 0 2px 15px;
 	-webkit-column-break-inside: avoid;
 	-moz-column-break-inside: avoid;
 	column-break-inside: avoid;
 	padding: 15px;
 	padding-bottom: 5px;
-	background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
 	opacity: 1;
 
 	-webkit-transition: all .2s ease;
@@ -501,37 +573,190 @@ footer .btn-default{
 
 .pin img {
 	width: 100%;
-	border-bottom: 1px solid #ccc;
 	padding-bottom: 15px;
 	margin-bottom: 5px;
 }
 
 .pin p {
-	font: 12px/18px Arial, sans-serif;
-	color: #333;
+	font: 14px/20px Arial, sans-serif;
 	margin: 0;
+    line-height: 1.5em;
 }
 
-@media (min-width: 960px) {
+@media (max-width: 480px) {
 	#columns {
-		-webkit-column-count: 4;
-		-moz-column-count: 4;
-		column-count: 4;
+		-webkit-column-count: 1;
+		-moz-column-count: 1;
+		column-count: 1 ;
 	}
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 481px) and (max-width: 991px) {
 	#columns {
-		-webkit-column-count: 5;
-		-moz-column-count: 5;
-		column-count: 5;
+		-webkit-column-count: 2;
+		-moz-column-count: 2;
+		column-count: 2;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	#columns {
+		-webkit-column-count: 3;
+		-moz-column-count: 3;
+		column-count: 3;
+	}
+}
+
+@media (min-width: 1199px) {
+	#columns {
+		-webkit-column-count: 3;
+		-moz-column-count: 3;
+		column-count: 3;
 	}
 
 
 }
 
-/* ----------- Product list Styling -------------------- */
-/* ----------- Product list Styling -------------------- */
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+.pay{
+	position: relative;
+}
+
+.empty-basket{
+	font-size: 3em;
+	text-align: center;
+}
+
+.empty-basket span{
+	font-size: 100px;
+	text-align: center;
+}
+
+.cart{
+	margin-top: 50px;
+}
+.table{
+	margin-bottom: 0;
+}
+
+.tb-pic{
+	width: 8em;
+}
+
+.tb-item{
+	width: 25em;
+}
+
+.tb-qty{
+	width: 3em;
+}
+
+.tb-price{
+	width: 10em;
+}
+
+.tb-total{
+	width: 10em;
+}
+
+.tb-remove{
+	width: 5em;
+}
+
+.tb-img{
+	width: 125px;
+	height: auto;
+}
+
+.tb-hr{
+	margin-top: 5px;
+}
+
+.tb-in-qty{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+@media (min-width: 600px) {
+  	.tb-in-qty{
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+}
+
+.table h3{
+	margin-top: 0px;
+}
+
+
+/*---------- Item Styling ----------*/
+.item-page, .item-price-table{
+	position: relative;
+}
+
+.item-page img{
+	/*max-height: 365px;*/
+	max-width: 100%;
+	margin: auto;
+}
+
+.item-page__price{
+	font-size: 2em;
+	color: green;
+	font-weight: bold;
+}
+
+.item-page__coupon{
+	font-size: 1em;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+	padding-top: 10px;
+}
+
+.item-page__coupon div{
+	position: relative;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.item-price-table .coupon-panel__btn{
+	font-weight: bold;
+	font-size: 1.8em;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+.item-price-table .coupon-panel__btn span{
+	padding: 0 20px;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.coupon-panel__btn{
+	width: 100%;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.cust-page p img{
+	max-width: 100%;
+    float: none;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+
 /* ----------- Product list Styling -------------------- */
 
 
@@ -547,7 +772,9 @@ footer .btn-default{
 /* Home Page Carousel */
 
 header.carousel {
-    height: 100%;
+    height: 80%;
+    max-height: 700px;
+    width: 100%;
 }
 
 header.carousel .item,

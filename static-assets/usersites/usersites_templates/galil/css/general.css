@@ -139,6 +139,10 @@ h2.page-header.inner-page{
 	position: relative;
 }
 
+.navbar-brand>img{
+	max-height: 80px;
+}
+
 /*---------- Sidebar Styling ----------*/
 .sidebar-list{
 	text-decoration: none;
@@ -354,7 +358,8 @@ span.percent{
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	.product .thumbnail{
-		height: 620px;
+		max-height: 620px;
+		min-height: 460px;
 	}
 
 	.coupons .product .thumbnail{
@@ -396,13 +401,30 @@ span.percent{
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	.main-products .product .thumbnail{
-		min-height: 412px;
-		max-width: 767px;
+		max-height: 620px;
+		min-height: 460px;
+		max-width: 766px;
 	}
 
 	.main-products>.row>.product>.thumbnail>img{
+		max-height: 300px;
+		max-width: 100%;
 		min-height: 185px;
-		width:100%;
+		height: auto;
+	}
+}
+
+@media (max-width: 480px) {
+	.main-products .product .thumbnail{
+		min-height: 380px;
+		max-width: 766px;
+	}
+
+	.main-products>.row>.product>.thumbnail>img{
+		max-height: 300px;
+		max-width: 100%;
+		min-height: 185px;
+		height: auto;
 	}
 }
 

@@ -1,0 +1,68 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{# ------------------------------ #}
+
+<!-- Header Carousel -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+
+            {% if site.user_site.slider_images|length == 0 %}
+
+                <div class="item active">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+
+            {% else %}
+
+                {% for i in site.user_site.slider_images %}
+                    {% if forloop.first %}
+                        <div class="item active ">
+                            <div class="fill overlay" style="background-image:url('{{ i.image.original }}');"></div>
+                        </div>
+                    {% else %}
+                        <div class="item ">
+                            <div class="fill overlay" style="background-image:url('{{ i.image.original }}');"></div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+    </header>
+
+{# ------------------------------- #}
+
+
+
+{# secondary menu - custom gages #}
+      <div class="container">
+        <div class="cust-nav">
+           {% for page in site.user_site.organization.additional_pages.all %}
+                <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
+            {% endfor %}
+        </div>{# /secondary menu #}
+      </div>

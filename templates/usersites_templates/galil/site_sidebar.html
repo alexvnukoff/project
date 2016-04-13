@@ -47,6 +47,28 @@
 {#        {% endfor %}#}
 {#</div>#}
 
+{# Working!!!#}
+
+{#<div class="panel-group sidebar side-bar" id="accordion">#}
+{#    <ul class="sidebar-list">#}
+{#        {% for pk, category in categories.items %}#}
+{#            {% if category.name != 'b2c-category' %}#}
+{#                {% if  category.level == 0 %}#}
+{#                    {% if category.is_leaf_node  %}#}
+{#                        <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>#}
+{#                    {% else %}#}
+{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
+{#                    {% endif %}#}
+                {# If the category is not lvl0#}
+{#                {% else %}#}
+{#                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ " "|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
+
+{# end of Working!!!#}
 
 
 <div class="panel-group sidebar side-bar" id="accordion">
@@ -54,12 +76,11 @@
         {% for pk, category in categories.items %}
             {% if category.name != 'b2c-category' %}
                 {% if  category.level == 0 %}
-                    {% if category.is_leaf_node  %}
+{#                    {% if category.get_children  %}#}
+{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
+{#                    {% else %}#}
                         <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>
-                    {% else %}
-
-                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>
-                    {% endif %}
+{#                    {% endif %}#}
                 {# If the category is not lvl0#}
                 {% else %}
                     <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ " "|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>
@@ -68,8 +89,6 @@
         {% endfor %}
     </ul>
 </div>
-
-
 
 
 {#                    {% if category.get_next_sibling == None or category.get_next_sibling.get_previous_sibling.level == 0%}#}

@@ -13,13 +13,13 @@
 
         <div class="container">
             {% if total > 0 %}
-                <div class="panel panel-default">
+                <div class="panel panel-default in-page">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-12 col-lg-12">
 
                                 <form method="post" action="">{% csrf_token %}
-                                    <h2 class="page-header">{% trans 'List of products:' %}</h2>
+                                    <h2 class="page-header ">{% trans 'List of products:' %}</h2>
 
                                     <table class="table table-striped">
                                         <thead>
