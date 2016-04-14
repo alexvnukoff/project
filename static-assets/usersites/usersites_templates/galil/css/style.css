@@ -21,9 +21,14 @@
 	float: left;
 }
 
-.banner{
-	margin-right: 7px;
+.banner_cat{
+	padding-right: 5px;
 }
+
+.banner_cat:last-child{
+	padding-right: 0;
+}
+
 
 .coupons{
 	float: right;

@@ -165,3 +165,11 @@ footer a:hover,
 footer a:active{
 	color: #a40000!important;
 }
+
+.footer-menu a{
+	color: #000;
+}
+
+.footer-col span{
+	color: #a40000;
+}

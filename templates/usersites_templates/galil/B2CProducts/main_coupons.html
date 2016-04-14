@@ -44,7 +44,6 @@
                             <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
 
                             <p>{{ product.short_description|truncatechars:105 }}</p>
-                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {% if product.cost %}
                                 <p class="product__price__coupon">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
@@ -64,6 +63,10 @@
                                     <p class="product__valid__coupon">{% trans "Promotion ends" %}</p>
                                     <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
                                 </div>
+
+                        <p>
+                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            </p>
                         </div>
 
 
@@ -81,13 +84,13 @@
         </div>
 
     <div class="banners-pack">
-          <div class="banner">
+          <div class="banner banner_cat">
             {% site_banner "top" "SITES RIGHT 1" %}
           </div>
-          <div class="banner">
+          <div class="banner banner_cat">
             {% site_banner "top" "SITES RIGHT 2" %}
           </div>
-          <div class="banner">
+          <div class="banner banner_cat">
             {% site_banner "top" "SITES RIGHT 3" %}
           </div>
     </div>
