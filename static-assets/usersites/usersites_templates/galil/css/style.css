@@ -21,6 +21,10 @@
 	float: left;
 }
 
+.banner{
+	margin-right: 7px;
+}
+
 .coupons{
 	float: right;
 }

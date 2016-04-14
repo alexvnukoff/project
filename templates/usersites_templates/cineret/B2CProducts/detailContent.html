@@ -16,7 +16,7 @@
 
         {# page header - the product name #}
         <div class="col-lg-12">
-            <h1 class="page-header">{{ object.name }}</h1>
+            <h1 class="page-header in-page">{{ object.name }}</h1>
         </div>
 
         <div class="row">
@@ -89,7 +89,7 @@
                         <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
                     {% endif %}
 
-                    <button id="result" class="button more special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                    <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
 
                 </form>
 

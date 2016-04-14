@@ -1,0 +1,303 @@
+/*---------- General Styling ----------*/
+body {
+	background-color: #fff;
+    color: #000;
+    /* main color: color: #83ba3a */
+}
+
+.page-header,
+.page-header a,
+h3 a,
+h3 a:hover,
+h3 a:active,
+h3 a:focus,
+.navbar-default .nav li a:hover,
+.navbar-default .nav li a:focus{
+    color: #BF0000;
+}
+
+.btn-default{
+    background-color: #BF0000;
+    color: #fff;
+}
+
+.btn-default:hover,
+.btn-default:active,
+.btn-default:focus{
+    background-color: #000;
+    color: #fff;
+}
+
+.navbar-default{
+    background-color: #222222;
+}
+
+.navbar-default .navbar-toggle {
+    background-color: #BF0000;
+    border-color: #6D0000;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.navbar-default .navbar-collapse {
+    border-color: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-default .navbar-nav > .active > a {
+    color: white;
+    background-color: #BF0000;
+}
+
+.navbar-default .nav li a {
+    color: white;
+}
+
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: #6D0000;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+}
+
+.cust-nav__btn{
+    background-color: #fff;
+}
+
+.cust-nav__btn a{
+    color: #000;
+}
+
+@media (min-width: 768px) {
+    .navbar-default {
+        background-color: rgba(0,0,0,.7); // Tint color
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default .navbar-brand {
+        color: #BF0000;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default.navbar-shrink {
+        background-color: #222222;
+    }
+}
+
+.proposal-link{
+    color: #000;
+}
+
+.coupon {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.product__discount{
+    background-color: #BF0000;
+    color: #fff;
+}
+
+.product__title{
+    color: #BF0000;
+}
+
+.product__deleted-price{
+    color: #aaa;
+}
+
+.contact-fields .main-contact-btn{
+    color: #ffffff;
+    background-color: #BF0000;
+    border-color: #BF0000;
+}
+
+.main-contact{
+    background: #000;
+    color: #fff;
+}
+
+.map {
+    background-color: #ccc;
+}
+
+.pin {
+	background: #FEFEFE;
+	border: 2px solid #FAFAFA;
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+	background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
+}
+
+.pin img {
+	border-bottom: 1px solid #ccc;
+}
+
+.pin p {
+	color: #333;
+}
+
+/*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
+.about-main,
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active,
+.product .thumbnail,
+.product__desc,
+.go-to-full,
+footer a,
+#timer-detail-page,
+.smalltext,
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active,
+.item-price-table,
+.membership-banner__member-text,
+.coupon-timer{
+	color: #000 !important;
+}
+
+.cust-nav ul li a,
+.navbar-inverse .navbar-nav>li>a{
+	color: #fff;
+}
+
+.cust-nav__btn{
+	background-color: #fff;
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>li>a:active{
+	background-color: #fff;
+	border-radius: 15px;
+}
+
+/*.navbar-inverse .navbar-nav>.active a:hover,*/
+/*.navbar-inverse .navbar-nav>.active a:focus,*/
+/*.navbar-inverse .navbar-nav>.active a:active{*/
+	/*background-color: #a40000;*/
+	/*color: #fff!important;*/
+/*}*/
+
+.carousel-text {
+    background: rgba(255,255,255,0.75);
+}
+/*---------- Text Styling - Black text ----------*/
+.side-bar a,
+.select-lang,
+.item-page__qty-box,
+.cart{
+	color: #000;
+}
+
+/*---------- Text Styling - Dimming with gray ----------*/
+.product__cat,
+.product__valid__coupon,
+.product__deleted-price{
+	color: #979797;
+}
+
+
+
+/*---------- carousel Styling ----------*/
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus {
+    background: rgba(0,0,0,0);
+}
+
+/*---------- Product Styling ----------*/
+.product .thumbnail{
+	background-color: #fff;
+}
+
+.product__title{
+	border-bottom: 1px solid #fff;
+}
+
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	background-color: #fff;
+	border: 1px solid #979797;
+}
+
+.job_offer__p{
+	color: #262626;
+}
+
+/*---------- Footer Styling ----------*/
+footer,
+.membership-banner{
+	background-color: #f2f2f2;
+}
+
+.rights{
+	border-top: 1px solid #fff;
+}
+
+footer a:hover,
+footer a:active{
+	/*color: #a40000!important;*/
+}
+/*---------- Search Item Styling ----------*/
+.tmp_search{
+	color: #000;
+}
+
+.top_search input,
+.top_search input:focus{
+	/*background-color: #a40000;*/
+	border: 1px solid #fff;
+	color: #fff;
+}
+
+.top_search input:focus{
+	box-shadow: 0 0 5px 1px #969696;
+}
+
+.top_search input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+    -webkit-text-fill-color: #333;
+}
+.top_search input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px white inset;
+    -webkit-text-fill-color: #333;
+}
+/*---------- Page Item Styling ----------*/
+
+#timer-detail-page{
+    border: 1px solid #BF0000;
+}
+
+.pagination>li>a, .pagination>li>span{
+	/*color: #a40000;*/
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	/*background-color: #a40000;*/
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+.category{
+	background-color: #fff;
+	color: #000;
+}
+
+

@@ -1,197 +1,108 @@
 /*---------- General Styling ----------*/
 
-/*---------- Navigation Styling ----------*/
+.btn-default{
+    float: right;
+}
+
+/* ----------- Navigation Styling -------------------- */
+
+.navbar-right{
+    clear: right;
+	 margin-right: 0;
+    float: right!important;
+}
+
 .navbar-nav{
-    margin-left: 15px;
-	margin-right: 0;
+	float: right!important;
+	clear: right;
 }
 
 .navbar-nav>li{
 	float: left;
 }
 
-.navbar-right{
-	float: right!important;
+.overlay {
+    left: 0;
 }
 
+/* ----------- Proposal Styling -------------------- */
 
-.cust-nav{
-  top:50px;
-  left:0px;
-}
-
-.cust-nav>.cust-nav__btn{
-	float: left;
-}
-
-/*.navbar-brand{*/
-	/*float: left;*/
-/*}*/
-
-.cust-nav ul li{
-	float: left;
-}
-
-.navbar-collapse{
-	clear: right;
-}
-
-/*---------- about-banner Styling ----------*/
-.about-main__movie{
-	float: right;
-}
-
-.about-main__text{
-	float: left;
-}
-/*---------- Product Styling ----------*/
-.main-coupons{
-	float: left;
-}
-
-.product{
-	float: left;
-}
-
-.product__price__coupon{
-	right: 6px;
-}
-
-
-.product__discount{
-	right: 6px;
-	float: right;
-}
-
-.product__btn{
-	right: 15px;
-}
-
-.product__deleted-price{
-	padding-left: 10px;
-}
-
-.product__price{
-	left: 15px;
-}
-
-.coupon-timer{
-	left: 15px;
-}
-
-.go-to-full{
-	float: right;
-}
-
-.go-to-full:after{
-	font-family: "Glyphicons Halflings";
-  	content: "\e250";
-  	/* content:"\e251"; */
-}
-
-.banner-ad-main-collection{
-	float: right;
-}
-/*---------- News Styling ----------*/
-.news-wrapper{
-	padding-left: 15px;
-}
-
-.main-proposal{
-	float: left;
-}
-
-.main-news{
-	float: right;
-}
-
-.proposal{
-	float: left;
+.proposal-thumb .btn-default {
+    float: right;
 }
 
 .proposal-link{
     float: right;
 }
 
+.proposal-link span{
+    float: left;
+    padding-right: 5px;
+}
+
+/* ----------- News Styling -------------------- */
+.main-news{
+    float: right;
+}
+
 .news__img{
-	float: left;
-	padding-right: 20px;
+    float: left;
+    padding-right: 10px;
+    margin: 20px 0 20px;
 }
 
-.news__text{
-	/*float: right;*/
-}
-
-.news__btn{
-	float: right;
-}
-
-/*---------- Jobs Styling ----------*/
-.jobs-content{
+ /* ----------- Coupons Styling -------------------- */
+.coupon-div{
 	float: left;
 }
 
-.jobs-btn{
+
+/* ----------- Product Styling -------------------- */
+
+.category{
+    float: left;
+    padding-left: 10px;
+}
+
+.btn-mail-order{
+    float: left;
+}
+
+.dec,
+.inc{
+    float: none;
+}
+
+/* ----------- Contact Styling -------------------- */
+
+.main-contact .control-group{
+	text-align: left;
+}
+
+.contact-info{
+	float: left;
+}
+
+.contact-fields{
 	float: right;
+}
+
+/* ----------- Counter Styling -------------------- */
+
+/*---------- Footer Styling ----------*/
+.footer-col span{
+	padding-right: 10px;
 }
 
 /*---------- Banner Advertisment Styling ----------*/
-.membership-banner__member{
+/* The banner above the footer */
+
+
+/* ----------- Product list Styling -------------------- */
+.item-page__coupon div{
 	float: left;
+	padding-left: 15px;
 }
-
-.membership-banner__ad{
-	float: right;
-}
-
-.membership-banner__member img{
-	float: left;
-}
-
-.membership-banner__member-text{
-	float: left;
-}
-
-/*---------- Banners Styling ----------*/
-.banner-main-page img{
-    padding: 0px 10px 10px 0;
-}
-
-.banner-main-page{
-	float: left;
-}
-
-/*---------- Contact Styling ----------*/
-.contact-info, .contact-fields{
-	float: left;
-}
-
-/*---------- Footer Styling ----------*/
-footer span{
-	margin-right: 5px;
-}
-
-.footer-col{
-	float: left;
-}
-
-/*.top_search{*/
-	/*float: right;*/
-/*}*/
-
-.paginator, .category{
-	float: right;
-}
-
-/*---------- Item Styling ----------*/
-.item{
-	float: left;
-}
-
-.pay{
-	float: right;
-}
-
 
 .item-page{
 	float: left;
@@ -201,20 +112,9 @@ footer span{
 	float: right;
 }
 
-.item-page__price span{
-	padding-left: 20px;
-}
 
-.item-page__coupon div{
-	float: left;
-	padding-right: 30px;
-}
-
-/*---------- Counter Styling ----------*/
-#timer-detail-page{
-    float: left;
-}
-
-#timer-detail-page > div{
-    float: left;
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+.pay{
+    float: right;
 }

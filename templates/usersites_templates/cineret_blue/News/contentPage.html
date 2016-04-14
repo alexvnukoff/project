@@ -1,0 +1,12 @@
+{% extends 'usersites_templates/cineret_blue/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load content_tags %}
+
+{% block content %}
+
+    {{ block.super }}
+    {% news 'News/list.html' 10 page %}
+
+{% endblock %}
