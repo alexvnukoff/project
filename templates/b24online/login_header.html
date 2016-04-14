@@ -11,23 +11,62 @@
         	<a href="/"><i class="logo news-logo"></i></a>
         	{% show_top_static_pages %}
         </div>
+      <div class="tophead-center">
+      </div>
 
-        <div class="tophead-center">
-        </div>
-        <div class="tophead-r">
+      <style>
 
-            {% if user.email %}
-                {% trans 'Profile' %}:
-                 <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
-            {% endif %}
+.language-navi {
+    position:relative;
+    display:inline-block;
+    width:24px;
+    cursor:pointer;
+    float:left;
+    margin:5px 15px 0 0;
+}
 
-        	{% if user.is_authenticated %}
-                <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
-            {% else %}
-                <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
-                <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
-                <a href="{% url 'auth_login' %}" title="{% trans 'Sign in' %}"><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'registration_register' %}?next={{ request.path }}" title="{% trans 'Sign up' %}"><font>{% trans 'Sign up' %}</font></a>
-            {% endif %}
+.language-navi-dropdown {
+  display: none;
+  width:258px;
+    position: absolute;
+    padding:8px 8px 0 4px;
+    border-left:1px solid #dedede;
+    border-right:1px solid #dedede;
+    border-bottom:1px solid #dedede;
+    background:#f8f8f8;
+    margin:-10px 0 0 -5px;
+    z-index: 1;
+  }
+
+.language-navi-dropdown img {width:24px;}
+.language-navi:hover .language-navi-dropdown {display:block;}
+        </style>
+
+    <div class="tophead-r">
+      
+            <div class="language-navi">
+            <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
+            {% get_available_languages as LANGUAGES %}
+            <div class="language-navi-dropdown">
+              {% for code, lang in LANGUAGES %}
+                  {% if not code == LANGUAGE_CODE %}
+                  <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                  {% endif %}
+              {% endfor %}
+            </div>
+            </div>
+    {% if user.email %}
+        {% trans 'Profile' %}:
+         <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
+    {% endif %}
+
+        {% if user.is_authenticated %}
+        <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
+    {% else %}
+        <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
+        <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
+        <a href="{% url 'auth_login' %}" title="{% trans 'Sign in' %}"><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'registration_register' %}?next={{ request.path }}" title="{% trans 'Sign up' %}"><font>{% trans 'Sign up' %}</font></a>
+    {% endif %}
         </div>
     </div>
 </div>

@@ -229,3 +229,10 @@ li.big-coupon .top .sale {left:470px !important;}
 .coupon-big .coupon-image{float:right;width:200px;}
 .change-passwd-link {text-align:left !important;}
 select#id_language {float:right;}
+
+.language-navi {float:right;margin:5px 0 0 15px;}
+.language-navi-dropdown {margin:-10px -5 0 0;z-index:99;}
+.language-navi-dropdown img {width:24px;}
+.language-navi:hover .language-navi-dropdown {display:block;}
+
+.add-new {float:left;margin:0 0 0 5px;}

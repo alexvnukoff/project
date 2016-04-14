@@ -258,3 +258,8 @@ li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .coupon-big .social {margin:10px 0;}
 .change-passwd-link {text-align:right;}
 
+.language-navi {position:relative;display:inline-block;width:24px;cursor:pointer;float:left;margin:5px 15px 0 0;}
+.language-navi-dropdown {display:none;width:258px;position:absolute;padding:8px 8px 0 4px;border-left:1px solid #dedede;border-right:1px solid #dedede;border-bottom:1px solid #dedede;background:#f8f8f8;margin:-10px 0 0 -5px;z-index:99;}
+.language-navi-dropdown img {width:24px;}
+.language-navi:hover .language-navi-dropdown {display:block;}
+.add-new {float:right;margin:0 5px 0 0;}

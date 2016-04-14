@@ -105,34 +105,6 @@
          <div class="news-left">
          <div class="b-filter">
             	<div class="b-filter-left">
-                	<select id="lang_select">
-                    	<option disabled selected>{% trans 'Mother tongue' %}</option>
-                        {% get_available_languages as LANGUAGES %}
-                        {% for code, lang in LANGUAGES %}
-                            <option value="{{ code }}">{{ lang }}</option>
-                        {% endfor %}
-                    </select>
-                     <!-- Google Translate injection -->
-                    <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
-                        <script type="text/javascript">
-                            function googleTranslateElementInit() {
-                                new google.translate.TranslateElement({
-                                    pageLanguage: 'en',
-                                    multilanguagePage: true,
-                                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element_main');
-                            }
-                        </script>
-                        <style type="text/css">
-                        .goog-te-combo {
-                          width: 200px;
-                        }
-                       .goog-te-gadget-simple{background-color:#fff;
-                                              border-left:1px solid #d5d5d5;border-top:1px solid #9b9b9b;border-bottom:1px solid #e8e8e8;border-right:1px solid #d5d5d5;
-                                              font-size: 6pt;display:inline-block;padding-top:1px;cursor:pointer;zoom:1;*display:inline;float: left;width: 107px;}
-                        </style>
-                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                </div>
-            <!-- /Google Translate injection -->
                 </div>
               {% if not addNew or not user.is_authenticated %}
                   <a  class="add-new {% if not user.is_authenticated %}logged-out{% endif %}" href="#">
@@ -150,39 +122,6 @@
                     </a>
               {% endif %}
             </div>
-          <script>
-                    $(document).ready(function() {
-                          var path = (window.location.host).split('.');
-                          path = path[0];
-                         $("#lang_select").find('option').each(function( i, opt ) {
-                            if( opt.value === path )
-                                $(opt).attr('selected', 'selected');
-                        });
-                    });
-                    $( "#lang_select" ).change(function(e) {
-                        if (!$( this ).val())
-                        return;
-
-                        path = (window.location.host).split('.');
-                        if (path[0] == 'www'){
-                            delete path[0]
-                        }
-
-                        if (path.length > 2){
-                            host = path[1] + '.' + path[2]
-                        }
-                        else{
-                            host = window.location.host
-                        }
-
-
-                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
-                                window.location.pathname + window.location.search + window.location.hash;
-
-                    });
-
-                </script>
-
 
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
