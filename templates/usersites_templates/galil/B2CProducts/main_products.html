@@ -22,7 +22,7 @@
                 <div class="col-sm-6 col-xs-18 col-md-3  product">
                     <div class="thumbnail main-products-thumb">
                         {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid">
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid thumb-img">
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />
                         {% endif %}
