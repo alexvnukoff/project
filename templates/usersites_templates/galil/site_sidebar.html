@@ -83,7 +83,7 @@
 {#                    {% endif %}#}
                 {# If the category is not lvl0#}
                 {% else %}
-                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ " "|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>
+                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>
                 {% endif %}
             {% endif %}
         {% endfor %}
