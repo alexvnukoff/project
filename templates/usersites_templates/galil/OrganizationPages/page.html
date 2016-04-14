@@ -13,15 +13,7 @@
             </div>
         </div><!-- /.row -->
 
-        <div class="row">
-            <div class="cust-nav">
-               {% for page in site.user_site.organization.additional_pages.all %}
-                    <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
-                {% endfor %}
-            </div>{# /secondary menu #}
-        </div>
-
-        <!-- Intro Content -->
+                <!-- Intro Content -->
         <div class="row cust-page">
             <div class="col-md-12">
                 <p>{{ object.content|cleanHtml|safe }}</p>
