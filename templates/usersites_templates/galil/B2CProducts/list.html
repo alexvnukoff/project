@@ -5,7 +5,7 @@
 <section class="content__info">
 
     {# Products page content #}
-    <div class="container">
+    <div class="container main-products">
         {% include 'usersites_templates/galil/B2CProducts/Paginator.html' %}
 
         {# Page title #}
@@ -13,13 +13,13 @@
             <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
         </div>
 
-        <div class="row main-products-thumb">
+        <div class="row ">
             {% for product in products %}
 
                 <div class="col-xs-12 col-sm-6 col-md-3 product ">
-                    <div class="thumbnail ">
+                    <div class="thumbnail main-products-thumb">
                         {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="thumb-img">
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />
                         {% endif %}
@@ -49,7 +49,6 @@
 {#                                </div>#}
 {#                            {% endif %}#}
 
-                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
                             {# If there is one, display the cost. If there is a discount, display it too. #}
                             {% if product.cost %}
@@ -64,11 +63,17 @@
 
                             {# If the product is a coupon, display the timer #}
                             {% if product.coupon_discount_percent %}
+                                <p>
                                 <div class="coupon-timer">
                                     <p class="timer-heading">{% trans "Promotion ends" %}</p>
                                     <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
                                 </div>
+                                </p>
                             {% endif %}
+
+                        <p>
+                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            </p>
                         </div>
 
                     </div>
