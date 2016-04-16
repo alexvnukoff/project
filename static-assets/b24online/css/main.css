@@ -263,10 +263,8 @@ li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .language-navi-dropdown img {width:24px;}
 .language-navi:hover .language-navi-dropdown {display:block;}
 .add-new {float:right;margin:0 5px 0 0;}
-
 .my-filter-button {margin:10px 0 5px 0;padding:0;display:block;float:left;}
-.my-filter-button .addButton {}
-
+.geolocation-navi {float:left;width:40px;font-size:20px;}
 
 
 

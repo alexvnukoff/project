@@ -1,10 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?79412034');
-  src: url('../font/fontello.eot?79412034#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff?79412034') format('woff'),
-       url('../font/fontello.ttf?79412034') format('truetype'),
-       url('../font/fontello.svg?79412034#fontello') format('svg');
+  src: url('../font/fontello.eot?6727011');
+  src: url('../font/fontello.eot?6727011#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?6727011') format('woff2'),
+       url('../font/fontello.woff?6727011') format('woff'),
+       url('../font/fontello.ttf?6727011') format('truetype'),
+       url('../font/fontello.svg?6727011#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -102,3 +103,5 @@ span.icon-gplus-squared:hover {text-decoration:none !important;}
 .icon-shekel:before { content: '\e827'; } /* '' */
 .icon-cube:before { content: '\e828'; } /* '' */
 .icon-chart-line:before { content: '\e829'; } /* '' */
+.icon-location:before { content: '\e82a'; } /* '' */
+.icon-direction:before { content: '\e82b'; } /* '' */
