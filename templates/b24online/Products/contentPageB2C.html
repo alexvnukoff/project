@@ -14,7 +14,8 @@
     {% endif %}
 
     {% if is_my %}
-    <div> 
+        {% include "b24online/main/add_button.html" %}
+    <div>
         {% include "b24online/main/paginator.html" %}
         <div style="float:right;" class="data">
             <a href="{% url 'products:b2c_product_update_paginator' page=page.number %}">
