@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load static %}
+
+   <div class="my-filter-button">
+        {% if addNew and user.is_authenticated %}
+              <a class="add-new" href="{{ addNew }}">
+                  <button class="addButton">
+                      <img src="{% static 'b24online/img/plus.svg' %}" alt="">
+                      <span>{% trans 'Add' %}</span>
+                  </button>
+              </a>
+        {% endif %}
+   </div>

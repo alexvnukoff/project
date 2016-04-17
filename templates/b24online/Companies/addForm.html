@@ -56,6 +56,8 @@
             right: 5px;
         }
     </style>
+
+    {% include "b24online/main/add_button.html" %}
     <div class="newsform">
     <form enctype="multipart/form-data" method="post" onkeypress="return event.keyCode != 13;" action="" xmlns="http://www.w3.org/1999/html">
     {% csrf_token %}
