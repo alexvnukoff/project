@@ -25,6 +25,8 @@
     left: 0;
 }
 
+
+
 /* ----------- Proposal Styling -------------------- */
 
 .proposal-thumb .btn-default {
@@ -71,6 +73,10 @@
 .dec,
 .inc{
     float: none;
+}
+
+.product__btn{
+	float: none;
 }
 
 /* ----------- Contact Styling -------------------- */
