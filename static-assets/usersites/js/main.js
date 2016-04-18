@@ -166,6 +166,12 @@ if ($('.fancybox').length > 0) {
     $('.content__info').addClass('grid-layout');
 
   });
+
+  $('.dialog-form').on('click', function(e) {
+      e.preventDefault();
+      processDialogForm(this);
+  });
+
 });
 
 $('.select-dropdown a').on('click', function(event) {
@@ -270,3 +276,37 @@ if (typeof SEARCH_Q_URL !== 'undefined') {
     };
 }
 
+
+/**
+ * Process the dialog form for clicked 'href'
+ */
+function processDialogForm(selectedHref) {
+    var url = $(selectedHref).attr('href');
+    var processDataDialogId = '#processDataDialog',
+        processDataDialog = $(processDataDialogId);
+    if (processDataDialog.length == 0) {
+        // Необходимо добавить слой
+        var processDataDialog = $('<div/>')
+            .attr('height', 300)
+            .attr('id', processDataDialogId)
+            .hide();
+        $('body').append(processDataDialog);
+    }
+    $(processDataDialog).dialog({
+        autoOpen: false,
+        minHeight: 300,
+        minWidth: 400, 
+        modal: true,
+        draggable: true,
+        resizable: true,
+    });
+    $.getJSON(url, function(data) {
+        var title = data.title || ''; 
+        if ('html' in data) {
+            $(processDataDialog).dialog('option', 'title', title);
+            $(processDataDialog).dialog('option', 'minHeight', 600);
+            $(processDataDialog).html(data.html).dialog('open');
+            $(processDataDialog).dialog("widget").css('height', 'auto');
+        }
+    });
+}
