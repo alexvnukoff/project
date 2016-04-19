@@ -42,6 +42,7 @@
         </div>
 
         </div>
+        <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
     {% endfor %}
 
     {% include 'usersites_templates/default_no_banners/Paginator.html' %}

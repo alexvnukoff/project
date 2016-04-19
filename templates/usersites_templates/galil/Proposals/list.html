@@ -25,6 +25,7 @@
 
                 <p class="date">{{ proposal.created_at|date:'d M Y' }}</p>
                 <p>{{ proposal.description|cleanHtml|safe }}</p>
+                <a href="{{ proposal.get_absolute_url }}" class="btn btn-default news__btn">{% trans 'More' %}</a>
             </div>
 
         {% endfor %}

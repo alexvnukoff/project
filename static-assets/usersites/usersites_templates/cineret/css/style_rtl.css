@@ -89,6 +89,10 @@ body{
 .product__btn{
 	float: none;
 }
+
+.product{
+    float: right;
+}
 /* ----------- Contact Styling -------------------- */
 
 .main-contact .control-group{

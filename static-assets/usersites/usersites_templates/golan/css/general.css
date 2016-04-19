@@ -138,14 +138,7 @@ collapse the menu on 991px. */
     }
 }
 
-.navbar-inverse .navbar-nav>li>a,
-.navbar-inverse .navbar-nav>.active>a,
-.navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>li>a:focus,
-.navbar-inverse .navbar-nav>li>a:active {
-	margin-right: 3px;
-	margin-left: 3px;
-}
+
 /*.logo{*/
     /*width: auto;*/
     /*height: 50px;*/
@@ -274,7 +267,7 @@ collapse the menu on 991px. */
 
 .thumbnail img{
 	/*max-width: 276px;*/
-	height: 184px;
+	max-height: 184px;
 }
 
 .product__title{
@@ -295,7 +288,7 @@ collapse the menu on 991px. */
 	font-weight: bold;
 	margin-bottom: 15px;
 	position: absolute;
-	/*bottom: 90px;*/
+	bottom: 90px;
 }
 
 
@@ -352,23 +345,6 @@ collapse the menu on 991px. */
 
 .go-to-full{
 	position: relative;
-}
-
-/* Portrait tablets and small desktops */
-@media (min-width: 768px) and (max-width: 991px) {
-	.product .thumbnail{
-		/*height: 500px;*/
-	}
-}
-
-/* Landscape phones and portrait tablets */
-@media (max-width: 767px) {
-
-}
-
-/* Portrait phones and smaller */
-@media (max-width: 480px) {
-
 }
 
 /*---------- News Styling ----------*/
@@ -459,7 +435,6 @@ collapse the menu on 991px. */
 /* The custom banners on the main page */
 .banner-ad-main-collection{
 	position: relative;
-	max-width: 100%;
 }
 
 @media (min-width: 992px) {
@@ -480,16 +455,10 @@ collapse the menu on 991px. */
 .banner-main-page{
     padding: 0;
 	position: relative;
-	max-width:90%;
-    height:auto;
-    display:block;
-    margin:0 auto;
 }
 
 .banner-main-page img{
-    width:100% !important;
-    height:100% !important;
-    display:block;
+    /*width: 100%;*/
 }
 
 /*--------- contact form --------------*/
