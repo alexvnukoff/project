@@ -93,7 +93,7 @@
                         <h4>{{ proposal.title|truncatechars_html:30 }}</h4>
                     </div>
                     <div class="panel-body flex-grow">
-                        <p>{{ proposal.description|cleanHtml|safe|truncatechars_html:"250" }}</p>
+                        <p>{{ proposal.description|cleanHtml|striptags|safe|truncatechars_html:"250" }}</p>
 
                     </div>
                 <a href="{{ proposal.get_absolute_url }}" class="btn btn-default">{% trans 'More' %}</a>

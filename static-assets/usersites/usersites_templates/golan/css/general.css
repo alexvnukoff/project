@@ -267,7 +267,7 @@ collapse the menu on 991px. */
 
 .thumbnail img{
 	/*max-width: 276px;*/
-	height: 184px;
+	max-height: 184px;
 }
 
 .product__title{
