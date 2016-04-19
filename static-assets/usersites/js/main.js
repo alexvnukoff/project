@@ -167,10 +167,6 @@ if ($('.fancybox').length > 0) {
 
   });
 
-  $('.dialog-form').on('click', function(e) {
-      e.preventDefault();
-      processDialogForm(this);
-  });
 
 });
 
@@ -252,40 +248,54 @@ $(function(){
   });
 };
 
-if (typeof SEARCH_Q_URL !== 'undefined') {
-    var search_cache = {};
-    $('#search_q').autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            var term = request.term;
-            if (term in search_cache) {
-                response(search_cache[term]);
-                return;
+
+// The dialog forms
+var DIALOG_FORM_OPEN_CLS = '.dialog-open',
+    DIALOG_FORM_CLS = '.dialog-form',
+    DIALOG_HREF_CLS = '.dialog-href';
+
+$(document).ready(function() {
+    // The search with autocomplete
+    if (typeof SEARCH_Q_URL !== 'undefined') {
+        var search_cache = {};
+        $('#search_q').autocomplete({
+            minLength: 2,
+            source: function(request, response) {
+                var term = request.term;
+                if (term in search_cache) {
+                    response(search_cache[term]);
+                    return;
+                }
+                $.getJSON(SEARCH_Q_URL, request, function(data, status, xhr) {
+                    search_cache[term] = data;
+                    response(data);
+                });
             }
-            $.getJSON(SEARCH_Q_URL, request, function(data, status, xhr) {
-                search_cache[term] = data;
-                response(data);
-            });
-        }
-    }).data('ui-autocomplete')._renderItem = function(ul, item) {
-        return $('<li></li>')
-            .data('item.autocomplete', item)
-            .append('<img style="margin: 5px; height="20" src="' + item.img + '" />')
-            .append(item.label)
-            .appendTo(ul);
-    };
-}
+        }).data('ui-autocomplete')._renderItem = function(ul, item) {
+            return $('<li></li>')
+                .data('item.autocomplete', item)
+                .append('<img style="margin: 5px; height="20" src="' + item.img + '" />')
+                .append(item.label)
+                .appendTo(ul);
+        };
+    }
+
+    $(DIALOG_FORM_OPEN_CLS).on('click', function(e) {
+        e.preventDefault();
+        processDialogForm(this);
+    });
+    
+});    
 
 
 /**
  * Process the dialog form for clicked 'href'
  */
 function processDialogForm(selectedHref) {
-    var url = $(selectedHref).attr('href');
-    var processDataDialogId = '#processDataDialog',
+    var url = $(selectedHref).attr('href'),
+        processDataDialogId = '#processDataDialog',
         processDataDialog = $(processDataDialogId);
     if (processDataDialog.length == 0) {
-        // Необходимо добавить слой
         var processDataDialog = $('<div/>')
             .attr('height', 300)
             .attr('id', processDataDialogId)
@@ -299,14 +309,42 @@ function processDialogForm(selectedHref) {
         modal: true,
         draggable: true,
         resizable: true,
-    });
-    $.getJSON(url, function(data) {
-        var title = data.title || ''; 
-        if ('html' in data) {
-            $(processDataDialog).dialog('option', 'title', title);
-            $(processDataDialog).dialog('option', 'minHeight', 600);
-            $(processDataDialog).html(data.html).dialog('open');
-            $(processDataDialog).dialog("widget").css('height', 'auto');
+        open: function() {
+            initDialogForms();
         }
+    });
+    
+    $.get(url, function(data) {
+        var title = $(selectedHref).data('title') || 'User registration';
+        $(processDataDialog).dialog('option', 'title', title);
+        $(processDataDialog).html(data).dialog('open');
+        $(processDataDialog).dialog("widget").css('height', 'auto');
+    });
+}
+
+/**
+ * Assign the handler for form submitting
+ */
+function initDialogForms() {
+    $(DIALOG_FORM_CLS).each(function() {
+        $(this).submit(function(event) {
+            event.preventDefault();
+            var dialogId = '#processDataDialog';
+            $(this).ajaxSubmit({
+                success: function(html) {
+                    var newFormDiv, 
+                        newContent = $.parseHTML(html),
+                        newDiv = $.grep(newContent, function(item) {
+                            return $(item).is('div');
+                        });
+                        
+                    if ((newDiv.length > 0) && $(dialogId).dialog('isOpen')) {
+                        newFormDiv = $(newDiv).children(':first');
+                        $('#form_wrapper').empty().append(newFormDiv);
+                        initDialogForms();
+                    }
+                }
+            });
+        });
     });
 }

@@ -10,3 +10,7 @@ WSGI_APPLICATION = 'usersites.wsgi.application'
 ROOT_URLCONF = 'usersites.urls'
 
 SESSION_COOKIE_NAME = 'site_session_id'
+
+if 'DIRS' in TEMPLATES:
+    TEMPLATES[0]['DIRS'].insert(0, os.path.join(BASE_DIR, '..', 
+                                             'templates/_usersites/'))
