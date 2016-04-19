@@ -2252,7 +2252,7 @@ class Producer(ActiveModelMixing, models.Model):
                     'big': {'box': (150, 150), 'fit': False},
                 }
             })
-        tasks.upload_images(*params, async=False)
+        tasks.upload_images(*params)
 
 
 ##
@@ -2341,7 +2341,7 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                     'th': {'box': (50, 50), 'fit': False}
                 }
             })
-        tasks.upload_images(*params, async=False)
+        tasks.upload_images(*params)
 
     def get_absolute_url(self):
         return reverse('questionnaires:detail', kwargs={'item_id': self.pk})

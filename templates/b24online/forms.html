@@ -28,8 +28,8 @@
 
     {% block js %}
          {{ block.super }}
-         <script src="//tinymce.cachefly.net/4.3/tinymce.min.js"></script>
-         <script src="//tinymce.cachefly.net/4.3/jquery.tinymce.min.js"></script>
+         <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+         <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script>
 
         <script>
             function add_category(name, pk) {
@@ -52,14 +52,19 @@
                     {% endfor %}
                 {% endif %}
             ];
+
+
             function setTiny(selector)
             {
+                tinymce.PluginManager.load('uploadimage', '{% static "b24online/js/tinymce/plugins/uploadimage/plugin.js" %}');
+
                 $(selector).tinymce({
                         mode:"textareas",
                         selector: selector,
-                        plugins : "paste link lists print preview media",
+                        plugins : "paste link lists print preview media -uploadimage",
                         paste_as_text: true,
                         media_live_embeds: true,
+                        uploadimage_form_url: '{% url 'upload_editor_image' %}'
                     });
             }
 

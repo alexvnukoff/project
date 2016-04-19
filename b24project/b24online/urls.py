@@ -91,6 +91,7 @@ urlpatterns = [
     url(r'^branch-list$', b24online.views.branch_list, name="branch_list"),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^tos/$', TemplateView.as_view(template_name="b24online/tos.html"), name="tos"),
+    url(r'^upload/$', b24online.views.editor_upload, name="upload_editor_image"),
 ]
 
 if settings.DEBUG:

@@ -459,7 +459,7 @@ class UploadGalleryImage(CreateView):
             }
         }
 
-        tasks.upload_images.apply((params,), {'async': True})
+        tasks.upload_images.apply((params,))
 
         return HttpResponse('')
 
