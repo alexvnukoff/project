@@ -32,7 +32,7 @@
                                 <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"20" }}</p>
                             {% endif %}
 
-                            <a type="button" class="btn btn-default news__btn" href="{% url 'news:main' %}" role="button">{% trans 'More' %}</a>
+                            <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
 
                         </div>
 

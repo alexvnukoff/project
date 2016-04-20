@@ -175,8 +175,8 @@
                         <a href="{{ item.parent.get_absolute_url }}">{{ item.parent.name }}</a>
                      </p>
                 {% endif %}
-                </div>
                 {% b2b_social_buttons  item.logo item.name item.description %}
+                </div>
 
                 <div class="cpn-details-tab" id="tpp-details-tab">
                     <div class="tab-cate">
@@ -224,8 +224,13 @@
                                 </a>
                             </li>
                              <li>
-                                <a data-id="news-tab" href="{% url "companies:tab_products" item.pk %}">
-                                    {% trans "Products" %}
+                                <a data-id="news-tab" href="{% url "companies:tab_b2b_products" item.pk %}">
+                                    {% trans "B2B Products" %}
+                                </a>
+                            </li>
+                             <li>
+                                <a data-id="news-tab" href="{% url "companies:tab_b2c_products" item.pk %}">
+                                    {% trans "B2C Products" %}
                                 </a>
                             </li>
                             <li>

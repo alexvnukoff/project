@@ -15,9 +15,9 @@ from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from b24online.custom import CustomImageField
-from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, 
-                              image_storage, IndexedModelMixin, 
-                              ActiveModelMixing, GalleryImage, 
+from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery,
+                              image_storage, IndexedModelMixin,
+                              ActiveModelMixing, GalleryImage,
                               Producer, Questionnaire)
 from b24online.utils import generate_upload_path, reindex_instance
 import uuid
@@ -57,8 +57,8 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
-    producer = models.ForeignKey(Producer, related_name='b2c_products', 
-                                 verbose_name=_('Producer'), 
+    producer = models.ForeignKey(Producer, related_name='b2c_products',
+                                 verbose_name=_('Producer'),
                                  null=True, blank=True)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
@@ -114,7 +114,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        return reverse('products:detail', args=[self.slug, self.pk])
+        return reverse('products:B2CDetail', args=[self.slug, self.pk])
 
     @property
     def gallery_images(self):
@@ -165,7 +165,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
             yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id, 
+                           kwargs={'content_type_id': model_type.id,
                                    'item_id': self.id}),
                    _('Questionnaire'))
 
