@@ -2,6 +2,10 @@
 {% load static from staticfiles %}
 {% load i18n %}
 
+{% block after_meta %}
+<meta http-equiv="refresh" content="2; URL=/">
+{% endblock %}
+
 {% block title %}{% trans "Logged out" %}{% endblock %}
 
 {% block content %}
