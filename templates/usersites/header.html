@@ -20,15 +20,14 @@
                     
                     {# Registration. login and logout #}
                     {% if user.is_authenticated %}
-                        <li><a href="#logout" id="logout_user">{% trans 'Logout' %}</a></li>
+                        <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
                     {% else %}
                         <li><a href="{% url 'registration_register' %}" 
-                                id="register_user"
                                 class="dialog-open"
                                 data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a></li>
                         <li><a href="{% url 'auth_login' %}" 
-                                id="login_user" 
-                                class="dialog-open">{% trans 'Login' %}</a></li>
+                                class="dialog-open"
+                                data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a></li>
                     {% endif %}
                 </ul>
                 <div class="busket vertical">

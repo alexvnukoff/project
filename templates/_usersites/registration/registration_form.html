@@ -4,7 +4,7 @@
 <div id="form_wrapper">
     <form class="dialog-form" method="POST" action="{% url 'registration_register' %}">
         {% csrf_token %}
-        <table>
+        <table cellPadding="2" celSpaing="2" width="100%">
             <tr>
                 <td colspan="2">
                 {% for key, value in form.errors.items %}
@@ -47,7 +47,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td>&nbsp;</td>
+                <td>
                     <input type="submit" class="register_user" name="Register" class="btnlogin" value="{% trans 'Sign up' %}">
                 </td>
             </tr>

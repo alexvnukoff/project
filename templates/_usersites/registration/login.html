@@ -1,0 +1,47 @@
+{% load static from staticfiles %}
+{% load i18n %}
+
+<div id="form_wrapper">
+    <form class="dialog-form" method="POST" action="{% url 'auth_login' %}">
+         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <table cellPadding="2" celSpaing="2" width="100%">
+            <tr>
+                <td colspan="2">
+                {% for key, value in form.errors.items %}
+                    {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
+                {% endfor %}
+                </td>
+            </tr>
+            <tr valign="top">
+                <td><label>{% trans 'E-mail' %}</label></td>
+                <td>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="formerror">{{ form.username.errors.as_text }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><label>{% trans 'Password' %}</label></td>
+                <td>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="formerror">{{ form.password1.errors.as_text }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" name="Login" class="btnlogin" value="{% trans 'Sign in' %}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

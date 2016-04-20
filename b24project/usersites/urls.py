@@ -10,7 +10,6 @@ import usersites.News.urls
 import usersites.OrganizationPages.urls
 import usersites.Proposals.urls
 import usersites.Questionnaires.urls
-import usersites.auth_urls
 
 import usersites.views
 

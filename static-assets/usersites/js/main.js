@@ -288,24 +288,26 @@ $(document).ready(function() {
 });    
 
 
+var processDataDialogDivId = 'processDataDialog',
+    processDataDialogId = '#' + processDataDialogDivId;
+
 /**
  * Process the dialog form for clicked 'href'
  */
 function processDialogForm(selectedHref) {
     var url = $(selectedHref).attr('href'),
-        processDataDialogId = '#processDataDialog',
         processDataDialog = $(processDataDialogId);
     if (processDataDialog.length == 0) {
         var processDataDialog = $('<div/>')
             .attr('height', 300)
-            .attr('id', processDataDialogId)
+            .attr('id', processDataDialogDivId)
             .hide();
-        $('body').append(processDataDialog);
+        $('body').children(':first').prepend(processDataDialog);
     }
     $(processDataDialog).dialog({
         autoOpen: false,
         minHeight: 300,
-        minWidth: 400, 
+        minWidth: 400,
         modal: true,
         draggable: true,
         resizable: true,
@@ -329,21 +331,28 @@ function initDialogForms() {
     $(DIALOG_FORM_CLS).each(function() {
         $(this).submit(function(event) {
             event.preventDefault();
-            var dialogId = '#processDataDialog';
             $(this).ajaxSubmit({
-                success: function(html) {
-                    var newFormDiv, 
-                        newContent = $.parseHTML(html),
+                success: function(data, textStatus, jqXHR) {
+                    var newFormDiv,
+                        newContent = $.parseHTML(data),
                         newDiv = $.grep(newContent, function(item) {
                             return $(item).is('div');
+                        }),
+                        checkMeta = $.grep(newContent, function(item) {
+                            return $(item).is('meta');
                         });
-                        
-                    if ((newDiv.length > 0) && $(dialogId).dialog('isOpen')) {
+                    if (checkMeta.length > 0) {
+                        $(processDataDialogId).dialog('close');                    
+                        location.reload();
+                    } else if ((newDiv.length > 0) && $(processDataDialogId).dialog('isOpen')) {
                         newFormDiv = $(newDiv).children(':first');
+                        $(DIALOG_FORM_CLS).each(function() {
+                            $(this).remove();
+                        });
                         $('#form_wrapper').empty().append(newFormDiv);
                         initDialogForms();
                     }
-                }
+                },
             });
         });
     });

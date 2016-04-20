@@ -1,0 +1,14 @@
+{% extends "usersites/index.html" %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "Logged out" %}{% endblock %}
+
+{% block content %}
+    {{ block.super }}    
+    <section class="content__info grid-layout">
+        <div class="data">
+            <h3>{% trans 'Successfully logged out' %}</h3>
+        </div>
+    </section>
+{% endblock %}
