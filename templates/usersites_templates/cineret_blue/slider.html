@@ -5,7 +5,7 @@
 {# ------------------------------ #}
 
 <!-- Header Carousel -->
-    <header id="myCarousel" class="carousel slide">
+    <header id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -33,11 +33,11 @@
                 {% for i in site.user_site.slider_images %}
                     {% if forloop.first %}
                         <div class="item active ">
-                            <div class="fill overlay" style="background-image:url('{{ i.image.original }}');"></div>
+                            <img src="{{ i.image.original }}" >
                         </div>
                     {% else %}
-                        <div class="item ">
-                            <div class="fill overlay" style="background-image:url('{{ i.image.original }}');"></div>
+                        <div class="item fill">
+                            <img src="{{ i.image.original }}" >
                         </div>
                     {% endif %}
                 {% endfor %}
