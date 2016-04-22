@@ -1,27 +1,27 @@
 # -*- encoding: utf-8 -*-
+import errno
 import importlib
+import logging
 import os
 import uuid
-import logging
 
 import boto3
 from PIL import Image
 from boto3.s3.transfer import S3Transfer
-
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File, locks
 from django.core.files.move import file_move_safe
 from django.utils import translation
+from django.utils._os import abspathu
+from django.utils.lru_cache import lru_cache
 from django.utils.text import slugify
 from django.utils.timezone import now
-from django.utils.lru_cache import lru_cache
 from mptt.models import MPTTModel
 from mptt.utils import get_cached_trees
-
-import errno
 from unidecode import unidecode
+
 from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
@@ -297,7 +297,7 @@ class MTTPTreeBuilder(object):
             child_key = '.'.join(attr_name_parts[1:])
             cls.get_composite_attr(instance, child_key)
         elif parts_len == 1:
-            return gettatr(instance, attr_name_parts[0], None)
+            return getattr(instance, attr_name_parts[0], None)
         else:
             return None
 
@@ -389,3 +389,45 @@ def upload_to_S3(*files):
 
         transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], extra_args=extra_args)
         os.remove(file['file'])
+
+
+def upload_images(*args, base_bucket_path=""):
+    images_to_upload = []
+
+    for image in args:
+        abs_path = abspathu(settings.MEDIA_ROOT)
+        bucket_path = abspathu(image['file'])
+
+        if abs_path in bucket_path:
+            bucket_path = bucket_path[len(abs_path):]
+
+        bucket_path = bucket_path.replace('\\', '/')
+
+        filename = os.path.basename(image['file'])
+        filepath = os.path.dirname(image['file'])
+        image_descriptor = Image.open(image['file'])
+        content_type = Image.MIME.get(image_descriptor.format) or 'image/png'
+
+        del image_descriptor
+
+        if 'sizes' in image:
+            for size_name, size_data in image['sizes'].items():
+                resize_name = "%s_%s" % (size_name, filename)
+                out = (os.path.join(filepath, resize_name)).replace('\\', '/')
+                resize(image['file'], out=out, **size_data)
+
+                images_to_upload.append({
+                    'file': out,
+                    'bucket_path': "%s%s%s" % (base_bucket_path, size_name, bucket_path),
+                    'content_type': content_type,
+                })
+
+        images_to_upload.append({
+            'file': image['file'],
+            'bucket_path': "%soriginal%s" % (base_bucket_path, bucket_path),
+            'content_type': content_type
+        })
+
+    upload_to_S3(*images_to_upload)
+
+    return [image['bucket_path'] for image in images_to_upload]

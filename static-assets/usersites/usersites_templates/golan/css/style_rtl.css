@@ -48,7 +48,7 @@ body{
 /*.navbar-collapse{*/
 	/*float: left;*/
 /*}*/
-@media (min-width: 1200px) {
+@media (min-width: 768px) {
 	.navbar-header {
 		float: right;
 	}
@@ -57,6 +57,11 @@ body{
 .navbar-right{
 	float: left!important;
 }
+
+.navbar-toggle {
+	float: right;
+}
+
 /*---------- Slider Styling ----------*/
 
 .carousel-caption{

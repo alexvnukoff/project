@@ -10,7 +10,7 @@
 .company-list li .company-infor .desc{ float: left; width: 348px; color: #595959;}
 .company-list li .company-infor .desc a.more{ display: block; padding-top: 12px;}
 .company-list li .company-infor .desc p.link{ display:block; padding:0; padding-bottom: 5px;}
-.company-list li .company-infor .companycontact{ float:right;width:174px;border-left:1px #e1e1e1 solid;padding-left:10px;}
+.company-list li .company-infor .companycontact{ float:right;width:180px;border-left:1px #e1e1e1 solid;padding-left:10px;}
 .company-list li .company-infor .companycontact .line{ float: left; width: 100%; margin: 0 0 8px 0;}
 .company-list li .company-infor .companycontact .line .iconinfo{float:left;width:23px;}
 .company-list li .company-infor .companycontact .line .nameinfo{float:left;max-width:150px;}

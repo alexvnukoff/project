@@ -35,9 +35,9 @@
                             {% endif %}
 
                             {% if company.short_description %}
-                                {{ company.short_description|cleanHtml|safe|truncatechars:200 }}
+                                {{ company.short_description|cleanHtml|safe|truncatechars_html:200 }}
                             {% else %}
-                                {{ company.description|cleanHtml|safe|truncatewords_html:200 }}
+                                {{ company.description|cleanHtml|safe|truncatechars_html:200 }}
                             {% endif %}
                             <a href="{{ company.get_absolute_url }}">{% trans "More" %}...</a>
 

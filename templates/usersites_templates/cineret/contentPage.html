@@ -16,13 +16,15 @@
 <section class="content__info grid-layout">
 
     <div class="container">
-        <div class="row">
+        <div class=" clearfix">
         <!-- Marketing Icons Section -->
-            <div class="col-lg-12">
-                <h1 class="page-header">
-                    {{ site.user_site.organization.name }}
-                </h1>
-            </div>
+{#            <div class="row">#}
+{#                <div class="col-lg-12">#}
+{#                    <h1 class="page-header">#}
+{#                        {{ site.user_site.organization.name }}#}
+{#                    </h1>#}
+{#                </div>#}
+{#            </div>#}
 
             {% proposal 'Proposals/wall.html' 4 %}
 
@@ -32,29 +34,50 @@
     {# About section of the company on the front page. News + about #}
     <div class="container">
         <div class="row">
-            <div class="col-md-8 news-main">
-                {% news 'News/wall.html' 2 %}
-            </div>
-
-
-            <div class="col-md-4 about-main">
-
-                <div class="col-md-12 about-main__text">
-                    {# Organization name #}
-                    <h2 class="page-header">{{ site.user_site.organization.name }}</h2>
-                    <p>
-                        {# Organization description #}
-                        {{ site.user_site.organization.short_description|cleanHtml|safe }}
-                    </p>
+            {% if news %}
+                <div class="col-md-8 news-main">
+                    {% news 'News/wall.html' 2 %}
                 </div>
 
-                {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
-                {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
-                    {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
-                    {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
-                {#</div>#}
 
-            </div>
+                <div class="col-md-4 about-main">
+
+                    <div class="col-md-12 about-main__text">
+                        {# Organization name #}
+                        <h2 class="page-header">{{ site.user_site.organization.name }}</h2>
+                        <p>
+                            {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                        </p>
+                    </div>
+
+                    {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
+                    {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+                        {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
+                        {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                    {#</div>#}
+
+                </div>
+            {% else %}
+                <div class="col-md-12 about-main">
+
+                    <div class="col-md-12 about-main__text">
+                        {# Organization name #}
+                        <h2 class="page-header">{{ site.user_site.organization.name }}</h2>
+                        <p>
+                            {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                        </p>
+                    </div>
+
+                    {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
+                    {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+                        {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
+                        {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                    {#</div>#}
+
+                </div>
+            {% endif %}
         </div>
     </div>
 
