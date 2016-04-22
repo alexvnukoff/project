@@ -37,7 +37,7 @@
                     {% elif news.country %}
                         <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
                     {% endif %}
-                    {{ news.created_at|date:'d M Y' }}</p>
+                    {{ news.created_at|date:'d M Y' }}, <a href="{{ news.organization.get_absolute_url }}" title="{{ news.organization.name }}">{{ news.organization.name }}</a></p>
                     <p>
                         {% if news.short_description %}
                             {% autoescape off %}

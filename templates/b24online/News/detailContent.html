@@ -40,7 +40,7 @@
                 <img src="{{ item.organization.flag_url }}" class="flag" title="{{ item.organization.flag }}" alt="{{ item.organization.name }}" />
             {% endif %}
 
-            {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }},
+            {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }}, <a href="{{ item.organization.get_absolute_url }}" title="{{ item.organization.name }}">{{ item.organization.name }}</a>
             {% for category in item.categories.all %} {{ category.name }}{% endfor %}
         </p>
                           <!-- Яндекс.Директ -->
