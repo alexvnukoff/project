@@ -313,6 +313,7 @@ function processDialogForm(selectedHref) {
         resizable: true,
         open: function() {
             initDialogForms();
+            initDialogHrefs();
         }
     });
     
@@ -349,11 +350,46 @@ function initDialogForms() {
                         $(DIALOG_FORM_CLS).each(function() {
                             $(this).remove();
                         });
-                        $('#form_wrapper').empty().append(newFormDiv);
+                        $('#main_wrapper').empty().append(newFormDiv);
                         initDialogForms();
+                        initDialogHrefs();
                     }
                 },
+                error: function(jqXHR, testStatus) {
+                    $(processDataDialogId).dialog('close');                    
+                }
             });
         });
     });
 }
+
+
+/**
+ * Assign the handler for hrefs in dialogs
+ */
+function initDialogHrefs() {
+    $(DIALOG_HREF_CLS).each(function() {
+        $(this).click(function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.get(url, function(data) {
+                var newFormDiv,
+                    newContent = $.parseHTML(data),
+                    newDiv = $.grep(newContent, function(item) {
+                        return $(item).is('div');
+                    });
+                if ((newDiv.length > 0) && $(processDataDialogId).dialog('isOpen')) {
+                    newFormDiv = $(newDiv).children(':first');
+                    $(DIALOG_FORM_CLS).each(function() {
+                        $(this).remove();
+                    });
+                    $('#main_wrapper').empty().append(newFormDiv);
+                    initDialogForms();
+                    initDialogHrefs();
+                 }
+            });
+        });
+    });
+}
+
+

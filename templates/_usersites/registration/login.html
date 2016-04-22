@@ -1,7 +1,7 @@
 {% load static from staticfiles %}
 {% load i18n %}
 
-<div id="form_wrapper">
+<div id="main_wrapper">
     <form class="dialog-form" method="POST" action="{% url 'auth_login' %}">
          {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <td colspan="2" align="right">
-                    <a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a>
+                    <a class="dialog-href" href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a>
                 </td>
             </tr>
         </table>
