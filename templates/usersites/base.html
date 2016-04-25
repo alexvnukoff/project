@@ -11,6 +11,7 @@
     <meta name="MSSmartTagsPreventParsing" content="true">
     <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
+    {% block after_meta %}{% endblock %}
 
     <!--<link rel="shortcut icon" href="images/favicon.ico">-->
     <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
@@ -127,7 +128,6 @@
 <!-- //////////////////////////////////////////////////////////////////////// -->
     {% block before_js %}
         <script  type="text/javascript">
-            // For search autocomplete 1
             var SEARCH_Q_URL = '{% url "b2c_products:b2c_product_json" %}';
         </script>
     {% endblock %}
@@ -144,8 +144,8 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
 
-
-    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+        <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+        <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
 
     <script>

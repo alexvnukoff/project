@@ -8,6 +8,9 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.generic import View
 from django.http import HttpResponse, JsonResponse
+from django.utils.translation import ugettext as _
+
+from registration.backends.default.views import RegistrationView
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
@@ -85,4 +88,11 @@ class ProductJsonData(View):
         data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
             for item in qs]
         return JsonResponse(data, safe=False)
+
+
+class UsersitesRegistrationView(RegistrationView):
+    """
+    The custom RegistrationView for 'usersites'.
+    """
+    template_name = 'registration/registration_form.html'
 

@@ -10,11 +10,14 @@ import usersites.News.urls
 import usersites.OrganizationPages.urls
 import usersites.Proposals.urls
 import usersites.Questionnaires.urls
+
 import usersites.views
+
 from appl import func
 
 urlpatterns = [
     url(r'^$', usersites.views.wall, name='main'),
+    url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     url(r'^api/', include(usersites.Api.urls), name='api'),
     url(r'^news/', include(usersites.News.urls, namespace='news')),

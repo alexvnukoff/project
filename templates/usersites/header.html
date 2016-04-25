@@ -17,7 +17,18 @@
                     {% if company_questionnaires.count %}
                         <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
                     {% endif %}
-
+                    
+                    {# Registration. login and logout #}
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
+                    {% else %}
+                        <li><a href="{% url 'registration_register' %}" 
+                                class="dialog-open"
+                                data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a></li>
+                        <li><a href="{% url 'auth_login' %}" 
+                                class="dialog-open"
+                                data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a></li>
+                    {% endif %}
                 </ul>
                 <div class="busket vertical">
                     <span ngCloak><a href="{% url 'b2c_products:basket' %}">{{ request|basket_quantity }}</a></span>
