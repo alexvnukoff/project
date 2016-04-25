@@ -35,6 +35,7 @@
                 <ul>
                     <li><a href="#questions">{% trans 'Questions' %}</a></li>
                     <li><a href="#recommendations">{% trans 'Recommendations' %}</a></li>
+                    <li><a href="#cases">{% trans 'Statistics' %}</a></li>
                 </ul>
             </div>
         
@@ -60,7 +61,10 @@
                     {% for question in item.actual_questions %}                
                     <tr>
                         <td>{{ question.question_text }}</td>
-                        <td>{{ question.created_by }}</td>
+                        <td>
+                            {# The question author #}
+                            {{ question.author }}
+                        </td>
                         {% if request.user == item.created_by %}
                         <td align="center" style="font-size: 130%;">
                             <a href="{{ request.path }}?move=up&question_id={{ question.id }}">&#8681;</a>
@@ -120,6 +124,32 @@
                                 href="{% url 'questionnaires:delete_recommendation' pk=recommendation.id %}"></a>
                         </td>
                         {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td align="center" 
+                            colspan="{% if request.user == item.created_by %}4{% else %}3{% endif %}">
+                            {% trans 'There are no records' %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table> 
+              </div>
+            </div>
+            <div id="cases">
+              <div style="margin: 20px; clear: both;">
+                <table width="100%" cellspacing="2" cellpadding="2"
+                    border="0" class="table-data">
+                    <tr>
+                        <th>{% trans 'Date' %}</th>
+                        <th>{% trans 'Participants' %}</th>
+                        <th>{% trans 'Coincedences' %}</th>
+                    </tr>
+                    {% for item_case in item.cases.all %}                
+                    <tr valign="top">
+                        <td>{{ item_case.created_at }}</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     {% empty %}
                     <tr>

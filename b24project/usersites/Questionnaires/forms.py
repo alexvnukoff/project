@@ -161,7 +161,10 @@ class InviteForm(forms.Form):
                             continue
                         question = Question.objects.create(
                             questionnaire=self.questionnaire,
+                            created_by_participant=\
+                                self.questionnaire.get_inviter(),
                             who_created=Question.BY_MEMBER,
+                            
                             question_text=q_form.cleaned_data['question_text']
                         )
                         self.instance.extra_questions.add(question)
