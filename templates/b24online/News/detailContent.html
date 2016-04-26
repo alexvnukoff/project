@@ -32,7 +32,7 @@
 </script>
     {% block content %}
     <div class="new-details">
-        <h1>{{ item.title }}</h1>
+        <h1>{% if item.video_code %}<span title="YouTube" class="icon-youtube-play"></span>{% endif %}{{ item.title }}</h1>
         <p class="date">
             {% if item.country %}
                 <i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>

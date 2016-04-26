@@ -192,7 +192,7 @@ div.org-contacts ul li span.left{float: right;}
 #search{ float:left;}
 .services{ margin-top:0;}
 #tv-list li .title-tv .flag{ float:right;}
-.related-news ul li{ margin: 12px 0 0 40px;}
+.related-news ul li{direction:rtl !important; margin: 12px 0 0 10px;}
 .profile-l { float:right;}
 .profile-clumn{ margin-left:0; margin-right:9px;}
 .profile-clumn, .profile-clumn li .radio span{ float:right;}
