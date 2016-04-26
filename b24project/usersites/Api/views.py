@@ -21,8 +21,7 @@ from usersites.Api.serializers import GallerySerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
     DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
     DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
-    ListQuestionnaireSerializer, DetailQuestionnaireSerializer, ListQuestionSerializer, \
-    QuestionnaireSerializer
+    ListQuestionSerializer, QuestionnaireSerializer
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -409,7 +408,7 @@ def settings_api(request):
     return Response(result)
 
 
-class QuestionnaireViewSet(viewsets.ModelViewSet):
+class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Rest API for Questionnaires.
     """

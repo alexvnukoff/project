@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+import logging
+
 from django.utils.text import Truncator
 from lxml.html.clean import clean_html
 from rest_framework import serializers
@@ -7,6 +9,8 @@ from rest_framework import serializers
 from b24online.models import Questionnaire
 
 from appl.func import currency_symbol
+
+logger = logging.getLogger(__name__)
 
 
 class ListAdditionalPageSerializer(serializers.BaseSerializer):
@@ -211,36 +215,29 @@ class DetaiCouponSerializer(serializers.BaseSerializer):
             'details': clean_html(obj.description) if obj.description else '',
             'percent': obj.coupon_discount_percent
         }
-        
-
-class ListQuestionnaireSerializer(serializers.BaseSerializer):
-    def to_representation(self, obj):
-        return {
-            'id': obj.pk,
-            'name': obj.name,
-            'shortText': clean_html(obj.short_description),
-            'price': obj.item.cost,
-        }
-
-
-class DetailQuestionnaireSerializer(serializers.BaseSerializer):
-    def to_representation(self, obj):
-        return {
-            'id': obj.pk,
-            'name': obj.name,
-            'shortText': clean_html(obj.short_description),
-            'price': obj.item.cost,
-        }
 
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
     """
     Serializer for Questionnaire model.
     """
+    
+    image = serializers.SerializerMethodField('get_image_original')
+
+    def __new__(cls, *args, **kwargs):
+        logger.debug(kwargs)
+        if kwargs.get('many', False):
+            pass
+        return super(QuestionnaireSerializer, cls)\
+            .__new__(cls, *args, **kwargs)
+                                                
     class Meta:
         model = Questionnaire
-        fields = ('id', 'name')
-                                            
+        fields = ('id', 'name', 'short_description', 'image')
+
+    def get_image_original(self, instance):
+        return instance.image.original if instance.image else None
+
 
 class ListQuestionSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
