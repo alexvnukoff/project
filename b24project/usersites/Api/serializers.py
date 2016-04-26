@@ -1,6 +1,10 @@
+# -*- encoding: utf-8 -*-
+
 from django.utils.text import Truncator
 from lxml.html.clean import clean_html
 from rest_framework import serializers
+
+from b24online.models import Questionnaire
 
 from appl.func import currency_symbol
 
@@ -207,3 +211,41 @@ class DetaiCouponSerializer(serializers.BaseSerializer):
             'details': clean_html(obj.description) if obj.description else '',
             'percent': obj.coupon_discount_percent
         }
+        
+
+class ListQuestionnaireSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'name': obj.name,
+            'shortText': clean_html(obj.short_description),
+            'price': obj.item.cost,
+        }
+
+
+class DetailQuestionnaireSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'name': obj.name,
+            'shortText': clean_html(obj.short_description),
+            'price': obj.item.cost,
+        }
+
+
+class QuestionnaireSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Questionnaire model.
+    """
+    class Meta:
+        model = Questionnaire
+        fields = ('id', 'name')
+                                            
+
+class ListQuestionSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'question_text': obj.question_text,
+        }
+        

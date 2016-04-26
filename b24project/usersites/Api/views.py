@@ -5,21 +5,24 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.decorators import (permission_classes, api_view,
+                                       detail_route, list_route)
 from rest_framework.filters import BaseFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
-    Banner, AdditionalPage, Company
+    Banner, AdditionalPage, Company, Questionnaire
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
     DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
-    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer
+    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
+    ListQuestionnaireSerializer, DetailQuestionnaireSerializer, ListQuestionSerializer, \
+    QuestionnaireSerializer
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -247,6 +250,7 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
             .order_by('level').distinct()
 
 
+
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def interface(request):
@@ -403,3 +407,41 @@ def settings_api(request):
             })
 
     return Response(result)
+
+
+class QuestionnaireViewSet(viewsets.ModelViewSet):
+    """
+    Rest API for Questionnaires.
+    """
+    queryset = Questionnaire.get_active_objects()
+    serializer_class = QuestionnaireSerializer
+
+    def filter_queryset(self, queryset):
+        """
+        Filter the Ques. only for current Company.
+        """
+        from b24online.utils import get_company_questionnaire_qs
+    
+        organization = get_current_site().user_site.organization
+        return get_company_questionnaire_qs(organization)
+
+    @detail_route(methods=['get', ])
+    def questions(self, request, pk=None):
+        """
+        Return the Questionnaire's questions
+        """
+        instance = self.get_object()
+        queryset = instance.questions.order_by('position')
+        serializer = ListQuestionSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @detail_route(methods=['get', ])
+    def recommendations(self, request, pk=None):
+        """
+        Return the Questionnaire's recommendations
+        """
+        instance = self.get_object()
+        queryset = instance.recommendations.all()
+        serializer = ListRecommendationSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
