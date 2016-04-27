@@ -222,10 +222,11 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
     Serializer for Questionnaire model.
     """
     
-    image = serializers.SerializerMethodField('get_image_original')
+    image = serializers.SerializerMethodField('get_image_original', 
+                                              read_only=True)
+    item_cost = serializers.FloatField(source='item.cost', read_only=True)
 
     def __new__(cls, *args, **kwargs):
-        logger.debug(kwargs)
         if kwargs.get('many', False):
             pass
         return super(QuestionnaireSerializer, cls)\
@@ -233,7 +234,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
                                                 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'name', 'short_description', 'image')
+        fields = ('id', 'name', 'short_description', 'image', 'item_cost')
 
     def get_image_original(self, instance):
         return instance.image.original if instance.image else None
