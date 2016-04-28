@@ -71,7 +71,7 @@ def _wall_content(request):
         hits = apply_filters(request, InnovationProject, q, filter_list).sort(*sort)[:1].execute().hits
 
         if hits.total > 0:
-            innovation_project = innovation_project.get(pk=hits[0].django_id)
+            innovation_project = innovation_project.filter(pk=hits[0].django_id)
         else:
             innovation_project = None
 
