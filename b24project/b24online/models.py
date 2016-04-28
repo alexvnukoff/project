@@ -2275,6 +2275,7 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                              storage=image_storage,
                              sizes=['big', 'small', 'th'],
                              max_length=255, null=True, blank=True)
+
     content_type = models.ForeignKey(ContentType,
                                      limit_choices_to=CONTENT_TYPE_LIMIT,
                                      on_delete=models.CASCADE,
@@ -2318,10 +2319,6 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                 pass
         return None
     
-
-    def has_perm(self, user):
-        return True
-        
     class Meta:
         verbose_name = _('Questionnaire')
         verbose_name_plural = _('Questionnaires')
