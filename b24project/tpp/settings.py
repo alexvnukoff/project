@@ -171,6 +171,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
     'b24online.stats.middleware.RegisteredEventMiddleware',
+    'tpp.GeolocationFilterByRegion.GeolocationMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -365,3 +366,19 @@ ORDER_NOTIFICATION_TEMPLATE = 'b24online/Products/notification.txt'
 ORDER_NOTIFICATION_DISABLE = False
 ORDER_NOTIFICATION_FROM = 'noreply@tppcenter.com'
 ORDER_NOTIFICATION_TO = 'orders@b24online.com'
+
+# Countries ID's form our database
+GEO_COUNTRY_DB = {
+    'Azerbaydjan': '1',
+    'Armenia': '2',
+    'Belarus': '3',
+    'Georgia': '4',
+    'Israel': '5',
+    'Kazakhstan': '6',
+    'Kyrgyzstan': '7',
+    'Latvia': '8',
+    'Lithuania': '9',
+    'Moldova': '10',
+    'Russia': '11',
+}
+

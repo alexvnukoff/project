@@ -57,6 +57,11 @@ def _wall_content(request):
         if values:
             applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
+    # Apply geo_country by our internal code
+    if request.session['geo_country'] and not request.GET.get('order1'):
+        geo_country = request.session['geo_country']
+        applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
     innovation_project = InnovationProject.get_active_objects()
     products = B2BProduct.get_active_objects().prefetch_related('company__countries')
     proposal = BusinessProposal.get_active_objects()

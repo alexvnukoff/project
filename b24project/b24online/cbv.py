@@ -251,6 +251,15 @@ class ItemsList(HybridListView):
             if values:
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
 
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            geo_country = self.request.session['geo_country']
+            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
         else:
