@@ -15,9 +15,27 @@ def get_main_c(obj):
 
     # Conditions for countries
     # http://dev.maxmind.com/geoip/legacy/codes/iso3166/
-    if obj == 'il':
+    if obj == 'az':
+        return country['Azerbaydjan']
+    elif obj == 'am':
+        return country['Armenia']
+    elif obj == 'by':
+        return country['Belarus']
+    elif obj == 'ge':
+        return country['Georgia']
+    elif obj == 'il':
         return country['Israel']
-    elif obj == 'ru' or 'kz':
+    elif obj == 'kz':
+        return country['Kazakhstan']
+    elif obj == 'kg':
+        return country['Kyrgyzstan']
+    elif obj == 'lv':
+        return country['Latvia']
+    elif obj == 'lt':
+        return country['Lithuania']
+    elif obj == 'md':
+        return country['Moldova']
+    elif obj == 'ru':
         return country['Russia']
     else:
         return None
@@ -35,7 +53,7 @@ class GeolocationMiddleware(object):
             request.session['geo_ip'] = ip
 
             try:
-                geo_info = geo.get_geoip_data('62.90.75.68')
+                geo_info = geo.get_geoip_data(ip)
             except KeyError:
                 geo_info = False
                 request.session['geo_country'] = None
