@@ -79,14 +79,28 @@ class TestQuestionnaire(unittest.TestCase):
             password=ADMIN_USER_DATA['password']
         )
 
+    def getQuestionnaires(self):
+        url = reverse('api:questionnaire-list')
+        response = self.client.get(url, format='json', **EXTRA_HEADERS)
+        return json.loads(response.content.decode('utf-8'))
+
     def testQuestionnaireList(self):
         """
         Test the tester user login.
         """
-        url = reverse('api:questionnaire-list')
-        response = self.client.get(url, format='json', **EXTRA_HEADERS)
-        print(response.content)
-                                                   
+        try:
+            self._questionnaires = self.getQuestionnaires()
+        except ValueError:
+            raise AssertionError(
+                _(u'Invalid response content format, not a JSON'))
+
+    def testQuestionnaireDetail(self):
+        """
+        Test the Questionnaires list.
+        """
+        self._questionnaries = self.getQuestionnaires()
+        print(self._questionnaries)
+                                                                                                           
 
 if __name__ == '__main__':
     unittest.main()
