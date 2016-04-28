@@ -151,9 +151,12 @@ def apply_filters(request, model, q, valid_filters):
     for filter_key in valid_filters:
         filter_lookup = "filter[%s][]" % filter_key
         values = request.GET.getlist(filter_lookup)
-
         if values:
             s = s.filter('terms', **{filter_key: values})
+
+    # Apply geo_country by our internal code
+    if request.session['geo_country'] and not request.GET.get('order1'):
+        s = s.filter('terms', **{'country': [request.session['geo_country']]})
 
     if q:
         s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
