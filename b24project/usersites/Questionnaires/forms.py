@@ -118,6 +118,7 @@ class InviteForm(forms.Form):
         return it_is_valid
 
     def save(self):
+        inviter_participant = None
         try:
             with transaction.atomic():
                 if not self.instance:
@@ -156,12 +157,13 @@ class InviteForm(forms.Form):
                         responsive = inviter_participant
 
                 for q_form in self.answer_formset:
-                    if not q_form.question:
+                    if not q_form.question and inviter_participant:
                         if 'question_text' not in q_form.cleaned_data:
                             continue
                         question = Question.objects.create(
                             questionnaire=self.questionnaire,
                             who_created=Question.BY_MEMBER,
+                            created_by_participant=inviter_participant,
                             question_text=q_form.cleaned_data['question_text']
                         )
                         self.instance.extra_questions.add(question)

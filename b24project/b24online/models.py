@@ -2382,6 +2382,12 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True, 
         blank=True
     )
+    created_by_participant = models.ForeignKey(
+        'QuestionnaireParticipant',
+        related_name='questions',
+        null=True,
+        blank=True
+    )
     question_text = models.TextField(
         _('Question text'), 
         blank=False, 
@@ -2420,6 +2426,19 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         """The stub for using in views.
         """
         return True
+
+    @property
+    def author(self):
+        cls = type(self)
+        if self.who_created == cls.BY_AUTHOR:
+            return  self.created_by
+        elif self.who_created == cls.BY_MEMBER:
+            return  self.created_by_participant
+        else:
+            return None
+        
+    def __str__(self):
+        return self.question_text
 
 
 class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2491,7 +2510,10 @@ class QuestionnaireParticipant(ActiveModelMixing, models.Model):
     class Meta:
         verbose_name = _('Questionnaire participant')
         verbose_name_plural = _('Questionnaire participants')
-        
+       
+    def __str__(self):
+        return str(self.user) if self.user else self.email 
+
 
 class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     """
