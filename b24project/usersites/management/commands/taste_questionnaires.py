@@ -25,6 +25,10 @@ EXTRA_HEADERS = {
     'HTTP_HOST': 'ru.mcs.org.il',
 }
 
+# Shortcuts
+def _g(items, attr_name='name'):
+    return [item.get(attr_name) for item in items]
+    
 
 class Command(BaseCommand):
     """
@@ -119,8 +123,7 @@ class Command(BaseCommand):
             self.get_response(reverse('api:questionnaire-list'))
         )
         if self._quests:
-            cls.log_list([item.get('name') for item in self._quests], 
-                         prompt='The site company quests:')
+            cls.log_list(_g(self._quests), prompt='The site company quests:')
             q_data = dict([item.get('id'), item] for item in self._quests)
             if self._quest_id:
                 self._quest = q_data.get(self._quest_id)
@@ -146,3 +149,10 @@ class Command(BaseCommand):
         """
         Return the selected quest. questions.        
         """
+        cls = type(self)
+        
+        url = reverse('api:questionnaire-questions', args=[self._quest_id])
+        self._questions = cls.get_response_content(self.get_response(url))
+        cls.log_list(_g(self._questions, 'question_text'), 
+                     prompt='Questions list')        
+        
