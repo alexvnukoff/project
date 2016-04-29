@@ -1,8 +1,10 @@
 import os
 
+from django.db.models import Q
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
+from django.db import transaction, IntegrityError
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
 from rest_framework.decorators import (permission_classes, api_view,
@@ -13,7 +15,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
-    Banner, AdditionalPage, Company, Questionnaire
+    Banner, AdditionalPage, Company, Questionnaire, Question
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.Api.serializers import GallerySerializer, \
@@ -21,7 +23,7 @@ from usersites.Api.serializers import GallerySerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
     DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
     DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
-    ListQuestionSerializer, QuestionnaireSerializer
+    ListQuestionSerializer, QuestionnaireSerializer, AtFirstCaseAnswersSeializer
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -417,24 +419,14 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         """
-        Filter the Ques. only for current Company.
+        Filter the Quest-e only for current Company.
         """
         from b24online.utils import get_company_questionnaire_qs
     
         organization = get_current_site().user_site.organization
         return get_company_questionnaire_qs(organization)
 
-    @detail_route(methods=['get', ])
-    def questions(self, request, pk=None):
-        """
-        Return the Questionnaire's questions
-        """
-        instance = self.get_object()
-        queryset = instance.questions.order_by('position')
-        serializer = ListQuestionSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    @detail_route(methods=['get', ])
+    @detail_route(methods=['GET', ])
     def recommendations(self, request, pk=None):
         """
         Return the Questionnaire's recommendations
@@ -444,3 +436,38 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = ListRecommendationSerializer(queryset, many=True)
         return Response(serializer.data)
     
+    def _get_questions_first(self, instance):
+        return instance.questions\
+            .filter((Q(who_created=Question.BY_AUTHOR) | \
+                     Q(is_approved=True)),
+                    is_active=True, is_deleted=False)
+    
+    @detail_route(methods=['GET',])
+    def atfirst(self, request, pk=None):
+        """
+        Return the Questionnaire's questions
+        """
+        instance = self.get_object()
+        questions = self._get_questions_first(instance)
+        serializer = ListQuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['POST',])
+    def processfirst(self, request, pk=None):
+        """
+        Process the POST-data.
+        """
+        instance = self.get_object()
+        data = request.data.copy()
+        questions = self._get_questions_first(instance)        
+        data['questionnaire_id'] = instance.id
+        serializer = AtFirstCaseAnswersSeializer(data=data)
+        if serializer.is_valid():
+            questionnaire = serializer.save()
+            return Response(
+                {'result': 'success', 
+                 'case_id': questionnaire.id,
+                 'case_token': questionnaire.case_uuid})
+        else:
+            return Response({'result': 'error', 'errors': serializer.errors})
+            

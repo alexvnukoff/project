@@ -2,11 +2,14 @@
 
 import logging
 
+from django.db import transaction, IntegrityError
 from django.utils.text import Truncator
 from lxml.html.clean import clean_html
 from rest_framework import serializers
 
-from b24online.models import Questionnaire
+from b24online.models import (Questionnaire, Question, QuestionnaireCase,
+                              Recommendation, QuestionnaireParticipant,
+                              Answer)
 
 from appl.func import currency_symbol
 
@@ -234,11 +237,109 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
                                                 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'name', 'short_description', 'image', 'item_cost')
+        fields = ('id', 'name', 'short_description', 'image', 'item_cost', 
+                  'use_show_result')
 
     def get_image_original(self, instance):
         return instance.image.original if instance.image else None
 
+
+class CaseQuestionAnswerSerializer(serializers.Serializer):
+    """
+    Question's answer serializer.
+    """
+    question_id = serializers.IntegerField(required=True)
+    answer = serializers.BooleanField(required=True)
+    show_answer = serializers.BooleanField(required=False)
+    
+
+class CaseExtraQuestionAnswerSerializer(serializers.Serializer):
+    """
+    Extra question's answer serializer.
+    """
+    question_text = serializers.CharField(required=True)
+    answer = serializers.BooleanField(required=True)
+    show_answer = serializers.BooleanField(required=False)
+    
+
+class AtFirstCaseAnswersSeializer(serializers.Serializer):
+    """
+    Process data for inviter answers.
+    """
+    questionnaire_id = serializers.IntegerField(required=True)
+    inviter_email = serializers.EmailField(required=True)
+    invited_email = serializers.EmailField(required=True)
+    answers = CaseQuestionAnswerSerializer(many=True)
+    extra_answers = CaseExtraQuestionAnswerSerializer(
+        many=True, 
+        required=False
+    )
+
+    def save(self):
+        inviter_participant = None
+        instance = None
+        try:
+            try:
+                questionnaire = Questionnaire.objects.get(
+                    id=self.validated_data['questionnaire_id']
+                )
+            except Questionnaire.DoesNotExist:
+                raise IntergityError
+                
+            with transaction.atomic():
+                instance = QuestionnaireCase.objects.create(
+                    questionnaire=questionnaire,
+                    status=QuestionnaireCase.DRAFT,
+                )
+                invited_email = self.validated_data.get('invited_email')
+                if invited_email:
+                    invited_participant = QuestionnaireParticipant.objects\
+                        .create(
+                            email=invited_email,
+                            is_invited=True
+                        )
+                    instance.participants.add(invited_participant)
+                    inviter_email = self.validated_data.get('inviter_email')
+                if inviter_email:
+                    inviter_participant = QuestionnaireParticipant(
+                        email=inviter_email,
+                        is_invited=False,
+                    )
+                    inviter_participant.save()
+                    instance.participants.add(inviter_participant)
+                    responsive = inviter_participant
+
+                for answer_data in self.validated_data['answers']:
+                    question_id = int(answer_data['question_id'])
+                    try:
+                        question = Question.objects.get(
+                            id=question_id
+                        )
+                    except Question.DoesNotExist:
+                        continue    
+                    answer_value = answer_data.get('answer', False)
+                    if questionnaire.use_show_result:
+                        new_answer = Answer.objects.create(
+                            questionnaire_case=instance,
+                            question=question,
+                            participant=responsive,
+                            answer=answer_value,
+                            show_answer=answer_data.get('show', False),
+                        )
+                    else:
+                        if answer_value:
+                            new_answer = Answer.objects.create(
+                                questionnaire_case=instance,
+                                question=question,
+                                participant=responsive,
+                                answer=True,
+                            )
+
+        except IntegrityError:
+            return None
+        else:
+            return instance
+        
 
 class ListQuestionSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):

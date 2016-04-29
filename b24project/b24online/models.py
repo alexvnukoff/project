@@ -2400,6 +2400,10 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True,
         blank=True,
     )
+    is_approved = models.BooleanField(
+        _('User question approved by questionnaire author'),
+        default=False
+    )
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 

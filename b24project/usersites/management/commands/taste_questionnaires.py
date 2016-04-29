@@ -6,6 +6,7 @@ The tool to taste the :app:`Questionnaires` application.
 
 import json
 import logging 
+import random
 
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
@@ -151,8 +152,35 @@ class Command(BaseCommand):
         """
         cls = type(self)
         
-        url = reverse('api:questionnaire-questions', args=[self._quest_id])
+        url = reverse('api:questionnaire-atfirst', args=[self._quest_id])
         self._questions = cls.get_response_content(self.get_response(url))
         cls.log_list(_g(self._questions, 'question_text'), 
-                     prompt='Questions list')        
-        
+                     prompt='Questions list for first participant')        
+
+        answers = []
+        for question in self._questions:
+            answers.append({'question_id': question.get('id'),
+                           'answer': bool(random.getrandbits(1))})        
+
+        extra_answers = [
+            {'question_text': 'Первый тестовый вопрос', 
+             'answer': bool(random.getrandbits(1))},
+            {'question_text': 'Второй тестовый вопрос', 
+             'answer': bool(random.getrandbits(1))},
+        ]
+
+        url = reverse('api:questionnaire-processfirst', args=[self._quest_id])
+        post_data = {
+            'questionnaire_id': self._quest['id'],
+            'inviter_email': 'inviter@example.b24online.com',
+            'invited_email': 'invited@example.b24online.com',
+            'answers': answers,
+            'extra_answers': extra_answers,
+        }        
+        response = self._client.post(
+            url, 
+            post_data, 
+            format='json', 
+            **EXTRA_HEADERS
+        )
+        print(cls.get_response_content(response))

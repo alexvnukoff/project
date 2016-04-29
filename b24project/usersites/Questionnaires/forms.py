@@ -87,19 +87,20 @@ class InviteForm(forms.Form):
         self.questionnaire = questionnaire
         if self.is_invited:
             extra_ids = [q.id for q in self.instance.extra_questions.all()]
-            logger.debug(extra_ids)
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
                 for question in self.questionnaire.questions\
-                    .filter(Q(is_active=True) & Q(is_deleted=False) &\
-                            (Q(who_created=Question.BY_AUTHOR) | Q(id__in=extra_ids)))]
+                    .filter((Q(who_created=Question.BY_AUTHOR) | \
+                             Q(id__in=extra_ids)),
+                            is_active=True, is_deleted=False,)]
             }
         else:
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
                 for question in self.questionnaire.questions\
-                    .filter(who_created=Question.BY_AUTHOR, 
-                            is_deleted=False, is_active=True)]
+                    .filter((Q(who_created=Question.BY_AUTHOR) | \
+                             Q(is_approved=True)),
+                            is_active=True, is_deleted=False)]
             }
         if self.data:
             params.update({'data': self.data})
@@ -162,8 +163,6 @@ class InviteForm(forms.Form):
                             continue
                         question = Question.objects.create(
                             questionnaire=self.questionnaire,
-                            created_by_participant=\
-                                self.questionnaire.get_inviter(),
                             who_created=Question.BY_MEMBER,
                             created_by_participant=inviter_participant,
                             question_text=q_form.cleaned_data['question_text']
