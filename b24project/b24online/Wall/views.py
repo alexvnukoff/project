@@ -57,6 +57,11 @@ def _wall_content(request):
         if values:
             applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
+    # Apply geo_country by our internal code
+    if request.session['geo_country'] and not request.GET.get('order1'):
+        geo_country = request.session['geo_country']
+        applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
     innovation_project = InnovationProject.get_active_objects()
     products = B2BProduct.get_active_objects().prefetch_related('company__countries')
     proposal = BusinessProposal.get_active_objects()
@@ -71,7 +76,7 @@ def _wall_content(request):
         hits = apply_filters(request, InnovationProject, q, filter_list).sort(*sort)[:1].execute().hits
 
         if hits.total > 0:
-            innovation_project = innovation_project.get(pk=hits[0].django_id)
+            innovation_project = innovation_project.filter(pk=hits[0].django_id)
         else:
             innovation_project = None
 
@@ -146,9 +151,12 @@ def apply_filters(request, model, q, valid_filters):
     for filter_key in valid_filters:
         filter_lookup = "filter[%s][]" % filter_key
         values = request.GET.getlist(filter_lookup)
-
         if values:
             s = s.filter('terms', **{filter_key: values})
+
+    # Apply geo_country by our internal code
+    if request.session['geo_country'] and not request.GET.get('order1'):
+        s = s.filter('terms', **{'country': [request.session['geo_country']]})
 
     if q:
         s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])

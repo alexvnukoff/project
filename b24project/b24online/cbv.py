@@ -180,9 +180,17 @@ class ItemsList(HybridListView):
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
             values = self.request.GET.getlist(filter_lookup)
-
+            print(values)
             if values:
                 s = s.filter('terms', **{filter_key: values})
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            s = s.filter('terms', **{'country': [self.request.session['geo_country']]})
 
         if q:
             s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
@@ -250,6 +258,15 @@ class ItemsList(HybridListView):
 
             if values:
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            geo_country = self.request.session['geo_country']
+            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
