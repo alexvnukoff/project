@@ -16,12 +16,13 @@ from guardian.shortcuts import get_objects_for_user
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, DeleteGalleryImage, GalleryImageList, \
     DocumentList, DeleteDocument
-from b24online.models import (Chamber, Company, News, Tender, Exhibition, 
-                              BusinessProposal, InnovationProject, 
+from b24online.models import (Chamber, Company, News, Tender, Exhibition,
+                              BusinessProposal, InnovationProject,
                               Organization, Vacancy, StaffGroup,
-                              PermissionsExtraGroup)
+                              PermissionsExtraGroup, Country)
 from b24online.utils import handle_uploaded_file
 from b24online.Tpp.forms import AdditionalPageFormSet, ChamberForm
+from b24online.search_indexes import SearchEngine
 
 
 class ChamberList(ItemsList):
@@ -42,7 +43,35 @@ class ChamberList(ItemsList):
     # allowed filter list
     # filter_list = ['country']
 
+    filter_list = {
+        'countries': Country
+    }
+
     model = Chamber
+
+    def get_filtered_items(self):
+        s = SearchEngine(doc_type=self.model.get_index_model())
+        q = self.request.GET.get('q', '').strip()
+
+        for filter_key in list(self.filter_list.keys()):
+            filter_lookup = "filter[%s][]" % filter_key
+            values = self.request.GET.getlist(filter_lookup)
+            print(values)
+            if values:
+                s = s.filter('terms', **{filter_key: values})
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            s = s.filter('terms', **{'countries': [self.request.session['geo_country']]})
+
+        if q:
+            s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
+
+        return self.filter_search_object(s)
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Tpp/contentPage.html'
@@ -80,6 +109,30 @@ class ChamberList(ItemsList):
             #                                    Organization.get_active_objects().all()).instance_of(Chamber)
 
         #return queryset
+
+    def get(self, request, *args, **kwargs):
+        for f, model in self.filter_list.items():
+            key = "filter[%s][]" % f
+            values = request.GET.getlist(key)
+
+            if values:
+                self.applied_filters[f] = model.objects.filter(pk__in=values)
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            geo_country = self.request.session['geo_country']
+            self.applied_filters['countries'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
+        if request.is_ajax():
+            self.ajax(request, *args, **kwargs)
+        else:
+            self.no_ajax(request, *args, **kwargs)
+
+        return super(ItemsList, self).get(request, *args, **kwargs)
 
 
 class ChamberDetail(ItemDetail):
