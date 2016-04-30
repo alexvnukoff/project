@@ -132,7 +132,7 @@ class InviteForm(forms.Form):
                         responsive = self.instance.participants.get(
                             is_invited=True
                         )
-                    except QuestionnaireCase.DoesNotExist:
+                    except QuestionnaireParticipant.DoesNotExist:
                         raise Http404(_('There is no suitable participant'))
 
                 else:
@@ -221,6 +221,5 @@ class InviteForm(forms.Form):
             Q(question__id__in=question_ids) | \
             Q(for_color=color))
         )
-        logger.debug(ritems)
         self.instance.recommendations.add(*ritems)
 

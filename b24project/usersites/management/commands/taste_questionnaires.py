@@ -60,7 +60,11 @@ class Command(BaseCommand):
         self._init(*args, **options)
         self._select_questionnaire()        
         self._check_questionnaire()
-        self._get_questions()
+        self._get_questions_atfirst()
+        self._answer_questions_atfirst()
+        self._get_questions_atsecond()
+        self._answer_questions_atsecond()
+
         
     def _init(self, *args, **options):
         """
@@ -146,36 +150,36 @@ class Command(BaseCommand):
         quest_data = cls.get_response_content(self.get_response(url))
         cls.log(quest_data.get('name'), prompt='Check once more: ')        
             
-    def _get_questions(self):
+    def _get_questions_atfirst(self):
         """
         Return the selected quest. questions.        
         """
         cls = type(self)
         
-        url = reverse('api:questionnaire-atfirst', args=[self._quest_id])
+        url = reverse('api:questionnaire-inviter', args=[self._quest_id])
         self._questions = cls.get_response_content(self.get_response(url))
         cls.log_list(_g(self._questions, 'question_text'), 
                      prompt='Questions list for first participant')        
 
+    def _answer_questions_atfirst(self):
+        cls = type(self)
+        url = reverse('api:questionnaire-inviter', args=[self._quest_id])
         answers = []
         for question in self._questions:
             answers.append({'question_id': question.get('id'),
                            'answer': bool(random.getrandbits(1))})        
 
-        extra_answers = [
+        answers += [
             {'question_text': 'Первый тестовый вопрос', 
              'answer': bool(random.getrandbits(1))},
             {'question_text': 'Второй тестовый вопрос', 
              'answer': bool(random.getrandbits(1))},
         ]
-
-        url = reverse('api:questionnaire-processfirst', args=[self._quest_id])
         post_data = {
             'questionnaire_id': self._quest['id'],
             'inviter_email': 'inviter@example.b24online.com',
             'invited_email': 'invited@example.b24online.com',
             'answers': answers,
-            'extra_answers': extra_answers,
         }        
         response = self._client.post(
             url, 
@@ -183,4 +187,33 @@ class Command(BaseCommand):
             format='json', 
             **EXTRA_HEADERS
         )
-        print(cls.get_response_content(response))
+        new_case_info = cls.get_response_content(response)
+        self._case_uuid = new_case_info.get('case_uuid')
+        cls.log(self._case_uuid, prompt='New case uuid')
+        
+    def _get_questions_atsecond(self):
+        cls = type(self)
+        url = reverse('api:questionnaire-invited', args=[self._case_uuid,])
+        self._questions = cls.get_response_content(self.get_response(url))
+        cls.log_list(_g(self._questions, 'question_text'), 
+                     prompt='Questions list for second participant')        
+        
+    def _answer_questions_atsecond(self):
+        cls = type(self)
+        url = reverse('api:questionnaire-invited', args=[self._case_uuid,])
+        answers = []
+        for question in self._questions:
+            answers.append({'question_id': question.get('id'),
+                           'answer': bool(random.getrandbits(1))})        
+        post_data = {
+            'questionnaire_id': self._quest['id'],
+            'answers': answers,
+        }        
+        response = self._client.post(
+            url, 
+            post_data, 
+            format='json', 
+            **EXTRA_HEADERS
+        )
+        new_case_info = cls.get_response_content(response)
+        print(new_case_info)

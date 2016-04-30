@@ -3,6 +3,7 @@
 import logging
 
 from django.db import transaction, IntegrityError
+from django.db.models import Q
 from django.utils.text import Truncator
 from lxml.html.clean import clean_html
 from rest_framework import serializers
@@ -244,7 +245,29 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         return instance.image.original if instance.image else None
 
 
-class CaseQuestionAnswerSerializer(serializers.Serializer):
+class AtFirstAnswerSerializer(serializers.Serializer):
+    """
+    Question's answer serializer.
+    """
+    question_id = serializers.IntegerField(required=False)
+    question_text = serializers.CharField(required=False)
+    answer = serializers.BooleanField(required=True)
+    show_answer = serializers.BooleanField(required=False)
+    
+    def validate(self, data):
+        """
+        Extra validation.
+        
+        Question ID or Question text must be filled.
+        """
+        if not data.get('question_id') and not data.get('question_text'):
+            raise serializers.ValidationError(
+                _('One of the question\'s fields, ID or text must '
+                  'not be empty'))
+        return data
+
+
+class AtSecondAnswerSerializer(serializers.Serializer):
     """
     Question's answer serializer.
     """
@@ -253,27 +276,14 @@ class CaseQuestionAnswerSerializer(serializers.Serializer):
     show_answer = serializers.BooleanField(required=False)
     
 
-class CaseExtraQuestionAnswerSerializer(serializers.Serializer):
-    """
-    Extra question's answer serializer.
-    """
-    question_text = serializers.CharField(required=True)
-    answer = serializers.BooleanField(required=True)
-    show_answer = serializers.BooleanField(required=False)
-    
-
-class AtFirstCaseAnswersSeializer(serializers.Serializer):
+class AtFirstAnswersSerializer(serializers.Serializer):
     """
     Process data for inviter answers.
     """
     questionnaire_id = serializers.IntegerField(required=True)
     inviter_email = serializers.EmailField(required=True)
     invited_email = serializers.EmailField(required=True)
-    answers = CaseQuestionAnswerSerializer(many=True)
-    extra_answers = CaseExtraQuestionAnswerSerializer(
-        many=True, 
-        required=False
-    )
+    answers = AtFirstAnswerSerializer(many=True)
 
     def save(self):
         inviter_participant = None
@@ -310,13 +320,24 @@ class AtFirstCaseAnswersSeializer(serializers.Serializer):
                     responsive = inviter_participant
 
                 for answer_data in self.validated_data['answers']:
-                    question_id = int(answer_data['question_id'])
-                    try:
-                        question = Question.objects.get(
-                            id=question_id
+                    question_id = answer_data.get('question_id')
+                    question_text = answer_data.get('question_text')
+                    if question_id:
+                        try:
+                            question = Question.objects.get(
+                                id=question_id
+                            )
+                        except Question.DoesNotExist:
+                            continue    
+                    elif question_text:
+                        question = Question.objects.create(
+                            questionnaire=questionnaire,
+                            who_created=Question.BY_MEMBER,
+                            created_by_participant=inviter_participant,
+                            question_text=question_text,
                         )
-                    except Question.DoesNotExist:
-                        continue    
+                        instance.extra_questions.add(question)
+                        
                     answer_value = answer_data.get('answer', False)
                     if questionnaire.use_show_result:
                         new_answer = Answer.objects.create(
@@ -341,10 +362,113 @@ class AtFirstCaseAnswersSeializer(serializers.Serializer):
             return instance
         
 
+class AtSecondAnswersSerializer(serializers.Serializer):
+    """
+    Process data for inviter answers.
+    """
+    questionnaire_case_id = serializers.IntegerField(required=True)
+    answers = AtSecondAnswerSerializer(many=True)
+
+    def save(self):
+        inviter_participant = None
+        instance = None
+        try:
+            try:
+                instance = QuestionnaireCase.objects.get(
+                    id=self.validated_data['questionnaire_case_id']
+                )
+            except QuestionnaireCase.DoesNotExist:
+                raise IntergityError
+
+            try:
+                responsive = instance.participants.get(
+                    is_invited=True
+                )
+            except QuestionnaireParticipant.DoesNotExist:
+                raise IntegrityError
+                
+            with transaction.atomic():
+                invited_email = self.validated_data.get('invited_email')
+                for answer_data in self.validated_data['answers']:
+                    question_id = answer_data.get('question_id')
+                    if question_id:
+                        try:
+                            question = Question.objects.get(
+                                id=question_id
+                            )
+                        except Question.DoesNotExist:
+                            logger.error(_('There is no such question'))
+                        else:
+                            answer_value = answer_data.get('answer', False)
+                            if instance.questionnaire.use_show_result:
+                                new_answer = Answer.objects.create(
+                                    questionnaire_case=instance,
+                                    question=question,
+                                    participant=responsive,
+                                    answer=answer_value,
+                                    show_answer=answer_data\
+                                        .get('show', False),
+                                )
+                            else:
+                                if answer_value:
+                                    new_answer = Answer.objects.create(
+                                        questionnaire_case=instance,
+                                        question=question,
+                                        participant=responsive,
+                                        answer=True,
+                                    )
+        except IntegrityError:
+            return None
+        else:
+            return instance
+
+    def process_answers(self, questionnaire_case):
+        data = list(questionnaire_case.get_coincedences())
+        
+        coincedences = len([item for item in data \
+            if item.get('is_coincedence')])
+        q_colors = sorted((
+            ('red', questionnaire_case.questionnaire.red_level),
+            ('yellow', questionnaire_case.questionnaire.yellow_level),
+            ('green', questionnaire_case.questionnaire.green_level)
+        ), key=lambda x: x[1], reverse=True)
+
+        color = None
+        for (_color, hm) in q_colors:
+            if coincedences > hm or (hm == 0 and coincedences >= hm):
+                color = _color
+                break
+
+        existed_ids = [r.id for r in questionnaire_case.recommendations.all()]
+        
+        items = [item['question'].pk for item in \
+                list(questionnaire_case.get_coincedences()) \
+                    if item.get('is_coincedence') and 'question' in item]
+        question_ids = filter(lambda x: x not in existed_ids, items)
+        ritems = Recommendation.objects.filter(
+            Q(questionnaire=questionnaire_case.questionnaire) & (
+            Q(question__id__in=question_ids) | \
+            Q(for_color=color))
+        )
+        questionnaire_case.recommendations.add(*ritems)
+        
+
 class ListQuestionSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
         return {
             'id': obj.pk,
             'question_text': obj.question_text,
         }
+
+
+class ListRecommendationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Questionnaire model.
+    """
+    
+    class Meta:
+        model = Recommendation
+        fields = ('id', 'name', 'description')
+
+
         
