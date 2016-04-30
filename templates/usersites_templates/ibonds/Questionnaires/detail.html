@@ -9,6 +9,28 @@
 {% block after_css %}
     <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+    <style type="text/css">
+        .frame {
+            overflow: auto; 
+            width: 550px; 
+            height: 300px; 
+            text-align: justify; 
+            padding: 15px; 
+            margin-left: 0;
+            border-left: #000000 1px solid; 
+            border-right: #000000 1px solid; 
+            border-top: #000000 1px solid; 
+            border-bottom: #000000 1px solid; 
+            scrollbar-face-color: #DF0000; 
+            scrollbar-highlight-color: #FF0000; 
+            scrollbar-shadow-color: #BB0000; 
+            scrollbar-3dlight-color: #660000; 
+            scrollbar-arrow-color: #FFFFFF; 
+            scrollbar-track-color: #F5F5F5; 
+            scrollbar-darkshadow-color: #660000;
+        }
+    </style>    
+
 {% endblock %}
 
 {% block title %}{{ object.name }}{% endblock %}
@@ -36,4 +58,21 @@
         </div>
     </section>
     {% endwith %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var submit_button = $('#save-button');
+            $(submit_button).css('cursor', 'text').attr('disabled', 'disabled');
+            $('#agree-tos').change(function() {
+                if($(this).is(":checked")) {
+                    $(submit_button).css('cursor', 'pointer').removeAttr('disabled');
+                } else {
+                    $(submit_button).css('cursor', 'text').attr('disabled', 'disabled');
+                }
+            }) 
+        });
+    </script>
+
 {% endblock %}
