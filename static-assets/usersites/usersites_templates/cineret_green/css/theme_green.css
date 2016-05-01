@@ -72,6 +72,10 @@ h3 a:focus,
     color: #000;
 }
 
+.cust-nav__btn a:hover{
+    color: #6ACC2B;
+}
+
 @media (min-width: 768px) {
     .navbar-default {
         background-color: rgba(0,0,0,.7); // Tint color
