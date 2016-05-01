@@ -520,6 +520,7 @@ h3 a:focus{
 
 .product .thumbnail{
     padding: 0;
+    border: none;
 }
 
 .product .product__caption{
