@@ -69,11 +69,11 @@ h3 a:focus,
 }
 
 .cust-nav__btn a{
-    color: #000;
+    color: #fed136;
 }
 
 .cust-nav__btn a:hover{
-    color: #fed136;
+    color: #000;
 }
 
 @media (min-width: 768px) {
