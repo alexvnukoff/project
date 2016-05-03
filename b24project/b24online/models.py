@@ -2355,6 +2355,14 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
         return Recommendation.get_active_objects()\
             .filter(questionnaire=self)
 
+    def get_extra_questions(self):
+        return Question.get_active_objects()\
+            .filter(questionnaire=self, 
+                    who_created=Question.BY_MEMBER,
+                    is_approved=False)\
+            .order_by('position')
+        
+
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """

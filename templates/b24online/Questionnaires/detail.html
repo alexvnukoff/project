@@ -40,9 +40,12 @@
                     <li><a href="#questions">{% trans 'Questions' %}</a></li>
                     <li><a href="#recommendations">{% trans 'Recommendations' %}</a></li>
                     <li><a href="#cases">{% trans 'Statistics' %}</a></li>
+                    {% if request.user == item.created_by %}
+                        <li><a href="#userquestions">{% trans 'Users questions' %}</a></li>
+                    {% endif %}
                 </ul>
             </div>
-        
+
             <div id="questions">
               <div style="margin: 20px; clear: both;">
                 {% if request.user == item.created_by %}
@@ -62,7 +65,7 @@
                         <th>&nbsp;</th>
                         {% endif %}
                     </tr>
-                    {% for question in item.actual_questions %}                
+                    {% for question in item.actual_questions %}
                     <tr>
                         <td>{{ question.question_text }}</td>
                         <td>
@@ -75,25 +78,25 @@
                             <a href="{{ request.path }}?move=down&question_id={{ question.id }}">&#8679;</a>
                         </td>
                         <td class="data-action">
-                            <a class="imgnews edit icon-action" 
+                            <a class="imgnews edit icon-action"
                                 href="{% url 'questionnaires:update_question' pk=question.id %}"></a>
-                            <a class="imgnews remove icon-action" 
+                            <a class="imgnews remove icon-action"
                                 href="{% url 'questionnaires:delete_question' pk=question.id %}"></a>
                         </td>
                         {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td align="center" 
+                        <td align="center"
                             colspan="{% if request.user == item.created_by %}4{% else %}2{% endif %}">
                             {% trans 'There are no records' %}
                         </td>
                     </tr>
                     {% endfor %}
-                </table> 
+                </table>
                 </div>
             </div>
-        
+
             <div id="recommendations">
               <div style="margin: 20px; clear: both;">
                 {% if request.user == item.created_by %}
@@ -114,7 +117,7 @@
                         <th>&nbsp;</th>
                         {% endif %}
                     </tr>
-                    {% for recommendation in item.actual_recommendations %}                
+                    {% for recommendation in item.actual_recommendations %}
                     <tr valign="top">
                         <td>{{ recommendation.question|default:"" }}</td>
                         <td>{{ recommendation.for_color|default:"" }}</td>
@@ -122,22 +125,22 @@
                         <td>{{ recommendation.description|truncatewords:40 }}</td>
                         {% if request.user == item.created_by %}
                         <td class="data-action">
-                            <a class="imgnews edit icon-action" 
+                            <a class="imgnews edit icon-action"
                                 href="{% url 'questionnaires:update_recommendation' pk=recommendation.id %}"></a>
-                            <a class="imgnews remove icon-action" 
+                            <a class="imgnews remove icon-action"
                                 href="{% url 'questionnaires:delete_recommendation' pk=recommendation.id %}"></a>
                         </td>
                         {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td align="center" 
+                        <td align="center"
                             colspan="{% if request.user == item.created_by %}4{% else %}3{% endif %}">
                             {% trans 'There are no records' %}
                         </td>
                     </tr>
                     {% endfor %}
-                </table> 
+                </table>
               </div>
             </div>
             <div id="cases">
@@ -151,12 +154,12 @@
                         <th>{% trans 'Answers' %}</th>
                         <th>{% trans 'Coincedences' %}</th>
                     </tr>
-                    {% for item_case in item.cases.all %}                
+                    {% for item_case in item.cases.all %}
                     <tr valign="top">
                         <td rowspan="2">{{ item_case.created_at|date:'d M Y H:i' }}</td>
                         <td style="border-bottom: 0;">{% trans 'First' %}: {{ item_case.get_inviter }}</td>
                         <td style="border-bottom: 0;" align="center">
-                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'inviter' %}" 
+                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'inviter' %}"
                                data-title="{% trans 'First user answers' %}"
                                class="show-in-dialog">{{ item_case.get_inviter_answers_total|default:'0' }}</td>
                         </td>
@@ -166,7 +169,7 @@
                     <tr valign="top">
                         <td style="border-top: 0;">{% trans 'Second' %}: {{ item_case.get_invited }}</td>
                         <td style="border-top: 0;" align="center">
-                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'invited' %}" 
+                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'invited' %}"
                                data-title="{% trans 'Second user answers' %}"
                                class="show-in-dialog">{{ item_case.get_invited_answers_total|default:'0' }}
                             </a>
@@ -174,15 +177,64 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td align="center" 
+                        <td align="center"
                             colspan="{% if request.user == item.created_by %}4{% else %}3{% endif %}">
                             {% trans 'There are no records' %}
                         </td>
                     </tr>
                     {% endfor %}
-                </table> 
+                </table>
               </div>
             </div>
+
+            {% if request.user == item.created_by %}
+            <div id="userquestions">
+              <form action="" method="post">
+              {% csrf_token %}
+              {{ form.formset.management_form }}
+              <div style="margin: 20px; clear: both;">
+                <div style="padding: 10px 0; text-align: right;">&nbsp;</div>
+                <table width="100%" cellspacing="2" cellpadding="2"
+                    border="0" class="table-data">
+                    <tr>
+                        <th>{% trans 'Question' %}</th>
+                        <th>{% trans 'Created by' %}</th>
+                        <th>{% trans 'Approve' %}</th>
+                        <th>{% trans 'Delete' %}</th>
+                    </tr>
+                    {% for item_form in form.formset %} 
+                    {% for hidden in item_form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    <tr>
+                        <td>{{ item_form.question.question_text }}</td>
+                        <td>
+                            {# The question author #}
+                            {{ item_form.question.author }}
+                        </td>
+                        <td align="center">
+                            {{ item_form.approve }}
+                        </td>
+                        <td class="center">
+                            {{ item_form.DELETE }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td align="center"colspan="4">{% trans 'There are no records' %}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="without-border">
+                      <td colspan="2">&nbsp;</td>
+                      <td colspan="2" align="right">
+                        <input type="submit" name="update" value="{% trans 'Save changes' %}">
+                      </td>
+                    </tr>
+                </table>
+              </div>
+              </form>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

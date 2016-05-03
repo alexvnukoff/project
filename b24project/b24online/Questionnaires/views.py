@@ -28,8 +28,12 @@ from centerpokupok.models import B2CProduct
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
                            ItemDeactivate)
-from b24online.Questionnaires.forms import (QuestionnaireForm, QuestionForm,
-                                            RecommendationForm)
+from b24online.Questionnaires.forms import (
+    QuestionnaireForm, 
+    QuestionForm,
+    RecommendationForm, 
+    ExtraQuestionsForm,
+)
 from b24online.utils import (get_by_content_type, get_permitted_orgs)
 
 
@@ -183,6 +187,7 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
 class QuestionnaireDetail(ItemDetail):
     model = Questionnaire
     template_name = 'b24online/Questionnaires/detail.html'
+    form_class = ExtraQuestionsForm
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -197,6 +202,29 @@ class QuestionnaireDetail(ItemDetail):
         self._product = questionnaire.item
         context.update({'product': self._product,})
         return context
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request,
+            self.object,
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        logger.debug(request.POST)
+        form = self.form_class(
+            request,
+            self.object,
+            data=request.POST,
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail',
+                kwargs={'item_id': self.object.pk,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class QuestionnaireDelete(ItemDeactivate):
