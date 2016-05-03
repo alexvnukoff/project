@@ -2588,6 +2588,14 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         return self.get_participants()[1]
 
+    def get_participant(self, participant_type):
+        if participant_type == 'inviter':
+            return self.get_inviter()
+        elif participant_type == 'invited':
+            return self.get_invited()
+        else:
+            return None
+
     def get_coincedences(self):
         """
         Return the answers coincendences.
@@ -2656,16 +2664,17 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                 if not answer.question:
                     continue
                 _questions.append(answer.question.pk)
-                answers[answer.question.id] = answer.answer
-                shows[answer.question.id] = answer.show_answer
+                answers[answer.question.id] = answer
             _questions = set(_questions)
 
-            print(_questions)
             for question in self.questionnaire.questions\
                 .filter(id__in=_questions).order_by('position'):
+                answer = answers.get(question.id)
+                is_true = answer.answer
                 yield {
                     'question': question,
                     'answer': answers.get(question.id),
+                    'is_true': is_true,
                     'show': shows.get(question.id),
                 }
         
@@ -2674,7 +2683,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         Return how many positive answers.
         """
         _answers = [item for item in self.get_answers(participant_type) \
-            if item.get('answer')]
+            if item.get('is_true') ]
         return len(_answers)
 
     def get_inviter_answers(self):

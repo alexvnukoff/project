@@ -161,11 +161,16 @@
                                class="show-in-dialog">{{ item_case.get_inviter_answers_total|default:'0' }}</td>
                         </td>
                         <td rowspan="2" align="center">
-                            <a href="#' class="show-in-dialog">{{ item_case.get_coincedences_total|default:'0' }}</td>
+                            <a href="{% url 'questionnaires:questionnaire_case_coincedences' item_case.id %}" class="show-in-dialog">{{ item_case.get_coincedences_total|default:'0' }}</td>
                     </tr>
                     <tr valign="top">
                         <td style="border-top: 0;">{% trans 'Second' %}: {{ item_case.get_invited }}</td>
-                        <td style="border-top: 0;" align="center">{{ item_case.get_invited_answers_total|default:'0' }}</td>
+                        <td style="border-top: 0;" align="center">
+                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'invited' %}" 
+                               data-title="{% trans 'Second user answers' %}"
+                               class="show-in-dialog">{{ item_case.get_invited_answers_total|default:'0' }}
+                            </a>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>

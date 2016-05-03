@@ -19,6 +19,7 @@ from b24online.Questionnaires.views import (
      RecommendationUpdate,
      RecommendationDelete,
      questionnaire_case_answers,
+     questionnaire_case_coincedences,
 )
 
 
@@ -64,5 +65,8 @@ urlpatterns = [
      url(r'^case/(?P<pk>\d+?)/answers/(?P<participant_type>(inviter|invited))/$',
          questionnaire_case_answers, 
          name='questionnaire_case_answers'),
+     url(r'^case/(?P<pk>\d+?)/coincedences/$',
+         questionnaire_case_coincedences, 
+         name='questionnaire_case_coincedences'),
  
 ]
