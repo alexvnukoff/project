@@ -1,0 +1,4 @@
+One of the questionnaires "{{ q_case.questionnaire.name }}" created by You 
+has been finished. 
+
+You can view the results by this url: {{ result_href }}

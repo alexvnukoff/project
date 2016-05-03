@@ -17,6 +17,11 @@
     <link type="text/css" rel="stylesheet" href='{% static "b24online/css/extra.css" %}' />
 {% endblock %}
 
+{% block js %}
+    {{  block.super }}
+    <script  type="text/javascript" src="{% static 'b24online/js/questionnaires.js' %}"></script>
+{% endblock %}
+
 {% block keywords %}{% endblock %}
 
 {% block content %}
@@ -137,18 +142,30 @@
             </div>
             <div id="cases">
               <div style="margin: 20px; clear: both;">
+                <div style="padding: 10px 0; text-align: right;">&nbsp;</div>
                 <table width="100%" cellspacing="2" cellpadding="2"
                     border="0" class="table-data">
                     <tr>
                         <th>{% trans 'Date' %}</th>
                         <th>{% trans 'Participants' %}</th>
+                        <th>{% trans 'Answers' %}</th>
                         <th>{% trans 'Coincedences' %}</th>
                     </tr>
                     {% for item_case in item.cases.all %}                
                     <tr valign="top">
-                        <td>{{ item_case.created_at }}</td>
-                        <td></td>
-                        <td></td>
+                        <td rowspan="2">{{ item_case.created_at|date:'d M Y H:i' }}</td>
+                        <td style="border-bottom: 0;">{% trans 'First' %}: {{ item_case.get_inviter }}</td>
+                        <td style="border-bottom: 0;" align="center">
+                            <a href="{% url 'questionnaires:questionnaire_case_answers' item_case.id 'inviter' %}" 
+                               data-title="{% trans 'First user answers' %}"
+                               class="show-in-dialog">{{ item_case.get_inviter_answers_total|default:'0' }}</td>
+                        </td>
+                        <td rowspan="2" align="center">
+                            <a href="#' class="show-in-dialog">{{ item_case.get_coincedences_total|default:'0' }}</td>
+                    </tr>
+                    <tr valign="top">
+                        <td style="border-top: 0;">{% trans 'Second' %}: {{ item_case.get_invited }}</td>
+                        <td style="border-top: 0;" align="center">{{ item_case.get_invited_answers_total|default:'0' }}</td>
                     </tr>
                     {% empty %}
                     <tr>

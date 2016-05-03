@@ -1,0 +1,3 @@
+The questionnaire started by You at {{ q_case.created_at }} has been finished. 
+
+You can view the results by this url: {{ result_href }}

@@ -171,23 +171,14 @@ class InviteForm(forms.Form):
                     else:
                         question = q_form.question
 
-                    if self.questionnaire.use_show_result:
-                        new_answer = Answer.objects.create(
-                            questionnaire_case=self.instance,
-                            question=question,
-                            participant=responsive,
-                            answer=q_form.cleaned_data.get('agree', False),
-                            show_answer=q_form.cleaned_data.get('show', False),
+                    new_answer = Answer.objects.create(
+                        questionnaire_case=self.instance,
+                        question=question,
+                        participant=responsive,
+                        answer=q_form.cleaned_data.get('agree', False),
+                        show_answer=q_form.cleaned_data.get('show', False) \
+                            if self.questionnaire.use_show_result else False,
                         )
-                    else:
-                        if 'agree' in q_form.cleaned_data and \
-                            q_form.cleaned_data['agree']:
-                            new_answer = Answer.objects.create(
-                                questionnaire_case=self.instance,
-                                question=question,
-                                participant=responsive,
-                                answer=True,
-                            )
 
         except IntegrityError:
             raise

@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import TemplateView
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 from b24online.models import (Questionnaire, QuestionnaireCase, Answer)
 from guardian.mixins import LoginRequiredMixin
@@ -80,17 +81,34 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                    
                     inviter = q_case.get_inviter()
                     if inviter and inviter.email:
-                        subject = _('The questionnaire results')
-                        message = 'The questionnaire results Url: {0}' \
-                            . format(result_href)
-                        mail = EmailMessage(
-                            subject, 
-                            message,
+                        results_subject = _('The questionnaire started by '
+                                    'You has beed finished')
+                        results_message = render_to_string(
+                            'usersites/Questionnaires/resultsEmail.txt',
+                            {'q_case': q_case, 'result_href': result_href}
+                        )
+                        results_mail = EmailMessage(
+                            results_subject, 
+                            results_message,
                             settings.DEFAULT_FROM_EMAIL, 
                             [inviter.email,]
                         )
+                        report_subject = _('The questionnaire created by '
+                                    'You has beed finished')
+                        report_message = render_to_string(
+                            'usersites/Questionnaires/reportEmail.txt',
+                            {'q_case': q_case}
+                        )
+                        report_mail = EmailMessage(
+                            report_subject, 
+                            report_message,
+                            settings.DEFAULT_FROM_EMAIL,
+                            [q_case.questionnaire.created_by.email,], 
+                        )
+                        
+                        
                         if not getattr(settings, 'NOT_SEND_EMAIL', False):
-                            mail.send()
+                            results_mail.send()
 
                     form.process_answers()
                     success_url = reverse(

@@ -4,21 +4,25 @@
 The views for Questionnaires, Questions etc
 """
 
+import json
 import logging
 
-from django.http import HttpResponse, Http404
+from django.http import (HttpResponse, HttpResponseRedirect, Http404, 
+                         HttpResponseBadRequest)
 from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import login_required
 
 from b24online.models import (Company, B2BProduct, Questionnaire, 
-                              Question, Answer, Recommendation)
+                              QuestionnaireCase, Question, Answer, 
+                              Recommendation)
 from centerpokupok.models import B2CProduct
                               
 from guardian.mixins import LoginRequiredMixin
@@ -422,3 +426,35 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
                 })
             return HttpResponseRedirect(success_url)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+@login_required
+def questionnaire_case_answers(request, pk, participant_type, **kwargs):
+    model = QuestionnaireCase
+    template_name = 'b24online/Questionnaires/QuestionnaireCaseAnswers.html'
+    if request.is_ajax():
+        try:
+            instance = QuestionnaireCase.objects.get(pk=pk)
+        except QuestionnaireCase.DoesNotExist:
+            raise Http404(_('There is no such QuestionnaireCase with ID={0}') \
+                . format(pk))
+        else:
+            logger.debug('Step 1')
+            if not can_manage_product(request.user, 
+                instance.questionnaire.item):
+                return HttpResponseRedirect(reverse('denied'))
+            data = {
+                'code': 'success',
+                'msg': render_to_string(
+                        template_name,
+                        {},
+                        context_instance=RequestContext(request),
+                )
+            }
+            logger.debug('Step 2')
+            return HttpResponse(json.dumps(data), 
+                                content_type='application/json')
+    return HttpResponseBadRequest()
+
+                                            
+                                            

@@ -2577,27 +2577,43 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
             raise RuntimeError(_('The participants are invalid'))
 
     def get_inviter(self):
+        """
+        Return the first participant.
+        """
         return self.get_participants()[0]
 
     def get_invited(self):
+        """
+        Return the second participant.
+        """
         return self.get_participants()[1]
 
     def get_coincedences(self):
+        """
+        Return the answers coincendences.
+        """
         answers = {}
         shows = {}
+        _questions = []
         for answer in Answer.objects.filter(
             questionnaire_case=self):
             if not answer.question:
                 continue
+
+            _questions.append(answer.question.id)
+
             answers.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
                     answer.answer
             shows.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
                     answer.show_answer
+        _questions = set(_questions)
+
         inviter, invited = self.get_participants()
         if all((inviter, invited)):
-            for question in self.questionnaire.questions.order_by('position'):
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
                 data = {
                     'question': question,
                     'inviter': answers.get(question.id, {}).get(inviter.id),
@@ -2611,6 +2627,79 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                         (data.get('inviter_show') or data.get('invited_show')),
                 })
                 yield data
+
+    def get_coincedences_total(self):
+        """
+        Return how many coincedences
+        """
+        _coincedences = [item for item in self.get_coincedences() \
+            if item.get('is_coincedence')]
+        return len(_coincedences)
+
+    def get_answers(self, participant_type):
+        """
+        Return the answers.
+        """
+        responsive = None
+        inviter, invited = self.get_participants()
+        if participant_type == 'inviter':
+            responsive = inviter
+        elif participant_type == 'invited':
+            responsive = invited
+
+        if responsive:
+            answers = {}
+            shows = {}
+            _questions = []
+            for answer in Answer.objects.filter(
+                questionnaire_case=self, participant=responsive):
+                if not answer.question:
+                    continue
+                _questions.append(answer.question.pk)
+                answers[answer.question.id] = answer.answer
+                shows[answer.question.id] = answer.show_answer
+            _questions = set(_questions)
+
+            print(_questions)
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
+                yield {
+                    'question': question,
+                    'answer': answers.get(question.id),
+                    'show': shows.get(question.id),
+                }
+        
+    def get_answers_total(self, participant_type):
+        """
+        Return how many positive answers.
+        """
+        _answers = [item for item in self.get_answers(participant_type) \
+            if item.get('answer')]
+        return len(_answers)
+
+    def get_inviter_answers(self):
+        """
+        Return positive answers for inviter.
+        """
+        return self.get_answers('inviter')
+
+    def get_inviter_answers_total(self):
+        """
+        Return how many positive answers for inviter.
+        """
+        return self.get_answers_total('inviter')
+
+    def get_invited_answers(self):
+        """
+        Return positive answers for invited.
+        """
+        return self.get_answers('invited')
+
+    def get_invited_answers_total(self):
+        """
+        Return how many positive answers for invited.
+        """
+        return self.get_answers_total('invited')
 
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
