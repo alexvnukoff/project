@@ -55,7 +55,7 @@ table.table-data td.is-child {
 tr.toggle-child td.toggler {
     cursor: pointer;
     background:url('../img/rarr-blue.png') left 3px no-repeat;
-    padding-left:20px;
+    padding-left:20px !important;
     width: -moz-fit-content; /* mozilla only */
     width: intrinsic; /* webkit only */
     border-bottom:1px dotted blue;

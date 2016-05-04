@@ -58,7 +58,7 @@ def _wall_content(request):
             applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
     # Apply geo_country by our internal code
-    if request.session['geo_country'] and not request.GET.get('order1'):
+    if request.session.get('geo_country') and not request.GET.get('order1'):
         geo_country = request.session['geo_country']
         applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
@@ -155,7 +155,7 @@ def apply_filters(request, model, q, valid_filters):
             s = s.filter('terms', **{filter_key: values})
 
     # Apply geo_country by our internal code
-    if request.session['geo_country'] and not request.GET.get('order1'):
+    if request.session.get('geo_country') and not request.GET.get('order1'):
         s = s.filter('terms', **{'country': [request.session['geo_country']]})
 
     if q:
