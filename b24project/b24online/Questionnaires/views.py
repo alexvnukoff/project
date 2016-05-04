@@ -211,7 +211,6 @@ class QuestionnaireDetail(ItemDetail):
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
-        logger.debug(request.POST)
         form = self.form_class(
             request,
             self.object,

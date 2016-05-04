@@ -180,7 +180,7 @@ class Command(BaseCommand):
             'inviter_email': 'inviter@example.b24online.com',
             'invited_email': 'invited@example.b24online.com',
             'answers': answers,
-        }        
+        }     
         response = self._client.post(
             url, 
             post_data, 
@@ -216,4 +216,3 @@ class Command(BaseCommand):
             **EXTRA_HEADERS
         )
         new_case_info = cls.get_response_content(response)
-        print(new_case_info)

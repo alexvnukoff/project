@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^questionnaires/(?P<uuid>[0-9a-f\-]+?)/invited/$', 
         QuestionnaireInviterView.as_view(),
         name='questionnaire-invited'),
-    url(r'^questionnaires/case/(?P<pk>[0-9])+?/recommendations/$', 
+    url(r'^questionnaires/case/(?P<pk>[0-9]+?)/recommendations/$', 
         QuestionnaireCaseRecommendationsView.as_view(),
         name='questionnaire-case-recommendations'),
 ]
@@ -36,13 +36,3 @@ router.register(r'products/b2c', B2CProductViewSet)
 router.register(r'questionnaires', QuestionnaireViewSet)
 
 urlpatterns += router.urls
-
-#urlpatterns += [
-#    url(r'^questionnaires/(?P<uuid>[0-9a-f\-]+?)/invited/$', 
-#        QuestionnaireInviterView.as_view(),
-#        name='questionnaire-invited'),
-#    url(r'^questionnaires/case/(?P<pk>[0-9])+?/recommendations/$', 
-#        QuestionnaireInviterView.as_view(),
-#        name='questionnaire-case-recommendations'),
-#        
-#]

@@ -1,4 +1,5 @@
 import os
+import logging
 
 from django.db.models import Q
 from django.conf import settings
@@ -26,6 +27,8 @@ from usersites.Api.serializers import GallerySerializer, \
     DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
     ListQuestionSerializer, QuestionnaireSerializer, AtFirstAnswersSerializer, \
     AtSecondAnswersSerializer, ListRecommendationSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -525,14 +528,15 @@ class QuestionnaireCaseRecommendationsView(APIView):
     """
     Process the participants questions answers.
     """
-    def get(self, request, format=None, **kwargs):
-        pk = 80
+    def get(self, request, pk, format=None, **kwargs):
+        logger.debug(pk)
+        logger.debug(kwargs)
         try:           
             instance = QuestionnaireCase.objects.get(pk=pk)
         except QuestionnaireCase.DoesNotExist:
             return Response({'result': 'error', 
                 'errors': [
-                    _('There is no such QuestionnaireCase with ID=%d') % \
+                    _('There is no such QuestionnaireCase with ID=%s') % \
                         pk]})
         else:
             serializer = ListRecommendationSerializer(
