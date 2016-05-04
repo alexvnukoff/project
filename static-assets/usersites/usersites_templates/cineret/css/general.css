@@ -520,6 +520,7 @@ h3 a:focus{
 
 .product .thumbnail{
     padding: 0;
+    border: none;
 }
 
 .product .product__caption{
@@ -998,7 +999,7 @@ header.carousel {
     /*max-height: 700px;*/
     width: auto;
     max-width: 100%;
-    margin-top: 100px;
+    /*margin-top: 100px;*/
 }
 
 header.carousel .item,

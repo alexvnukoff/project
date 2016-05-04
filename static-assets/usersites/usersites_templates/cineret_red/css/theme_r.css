@@ -69,6 +69,10 @@ h3 a:focus,
 }
 
 .cust-nav__btn a{
+    color: #BF0000;
+}
+
+.cust-nav__btn a:hover{
     color: #000;
 }
 
