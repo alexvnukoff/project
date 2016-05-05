@@ -1,4 +1,6 @@
 import os
+import logging
+
 from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -16,12 +18,14 @@ from django.utils.text import Truncator
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView, ListView
 from appl import func
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
-    GalleryImage, Document, Chamber
+    GalleryImage, Document, Chamber, IndexedModelMixin
 from b24online.search_indexes import SearchEngine
 from core import tasks
 from core.cbv import HybridListView
 from b24online.forms import GalleryImageForm, DocumentForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
+
+logger = logging.getLogger(__name__)
 
 
 class TabItemList(HybridListView):
@@ -313,9 +317,9 @@ class ItemsList(HybridListView):
         return queryset
 
     def get_queryset(self):
-        if self.is_filtered() and not self.is_my():
+        if issubclass(self.model, IndexedModelMixin) \
+            and self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
-
         queryset = self.model.get_active_objects().filter(is_active=True).order_by(*self._get_sorting_params())
         return self.optimize_queryset(queryset)
 
