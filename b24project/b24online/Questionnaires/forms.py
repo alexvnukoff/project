@@ -170,10 +170,10 @@ class ExtraQuestionsForm(forms.Form):
         )(**params)
 
     def is_valid(self):
-        if not super(ExtraQuestionsForm, self).is_valid()
+        if not super(ExtraQuestionsForm, self).is_valid():
             return False
         for item_form in self.formset:
-            if not  item_form.is_valid()
+            if not  item_form.is_valid():
                 return False
         return True
         
