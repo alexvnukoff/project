@@ -4,28 +4,36 @@
 The views for Questionnaires, Questions etc
 """
 
+import json
 import logging
 
-from django.http import HttpResponse, Http404
+from django.http import (HttpResponse, HttpResponseRedirect, Http404,
+                         HttpResponseBadRequest)
 from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic import (DetailView, ListView, View,
                                   TemplateView)
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import login_required
 
-from b24online.models import (Company, B2BProduct, Questionnaire, 
-                              Question, Answer, Recommendation)
+from b24online.models import (Company, B2BProduct, Questionnaire,
+                              QuestionnaireCase, Question, Answer,
+                              Recommendation)
 from centerpokupok.models import B2CProduct
-                              
+
 from guardian.mixins import LoginRequiredMixin
-from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, 
+from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
                            ItemDeactivate)
-from b24online.Questionnaires.forms import (QuestionnaireForm, QuestionForm,
-                                            RecommendationForm)
+from b24online.Questionnaires.forms import (
+    QuestionnaireForm, 
+    QuestionForm,
+    RecommendationForm, 
+    ExtraQuestionsForm,
+)
 from b24online.utils import (get_by_content_type, get_permitted_orgs)
 
 
@@ -55,7 +63,7 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         self.object = None
         self.content_type_id = kwargs.pop('content_type_id')
         self.item_id = kwargs.pop('item_id')
-        if not can_manage_product(request.user, 
+        if not can_manage_product(request.user,
             get_by_content_type(self.content_type_id, self.item_id)):
             return HttpResponseRedirect(reverse('denied'))
 
@@ -64,7 +72,7 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             content_type_id=self.content_type_id,
             item_id=self.item_id
         )
@@ -72,7 +80,7 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             content_type_id=self.content_type_id,
             item_id=self.item_id,
             data=request.POST,
@@ -83,9 +91,9 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
             if form.changed_data and 'image' in form.changed_data:
                 form.instance.upload_image()
             success_url = reverse(
-                'questionnaires:list', 
+                'questionnaires:list',
                 kwargs={
-                    'content_type_id': self.content_type_id, 
+                    'content_type_id': self.content_type_id,
                     'item_id': self.item_id,
                 })
             return HttpResponseRedirect(success_url)
@@ -112,14 +120,14 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
         )
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
             data=request.POST,
             files=request.FILES
@@ -129,9 +137,9 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
             if form.changed_data and 'image' in form.changed_data:
                 form.instance.upload_image()
             success_url = reverse(
-                'questionnaires:list', 
+                'questionnaires:list',
                 kwargs={
-                    'content_type_id': self.object.content_type_id, 
+                    'content_type_id': self.object.content_type_id,
                     'item_id': self.object.object_id,
                 })
             return HttpResponseRedirect(success_url)
@@ -155,7 +163,7 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
         self.product = None
         if self.content_type_id and self.product_id:
             self.product = get_by_content_type(
-                self.content_type_id, 
+                self.content_type_id,
                 self.product_id
             )
             if not can_manage_product(request.user, self.product):
@@ -163,7 +171,7 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
 
             if not self.product:
                 raise Http404(_('There is no such instance'))
-        
+
         return super(QuestionnaireList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -172,13 +180,14 @@ class QuestionnaireList(LoginRequiredMixin, ItemsList):
             qs = qs.filter(
                 content_type_id=self.content_type_id,
                 object_id=self.product_id
-            )    
+            )
         return qs
 
 
 class QuestionnaireDetail(ItemDetail):
     model = Questionnaire
     template_name = 'b24online/Questionnaires/detail.html'
+    form_class = ExtraQuestionsForm
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -194,13 +203,35 @@ class QuestionnaireDetail(ItemDetail):
         context.update({'product': self._product,})
         return context
 
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(
+            request,
+            self.object,
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request,
+            self.object,
+            data=request.POST,
+        )
+        if form.is_valid():
+            form.save()
+            success_url = reverse(
+                'questionnaires:detail',
+                kwargs={'item_id': self.object.pk,
+                })
+            return HttpResponseRedirect(success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
 
 class QuestionnaireDelete(ItemDeactivate):
     model = Questionnaire
 
     def get_success_url(self):
         return reverse(
-            'questionnaires:list', 
+            'questionnaires:list',
             kwargs={
                 'content_type_id': self.object.content_type_id,
                 'item_id': self.object.item.pk
@@ -220,7 +251,7 @@ class QuestionDelete(ItemDeactivate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not can_manage_product(request.user, 
+        if not can_manage_product(request.user,
             self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
         return super(QuestionDelete, self)\
@@ -228,10 +259,10 @@ class QuestionDelete(ItemDeactivate):
 
     def get_success_url(self):
         return reverse(
-            'questionnaires:detail', 
+            'questionnaires:detail',
             kwargs={'item_id': self.object.questionnaire.pk}
         )
-        
+
 
 class RecommendationDelete(ItemDeactivate):
     model = Recommendation
@@ -269,14 +300,14 @@ class QuestionCreate(LoginRequiredMixin, ItemCreate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             item_id=self.item_id
         )
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             item_id=self.item_id,
             data=request.POST,
             files=request.FILES
@@ -284,7 +315,7 @@ class QuestionCreate(LoginRequiredMixin, ItemCreate):
         if form.is_valid():
             form.save()
             success_url = reverse(
-                'questionnaires:detail', 
+                'questionnaires:detail',
                 kwargs={
                     'item_id': self.item_id,
                 })
@@ -303,7 +334,7 @@ class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not can_manage_product(request.user, 
+        if not can_manage_product(request.user,
             self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
         return super(QuestionUpdate, self)\
@@ -311,14 +342,14 @@ class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
         )
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
             data=request.POST,
             files=request.FILES
@@ -326,7 +357,7 @@ class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
         if form.is_valid():
             form.save()
             success_url = reverse(
-                'questionnaires:detail', 
+                'questionnaires:detail',
                 kwargs={
                     'item_id': self.object.questionnaire.id,
                 })
@@ -359,14 +390,14 @@ class RecommendationCreate(LoginRequiredMixin, ItemCreate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             item_id=self.item_id
         )
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             item_id=self.item_id,
             data=request.POST,
             files=request.FILES
@@ -374,7 +405,7 @@ class RecommendationCreate(LoginRequiredMixin, ItemCreate):
         if form.is_valid():
             form.save()
             success_url = reverse(
-                'questionnaires:detail', 
+                'questionnaires:detail',
                 kwargs={
                     'item_id': self.item_id,
                 })
@@ -393,7 +424,7 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not can_manage_product(request.user, 
+        if not can_manage_product(request.user,
             self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
         return super(RecommendationUpdate, self)\
@@ -401,14 +432,14 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
         )
         return self.render_to_response(self.get_context_data(form=form))
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(
-            request, 
+            request,
             instance=self.object,
             data=request.POST,
             files=request.FILES
@@ -416,9 +447,73 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
         if form.is_valid():
             form.save()
             success_url = reverse(
-                'questionnaires:detail', 
+                'questionnaires:detail',
                 kwargs={
                     'item_id': self.object.questionnaire.id,
                 })
             return HttpResponseRedirect(success_url)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+@login_required
+def questionnaire_case_answers(request, pk, participant_type, **kwargs):
+    model = QuestionnaireCase
+    template_name = 'b24online/Questionnaires/questionnaireCaseAnswers.html'
+    if request.is_ajax():
+        try:
+            instance = QuestionnaireCase.objects.get(pk=pk)
+        except QuestionnaireCase.DoesNotExist:
+            raise Http404(_('There is no such QuestionnaireCase with ID={0}') \
+                . format(pk))
+        else:
+            if not can_manage_product(request.user,
+                instance.questionnaire.item):
+                return HttpResponseRedirect(reverse('denied'))
+
+            answers = instance.get_answers(participant_type)
+            data = {
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'instance': instance, 
+                     'answers': answers, 
+                     'responsive': instance.get_participant(participant_type)},
+                    context_instance=RequestContext(request),
+                )
+            }
+            return HttpResponse(json.dumps(data),
+                                content_type='application/json')
+    return HttpResponseBadRequest()
+
+
+@login_required
+def questionnaire_case_coincedences(request, pk, **kwargs):
+    model = QuestionnaireCase
+    template_name = 'b24online/Questionnaires/questionnaireCaseCoincedences.html'
+    if request.is_ajax():
+        try:
+            instance = QuestionnaireCase.objects.get(pk=pk)
+        except QuestionnaireCase.DoesNotExist:
+            raise Http404(_('There is no such QuestionnaireCase with ID={0}') \
+                . format(pk))
+        else:
+            if not can_manage_product(request.user,
+                instance.questionnaire.item):
+                return HttpResponseRedirect(reverse('denied'))
+
+            coincedences = instance.get_coincedences()
+            data = {
+                'code': 'success',
+                'msg': render_to_string(
+                    template_name,
+                    {'instance': instance, 
+                     'coincedences': coincedences,
+                    }, 
+                    context_instance=RequestContext(request),
+                )
+            }
+            return HttpResponse(json.dumps(data),
+                                content_type='application/json')
+    return HttpResponseBadRequest()
+
+

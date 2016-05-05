@@ -2275,6 +2275,7 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                              storage=image_storage,
                              sizes=['big', 'small', 'th'],
                              max_length=255, null=True, blank=True)
+
     content_type = models.ForeignKey(ContentType,
                                      limit_choices_to=CONTENT_TYPE_LIMIT,
                                      on_delete=models.CASCADE,
@@ -2318,10 +2319,6 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
                 pass
         return None
     
-
-    def has_perm(self, user):
-        return True
-        
     class Meta:
         verbose_name = _('Questionnaire')
         verbose_name_plural = _('Questionnaires')
@@ -2358,6 +2355,14 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
         return Recommendation.get_active_objects()\
             .filter(questionnaire=self)
 
+    def get_extra_questions(self):
+        return Question.get_active_objects()\
+            .filter(questionnaire=self, 
+                    who_created=Question.BY_MEMBER,
+                    is_approved=False)\
+            .order_by('position')
+        
+
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """
@@ -2382,6 +2387,12 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         null=True, 
         blank=True
     )
+    created_by_participant = models.ForeignKey(
+        'QuestionnaireParticipant',
+        related_name='questions',
+        null=True,
+        blank=True
+    )
     question_text = models.TextField(
         _('Question text'), 
         blank=False, 
@@ -2396,6 +2407,10 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         _('The question position in the set'),
         null=True,
         blank=True,
+    )
+    is_approved = models.BooleanField(
+        _('User question approved by questionnaire author'),
+        default=False
     )
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -2420,6 +2435,19 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         """The stub for using in views.
         """
         return True
+
+    @property
+    def author(self):
+        cls = type(self)
+        if self.who_created == cls.BY_AUTHOR:
+            return  self.created_by
+        elif self.who_created == cls.BY_MEMBER:
+            return  self.created_by_participant
+        else:
+            return None
+        
+    def __str__(self):
+        return self.question_text
 
 
 class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2491,7 +2519,10 @@ class QuestionnaireParticipant(ActiveModelMixing, models.Model):
     class Meta:
         verbose_name = _('Questionnaire participant')
         verbose_name_plural = _('Questionnaire participants')
-        
+       
+    def __str__(self):
+        return str(self.user) if self.user else self.email 
+
 
 class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     """
@@ -2554,27 +2585,51 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
             raise RuntimeError(_('The participants are invalid'))
 
     def get_inviter(self):
+        """
+        Return the first participant.
+        """
         return self.get_participants()[0]
 
     def get_invited(self):
+        """
+        Return the second participant.
+        """
         return self.get_participants()[1]
 
+    def get_participant(self, participant_type):
+        if participant_type == 'inviter':
+            return self.get_inviter()
+        elif participant_type == 'invited':
+            return self.get_invited()
+        else:
+            return None
+
     def get_coincedences(self):
+        """
+        Return the answers coincendences.
+        """
         answers = {}
         shows = {}
+        _questions = []
         for answer in Answer.objects.filter(
             questionnaire_case=self):
             if not answer.question:
                 continue
+
+            _questions.append(answer.question.id)
+
             answers.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
                     answer.answer
             shows.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
                     answer.show_answer
+        _questions = set(_questions)
+
         inviter, invited = self.get_participants()
         if all((inviter, invited)):
-            for question in self.questionnaire.questions.order_by('position'):
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
                 data = {
                     'question': question,
                     'inviter': answers.get(question.id, {}).get(inviter.id),
@@ -2588,6 +2643,80 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                         (data.get('inviter_show') or data.get('invited_show')),
                 })
                 yield data
+
+    def get_coincedences_total(self):
+        """
+        Return how many coincedences
+        """
+        _coincedences = [item for item in self.get_coincedences() \
+            if item.get('is_coincedence')]
+        return len(_coincedences)
+
+    def get_answers(self, participant_type):
+        """
+        Return the answers.
+        """
+        responsive = None
+        inviter, invited = self.get_participants()
+        if participant_type == 'inviter':
+            responsive = inviter
+        elif participant_type == 'invited':
+            responsive = invited
+
+        if responsive:
+            answers = {}
+            shows = {}
+            _questions = []
+            for answer in Answer.objects.filter(
+                questionnaire_case=self, participant=responsive):
+                if not answer.question:
+                    continue
+                _questions.append(answer.question.pk)
+                answers[answer.question.id] = answer
+            _questions = set(_questions)
+
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
+                answer = answers.get(question.id)
+                is_true = answer.answer
+                yield {
+                    'question': question,
+                    'answer': answers.get(question.id),
+                    'is_true': is_true,
+                    'show': shows.get(question.id),
+                }
+        
+    def get_answers_total(self, participant_type):
+        """
+        Return how many positive answers.
+        """
+        _answers = [item for item in self.get_answers(participant_type) \
+            if item.get('is_true') ]
+        return len(_answers)
+
+    def get_inviter_answers(self):
+        """
+        Return positive answers for inviter.
+        """
+        return self.get_answers('inviter')
+
+    def get_inviter_answers_total(self):
+        """
+        Return how many positive answers for inviter.
+        """
+        return self.get_answers_total('inviter')
+
+    def get_invited_answers(self):
+        """
+        Return positive answers for invited.
+        """
+        return self.get_answers('invited')
+
+    def get_invited_answers_total(self):
+        """
+        Return how many positive answers for invited.
+        """
+        return self.get_answers_total('invited')
 
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):

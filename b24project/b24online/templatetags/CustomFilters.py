@@ -526,22 +526,7 @@ def questionnaire_for_company_products():
     """
     Return the Questionnarie's qs for current company products.
     """
-    from b24online.models import B2BProduct
-    from centerpokupok.models import B2CProduct
+    from b24online.utils import get_company_questionnaire_qs
     
     organization = get_current_site().user_site.organization
-    if isinstance(organization, Company):
-        b2b_content_type, b2c_content_type = map(
-            lambda model_class: ContentType.objects.get_for_model(model_class),
-                 (B2BProduct, B2CProduct))
-        b2b_ids, b2c_ids = map(
-            lambda model_class: \
-                [item.id for item in model_class.get_active_objects()\
-                    .filter(company=organization)],
-                 (B2BProduct, B2CProduct))
-        return Questionnaire.get_active_objects().filter(
-            (Q(content_type=b2b_content_type) & Q(object_id__in=b2b_ids)) | \
-            (Q(content_type=b2c_content_type) & Q(object_id__in=b2c_ids))
-        )
-    else:
-        return Questionnaire.objects.none()
+    return get_company_questionnaire_qs(organization)

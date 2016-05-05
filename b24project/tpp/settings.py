@@ -144,7 +144,11 @@ CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.use
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
 ACCOUNT_ACTIVATION_DAYS = 7  # One week user's account activation period

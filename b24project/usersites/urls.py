@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^$', usersites.views.wall, name='main'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
-    url(r'^api/', include(usersites.Api.urls), name='api'),
+    url(r'^api/', include(usersites.Api.urls, namespace='api')),
     url(r'^news/', include(usersites.News.urls, namespace='news')),
     url(r'^proposal/', include(usersites.Proposals.urls, namespace='proposal')),
     url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),

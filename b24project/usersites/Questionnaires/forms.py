@@ -87,19 +87,20 @@ class InviteForm(forms.Form):
         self.questionnaire = questionnaire
         if self.is_invited:
             extra_ids = [q.id for q in self.instance.extra_questions.all()]
-            logger.debug(extra_ids)
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
                 for question in self.questionnaire.questions\
-                    .filter(Q(is_active=True) & Q(is_deleted=False) &\
-                            (Q(who_created=Question.BY_AUTHOR) | Q(id__in=extra_ids)))]
+                    .filter((Q(who_created=Question.BY_AUTHOR) | \
+                             Q(id__in=extra_ids)),
+                            is_active=True, is_deleted=False,)]
             }
         else:
             params = {
                 'initial': [{'question_id': question.id, 'question': question} \
                 for question in self.questionnaire.questions\
-                    .filter(who_created=Question.BY_AUTHOR, 
-                            is_deleted=False, is_active=True)]
+                    .filter((Q(who_created=Question.BY_AUTHOR) | \
+                             Q(is_approved=True)),
+                            is_active=True, is_deleted=False)]
             }
         if self.data:
             params.update({'data': self.data})
@@ -118,6 +119,7 @@ class InviteForm(forms.Form):
         return it_is_valid
 
     def save(self):
+        inviter_participant = None
         try:
             with transaction.atomic():
                 if not self.instance:
@@ -130,7 +132,7 @@ class InviteForm(forms.Form):
                         responsive = self.instance.participants.get(
                             is_invited=True
                         )
-                    except QuestionnaireCase.DoesNotExist:
+                    except QuestionnaireParticipant.DoesNotExist:
                         raise Http404(_('There is no suitable participant'))
 
                 else:
@@ -156,35 +158,27 @@ class InviteForm(forms.Form):
                         responsive = inviter_participant
 
                 for q_form in self.answer_formset:
-                    if not q_form.question:
+                    if not q_form.question and inviter_participant:
                         if 'question_text' not in q_form.cleaned_data:
                             continue
                         question = Question.objects.create(
                             questionnaire=self.questionnaire,
                             who_created=Question.BY_MEMBER,
+                            created_by_participant=inviter_participant,
                             question_text=q_form.cleaned_data['question_text']
                         )
                         self.instance.extra_questions.add(question)
                     else:
                         question = q_form.question
 
-                    if self.questionnaire.use_show_result:
-                        new_answer = Answer.objects.create(
-                            questionnaire_case=self.instance,
-                            question=question,
-                            participant=responsive,
-                            answer=q_form.cleaned_data.get('agree', False),
-                            show_answer=q_form.cleaned_data.get('show', False),
+                    new_answer = Answer.objects.create(
+                        questionnaire_case=self.instance,
+                        question=question,
+                        participant=responsive,
+                        answer=q_form.cleaned_data.get('agree', False),
+                        show_answer=q_form.cleaned_data.get('show', False) \
+                            if self.questionnaire.use_show_result else False,
                         )
-                    else:
-                        if 'agree' in q_form.cleaned_data and \
-                            q_form.cleaned_data['agree']:
-                            new_answer = Answer.objects.create(
-                                questionnaire_case=self.instance,
-                                question=question,
-                                participant=responsive,
-                                answer=True,
-                            )
 
         except IntegrityError:
             raise
@@ -218,6 +212,5 @@ class InviteForm(forms.Form):
             Q(question__id__in=question_ids) | \
             Q(for_color=color))
         )
-        logger.debug(ritems)
         self.instance.recommendations.add(*ritems)
 

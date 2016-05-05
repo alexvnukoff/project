@@ -18,6 +18,8 @@ from b24online.Questionnaires.views import (
      RecommendationCreate,
      RecommendationUpdate,
      RecommendationDelete,
+     questionnaire_case_answers,
+     questionnaire_case_coincedences,
 )
 
 
@@ -51,7 +53,6 @@ urlpatterns = [
      url(r'^questions/delete/(?P<pk>\d+?)/$',
          QuestionDelete.as_view(), 
          name='delete_question'),
-
      url(r'^detail/(?P<item_id>\d+?)/recommendations/add/$',
          RecommendationCreate.as_view(), 
          name='add_recommendation'),
@@ -61,5 +62,11 @@ urlpatterns = [
      url(r'^recommendations/delete/(?P<pk>\d+?)/$',
          RecommendationDelete.as_view(), 
          name='delete_recommendation'),
+     url(r'^case/(?P<pk>\d+?)/answers/(?P<participant_type>(inviter|invited))/$',
+         questionnaire_case_answers, 
+         name='questionnaire_case_answers'),
+     url(r'^case/(?P<pk>\d+?)/coincedences/$',
+         questionnaire_case_coincedences, 
+         name='questionnaire_case_coincedences'),
  
 ]

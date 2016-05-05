@@ -13,6 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File, locks
 from django.core.files.move import file_move_safe
+from django.db.models import Q
 from django.utils import translation
 from django.utils._os import abspathu
 from django.utils.lru_cache import lru_cache
@@ -431,3 +432,28 @@ def upload_images(*args, base_bucket_path=""):
     upload_to_S3(*images_to_upload)
 
     return [image['bucket_path'] for image in images_to_upload]
+
+
+def get_company_questionnaire_qs(organization):
+    """
+    Return the qs for Company's questionnaires.
+    """
+    from b24online.models import B2BProduct, Questionnaire, Company
+    from centerpokupok.models import B2CProduct
+
+    if isinstance(organization, Company):
+        b2b_content_type, b2c_content_type = map(
+            lambda model_class: ContentType.objects.get_for_model(model_class),
+                (B2BProduct, B2CProduct))
+        b2b_ids, b2c_ids = map(
+            lambda model_class: \
+                [item.id for item in model_class.get_active_objects()\
+                    .filter(company=organization)],
+                     (B2BProduct, B2CProduct))
+        return Questionnaire.get_active_objects().filter(
+            (Q(content_type=b2b_content_type) & Q(object_id__in=b2b_ids)) | \
+            (Q(content_type=b2c_content_type) & Q(object_id__in=b2c_ids))
+        )
+    else:
+        return Questionnaire.objects.none()
+    

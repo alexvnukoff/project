@@ -1,0 +1,30 @@
+{% load static %}
+{% load i18n %}
+
+<div class="data">
+    <h1>{% trans 'Coincedences' %}</h1>
+    <hr class="hr-divider-one">
+</div>
+
+<div class="data">
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+            <th>{% trans 'Question' %}</th>
+            <th>{% trans 'Answer' %} {% trans 'of' %} &laquo;{{ instance.get_invited }}</th>
+            <th>{% trans 'Answer' %} {% trans 'of' %} &laquo;{{ instance.get_inviter }}</th>
+        </tr>
+        {% if coincedences %}
+            {% for coincedence in coincedences %}
+            <tr>
+                <td>{{ coincedence.question.question_text }}</td>
+                <td>{% if coincedence.inviter %}{% trans 'Yes' %}{% else %}-{% endif %}</td>
+                <td>{% if coincedence.invited %}{% trans 'Yes' %}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="2" align="center">{% trans 'There are no records' %}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>

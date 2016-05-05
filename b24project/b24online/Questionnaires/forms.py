@@ -122,3 +122,74 @@ class RecommendationForm(forms.ModelForm):
             self.instance.questionnaire = self.item
             self.instance.created_by = self.request.user
         return super(RecommendationForm, self).save(*args, **kwargs)
+
+
+class ExtraQuestionForm(forms.Form):
+
+    question_id = forms.IntegerField(
+        label=_('Question ID'),
+        widget=forms.HiddenInput,
+        required=False,
+    )
+    approve = forms.BooleanField(
+        label=_('Your answer'),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        data = kwargs.get('initial')
+        if data and 'question' in data:
+            self.question = data.pop('question')
+        else:
+            self.question = None
+        super(ExtraQuestionForm, self).__init__(*args, **kwargs)
+
+    def save(self):
+        pass
+
+
+class ExtraQuestionsForm(forms.Form):
+
+    def __init__(self, request, questionnaire, *args, **kwargs):
+        super(ExtraQuestionsForm, self).__init__(*args, **kwargs)
+        self.request = request
+        self.questionnaire = questionnaire
+
+        params = {
+            'initial': [{'question_id': question.id, 'question': question} \
+                for question in self.questionnaire.get_extra_questions()]
+            }
+        if self.data:
+            params.update({'data': self.data})
+
+        self.formset = formset_factory(
+            ExtraQuestionForm,
+            extra=0,
+            max_num=0,
+            can_delete=True
+        )(**params)
+
+    def is_valid(self):
+        if not super(ExtraQuestionsForm, self).is_valid()
+            return False
+        for item_form in self.formset:
+            if not  item_form.is_valid()
+                return False
+        return True
+        
+    def save(self):
+        for item_form in self.formset:
+            on_delete, on_approve, question_id = map(
+                lambda x: item_form.cleaned_data.get(x),
+                ('DELETE', 'approve', 'question_id')
+            )
+            try:
+                question = Question.objects.get(pk=question_id)
+            except Question.DoesNotExist:
+                continue
+            else:
+                if on_delete:
+                    question.is_active = False
+                elif on_approve:
+                    question.approve = True
+                question.save()
