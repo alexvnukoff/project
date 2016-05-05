@@ -300,7 +300,7 @@ class MessageSendForm(forms.ModelForm):
             else:
                 new_message.upload_files()
 
-        if send_as_email:
+        if send_as_email and organization:
             if not organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to '
