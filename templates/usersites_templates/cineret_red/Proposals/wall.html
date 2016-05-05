@@ -5,22 +5,14 @@
 
 {# Start of the bp model. There are 2 bp. #}
 {% if proposals %}
+    {% with num_of_prop=proposals|length %}
 
-        {% with num_of_prop=proposals|length %}
 
-        <div class="row row-flex row-flex-wrap">
-            {% for proposal in proposals %}
-                {% if num_of_prop  == 4  %}
-                    <div class="col-md-3 col-sm-6 col-xs-12 prop-col">
-                {% elif  num_of_prop == 3  %}
-                    <div class="col-md-4 col-xs-12 prop-col">
-                {% elif  num_of_prop == 2  %}
-                    <div class="col-md-6 col-xs-12 prop-col">
-                {% elif  num_of_prop == 1  %}
-                    <div class="col-md-12 prop-col">
-                {% endif %}
-
-                    <div class="panel panel-default flex-col bp-main">
+    <div class="row row-flex row-flex-wrap bp-main">
+        {% for proposal in proposals %}
+            {% if num_of_prop  == 4  %}
+                <div class="col-md-3 col-sm-6 col-xs-12 prop-col">
+                    <div class="panel panel-default flex-col">
                         <div class="panel-heading">
                             <h4>{{ proposal.title|truncatechars_html:30 }}</h4>
                         </div>
@@ -31,13 +23,52 @@
                     <a href="{{ proposal.get_absolute_url }}" class="btn btn-default">{% trans 'More' %}</a>
                     </div>
                 </div>
+            {% elif  num_of_prop == 3  %}
+                <div class="col-md-4 col-xs-12 prop-col">
+                    <div class="panel panel-default flex-col">
+                        <div class="panel-heading">
+                            <h4>{{ proposal.title|truncatechars_html:40 }}</h4>
+                        </div>
+                        <div class="panel-body flex-grow">
+                            <p>{{ proposal.description|cleanHtml|striptags|safe|truncatechars_html:"350" }}</p>
 
-            {% endfor %}
+                        </div>
+                    <a href="{{ proposal.get_absolute_url }}" class="btn btn-default">{% trans 'More' %}</a>
+                    </div>
+                </div>
+            {% elif  num_of_prop == 2  %}
+                <div class="col-md-6 col-xs-12 prop-col">
+                    <div class="panel panel-default flex-col">
+                        <div class="panel-heading">
+                            <h4>{{ proposal.title|truncatechars_html:50 }}</h4>
+                        </div>
+                        <div class="panel-body flex-grow">
+                            <p>{{ proposal.description|cleanHtml|striptags|safe|truncatechars_html:"450" }}</p>
 
-            <a href="{% url 'proposal:main' %}" class="proposal-link"><span class="glyphicon glyphicon-paperclip proposal-clip"></span>{% trans 'More' %} {% trans 'Business proposals' %}</a>
-        </div>
+                        </div>
+                    <a href="{{ proposal.get_absolute_url }}" class="btn btn-default">{% trans 'More' %}</a>
+                    </div>
+                </div>
+            {% elif  num_of_prop == 1  %}
+                <div class="col-md-12 prop-col">
+                    <div class="panel panel-default flex-col">
+                        <div class="panel-heading">
+                            <h4>{{ proposal.title|truncatechars_html:60 }}</h4>
+                        </div>
+                        <div class="panel-body flex-grow">
+                            <p>{{ proposal.description|cleanHtml|striptags|safe|truncatechars_html:"550" }}</p>
+
+                        </div>
+                    <a href="{{ proposal.get_absolute_url }}" class="btn btn-default">{% trans 'More' %}</a>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% endfor %}
+
+        <a href="{% url 'proposal:main' %}" class="proposal-link"><span class="glyphicon glyphicon-paperclip proposal-clip"></span>{% trans 'More' %} {% trans 'Business proposals' %}</a>
+    </div>
 
     {% endwith %}
-
 {% endif %}
 

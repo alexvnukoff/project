@@ -1,0 +1,841 @@
+/*---------- General Styling ----------*/
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+	max-width: 100%;
+	/*overflow-x: hidden;*/
+}
+
+.content{
+	flex: 1;
+}
+
+.icon-ok:before {
+	font-family: "Glyphicons Halflings";
+    content:"\e013";
+}
+/***/
+.center-wrap {
+  line-height: 120px;
+  text-align: center;
+}
+
+.clearfix:after { 
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+/***/
+.vertical-center-child {
+  display: table-cell;
+	vertical-align: middle;
+	float: none;
+}
+
+/***/
+.vertical-center-parent{
+	table-layout: fixed;
+    display: table;
+}
+
+/***/
+.v-align {
+    display: inline-block;
+    vertical-align: middle !important;
+    float: none;
+}
+
+.page-header{
+	margin-top: 30px;
+}
+
+h2.page-header a,
+h1.page-header, h2{
+	text-decoration: none;
+	font-weight: bold;
+}
+
+h2.page-header.inner-page{
+	padding-top: 0;
+	margin-top: 10px;
+}
+
+.section-header{
+	border: none;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-top: 0;
+	padding-top: 5px;
+}
+
+.glyphicon{
+	font-size: 16px;
+}
+
+/*---------- logo Styling ----------*/
+.navbar{
+	padding-top: 15px;
+}
+
+.navbar-brand{
+	padding: 0;
+	height: auto;
+	max-height: 100px;
+}
+
+.navbar-brand img{
+	max-height: 100px;
+}
+
+
+/* Landscape tablets and medium desktops
+collapse the menu on 991px. */
+@media (max-width: 991px) {
+	.navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar-text {
+        float: none;
+        margin: 15px 0;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+}
+
+
+/*.logo{*/
+    /*width: auto;*/
+    /*height: 50px;*/
+    /*padding: 0 5%;*/
+/*}*/
+
+/*.navbar-brand{*/
+	/*padding: 0;*/
+/*}*/
+
+/*.navbar-brand>img {*/
+    /*max-height: 100px;*/
+/*}*/
+
+
+/*---------- Navigation Styling ----------*/
+/*.navbar-nav>li>a{*/
+	/*text-transform: uppercase;*/
+	/*font-weight: bold;*/
+/*}*/
+
+/*.navbar-inverse{*/
+	/*margin-top: 20px;*/
+/*}*/
+
+.side-bar a{
+	text-decoration: none;
+}
+
+.banner{
+	margin-bottom: 10px;
+}
+
+.banner img{
+	width: 100%;
+	height: auto;
+	padding: 0;
+}
+
+.cust-nav ul{
+	list-style: none;
+	background-color: transparent;
+}
+
+.lang_list.hidden{
+	display: none;
+}
+
+.cust-nav ul li a{
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.cust-nav__btn a{
+	font-size: 16px;
+}
+
+/*---------- carousel Styling ----------*/
+#myCarousel{
+	margin-bottom: 20px;
+	margin-top: 70px;
+}
+
+.carousel-text{
+	position: absolute;
+	bottom: 0;
+	z-index: 15;
+	background: rgba(0,0,0,0.75);
+}
+
+.carousel-text ul li {
+	padding: 0 10px;
+	text-align: center;
+}
+
+.carousel-text li {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 2em;
+	cursor: pointer;
+}
+
+.carousel-text li small{
+    display: block;
+    font-size: 0.5em;
+}
+
+/*---------- About main page Styling ----------*/
+/* The about section is in: main page */
+.about-main{
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.about-main__movie{
+	padding: 20px;
+	position: relative;
+}
+
+.about-main__movie img{
+	width: 90%;
+	height: auto;
+	text-align: middle;
+}
+
+.about-main__text{
+	position: relative;
+}
+
+/*---------- Product Styling ----------*/
+.main-coupons{
+	position: relative;
+}
+
+.product{
+	padding: 0 5px;
+	position: relative;
+
+}
+
+.product .thumbnail{
+    border: none;
+    padding: 0;
+	height: 450px;
+}
+
+.thumbnail img{
+	/*max-width: 276px;*/
+	max-height: 184px;
+}
+
+.product__title{
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	/*position: absolute;*/
+	/*top: 190px;*/
+}
+
+.product__cat{
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.product__price{
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 15px;
+	position: absolute;
+	bottom: 90px;
+}
+
+
+.product__desc{
+	font-size: 16px;
+	/*position: absolute;*/
+	/*top: 250px;*/
+}
+
+.thumbnail .product__price__coupon{
+	position: absolute;
+	top: -1px;
+	width: 70%;
+	height: auto;
+	z-index: 145;
+}
+
+.product__valid__coupon{
+	font-size: 12px;
+}
+
+.product__deleted-price{
+	text-decoration: line-through;
+}
+
+.product__discount{
+	padding: 0 5%;
+	font-size: 30px;
+	position: absolute;
+	z-index: 150;
+	top: 0;
+	font-weight: bold;
+}
+
+.product__img{
+	height: 210px;
+	width: auto;
+}
+
+.product__btn{
+	margin-top: 3px;
+	position: absolute;
+	bottom: 30px;
+}
+
+.product__caption{
+    padding: 10px;
+}
+
+.coupon-timer{
+	position: absolute;
+	bottom: 50px;
+}
+
+.go-to-full{
+	position: relative;
+}
+
+/*---------- News Styling ----------*/
+.news{
+    margin-bottom: 20px;
+}
+.main-news{
+	position: relative;
+}
+
+.main-news .thumbnail{
+	border: none;
+}
+
+.news_page h2{
+	margin-top: 0;
+}
+
+.news__title{
+	font-size: 25px;
+	margin: 0 0 10px 0;
+}
+
+.news__img{
+	position: relative;
+}
+
+.news__img img{
+	max-width: 150px;
+}
+
+.news__text{
+	position: relative;
+}
+
+.news__btn{
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.news__text h4{
+	font-size: 25px;
+    margin: 0;
+}
+
+.news_page .btn-align{
+	text-align: center;
+}
+
+/*---------- Proposal Styling ----------*/
+.main-proposal{
+	position: relative;
+}
+
+.proposal{
+	position: relative;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.job_offer__header{
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.job_offer__p{
+	font-size: 1em !important;
+	padding-top: 20px;
+}
+
+.job_offer__span{
+	font-weight: bold;
+}
+
+.jobs-content{
+	position: relative;
+}
+
+.jobs-btn{
+	position: relative;
+}
+
+/*---------- Banners Styling ----------*/
+/* The custom banners on the main page */
+.banner-ad-main-collection{
+	position: relative;
+}
+
+@media (min-width: 992px) {
+	.banner-ad-main-collection{
+		margin-top: 75px;
+		padding: 20px;
+	}
+}
+
+/* Landscape tablets and medium desktops */
+@media (max-width: 991px) {
+	.banner-ad-main-collection{
+		margin-top: 10px;
+		padding: 20px;
+	}
+}
+
+.banner-main-page{
+    padding: 0;
+	position: relative;
+}
+
+.banner-main-page img{
+    /*width: 100%;*/
+}
+
+/*--------- contact form --------------*/
+.contact-info, .contact-fields{
+	position: relative;
+}
+
+.contact-fields{
+	margin-top: 80px;
+}
+
+.contact-fields-email{
+	margin: 20px 0;
+}
+
+.contact-fields-email .controls input,
+.contact-fields-email .controls textarea{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.contact-fields-email .controls textarea{
+	height: auto;
+}
+/*---------- Footer Styling ----------*/
+footer{
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+footer .row{
+	padding-bottom: 10px;
+}
+
+footer a{
+	text-decoration: none;
+}
+
+footer a:hover,
+footer a:active{
+	text-decoration: none;
+}
+
+footer ul{
+	list-style: none;
+	padding: 0;
+}
+
+footer img{
+	width: 100%;
+}
+
+footer .btn-default{
+	margin-top: 10px;
+}
+
+.footer-col{
+	position: relative;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+.membership-banner{
+	padding: 0;
+	text-align: center;
+}
+
+.membership-banner__member{
+	height: 100%;
+	padding: 0;
+	display: table;
+	position: relative;
+}
+
+.membership-banner__member img{
+	width: auto;
+	max-height: 80px;
+	margin: 10px;
+	display: inline;
+	position: relative;
+}
+
+.membership-banner__member-text{
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+	padding: 0 10px;
+	position: relative;
+}
+
+.membership-banner__member h4{
+	padding-top: 10px;
+	font-size: 1em;
+}
+
+.membership-banner__member p{
+	font-size: 0.7em;
+}
+
+.membership-banner__ad{
+	padding: 0;
+	margin: 0;
+	height: 80px;
+	position: relative;
+}
+
+.membership-banner__ad img{
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+    margin: auto;
+	padding: 10px;
+}
+
+@media \0screen {
+  img { 
+  	width: auto; /* for ie 8 */
+  }
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination{
+	text-align: center;
+	position: relative;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	text-decoration: none;
+}
+
+.top_search{
+	position: relative;
+	clear: both;
+	margin-top: 10px;
+}
+
+.category{
+	/*position: relative;*/
+}
+
+.category select{
+	/*margin: 0 10px;*/
+	display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+.pay{
+	position: relative;
+}
+
+.empty-basket{
+	font-size: 3em;
+	text-align: center;
+}
+
+.empty-basket span{
+	font-size: 100px;
+	text-align: center;
+}
+
+.cart{
+	margin-top: 50px;
+}
+.table{
+	margin-bottom: 0;
+}
+
+.tb-pic{
+	width: 8em;
+}
+
+.tb-item{
+	width: 25em;
+}
+
+.tb-qty{
+	width: 3em;
+}
+
+.tb-price{
+	width: 10em;
+}
+
+.tb-total{
+	width: 10em;
+}
+
+.tb-remove{
+	width: 5em;
+}
+
+.tb-img{
+	width: 125px;
+	height: auto;
+}
+
+.tb-hr{
+	margin-top: 5px;
+}
+
+.tb-in-qty{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+@media (min-width: 600px) {
+  	.tb-in-qty{
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+}
+
+.table h3{
+	margin-top: 0px;
+}
+
+/*---------- Item Styling ----------*/
+.item-page, .item-price-table{
+	position: relative;
+}
+
+.item-page img{
+	/*max-height: 365px;*/
+	max-width: 100%;
+	margin: auto;
+}
+
+.item-page__price{
+	font-size: 2em;
+	color: green;
+	font-weight: bold;
+}
+
+.item-page__coupon{
+	font-size: 1em;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+	padding-top: 10px;
+}
+
+.item-page__coupon div{
+	position: relative;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.item-price-table .coupon-panel__btn{
+	font-weight: bold;
+	font-size: 1.8em;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+.item-price-table .coupon-panel__btn span{
+	padding: 0 20px;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.coupon-panel__btn{
+	width: 100%;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.cust-page p img{
+	max-width: 100%;
+    float: none;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    font-family: sans-serif;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border-radius: 3px;
+	padding: 10px;
+}
+
+#timer-detail-page > div{
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+}
+
+#timer-detail-page div > span{
+    padding: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.map {
+    height: 250px;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ccc;
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+
+
