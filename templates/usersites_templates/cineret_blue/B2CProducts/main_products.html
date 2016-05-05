@@ -4,6 +4,7 @@
 {% load humanize %}
 
 {% if products %}
+    {% with num_of_prod=products|length %}
     <div class="container clearfix main-products">
 
         {# Products header #}
@@ -19,7 +20,16 @@
 
                 {# Order of elements in the product thumbnail: #}
                 {# img, title, category, short description, price, deleted price, button group #}
-                <div class="col-sm-6 col-xs-12 col-md-3 product">
+                {% if num_of_prod  == 4  %}
+                    <div class="col-sm-6 col-xs-12 col-md-3 product">
+                {% elif num_of_prod  == 3  %}
+                    <div class="col-sm-6 col-xs-12 col-md-4 product">
+                {% elif num_of_prod  == 2  %}
+                    <div class="col-sm-6 col-xs-12 col-md-6 product">
+                {% elif num_of_prod  == 1  %}
+                    <div class="col-sm-12 col-xs-12 col-md-12 product">
+                {% endif %}
+
                     <div class="thumbnail">
 
                         {% if product.image %}
@@ -75,4 +85,5 @@
         <br/><br/>
 
     </div>
+    {% endwith %}
 {% endif %}{# End of products section. #}
