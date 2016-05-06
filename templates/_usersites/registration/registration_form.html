@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static from staticfiles %}
 
-<div id="form_wrapper">
+<div id="main_wrapper">
     <form class="dialog-form" method="POST" action="{% url 'registration_register' %}">
         {% csrf_token %}
         <table cellPadding="2" celSpaing="2" width="100%">
@@ -17,7 +17,7 @@
                 <td>
                     {{ form.email }}
                     {% if form.email.errors %}
-                        <div class="formerror">{{ form.email.errors.as_text }}</div>
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.email.errors.as_text }}</p>
                     {% endif %}
                 </td>
             </tr>
@@ -26,7 +26,7 @@
                 <td>
                     {{ form.password1}}
                     {% if form.password1.errors %}
-                        <div class="formerror">{{ form.password1.errors.as_text }}</div>
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.password1.errors.as_text }}</p>
                     {% endif %}
                 </td>
             </tr>
@@ -35,7 +35,7 @@
                 <td>
                     {{ form.password2 }}
                     {% if form.password2.errors %}
-                        <div class="formerror">{{ form.password2.errors.as_text }}</div>
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.password2.errors.as_text }}</p>
                     {% endif %}
                 </td>
             </tr>
