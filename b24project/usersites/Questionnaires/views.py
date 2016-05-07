@@ -118,6 +118,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                         }
                     )
                 else:
+                    inviter = q_case.get_inviter()
                     domain = get_current_site().domain
                     next_url = 'http://{0}{1}' . format(
                         domain,
