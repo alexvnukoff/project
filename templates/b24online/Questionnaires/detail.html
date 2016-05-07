@@ -40,7 +40,7 @@
                     <li><a href="#questions">{% trans 'Questions' %}</a></li>
                     <li><a href="#recommendations">{% trans 'Recommendations' %}</a></li>
                     <li><a href="#cases">{% trans 'Statistics' %}</a></li>
-                    {% if request.user == item.created_by %}
+                    {% if can_manage %}
                         <li><a href="#userquestions">{% trans 'Users questions' %}</a></li>
                     {% endif %}
                 </ul>
@@ -54,7 +54,7 @@
                         {% trans 'Add new question' %}
                     </a>
                 </div>
-                {# % endif % #}
+                {% endif %}
                 <table width="100%" cellspacing="2" cellpadding="2"
                     border="0" class="table-data">
                     <tr>
