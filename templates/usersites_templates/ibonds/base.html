@@ -75,37 +75,8 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-
-        <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
         <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
-
-    <script>
-    function initMap() {
-        {% if site.user_site.organization.location %}
-          {% with site.user_site.organization.location|split:"," as LatLng %}
-            var myLatLng = { lat: {{ LatLng.0 }}, lng: {{ LatLng.1 }} };
-          {% endwith %}
-        {% endif %}
-
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        disableDefaultUI: true,
-        scrollwheel: false,
-        navigationControl: false,
-        mapTypeControl: false,
-        zoomControl: true,
-        scaleControl: true,
-        center: myLatLng
-      });
-
-      var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map
-      });
-    }
-
-    </script>
 
 {% block js %}{% endblock %}
 
