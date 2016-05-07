@@ -23,7 +23,7 @@
                     {# If any company products have questionnaires #}
                     {% questionnaire_for_company_products as company_questionnaires %}
                     {% if company_questionnaires.count %}
-                        <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
+                        <li><a href="{% url 'questionnaires:case_history' %}">{% trans 'Questionnaries history' %}</a></li>
                     {% endif %}
                     {% if site.user_site.organization.b2c_products.exists %}
                         <li><a href="{% url 'b2c_products:main' %}">{% trans 'Themes' %}</a></li>

@@ -1,0 +1,48 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load content_tags %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Questionnaire cases list' %}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <section class="content__info grid-layout">
+        <div class="container">
+            <div class="data">
+                <h2 class="page-header">{% trans 'Questionnaire cases list' %}</h2>
+                <hr class="hr-divider-one">
+                {% if view.email %}
+                <div class="data">
+                    {% trans 'The Email with url has been sent to Your email' %}
+                 </div>
+                {% else %}
+                <div class="data">
+                    <form method="post" action="">
+                    {% csrf_token %}
+                    <table class="q_data" width="100%">
+                        <tr>
+                            <td align="right">{% trans 'Enter Your Email' %}:</td>
+                            <td align="left"><input type="text" name="email" style="min-width: 150px; max-width: 350px; width: 250px;"></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td align="left">
+                                <input type="submit" class="btntype2" name="submit" value="{% trans 'Show' %}">
+                            </td>
+                        </tr>
+                    </table> 
+                    </form>
+                 </div>
+                 {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

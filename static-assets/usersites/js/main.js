@@ -308,7 +308,9 @@ function processDialogForm(selectedHref) {
     $(processDataDialog).dialog({
         autoOpen: false,
         minHeight: 300,
-        minWidth: 400,
+        minWidth: 200,
+        maxWidth: 400,
+        width: 300,
         modal: true,
         draggable: true,
         resizable: true,
