@@ -24,7 +24,8 @@
             {% for product in products %}
 
                 <div class="col-xs-12 col-sm-6 col-md-3 product ">
-                    <div class="thumbnail ">
+                  <div class="thumbnail">
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
                         {% if product.image %}
                             <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
                         {% else %}
@@ -35,7 +36,7 @@
                             {# img for the corner of the coupon discount % display. #}
                             <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">
                         {% endif %}
-
+                        </a>
                         {# Register the 'view' event for b2c product #}
                         {{ product|register_event:"view"|process_event:request }}
                         {% questionnaire_for_product product as questionnaires %}
