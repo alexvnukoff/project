@@ -24,7 +24,6 @@ p.notify {
 table.q_data td {
     border: none;
     font-size: 120%;
-    text-shadow: -1px -1px white, 1px 1px #333;
 }
 
 table.q_data td input[type=checkbox] {
@@ -44,6 +43,12 @@ table.q_data tr td {
     font-size: 100%;
     padding: 10px;
     vertical-align: middle;
+}
+
+table.q_data tr.history td {
+    font-size: 100%;
+    padding: 10px;
+    vertical-align: top;
 }
 
 table.q_data tr.header td {
@@ -136,7 +141,7 @@ table.q_data tr {
     border-radius: 10px;
     padding: 10px;
     font-size: 120%;
-    text-shadow: -1px -1px white, 1px 1px #777;
+    # text-shadow: -1px -1px white, 1px 1px #777;
 }
 
 #r_items p:nth-child(odd) {
