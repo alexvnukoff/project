@@ -282,6 +282,7 @@ $(document).ready(function() {
 
     $(DIALOG_FORM_OPEN_CLS).on('click', function(e) {
         e.preventDefault();
+        $('#navbarCollapse').collapse('hide');
         processDialogForm(this);
     });
     
