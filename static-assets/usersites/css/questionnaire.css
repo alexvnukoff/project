@@ -1,14 +1,14 @@
 p.notify {
-    text-align: left; 
-    font-size: 150%; 
-    font-weight: bold;            
+    text-align: left;
+    font-size: 150%;
+    font-weight: bold;
     text-indent: 0;
 }
 
 #description {
-    margin: 20px 0; 
+    margin: 20px 0;
     padding: 10px;
-    text-align: left; 
+    text-align: left;
     font-size: 120%;
     position: relative;
     overflow: auto;
@@ -18,9 +18,9 @@ p.notify {
 }
 
 #item_image {
-    float: left; 
-    margin: 0 10px 10px 0 ; 
-}    
+    float: left;
+    margin: 0 10px 10px 0 ;
+}
 table.q_data td {
     border: none;
     font-size: 120%;
@@ -79,63 +79,63 @@ table.q_data tr {
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    margin: 10px; 
+    margin: 10px;
 }
 .yellow {
     background: yellow;
     border-radius: 50%;
     width: 30px;
-    height: 30px; 
-    margin: 10px; 
+    height: 30px;
+    margin: 10px;
 }
 .green {
     background: green;
     border-radius: 50%;
     width: 30px;
-    height: 30px; 
-    margin: 10px; 
+    height: 30px;
+    margin: 10px;
 }
 .lightred {
     background: #ffc2b3;
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    margin: 10px; 
+    margin: 10px;
 }
 .lightyellow {
     background: #ffffb3;
     border-radius: 50%;
     width: 30px;
-    height: 30px; 
-    margin: 10px; 
+    height: 30px;
+    margin: 10px;
 }
 .lightgreen {
     background: #ccffdd;
     border-radius: 50%;
     width: 30px;
-    height: 30px; 
-    margin: 10px; 
+    height: 30px;
+    margin: 10px;
 }
 .grey {
     background: #aaaaaa;
     border-radius: 50%;
     width: 30px;
-    height: 30px; 
-    margin: 10px; 
+    height: 30px;
+    margin: 10px;
 }
 
 #lights {
     float: left;
-    overflow-y: auto; 
-    width: 60px; 
-    background: #222222; 
+    overflow-y: auto;
+    width: 60px;
+    background: #222222;
     border: 2px solid #000000;
     border-radius: 10px;
-    margin: 0 10px 10px 0; 
+    margin: 0 10px 10px 0;
 }
 
 #recommendations {
-    overflow: auto; 
+    overflow: auto;
     border: 1px dashed #aaaaaa;
     background: #f1f1f1;
     border-radius: 10px;
@@ -151,3 +151,9 @@ table.q_data tr {
 .r_item {
     padding: 10px;
 }
+
+.language-navi {position:relative;display:inline-block;width:24px;cursor:pointer;float:left;margin:5px 15px 0 0;}
+.language-navi-dropdown {display:none;position:absolute;padding:8px 8px 0 4px;border-left:1px solid #dedede;border-right:1px solid #dedede;border-bottom:1px solid #dedede;background:#f8f8f8;margin:-10px 0 0 -5px;z-index:99;}
+.language-navi-dropdown img {width:24px;}
+.language-navi:hover .language-navi-dropdown {display:block;}
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {background-color: transparent !important;}
