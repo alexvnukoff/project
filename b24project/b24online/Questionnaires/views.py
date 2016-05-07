@@ -200,7 +200,7 @@ class QuestionnaireDetail(ItemDetail):
         context = super(QuestionnaireDetail, self).get_context_data(**kwargs)
         questionnaire = context.get('item')
         self._product = questionnaire.item
-        context.update({'product': self._product,})
+        context.update({'product': self._product, 'can_manage': True})
         return context
 
     def get(self, request, *args, **kwargs):

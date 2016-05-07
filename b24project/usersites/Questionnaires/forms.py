@@ -33,7 +33,7 @@ class AnswerForm(forms.Form):
             attrs={
                 'rows': '3', 
                 'placeholder': _('Ask Your own question'),
-                'style': 'min-width: 150px; max-width: 350px; width: 250px;'
+                'style': 'min-width: 150px; max-width: 350px; width: 200px;'
             }
         ),
     )
