@@ -220,4 +220,9 @@ class HistoryForm(forms.Form):
     email = forms.EmailField(
         label=_('Email'),
         required=True,
+        widget=forms.TextInput(
+            attrs={
+                'style': 'min-width: 150px; max-width: 350px; width: 200px;'
+            }
+        ),
     )

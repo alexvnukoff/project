@@ -269,54 +269,6 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
         raise Http404(_('There is no such Questionnaire'))
 
 
-class QuestionnaireCaseHistory(UserTemplateMixin, TemplateView):
-    """
-    The Questionnaire history form view.
-    """
-    model = QuestionnaireCase
-    template_name = '{template_path}/Questionnaires/history.html'
-
-    def get(self, request, *args, **kwargs):
-        form = HistoryForm()
-        return self.render_to_response(
-            self.get_context_data(form=form, *args, **kwargs)
-        )
-        
-
-    def post(self, request, *args, **kwargs):
-        form = HistoryForm(
-            data=self.request.POST
-        )
-        self.email = None
-        if form.is_valid():
-            self.email = form.cleaned_data.get('email')
-            history_uuid = str(uuid.uuid4())
-            request.session['history_info'] = {history_uuid: _email}
-            domain = get_current_site().domain
-            history_url = 'http://{0}{1}' . format(
-                domain,
-                reverse('questionnaires:case_list',
-                        kwargs={'uuid': history_uuid}))
-
-            subject = _('The request about Questionnaires history')
-            message = render_to_string(
-                        'usersites/Questionnaires/historyEmail.txt',
-                        {'history_url': history_url}
-                    )
-
-            smail = EmailMessage(
-                subject, 
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [self.email,], 
-            )
-            if not getattr(settings, 'NOT_SEND_EMAIL', False):
-                smail.send()
-        return self.render_to_response(
-            self.get_context_data(form=form, *args, **kwargs)
-        )
-
-
 class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
     """
     The Questionnaire list view.
@@ -340,3 +292,54 @@ class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
             return HttpResponseRedirect(reverse('denied'))
 
 
+class QuestionnaireCaseHistory(UserTemplateMixin, TemplateView):
+    """
+    The Questionnaire history form view.
+    """
+    model = QuestionnaireCase
+    template_name = '{template_path}/Questionnaires/history.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            self.email = request.user.email
+            self.template_name = '{template_path}/Questionnaires/contentPage.html'
+            return self.render_to_response(
+                self.get_context_data(*args, **kwargs)
+            )
+        else:
+            form = HistoryForm()
+            return self.render_to_response(
+                self.get_context_data(form=form, *args, **kwargs)
+            )
+
+    def post(self, request, *args, **kwargs):
+        form = HistoryForm(
+            data=self.request.POST
+        )
+        self.email = None
+        if form.is_valid():
+            self.email = form.cleaned_data.get('email')
+            history_uuid = str(uuid.uuid4())
+            request.session['history_info'] = {history_uuid: self.email}
+            domain = get_current_site().domain
+            history_url = 'http://{0}{1}' . format(
+                domain,
+                reverse('questionnaires:case_list',
+                        kwargs={'uuid': history_uuid}))
+
+            subject = _('The request about Questionnaires history')
+            message = render_to_string(
+                        'usersites/Questionnaires/historyEmail.txt',
+                        {'history_url': history_url}
+                    )
+            smail = EmailMessage(
+                subject, 
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.email,], 
+            )
+            if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                smail.send()
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
