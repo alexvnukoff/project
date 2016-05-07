@@ -12,7 +12,7 @@
         <p class="toggle-next {% if is_filtered %}force-open{% endif %}" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
         <ul class="form-control" {% if not is_filtered %}style="display: none;"{% endif %}>
             <fieldset class="dcol">
-              {% for field in form %}  
+              {% for field in form %}
               <li>
                 <label>{{ field.label }}:</label>
                 <p>{{ field }}</p>
@@ -23,7 +23,7 @@
               {% endfor %}
               <li>
                 <input type="submit" name="filter" value="{% trans 'Search' %}" />
-                <input type="reset" id="reset-form" value="{% trans 'Reset form '%}" 
+                <input type="reset" id="reset-form" value="{% trans 'Reset form '%}"
                     onclick="window.location.href='{{ request.path }}'; return false;" />
               </li>
             </fieldset>
@@ -35,7 +35,7 @@
     <h1>{% trans 'Deals list' %} {% trans 'for' %} {{ current_organization }}</h1>
     <hr class="hr-divider-one">
     <div class="data">
-      {% block deals_base %}  
+      {% block deals_base %}
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Deal date' %}</th>
@@ -99,7 +99,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-                
+
         {% empty %}
         <tr>
           <td colspan="4" align="center">
@@ -108,12 +108,12 @@
         </tr>
         {% endfor %}
         {% endautoescape %}
-      </table>  
+      </table>
       {% endblock %}
-      
+
       {% with page_obj as page %}
         {% include 'b24online/main/paginator.html' %}
-      {% endwith %}  
+      {% endwith %}
     </div>
 </div>
 
@@ -148,6 +148,6 @@
         yearRange: "2010:",
         dateFormat: "dd/mm/yy"
     });
-</script>    
+</script>
 {% endautoescape %}
 {% endif %}
