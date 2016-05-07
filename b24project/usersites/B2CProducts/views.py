@@ -41,7 +41,6 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        logger.debug('Step 1')
         #if self.object and getattr(self.object, 'cost', False): 
         if self.object: 
             logger.debug(self.object)

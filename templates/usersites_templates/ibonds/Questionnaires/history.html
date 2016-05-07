@@ -30,7 +30,12 @@
                     <table class="q_data" width="100%">
                         <tr>
                             <td align="right">{% trans 'Enter Your Email' %}:</td>
-                            <td align="left"><input type="text" name="email" style="min-width: 150px; max-width: 350px; width: 250px;"></td>
+                            <td align="left">
+                                <span>{{ form.email }}</span>
+                                {% if form.is_bound and form.email.errors %}
+                                    <p class="errors">{{ form.email.errors|striptags }}</p>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
