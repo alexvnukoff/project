@@ -12,12 +12,6 @@
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                     {% endfor %}
 
-                    {# If any company products have questionnaires #}
-                    {% questionnaire_for_company_products as company_questionnaires %}
-                    {% if company_questionnaires.count %}
-                        <li><a href="{% url 'questionnaires:case_list' %}">{% trans 'Questionnaries history' %}</a></li>
-                    {% endif %}
-                    
                     {# Registration. login and logout #}
                     {% comment %}
                     {% if user.is_authenticated %}

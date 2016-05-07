@@ -28,6 +28,9 @@ urlpatterns = [
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
     url(r'^questionnaires/', 
         include(usersites.Questionnaires.urls, namespace='questionnaires')),
+    url(r'^denied/$', 
+        TemplateView.as_view(template_name="usersites/denied.html"),
+        name='denied'),
 ]
 
 if settings.DEBUG:

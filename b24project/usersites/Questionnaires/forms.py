@@ -214,3 +214,10 @@ class InviteForm(forms.Form):
         )
         self.instance.recommendations.add(*ritems)
 
+
+class HistoryForm(forms.Form):
+
+    email = forms.EmailField(
+        label=_('Email'),
+        required=True,
+    )

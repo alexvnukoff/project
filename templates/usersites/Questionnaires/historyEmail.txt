@@ -1,0 +1,6 @@
+{% autoescape off %}
+You've requested the questionnaire's history and can view this one by url:
+
+    {{ history_url }}
+
+{% endautoescape %}

@@ -4,6 +4,7 @@
 The views for Questionnaires, Questions etc
 """
 
+import uuid
 import logging
 
 from django.conf import settings
@@ -18,7 +19,7 @@ from b24online.models import (Questionnaire, QuestionnaireCase, Answer)
 from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import ItemDetail, ItemsList
 from usersites.mixins import UserTemplateMixin
-from usersites.Questionnaires.forms import InviteForm
+from usersites.Questionnaires.forms import InviteForm, HistoryForm
 from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
@@ -94,7 +95,7 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                             [inviter.email,]
                         )
                         report_subject = _('The questionnaire created by '
-                                    'You has beed finished')
+                                    'You has been finished')
                         report_message = render_to_string(
                             'usersites/Questionnaires/reportEmail.txt',
                             {'q_case': q_case}
@@ -105,8 +106,6 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                             settings.DEFAULT_FROM_EMAIL,
                             [q_case.questionnaire.created_by.email,], 
                         )
-                        
-                        
                         if not getattr(settings, 'NOT_SEND_EMAIL', False):
                             results_mail.send()
 
@@ -132,8 +131,11 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                     invited = q_case.get_invited()
                     if invited and invited.email:
                         subject = _('Invite to answer the questions')
-                        message = 'The Questionnaire activation Url: {0}' \
-                            . format(result_href)
+                        message = render_to_string(
+                            'usersites/Questionnaires/resultsInviterEmail.txt',
+                            {'q_case': q_case, 'inviter': inviter, 
+                             'result_href': result_href}
+                        )
                         mail = EmailMessage(
                             subject, 
                             message,
@@ -267,6 +269,54 @@ class QuestionnaireResults(UserTemplateMixin, TemplateView):
         raise Http404(_('There is no such Questionnaire'))
 
 
+class QuestionnaireCaseHistory(UserTemplateMixin, TemplateView):
+    """
+    The Questionnaire history form view.
+    """
+    model = QuestionnaireCase
+    template_name = '{template_path}/Questionnaires/history.html'
+
+    def get(self, request, *args, **kwargs):
+        form = HistoryForm()
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+        
+
+    def post(self, request, *args, **kwargs):
+        form = HistoryForm(
+            data=self.request.POST
+        )
+        self.email = None
+        if form.is_valid():
+            self.email = form.cleaned_data.get('email')
+            history_uuid = str(uuid.uuid4())
+            request.session['history_info'] = {history_uuid: _email}
+            domain = get_current_site().domain
+            history_url = 'http://{0}{1}' . format(
+                domain,
+                reverse('questionnaires:case_list',
+                        kwargs={'uuid': history_uuid}))
+
+            subject = _('The request about Questionnaires history')
+            message = render_to_string(
+                        'usersites/Questionnaires/historyEmail.txt',
+                        {'history_url': history_url}
+                    )
+
+            smail = EmailMessage(
+                subject, 
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.email,], 
+            )
+            if not getattr(settings, 'NOT_SEND_EMAIL', False):
+                smail.send()
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+
 class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
     """
     The Questionnaire list view.
@@ -275,16 +325,18 @@ class QuestionnaireCaseList(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/Questionnaires/contentPage.html'
 
     def get(self, request, *args, **kwargs):
-        from django.core.validators import validate_email
-        from django import forms
+        self.email = None
+        if request.user.is_authenticated():
+            self.email = request.user.email
+        else:
+            history_uuid = kwargs.get('uuid')
+            if history_uuid:
+                history_info = request.session.get('history_info')
+                if history_info:
+                    self.email = history_info.get(history_uuid)
+        if self.email:
+            return super().get(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('denied'))
 
-        _email = request.GET.get('email')
-        if _email:
-            try:
-                validate_email(_email)
-            except forms.ValidationError:
-                pass
-            else:
-                self.email = _email
-        return super().get(request, *args, **kwargs)
 
