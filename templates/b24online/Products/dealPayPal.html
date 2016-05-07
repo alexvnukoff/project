@@ -29,7 +29,7 @@
                 } else {
                     $(submit_button).css('cursor', 'text').attr('disabled', 'disabled');
                 }
-            }) 
+            })
         });
     </script>
 {% endblock %}
@@ -52,8 +52,8 @@
     </p>
 
     </div>
-    
-    
+
+
     <div class="data">
       <h2 class="data toggle-next">{% trans 'Products list' %}</h2>
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data" style="display: none;">
@@ -67,7 +67,7 @@
           <th>&nbsp;</th>
           {% endif %}
         </tr>
-        
+
         {% for deal_item in item.get_items %}
         <tr>
           <td><a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item.name }}</a></td>
@@ -80,22 +80,22 @@
           {% endif %}
         </tr>
         {% endfor %}
-      </table>  
+      </table>
     </div>
-  </div>    
+  </div>
   <div class="data">
     <p class="data-info">
       <label>{% trans 'Total deal cost' %}:</label>
       <span class="bolded">{{ item.currency|getSymbol }}&nbsp;{{ item.total_cost }}</span>
     </p>
-  
+
   </div>
   <div class="data">
       <input type="checkbox" id="agree-tos" name="agree_tos" />
       <label>Agree with TOS</label>
   </div>
   <div class="data" id="paypal-form-container">
-      <div style="">{{ paypal_form.render }}</div>    
+      <div style="">{{ paypal_form.render }}</div>
   </div>
 </div>
 {% endblock %}

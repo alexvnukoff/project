@@ -85,7 +85,7 @@
             <p class="timer-heading">{% trans 'Promotion ends' %}</p>
             <div style="font-size:32px;" class="timer icon-clock" date="{{ item.end_coupon_date|date:'Y-m-d' }}"></div>
 
-            {% b2b_social_buttons item.image item.name item.description %}
+            {% b2b_social_buttons item.image item.name item.name %}
 
             {% if paypal_form %}
                 <div style="">{{ paypal_form.render }}</div>
@@ -123,7 +123,7 @@
                     {% endfor %}
                 </div>
             </div>
-            {% b2b_social_buttons item.image item.name item.description %}
+            {% b2b_social_buttons item.image item.name item.name %}
 
         </div>
     <div class="goods-details-center">
