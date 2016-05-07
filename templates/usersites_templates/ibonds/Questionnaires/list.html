@@ -10,7 +10,7 @@
         <td colspan="4">{% trans 'Your questionnaires' %}</td>
     </tr>
     {% for item in page_obj.object_list %}
-    <tr valign="top">
+    <tr class="history">
         <td align="left">
             <a href="{% url 'questionnaires:results' uuid=item.case_uuid participant='inviter' %}">
                 {{ item.questionnaire.name }}
@@ -19,11 +19,9 @@
         <td align="center">
             {{ item.created_at|date:"d M Y H:i" }}
         </td>
-        <td align="center">
-            {{ item.get_inviter.email }}
-        </td>
-        <td align="center">
-            {{ item.get_invited.email }}
+        <td align="left">
+            {% trans 'First' %}: {{ item.get_inviter.email }}<br/>
+            {% trans 'Second' %}: {{ item.get_invited.email }}
         </td>
     </tr>
     {% empty %}
