@@ -131,14 +131,14 @@
                         t.parentNode.insertBefore(s, t);
                     })(window, document, "yandex_context_callbacks");
                     </script>
-                    <div class="video-details">
                     {% if item.video_code %}
+                    <div class="video-details">
                         <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
                     {% endif %}
+
                       <div style="clear:both;"></div>
                       <div class="fb-comments" data-href="http://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
-                  </div>
-
                     <div class="related-news">
                         <span class="title">{% trans 'Similar news' %}</span>
                         <ul>
