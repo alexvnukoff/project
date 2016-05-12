@@ -138,6 +138,38 @@
             {{ form.language }}
         </div><br />
 
+        <h3>{% trans 'Social links' %}</h3>
+        <div class="form-group">
+        <label>{% trans "Facebook Link" %}</label>
+        <input type="text" name="has_facebook" placeholder="{% trans 'Link to your facebook page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_facebook.value|default_if_none:"" }}">
+        {% if form.errors.has_facebook %}<small class="error">{{ form.errors.has_facebook.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "YouTube Link" %}</label>
+        <input type="text" name="has_youtube" placeholder="{% trans 'Link to your youtube channel' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_youtube.value|default_if_none:"" }}">
+        {% if form.errors.has_youtube %}<small class="error">{{ form.errors.has_youtube.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Twitter Link" %}</label>
+        <input type="text" name="has_twitter" placeholder="{% trans 'Link to your twitter account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_twitter.value|default_if_none:"" }}">
+        {% if form.errors.has_twitter %}<small class="error">{{ form.errors.has_twitter.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Vkontakte Link" %}</label>
+        <input type="text" name="has_vk" placeholder="{% trans 'Link to your vk page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_vk.value|default_if_none:"" }}">
+        {% if form.errors.has_vk %}<small class="error">{{ form.errors.has_vk.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Odnoklassniki Link" %}</label>
+        <input type="text" name="has_ok" placeholder="{% trans 'Link to your Ok account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_ok.value|default_if_none:"" }}">
+        {% if form.errors.has_ok %}<small class="error">{{ form.errors.has_ok.0 }}</small>{% endif %}
+        </div>
+
+        <br>
         <div class="form-group">
         <label>{% trans "Organization logo" %} <span>({% trans "Max Dimensions" %} 220x120px)</span></label>
         <input type="file" name="logo">
