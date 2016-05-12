@@ -260,7 +260,7 @@
 
           <ul>
             {% for page in item.additional_pages.all %}
-                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:40 }}</a></li>
             {% endfor %}
          </ul>
 
