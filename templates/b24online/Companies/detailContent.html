@@ -259,9 +259,6 @@
                                     {% trans "Contacts" %}
                                 </a>
                             </li>
-                            {% comment %}{% for page in item.additional_pages.all %}
-                                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
-                                 {% endfor %}{% endcomment %}
                         </ul>
                     </div>
                     <div id="cpn-tabs-about">
@@ -313,15 +310,25 @@
 
                 </div>
             </div>
-            {% comment %}{% for page in item.additional_pages.all %}
-                <div id="tabs-{{ forloop.counter0|add:5 }}">
-                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
-                 </div>
-            {% endfor %}{% endcomment %}
           </div>
   </div>
+
+        <div class="cpn-details-tab" id="tpp-details-tab">
+          <div class="tab-cate">
+
+          <ul>
             {% for page in item.additional_pages.all %}
-            <h3 style="padding:35px 0 10px 0">{{ page.title }}</h3>
-                     {{ page.content|cleanHtml|safe }}
-         {% endfor %}
+                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+            {% endfor %}
+         </ul>
+
+        </div>
+
+            {% for page in item.additional_pages.all %}
+              <div id="tabs-{{ forloop.counter0|add:5 }}">
+                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+              </div>
+            {% endfor %}
+        </div>
+
 {% endblock %}
