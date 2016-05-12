@@ -71,6 +71,7 @@ class UserSite(ActiveModelMixing, models.Model):
     has_facebook = models.CharField(max_length=225, null=True, blank=True)
     has_youtube = models.CharField(max_length=225, null=True, blank=True)
     has_twitter = models.CharField(max_length=225, null=True, blank=True)
+    has_instagram = models.CharField(max_length=225, null=True, blank=True)
     has_vk = models.CharField(max_length=225, null=True, blank=True)
     has_ok = models.CharField(max_length=225, null=True, blank=True)
 

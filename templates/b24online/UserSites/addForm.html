@@ -158,6 +158,12 @@
         </div>
 
         <div class="form-group">
+        <label>{% trans "Instagram Link" %}</label>
+        <input type="text" name="has_instagram" placeholder="{% trans 'Link to your Instagram account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_instagram.value|default_if_none:"" }}">
+        {% if form.errors.has_instagram %}<small class="error">{{ form.errors.has_instagram.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
         <label>{% trans "Vkontakte Link" %}</label>
         <input type="text" name="has_vk" placeholder="{% trans 'Link to your vk page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.has_vk.value|default_if_none:"" }}">
         {% if form.errors.has_vk %}<small class="error">{{ form.errors.has_vk.0 }}</small>{% endif %}
