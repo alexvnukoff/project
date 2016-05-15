@@ -482,6 +482,11 @@ def get_item(container, key):
     return container.get(key, None)
 
 
+@register.assignment_tag()
+def get_item_by_key(container, key):
+    return container.get(key, None)
+
+
 # Class for filter form results colorizing
 DataToColorize = namedtuple('DataToColorize', ['value', 'q_name'])
 

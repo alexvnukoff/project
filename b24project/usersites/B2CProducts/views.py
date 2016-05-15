@@ -27,6 +27,7 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
 from usersites.views import ProductJsonData
+from usersites.forms import create_extra_form
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +42,8 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        #if self.object and getattr(self.object, 'cost', False): 
         if self.object: 
-            logger.debug(self.object)
             questionnaire = Questionnaire.get_questionnaire(self.object)
-            logger.debug(questionnaire)
             if questionnaire:
                 return HttpResponseRedirect(reverse(
                     'questionnaires:detail',
@@ -54,21 +52,30 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
         if not request.session.get('basket_currency'):
             request.session['basket_currency'] = request.POST.get('currency')
 
         if not request.session.get('company_paypal'):
             request.session['company_paypal'] = request.POST.get('company_paypal')
 
-        if request.POST.get('quantity').isdigit():
+        if 'quantity' in request.POST and request.POST.get('quantity').isdigit():
             basket = Basket(request)
-            basket.add(request.POST.get('product_id'), request.POST.get('quantity'))
+            basket.add(request.POST.get('product_id'), 
+                       request.POST.get('quantity'))
             return HttpResponse(status=200)
+        elif 'presave' in request.POST:
+            context = self.get_context_data(**kwargs) or {}
+            return self.render_to_response(context)
         return HttpResponseNotFound()
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         domain = get_current_site().domain
+
+        extra_form = create_extra_form(self.object, self.request)
+        if extra_form:
+            context_data['extra_form'] = extra_form
 
         if self.object.currency and self.object.cost:
             paypal_dict = {
