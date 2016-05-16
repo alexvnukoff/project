@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField, DateRangeField
+from django.contrib.postgres.fields import HStoreField, DateRangeField, JSONField
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -68,6 +68,8 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     discount_percent = models.FloatField(null=True, blank=True)
     coupon_discount_percent = models.FloatField(null=True, blank=True)
     coupon_dates = DateRangeField(null=True, blank=True)
+
+    extra_params = JSONField(_('Extra param fields'), null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')

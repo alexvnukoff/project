@@ -2153,10 +2153,11 @@ class DealItem(models.Model):
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
     quantity = models.PositiveIntegerField(_('Quantity'))
+    extra = JSONField(_('Extra parameters values'), null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Deal product'
-        verbose_name_plural = 'Deal products'
+        verbose_name = _('Deal product')
+        verbose_name_plural = _('Deal products')
 
     def get_total(self):
         """

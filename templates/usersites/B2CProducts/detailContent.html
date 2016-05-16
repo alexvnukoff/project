@@ -6,6 +6,11 @@
 {% load inclusionTags %}
 {% load humanize %}
 {% block title %}{{ object.name }}{% endblock %}
+{% block after_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
 
@@ -23,6 +28,36 @@
                 {% endif %}
             </div>
             <div class="info">
+                {% if extra_form %}
+                <form action="" method="post" id="ExtraParamsForm">
+                    {% csrf_token %}
+                    <table class="q_data" width="90%">
+                    {% for field in extra_form %}
+                        {% get_item_by_key extra_form.pre_texts field.name as field_pre_text %}
+                        {% if field_pre_text %}
+                        <tr>
+                            <td colspan="2" style="padding: 10px 0; font-weight: bold;">{{ field_pre_text }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr valign="top">
+                            <td>{{ field.label }}</td>
+                            <td>
+                                <span>{{ field }}</span>
+                                {% if extra_form.is_bound and field.errors %}
+                                    <p class="errors">{{ field.errors|striptags }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="submit" name="presave" value="{% trans 'Save' %}">
+                            </td>
+                        </tr>
+                    </table>
+                </form>                
+                {% else %}
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
                     <input type="hidden" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
@@ -57,7 +92,6 @@
                                 <td></td>
                                 <td>
                                     <button id="result">{% trans 'Add to basket' %}</button>
-
                                 </td>
                             </tr>
 
@@ -65,20 +99,21 @@
                     </table>
                 </form>
 
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td></td>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
                             <td>
                                 {% if paypal_form %}
                                     <div style="">{{ paypal_form.render }}</div>
                                 {% else %}
                                     <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-                                {% endif %}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endif %}
             </div>
 
 
