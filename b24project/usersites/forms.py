@@ -2,6 +2,8 @@
 import logging
 
 from django import forms
+from django.utils.translation import ugettext as _
+
 from usersites.models import UserSiteTemplate
 
 logger = logging.getLogger(__name__)
