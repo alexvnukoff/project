@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
+from django.contrib.postgres.fields import JSONField
 
 
 class ExternalSiteTemplate(models.Model):
@@ -66,14 +67,7 @@ class UserSite(ActiveModelMixing, models.Model):
     site = models.OneToOneField(Site, null=True, blank=True, related_name='user_site')
     domain_part = models.CharField(max_length=100, null=False, blank=False)
     galleries = GenericRelation(Gallery, related_query_name='sites')
-
-    # Social liks
-    has_facebook = models.CharField(max_length=225, null=True, blank=True)
-    has_youtube = models.CharField(max_length=225, null=True, blank=True)
-    has_twitter = models.CharField(max_length=225, null=True, blank=True)
-    has_instagram = models.CharField(max_length=225, null=True, blank=True)
-    has_vk = models.CharField(max_length=225, null=True, blank=True)
-    has_ok = models.CharField(max_length=225, null=True, blank=True)
+    metadata = JSONField()
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -136,6 +130,42 @@ class UserSite(ActiveModelMixing, models.Model):
     def slider_images(self):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
+    @property
+    def facebook(self):
+        if self.metadata:
+            return self.metadata.get('facebook', '')
+        return None
+
+    @property
+    def youtube(self):
+        if self.metadata:
+            return self.metadata.get('youtube', '')
+        return None
+
+    @property
+    def twitter(self):
+        if self.metadata:
+            return self.metadata.get('twitter', '')
+        return None
+
+    @property
+    def instagram(self):
+        if self.metadata:
+            return self.metadata.get('instagram', '')
+        return None
+
+    @property
+    def vkontakte(self):
+        if self.metadata:
+            return self.metadata.get('vkontakte', '')
+        return None
+
+    @property
+    def odnoklassniki(self):
+        if self.metadata:
+            return self.metadata.get('odnoklassniki', '')
+        return None
 
     def __str__(self):
         return self.domain_part
