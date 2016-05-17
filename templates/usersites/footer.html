@@ -6,6 +6,38 @@
 
 <!--  {{ site.user_site.footer_text }} -->
 
+<!-- Social links -->
+<div style="margin:0 0 30px 0;">
+  <div style="text-align:center;margin:0 auto;">
+
+    {% if site.user_site.facebook %}
+    <a href="{{ site.user_site.facebook }}" target="_blank"><i class="icon-facebook-official"></i></a>
+    {% endif %}
+
+    {% if site.user_site.youtube %}
+    <a href="{{ site.user_site.youtube }}" target="_blank"><i class="icon-youtube"></i></a>
+    {% endif %}
+
+    {% if site.user_site.twitter %}
+    <a href="{{ site.user_site.twitter }}" target="_blank"><i class="icon-twitter"></i></a>
+    {% endif %}
+
+    {% if site.user_site.instagram %}
+    <a href="{{ site.user_site.instagram }}" target="_blank"><i class="icon-instagram"></i></a>
+    {% endif %}
+
+    {% if site.user_site.vkontakte %}
+    <a href="{{ site.user_site.vkontakte }}" target="_blank"><i class="icon-vkontakte"></i></a>
+    {% endif %}
+
+    {% if site.user_site.odnoklassniki %}
+    <a href="{{ site.user_site.odnoklassniki }}" target="_blank"><i class="icon-odnoklassniki"></i></a>
+    {% endif %}
+
+  </div>
+</div>
+
+
     <div class="map" id="map" long="" lat="">
 
     </div>

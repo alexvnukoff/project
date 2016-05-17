@@ -236,6 +236,24 @@ class SiteUpdate(UpdateView):
         if form.has_changed() and ('sub_domain' in form.changed_data or 'domain' in form.changed_data):
             form.instance.domain_part = form.cleaned_data.get('domain', None) or form.cleaned_data.get('sub_domain')
 
+        if 'facebook' in form.changed_data:
+            form.instance.metadata['facebook'] = form.cleaned_data['facebook']
+
+        if 'youtube' in form.changed_data:
+            form.instance.metadata['youtube'] = form.cleaned_data['youtube']
+
+        if 'twitter' in form.changed_data:
+            form.instance.metadata['twitter'] = form.cleaned_data['twitter']
+
+        if 'instagram' in form.changed_data:
+            form.instance.metadata['instagram'] = form.cleaned_data['instagram']
+
+        if 'vkontakte' in form.changed_data:
+            form.instance.metadata['vkontakte'] = form.cleaned_data['vkontakte']
+
+        if 'odnoklassniki' in form.changed_data:
+            form.instance.metadata['odnoklassniki'] = form.cleaned_data['odnoklassniki']
+
         with transaction.atomic():
             self.object = form.save()
             gallery_images_form.instance = self.object.get_gallery(self.request.user)
