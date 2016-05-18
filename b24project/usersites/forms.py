@@ -8,6 +8,16 @@ from usersites.models import UserSiteTemplate
 
 logger = logging.getLogger(__name__)
 
+
+class UserSiteTemplateForm(forms.ModelForm):
+    class Meta:
+        model = UserSiteTemplate
+        fields = '__all__'
+
+
+##
+# Simple form builder for extra parameters
+##
 INTEGER, FLOAT, DATE, CHAR, TEXTAREA, BOOLEAN, IMAGE = \
     'integer', 'float', 'date', 'char', 'textarea', 'boolean', 'image'
 
@@ -22,23 +32,19 @@ FIELD_TYPES = {
 }
 
 
-class UserSiteTemplateForm(forms.ModelForm):
-    class Meta:
-        model = UserSiteTemplate
-        fields = '__all__'
-
-
 class ExtraParamsError(Exception):
-    pass
+    """
+    If some of form fields descriptions is invalid.
+    """
 
 
 class ExtraParamsForm(forms.Form):
     """
     The form for product extra paramemeters.
     """
-    
     def __init__(self, instance, request, *args, **kwargs):
         self._instance = instance
+        self._request = request
         super(ExtraParamsForm, self).__init__(*args, **kwargs)
         extra_param_fields = getattr(instance, 'extra_params')
         if not extra_param_fields:
@@ -67,6 +73,10 @@ class ExtraParamsForm(forms.Form):
                     self.post_texts[name] = post_text
                 self.fields[name] = field
 
+    def save(self, *args, **kwargs):
+        data = self.cleaned_data
+        self.request.session['extra_params_values']
+        
 
 def create_extra_form(instance, request):
     """

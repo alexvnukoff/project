@@ -31,6 +31,7 @@ from usersites.forms import create_extra_form
 
 logger = logging.getLogger(__name__)
 
+
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
     model = B2CProduct
     filter_key = 'company'
@@ -75,6 +76,8 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         extra_form = create_extra_form(self.object, self.request)
         if extra_form:
+            if self.request.method == 'POST' and extra_form.is_valid()
+                extra_form.save()
             context_data['extra_form'] = extra_form
 
         if self.object.currency and self.object.cost:
