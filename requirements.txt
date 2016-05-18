@@ -13,7 +13,7 @@ Django==1.9.6
 django-appconf==1.0.2
 django-celery==3.1.17
 django-debug-toolbar==1.4
--e git+https://github.com/fatal10110/django-guardian.git@05b846f3929394835c885ab2c777cb9d49240bc2#egg=django_guardian
+-e git+https://github.com/fatal10110/django-guardian.git@devel#egg=django_guardian
 django-loginas==0.1.9
 django-modeltranslation==0.11
 django-mptt==0.8.4
