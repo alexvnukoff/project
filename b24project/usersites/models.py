@@ -67,7 +67,7 @@ class UserSite(ActiveModelMixing, models.Model):
     site = models.OneToOneField(Site, null=True, blank=True, related_name='user_site')
     domain_part = models.CharField(max_length=100, null=False, blank=False)
     galleries = GenericRelation(Gallery, related_query_name='sites')
-    metadata = JSONField()
+    metadata = JSONField(null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')

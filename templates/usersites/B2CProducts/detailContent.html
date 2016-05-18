@@ -31,8 +31,9 @@
                 {% if extra_form %}
                 <form action="" method="post" id="ExtraParamsForm">
                     {% csrf_token %}
+                    {% for hidden in extra_form.hidden_fields %}{{ hidden }}{% endfor %}
                     <table class="q_data" width="90%">
-                    {% for field in extra_form %}
+                    {% for field in extra_form.visible_fields %}
                         {% get_item_by_key extra_form.pre_texts field.name as field_pre_text %}
                         {% if field_pre_text %}
                         <tr>
@@ -59,6 +60,9 @@
                 </form>                
                 {% else %}
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
+                    {% if extra_params_uuid %}
+                    <input type="hidden" name="extra_params_uuid" value="{{ extra_params_uuid }}">
+                    {% endif %}
                     <input type="hidden" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">

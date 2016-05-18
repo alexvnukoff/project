@@ -53,6 +53,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        cls = type(self)
         self.object = self.get_object()
         if not request.session.get('basket_currency'):
             request.session['basket_currency'] = request.POST.get('currency')
@@ -64,11 +65,26 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
             basket = Basket(request)
             basket.add(request.POST.get('product_id'), 
                        request.POST.get('quantity'))
+            cls.save_extra_params(basket, request)
             return HttpResponse(status=200)
+
         elif 'presave' in request.POST:
             context = self.get_context_data(**kwargs) or {}
             return self.render_to_response(context)
         return HttpResponseNotFound()
+        
+    @classmethod
+    def save_extra_params(cls, basket, request):
+        if request.method == 'POST':
+            extra_params_uuid = request.POST.get('extra_params_uuid')
+            logger.debug(extra_params_uuid)
+            if extra_params_uuid:
+                uuid_key = 'extra_params__{0}' . format(extra_params_uuid)
+                extra_params_values = reques.session.get(uuid_key)
+                if extra_params_values:
+                    basket.basket.extra_params = extra_params_values
+                    basket.basket.save()
+        
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -76,9 +92,12 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         extra_form = create_extra_form(self.object, self.request)
         if extra_form:
-            if self.request.method == 'POST' and extra_form.is_valid()
+            if self.request.method == 'POST' and extra_form.is_valid():
                 extra_form.save()
-            context_data['extra_form'] = extra_form
+                context_data['extra_params_uuid'] = \
+                    extra_form.cleaned_data.get('extra_params_uuid')
+            else:
+                context_data['extra_form'] = extra_form
 
         if self.object.currency and self.object.cost:
             paypal_dict = {

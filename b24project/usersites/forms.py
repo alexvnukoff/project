@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import uuid
 import logging
 
 from django import forms
@@ -42,15 +44,22 @@ class ExtraParamsForm(forms.Form):
     """
     The form for product extra paramemeters.
     """
+
+    extra_params_uuid = forms.UUIDField(
+        widget=forms.HiddenInput()
+    )
+
     def __init__(self, instance, request, *args, **kwargs):
-        self._instance = instance
-        self._request = request
+        self.instance = instance
+        self.request = request
         super(ExtraParamsForm, self).__init__(*args, **kwargs)
         extra_param_fields = getattr(instance, 'extra_params')
+        self.initial['extra_params_uuid'] = uuid.uuid4()
         if not extra_param_fields:
             raise ExtraParamsError(_('Invalid form description'))
         self.pre_texts = {}
         self.post_texts = {}
+        self.valuable_fields = []
         for item in extra_param_fields:
             name = item.get('name')
             fieldtype = item.get('fieldtype')
@@ -72,20 +81,28 @@ class ExtraParamsForm(forms.Form):
                 if post_text:
                     self.post_texts[name] = post_text
                 self.fields[name] = field
+                self.valuable_fields.append(name)
 
     def save(self, *args, **kwargs):
-        data = self.cleaned_data
-        self.request.session['extra_params_values']
+        uuid_key = 'extra_params__{0}' . format(
+            self.cleaned_data['extra_params_uuid']
+        )
+        self.request.session[uuid_key] = dict(
+            [(field_name, field_value) for field_name, field_value \
+                in self.cleaned_data.items() 
+                if field_name in self.valuable_fields])
         
 
 def create_extra_form(instance, request):
     """
     Try to build and return the form for product extra params.
     """
-    try:
-        params = {}
-        if request.method == 'POST':
-            params.update({'data': request.POST, 'files': request.FILES})
-        return ExtraParamsForm(instance, request, **params)
-    except ExtraParamsError:
-        return None
+    if 'uuid_hash' in request.session:
+        try:
+            params = {}
+            if request.method == 'POST':
+                params.update({'data': request.POST, 'files': request.FILES})
+            return ExtraParamsForm(instance, request, **params)
+        except ExtraParamsError:
+            pass
+    return None
