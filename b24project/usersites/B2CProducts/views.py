@@ -4,6 +4,8 @@ import re
 import logging
 
 from collections import OrderedDict
+
+from django.db import transaction, IntegrityError
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -16,12 +18,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
+from django.contrib.contenttypes.models import ContentType
+
 from paypal.standard.forms import PayPalPaymentsForm
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.models import Questionnaire
+from b24online.models import (Questionnaire, DealOrder, Deal, DealItem)
 from b24online.search_indexes import B2cProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail
@@ -197,6 +201,7 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         return context
 
     def form_valid(self, form):
+        logger.debug('Step 1')
         cd = form.cleaned_data
         basket = Basket(self.request)
         org_email = get_current_site().user_site.organization.email
@@ -211,13 +216,58 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
             'site': get_current_site().domain,
         }
 
+        logger.debug('Step 2')
         subject = (_('Order from') + ' {0}').format(get_current_site().domain)
         body = loader.render_to_string('usersites/B2CProducts/templateEmail.html', context)
 
-        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
-                  [org_email, 'migirov@gmail.com'], fail_silently=False)
+        logger.debug('Step 3')
+        if not getattr(settings, 'NOT_SEND_EMAIL', False):
+            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
+                      [org_email, 'migirov@gmail.com'], fail_silently=False)
 
+        # Save the bought products to Deal and DealItems
+        self.save_deal_order(basket)
+        logger.debug('Step 4')
         return super(B2CProductByEmail, self).form_valid(form)
+
+    def form_invalid(self, form):
+        logger.debug('Error 1')
+        logger.debug(form.errors)
+        return super().form_invalid(form)
+
+    def save_deal_order(self, basket):
+        """
+        Save the basket items to DealItems    
+        """
+        supplier = get_current_site().user_site.organization
+        try:
+            with transaction.atomic():
+                deal_order = DealOrder.objects.create(
+                    customer_type=DealOrder.AS_PERSON,
+                    status=DealOrder.DRAFT
+                )
+                deal_order.save()
+
+                for item in basket:
+                    deal = Deal.objects.create(
+                        deal_order=deal_order,
+                        currency=item.product.currency,
+                        supplier_company=supplier,
+                        status=DealOrder.DRAFT
+                    )
+                    model_type = ContentType.objects.get_for_model(item.product)
+                    deal_item = DealItem.objects.create(
+                        deal=deal,
+                        content_type=model_type,
+                        object_id=item.product.pk,
+                        quantity=item.quantity,
+                        currency=item.product.currency,
+                        cost=item.product.cost,
+                        extra_params=item.extra_params,
+                    )
+        except IntegrityError:
+            raise
+        return deal_order
 
 
 class B2CProductJsonData(ProductJsonData):

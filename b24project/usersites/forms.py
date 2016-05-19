@@ -87,12 +87,10 @@ class ExtraParamsForm(forms.Form):
         uuid_key = 'extra_params__{0}' . format(
             self.cleaned_data['extra_params_uuid']
         )
-        logger.debug(uuid_key)
         data = dict(
             [(field_name, field_value) for field_name, field_value \
                 in self.cleaned_data.items() 
                 if field_name in self.valuable_fields])
-        logger.debug(data)
         self.request.session[uuid_key] = dict(
             [(field_name, field_value) for field_name, field_value \
                 in self.cleaned_data.items() 
