@@ -41,7 +41,9 @@
                         </tr>
                         {% endif %}
                         <tr valign="top">
-                            <td class="required">{{ field.label }}</td>
+                            <td class="field-label {% if field.requeired %}required{% endif %}">
+                                <label>{{ field.label }}</label>
+                            </td>
                             <td>
                                 <span>{{ field }}</span>
                                 {% if extra_form.is_bound and field.errors %}

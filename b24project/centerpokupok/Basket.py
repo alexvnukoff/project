@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
+
+import logging
 from django.utils.timezone import now
 
 from centerpokupok.models import UserBasket, BasketItem
 from tpp.DynamicSiteMiddleware import get_current_site
 
+logger = logging.getLogger(__name__)
+
 
 class ItemAlreadyExists(Exception):
     pass
 
+
 class ItemDoesNotExist(Exception):
     pass
+
 
 class Basket:
     def __init__(self, request):
@@ -44,14 +50,18 @@ class Basket:
         basket.save()
         return basket
 
-    def add(self, product, quantity=1):
+    def add(self, product, quantity=1, extra_params={}):
         try:
+            if extra_params:
+                raise RuntimeError()
             item = BasketItem.objects.get(basket=self.basket, product=product)
-        except BasketItem.DoesNotExist:
+        except (BasketItem.DoesNotExist, RuntimeError):
             item = BasketItem()
             item.basket = self.basket
             item.product_id = product
             item.quantity = quantity
+            if extra_params:
+                item.extra_params = extra_params
             item.save()
         else: #ItemAlreadyExists
             if item.quantity:

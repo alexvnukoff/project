@@ -67,11 +67,12 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         if 'quantity' in request.POST and request.POST.get('quantity').isdigit():
             basket = Basket(request)
+            extra_params_values = cls.get_extra_params(request)
             basket_item = basket.add(
                 request.POST.get('product_id'), 
-                request.POST.get('quantity')
+                request.POST.get('quantity'),
+                extra_params=extra_params_values,
             )
-            cls.save_extra_params(basket_item, request)
             return HttpResponse(status=200)
 
         elif 'presave' in request.POST:
@@ -80,16 +81,14 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         return HttpResponseNotFound()
         
     @classmethod
-    def save_extra_params(cls, basket_item, request):
+    def get_extra_params(cls, request):
+        data = None
         if request.method == 'POST':
             extra_params_uuid = request.POST.get('extra_params_uuid')
             if extra_params_uuid:
                 uuid_key = 'extra_params__{0}' . format(extra_params_uuid)
-                extra_params_values = request.session.get(uuid_key)
-                if extra_params_values:
-                    basket_item.extra_params = extra_params_values
-                    basket_item.save()
-        
+                data = request.session.get(uuid_key)
+        return data        
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -201,7 +200,6 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         return context
 
     def form_valid(self, form):
-        logger.debug('Step 1')
         cd = form.cleaned_data
         basket = Basket(self.request)
         org_email = get_current_site().user_site.organization.email
@@ -216,35 +214,30 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
             'site': get_current_site().domain,
         }
 
-        logger.debug('Step 2')
         subject = (_('Order from') + ' {0}').format(get_current_site().domain)
         body = loader.render_to_string('usersites/B2CProducts/templateEmail.html', context)
 
-        logger.debug('Step 3')
         if not getattr(settings, 'NOT_SEND_EMAIL', False):
             send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
                       [org_email, 'migirov@gmail.com'], fail_silently=False)
 
         # Save the bought products to Deal and DealItems
-        self.save_deal_order(basket)
-        logger.debug('Step 4')
+        self.save_deal_order(basket, data=cd)
         return super(B2CProductByEmail, self).form_valid(form)
 
-    def form_invalid(self, form):
-        logger.debug('Error 1')
-        logger.debug(form.errors)
-        return super().form_invalid(form)
-
-    def save_deal_order(self, basket):
+    def save_deal_order(self, basket, data={}):
         """
         Save the basket items to DealItems    
         """
+        # Product supplier company
         supplier = get_current_site().user_site.organization
         try:
             with transaction.atomic():
+                # Deal order
                 deal_order = DealOrder.objects.create(
                     customer_type=DealOrder.AS_PERSON,
-                    status=DealOrder.DRAFT
+                    status=DealOrder.READY,
+                    deal_place=DealOrder.ON_USERSITE
                 )
                 deal_order.save()
 
@@ -253,7 +246,9 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                         deal_order=deal_order,
                         currency=item.product.currency,
                         supplier_company=supplier,
-                        status=DealOrder.DRAFT
+                        person_last_name=data.get('name'),
+                        person_email=data.get('email'),
+                        status=Deal.ORDERED,
                     )
                     model_type = ContentType.objects.get_for_model(item.product)
                     deal_item = DealItem.objects.create(
