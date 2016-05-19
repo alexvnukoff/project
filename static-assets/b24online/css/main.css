@@ -266,5 +266,6 @@ li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .my-filter-button {margin:10px 0 5px 0;padding:0;display:block;float:left;}
 .geolocation-navi {float:left;width:40px;font-size:20px;}
 .content-goods-tab .content-news th, td {padding: 5px !important;}
-
+.content-video {height:370px;padding:10px 0;background:transparent;}
+.content-video-text {background:#fafbfa;padding:10px;font-size:15px;line-height:1.3;}
 

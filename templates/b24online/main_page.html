@@ -147,10 +147,11 @@
                         <li><a class="single-page" href="{% url 'innov:main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
                         <li><a class="single-page" href="{% url 'proposal:main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals' %}</a></li>
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
-
 {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-{% endcomment %}        <li><a class="single-page" href="{% url 'tv:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP TV' %}</a></li>
+                        <li><a class="single-page" href="{% url 'tv:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP TV' %}</a></li>
+{% endcomment %}
+                        <li><a class="single-page" href="{% url 'video:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP CHANNEL' %}</a></li>
                         <li><a class="single-page" href="{% url 'vacancy:main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
 
@@ -177,6 +178,7 @@
                             <li><a class="single-page" href="{% url 'products:my_b2c' %}"><i class="icon-basket"></i>&nbsp;{% trans 'Products B2C' %}</a></li>
                             <li><a class="single-page" href="{% url 'tpp:my_main' %}"><i class="icon-shield"></i>&nbsp;{% trans 'Organizations' %}</a></li>
                             <li><a class="single-page" href="{% url 'companies:my_main' %}"><i class="icon-briefcase"></i>&nbsp;{% trans 'Companies' %}</a></li>
+                            <li><a class="single-page" href="{% url 'video:my_main' %}"><i class="icon-youtube-play"></i>&nbsp;{% trans 'Video Gallery' %}</a></li>
                             <li><a class="single-page" href="{% url 'innov:my_main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
                             <li><a class="single-page" href="{% url 'proposal:my_main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals'  %}</a></li>
                             <li><a class="single-page" href="{% url 'exhibitions:my_main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
@@ -194,7 +196,6 @@
                         {# The deals history #}
                         <li><a href="{% url 'products:deal_list' %}"><i class="icon-list-bullet"></i>&nbsp;{% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
                         <li><a href="{% url 'products:deal_list' %}"><i class="icon-book"></i>&nbsp;{% trans 'Deals history' %}</a></li>
-
                             <!-- temporary hide..
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                             <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>

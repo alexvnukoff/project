@@ -3,14 +3,15 @@
 import os
 import logging
 
-from django.db import models 
+from django.db import models
 from django import template
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 from appl import func
-from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal, Company, News, Banner, BannerBlock
+from b24online.models import (Chamber, B2BProduct, Organization, StaticPage,
+    Exhibition, Tender, InnovationProject, BusinessProposal, Company, News,
+    Banner, BannerBlock, Video)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement, Resume
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -141,7 +142,7 @@ def statistic(*args, **kwargs):
     return {'model_statistic': model_statistic}
 
 
-@register.inclusion_tag('b24online/main/contextMenu.html', 
+@register.inclusion_tag('b24online/main/contextMenu.html',
                         name='setContextMenu', takes_context=True)
 def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
@@ -175,6 +176,9 @@ def set_context_menu(context, obj, **kwargs):
     elif model_name == Company.__name__:
         set_current = True
         url_namespace = "companies"
+    elif model_name == Video.__name__:
+        top_perm = False
+        url_namespace = "video"
     elif model_name == Chamber.__name__:
         set_current = True
         url_namespace = "tpp"

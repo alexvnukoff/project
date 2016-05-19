@@ -1,0 +1,53 @@
+{% extends 'b24online/main_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+    {% block content %}
+    <div class="new-details">
+        <h1>{% if item.video_code %}<span title="YouTube" class="icon-youtube-play"></span>{% endif %}{{ item.title }}</h1>
+        <p class="date">
+
+        {% if item.organization %}
+            {% if item.organization.flag %}
+                <img src="{{ item.organization.flag_url }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+            {% else %}
+                <i class="sprite {{ item.organization.country.flag }}" title="{{ item.organization.country.name }}"></i>
+            {% endif %}
+        {% endif %}
+
+            {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }}, <a href="{{ item.organization.get_absolute_url }}" title="{{ item.organization.name }}">{{ item.organization.name }}</a>
+        </p>
+
+          {% if item.video_code %}
+          <div class="content-video">
+              <iframe width="660" height="372" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
+          </div>
+          {% endif %}
+
+          <div class="content-video-text">
+              <p>{{ item.content|cleanHtml|safe }} </p>
+          </div>
+
+          {% b2b_social_buttons item.image item.title item.content %}
+
+
+          <div style="clear:both;"></div>
+          <div class="fb-comments" data-href="http://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
+
+      </div>
+
+{% endblock %}
