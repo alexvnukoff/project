@@ -68,6 +68,8 @@
             </td>
         </tr>
         {% endif %}
+
+        {% if not user.is_authenticated %}
         <tr>
             <td>
                 {% include "usersites_templates/ibonds/Questionnaires/tos.html" %}
@@ -78,6 +80,8 @@
                 <input type="checkbox" id="agree-tos" name="tos" /> {% trans 'I agree to the terms' %}
             </td>
         </tr>
+        {% endif %}
+
         <tr>
             <td align="left">
                 <input type="submit" class="btntype2" id="save-button" name="submit" value="{% trans 'Save' %}">
