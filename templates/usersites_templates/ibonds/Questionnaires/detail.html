@@ -63,6 +63,7 @@
 {% endblock %}
 
 {% block js %}
+    {% if not user.is_authenticated %}
     <script type="text/javascript">
         $(document).ready(function() {
             var submit_button = $('#save-button');
@@ -76,5 +77,6 @@
             }) 
         });
     </script>
+    {% endif %}
 
 {% endblock %}
