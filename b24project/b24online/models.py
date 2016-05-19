@@ -1893,7 +1893,8 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     AS_ORGANIZATION, AS_PERSON = 'organization', 'person'
     CUSTOMER_TYPES = ((AS_PERSON, _('Person')),
                       (AS_ORGANIZATION, _('Organization')),)
-
+    ON_PORTAL, ON_USERSITE = 'portal', 'site'
+    DEAL_PLACES = ((ON_PORTAL, _('On portal')), (ON_USERSITE, _('On site')))
     DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
                 (PARTIALLY, _('Partially paid')), (PAID, _('Paid')))
@@ -1901,10 +1902,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     customer_type = models.CharField(_('Customer type'), max_length=15,
                                      choices=CUSTOMER_TYPES,
                                      null=False, blank=False)
-    customer_organization = models.ForeignKey(
-        'Organization',
-        related_name='deal_orders',
-        verbose_name=_('Customer organization'),
+    deal_place = models.CharField(_('Deal place'), max_length=15,
+                                     choices=DEAL_PLACES,
+                                     default=ON_PORTAL,
+                                     null=False, blank=False)
+    customer_organization = models.ForeignKey('Organization', 
+        related_name='deal_orders', verbose_name=_('Customer organization'),
         null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50,
                                 blank=True, null=True, db_index=True)
@@ -1957,10 +1960,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_customer(self):
         if self.customer_type == self.AS_PERSON:
-            if self.created_by.profile:
-                return self.created_by.profile.full_name or self.created_by.email
-            else:
-                return self.created_by
+            if self.created_by:
+                if self.created_by.profile:
+                    return self.created_by.profile.full_name \
+                        or self.created_by.email
+                else:
+                    return self.created_by
         elif self.customer_type == self.AS_ORGANIZATION:
             return self.customer_organization
         else:
@@ -2153,7 +2158,7 @@ class DealItem(models.Model):
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
     quantity = models.PositiveIntegerField(_('Quantity'))
-    extra = JSONField(_('Extra parameters values'), null=True, blank=True)
+    extra_params = JSONField(_('Extra parameters values'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('Deal product')

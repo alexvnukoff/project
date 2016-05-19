@@ -283,3 +283,18 @@ label.required::after {
 .data-action .icon-action { float: left; width:20px; height: 20px; margin: 4px;}
 .data-action .remove {background-position: -120px -60px;}
 .data-action .edit {background-position: -216px -60px;}
+
+table.q_data td input {
+    width: 100%;
+}
+
+table.q_data textarea {
+    width: 100%;
+    margin: 0 -2px;
+    border-top: 2px solid #CCE5ED;
+}
+
+table.q_data td input[type='file'] {
+    border: none;
+}
+

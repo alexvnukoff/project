@@ -4,6 +4,8 @@ import re
 import logging
 
 from collections import OrderedDict
+
+from django.db import transaction, IntegrityError
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -16,12 +18,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
+from django.contrib.contenttypes.models import ContentType
+
 from paypal.standard.forms import PayPalPaymentsForm
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.models import Questionnaire
+from b24online.models import (Questionnaire, DealOrder, Deal, DealItem)
 from b24online.search_indexes import B2cProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail
@@ -30,6 +34,7 @@ from usersites.views import ProductJsonData
 from usersites.forms import create_extra_form
 
 logger = logging.getLogger(__name__)
+
 
 class B2CProductDetail(UserTemplateMixin, ItemDetail):
     model = B2CProduct
@@ -52,6 +57,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        cls = type(self)
         self.object = self.get_object()
         if not request.session.get('basket_currency'):
             request.session['basket_currency'] = request.POST.get('currency')
@@ -61,13 +67,28 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         if 'quantity' in request.POST and request.POST.get('quantity').isdigit():
             basket = Basket(request)
-            basket.add(request.POST.get('product_id'), 
-                       request.POST.get('quantity'))
+            extra_params_values = cls.get_extra_params(request)
+            basket_item = basket.add(
+                request.POST.get('product_id'), 
+                request.POST.get('quantity'),
+                extra_params=extra_params_values,
+            )
             return HttpResponse(status=200)
+
         elif 'presave' in request.POST:
             context = self.get_context_data(**kwargs) or {}
             return self.render_to_response(context)
         return HttpResponseNotFound()
+        
+    @classmethod
+    def get_extra_params(cls, request):
+        data = None
+        if request.method == 'POST':
+            extra_params_uuid = request.POST.get('extra_params_uuid')
+            if extra_params_uuid:
+                uuid_key = 'extra_params__{0}' . format(extra_params_uuid)
+                data = request.session.get(uuid_key)
+        return data        
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -75,7 +96,12 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         extra_form = create_extra_form(self.object, self.request)
         if extra_form:
-            context_data['extra_form'] = extra_form
+            if self.request.method == 'POST' and extra_form.is_valid():
+                extra_form.save()
+                context_data['extra_params_uuid'] = \
+                    extra_form.cleaned_data.get('extra_params_uuid')
+            else:
+                context_data['extra_form'] = extra_form
 
         if self.object.currency and self.object.cost:
             paypal_dict = {
@@ -191,10 +217,52 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         subject = (_('Order from') + ' {0}').format(get_current_site().domain)
         body = loader.render_to_string('usersites/B2CProducts/templateEmail.html', context)
 
-        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
-                  [org_email, 'migirov@gmail.com'], fail_silently=False)
+        if not getattr(settings, 'NOT_SEND_EMAIL', False):
+            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL,
+                      [org_email, 'migirov@gmail.com'], fail_silently=False)
 
+        # Save the bought products to Deal and DealItems
+        self.save_deal_order(basket, data=cd)
         return super(B2CProductByEmail, self).form_valid(form)
+
+    def save_deal_order(self, basket, data={}):
+        """
+        Save the basket items to DealItems    
+        """
+        # Product supplier company
+        supplier = get_current_site().user_site.organization
+        try:
+            with transaction.atomic():
+                # Deal order
+                deal_order = DealOrder.objects.create(
+                    customer_type=DealOrder.AS_PERSON,
+                    status=DealOrder.READY,
+                    deal_place=DealOrder.ON_USERSITE
+                )
+                deal_order.save()
+
+                for item in basket:
+                    deal = Deal.objects.create(
+                        deal_order=deal_order,
+                        currency=item.product.currency,
+                        supplier_company=supplier,
+                        person_last_name=data.get('name'),
+                        person_email=data.get('email'),
+                        status=Deal.ORDERED,
+                    )
+                    model_type = ContentType.objects.get_for_model(item.product)
+                    deal_item = DealItem.objects.create(
+                        deal=deal,
+                        content_type=model_type,
+                        object_id=item.product.pk,
+                        quantity=item.quantity,
+                        currency=item.product.currency,
+                        cost=item.product.cost,
+                        extra_params=item.extra_params,
+                    )
+        except IntegrityError:
+            raise
+        return deal_order
 
 
 class B2CProductJsonData(ProductJsonData):

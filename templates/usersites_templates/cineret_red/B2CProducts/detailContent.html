@@ -6,6 +6,10 @@
 {% load inclusionTags %}
 {% load humanize %}
 {% block title %}{{ object.name }}{% endblock %}
+{% block after_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+{% endblock %}
 {% block content %}
     {{ block.super }}
 
@@ -32,8 +36,45 @@
 
             {# product details - price, quantity, decription and add to cart. If its a coupon, there will be a timer. #}
             <div class="col-md-6 item-price-table">
-
+                {% if extra_form %}
+                <form action="" method="post" id="ExtraParamsForm">
+                    {% csrf_token %}
+                    {% for hidden in extra_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    <table class="q_data" width="90%">
+                    {% for field in extra_form.visible_fields %}
+                        {% get_item_by_key extra_form.pre_texts field.name as field_pre_text %}
+                        {% if field_pre_text %}
+                        <tr>
+                            <td colspan="2" style="padding: 10px 0; font-weight: bold;">{{ field_pre_text }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr valign="top">
+                            <td>
+                                <label class="{% if field.field.required %}required{% endif %}">{{ field.label }}:</label>
+                            </td>
+                        </tr>
+                        </tr>
+                            <td>
+                                <span>{{ field }}</span>
+                                {% if extra_form.is_bound and field.errors %}
+                                    <p class="errors">{{ field.errors|striptags }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="submit" name="presave" value="{% trans 'Save' %}">
+                            </td>
+                        </tr>
+                    </table>
+                </form>                
+                {% else %}
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
+                    {% if extra_params_uuid %}
+                    <input type="hidden" name="extra_params_uuid" value="{{ extra_params_uuid }}">
+                    {% endif %}
 
                     <input type="hidden" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
@@ -102,7 +143,7 @@
                     <h4>{% trans 'About Company' %}</h4>
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
-
+                {% endif %}
             </div>{# end of details table #}
 
         </div>{# end of row #}

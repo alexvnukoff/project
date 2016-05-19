@@ -214,6 +214,7 @@ class BasketItem(models.Model):
     basket = models.ForeignKey(UserBasket, verbose_name=_('basket'), related_name='items')
     product = models.ForeignKey('B2CProduct', related_name='basket_product')
     quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+    extra_params = JSONField(_('Extra parameters values'), null=True, blank=True)
 
     def __str__(self):
         return '{0}'.format(self.product_id)

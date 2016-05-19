@@ -27,10 +27,10 @@ class UserDetail(forms.Form):
 
 
 class OrderEmailForm(forms.Form):
-      name = forms.CharField(required=True, label=_("Name"))
-      last_name = forms.CharField(required=True, label=_("Last Name"))
-      email = forms.CharField(required=True, label=_("Email"))
-      message = forms.CharField(label=_("Description"), widget=forms.Textarea)
-      name.widget.attrs.update({'placeholder': 'Your Name'})
-      email.widget.attrs.update({'placeholder': 'Email'})
-      message.widget.attrs.update({'placeholder': 'Message'})
+    name = forms.CharField(required=True, label=_("Name"))
+    last_name = forms.CharField(required=False, label=_("Last Name"))
+    email = forms.CharField(required=True, label=_("Email"))
+    message = forms.CharField(label=_("Description"), widget=forms.Textarea)
+    name.widget.attrs.update({'placeholder': 'Your Name'})
+    email.widget.attrs.update({'placeholder': 'Email'})
+    message.widget.attrs.update({'placeholder': 'Message'})
