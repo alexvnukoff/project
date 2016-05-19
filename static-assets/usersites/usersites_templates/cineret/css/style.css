@@ -25,6 +25,10 @@
     left: 0;
 }
 
+.social-header .button{
+	float: left;
+}
+
 
 
 /* ----------- Proposal Styling -------------------- */

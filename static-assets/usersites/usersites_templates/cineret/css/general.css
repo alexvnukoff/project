@@ -91,6 +91,33 @@ h3 a:focus{
 }
 
 /* ----------- Navigation Styling -------------------- */
+/* Social links */
+.social-header{
+	padding-top: 7px;
+    padding-bottom: 15px;
+}
+
+.social-header a{
+	margin: 0 5px;
+}
+
+.social-header i{
+	/*padding: 8px 20px 8px 12px;*/
+}
+
+.social-header .button{
+	display:block;
+	width:36px;
+	height:36px;
+	border-radius:18px;
+	font-size: 15px;
+	/*color:#000;*/
+	/*line-height:36px;*/
+	text-align:center;
+	background:#fff;
+}
+
+
 .navbar-default{
     padding: 0;
     border-color: transparent;
