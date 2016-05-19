@@ -58,6 +58,40 @@
                     <input type="text" placeholder="Search" name="s">
                 </form>
             </div>
+
+           <div>
+                <!-- Social links  -->
+                <div class="social-header">
+                  <div style="text-align:center;margin:0 auto;">
+
+                    {% if site.user_site.facebook %}
+                    <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
+                    {% endif %}
+
+                    {% if site.user_site.youtube %}
+                    <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
+                    {% endif %}
+
+                    {% if site.user_site.twitter %}
+                    <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
+                    {% endif %}
+
+                    {% if site.user_site.instagram %}
+                    <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
+                    {% endif %}
+
+                    {% if site.user_site.vkontakte %}
+                    <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
+                    {% endif %}
+
+                    {% if site.user_site.odnoklassniki %}
+                    <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
+                    {% endif %}
+
+                  </div>
+                </div>
+
+           </div>
           </div>
 
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
