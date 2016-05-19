@@ -4,9 +4,11 @@ import uuid
 import logging
 
 from django import forms
+from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from usersites.models import UserSiteTemplate
+from b24online.utils import handle_uploaded_file
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +62,7 @@ class ExtraParamsForm(forms.Form):
         self.pre_texts = {}
         self.post_texts = {}
         self.valuable_fields = []
+        self.image_fields = []
         for item in extra_param_fields:
             name = item.get('name')
             fieldtype = item.get('fieldtype')
@@ -82,6 +85,8 @@ class ExtraParamsForm(forms.Form):
                     self.post_texts[name] = post_text
                 self.fields[name] = field
                 self.valuable_fields.append(name)
+                if fieldtype == 'image':
+                    self.image_fields.append(name)
 
     def save(self, *args, **kwargs):
         uuid_key = 'extra_params__{0}' . format(
@@ -95,6 +100,11 @@ class ExtraParamsForm(forms.Form):
             [(field_name, field_value) for field_name, field_value \
                 in self.cleaned_data.items() 
                 if field_name in self.valuable_fields])
+        if self.image_fields:
+            for field_name in self.image_fields:
+                filepath = handle_uploaded_file(self.cleaned_data[field_name])
+                full_path = (os.path.join(settings.MEDIA_ROOT, filepath)).replace('\\', '/')
+                utils.upload_images({'file': full_path})
         
 
 def create_extra_form(instance, request):
