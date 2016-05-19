@@ -63,9 +63,11 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
         if 'quantity' in request.POST and request.POST.get('quantity').isdigit():
             basket = Basket(request)
-            basket.add(request.POST.get('product_id'), 
-                       request.POST.get('quantity'))
-            cls.save_extra_params(basket, request)
+            basket_item = basket.add(
+                request.POST.get('product_id'), 
+                request.POST.get('quantity')
+            )
+            cls.save_extra_params(basket_item, request)
             return HttpResponse(status=200)
 
         elif 'presave' in request.POST:
@@ -74,16 +76,15 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
         return HttpResponseNotFound()
         
     @classmethod
-    def save_extra_params(cls, basket, request):
+    def save_extra_params(cls, basket_item, request):
         if request.method == 'POST':
             extra_params_uuid = request.POST.get('extra_params_uuid')
-            logger.debug(extra_params_uuid)
             if extra_params_uuid:
                 uuid_key = 'extra_params__{0}' . format(extra_params_uuid)
-                extra_params_values = reques.session.get(uuid_key)
+                extra_params_values = request.session.get(uuid_key)
                 if extra_params_values:
-                    basket.basket.extra_params = extra_params_values
-                    basket.basket.save()
+                    basket_item.extra_params = extra_params_values
+                    basket_item.save()
         
 
     def get_context_data(self, **kwargs):

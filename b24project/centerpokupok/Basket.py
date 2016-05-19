@@ -59,6 +59,7 @@ class Basket:
             else:
                 item.quantity = int(quantity)
             item.save()
+        return item
 
     def remove(self, product):
         try:
