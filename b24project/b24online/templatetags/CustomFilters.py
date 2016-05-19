@@ -24,7 +24,7 @@ from lxml.html.clean import Cleaner
 import b24online.urls
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, MessageChat, Message,
-                              Questionnaire, Company)
+                              Questionnaire, Company, Banner)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -535,3 +535,16 @@ def questionnaire_for_company_products():
     
     organization = get_current_site().user_site.organization
     return get_company_questionnaire_qs(organization)
+
+
+@register.assignment_tag()
+def site_banner_total(side, block):
+    """
+    Return the number of selected type banners.
+    """
+    site_pk = get_current_site().pk
+    return Banner.objects\
+        .filter(site_id=site_pk, 
+                block__code=block, 
+                block__block_type='user_site')\
+        .count()
