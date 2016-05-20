@@ -269,7 +269,7 @@ class RecommendationDelete(ItemDeactivate):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not can_manage_product(request.user, self.object.quetionnaire.item):
+        if not can_manage_product(request.user, self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
         return super(RecommendationDelete, self)\
             .dispatch(request, *args, **kwargs)

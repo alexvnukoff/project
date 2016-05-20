@@ -2504,7 +2504,7 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         verbose_name_plural = _('Recommendations')
         
     def __str__(self):
-        return self.description
+        return self.description or str(self.id)
 
     def has_perm(self, user):
         return True
