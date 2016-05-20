@@ -274,6 +274,12 @@ class RecommendationDelete(ItemDeactivate):
         return super(RecommendationDelete, self)\
             .dispatch(request, *args, **kwargs)
 
+    def get_success_url(self):
+        return reverse(
+            'questionnaires:detail',
+            kwargs={'item_id': self.object.questionnaire.pk}
+        )
+
 
 class QuestionCreate(LoginRequiredMixin, ItemCreate):
     """
