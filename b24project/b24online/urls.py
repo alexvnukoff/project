@@ -35,6 +35,7 @@ import b24online.UserSites.urls
 import b24online.Users.urls
 import b24online.Vacancy.urls
 import b24online.Wall.urls
+import b24online.Video.urls
 import b24online.views
 
 admin.autodiscover()
@@ -63,7 +64,7 @@ urlpatterns = [
     url(r'^questionnaires/',
         include(b24online.Questionnaires.urls,
         namespace='questionnaires')),
-
+    url(r'^video/', include(b24online.Video.urls, namespace='video')),
     url(r'^admin-tpp/', include(b24online.AdminTpp.urls, namespace='AdminTpp')),
 
     url(r'^register/exhibition/$', b24online.views.register_to_exhibition),

@@ -179,7 +179,7 @@ class AbstractRegisterInfoModel(models.Model):
     The abstract model-container of registration info fields.
     """
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        verbose_name=_('Creator'), 
+        verbose_name=_('Creator'),
         related_name='%(class)s_create_user',
         null=True, blank=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -194,7 +194,7 @@ class AbstractRegisterInfoModel(models.Model):
     class Meta:
         abstract = True
 
-    @property    
+    @property
     def created(self):
         """
         Return the created_at datetime text by selected format.
@@ -440,7 +440,7 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
         """
         assert issubclass(model_klass, models.Model), \
             _('Invalid parameter. Must be a "Model" subclass')
-        content_type = ContentType.objects.get_for_model(model_klass) 
+        content_type = ContentType.objects.get_for_model(model_klass)
         return self.get_descendants().instance_of(model_klass)
 
     @property
@@ -768,11 +768,11 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
+    is_hidden_user = models.BooleanField(_('Hide the vacancy user'),
                                         default=False, db_index=True)
-    staffgroup = models.ManyToManyField('StaffGroup', 
+    staffgroup = models.ManyToManyField('StaffGroup',
                                         related_name='group_vacancies')
-    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup', 
+    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup',
                                         related_name='extra_group_vacancies')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
@@ -970,8 +970,8 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-    producer = models.ForeignKey('Producer', related_name='b2b_products', 
-                                 verbose_name=_('Producer'), 
+    producer = models.ForeignKey('Producer', related_name='b2b_products',
+                                 verbose_name=_('Producer'),
                                  null=True, blank=True)
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
@@ -1045,7 +1045,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
             yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id, 
+                           kwargs={'content_type_id': model_type.id,
                                    'item_id': self.id}),
                    _('Questionnaire'))
 
@@ -1434,25 +1434,25 @@ class MessageChat(AbstractRegisterInfoModel):
         (CLOSED, _('Closed')),
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=False) 
-    organization = models.ForeignKey('Organization', related_name='chats', 
+                               null=True, blank=False)
+    organization = models.ForeignKey('Organization', related_name='chats',
                                      null=True, blank=True)
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='incoming_chats', null=True,
                                   blank=True)
-    participants = models.ManyToManyField(User, blank=True)    
+    participants = models.ManyToManyField(User, blank=True)
     is_private = models.NullBooleanField()
-    status = models.CharField(_('Chart status'), max_length=10, 
+    status = models.CharField(_('Chart status'), max_length=10,
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
 
     class Meta:
-        verbose_name = _('Messages chat')    
-        verbose_name_plural = _('Messages chats')    
+        verbose_name = _('Messages chat')
+        verbose_name_plural = _('Messages chats')
 
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
-        
+
     def get_participants(self):
         return self.participants.all()
 
@@ -1468,21 +1468,21 @@ class Message(models.Model):
         (READ, _('Read')),
     )
 
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='outgoing_messages')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='incoming_messages', null=True,
                                   blank=True)
-    organization = models.ForeignKey('Organization', 
-                                     related_name='organization_messages', 
+    organization = models.ForeignKey('Organization',
+                                     related_name='organization_messages',
                                      null=True, blank=True)
     chat = models.ForeignKey(MessageChat, related_name='chat_messages',
                              null=True, blank=True)
     is_read = models.BooleanField(default=False)
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=True, db_index=True) 
+                               null=True, blank=True, db_index=True)
     content = models.TextField(blank=False, null=False)
-    status = models.CharField(_('Message status'), max_length=10, 
+    status = models.CharField(_('Message status'), max_length=10,
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -1514,7 +1514,7 @@ class Message(models.Model):
             if attachment.is_image():
                 images.append({
                     'file': os.path.join(
-                        abspathu(settings.MEDIA_ROOT), 
+                        abspathu(settings.MEDIA_ROOT),
                                  str(attachment.file)),
                     'sizes': {
                         'th': {'box': (50, 50), 'fit': False},
@@ -1522,7 +1522,7 @@ class Message(models.Model):
                 })
             else:
                 files.append({
-                    'file': os.path.join(settings.MEDIA_ROOT, 
+                    'file': os.path.join(settings.MEDIA_ROOT,
                                          str(attachment.file)),
                     'bucket_path': str(attachment.file),
                 })
@@ -1544,9 +1544,9 @@ class MessageAttachment(models.Model):
     file = models.FileField()
     file_name = models.CharField(_('File name'), max_length=255, null=True,
                                  blank=True, editable=False)
-    content_type = models.CharField(_('Content type'), max_length=255, 
+    content_type = models.CharField(_('Content type'), max_length=255,
                                     null=True, blank=True, editable=False)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    related_name='%(class)s_create_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
@@ -1918,7 +1918,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                               null=False, blank=False)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    
+
     class Meta:
         verbose_name = _('Product order')
         verbose_name_plural = _('Product orders')
@@ -1950,8 +1950,8 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 
     @property
     def customer_person(self):
-        return self.created_by 
-        
+        return self.created_by
+
     def get_customer_type(self):
         """
         Return the customer type title: Company or Person.
@@ -2033,7 +2033,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     deal_no = models.CharField(_('Deal No.'), max_length=50,
                                 blank=True, null=True, db_index=True)
     total_cost = models.DecimalField(_('Total deal cost'),
-                                     max_digits=15, decimal_places=2, 
+                                     max_digits=15, decimal_places=2,
                                      null=True, blank=False, editable=False)
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
@@ -2174,7 +2174,7 @@ class DealItem(models.Model):
 
 class StaffGroup(models.Model):
     """
-    Class for the relations of :class:`auth.models.Group` for 
+    Class for the relations of :class:`auth.models.Group` for
     organization's staff vacancies.
     """
     group = models.OneToOneField(Group, verbose_name=_('Vacancy group'))
@@ -2194,10 +2194,10 @@ class PermissionsExtraGroup(models.Model):
     """
     Class for permission's addiotional groups.
     """
-    name = models.CharField(_('Group name'), max_length=255, 
+    name = models.CharField(_('Group name'), max_length=255,
                             blank=False, null=False)
     permissions = models.ManyToManyField(
-        Permission, 
+        Permission,
         verbose_name=_('Permission extra group')
     )
 
@@ -2215,21 +2215,21 @@ class Producer(ActiveModelMixing, models.Model):
     """
     The model class for goods producers.
     """
-    name = models.CharField(_('Name'), max_length=255, 
+    name = models.CharField(_('Name'), max_length=255,
                             blank=False, null=False)
     slug = models.SlugField(max_length=255)
-    short_description = models.TextField(_('Short description'), 
+    short_description = models.TextField(_('Short description'),
                                          null=True, blank=True)
     description = models.TextField(_('Descripion'), null=True, blank=True)
-    logo = CustomImageField(upload_to=generate_upload_path, 
+    logo = CustomImageField(upload_to=generate_upload_path,
                             storage=image_storage,
                             sizes=['big', 'small', 'th'],
                             max_length=255, null=True, blank=True)
-    country = models.CharField(_('Country'), max_length=255, 
+    country = models.CharField(_('Country'), max_length=255,
                                null=True, blank=True)
-    b2b_categories = models.ManyToManyField(B2BProductCategory, 
+    b2b_categories = models.ManyToManyField(B2BProductCategory,
                                             related_name='producers')
-    b2c_categories = models.ManyToManyField('centerpokupok.B2CProductCategory', 
+    b2c_categories = models.ManyToManyField('centerpokupok.B2CProductCategory',
                                             related_name='producers')
     is_approved = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -2242,7 +2242,7 @@ class Producer(ActiveModelMixing, models.Model):
     @classmethod
     def get_active_objects(cls):
         return cls.objects.all()
-        
+
     def __str__(self):
         return self.name
 
@@ -2272,12 +2272,12 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
         models.Q(app_label='centerpokupok', model='b2cproduct')
 
-    name = models.CharField(_('Questionnaire title'), max_length=255, 
+    name = models.CharField(_('Questionnaire title'), max_length=255,
                             blank=False, null=False)
-    short_description = models.TextField(_('Short description'), 
+    short_description = models.TextField(_('Short description'),
                                          null=True, blank=True)
     description = models.TextField(_('Descripion'), null=True, blank=True)
-    image = CustomImageField(upload_to=generate_upload_path, 
+    image = CustomImageField(upload_to=generate_upload_path,
                              storage=image_storage,
                              sizes=['big', 'small', 'th'],
                              max_length=255, null=True, blank=True)
@@ -2324,7 +2324,7 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
             except IndexError:
                 pass
         return None
-    
+
     class Meta:
         verbose_name = _('Questionnaire')
         verbose_name_plural = _('Questionnaires')
@@ -2363,16 +2363,16 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_extra_questions(self):
         return Question.get_active_objects()\
-            .filter(questionnaire=self, 
+            .filter(questionnaire=self,
                     who_created=Question.BY_MEMBER,
                     is_approved=False)\
             .order_by('position')
-        
+
 
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     """
-    The 'Question' models class.    
+    The 'Question' models class.
     """
     # Who created the question
     BY_AUTHOR, BY_MEMBER = 'author', 'member'
@@ -2380,17 +2380,17 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         (BY_AUTHOR, _('By author')),
         (BY_MEMBER, _('By member')),
     )
-    
+
     questionnaire = models.ForeignKey(
-        Questionnaire, 
+        Questionnaire,
         related_name='questions',
     )
     who_created = models.CharField(
-        _('Who is the author'), 
+        _('Who is the author'),
         max_length=10,
-        choices=WHO_CREATED, 
-        default=BY_AUTHOR, 
-        null=True, 
+        choices=WHO_CREATED,
+        default=BY_AUTHOR,
+        null=True,
         blank=True
     )
     created_by_participant = models.ForeignKey(
@@ -2400,13 +2400,13 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         blank=True
     )
     question_text = models.TextField(
-        _('Question text'), 
-        blank=False, 
+        _('Question text'),
+        blank=False,
         null=False
     )
     description = models.TextField(
-        _('Descripion'), 
-        null=True, 
+        _('Descripion'),
+        null=True,
         blank=True
     )
     position = models.PositiveIntegerField(
@@ -2424,11 +2424,11 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     class Meta:
         verbose_name = _('Question')
         verbose_name_plural = _('Questions')
-        
+
     def __str__(self):
         return self.question_text
 
-    def save(self, *args, **kwargs):        
+    def save(self, *args, **kwargs):
         """
         Save th instance.
         """
@@ -2436,7 +2436,7 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
             .get('position_max') or 0
         self.position = max_position + 1
         super(Question, self).save(*args, **kwargs)
-    
+
     def has_perm(self, user):
         """The stub for using in views.
         """
@@ -2451,16 +2451,16 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
             return  self.created_by_participant
         else:
             return None
-        
+
     def __str__(self):
         return self.question_text
 
 
 class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     """
-    The 'Recommendation' models class.    
+    The 'Recommendation' models class.
     """
-    
+
     RED, YELLOW, GREEN = 'red', 'yellow', 'green'
     COLORS = (
         (RED, _('Red')),
@@ -2468,32 +2468,32 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         (GREEN, _('Green')),
     )
     questionnaire = models.ForeignKey(
-        Questionnaire, 
+        Questionnaire,
         related_name='recommendations',
         null=False,
         blank=False,
     )
     question = models.ForeignKey(
-        Question, 
+        Question,
         related_name='recommendations',
         null=True,
         blank=True
     )
     for_color = models.CharField(
-        _('For what color'), 
-        max_length=10, 
-        choices=COLORS, 
-        null=True, 
+        _('For what color'),
+        max_length=10,
+        choices=COLORS,
+        null=True,
         blank=True)
     name = models.CharField(
-        _('Name'), 
-        max_length=255, 
+        _('Name'),
+        max_length=255,
         null=True,
-        blank=True, 
+        blank=True,
     )
     description = models.TextField(
-        _('Descripion'), 
-        null=True, 
+        _('Descripion'),
+        null=True,
         blank=True,
     )
     is_active = models.BooleanField(default=True)
@@ -2502,7 +2502,7 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     class Meta:
         verbose_name = _('Recommendation')
         verbose_name_plural = _('Recommendations')
-        
+
     def __str__(self):
         return self.description or str(self.id)
 
@@ -2512,27 +2512,27 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
     def recommendations(self):
         return Recommendation.objects.filter(question__questionnaire=self)\
             .order_by('question__position')
-            
+
 
 class QuestionnaireParticipant(ActiveModelMixing, models.Model):
-    email = models.EmailField(verbose_name='E-mail', max_length=255, 
+    email = models.EmailField(verbose_name='E-mail', max_length=255,
                               db_index=True)
     user = models.ForeignKey(User, related_name='questionnaire_cases',
                              null=True, blank=True)
     is_invited = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    
+
     class Meta:
         verbose_name = _('Questionnaire participant')
         verbose_name_plural = _('Questionnaire participants')
-       
+
     def __str__(self):
-        return str(self.user) if self.user else self.email 
+        return str(self.user) if self.user else self.email
 
 
 class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
     """
-    The 'Questionnaire' case models class.    
+    The 'Questionnaire' case models class.
     """
     DRAFT, READY, ACTIVE, FINISHED = 'draft', 'ready', 'active', 'FINISHED'
     STATUSES = (
@@ -2541,37 +2541,37 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         (ACTIVE, _('Actiive')),
         (FINISHED, _('Finished')),
     )
-    
+
     questionnaire = models.ForeignKey(
-        Questionnaire, 
+        Questionnaire,
         related_name='cases',
     )
     case_uuid = models.UUIDField(
-        default=uuid.uuid4, 
+        default=uuid.uuid4,
         editable=False,
         unique=True,
     )
     status = models.CharField(
-        _('Status'), 
-        max_length=20, 
-        choices=STATUSES, 
-        default=DRAFT, 
+        _('Status'),
+        max_length=20,
+        choices=STATUSES,
+        default=DRAFT,
         editable=False,
-        null=False, 
+        null=False,
         db_index=True
     )
 
-    participants = models.ManyToManyField(QuestionnaireParticipant)    
-    extra_questions = models.ManyToManyField(Question)    
+    participants = models.ManyToManyField(QuestionnaireParticipant)
+    extra_questions = models.ManyToManyField(Question)
     recommendations = models.ManyToManyField(Recommendation)
-        
+
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('Questionnaire case')
         verbose_name_plural = _('Questionnaire cases')
-        
+
     def has_perm(self, user):
         return True
 
@@ -2691,7 +2691,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                     'is_true': is_true,
                     'show': shows.get(question.id),
                 }
-        
+
     def get_answers_total(self, participant_type):
         """
         Return how many positive answers.
@@ -2727,38 +2727,38 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
 
 class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
     """
-    The 'Question answer' models class.    
+    The 'Question answer' models class.
     """
     question = models.ForeignKey(
-        Question, 
+        Question,
         related_name='questions',
         verbose_name=_('Question'),
         null=True,
     )
     questionnaire_case = models.ForeignKey(
-        QuestionnaireCase, 
+        QuestionnaireCase,
         related_name='questionnaire_cases',
         verbose_name=_('Questionnaire cases'),
         null=True,
     )
     participant = models.ForeignKey(
-        QuestionnaireParticipant, 
+        QuestionnaireParticipant,
         related_name='answers',
         verbose_name=_('Answer author'),
     )
     answer = models.NullBooleanField(
-        _('Answer'), 
+        _('Answer'),
         default=False,
-        null=True, 
+        null=True,
         blank=True
     )
     show_answer = models.NullBooleanField(
-        _('Show'), 
+        _('Show'),
         default=False,
-        null=True, 
+        null=True,
         blank=True
     )
-    
+
     class Meta:
         verbose_name = _('Question answer')
         verbose_name_plural = _('Questions answers')
@@ -2768,6 +2768,61 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_answer(self):
         return str(self)
+
+
+class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
+    class Meta:
+        ordering = ["-id"]
+
+    title = models.CharField(max_length=255, blank=False, null=False)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                             sizes=['big', 'small', 'th'], max_length=255, blank=True)
+    slug = models.SlugField(max_length=255)
+    short_description = models.TextField()
+    content = models.TextField()
+    video_code = models.CharField(max_length=255, blank=True, null=True)
+    keywords = models.CharField(max_length=2048, blank=True, null=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE, related_name='video')
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def upload_images(self):
+        from core import tasks
+        params = {
+            'file': self.image.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
+    @staticmethod
+    def get_index_model(**kwargs):
+        from b24online.search_indexes import VideoIndex
+        return VideoIndex
+
+    def __str__(self):
+        return self.title
+
+    def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
+        if self.organization:
+            return self.organization.has_perm(user)
+
+        return user.is_commando or user.is_superuser
+
+    def get_absolute_url(self):
+        return reverse('video:detail', args=[self.slug, self.pk])
 
 
 @receiver(pre_save)

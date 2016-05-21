@@ -209,6 +209,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a data-id="video-tab" href="{% url "companies:tab_video" item.pk %}">
+                                    {% trans "Video gallery" %}
+                                </a>
+                            </li>
+                            <li>
                                 <a data-id="document-tabs" href="{% url "companies:tabs_documents" item.pk %}">
                                     {% trans "Documents" %}
                                 </a>

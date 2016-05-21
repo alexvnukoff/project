@@ -667,3 +667,37 @@ def remove_index(sender, instance, **kwargs):
 
         if hits.total:
             hits[0].delete()
+
+
+class VideoIndex(DocType):
+    django_id = Integer()
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    content = String(analyzer=html_strip, fields={'raw': String(index='no')})
+    organization = Integer()
+    is_active = Boolean()
+    is_deleted = Boolean()
+    created_at = Date()
+
+    @staticmethod
+    def get_model():
+        from b24online.models import Video
+        return Video
+
+    @classmethod
+    def get_queryset(cls):
+        return cls.get_model().objects.all().prefetch_related('organization')
+
+    @classmethod
+    def to_index(cls, obj):
+        index_instance = cls(
+            django_id=obj.pk,
+            title=obj.title,
+            content=obj.content,
+            organization=getattr(obj.organization, 'pk', None),
+            is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
+            created_at=obj.created_at
+        )
+
+        return index_instance
+

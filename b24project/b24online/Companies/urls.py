@@ -3,7 +3,7 @@ from django.conf.urls import url
 from b24online.Companies.views import (CompanyList, CompanyCreate, CompanyUpdate,
         DeleteCompany, CompanyDetail, send_message, _tab_news, _tab_tenders,
         _tabs_exhibitions, _tab_b2b_products, _tab_b2c_products, _tab_structure,
-        _tab_staff, _tab_proposals, _tab_innovation_projects, CompanyGalleryImageList,
+        _tab_staff, _tab_proposals, _tab_innovation_projects, _tab_video, CompanyGalleryImageList,
         DeleteCompanyGalleryImage, CompanyDocumentList, DeleteCompanyDocument)
 
 urlpatterns = [
@@ -44,7 +44,8 @@ urlpatterns = [
         CompanyGalleryImageList.as_view(is_structure=True), name="gallery_structure"),
     url(r'^tabs/gallery/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$',
         DeleteCompanyGalleryImage.as_view(), name="gallery_remove_item"),
-
+    url(r'^tabs/video/(?P<company>[0-9]+)/$', _tab_video, name="tab_video"),
+    url(r'^tabs/video/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', _tab_video, name="tab_video_paged"),
     url(r'^tabs/documents/(?P<item>[0-9]+)/$', CompanyDocumentList.as_view(), name="tabs_documents"),
     url(r'^tabs/documents/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$',
         CompanyDocumentList.as_view(), name="tabs_documents_paged"),
