@@ -1,18 +1,20 @@
-{% extends "usersites/index.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="1; URL=/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% trans "Logged out" %}</title>
+    <link rel="stylesheet" href="{% static 'usersites/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
+</head>
 
-{% block after_meta %}
-<meta http-equiv="refresh" content="2; URL=/">
-{% endblock %}
-
-{% block title %}{% trans "Logged out" %}{% endblock %}
-
-{% block content %}
-    {{ block.super }}    
-    <section class="content__info grid-layout">
-        <div class="data">
+<body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
+    <section>
+        <div style="margin: 20px; padding: 20px;">
             <h3>{% trans 'Successfully logged out' %}</h3>
         </div>
     </section>
-{% endblock %}
+</body>
+</html>

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import os
+import logging
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -14,6 +17,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
 from django.contrib.postgres.fields import JSONField
+
+logger = logging.getLogger(__name__)
 
 
 class ExternalSiteTemplate(models.Model):
