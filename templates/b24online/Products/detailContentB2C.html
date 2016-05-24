@@ -236,7 +236,9 @@
                 </li>
                 {% endcomment %}
                 <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                {% comment %}
                 <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
+                {% endcomment %}
                 {% for page in item.additional_pages.all %}
                      <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                 {% endfor %}
@@ -254,13 +256,13 @@
                 {% endfor %}
             </div>
         </div>
-
+        {% comment %}
         <div id="goods-tabs-3">
             <div class="content-goods-tab">
 
             </div>
         </div>
-
+        {% endcomment %}
         {% for page in item.additional_pages.all %}
             <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
