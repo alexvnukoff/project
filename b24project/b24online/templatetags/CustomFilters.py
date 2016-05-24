@@ -548,3 +548,11 @@ def site_banner_total(side, block):
                 block__code=block, 
                 block__block_type='user_site')\
         .count()
+
+
+@register.assignment_tag()
+def get_currentsite():
+    """
+    Return the current site.
+    """
+    return get_current_site()
