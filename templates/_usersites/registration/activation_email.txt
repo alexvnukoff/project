@@ -1,17 +1,21 @@
 {% load i18n %}
-{% blocktrans with site_name=site.name %}
+{% load CustomFilters %}
+
+{% get_currentsite as current_site %}
+{% blocktrans with site_name=current_site.name %}
 You (or someone pretending to be you) have asked to register an account at
-{{ site_name }}.  If this wasn't you, please ignore this email
-and your address will be removed from our records.
+{{ site_name }}.  If this wasn't you, please ignore this email and your 
+address will be removed from our records.
 {% endblocktrans %}
 {% blocktrans %}
 To activate this account, please click the following link within the next
-{{ expiration_days }} days:
+{{ expiration_days }} days::
 {% endblocktrans %}
 
-http://{{site.domain}}{% url 'registration_activate' activation_key %}
+http://{{ current_site.domain }}{% url 'registration_activate' activation_key %}
 
-{% blocktrans with site_name=site.name %}
+--
+{% blocktrans with site_name=current_site.name %}
 Sincerely,
 {{ site_name }} Management
 {% endblocktrans %}
