@@ -84,6 +84,9 @@ class InviteForm(forms.Form):
         if self.instance:
             del self.fields['inviter_email']
             del self.fields['invite_by_email']
+        elif self.request.user.is_authenticated():
+            self.fields['inviter_email'].widget = forms.HiddenInput()
+            self.hidden_fields['inviter_email'] = self.fields['inviter_email']
         self.questionnaire = questionnaire
         if self.is_invited:
             extra_ids = [q.id for q in self.instance.extra_questions.all()]

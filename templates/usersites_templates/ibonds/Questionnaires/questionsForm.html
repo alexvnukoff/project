@@ -37,7 +37,7 @@
     </table>
     <br/>
     <table class="q_data" width="100%">
-        {% if form.inviter_email %}
+        {% if form.inviter_email and not user.is_authenticated %}
         <tr>
             <td align="left">
                 {% trans 'Your Email' %}:
