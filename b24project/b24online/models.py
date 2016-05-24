@@ -2785,6 +2785,7 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE, related_name='video')
+    country = models.ForeignKey(Country, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
