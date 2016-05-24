@@ -14,6 +14,7 @@ To activate this account, please click the following link within the next
 
 http://{{ current_site.domain }}{% url 'registration_activate' activation_key %}
 
+--
 {% blocktrans with site_name=current_site.name %}
 Sincerely,
 {{ site_name }} Management
