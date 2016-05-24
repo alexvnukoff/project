@@ -298,7 +298,7 @@ class QuestionCreate(LoginRequiredMixin, ItemCreate):
         except:
             return HttpResponseRedirect(reverse('denied'))
         else:
-            if not can_manage_product(request.user, _quetionnaire):
+            if not can_manage_product(request.user, _questionnaire):
                 return HttpResponseRedirect(reverse('denied'))
 
         return super(QuestionCreate, self)\
