@@ -1,14 +1,16 @@
 {% load i18n %}
+{% load CustomFilters %}
+{% get_currentsite as current_site %}
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>{{ site.name }} {% trans "registration" %}</title>
+    <title>{{ current_site.name }} {% trans "registration" %}</title>
 </head>
 
 <body>
 <p>
-    {% blocktrans with site_name=site.name %}
+    {% blocktrans with site_name=current_site.name %}
     You (or someone pretending to be you) have asked to register an account at
     {{ site_name }}.  If this wasn't you, please ignore this email
     and your address will be removed from our records.
@@ -22,12 +24,12 @@
 </p>
 
 <p>
-    <a href="http://{{site.domain}}{% url 'registration_activate' activation_key %}">
-        {{site.domain}}{% url 'registration_activate' activation_key %}
+    <a href="http://{{current_site.domain}}{% url 'registration_activate' activation_key %}">
+        {{current_site.domain}}{% url 'registration_activate' activation_key %}
     </a>
 </p>
 <p>
-    {% blocktrans with site_name=site.name %}
+    {% blocktrans with site_name=current_site.name %}
     Sincerely,
     {{ site_name }} Management
     {% endblocktrans %}
