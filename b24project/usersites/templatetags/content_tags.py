@@ -6,9 +6,9 @@ from django.core.paginator import Paginator
 from django.utils.timezone import now
 
 from appl import func
-from b24online.models import B2BProduct, B2BProductCategory, News, BusinessProposal, Company, Producer, \
-                             QuestionnaireCase
-    
+from b24online.models import (B2BProduct, B2BProductCategory, News, BusinessProposal,
+                              Company, Producer, QuestionnaireCase, Video)
+
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_template_with_base_path, load_category_hierarchy
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -297,4 +297,19 @@ def check_pr_contain(producer_pk, uri):
     if '/?pr={0}'.format(producer_pk) in uri:
         return True
     return False
+
+
+@register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
+def videos(context, template_name, on_page, page=1, order_by='-created_at'):
+    queryset = Video.get_active_objects().filter(organization=get_current_site().user_site.organization)
+
+    return ItemsTag(
+        order_by=order_by,
+        context=context,
+        queryset=queryset,
+        template_path=template_name,
+        on_page=on_page,
+        current_page=page,
+        url_paginator='video:paginator',
+        queryset_key='videos').result_data
 

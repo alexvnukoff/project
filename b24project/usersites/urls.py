@@ -10,6 +10,7 @@ import usersites.News.urls
 import usersites.OrganizationPages.urls
 import usersites.Proposals.urls
 import usersites.Questionnaires.urls
+import usersites.Video.urls
 
 import usersites.views
 
@@ -26,11 +27,12 @@ urlpatterns = [
     url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
     url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
-    url(r'^questionnaires/', 
+    url(r'^questionnaires/',
         include(usersites.Questionnaires.urls, namespace='questionnaires')),
-    url(r'^denied/$', 
+    url(r'^denied/$',
         TemplateView.as_view(template_name="usersites/denied.html"),
         name='denied'),
+    url(r'^video/', include(usersites.Video.urls, namespace='video')),
 ]
 
 if settings.DEBUG:

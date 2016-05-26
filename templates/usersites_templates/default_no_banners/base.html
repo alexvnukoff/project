@@ -88,6 +88,7 @@
                         <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
                     {% endif %}
                 {% endif %}
+                        <li><a href="{% url 'video:main' %}">{% trans 'Videos' %}</a></li>
                 {% comment %}
                     {% for page in site.user_site.organization.additional_pages %}
                         <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
