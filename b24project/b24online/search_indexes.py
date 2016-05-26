@@ -674,6 +674,7 @@ class VideoIndex(DocType):
     title = String(analyzer='snowball', fields={'raw': String(index='no')})
     content = String(analyzer=html_strip, fields={'raw': String(index='no')})
     organization = Integer()
+    country = Integer()
     is_active = Boolean()
     is_deleted = Boolean()
     created_at = Date()
@@ -685,7 +686,11 @@ class VideoIndex(DocType):
 
     @classmethod
     def get_queryset(cls):
-        return cls.get_model().objects.all().prefetch_related('organization')
+        return cls.get_model().objects.all().prefetch_related(
+                'organization',
+                'organization__countries',
+                'countries'
+                )
 
     @classmethod
     def to_index(cls, obj):
@@ -698,6 +703,9 @@ class VideoIndex(DocType):
             is_deleted=obj.is_deleted,
             created_at=obj.created_at
         )
+
+        country = obj.country if obj.country else getattr(obj.organization, 'country', None)
+        index_instance.country = getattr(country, 'pk', None)
 
         return index_instance
 

@@ -55,7 +55,7 @@ class VideoList(ItemsList):
         return context
 
     def optimize_queryset(self, queryset):
-        return queryset.prefetch_related('organization')
+        return queryset.select_related('country').prefetch_related('organization', 'organization__countries')
 
     def filter_search_object(self, s):
         return super().filter_search_object(s)
@@ -114,6 +114,7 @@ class VideoCreate(ItemCreate):
         if organization_id is not None:
             organization = Organization.objects.get(pk=organization_id)
             form.instance.organization = organization
+            form.instance.country = organization.country
 
         result = super().form_valid(form)
         self.object.reindex()
@@ -140,6 +141,7 @@ class VideoUpdate(ItemUpdate):
         if organization_id is not None:
             organization = Organization.objects.get(pk=organization_id)
             form.instance.organization = organization
+            form.instance.country = organization.country
 
         result = super().form_valid(form)
 
@@ -148,5 +150,6 @@ class VideoUpdate(ItemUpdate):
 
             if 'image' in form.changed_data:
                 self.object.upload_images()
+
         return result
 
