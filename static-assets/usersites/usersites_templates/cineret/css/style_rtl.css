@@ -22,7 +22,7 @@ body{
     }
 }
 
-.navbar-collapse .navbar-right{
+.navbar-collapse{
     clear: left;
 	margin-left: 0;
 	float: left!important;
@@ -43,6 +43,14 @@ body{
 
 .social-header .button{
 	float: right;
+}
+
+.social-header{
+    float: left!important;
+}
+
+.tel{
+    float: right;
 }
 
 
@@ -162,9 +170,19 @@ body{
     float: right;
 }
 
-/*.navbar-brand>img{*/
-    /*padding: 0 10px 0 0;*/
-/*}*/
+@media(max-width:767px) {
+    .navbar-header {
+        float: none;
+    }
+
+    .navbar-brand {
+        float: left;
+    }
+
+    .small-navbar{
+        float: right!important;
+    }
+}
 
 
 /*!*---------- Navigation Styling ----------*!*/

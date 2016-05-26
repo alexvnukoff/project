@@ -83,6 +83,24 @@ h2.page-header.inner-page{
 }
 
 /*---------- logo Styling ----------*/
+.tel{
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.tel a{
+    text-decoration: none;
+}
+
+/* Landscape phones and portrait tablets */
+@media (min-width: 480px) and (max-width: 768px) {
+    .tel{
+        padding-top: 15px;
+    }
+}
+
 .navbar{
 	padding-top: 15px;
 }
@@ -116,7 +134,7 @@ collapse the menu on 991px. */
     }
     .navbar-nav {
         float: none!important;
-        margin: 7.5px -15px;
+        margin: 7px -15px;
     }
     .navbar-nav>li {
         float: none;
@@ -174,6 +192,49 @@ collapse the menu on 991px. */
 	background:#fff;
 }
 
+@media(max-width:767px) {
+    .social-header{
+        padding-top: 7px;
+
+    }
+
+    .social-header .button {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        font-size: 12px;
+        line-height: 24px;
+    }
+
+    .small-navbar .fa{
+        font-size: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
+        clear: both;
+        text-align: center;
+        max-width: 70px;
+        line-height: 21px;
+    }
+
+    .small-navbar .fa span{
+        clear: both;
+        font-size: 10px;
+        text-align: center;
+        line-height: 9px;
+    }
+
+	.nav>li>a{
+		padding-right: 2px;
+		padding-left: 2px;
+	}
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+	.social-header {
+        margin-top: -50px;
+    }
+}
 
 /*.logo{*/
     /*width: auto;*/
@@ -232,10 +293,34 @@ collapse the menu on 991px. */
 	font-size: 16px;
 }
 
+#lang-dropdown{
+	display: none;
+}
+
+/*lang styling*/
+#lang-dropdown{
+	width: 260px;
+	padding: 8px;
+	background: #f5f5f5;
+}
+
+.navbar-nav li:hover #lang-dropdown{
+	display: block;
+	float: left;
+}
+
+.navbar-nav li:hover #lang-dropdown a{
+	float: left;
+	padding: 0 5px;
+}
+
+.navbar-nav li:hover #lang-dropdown img{
+	width: 24px;
+}
 /*---------- carousel Styling ----------*/
 #myCarousel{
 	margin-bottom: 20px;
-	margin-top: 70px;
+	margin-top: 10px;
 }
 
 .carousel-text{
@@ -404,13 +489,17 @@ collapse the menu on 991px. */
 	margin: 0 0 10px 0;
 }
 
-.news__img{
-	position: relative;
+.news__img img,
+.news-page-img img{
+	max-width:100% !important;
+    height:auto;
+    display:block;
+	padding: 0;
 }
 
-.news__img img{
-	max-width: 150px;
-}
+/*.news__img img{*/
+	/*max-width: 150px;*/
+/*}*/
 
 .news__text{
 	position: relative;
@@ -428,6 +517,10 @@ collapse the menu on 991px. */
 
 .news_page .btn-align{
 	text-align: center;
+}
+
+.news-detail-page-container{
+	margin-bottom: 20px;
 }
 
 /*---------- Proposal Styling ----------*/
@@ -847,6 +940,76 @@ footer .btn-default{
     margin-top: 20px;
     background-color: #ccc;
 }
+
+/* table responsive for pages */
+
+@media only screen and (max-width: 800px) {
+
+    /* Force table to not be like tables anymore */
+	#no-more-tables table,
+	#no-more-tables thead,
+	#no-more-tables tbody,
+	#no-more-tables th,
+	#no-more-tables td,
+	#no-more-tables tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	/*#no-more-tables tr { border: 1px solid #ccc; }*/
+
+	#no-more-tables td {
+		/* Behave  like a "row" */
+		border: none;
+		/*border-bottom: 1px solid #eee;*/
+		position: relative;
+		/*padding-left: 50%;*/
+		white-space: normal;
+		/*text-align:left;*/
+	}
+
+	#no-more-tables td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+	}
+
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+.about-page-content table{
+	overflow-x: auto;
+}
+
+.about-page-content td,
+.about-page-content th{
+	padding: 20px;
+}
+
+.about-page-content img{
+	max-width:100% !important;
+    height:auto;
+    display:block;
+	padding: 0;
+}
+
+
 
 /* Large desktops and laptops */
 @media (min-width: 1200px) {

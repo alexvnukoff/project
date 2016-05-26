@@ -4,6 +4,7 @@
 .navbar-nav{
     margin-left: 15px;
 	margin-right: 0;
+	float: right;
 }
 
 .navbar-nav>li{
@@ -38,6 +39,19 @@
 .navbar-collapse{
 	clear: right;
 }
+
+.social-header .button{
+	float: left;
+}
+
+.social-header{
+    float: right!important;
+}
+
+.tel{
+    float: left;
+}
+
 
 /*---------- about-banner Styling ----------*/
 .about-main__movie{
@@ -122,6 +136,14 @@
 }
 
 .news__btn{
+	float: right;
+}
+
+.news-page-img{
+	float: left;
+}
+
+.news-page-content{
 	float: right;
 }
 
