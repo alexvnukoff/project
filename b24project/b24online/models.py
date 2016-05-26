@@ -306,6 +306,7 @@ class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255)
+    description = models.CharField(max_length=225, null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
