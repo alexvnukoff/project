@@ -224,12 +224,32 @@
                     {% endif %}
                     <li>
                         {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
-                        <div class="fileinputs" style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #dedede;">
+                        <div class="fileinputs" style="margin-bottom:10px;">
 
                         <div style="background:#efefef;width:600px;margin-bottom:20px;">
                             <input type="file" name="{{ gallery_form.image.html_name }}">
                         </div>
-                            {% trans "Image description:" %} {{ gallery_form.description }}
+
+                      <table class="desctable">
+
+                        <tr>
+                          <th>{% trans "Image description:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.description }}</td>
+                        </tr>
+
+                        <tr>
+                          <th>{% trans "Image link:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.link }}</td>
+                        </tr>
+
+                      </table>
+
                         </div>
 
                     </li>

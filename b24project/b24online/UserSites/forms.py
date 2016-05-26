@@ -122,7 +122,7 @@ class SiteForm(forms.ModelForm):
 class GalleryForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
-        fields = ('image', 'description')
+        fields = ('image', 'description', 'link')
 
    # def clean_image(self):
    #     image_obj = self.cleaned_data.get('image', None)
@@ -157,7 +157,7 @@ class BannerForm(forms.ModelForm):
 
 
 GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
-                                            form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description'))
+                                            form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description', 'link'))
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
