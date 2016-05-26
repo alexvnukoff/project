@@ -28,6 +28,11 @@ h3 a:focus,
     color: #fff;
 }
 
+.tel .fa,
+.tel a{
+    color: #fff;
+}
+
 .navbar-default{
     background-color: #222222;
 }

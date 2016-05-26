@@ -14,8 +14,8 @@ body{
 
 /*---------- Navigation Styling ----------*/
 .navbar-nav{
-	float: right!important;
-    margin-right: 15px;
+	float: left!important;
+    margin-right: 5px;
 	margin-left: 0;
 }
 
@@ -29,6 +29,14 @@ body{
 
 .social-header .button{
 	float: right;
+}
+
+.social-header{
+    float: left!important;
+}
+
+.tel{
+    float: right;
 }
 
 .cust-nav{
@@ -49,6 +57,54 @@ body{
 	margin-left: 10px;
 }
 
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+	.navbar-brand{
+		float: right;
+	}
+}
+
+/* Portrait tablets and small desktops */
+@media  (max-width: 991px) {
+	.container>.navbar-header{
+		width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.navbar-header .navbar-toggle{
+		float: right;
+	}
+
+	.container>.navbar-header .navbar-brand{
+		float: left;
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
+/*!* Landscape phones and portrait tablets *!*/
+/*@media (max-width: 767px) {*/
+
+	/*.navbar-header{*/
+		/*width: 100%;*/
+	/*}*/
+
+	/*.navbar-header .navbar-toggle{*/
+		/*float: right;*/
+	/*}*/
+
+	/*.navbar-header .navbar-brand{*/
+		/*float: left;*/
+	/*}*/
+/*}*/
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+
 /*.navbar-collapse{*/
 	/*float: left;*/
 /*}*/
@@ -64,6 +120,10 @@ body{
 
 .navbar-toggle {
 	float: right;
+}
+
+.small-navbar{
+	float: right!important;
 }
 
 /*---------- Slider Styling ----------*/
@@ -201,6 +261,14 @@ body{
 }
 
 .news__btn{
+	float: left;
+}
+
+.news-page-img{
+	float: right;
+}
+
+.news-page-content{
 	float: left;
 }
 

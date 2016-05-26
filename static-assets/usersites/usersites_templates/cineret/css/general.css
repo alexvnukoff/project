@@ -93,8 +93,15 @@ h3 a:focus{
 /* ----------- Navigation Styling -------------------- */
 /* Social links */
 .social-header{
-	padding-top: 7px;
+	padding-top: 45px;
     padding-bottom: 15px;
+    position: relative;
+}
+
+@media (max-width: 1199px) {
+    .social-header{
+        padding-top: 15px;
+    }
 }
 
 .social-header a{
@@ -112,11 +119,19 @@ h3 a:focus{
 	border-radius:18px;
 	font-size: 15px;
 	/*color:#000;*/
-	/*line-height:36px;*/
+	line-height:36px;
 	text-align:center;
 	background:#fff;
 }
 
+.top-search-nav{
+    position: relative;
+    float: right;
+}
+
+.navbar-collapse{
+    float: right;
+}
 
 .navbar-default{
     padding: 0;
@@ -153,6 +168,50 @@ h3 a:focus{
     vertical-align: middle;
     max-width: 200px;
     padding: 0;
+}
+
+
+.tel{
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.tel a{
+    text-decoration: none;
+}
+
+#lang-dropdown{
+	display: none;
+}
+
+/*lang styling*/
+#lang-dropdown{
+	width: 260px;
+	padding: 8px;
+	background: #f5f5f5;
+}
+
+.navbar-nav li:hover #lang-dropdown{
+	display: block;
+	float: left;
+}
+
+.navbar-nav li:hover #lang-dropdown a{
+	float: left;
+	padding: 0 5px;
+}
+
+.navbar-nav li:hover #lang-dropdown img{
+	width: 24px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (min-width: 480px) and (max-width: 768px) {
+    .tel{
+        padding-top: 15px;
+    }
 }
 
 .overlay {
@@ -1034,6 +1093,47 @@ header.carousel .carousel-inner {
     height: 100%;
 }
 
+@media(max-width:767px) {
+    header.carousel .carousel-inner {
+        padding-top: 60px;
+    }
+
+    .social-header{
+        padding-top: 7px;
+
+    }
+
+    .social-header .button {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        font-size: 12px;
+        line-height: 24px;
+    }
+
+    .small-navbar .fa{
+        font-size: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
+        clear: both;
+        text-align: center;
+        max-width: 70px;
+        line-height: 21px;
+    }
+
+    .small-navbar .fa span{
+        clear: both;
+        font-size: 10px;
+        text-align: center;
+        line-height: 9px;
+    }
+
+    .nav>li>a{
+		padding-right: 2px;
+		padding-left: 2px;
+	}
+}
+
 header.carousel .fill {
     /*width: 100%;*/
     /*height: 100%;*/
@@ -1099,5 +1199,73 @@ footer {
     header.carousel .carousel {
         height: 70%;
     }
+}
+
+/* table responsive for pages */
+
+@media only screen and (max-width: 800px) {
+
+    /* Force table to not be like tables anymore */
+	#no-more-tables table,
+	#no-more-tables thead,
+	#no-more-tables tbody,
+	#no-more-tables th,
+	#no-more-tables td,
+	#no-more-tables tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	/*#no-more-tables tr { border: 1px solid #ccc; }*/
+
+	#no-more-tables td {
+		/* Behave  like a "row" */
+		border: none;
+		/*border-bottom: 1px solid #eee;*/
+		position: relative;
+		/*padding-left: 50%;*/
+		white-space: normal;
+		/*text-align:left;*/
+	}
+
+	#no-more-tables td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+	}
+
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+.about-page-content table{
+	overflow-x: auto;
+}
+
+.about-page-content td,
+.about-page-content th{
+	padding: 20px;
+}
+
+.about-page-content img{
+	max-width:100% !important;
+    height:auto;
+    display:block;
+	padding: 0;
 }
 

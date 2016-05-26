@@ -33,7 +33,10 @@ h2.page-header,
 	color: #a40000 !important;
 }
 
-
+.tel .fa,
+.tel a{
+    color: #fff;
+}
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
 .about-main,
 .side-bar a:hover,

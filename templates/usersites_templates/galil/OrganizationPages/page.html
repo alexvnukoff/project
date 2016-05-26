@@ -15,7 +15,7 @@
 
                 <!-- Intro Content -->
         <div class="row cust-page">
-            <div class="col-md-12">
+            <div id="no-more-tables" class="col-md-12 about-page-content">
                 {% if object.created_by.is_superuser %}
                     {% autoescape off %}
                     {{ object.content }}

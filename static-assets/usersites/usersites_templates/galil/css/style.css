@@ -1,6 +1,14 @@
 /*---------- General Styling ----------*/
 
 /*---------- Navigation Styling ----------*/
+.xs-navbar ul li{
+	float: left;
+}
+
+.top-nav li{
+	float: right;
+}
+
 .top-nav{
 	float: right;
 }
