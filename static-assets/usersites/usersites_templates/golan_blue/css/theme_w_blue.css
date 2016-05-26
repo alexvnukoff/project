@@ -33,6 +33,10 @@ h2.page-header,
 	color: #002061 !important;
 }
 
+.tel .fa,
+.tel a{
+    color: #fff;
+}
 
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
 .about-main,
@@ -71,7 +75,7 @@ footer a,
 .navbar-inverse .navbar-nav>li>a:focus,
 .navbar-inverse .navbar-nav>li>a:active{
 	background-color: #fff;
-	border-radius: 15px;
+	border-radius: 20px;
 }
 
 .navbar-inverse .navbar-nav>.active a:hover,

@@ -13,6 +13,14 @@ body{
 
 
 /*---------- Navigation Styling ----------*/
+.xs-navbar ul li{
+	float: right;
+}
+
+.top-nav li{
+	float: left;
+}
+
 .navbar-collapse>.top-nav{
 	float: left;
 }
@@ -21,6 +29,10 @@ body{
 	float: right;
     margin-right: -15px;
 	margin-left: 0px;
+}
+
+.top-nav{
+	float: left;
 }
 
 .navbar-nav>li{

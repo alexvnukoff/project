@@ -60,6 +60,11 @@ h3 a:focus,
   background-color: #6D0000;
 }
 
+.tel .fa,
+.tel a{
+    color: #fff;
+}
+
 .overlay {
     background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
 }

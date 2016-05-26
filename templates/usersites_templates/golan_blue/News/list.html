@@ -20,7 +20,7 @@
 
         <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs news__img">
             {% if article.image %}
-                <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}">
+                <img src="{{ article.image.original }}" alt="{{ article.name }}" title="{{ article.name }}">
             {% else %}
                 <img src="{% static 'b24online/img/item.jpg' %}" />
             {% endif %}
@@ -41,6 +41,7 @@
             <p>{{ news.content|cleanHtml|safe }}</p>
         </div>
 
+        <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
         </div>
     {% endfor %}
 

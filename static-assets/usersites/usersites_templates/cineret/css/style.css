@@ -29,6 +29,14 @@
 	float: left;
 }
 
+.social-header{
+    float: right!important;
+}
+
+.tel{
+    float: left;
+}
+
 
 
 /* ----------- Proposal Styling -------------------- */

@@ -6,7 +6,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
+        <div class="navbar-header ">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -20,55 +20,42 @@
 {#                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />#}
 {#                {% endif %}#}
           </a>
-        </div>
+            <!-- Social links  -->
+
+           </div>
+
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
+        <div>
+            <ul class="nav navbar-nav navbar-right top-search-nav">
 
-                    <!-- Social links  -->
-                    <div class="social-header">
-                      <div style="text-align:center;margin:0 auto;">
+                <!-- A language list - loading the available ones. -->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
 
-                        {% if site.user_site.facebook %}
-                        <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
-                        {% endif %}
+                    {% get_available_languages as LANGUAGES %}
 
-                        {% if site.user_site.youtube %}
-                        <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
-                        {% endif %}
-
-                        {% if site.user_site.twitter %}
-                        <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
-                        {% endif %}
-
-                        {% if site.user_site.instagram %}
-                        <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
-                        {% endif %}
-
-                        {% if site.user_site.vkontakte %}
-                        <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
-                        {% endif %}
-
-                        {% if site.user_site.odnoklassniki %}
-                        <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
-                        {% endif %}
-
-                      </div>
+                    <div id="lang-dropdown" role="menu" class="dropdown-menu">
+                        {% for code, lang in LANGUAGES %}
+                          {% if not code == LANGUAGE_CODE %}
+                              <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                          {% endif %}
+                      {% endfor %}
                     </div>
-
                 </li>
+
                 <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
-                <li>
+                <li class="hidden-xs">
                     <div class="tmp_search  top_search clearfix">
                         <form action="{% url 'b2c_products:search' %}">
                             <input type="text" placeholder="Search" name="s">
                         </form>
                     </div>
                 </li>
+
             </ul>
 
-            <ul class="nav navbar-nav ">
+            <ul class="nav navbar-nav hidden-xs">
                 <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
                 <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
 
@@ -97,25 +84,72 @@
 
                 <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
 
-                <!-- A language list - loading the available ones. -->
-                <li class="dropdown select-lang">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-flag"><span><b class="caret"></b></a>
-                        <div class="select -lang dropdown-menu">
-                            <form>
-                                <select name="lang" id="lang_select">
-                                    <option>{% trans 'Mother tongue' %}</option>
-                                    {% get_available_languages as LANGUAGES %}
-                                    {% for code, lang in LANGUAGES %}
-                                        <option value="{{ code }}">{{ lang }}</option>
-                                    {% endfor %}
-                                </select>
-                            </form>
-                        </div>
+            </ul>
 
-                </li>
+            <ul class="nav navbar-nav small-navbar visible-xs">
+                <li><a href="{% url 'main' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                <li><a href="{% url 'pages:about' %}"><i class="fa fa-users" aria-hidden="true"></i></a></li>
+
+                {% if not is_chamber %}
+                    {% if site.user_site.organization.b2c_products.exists %}
+                        <li><a href="{% url 'b2c_products:main' %}"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></li>
+                    {% endif %}
+                {% endif %}
+
+                {% if site.user_site.organization.proposals.exists %}
+                    <li><a href="{% url 'proposal:main' %}"><i class="fa fa-briefcase" aria-hidden="true"></i></a></li>
+                {% endif %}
+
+                {% if site.user_site.organization.news.exists %}
+                    <li><a href="{% url 'news:main' %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i></a></li>
+                {% endif %}
+
+{#                    {% if site.user_site.organization.galleries.exists %}#}
+{#                        <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>#}
+{#                    {% endif %}#}
+
+                <li><a href="{% url 'pages:contacts' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></li>
+
+
             </ul>
         </div>
+        </div>
         <!-- /.navbar-collapse -->
+
+    <div class="tel vertical visible-xs">
+                <i class="fa fa-phone-square" aria-hidden="true"></i>
+                <a href="tel:{{ site.user_site.organization.phone }}">{{ site.user_site.organization.phone }}</a>
+            </div>
+
+    <div class="social-header">
+              <div style="text-align:center;margin:0 auto;">
+
+                {% if site.user_site.facebook %}
+                <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.youtube %}
+                <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.twitter %}
+                <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.instagram %}
+                <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.vkontakte %}
+                <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.odnoklassniki %}
+                <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
+                {% endif %}
+
+              </div>
+            </div>
     </div>
     <!-- /.container -->
 </nav>
