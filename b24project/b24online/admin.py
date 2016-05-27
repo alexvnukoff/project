@@ -206,6 +206,10 @@ class B24UserAdmin(UserAdmin):
     change_form_template = 'loginas/change_form.html'
 
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_filter = ('questionnaire',)
+
+
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
@@ -228,6 +232,6 @@ admin.site.register(MessageChat, ModelAdmin)
 admin.site.register(Message, ModelAdmin)
 admin.site.register(Producer, ModelAdmin)
 admin.site.register(Questionnaire, ModelAdmin)
-admin.site.register(Question, ModelAdmin)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(Recommendation, ModelAdmin)
 admin.site.register(AdditionalPage, ModelAdmin)
