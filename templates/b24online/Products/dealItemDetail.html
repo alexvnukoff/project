@@ -36,6 +36,39 @@
         <label>{% trans 'Deal date' %}:</label>
         {{ item.deal.created_at|date:'d M Y H:i' }}
       </p>
+      <p class="data-info">
+        <label>{% trans 'Cost' %}:</label>
+        {{ item.cost }}
+      </p>
+      <p class="data-info">
+        <label>{% trans 'Quantity' %}:</label>
+        {{ item.quantity }}
+      </p>
+      <p class="data-info">
+        <label>{% trans 'Total' %}:</label>
+        {{ item.get_total }}
+      </p>
+      <p class="data-info">
+        <label>{% trans 'Currency' %}:</label>
+        {{ item.currency|getSymbol }}
+      </p>
+    </div>
+    {% with item.get_extra_params as extra_params %}
+      {% if extra_params %}
+      <div class="data">
+        <h1>{% trans 'Deal item additional parameters' %}</h1>
+        <hr class="hr-divider-one">
+        {% for param_descr, param_value in extra_params %}
+          {% if param_descr.pre_text %}
+          <p class="data-info pre-text">{{ param_descr.pre_text }}</p>
+          {% endif %}
+          <p class="data-info">
+            <label>{{ param_descr.label|default:param_descr.name }}:</label>
+            {{ param_value }}
+          </p>
+        {% endfor %}
+        {% endif %}
+      {% endwith %}
     </div>
   </div>
 </div>
