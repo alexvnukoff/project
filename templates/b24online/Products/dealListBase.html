@@ -6,148 +6,160 @@
 {% if not as_insert%}
 <div id="deals-tabs" style="margin-top: 20px; padding: 15px;">{% endif %}
 <div class="data">
-    {% if form %}
-    <div class="data">
-        <form id="filter-form" action="" method="get">
-        <p class="toggle-next {% if is_filtered %}force-open{% endif %}" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
-        <ul class="form-control" {% if not is_filtered %}style="display: none;"{% endif %}>
-            <fieldset class="dcol">
-              {% for field in form %}
-              <li>
-                <label>{{ field.label }}:</label>
-                <p>{{ field }}</p>
-                {% if form.is_bound and field.errors %}
-                <p class="errors">{{ field.errors|striptags }}</p>
-                {% endif %}
-              </li>
-              {% endfor %}
-              <li>
-                <input type="submit" name="filter" value="{% trans 'Search' %}" />
-                <input type="reset" id="reset-form" value="{% trans 'Reset form '%}"
-                    onclick="window.location.href='{{ request.path }}'; return false;" />
-              </li>
-            </fieldset>
-        </ul>
-        </form>
-    </div>
-    {% endif %}
+  {% if form %}
+  <div class="data">
+    <form id="filter-form" action="" method="get">
+    <p class="toggle-next {% if is_filtered %}force-open{% endif %}" style="font-size: 14px; font-weight: bold;">{% trans 'Search the deals' %}</p>
+    <ul class="form-control" {% if not is_filtered %}style="display: none;"{% endif %}>
+      <fieldset class="dcol">
+        {% for field in form %}
+          <li>
+            <label>{{ field.label }}:</label>
+            <p>{{ field }}</p>
+            {% if form.is_bound and field.errors %}
+              <p class="errors">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li>
+          <input type="submit" name="filter" value="{% trans 'Search' %}" />
+          <input type="reset" id="reset-form" value="{% trans 'Reset form '%}"
+            onclick="window.location.href='{{ request.path }}'; return false;" />
+        </li>
+      </fieldset>
+    </ul>
+    </form>
+  </div>
+  {% endif %}
 
-    <h1>{% trans 'Deals list' %} {% trans 'for' %} {{ current_organization }}</h1>
-    <hr class="hr-divider-one">
-    <div class="data">
-      {% block deals_base %}
-      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
-        <tr>
-          <th>{% trans 'Deal date' %}</th>
-          <th>{% trans 'Customer' %}</th>
-          <th>{% trans 'Cost' %}</th>
-          <th>{% trans 'Status' %}</th>
-          {% block extra_headers %}{% endblock %}
+  <h1>{% trans 'Deals list' %} {% trans 'for' %} {{ current_organization }}</h1>
+  <hr class="hr-divider-one">
+  <div class="data">
+    {% block deals_base %}
+    <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+    <tr>
+      <th>{% trans 'Deal date' %}</th>
+      <th>{% trans 'Customer' %}</th>
+      <th>{% trans 'Cost' %}</th>
+      <th>{% trans 'Status' %}</th>
+      {% block extra_headers %}{% endblock %}
+    </tr>
+
+    {% autoescape off %}
+    {% for deal in page_obj.object_list %}
+    <tr id="{{ deal.id }}-item" class="toggle-child">
+      <td class="toggler">
+        <a href="{% url 'products:deal_detail' deal.pk %}">
+          {{ deal.created_at|date:"d/m/Y H:i"|set_q_name:"deal_date"|colorize_by:form }}
+        </a>
+      </td>
+      {% with deal.deal_order.get_customer as customer %}
+      <td>
+        <a href="{{ customer.get_absolute_url }}" target="_blank">
+          {{ customer|set_q_name:"customer_name"|colorize_by:form }}
+        </a>
+      </td>
+      {% endwith %}
+      <td align="center">
+        {% if deal.total_cost %}
+        <span class="bolded">{{ deal.currency|getSymbol }}&nbsp;{{ deal.total_cost }}</span>
+        {% else %}
+        -
+        {% endif %}
+      </td>
+      <td align="center">{{ deal.get_status }}</td>
+
+      {% block extra_data %}{% endblock %}
+
+    </tr>
+    {% with deal.get_items as deal_items %}
+      {% if deal_items %}
+        <tr style="display: none;" class="{{ deal.id }}-item-child">
+          <th style="text-align: left; padding-left: 15px;" class="child" colspan="2">{% trans 'Products' %}:</th>
+          <th class="child">{% trans 'Price' %}</th>
+          {% block product_amount_header %}
+          <th class="child">{% trans 'Amount' %}</th>
+          {% endblock %}
         </tr>
 
-        {% autoescape off %}
-        {% for deal in page_obj.object_list %}
-        <tr id="{{ deal.id }}-item" class="toggle-child">
-          <td class="toggler">
-            <a href="{% url 'products:deal_detail' deal.pk %}">
-              {{ deal.created_at|date:"d/m/Y H:i"|set_q_name:"deal_date"|colorize_by:form }}
-            </a>
+        {% for deal_item in deal_items %}
+        <tr style="display: none;" class="{{ deal.id }}-item-child">
+          <td colspan="2" class="is-child">
+            <a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item }}</a>
           </td>
-          {% with deal.deal_order.get_customer as customer %}
-          <td>
-            <a href="{{ customer.get_absolute_url }}" target="_blank">
-              {{ customer|set_q_name:"customer_name"|colorize_by:form }}
-            </a>
-          </td>
-          {% endwith %}
           <td align="center">
-            {% if deal.total_cost %}
-            <span class="bolded">{{ deal.currency|getSymbol }}&nbsp;{{ deal.total_cost }}</span>
+            {% if deal_item.cost %}
+            <span class="bolded">{{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }}</span>
             {% else %}
             -
             {% endif %}
           </td>
-          <td align="center">{{ deal.get_status }}</td>
 
-          {% block extra_data %}{% endblock %}
-
-        </tr>
-        {% with deal.get_items as deal_items %}
-            {% if deal_items %}
-                <tr style="display: none;" class="{{ deal.id }}-item-child">
-                  <th style="text-align: left; padding-left: 15px;" class="child" colspan="2">{% trans 'Products' %}:</th>
-                  <th class="child">{% trans 'Price' %}</th>
-                  <th class="child">{% trans 'Amount' %}</th>
-                </tr>
-
-                {% for deal_item in deal_items %}
-                <tr style="display: none;" class="{{ deal.id }}-item-child">
-                  <td colspan="2" class="is-child">
-                    <a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item }}</a>
-                  </td>
-                  <td align="center">
-                    {% if deal_item.cost %}
-                    <span class="bolded">{{ deal_item.currency|getSymbol }}&nbsp;{{ deal_item.cost }}</span>
-                    {% else %}
-                    -
-                    {% endif %}
-                  </td>
-                  <td>
-                    {{ deal_item.quantity }}
-                  </td>
-                </tr>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        {% empty %}
-        <tr>
-          <td colspan="4" align="center">
-          {% trans 'There are no deals' %}
-          </td>
+          {% block product_amount %}
+          <td align="center">{{ deal_item.quantity }}</td>
+          {% endblock %}
         </tr>
         {% endfor %}
-        {% endautoescape %}
-      </table>
-      {% endblock %}
+      {% endif %}
+    {% endwith %}
 
-      {% with page_obj as page %}
-        {% include 'b24online/main/paginator.html' %}
-      {% endwith %}
-    </div>
+    {% empty %}
+    <tr>
+      <td colspan="4" align="center">
+      {% trans 'There are no deals' %}
+      </td>
+    </tr>
+    {% endfor %}
+    {% endautoescape %}
+    </table>
+    {% endblock %}
+
+    {% with page_obj as page %}
+    {% include 'b24online/main/paginator.html' %}
+    {% endwith %}
+  </div>
 </div>
 
 <div class="data" style="margin-top: 20px;">
-    <h1>{% trans 'Total cost' %}</h1>
-    <hr class="hr-divider-one">
-    {% if total_cost_data %}
-        {% for currency, cost in total_cost_data.items %}
-            <div class="detailinfo">
-                <label>{{ currency }}:</label>{{ cost }}
-            </div>
-        {% endfor %}
-    {% endif %}
+  <h1>{% trans 'Total cost' %}</h1>
+  <hr class="hr-divider-one">
+  {% if total_cost_data %}
+    {% for currency, cost in total_cost_data.items %}
+      <div class="detailinfo">
+        <label>{{ currency }}:</label>{{ cost }}
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>
 
 {% if not as_insert %}
 </div>
 {% autoescape off %}
 <script  type="text/javascript">
-    $('.toggle-next').not('.force-open').each(
-        function () {
-        $(this).next().hide();
-        });
-    $('.toggle-next.force-open').addClass('toggled');
-    $('.toggle-next').click(
-        function () {
-            $(this).toggleClass('toggled').next().toggle();
+  $('.toggle-next').not('.force-open').each(
+    function () {
+    $(this).next().hide();
     });
-    $( ".date" ).datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "2010:",
-        dateFormat: "dd/mm/yy"
-    });
+  $('.toggle-next.force-open').addClass('toggled');
+  $('.toggle-next').click(
+    function () {
+      $(this).toggleClass('toggled').next().toggle();
+  });
+  $('.toggle-child').not('.force-open').each(function () {
+    var child_class = '.' + $(this).attr('id') + '-child';
+    	$(this).nextAll(child_class).hide();
+  });
+  $('.toggle-child.force-open').addClass('toggled');
+  	$('.toggle-child').click(function () {
+    var child_class = '.' + $(this).attr('id') + '-child';
+    $(this).toggleClass('toggled').nextAll(child_class).toggle();
+  });
+  $( ".date" ).datepicker({
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "2010:",
+    dateFormat: "dd/mm/yy"
+  });
 </script>
 {% endautoescape %}
 {% endif %}

@@ -1966,6 +1966,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                         or self.created_by.email
                 else:
                     return self.created_by
+            else:
+                try:
+                    return Deal.objects.filter(deal_order=self)\
+                        .first().person_last_name
+                except Deal.DoesNotExist:
+                    return None 
         elif self.customer_type == self.AS_ORGANIZATION:
             return self.customer_organization
         else:
