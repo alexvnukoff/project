@@ -1005,6 +1005,12 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
         return context
 
 
+class DealItemDetail(LoginRequiredMixin, ItemDetail):
+    model = DealItem
+    template_name = 'b24online/Products/dealItemDetail.html'
+    current_section = _('Deals history')
+
+
 class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'

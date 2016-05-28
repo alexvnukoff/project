@@ -2170,6 +2170,13 @@ class DealItem(models.Model):
         verbose_name = _('Deal product')
         verbose_name_plural = _('Deal products')
 
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+
+    def __str__(self):
+        return str(self.item)
+
     def get_total(self):
         """
         Return the total cost

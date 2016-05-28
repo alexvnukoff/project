@@ -85,7 +85,7 @@
         {% for deal_item in deal_items %}
         <tr style="display: none;" class="{{ deal.id }}-item-child">
           <td colspan="2" class="is-child">
-            <a href="{{ deal_item.item.get_absolute_url }}">{{ deal_item.item }}</a>
+            <a href="{% url 'products:deal_item_detail' item_id=deal_item.id %}">{{ deal_item.item }}</a>
           </td>
           <td align="center">
             {% if deal_item.cost %}

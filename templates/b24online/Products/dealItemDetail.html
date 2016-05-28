@@ -1,0 +1,42 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block html_title %}{{ item }}{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+  <div class="data">
+    <h1>{{ item }}</h1>
+    <hr class="hr-divider-one">
+
+    <div class="data">
+      <p class="data-info">
+        <label>{% trans 'Customer' %}:</label>
+        {{ item.deal.deal_order.get_customer }}
+      </p>
+      <p class="data-info">
+        <label>{% trans 'Supplier' %}:</label>
+        {{ item.deal.supplier_company.name }}
+      </p>
+      <p class="data-info">
+        <label>{% trans 'Deal date' %}:</label>
+        {{ item.deal.created_at|date:'d M Y H:i' }}
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
