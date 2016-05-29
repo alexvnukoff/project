@@ -183,7 +183,7 @@ h3 a:focus{
 }
 
 #lang-dropdown{
-	display: none;
+	/*display: none;*/
 }
 
 /*lang styling*/
@@ -194,7 +194,7 @@ h3 a:focus{
 }
 
 .navbar-nav li:hover #lang-dropdown{
-	display: block;
+	/*display: block;*/
 	float: left;
 }
 
