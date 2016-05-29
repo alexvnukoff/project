@@ -294,7 +294,7 @@ collapse the menu on 991px. */
 }
 
 #lang-dropdown{
-	display: none;
+	/*display: none;*/
 }
 
 /*lang styling*/
@@ -305,7 +305,7 @@ collapse the menu on 991px. */
 }
 
 .navbar-nav li:hover #lang-dropdown{
-	display: block;
+	/*display: block;*/
 	float: left;
 }
 

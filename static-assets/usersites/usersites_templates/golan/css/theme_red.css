@@ -168,6 +168,7 @@ footer{
 .top_search input{
 	background-color: #000;
 	border: 1px solid #fff;
+	color: #fff;
 }
 /*---------- Page Item Styling ----------*/
 .special_offer__btn, .job_offer__btn{

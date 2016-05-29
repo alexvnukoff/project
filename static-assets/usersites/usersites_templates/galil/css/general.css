@@ -108,7 +108,7 @@ h2.page-header.inner-page{
 }
 
 #lang-dropdown{
-	display: none;
+	/*display: none;*/
 }
 
 /*lang styling*/
@@ -119,7 +119,7 @@ h2.page-header.inner-page{
 }
 
 .navbar-nav li:hover #lang-dropdown{
-	display: block;
+	/*display: block;*/
 	float: left;
 }
 
