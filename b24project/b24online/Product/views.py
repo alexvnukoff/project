@@ -879,7 +879,7 @@ class DealList(LoginRequiredMixin, ItemsList):
     current_section = _('Deals history')
     form_class = DealListFilterForm
     url_paginator = 'products:deal_list_paginator'
-    paginate_by = 5
+    paginate_by = 10
     sortField1 = 'created_at'
     order1 = 'asc'
     by_status = None
@@ -1003,6 +1003,12 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
             context['paypal_form'] = paypal_form
         return context
+
+
+class DealItemDetail(LoginRequiredMixin, ItemDetail):
+    model = DealItem
+    template_name = 'b24online/Products/dealItemDetail.html'
+    current_section = _('Deals history')
 
 
 class DealItemDelete(LoginRequiredMixin, ItemDetail):

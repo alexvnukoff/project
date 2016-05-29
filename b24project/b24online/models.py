@@ -1906,7 +1906,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                                      choices=DEAL_PLACES,
                                      default=ON_PORTAL,
                                      null=False, blank=False)
-    customer_organization = models.ForeignKey('Organization', 
+    customer_organization = models.ForeignKey('Organization',
         related_name='deal_orders', verbose_name=_('Customer organization'),
         null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50,
@@ -1966,6 +1966,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                         or self.created_by.email
                 else:
                     return self.created_by
+            else:
+                try:
+                    return Deal.objects.filter(deal_order=self)\
+                        .first().person_last_name
+                except Deal.DoesNotExist:
+                    return None
         elif self.customer_type == self.AS_ORGANIZATION:
             return self.customer_organization
         else:
@@ -2164,6 +2170,13 @@ class DealItem(models.Model):
         verbose_name = _('Deal product')
         verbose_name_plural = _('Deal products')
 
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+
+    def __str__(self):
+        return str(self.item)
+
     def get_total(self):
         """
         Return the total cost
@@ -2171,6 +2184,22 @@ class DealItem(models.Model):
         return self.cost * self.quantity if self.cost and self.quantity \
             else 0
 
+    def get_extra_params(self):
+        """
+        Return the item extra parameters as dictinary {param_name: param_value}
+        """
+        data = []
+        if self.item and hasattr(self.item, 'extra_params') \
+            and hasattr(self, 'extra_params'):
+            param_fields = self.item.extra_params
+            param_values = self.extra_params
+            for param_descr in param_fields:
+                param_name = param_descr.get('name')
+                if param_name:
+                    param_value = param_values.get(param_name)
+                    if param_value:
+                        data.append((param_descr, param_value))
+        return data
 
 class StaffGroup(models.Model):
     """
