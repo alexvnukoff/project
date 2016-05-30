@@ -41,9 +41,7 @@
                 </div>
 
                 {% block slider %}
-                    {% cache 3600 slider site.pk LANGUAGE_CODE %}
                         {% include 'usersites/slider.html' %}
-                    {% endcache %}
                 {% endblock %}
 
             <div class="offer__icons">
