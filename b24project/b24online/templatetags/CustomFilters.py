@@ -320,7 +320,7 @@ def log_instance(instance):
     logger.debug(type(instance))
     logger.debug(dir(instance))
     return ''
-### -- ###    
+### -- ###
 
 
 @register.filter
@@ -353,7 +353,7 @@ def deal_order_quantity(request):
             .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
             (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON,
                deal__deal_order__created_by=request.user) | \
-             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION,
                 deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
@@ -377,7 +377,7 @@ def get_by_content_type(item):
     """
     content_type_id = item.get('content_type_id')
     instance_id = item.get('object_id')
-    if content_type_id and instance_id:        
+    if content_type_id and instance_id:
         try:
             content_type = ContentType.objects.get(pk=content_type_id)
         except ContentType.DoesNotExist:
@@ -412,16 +412,16 @@ def thumbnail(img, param_str):
                 pass
             else:
                 try:
-                    _path, _filename = os.path.split(img_url)    
+                    _path, _filename = os.path.split(img_url)
                     _file, _ext = _filename.split('.')
                 except ValueError:
                     pass
                 else:
                     thumbnail_name = r'%s__%s.%s' % (_file, param_str, _ext)
                     thumbnail_path = os.path.join(
-                        settings.MEDIA_ROOT, 
+                        settings.MEDIA_ROOT,
                         'thumbnails',
-                        _path, 
+                        _path,
                         thumbnail_name
                     )
                     thumbnail_url = urljoin('thumbnails/', _path + '/') + thumbnail_name
@@ -436,7 +436,7 @@ def thumbnail(img, param_str):
                             except OSError as e:
                                 if e.errno != errno.EEXIST:
                                     raise
-                        resize(image_path, (size_px, size_px), cropped, sized_image_path) 
+                        resize(image_path, (size_px, size_px), cropped, sized_image_path)
                     return urljoin(settings.MEDIA_URL, thumbnail_url)
         return urljoin(settings.MEDIA_URL, img_url)
 
@@ -521,7 +521,7 @@ def questionnaire_for_product(item):
         if content_type:
             return Questionnaire.get_active_objects().filter(
                 content_type_id=content_type.id,
-                object_id=item.id            
+                object_id=item.id
             )
     return Questionnaire.objects.none()
 
@@ -532,7 +532,7 @@ def questionnaire_for_company_products():
     Return the Questionnarie's qs for current company products.
     """
     from b24online.utils import get_company_questionnaire_qs
-    
+
     organization = get_current_site().user_site.organization
     return get_company_questionnaire_qs(organization)
 
@@ -544,8 +544,8 @@ def site_banner_total(side, block):
     """
     site_pk = get_current_site().pk
     return Banner.objects\
-        .filter(site_id=site_pk, 
-                block__code=block, 
+        .filter(site_id=site_pk,
+                block__code=block,
                 block__block_type='user_site')\
         .count()
 
@@ -556,3 +556,10 @@ def get_currentsite():
     Return the current site.
     """
     return get_current_site()
+
+
+@register.assignment_tag()
+def check_banner_exist(block):
+    site_pk = get_current_site().pk
+    return Banner.objects.filter(site_id=site_pk, block__code=block,
+                block__block_type='user_site').exists()
