@@ -932,7 +932,6 @@ footer .btn-default{
 	/*text-align: center;*/
 	margin: 0;
 	padding: 0 10px 10px;
-	color: #a40000;
 }
 
 .ver-coupon-discount div{
@@ -942,7 +941,6 @@ footer .btn-default{
 .ver-coupon-discount .ver-coupon__discount{
 	font-size: 5vw;
 	font-weight: bold;
-	color: #fff;
 	text-align: center;
 	padding-top: 10px;
 	margin: 0;
@@ -980,24 +978,21 @@ footer .btn-default{
 }
 
 .ver-coupon-discount{
-	background-color: #a40000;
 	height: 100%;
 	margin-bottom: 0;
     padding-bottom: 0;
 }
 
 .ver-coupon-price .ver-coupon__btn{
-	border-color: #a40000;
-    color: #fff;
-    background-color: #a40000;
 	width: 80%;
 	/*margin: 1vw;*/
 	text-align: center;
 	font-weight: bold;
 	vertical-align:middle;
-	margin:0 auto;
+	margin: 0 auto;
     display:block;
 	padding-bottom: 10px;
+	margin-top: 20px;
 }
 
 .ver-coupon-price .ver-coupon__price{
@@ -1016,7 +1011,7 @@ footer .btn-default{
 	.ver-coupon-price .ver-coupon__price{
 		padding-top: 10px;
 		text-align: center;
-		font-size: 12px;
+		/*font-size: 12px;*/
 	}
 
 	.ver-coupon__title{

@@ -49,30 +49,30 @@ h3 a:focus{
 }
 
 .in-page{
-    margin-top: 10%;
+    margin-top: 120px;
 }
 
 @media (max-width: 480px) {
 	.in-page {
-		margin-top: 20%;
+		margin-top: 160px;
 	}
 }
 
 @media (min-width: 481px) and (max-width: 991px) {
 	.in-page {
-		margin-top: 18%;
+		margin-top: 250px;
 	}
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
 	.in-page {
-		margin-top: 12%;
+		margin-top: 180px;
 	}
 }
 
 @media (min-width: 1199px) {
 	.in-page {
-		margin-top: 10%;
+		margin-top: 120px;
 	}
 }
 
@@ -1093,9 +1093,16 @@ header.carousel .carousel-inner {
     height: 100%;
 }
 
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    header.carousel .carousel-inner {
+        padding-top: 120px;
+    }
+}
+
 @media(max-width:767px) {
     header.carousel .carousel-inner {
-        padding-top: 60px;
+        padding-top: 120px;
     }
 
     .social-header{

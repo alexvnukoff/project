@@ -1,0 +1,68 @@
+/** General Styling ***************/
+/*********************************/
+
+/* Main color elements. */
+h1 a,
+.footer-menu a{
+	color: #000;
+}
+
+h1 a:hover,
+h1 a:active,
+h1 a:focus,
+.footer-menu a:hover,
+.footer-menu a:active,
+.footer-menu a:focus{
+	color: #555;
+}
+
+/** Navigation Styling ***************/
+/*********************************/
+.menu-cart-checkout{
+	background-color: #ddd;
+}
+
+/** Slider Styling ***************/
+/*********************************/
+
+/** Products Styling ***************/
+/*********************************/
+
+/** Product Page Styling ***************/
+/*********************************/
+
+/** Coupons Styling ***************/
+/*********************************/
+
+/** Banners Styling ***************/
+/*********************************/
+
+/** News Styling ***************/
+/*********************************/
+.by-author {
+	color: #aab6aa;
+}
+
+/** Proposal Styling ***************/
+/*********************************/
+
+/** Gallery slider Styling ***************/
+/*********************************/
+
+/** Gallery Styling ***************/
+/*********************************/
+
+/** Media carusel Styling ***************/
+/*********************************/
+
+/** Cart Page Styling ***************/
+/*********************************/
+
+/** Contact Styling ***************/
+/*********************************/
+
+/** footer Styling ***************/
+/*********************************/
+footer{
+	background-color: #ddd;
+}
