@@ -41,32 +41,31 @@
 
     {# Coupons and banners section. 2 coupons and 4 banners. #}
     <div class="container clearfix">
-        <div class="row">
 
             {% coupons 'B2CProducts/main_coupons.html' 2 %}
 
             {# 4 banners, will lead to categories or products #}
             {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
             {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
-            {% if b2c_coupons %}
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 banner-ad-main-collection">
-
-                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                    </div>
-                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                    </div>
-                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 3" %}
-                    </div>
-                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 4" %}
-                    </div>
-
-                </div>
-            {% else %}
-{#                {% if banner and side == 'right' %}#}
+{#            {% if coupons.len > 0 %}#}
+{#                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 banner-ad-main-collection">#}
+{##}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 4" %}#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            {% else %}#}
+{#                {% if banner %}#}
                     <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
 
                         <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
@@ -84,9 +83,9 @@
 
                     </div>
 {#                {% endif %}#}
-            {% endif %}
+{#                {% endif %}#}
+{#            {% endif %}#}
 
-        </div><!-- /end of Coupons and news modouls -->
     </div><!-- /container -->
 
     {% b2c_products 'B2CProducts/main_products.html' 4 %}

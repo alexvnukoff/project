@@ -248,3 +248,34 @@ footer a:active{
 #myCarousel{
 	margin-top: 20px;
 }
+
+/*--------New coupon design -------------*/
+
+.ver-coupon__title{
+	color: #a40000;
+}
+
+.ver-coupon-discount .ver-coupon__discount{
+	color: #fff;
+}
+
+.ver-coupon-discount .ver-coupon-timer{
+	color: #fff;
+}
+
+.ver-coupon-discount{
+	background-color: #a40000;
+}
+
+.ver-coupon-price .ver-coupon__btn{
+	border-color: #a40000;
+    color: #fff;
+    background-color: #a40000;
+}
+
+.ver-coupon-price .ver-coupon__deleted-price{
+	color: #aaa;
+
+}
+
+

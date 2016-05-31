@@ -568,7 +568,7 @@ collapse the menu on 991px. */
 
 @media (min-width: 992px) {
 	.banner-ad-main-collection{
-		margin-top: 75px;
+		margin-top: 20px;
 		padding: 20px;
 	}
 }
@@ -587,7 +587,7 @@ collapse the menu on 991px. */
 }
 
 .banner-main-page img{
-    /*width: 100%;*/
+    width: 100%;
 }
 
 /*--------- contact form --------------*/
@@ -904,6 +904,136 @@ footer .btn-default{
     margin: 10px auto;
     display: block;
 }
+
+/*--------New coupon design -------------*/
+.ver-coupon{
+	/*background-color: #eee;*/
+	padding: 15px;
+}
+
+.ver-coupon-wrap [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.ver-coupon-wrap{
+    overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.ver-coupon-img img{
+	width: 100%;
+}
+
+.ver-coupon__title{
+	font-size: 2em;
+	/*text-align: center;*/
+	margin: 0;
+	padding: 0 10px 10px;
+	color: #a40000;
+}
+
+.ver-coupon-discount div{
+	text-align: center;
+}
+
+.ver-coupon-discount .ver-coupon__discount{
+	font-size: 5vw;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+	padding-top: 10px;
+	margin: 0;
+}
+
+.ver-coupon-timer-wrap{
+	display: table;
+}
+
+.ver-coupon-discount .ver-coupon-timer{
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+	/*padding-top: 10px;*/
+    margin: 0 auto;
+	float: none;
+
+	display:table-cell;
+	vertical-align:middle;
+	padding-top: 3vw;
+	padding-bottom: 3vw;
+	line-height: 1.3vw;
+}
+
+.ver-coupon-discount .timer-mini{
+	float: none;
+}
+
+
+.ver-coupon .product__price__coupon{
+	position: absolute;
+	top: -1px;
+	width: 100%;
+}
+
+.ver-coupon-discount{
+	background-color: #a40000;
+	height: 100%;
+	margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.ver-coupon-price .ver-coupon__btn{
+	border-color: #a40000;
+    color: #fff;
+    background-color: #a40000;
+	width: 80%;
+	/*margin: 1vw;*/
+	text-align: center;
+	font-weight: bold;
+	vertical-align:middle;
+	margin:0 auto;
+    display:block;
+	padding-bottom: 10px;
+}
+
+.ver-coupon-price .ver-coupon__price{
+	padding-top: 10px;
+	text-align: center;
+	font-size: 25px;
+}
+
+.ver-coupon-price .ver-coupon__deleted-price{
+	text-decoration: line-through;
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.ver-coupon-price .ver-coupon__price{
+		padding-top: 10px;
+		text-align: center;
+		font-size: 12px;
+	}
+
+	.ver-coupon__title{
+		font-size: 18px;
+	}
+}
+
+
+.ver-coupon-price{
+	/*background-color: #fff;*/
+	height: 100%;
+}
+
+.ver-coupon .product__title{
+	padding-bottom: 5px;
+}
+
 /*---------- Counter Styling ----------*/
 #timer-detail-page{
     font-family: sans-serif;

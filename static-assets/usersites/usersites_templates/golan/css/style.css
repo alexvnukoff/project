@@ -239,3 +239,19 @@ footer span{
 #timer-detail-page > div{
     float: left;
 }
+
+/*--------New coupon design -------------*/
+
+.ver-coupon-col{
+	float: left;
+}
+
+.ver-coupon-discount div{
+	float: right;
+}
+
+.ver-coupon .product__price__coupon{
+	left: 0;
+}
+
+
