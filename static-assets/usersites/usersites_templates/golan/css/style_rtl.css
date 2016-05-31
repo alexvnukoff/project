@@ -403,3 +403,17 @@ th, td{
 .banner-main-page{
 	float: right;
 }
+
+/*--------New coupon design -------------*/
+
+.ver-coupon-col{
+	float: right;
+}
+
+.ver-coupon-discount div{
+	float: right;
+}
+
+.ver-coupon .product__price__coupon{
+	left: 0;
+}

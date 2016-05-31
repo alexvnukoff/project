@@ -40,53 +40,96 @@
     </div>
 
     {# Coupons and banners section. 2 coupons and 4 banners. #}
-    <div class="container clearfix">
-        <div class="row">
+   <div class="container clearfix">
 
             {% coupons 'B2CProducts/main_coupons.html' 2 %}
 
             {# 4 banners, will lead to categories or products #}
             {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
             {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
-            {% if b2c_coupons %}
-                <div class="col-md-6 col-sm-12 col-xs-12 banner-ad-main-collection">
+{#            {% if coupons.len > 0 %}#}
+{#                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 banner-ad-main-collection">#}
+{##}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                    </div>#}
+{#                    <div class="col-md-6 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 4" %}#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            {% else %}#}
 
-                    <div class=" banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                    </div>
-                    <div class=" banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                    </div>
-                    <div class=" banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 3" %}
-                    </div>
-                    <div class=" banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 4" %}
-                    </div>
 
-                </div>
-            {% else %}
-                {% if banner and side == 'right' %}
                     <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
 
-                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                            {% site_banner "top" "SITES RIGHT 1" %}
-                        </div>
-                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                        {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+                        {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+                        {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+                        {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
+
+                        {% if right_banner_4 %}
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
                             {% site_banner "top" "SITES RIGHT 2" %}
-                        </div>
-                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                            {% site_banner "top" "SITES RIGHT 3" %}
-                        </div>
-                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                            {% site_banner "top" "SITES RIGHT 4" %}
-                        </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 3" %}
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 4" %}
+                            </div>
+
+                        {% elif right_banner_3 %}
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                            {% site_banner "top" "SITES RIGHT 2" %}
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 3" %}
+                            </div>
+
+                        {% elif right_banner_2 %}
+
+                            <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                            {% site_banner "top" "SITES RIGHT 2" %}
+                            </div>
+
+                         {% elif right_banner_1 %}
+
+                            <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                        {% endif %}
+
 
                     </div>
-                {% endif %}
-            {% endif %}
+{#                {% endif %}#}
 
-        </div><!-- /end of Coupons and news modouls -->
+{#            {% endif %}#}
+
     </div><!-- /container -->
 
     {% b2c_products 'B2CProducts/main_products.html' 4 %}
