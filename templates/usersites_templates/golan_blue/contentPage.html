@@ -66,13 +66,14 @@
 {#                </div>#}
 {#            {% else %}#}
 
+            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
 
+            {% if right_banner_1 %}
                     <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
 
-                        {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
-                        {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
-                        {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
-                        {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
 
                         {% if right_banner_4 %}
 
@@ -126,7 +127,8 @@
 
 
                     </div>
-{#                {% endif %}#}
+
+                {% endif %}
 
 {#            {% endif %}#}
 
