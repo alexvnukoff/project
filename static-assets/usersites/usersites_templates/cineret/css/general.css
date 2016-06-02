@@ -586,6 +586,10 @@ h3 a:focus{
     font-size: 16px;
 }
 
+.product-page-desc img{
+    width: 100%;
+}
+
 .product__price,
 .product__deleted-price{
     font-size: 18px;

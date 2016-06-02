@@ -123,6 +123,14 @@ a.product__btn,
 	border-bottom: 1px solid #fff;
 }
 
+.news__text .product__title{
+	border: none;
+}
+
+.product__title a{
+	color: #fff;
+}
+
 .product__discount{
 	color: #f7b400;
 }
