@@ -57,6 +57,27 @@ body{
 	margin-left: 10px;
 }
 
+.header-cart{
+	float: left;
+}
+
+.top-search-block{
+	float: left;
+}
+
+.main-nav-btn{
+	float: left;
+}
+
+/* Social links */
+.social-header{
+	float: left;
+}
+
+.header-top{
+	float: left;
+}
+
 /* Landscape tablets and medium desktops */
 @media (min-width: 992px) and (max-width: 1199px) {
 	.navbar-brand{
@@ -272,6 +293,10 @@ body{
 	float: left;
 }
 
+.main-video .main-video-img,
+.main-video .main-video-caption{
+	float: right;
+}
 
 /*---------- Jobs Styling ----------*/
 .jobs-content{

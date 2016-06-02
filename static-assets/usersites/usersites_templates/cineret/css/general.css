@@ -583,6 +583,11 @@ h3 a:focus{
 /* ----------- Product Styling -------------------- */
 .product__title{
     margin-top: 10px;
+    font-size: 16px;
+}
+
+.product-page-desc img{
+    width: 100%;
 }
 
 .product__price,
@@ -607,6 +612,10 @@ h3 a:focus{
 .product .thumbnail{
     padding: 0;
     border: none;
+}
+
+.product .thumbnail img{
+    width: 100%;
 }
 
 .product .product__caption{
@@ -645,6 +654,13 @@ h3 a:focus{
 
 .btn-mail-order{
     position: relative;
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px)  {
+    .product .product__caption .product__desc{
+        height: 100px;
+    }
 }
 
 
