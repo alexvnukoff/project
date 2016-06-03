@@ -2048,7 +2048,9 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
                                      null=True, blank=False, editable=False)
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
-    paypal_txn_id = models.ForeignKey(PayPalIPN, related_name='order_deals',
+    paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
+                                     null=True, blank=True, db_index=True)
+    models.ForeignKey(PayPalIPN, related_name='order_deals',
                                       verbose_name=_('PayPal Transaction'), 
                                       null=True, blank=True,
                                       editable=False)
