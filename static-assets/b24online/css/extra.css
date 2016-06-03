@@ -273,6 +273,23 @@ p.form-field {
     padding: 10px;
 }
 
+.chat-title-imgs {
+    float:right;
+}
+
+.chat-title-imgs > a{
+    text-decoration:none !important;
+}
+
+.message-attachments {
+    text-align:center;
+    float:left;
+    margin:5px;
+    border:1px dotted;
+    border-color:#888888;
+    padding:3px;
+}
+
 label.required::after {
     content: "*";
     color: red;

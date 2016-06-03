@@ -52,6 +52,27 @@
     float: left;
 }
 
+.header-cart{
+	float: right;
+}
+
+.top-search-block{
+	float: right;
+}
+
+.main-nav-btn{
+	float: right;
+}
+
+/* Social links */
+.social-header{
+	float: right;
+}
+
+.header-top{
+	float: right;
+}
+
 
 /*---------- about-banner Styling ----------*/
 .about-main__movie{
