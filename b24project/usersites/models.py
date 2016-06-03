@@ -9,6 +9,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils import timezone
+from django.db import transaction, IntegrityError
+
 from b24online.custom import CustomImageField
 from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
 from paypal.standard.ipn.models import PayPalIPN
@@ -195,5 +197,48 @@ def add_deal_for_product(sender, instance, created, **kwargs):
     """
     Add Deal for the product from Basket after PayPal success payment. 
     """
-    if created:
-        pass
+    from tpp.DynamicSiteMiddleware import get_current_site
+    from centerpokupok.models import B2CProduct
+    from b24online.models import (DealOrder, Deal, DealItem)
+
+    if created and instance and instance.item_number:
+        try:
+            item_id = int(instance.item_number)
+            item = B2CProduct.objects.get(id=item_id)
+        except (TypeError, B2CProduct.DoesNotExist):
+            pass
+        else:
+            supplier = get_current_site().user_site.organization
+            last_name = instance.last_name
+            first_name = instance.first_name
+            payer_email = instance.payer_email
+            try:
+                with transaction.atomic():
+                    # Deal order
+                    deal_order = DealOrder.objects.create(
+                        customer_type=DealOrder.AS_PERSON,
+                        status=DealOrder.READY,
+                        deal_place=DealOrder.ON_USERSITE
+                    )
+                    deal_order.save()
+
+                    deal = Deal.objects.create(
+                        deal_order=deal_order,
+                        currency=item.currency,
+                        supplier_company=supplier,
+                        person_last_name=last_name,
+                        person_first_name=first_name,
+                        person_email=payer_email,
+                        status=Deal.PAID_BY_PAYPAL,
+                    )
+                    model_type = ContentType.objects.get_for_model(item)
+                    deal_item = DealItem.objects.create(
+                        deal=deal,
+                        content_type=model_type,
+                        object_id=item.pk,
+                        quantity=1,
+                        currency=item.currency,
+                        cost=item.cost
+                    )
+            except IntegrityError:
+                raise
