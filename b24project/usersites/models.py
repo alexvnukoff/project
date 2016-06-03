@@ -11,6 +11,7 @@ from django.db import models
 from django.utils import timezone
 from b24online.custom import CustomImageField
 from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
+from paypal.standard.ipn.models import PayPalIPN
 from b24online.utils import generate_upload_path
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save
@@ -187,3 +188,12 @@ class UserSite(ActiveModelMixing, models.Model):
 @receiver(post_save, sender=UserSite)
 def index_item(sender, instance, created, **kwargs):
     instance.clear_cache()
+
+
+@receiver(post_save, sender=PayPalIPN)
+def add_deal_for_product(sender, instance, created, **kwargs):
+    """
+    Add Deal for the product from Basket after PayPal success payment. 
+    """
+    if created:
+        pass
