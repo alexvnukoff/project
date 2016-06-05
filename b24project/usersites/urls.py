@@ -33,6 +33,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="usersites/denied.html"),
         name='denied'),
     url(r'^video/', include(usersites.Video.urls, namespace='video')),
+    url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
 ]
 
 if settings.DEBUG:
