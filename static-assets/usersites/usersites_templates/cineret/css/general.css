@@ -586,7 +586,7 @@ h3 a:focus{
     font-size: 16px;
 }
 
-.product-page-desc img{
+.item-price-table img{
     width: 100%;
 }
 
@@ -654,6 +654,14 @@ h3 a:focus{
 
 .btn-mail-order{
     position: relative;
+}
+
+.main-product-thumbnail img{
+    width: 98%;
+}
+
+.main-product-thumbnail{
+    margin-bottom: 10px;
 }
 
 /* Landscape tablets and medium desktops */
