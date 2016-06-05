@@ -238,23 +238,25 @@ def set_notification_count(context):
     return notification
 
 
-@register.simple_tag(takes_context=True)
-def set_message_count(context):
+@register.assignment_tag(takes_context=True)
+def get_messages_number(context, for_current_organization=False):
     """
-    Return the number od unread messages.
+    Return the number of unread messages.
     """
     request = context.get('request')
-    if request.user.is_authenticated():
-        message = Message.objects.select_related('chat')\
-            .filter(chat__participants__id__exact=request.user.id,
-                    chat__status=MessageChat.OPENED,
-                    is_read=False)\
-            .filter(~Q(sender=request.user))\
-            .distinct()\
-            .count()
-    else:
-        message = 0
-    return message
+    filters = {
+        'chat__participants__id__exact': request.user.id,
+        'chat__status': MessageChat.OPENED,
+        'is_read': False,
+    }
+    if for_current_organization:
+        filters['organization'] = get_current_organization(request)
+
+    return Message.objects.select_related('chat')\
+        .filter(**filters)\
+        .filter(~Q(sender=request.user))\
+        .distinct()\
+        .count() if request.user.is_authenticated() else 0
 
 
 @register.simple_tag(takes_context=True)

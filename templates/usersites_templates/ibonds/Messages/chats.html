@@ -1,0 +1,38 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block after_css %}
+  <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  <section class="content__info grid-layout">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5 col-sm-5">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#">{% trans 'Organization' %}</a></li>
+            <li><a href="#">{% trans 'Private' %}</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-md-5 col-sm-5">
+          <div class="page-header">Test</div>
+          <div id="description">
+            dfsdfsdf
+          </div>
+          <div class="data">
+            ljhdsflkjsdf
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

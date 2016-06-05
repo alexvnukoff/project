@@ -260,7 +260,11 @@
               </div>
 
               <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
-              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
+
+              {# Unreaded messages #}
+              {% get_messages_number as messages_number %}
+              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{{ messages_number }} </a>
+
               <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
 
               {% if request.user.is_authenticated %}  

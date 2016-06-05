@@ -6,6 +6,7 @@ from paypal.standard.ipn.views import ipn
 import usersites.Api.urls
 import usersites.B2BProducts.urls
 import usersites.B2CProducts.urls
+import usersites.Messages.urls
 import usersites.News.urls
 import usersites.OrganizationPages.urls
 import usersites.Proposals.urls

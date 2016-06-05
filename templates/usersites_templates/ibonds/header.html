@@ -35,7 +35,10 @@
               <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
               {# Registration. login and logout #}
               {% if user.is_authenticated %}
-                <li><a href="#">2</a></li>
+                {% get_messages_number as messages_number %}
+                <li><a href="{% url 'messages:main' %}">
+                  <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}</a>
+                </li>
                 <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
               {% else %}
                 <li>

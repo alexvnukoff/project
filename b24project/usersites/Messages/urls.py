@@ -3,9 +3,9 @@
 from django.conf.urls import url
 
 from usersites.Messages.views import (
-    view_chats, 
+    UsersitesCharListView, 
 )  
 
 urlpatterns = [
-    url(r'^$', view_chats, name='main'),
+    url(r'^$', UsersitesCharListView.as_view(), name='main'),
 ]

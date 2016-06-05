@@ -219,29 +219,6 @@ class ChatListView(LoginRequiredMixin, TemplateView):
             .order_by('-updated_at')
 
 
-def view_chats(request):
-    """
-    View for the chats list.
-    """
-    current_organization = get_current_organization(request)
-    chats = MessageChat.objects\
-        .filter(Q(organization=current_organization) | \
-                Q(participants__id__exact=request.user.id),
-                status=MessageChat.OPENED)\
-        .distinct()\
-        .order_by('-updated_at')
-    per_page = 20
-    context = {
-        'organization_chats': chats.filter(is_private=False)[:per_page],
-        'user_chats': chats.filter(is_private=True)[:per_page],
-    }
-    return render_to_response(
-        'b24online/Messages/chats.html',
-        context, 
-        context_instance=RequestContext(request)
-    )
-
-
 @login_required
 def chat_messages(request, item_id):
     try:
