@@ -656,6 +656,14 @@ h3 a:focus{
     position: relative;
 }
 
+.main-product-thumbnail img{
+    width: 98%;
+}
+
+.main-product-thumbnail{
+    margin-bottom: 10px;
+}
+
 /* Landscape tablets and medium desktops */
 @media (min-width: 992px)  {
     .product .product__caption .product__desc{
