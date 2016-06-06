@@ -266,7 +266,6 @@ footer a:active{
 
 .top_search input,
 .top_search input:focus{
-	/*background-color: #a40000;*/
 	border: 1px solid #fff;
 	color: #000;
 }
