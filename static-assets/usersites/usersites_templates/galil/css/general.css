@@ -51,7 +51,7 @@ h2.page-header{
 	text-decoration: none;
 	font-weight: bold;
 	font-family: 'Oswald', sans-serif;
-	margin-top: 24px;
+	/*margin-top: 24px;*/
 }
 
 h2.page-header.inner-page{
@@ -647,7 +647,7 @@ span.percent{
 
 .news__img img{
 	position: relative;
-	width: 80px;
+	width: 100%;
 }
 
 .news_page h2{

@@ -13,18 +13,18 @@ h3 a:active,
 h3 a:focus,
 .navbar-default .nav li a:hover,
 .navbar-default .nav li a:focus{
-    color: #0047AF;
+    color: #F16522;
 }
 
 .btn-default{
-    background-color: #0047AF;
+    background-color: #F16522;
     color: #fff;
 }
 
 .btn-default:hover,
 .btn-default:active,
 .btn-default:focus{
-    background-color: #002151;
+    background-color: #AA3000;
     color: #fff;
 }
 
@@ -33,8 +33,8 @@ h3 a:focus,
 }
 
 .navbar-default .navbar-toggle {
-    background-color: #0047AF;
-    border-color: #002151;
+    background-color: #F16522;
+    border-color: #AA3000;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
@@ -47,7 +47,7 @@ h3 a:focus,
 
 .navbar-default .navbar-nav > .active > a {
     color: white;
-    background-color: #0047AF;
+    background-color: #F16522;
 }
 
 .navbar-default .nav li a {
@@ -57,7 +57,7 @@ h3 a:focus,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: white;
-  background-color: #002151;
+  background-color: #AA3000;
 }
 
 .tel .fa,
@@ -74,7 +74,7 @@ h3 a:focus,
 }
 
 .cust-nav__btn a{
-    color: #0047AF;
+    color: #F16522;
 }
 
 .cust-nav__btn a:hover{
@@ -89,7 +89,7 @@ h3 a:focus,
 
 @media (min-width: 768px) {
     .navbar-default .navbar-brand {
-        color: #0047AF;
+        color: #F16522;
     }
 }
 
@@ -109,12 +109,12 @@ h3 a:focus,
 }
 
 .product__discount{
-    background-color: #0047AF;
+    background-color: #F16522;
     color: #fff;
 }
 
 .product__title{
-    color: #0047AF;
+    color: #F16522;
 }
 
 .product__deleted-price{
@@ -123,12 +123,12 @@ h3 a:focus,
 
 .contact-fields .main-contact-btn{
     color: #ffffff;
-    background-color: #0047AF;
-    border-color: #002151;
+    background-color: #F16522;
+    border-color: #F16522;
 }
 
 .main-contact{
-    background: #002151;
+    background: #143300;
     color: #fff;
 }
 
@@ -266,7 +266,6 @@ footer a:active{
 
 .top_search input,
 .top_search input:focus{
-	/*background-color: #a40000;*/
 	border: 1px solid #fff;
 	color: #000;
 }
@@ -286,7 +285,7 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #0047AF;
+    border: 1px solid #F16522;
 }
 
 .pagination>li>a, .pagination>li>span{
@@ -307,6 +306,12 @@ footer a:active{
 .category{
 	background-color: #fff;
 	color: #000;
+}
+
+/*thumbnails fix*/
+.main-products .product {
+    margin-left : 0;
+    margin-right : 0;
 }
 
 

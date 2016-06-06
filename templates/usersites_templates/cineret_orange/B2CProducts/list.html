@@ -2,12 +2,14 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
-<section class="content__info">
+{#<section class="content__info">#}
 
-{# Page title #}
- <div class="container">
-            <h2 class="page-header in-page">{% trans 'Search B2C Products' %}</h2>
-            {% include 'usersites_templates/cineret_red/B2CProducts/paginator.html' %}
+    {# Products page content #}
+    <div class="container">
+
+        {# Page title #}
+            <h2 class="page-header in-page"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
+            {% include 'usersites_templates/golan_red/B2CProducts/paginator.html' %}
 
 {#        <div class="row main-products-thumb">#}
 
@@ -67,6 +69,9 @@
 
         </div>
 
- {% include 'usersites_templates/cineret_red/B2CProducts/paginator.html' %}
- </div>
 
+
+        {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
+    </div>
+
+{#</section>#}

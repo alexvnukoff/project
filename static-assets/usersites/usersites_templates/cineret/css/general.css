@@ -42,6 +42,10 @@ h3 a{
     text-decoration: none;
 }
 
+.page-header{
+    margin-top: 25px;
+}
+
 h3 a:hover,
 h3 a:active,
 h3 a:focus{
@@ -586,7 +590,7 @@ h3 a:focus{
     font-size: 16px;
 }
 
-.product-page-desc img{
+.item-price-table img{
     width: 100%;
 }
 
@@ -645,6 +649,11 @@ h3 a:focus{
     position: relative;
     display: inline;
     margin: 10px;
+
+}
+
+.category select{
+    height: 33px;
 }
 
 .pagination {
@@ -654,6 +663,14 @@ h3 a:focus{
 
 .btn-mail-order{
     position: relative;
+}
+
+.main-product-thumbnail img{
+    width: 98%;
+}
+
+.main-product-thumbnail{
+    margin-bottom: 10px;
 }
 
 /* Landscape tablets and medium desktops */
