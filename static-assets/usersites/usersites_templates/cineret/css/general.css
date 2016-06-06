@@ -42,6 +42,10 @@ h3 a{
     text-decoration: none;
 }
 
+.page-header{
+    margin-top: 25px;
+}
+
 h3 a:hover,
 h3 a:active,
 h3 a:focus{
