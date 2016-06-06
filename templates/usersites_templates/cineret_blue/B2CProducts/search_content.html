@@ -3,42 +3,70 @@
 {% load staticfiles %}
 {% load humanize %}
 <section class="content__info">
-   {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
 
-                <section class="content__info__products">
-                    <h2>{% trans 'Search B2C Products' %}</h2>
-                    <ul class="products-list">
+{# Page title #}
+ <div class="container">
+            <h2 class="page-header in-page">{% trans 'Search B2C Products' %}</h2>
+            {% include 'usersites_templates/cineret_blue/B2CProducts/paginator.html' %}
 
-                        {% for product in products %}
+{#        <div class="row main-products-thumb">#}
 
-                        <li class="product">
-                            <div class="product__cover vertical">
-                        <a href="">
+            <div id="wrapper">
+                <div id="columns">
+
+                    {% for product in products %}
+
+                        <div class="pin">
                             {% if product.image %}
-                              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
                             {% else %}
-                              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                                <img src="{% static 'b24online/img/item.jpg' %}" />
                             {% endif %}
-                        </a>
-                            </div>
-                            <div class="product__about">
 
-                                <p class="desc">
-                                    <strong>{{ product.name|truncatechars:80 }}</strong></p>
+                            {% if product.coupon_discount_percent %}
+                                <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                            {% endif %}
+
+                            <div class="caption">
+                                <h5 class="product__title">{{ product.name|truncatechars:20 }}</h5>
+                                <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
+
+                                {# If there is one, display the cost. If there is a discount, display it too. #}
                                 {% if product.cost %}
-                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                    <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                        {% if product.cost != product.get_discount_price %}
+                                            <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                        {% endif %}
+                                    </p>
                                 {% else %}
-                                <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                        <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                                 {% endif %}
 
+                                {# If the product is a coupon, the color of the button will be diff #}
+                                {% if product.coupon_discount_percent %}
+                                    <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                                {% else %}
+                                    <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                                {% endif %}
+
+                                {# If the product is a coupon, display the timer #}
+                                {% if product.coupon_discount_percent %}
+                                    <div class="coupon-timer">
+                                        <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                        <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                    </div>
+                                {% endif %}
                             </div>
-                            <a href="" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
-                        </li>
 
-                        {% endfor %}
+                        </div>
 
-                    </ul>
-                </section>
+                    {% endfor %}
 
-    {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
-    </section>
+                </div>
+{#            </div>#}
+
+        </div>
+
+ {% include 'usersites_templates/cineret_blue/B2CProducts/paginator.html' %}
+ </div>
+

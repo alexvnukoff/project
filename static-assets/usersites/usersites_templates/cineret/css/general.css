@@ -645,6 +645,11 @@ h3 a:focus{
     position: relative;
     display: inline;
     margin: 10px;
+
+}
+
+.category select{
+    height: 33px;
 }
 
 .pagination {
