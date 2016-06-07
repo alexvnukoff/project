@@ -894,6 +894,10 @@ footer .btn-default{
 	position: relative;
 }
 
+.item-price-table img {
+    width: 100%;
+}
+
 .item-page img{
 	/*max-height: 365px;*/
 	max-width: 100%;
