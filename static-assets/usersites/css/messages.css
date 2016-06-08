@@ -27,3 +27,9 @@
     border-bottom: 1px solid #444444;
     margin-bottom: 10px;
 }
+
+label.required::after {
+    content: "*";
+    color: red;
+    font-weight: bold; 
+}

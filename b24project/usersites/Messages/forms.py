@@ -15,37 +15,28 @@ from django.utils.html import strip_tags
 from b24online.models import (User, Organization, MessageChat,
                               Message, MessageAttachment)
 from b24online.utils import handle_uploaded_file
-from django.core.mail import EmailMessage
 from b24online import InvalidParametersError
-
+from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
 
 
 class MessageForm(forms.ModelForm):
-
-    AS_EMAIL, AS_MESSAGE = 'email', 'message'
-    DELIVERY_WAYS = (
-        (AS_EMAIL, _('As email')),
-        (AS_MESSAGE, _('As message')),
-    )
-
-    delivery_way = forms.ChoiceField(label=_('Delivery way'),
-                                     choices=DELIVERY_WAYS, required=True)
     chat = forms.ModelChoiceField(queryset=MessageChat.objects.all(),
                                   required=False)
     attachment = forms.FileField(label=_('Message attachment'), required=False)
-    is_private = forms.BooleanField(required=False)
 
     class Meta:
         model = Message
-        fields = ('organization', 'recipient', 'subject', 'content')
+        fields = ('subject', 'content')
 
     def __init__(self, request, *args, **kwargs):
+        self.chat = kwargs.pop('chat', None)
         super(MessageForm, self).__init__(*args, **kwargs)
         self.request = request
-        self.initial['delivery_way'] = type(self).AS_MESSAGE
-        self.initial['is_private'] = False
+        self.organization = get_current_site().user_site.organization
+        for field_name in ('subject', 'content', ):
+            self.fields[field_name].widget.attrs.update({'class': 'form-control'})
         self.fields['content'].required = True
 
     def send(self):
@@ -53,78 +44,47 @@ class MessageForm(forms.ModelForm):
         Send the message by means of selected way.
         """
         cls = type(self)
-        organization = self.cleaned_data.get('organization')
-        recipient = self.cleaned_data.get('recipient')
         subject = self.cleaned_data.get('subject')
         content = self.cleaned_data.get('content')
-        delivery_way = self.cleaned_data.get('delivery_way')
-        is_private = self.cleaned_data.get('is_private')
-        chat = self.cleaned_data.get('chat')
-        if delivery_way == cls.AS_MESSAGE:
-            try:
-                with transaction.atomic():
-                    new_message_chat = MessageChat.objects.create(
-                        subject=subject,
-                        organization=organization,
-                        status=MessageChat.OPENED,
-                        is_private=is_private,
-                        created_by=self.request.user,
-                    ) if not chat else chat
-                    new_message = Message.objects.create(
-                        subject=new_message_chat.subject,
-                        status=Message.READY,
-                        recipient=recipient,
-                        organization=organization,
-                        sender=self.request.user,
-                        chat=new_message_chat,
-                        content=content,
-                    )
-                    new_message_chat.participants.add(self.request.user)
-                    if recipient:
-                        new_message_chat.participants.add(recipient)
+        try:
+            with transaction.atomic():
+                # Create new message chat if it's necessary
+                new_message_chat = MessageChat.objects.create(
+                    subject=subject,
+                    organization=organization,
+                    status=MessageChat.OPENED,
+                    created_by=self.request.user,
+                ) if not self.chat else self.chat
 
-                    if self.request.FILES \
-                        and 'attachment' in self.request.FILES:
+                # Create new message
+                new_message = Message.objects.create(
+                    subject=new_message_chat.subject,
+                    status=Message.READY,
+                    organization=self.organization,
+                    sender=self.request.user,
+                    chat=new_message_chat,
+                    content=content,
+                )
+                new_message_chat.participants.add(self.request.user)
 
-                        for _attachment in self.request.FILES.getlist('attachment'):
-                            new_message_attachment = MessageAttachment.objects\
-                                .create(
-                                    file=handle_uploaded_file(_attachment),
-                                    message=new_message,
-                                    created_by=self.request.user,
-                                    file_name=_attachment.name,
-                                    content_type=_attachment.content_type,
-                                )
+                if self.request.FILES \
+                    and 'attachment' in self.request.FILES:
 
-            except IntegrityError as exc:
-                raise
-            else:
-                new_message.upload_files()
-                
+                    for _attachment in self.request.FILES.getlist('attachment'):
+                        new_message_attachment = MessageAttachment.objects\
+                            .create(
+                                file=handle_uploaded_file(_attachment),
+                                message=new_message,
+                                created_by=self.request.user,
+                                file_name=_attachment.name,
+                                content_type=_attachment.content_type,
+                            )
+
+        except IntegrityError as exc:
+            raise
         else:
-            if not organization.email:
-                email = 'admin@tppcenter.com'
-                subject = _('This message was sent to '
-                    'company with id = %(organization_id)d, '
-                    'subject: %(subject)s') % \
-                    {'organization_id': organization.id,
-                     'subject': subject}
-            else:
-                email = organization.email
-                subject = _('New message: %(subject)s') % {'subject': subject}
-
-            mail = EmailMessage(
-                subject,
-                content,
-                getattr(settings, 'DEFAULT_FROM_EMAIL',
-                        'noreply@tppcenter.com'),
-                [email,]
-            )
-            if attachment:
-                mail.attach(attachment.name, attachment.read(),
-                            attachment.content_type)
-            mail.send()
-
+            new_message.upload_files()
+                
     def get_errors(self):
         """
         Return the errors as one string.
