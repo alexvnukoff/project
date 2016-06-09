@@ -125,7 +125,7 @@ class MessageForm(forms.ModelForm):
                             attachment.content_type)
             mail.send()
 
-    def get_errors(self):
+    def get_errors_msg(self):
         """
         Return the errors as one string.
         """
@@ -136,6 +136,19 @@ class MessageForm(forms.ModelForm):
                     . join(map(lambda x: strip_tags(x), field_messages)))
                 )
         return '; ' . join(errors)
+
+    def get_errors(self):
+        """
+        Return the errors as one string.
+        """
+        errors = {}
+        for field_name, field_messages in self.errors.items():
+            errors[field_name] = ', ' . join(
+                map(lambda x: strip_tags(x), field_messages)
+            )
+        return errors
+
+
 
     def save(self, *args, **kwargs):
         pass

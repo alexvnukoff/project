@@ -78,21 +78,24 @@
                   <div class="content">
                   <div class="row">
                   <div class="col-md-12 col-sm-12">
-                  <form id="new_message_form" action="" method="POST" enctype="multipart/form-data">
+                  <form id="new_message_form" action="{% url 'messages:add_to_chats' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                       <label for="subject">{{ new_message_form.subject.label }}</label>
                       {{ new_message_form.subject }}
+                      <span id="subject_errors" class="error help-inline error-hidden"></span>
                     </div>
                     <div class="form-group">
                       <label for="content required">{{ new_message_form.content.label }}</label>
                       {{ new_message_form.content }}
+                      <span id="content_errors" class="error help-inline error-hidden"></span>
                     </div>
                     <div class="form-group">
                       <label for="attachment">{{ new_message_form.attachment.label }}</label>
                       {{ new_message_form.attachment }}
+                      <span id="attachment_errors" class="error help-inline error-hidden"></span>
                     </div>
-                    <button type="submit" id="save_new_message" class="btn btn-default">{% trans 'Send message' %}</button>
+                    <button id="save_new_message" class="btn btn-default">{% trans 'Send message' %}</button>
                   </form>
                   </div>
                   </div>
@@ -123,4 +126,5 @@
 
 {% block js %}
   <script type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
+  <script src="{% static 'usersites/js/messages.js' %}"></script>
 {% endblock %}

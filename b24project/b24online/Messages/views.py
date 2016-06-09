@@ -249,7 +249,7 @@ def add_to_chat(request):
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
         else:
-            response_text = form.get_errors()
+            response_text = form.get_errors_msg()
         return HttpResponse(
             json.dumps({'code': response_code, 'message': response_text}),
             content_type='application/json'

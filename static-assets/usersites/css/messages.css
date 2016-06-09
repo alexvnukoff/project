@@ -33,3 +33,7 @@ label.required::after {
     color: red;
     font-weight: bold; 
 }
+
+.error-hidden {
+    display: none;
+}
