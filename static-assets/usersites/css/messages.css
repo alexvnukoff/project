@@ -37,3 +37,49 @@ label.required::after {
 .error-hidden {
     display: none;
 }
+
+.has-error label,
+.field-error {
+    color: #a94442;
+}
+
+ul.chats-list li.list-group-item {
+    border: none;
+}
+
+.incoming-chat {
+    background-image: url("../images/incoming.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+}
+
+.outgoing-chat {
+    background-image: url("../images/outgoing.png");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+}
+
+li.current-item { 
+    background-color: #4a4a4a; 
+    font-weight: normal; 
+    border: 0; 
+    line-height: 30px; 
+    #height: 30px; 
+    max-width: 100%; 
+    overflow: hidden;
+}
+li.current-item a { 
+    color: #ffffff;
+}
+li.current-item::after{ 
+    content: ""; 
+    position: absolute; 
+    width: 0; 
+    height:0; 
+    right:0px; 
+    top: 18px;
+    border-style: solid; 
+    border-width: 7px 7px 7px 0; 
+    border-color: 
+    transparent #fafafa transparent transparent;
+}

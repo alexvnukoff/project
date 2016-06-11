@@ -203,7 +203,7 @@ class ChatListView(LoginRequiredMixin, TemplateView):
         self.object_list = self.get_queryset()
         context.update({
             'organization_chats': self.object_list\
-                .filter(is_private=False)[:self.paginate_by],
+                .filter(~Q(is_private=True))[:self.paginate_by],
             'user_chats': self.object_list\
                 .filter(is_private=True)[:self.paginate_by],
         })

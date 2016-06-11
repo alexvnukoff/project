@@ -117,6 +117,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
+    def get_full_name(self):
+        """Return the user's full name"""
+        return self.profile.full_name if self.profile else self.email
+
     @property
     def is_staff(self):
         return self.is_admin
