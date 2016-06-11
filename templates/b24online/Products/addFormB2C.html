@@ -46,32 +46,49 @@
             {% endfor %}
         {% endif %}
     ];
+
+    function additionalUpload() {
+      $('#selectAdditionaImage').click();
+      };
+    
 </script>
 <style>
-        .list-cat li {
-            padding: 5px;
-            border-radius: 5px;
-            background-color: #333;
-            color: #FFF;
-            padding-right: 25px;
-            position: relative;
-            float: left;
-            margin-bottom: 5px;
-            margin-right: 5px;
-        }
+  .list-cat li {
+      padding: 5px;
+      border-radius: 5px;
+      background-color: #333;
+      color: #FFF;
+      padding-right: 25px;
+      position: relative;
+      float: left;
+      margin-bottom: 5px;
+      margin-right: 5px;
+  }
 
-        .list-cat li .i-close {
-            position: absolute;
-            width: 8px;
-            height: 7px;
-            background-position: -195px 0;
-            top: 8px;
-            right: 5px;
-        }
+  .list-cat li .i-close {
+      position: absolute;
+      width: 8px;
+      height: 7px;
+      background-position: -195px 0;
+      top: 8px;
+      right: 5px;
+  }
 </style>
 
 {% include "b24online/main/add_button.html" %}
 <div class="newsform">
+
+
+<form id="upload-file" method="post" enctype="multipart/form-data">
+<fieldset>
+  <label style="display:none;" for="file">Select a file</label>
+  <input  style="display:none;" id="selectAdditionaImage" name="file" type="file">
+</fieldset>
+
+</form>
+
+
+
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
         {% csrf_token %}
         <div class="uploadimgage">
@@ -99,6 +116,10 @@
                     <input name="image" type="file" style="width: 100%"  />
                 </div>
             </div>
+
+            <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();">{% trans 'Additional images' %}</a>
+            <div style="display:none" id="additionalLoading">Loading...</div>
+
             <div>
                 <label class="sapce">{% trans 'Product producer' %}</label>
                 {% if form.errors.producer %}
@@ -206,6 +227,9 @@
                 <textarea rows="7" name="short_description" >{{ form.short_description.value|default_if_none:"" }}</textarea>
             </li>
             <li>
+            <div id="additional-images"></div>
+          </li>
+            <li>
                 <label>{% trans 'Detail text' %}</label>
                 {% if form.errors.description %}
                     <div class="error-handler"> <div class="formserror">{{ form.errors.description.0 }}</div></div>
@@ -217,6 +241,7 @@
                 </div>
             </li>
         </ul>
+
         <div>
             <div class="addpage-title">{% trans 'Coupon' %}</div>
             <ul class="tenderline">
@@ -263,4 +288,59 @@
         </div>
     </form>
 </div>
+
+
+<script>
+$(document).ready(function() {
+
+    var lding = $("#additionalLoading"), mylist = [];
+
+    $('.ai').click(function() {
+      console.log('Click');
+          $(this).hide();
+      });
+
+    $(function() {
+        $('#upload-file').change(function() {
+        lding.show();
+        var form_data = new FormData($(this)[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/upload/',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            async: true,
+            success: function(data) {
+
+            if(data.error) {
+              alert(data.error['message']);
+              lding.hide();
+            } else {
+              mylist.push(data.image['url']);
+              lding.hide();
+              $('<a class="ai" />')
+                .prop('href', '#')
+                .append($('<img />', {
+                  src: data.image['url'],
+                  wifth: '150',
+                  height: '100'
+              })).appendTo("#additional-images");
+            }
+              console.log(mylist);
+        },
+          error: function(data) {
+          lding.hide();
+          }
+
+        });
+        });
+
+    });
+
+
+
+});   
+</script>
 {% endblock %}
