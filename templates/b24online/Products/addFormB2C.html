@@ -73,21 +73,22 @@
       top: 8px;
       right: 5px;
   }
+
+#additional-images a.ai > img {
+      padding:2px;
+  }
+
 </style>
 
 {% include "b24online/main/add_button.html" %}
 <div class="newsform">
 
-
-<form id="upload-file" method="post" enctype="multipart/form-data">
-<fieldset>
-  <label style="display:none;" for="file">Select a file</label>
-  <input  style="display:none;" id="selectAdditionaImage" name="file" type="file">
-</fieldset>
-
-</form>
-
-
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+      <fieldset>
+        <label style="display:none;" for="file">Select a file</label>
+        <input  style="display:none;" id="selectAdditionaImage" name="file" type="file">
+      </fieldset>
+    </form>
 
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
         {% csrf_token %}
@@ -117,9 +118,8 @@
                 </div>
             </div>
 
-            <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();">{% trans 'Additional images' %}</a>
+            <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();" id="additionalButton">{% trans 'Additional images' %}</a>
             <div style="display:none" id="additionalLoading">Loading...</div>
-
             <div>
                 <label class="sapce">{% trans 'Product producer' %}</label>
                 {% if form.errors.producer %}
@@ -295,11 +295,6 @@ $(document).ready(function() {
 
     var lding = $("#additionalLoading"), mylist = [];
 
-    $('.ai').click(function() {
-      console.log('Click');
-          $(this).hide();
-      });
-
     $(function() {
         $('#upload-file').change(function() {
         lding.show();
@@ -313,13 +308,15 @@ $(document).ready(function() {
             processData: false,
             async: true,
             success: function(data) {
-
+            $('#selectAdditionaImage').val("");
             if(data.error) {
               alert(data.error['message']);
               lding.hide();
             } else {
               mylist.push(data.image['url']);
               lding.hide();
+              if(mylist.length == 5) {
+              $('#additionalButton').hide();} 
               $('<a class="ai" />')
                 .prop('href', '#')
                 .append($('<img />', {
@@ -339,7 +336,14 @@ $(document).ready(function() {
 
     });
 
-
+    $('#additional-images').on('click', 'a', function() {
+      $(this).hide();
+      removeValue = mylist.indexOf($(this).find("img").attr("src"));
+      mylist.splice(removeValue, 1);
+      if(mylist.length <= 4) {
+      $('#additionalButton').show();} 
+      console.log(mylist);
+      });
 
 });   
 </script>
