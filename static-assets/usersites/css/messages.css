@@ -59,7 +59,7 @@ ul.chats-list li.list-group-item {
     background-position: 95% 50%;
 }
 
-li.current-item { 
+li.active-item { 
     background-color: #4a4a4a; 
     font-weight: normal; 
     border: 0; 
@@ -68,10 +68,10 @@ li.current-item {
     max-width: 100%; 
     overflow: hidden;
 }
-li.current-item a { 
+li.active-item a { 
     color: #ffffff;
 }
-li.current-item::after{ 
+li.active-item::after{ 
     content: ""; 
     position: absolute; 
     width: 0; 
@@ -82,4 +82,15 @@ li.current-item::after{
     border-width: 7px 7px 7px 0; 
     border-color: 
     transparent #fafafa transparent transparent;
+}
+
+#chats_list li.list-group-item {
+    cursor: pointer;
+}
+
+a.no-decoration,
+a.no-decoration:hover,
+a.no-decoration:active,
+a.no-decoration:visited {
+    text-decoration: none;
 }
