@@ -37,6 +37,7 @@ from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from paypal.standard.ipn.models import PayPalIPN
 from registration.signals import user_registered
 from uuslug import uuslug
 from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
@@ -2028,10 +2029,12 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     The deal No. has been added as some organization can keep records about every
     deal.
     """
-    DRAFT, READY, PAID, ORDERED, REJECTED = \
-        'draft', 'ready', 'paid', 'ordered', 'rejected'
+    DRAFT, READY, PAID, ORDERED, REJECTED, PAID_BY_PAYPAL = \
+        'draft', 'ready', 'paid', 'ordered', 'rejected', 'paypal'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
-                (PAID, _('Paid')), (ORDERED, _('Ordered by Email')),
+                (PAID_BY_PAYPAL, _('Paid by PayPal')), 
+                (PAID, _('Paid')), 
+                (ORDERED, _('Ordered by Email')),
                 (REJECTED, _('Rejected')))
 
     deal_order = models.ForeignKey(DealOrder, related_name='order_deals',
@@ -2049,6 +2052,12 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
                                      null=True, blank=False, editable=False)
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
+    paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
+                                     null=True, blank=True, db_index=True)
+    models.ForeignKey(PayPalIPN, related_name='order_deals',
+                                      verbose_name=_('PayPal Transaction'), 
+                                      null=True, blank=True,
+                                      editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
                                    null=True, blank=True, db_index=True)
     status = models.CharField(_('Deal status'), max_length=10,
