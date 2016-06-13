@@ -1457,6 +1457,10 @@ class MessageChat(AbstractRegisterInfoModel):
         verbose_name = _('Messages chat')
         verbose_name_plural = _('Messages chats')
 
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
 

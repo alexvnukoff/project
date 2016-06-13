@@ -4,14 +4,12 @@
 
 $(function() {
 
-    var process_data_form_id = '#new_message_form',
-        process_data_submit_id = '#save_new_message';
- 
-    $(document).on('click', process_data_submit_id, function(e) {
+    $(document).on('click', '.save-new-message', function(e) {
         e.preventDefault(); 
         $('.field-error').empty().addClass('error-hidden');
         $('.form-group .has-error').removeClass('has-error');
-        $(process_data_form_id).ajaxSubmit({
+        var processed_form = $(this).parents('form:first');
+        $(processed_form).ajaxSubmit({
             url: this.href,
             type: 'post',
             success: function(data) {
@@ -53,7 +51,8 @@ function _cls(cls_str) {
 
 function ChatsUI(chats) {
     this.chatsListID = 'chats_list';
-    this.messagesListIO = 'messages_list';
+    this.chatMessagesID = 'chat_messages';
+    this.messagesListID = 'messages_list';
     this.itemCls = 'list-group-item';
     this.activeItemCls = 'active-item';
     this.currentItem = null;
@@ -89,9 +88,24 @@ ChatsUI.prototype.activateItem = function(item) {
 ChatsUI.prototype.onSelectItem = function(item) {
     var self = this;
     self.activateItem(item);
+    self.drawMessages(self.currentItem);
 }
 
 ChatsUI.prototype.drawMessages = function(currentItem) {
-    
+    var self = this;
+    var messagesList = $(_id(self.messagesListID));
+    if (messagesList.length > 0){
+        var item_a = $(currentItem).children('a:first'),
+            chat_id = item_a.data('chat-id'),
+            url = item_a.data('url');
+
+        if (chat_id && url) {
+            $('#new_message_chat_id').val(chat_id);
+            $.get(url, function(data) {
+                $(messagesList).html(data);
+                messagesList.scrollTop(messagesList[0].scrollHeight);
+            });
+        }
+    }    
 }
 

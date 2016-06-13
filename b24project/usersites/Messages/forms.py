@@ -26,10 +26,14 @@ class MessageForm(forms.ModelForm):
     """
     The new message and chat form class.
     """
+    chat = forms.ModelChoiceField(
+        queryset=MessageChat.objects.all(),
+        required=False
+    )
     recipient = forms.ChoiceField(
         choices=(),
         label=_('Message recipient'),
-        required=True
+        required=False,
     )
     attachment = forms.FileField(
         label=_('Message attachment'),
@@ -47,9 +51,18 @@ class MessageForm(forms.ModelForm):
         super(MessageForm, self).__init__(*args, **kwargs)
         self.fields['recipient'].choices = self.get_organization_staff()
         self.fields['content'].required = True
+        if self.chat:
+            self.fields['recipient'] = False
         for field_name in ('subject', 'content', 'recipient'):
             self.fields[field_name].widget.attrs\
                 .update({'class': 'form-control'})
+
+    def clean(self):
+        chat = self.cleaned_data.get('chat')
+        recipient = self.cleaned_data.get('recipient')
+        if not chat and not recipient:
+            raise forms.ValidationError(_('The recipient or chat must be defined'))
+        return self.cleaned_data
 
     def get_organization_staff(self):
         """Return the list of current organization staff"""
@@ -63,10 +76,13 @@ class MessageForm(forms.ModelForm):
 
     def clean_recipient(self):
         recipient_id = self.cleaned_data.get('recipient')
-        try:
-            self.recipient = User.objects.get(id=recipient_id)
-        except User.DoesNotExist:
-            raise forms.ValidationError(_('There is no such User'))
+        if recipient_id:
+            try:
+                self.recipient = User.objects.get(id=recipient_id)
+            except User.DoesNotExist:
+                raise forms.ValidationError(_('There is no such User'))
+        else:
+            self.recipient = None
         return recipient_id
 
     def send(self):
@@ -74,6 +90,9 @@ class MessageForm(forms.ModelForm):
         cls = type(self)
         subject = self.cleaned_data.get('subject')
         content = self.cleaned_data.get('content')
+        chat = self.cleaned_data.get('chat')
+        if not self.chat and chat:
+            self.chat = chat
         try:
             with transaction.atomic():
                 # Create new message chat if it's necessary

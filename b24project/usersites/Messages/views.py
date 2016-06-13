@@ -6,10 +6,13 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.http import (HttpResponse, HttpResponseBadRequest, Http404,
                          HttpResponseRedirect)
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
+from django.template import RequestContext, loader
+from guardian.mixins import LoginRequiredMixin
 from b24online.models import (MessageChat, Message)
-
+from b24online.cbv import ItemDetail
 from b24online.Messages.views import ChatListView
 
 from usersites.mixins import UserTemplateMixin
@@ -20,11 +23,11 @@ from tpp.DynamicSiteMiddleware import get_current_site
 logger = logging.getLogger(__name__)
 
 
-class UsersitesCharListView(UserTemplateMixin, ChatListView):
+class UsersitesChatsListView(UserTemplateMixin, ChatListView):
     template_name = '{template_path}/Messages/chats.html'
 
     def get_context_data(self, **kwargs):
-        context = super(UsersitesCharListView, self)\
+        context = super(UsersitesChatsListView, self)\
             .get_context_data(**kwargs)
         self.object_list = self.get_queryset()
         context.update({
@@ -58,7 +61,6 @@ def add_to_chat(request):
     if request.method == 'POST':
         form = MessageForm(request, data=request.POST,
                            files=request.FILES)
-        logger.debug(request.POST)
         if form.is_valid():
             try:
                 form.send()
@@ -84,3 +86,25 @@ def add_to_chat(request):
             content_type='application/json'
         )
     return HttpResponseBadRequest()
+
+
+class ChatMessagesView(LoginRequiredMixin, UserTemplateMixin, ItemDetail):
+    model = MessageChat
+    template_name = '{template_path}/Messages/chatMessages.html'
+    messages_per_page = 5
+
+    def get_context_data(self, **kwargs):
+        context = super(ChatMessagesView, self)\
+            .get_context_data(**kwargs)
+        messages = self.object.chat_messages.all()
+        messages_cnt = messages.count()
+        if messages_cnt > self.messages_per_page:
+            messages = messages.order_by('created_at')\
+                [messages_cnt - self.messages_per_page:]
+        else:
+            messages = messages.order_by('created_at')
+        context = {
+            'chat': self.object,
+            'messages': messages,
+        }
+        return context

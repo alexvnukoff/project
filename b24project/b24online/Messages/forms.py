@@ -18,7 +18,6 @@ from b24online.utils import handle_uploaded_file
 from django.core.mail import EmailMessage
 from b24online import InvalidParametersError
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -85,7 +84,6 @@ class MessageForm(forms.ModelForm):
 
                     if self.request.FILES \
                         and 'attachment' in self.request.FILES:
-
                         for _attachment in self.request.FILES.getlist('attachment'):
                             new_message_attachment = MessageAttachment.objects\
                                 .create(
@@ -95,7 +93,6 @@ class MessageForm(forms.ModelForm):
                                     file_name=_attachment.name,
                                     content_type=_attachment.content_type,
                                 )
-
             except IntegrityError as exc:
                 raise
             else:

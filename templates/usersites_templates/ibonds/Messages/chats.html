@@ -42,19 +42,22 @@
                               src="{% static 'b24online/img/profile.jpg' %}" />
                           {% endif %}
                         </span>
-                        <a class="no-decoration" data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                        <a class="no-decoration" 
+                          data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                          data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
                       </li>
                     {% empty %}
                       <h4 class="list-group-item" style="border: none;">{% trans 'There are no records yet' %}</h4>
                     {% endfor %}
                   </ul>
                 </div>
+                
                 {% if new_message_form %}
                 <div role="tabpanel" class="tab-pane fade" id="addnew">
                   <div class="content">
                   <div class="row">
                   <div class="col-md-12 col-sm-12">
-                  <form id="new_message_form" action="{% url 'messages:add_to_chats' %}" method="POST" enctype="multipart/form-data">
+                  <form id="new_message_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                       <label for="recipient" class="required">{{ new_message_form.recipient.label }}</label>
@@ -76,7 +79,7 @@
                       {{ new_message_form.attachment }}
                       <span id="id_attachment_errors" class="field-error help-inline error-hidden"></span>
                     </div>
-                    <button id="save_new_message" class="btn btn-default">{% trans 'Send message' %}</button>
+                    <button class="save-new-message btn btn-default">{% trans 'Send message' %}</button>
                   </form>
                   </div>
                   </div>
@@ -94,9 +97,39 @@
               <h4>{% trans 'Chat content' %}</h4>
             </div>
           </div>
+
           <div class="row">
-            <div class="col-md-12 col-sm-12 chats-list">
-            
+            <div id="chat_messages" class="col-md-12 col-sm-12 col-md-offset-1 col-sm-offset-1">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="container-fluid">
+                    <div class="row">
+                      <div class="chat-title" id="chat_title"></div>
+                    </div>
+                    <div class="row">                  
+                      <div class="col-md-12 col-sm-12" id="messages_list"></div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="add_to_chat" class="col-md-12 col-sm-12 col-md-offset-1 col-sm-offset-1" 
+              style="margin-top: 15px;">
+              <form id="add_to_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="new_message_chat_id" name="chat" value="" />
+                <div class="form-group">
+                  <label for="content" class="required">{% trans 'New message' %}</label>
+                  <textarea class="form-control" cols="30" id="id_content" name="content" rows="3"></textarea>
+                  <span id="id_content_errors" class="field-error help-inline error-hidden"></span>
+                </div>
+                <button class="save-new-message btn btn-default">{% trans 'Send message' %}</button>
+              </form>
             </div>
           </div>
         </div>
