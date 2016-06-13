@@ -689,7 +689,7 @@ class VideoIndex(DocType):
         return cls.get_model().objects.all().prefetch_related(
                 'organization',
                 'organization__countries',
-                'countries'
+                'country'
                 )
 
     @classmethod
