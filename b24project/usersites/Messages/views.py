@@ -79,7 +79,6 @@ def add_to_chat(request):
                     'msg': _('You have successfully updated chat'),
                 })
         else:
-            logger.debug(form.errors)
             data.update({
                 'code': 'error',
                 'errors': form.get_errors(),
