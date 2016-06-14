@@ -282,6 +282,10 @@
                         {% endwith %}
                     {% endfor %}
         </div>
+
+        <div id="imgs_fields">
+        </div>
+
         <div class="newform-button">
             <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
             <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
@@ -289,11 +293,14 @@
     </form>
 </div>
 
+    {% for i in object.additional_images %}
+    <p>{{ i }}</p>
+    {% endfor %}
 
 <script>
 $(document).ready(function() {
 
-    var lding = $("#additionalLoading"), mylist = [];
+    var lding = $("#additionalLoading"), mylist_count = 0;
 
     $(function() {
         $('#upload-file').change(function() {
@@ -313,9 +320,10 @@ $(document).ready(function() {
               alert(data.error['message']);
               lding.hide();
             } else {
-              mylist.push(data.image['url']);
               lding.hide();
-              if(mylist.length == 5) {
+              mylist_count++;
+              $('#imgs_fields').append('<input id="myLC_' + mylist_count + '" type="text" name="additional_images" value="' + data.image['url'] + '" />');
+              if(mylist_count == 5) {
               $('#additionalButton').hide();} 
               $('<a class="ai" />')
                 .prop('href', '#')
@@ -325,7 +333,7 @@ $(document).ready(function() {
                   height: '100'
               })).appendTo("#additional-images");
             }
-              console.log(mylist);
+              console.log(mylist_count);
         },
           error: function(data) {
           lding.hide();
@@ -338,11 +346,11 @@ $(document).ready(function() {
 
     $('#additional-images').on('click', 'a', function() {
       $(this).hide();
-      removeValue = mylist.indexOf($(this).find("img").attr("src"));
-      mylist.splice(removeValue, 1);
-      if(mylist.length <= 4) {
+      currentValue = $('#myLC_' + mylist_count).remove();
+      mylist_count--;
+      console.log(mylist_count);
+      if(mylist_count <= 4) {
       $('#additionalButton').show();} 
-      console.log(mylist);
       });
 
 });   
