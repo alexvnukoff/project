@@ -24,8 +24,9 @@ logger = logging.getLogger(__name__)
 
 
 class UsersitesChatsListView(UserTemplateMixin, ChatListView):
+    """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
-
+    
     def get_context_data(self, **kwargs):
         context = super(UsersitesChatsListView, self)\
             .get_context_data(**kwargs)
@@ -33,13 +34,16 @@ class UsersitesChatsListView(UserTemplateMixin, ChatListView):
         context.update({
             'chats': self.object_list[:self.paginate_by],
         })
-        new_message_form = MessageForm(
-            self.request,
-            data=self.request.POST,
-            files=self.request.FILES) \
-        if self.request.method == 'POST' else MessageForm(self.request)
-
-        context.update({'new_message_form': new_message_form})
+        only_refresh = self.kwargs.get('refresh')
+        if not only_refresh:
+            new_message_form = MessageForm(
+                self.request,
+                data=self.request.POST,
+                files=self.request.FILES) \
+            if self.request.method == 'POST' else MessageForm(self.request)
+            context.update({'new_message_form': new_message_form})
+        else:
+            self.template_name = '{template_path}/Messages/chatsRefresh.html'
         return context
 
     def get_queryset(self):
@@ -88,13 +92,15 @@ def add_to_chat(request):
     return HttpResponseBadRequest()
 
 
-class ChatMessagesView(LoginRequiredMixin, UserTemplateMixin, ItemDetail):
+class UsersitesChatMessagesView(LoginRequiredMixin, UserTemplateMixin, 
+                                ItemDetail):
+    """The chat's messages view"""
     model = MessageChat
     template_name = '{template_path}/Messages/chatMessages.html'
     messages_per_page = 5
 
     def get_context_data(self, **kwargs):
-        context = super(ChatMessagesView, self)\
+        context = super(UsersitesChatMessagesView, self)\
             .get_context_data(**kwargs)
         messages = self.object.chat_messages.all()
         messages_cnt = messages.count()

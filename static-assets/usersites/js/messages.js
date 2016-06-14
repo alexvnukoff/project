@@ -4,11 +4,19 @@
 
 $(function() {
 
+	// Список чатов и его обработка
+	var chats = $('#chats');
+	var chatsUI = null;
+	if (chats.length) {
+    	var chatsUI = new ChatsUI(chats);
+    	chatsUI.init();
+    }
+
     $(document).on('click', '.save-new-message', function(e) {
         e.preventDefault(); 
-        $('.field-error').empty().addClass('error-hidden');
-        $('.form-group .has-error').removeClass('has-error');
         var processed_form = $(this).parents('form:first');
+        $(processed_form).find('.field-error').empty().addClass('error-hidden');
+        $(processed_form).find('.form-group .has-error').removeClass('has-error');
         $(processed_form).ajaxSubmit({
             url: this.href,
             type: 'post',
@@ -26,19 +34,17 @@ $(function() {
                         $(fieldParentDiv).addClass('has-error');
                     });
                 } else if (data.code == 'success') {
-                    $('#chat_tabs a[href="#chats"]').tab('show');  
+                    $(processed_form).clearForm();
+                    if (chatsUI) {
+                        chatsUI.drawChats();
+                    }
+                    $('#chat_tabs a[href="#chats_list_tab"]').tab('show');  
                 }
             }
         });
         return false;
 	});
 	
-	// Список чатов и его обработка
-	var chats = $('#chats');
-	if (chats.length) {
-    	var chatsUI = new ChatsUI(chats);
-    	chatsUI.init();
-    }
 });
 
 function _id(id_str) {
@@ -74,7 +80,6 @@ ChatsUI.prototype.init = function() {
     });
 }
 
-
 ChatsUI.prototype.activateItem = function(item) {
     var self = this;
     var prevItem = $(self.chatsList).find(_cls(self.activeItemCls));
@@ -89,6 +94,17 @@ ChatsUI.prototype.onSelectItem = function(item) {
     var self = this;
     self.activateItem(item);
     self.drawMessages(self.currentItem);
+}
+
+ChatsUI.prototype.drawChats = function() {
+    var self = this;    
+    self.chatsList = $(_id(self.chatsListID));
+    var url = '/messages/chats/refresh/';
+    $.get(url, function(data) {
+        $(self.chatsList).html(data);
+        self.currentItem = null;
+        self.init();
+    });
 }
 
 ChatsUI.prototype.drawMessages = function(currentItem) {

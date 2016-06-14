@@ -115,6 +115,8 @@ class MessageForm(forms.ModelForm):
                     content=content,
                 )
                 new_message_chat.participants.add(self.request.user)
+                if self.recipient:
+                    new_message_chat.participants.add(self.recipient)
 
                 if self.request.FILES \
                     and 'attachment' in self.request.FILES:
