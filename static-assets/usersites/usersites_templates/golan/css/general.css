@@ -893,6 +893,7 @@ footer .btn-default{
 /*---------- Item Styling ----------*/
 .item-page, .item-price-table{
 	position: relative;
+	margin-bottom: 20px;
 }
 
 .item-price-table img {
