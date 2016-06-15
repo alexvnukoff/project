@@ -29,7 +29,7 @@
           {{ message.content }}
         </div>
         {% if message.attachments %}
-        <div class="clumnright" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
+        <div class="clumnright clearfix" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
           {% for attachment in message.attachments.all %}
             <div class="message-attachments">
               <a href="{{ MEDIA_URL}}{{ attachment.file }}">

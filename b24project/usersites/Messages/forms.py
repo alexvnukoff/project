@@ -37,7 +37,7 @@ class MessageForm(forms.ModelForm):
     )
     attachment = forms.FileField(
         label=_('Message attachment'),
-        required=False
+        required=False,
     )
 
     class Meta:
@@ -51,6 +51,8 @@ class MessageForm(forms.ModelForm):
         super(MessageForm, self).__init__(*args, **kwargs)
         self.fields['recipient'].choices = self.get_organization_staff()
         self.fields['content'].required = True
+        self.fields['attachment'].widget.attrs\
+            .update({'class': 'file-attachment'})
         if self.chat:
             self.fields['recipient'] = False
         for field_name in ('subject', 'content', 'recipient'):

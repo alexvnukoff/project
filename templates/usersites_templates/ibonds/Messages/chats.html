@@ -150,4 +150,17 @@
 {% block js %}
   <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
   <script type="text/javascript" src="{% static 'usersites/js/messages.js' %}"></script>
+  <script type="text/javascript">
+    $(function(){
+      function addOneMoreInput() {
+        $('.file-attachment').last().change(function() {
+          $(this).after('<input name="attachment" class="file-attachment" type="file" />');
+          $(this).off('change');  
+          addOneMoreInput();
+        });
+      }
+      addOneMoreInput();
+    });
+  </script>
+
 {% endblock %}

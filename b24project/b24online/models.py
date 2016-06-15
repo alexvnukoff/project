@@ -1518,7 +1518,6 @@ class Message(models.Model):
 
     def upload_files(self):
         from core import tasks
-
         images = []
         files = []
         for attachment in self.attachments.all():
