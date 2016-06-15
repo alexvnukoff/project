@@ -60,5 +60,4 @@ window.onload=function(){
 		winHight = window.innerHeight;
 		document.getElementById("mainContainer").setAttribute('style',"height:"+winHeight+";");
 	}
-	window.alert(window.innerHeight);
 };
