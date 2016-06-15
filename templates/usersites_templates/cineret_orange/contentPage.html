@@ -32,22 +32,69 @@
             {# 4 banners, will lead to categories or products #}
             {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
             {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
-                <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
+                {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
 
-                    <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 3" %}
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-                        {% site_banner "top" "SITES RIGHT 4" %}
+            {% if right_banner_1 %}
+                    <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
+
+
+                        {% if right_banner_4 %}
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                            {% site_banner "top" "SITES RIGHT 2" %}
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 3" %}
+                            </div>
+
+                            <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 4" %}
+                            </div>
+
+                        {% elif right_banner_3 %}
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                            {% site_banner "top" "SITES RIGHT 2" %}
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 3" %}
+                            </div>
+
+                        {% elif right_banner_2 %}
+
+                            <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                            {% site_banner "top" "SITES RIGHT 2" %}
+                            </div>
+
+                         {% elif right_banner_1 %}
+
+                            <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">
+                                {% site_banner "top" "SITES RIGHT 1" %}
+                            </div>
+
+                        {% endif %}
+
+
                     </div>
 
-                </div>
+                {% endif %}
 
 
         </div><!-- /end of Coupons and news modouls -->
