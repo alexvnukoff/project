@@ -137,6 +137,11 @@
                   <textarea class="form-control" cols="30" id="id_content" name="content" rows="3"></textarea>
                   <span id="id_content_errors" class="field-error help-inline error-hidden"></span>
                 </div>
+                <div class="form-group">
+                  <label for="content" class="required">{% trans 'Message attachment' %}</label>
+                  <input id="id_attachment" class="file-attachment" type="file" name="attachment"> 
+                </div>
+                
                 <button class="save-new-message btn btn-default">{% trans 'Send message' %}</button>
               </form>
             </div>
