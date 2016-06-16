@@ -4,7 +4,7 @@
 {% load CustomFilters %}
 {% block content %}
 
-
+{{ block.super }}
 
     <!-- Page Content -->
     <div class="container">
@@ -57,7 +57,7 @@
         <!-- Contact Form -->
         <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
             <div class="col-md-8 contact-fields">
-                <form name="sentMessage" id="contactForm" novalidate>
+                <form method="post" action="" name="sentMessage" id="contactForm" novalidate>
                     <div class="control-group form-group">
                         <div class="controls">
                             <label>{% trans 'Your name' %}:</label>
