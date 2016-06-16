@@ -678,6 +678,11 @@ h3 a:focus{
     .product .product__caption .product__desc{
         height: 100px;
     }
+
+    .product .thumbnail img{
+        max-width: 100%;
+        height: 215px;
+    }
 }
 
 
