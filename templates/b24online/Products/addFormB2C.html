@@ -293,14 +293,32 @@
     </form>
 </div>
 
-    {% for i in object.additional_images %}
-    <p>{{ i }}</p>
-    {% endfor %}
 
 <script>
 $(document).ready(function() {
 
     var lding = $("#additionalLoading"), mylist_count = 0;
+
+    {% if object.additional_images %}
+
+    $(function() {
+      {% for i in object.additional_images %}
+              mylist_count++;
+              $('#imgs_fields').append('<input id="myLC_' + mylist_count + '" type="text" name="additional_images" value="{{ i }}" />');
+              if(mylist_count == 5) {
+              $('#additionalButton').hide();} 
+              $('<a class="ai" />')
+                .prop('href', '#')
+                .append($('<img />', {
+                  src: '{{ i }}',
+                  wifth: '150',
+                  height: '100'
+              })).appendTo("#additional-images");
+
+      {% endfor %}
+    });
+    {% endif %}
+
 
     $(function() {
         $('#upload-file').change(function() {
@@ -333,7 +351,6 @@ $(document).ready(function() {
                   height: '100'
               })).appendTo("#additional-images");
             }
-              console.log(mylist_count);
         },
           error: function(data) {
           lding.hide();
@@ -344,14 +361,13 @@ $(document).ready(function() {
 
     });
 
-    $('#additional-images').on('click', 'a', function() {
-      $(this).hide();
-      currentValue = $('#myLC_' + mylist_count).remove();
-      mylist_count--;
-      console.log(mylist_count);
-      if(mylist_count <= 4) {
-      $('#additionalButton').show();} 
-      });
+      $('#additional-images').on('click', 'a', function() {
+        $(this).hide();
+        currentValue = $('#myLC_' + mylist_count).remove();
+        mylist_count--;
+        if(mylist_count <= 4) {
+        $('#additionalButton').show();} 
+        });
 
 });   
 </script>
