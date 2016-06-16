@@ -20,14 +20,41 @@
 {#                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />#}
 {#                {% endif %}#}
           </a>
-            <!-- Social links  -->
+
+            <ul class="nav navbar-nav  top-search-nav  top-search-nav-xs visible-xs">
+
+                <!-- A language list - loading the available ones. -->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
+
+                    {% get_available_languages as LANGUAGES %}
+
+                    <div id="lang-dropdown" role="menu" class="dropdown-menu">
+                        {% for code, lang in LANGUAGES %}
+                          {% if not code == LANGUAGE_CODE %}
+                              <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                          {% endif %}
+                      {% endfor %}
+                    </div>
+                </li>
+
+                <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
+                <li class="hidden-xs">
+                    <div class="tmp_search  top_search clearfix">
+                        <form action="{% url 'b2c_products:search' %}">
+                            <input type="text" placeholder="Search" name="s">
+                        </form>
+                    </div>
+                </li>
+
+            </ul>
 
            </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <div>
-            <ul class="nav navbar-nav navbar-right top-search-nav">
+            <ul class="nav navbar-nav navbar-right top-search-nav hidden-xs">
 
                 <!-- A language list - loading the available ones. -->
                 <li class="dropdown">
