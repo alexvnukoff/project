@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Q, Case, When, CharField, Max, Count
+from django.views.generic import (TemplateView, ListView)
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
@@ -18,6 +19,9 @@ from django.http import (HttpResponse, HttpResponseBadRequest, Http404,
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
+
+from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import LoginRequiredMixin
 
 from b24online import InvalidParametersError
 from b24online.models import (Message, MessageChat, MessageAttachment)
@@ -183,26 +187,36 @@ def add_message(request, content=None, recipient_id=None):
     return HttpResponse('')
 
 
-@login_required
-def view_chats(request):
+class ChatListView(LoginRequiredMixin, TemplateView):
+    """
+    View class for chats panel.
+    """
+    model = MessageChat
+    template_name = 'b24online/Messages/chats.html'
+    paginate_by = 20
     
-    user = request.user
-    current_organization = get_current_organization(request)
-    per_page = 20
-    chats = MessageChat.objects\
-        .filter(Q(organization=current_organization) | \
-                Q(participants__id__exact=user.id),
-                status=MessageChat.OPENED)\
-        .distinct()\
-        .order_by('-updated_at')
-
-    context = {
-        'organization_chats': chats.filter(is_private=False)[:per_page],
-        'user_chats': chats.filter(is_private=True)[:per_page],
-    }
-    logger.debug(context)
-    return render_to_response("b24online/Messages/chats.html",
-        context, context_instance=RequestContext(request))
+    def __init__(self, *args, **kwargs):
+        super(ChatListView).__init__(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(ChatListView, self).get_context_data(**kwargs)
+        self.object_list = self.get_queryset()
+        context.update({
+            'organization_chats': self.object_list\
+                .filter(~Q(is_private=True))[:self.paginate_by],
+            'user_chats': self.object_list\
+                .filter(is_private=True)[:self.paginate_by],
+        })
+        return context
+        
+    def get_queryset(self):
+        self.organization = get_current_organization(self.request)
+        return self.model.objects\
+            .filter(Q(organization=self.organization) | \
+                    Q(participants__id__exact=self.request.user.id),
+                    status=MessageChat.OPENED)\
+            .distinct()\
+            .order_by('-updated_at')
 
 
 @login_required
@@ -235,7 +249,7 @@ def add_to_chat(request):
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
         else:
-            response_text = form.get_errors()
+            response_text = form.get_errors_msg()
         return HttpResponse(
             json.dumps({'code': response_code, 'message': response_text}),
             content_type='application/json'

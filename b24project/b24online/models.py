@@ -118,6 +118,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
+    def get_full_name(self):
+        """Return the user's full name"""
+        return self.profile.full_name if self.profile else self.email
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -1453,6 +1457,10 @@ class MessageChat(AbstractRegisterInfoModel):
         verbose_name = _('Messages chat')
         verbose_name_plural = _('Messages chats')
 
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
 
@@ -1510,7 +1518,6 @@ class Message(models.Model):
 
     def upload_files(self):
         from core import tasks
-
         images = []
         files = []
         for attachment in self.attachments.all():

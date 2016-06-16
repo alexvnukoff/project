@@ -6,6 +6,7 @@ from paypal.standard.ipn.views import ipn
 import usersites.Api.urls
 import usersites.B2BProducts.urls
 import usersites.B2CProducts.urls
+import usersites.Messages.urls
 import usersites.News.urls
 import usersites.OrganizationPages.urls
 import usersites.Proposals.urls
@@ -33,6 +34,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="usersites/denied.html"),
         name='denied'),
     url(r'^video/', include(usersites.Video.urls, namespace='video')),
+    url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
 ]
 
 if settings.DEBUG:
