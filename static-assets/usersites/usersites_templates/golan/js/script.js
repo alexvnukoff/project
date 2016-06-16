@@ -52,3 +52,12 @@ $(document).ready( function() {
 	}).resize();
 
 });
+
+//trying to fix the height 100% on IE
+window.onload=function(){
+	// to detect if the browser used by the client is IE
+	if(navigator.appName == "Microsoft Internet Explorer"){
+		winHight = window.innerHeight;
+		document.getElementById("mainContainer").setAttribute('style',"height:"+winHeight+";");
+	}
+};

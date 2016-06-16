@@ -108,7 +108,7 @@ h3 a:focus,
     border: 1px solid #ddd;
 }
 
-.product__discount{
+.pin p .product__discount{
     background-color: #BF0000;
     color: #fff;
 }
