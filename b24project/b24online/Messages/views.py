@@ -28,6 +28,8 @@ from b24online.models import (Message, MessageChat, MessageAttachment)
 from b24online.utils import deep_merge_dict, get_current_organization
 from b24online.Messages.forms import (MessageForm, MessageSendForm, 
                                       AddParticipantForm, UpdateChatForm)
+from b24online.cbv import ItemsList
+
 
 logger = logging.getLogger(__name__)
 
@@ -187,13 +189,25 @@ def add_message(request, content=None, recipient_id=None):
     return HttpResponse('')
 
 
-class ChatListView(LoginRequiredMixin, TemplateView):
+class ChatListView(LoginRequiredMixin, ItemsList):
     """
     View class for chats panel.
     """
     model = MessageChat
     template_name = 'b24online/Messages/chats.html'
-    paginate_by = 20
+    paginate_by = 10
+    url_paginator = "messages:chats_paginator"
+    url_my_paginator = "messages:chats_paginator"
+
+    # Lists of required scripts and styles for ajax request
+    scripts = []
+    styles = []
+
+    paginate_by = 12
+
+    current_section = _("Products B2B")
+    addUrl = 'products:add'
+    
     
     def __init__(self, *args, **kwargs):
         super(ChatListView).__init__(*args, **kwargs)

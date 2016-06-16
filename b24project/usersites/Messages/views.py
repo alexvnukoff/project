@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 class UsersitesChatsListView(UserTemplateMixin, ChatListView):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
+    paginate_by = 5
     
     def get_context_data(self, **kwargs):
         context = super(UsersitesChatsListView, self)\
