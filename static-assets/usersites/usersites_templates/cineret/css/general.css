@@ -284,6 +284,12 @@ h3 a:focus{
     margin-top: 10px;
 }
 
+.header-top{
+    display: block;
+    float: right;
+    margin-top: 10px;
+    color: #fff;
+}
 
 
 /* ----------- Proposal Styling -------------------- */
