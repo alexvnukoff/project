@@ -14,6 +14,8 @@ from usersites.Messages.views import (
 
 urlpatterns = [
     url(r'^$', UsersitesChatsListView.as_view(), name='main'),
+    url(r'^chats/$', UsersitesChatsListView.as_view(), 
+        name="chats_list"),
     url(r'^chats/page(?P<page>[0-9]+)?/$', UsersitesChatsListView.as_view(), 
         name="chats_paginator"),
     url(r'^chats/add/$', add_to_chat, name='add_to_chat'),

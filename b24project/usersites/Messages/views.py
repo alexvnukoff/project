@@ -27,7 +27,7 @@ class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
                              ItemsList):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
-    paginate_by = 4
+    paginate_by = 10
     model = MessageChat
     url_paginator = "messages:chats_paginator"
     scripts = []
