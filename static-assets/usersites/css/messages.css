@@ -179,3 +179,7 @@ a.no-decoration:visited {
     overflow: scroll;
     font-size: 90%;
 }
+
+.smallpad {
+    padding: 0 5px;
+}

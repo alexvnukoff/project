@@ -197,20 +197,24 @@ class ChatListView(LoginRequiredMixin, ItemsList):
     template_name = 'b24online/Messages/chats.html'
     paginate_by = 10
     url_paginator = "messages:chats_paginator"
-    url_my_paginator = "messages:chats_paginator"
 
     # Lists of required scripts and styles for ajax request
     scripts = []
     styles = []
 
-    paginate_by = 12
+    paginate_by = 10
 
     current_section = _("Products B2B")
-    addUrl = 'products:add'
-    
+    # addUrl = 'products:add'
     
     def __init__(self, *args, **kwargs):
         super(ChatListView).__init__(*args, **kwargs)
+    
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Messages/chatsContentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Messages/chats.html'
     
     def get_context_data(self, **kwargs):
         context = super(ChatListView, self).get_context_data(**kwargs)

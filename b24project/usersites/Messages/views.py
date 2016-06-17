@@ -12,7 +12,7 @@ from django.utils.html import strip_tags
 from django.template import RequestContext, loader
 from guardian.mixins import LoginRequiredMixin
 from b24online.models import (MessageChat, Message)
-from b24online.cbv import ItemDetail
+from b24online.cbv import (ItemDetail, ItemsList)
 from b24online.Messages.views import ChatListView
 
 from usersites.mixins import UserTemplateMixin
@@ -23,18 +23,20 @@ from tpp.DynamicSiteMiddleware import get_current_site
 logger = logging.getLogger(__name__)
 
 
-class UsersitesChatsListView(UserTemplateMixin, ChatListView):
+class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin, 
+                             ItemsList):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
-    paginate_by = 5
+    paginate_by = 4
+    model = MessageChat
+    url_paginator = "messages:chats_paginator"
+    scripts = []
+    styles = []
     
     def get_context_data(self, **kwargs):
         context = super(UsersitesChatsListView, self)\
             .get_context_data(**kwargs)
         self.object_list = self.get_queryset()
-        context.update({
-            'chats': self.object_list[:self.paginate_by],
-        })
         only_refresh = self.kwargs.get('refresh')
         if not only_refresh:
             new_message_form = MessageForm(

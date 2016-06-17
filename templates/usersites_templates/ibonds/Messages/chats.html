@@ -39,26 +39,47 @@
               
               <div class="tab-content">
                 <div id="chats_list_tab" role="tabpanel" class="tab-pane fade in active">
-                  <ul id="chats_list" class="list-group chats-list">
-                    {% for chat in chats %}
-                      {% get_chat_other_side chat as other_side %}
-                      <li class="list-group-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
-                        <span class="thumb">
-                          {% if other_side.profile.avatar %}
-                            <img src="{{ other_side.profile.avatar.th }}" />
-                          {% else %}
-                            <img style="width: 24px;height: 24px;" 
-                              src="{% static 'b24online/img/profile.jpg' %}" />
-                          {% endif %}
-                        </span>
-                        <a class="no-decoration" 
-                          data-url="{% url 'messages:chat_messages' chat.pk  %}" 
-                          data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
-                      </li>
-                    {% empty %}
-                      <h4 class="list-group-item" style="border: none;">{% trans 'There are no records yet' %}</h4>
-                    {% endfor %}
-                  </ul>
+                  <div class="container-fluid">
+                    {% if page_obj.has_previous %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad text-center">
+                        <a href="{% url 'messages:chats_paginator' page=page_obj.previous_page_number %}"><img src="{% static 'usersites/images/up.png' %}"></a>
+                      </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad">
+                        <ul id="chats_list" class="list-group chats-list">
+                          {% for chat in page_obj.object_list %}
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="list-group-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
+                              <span class="thumb">
+                                {% if other_side.profile.avatar %}
+                                  <img src="{{ other_side.profile.avatar.th }}" />
+                                {% else %}
+                                  <img style="width: 24px;height: 24px;" 
+                                    src="{% static 'b24online/img/profile.jpg' %}" />
+                                {% endif %}
+                              </span>
+                              <a class="no-decoration" 
+                                data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                                data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
+                          {% empty %}
+                            <h4 class="list-group-item" style="border: none;">{% trans 'There are no records yet' %}</h4>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                    {% if page_obj.has_next %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad text-center">
+                        <a href="{% url 'messages:chats_paginator' page=page_obj.next_page_number %}"><img src="{% static 'usersites/images/down.png' %}"></a>
+                      </div>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
                 </div>
                 
                 {% if new_message_form %}
