@@ -1514,7 +1514,11 @@ class Message(models.Model):
             func.publish_realtime('private_massage', recipient=recipient_id, fromUser=sender.pk)
 
     def __str__(self):
-        return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
+        return 'From "%s" to chat "%s" at %s' % (
+            self.sender, 
+            self.chat.subject, 
+            self.created_at.strftime('%d/%m/%Y %H:%I:%S')
+        )
 
     def upload_files(self):
         from core import tasks
