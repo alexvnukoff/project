@@ -22,7 +22,6 @@ class CustomImageFieldFile(ImageFieldFile):
         if self.field.valid_sizes is not None and item in self.field.valid_sizes:
             self._require_file()
             return self.storage.url_by_size(self.name, item)
-
         return super().__getattr__(item)
 
 
