@@ -25,8 +25,10 @@ class JSONResponseMixin(object):
         return context
 
 class HybridListView(JSONResponseMixin, MultipleObjectTemplateResponseMixin, BaseListView):
+    without_json = False
+    
     def render_to_response(self, context, **response_kwargs):
-        if self.request.is_ajax():
+        if not self.without_json and self.request.is_ajax():
             return self.render_to_json_response(context)
         else:
             return super(HybridListView, self).render_to_response(context)

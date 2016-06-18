@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{% for chat in chats %}
+{% for chat in page_obj.object_list %}
   {% get_chat_other_side chat as other_side %}
   <li class="list-group-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
     <span class="thumb">
