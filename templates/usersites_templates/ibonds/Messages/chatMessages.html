@@ -11,7 +11,11 @@
     <div class="row" style="margin: 15px 0; border-bottom: 2px dotted #aaaaaa;">
       <div class="col-md-2 col-sm-2 text-center">
         <div class="circle-avatar">
-          <img class="chat-participant" src="{{ message.sender.profile.avatar.big }}" width="80"/>
+          {% if message.sender.profile and message.sender.profile.avatar %}
+            <img class="chat-participant" src="{{ message.sender.profile.avatar.big }}" width="80"/>
+          {% else %}
+            <img class="chat-participant" src="{% static 'usersites/images/profile.png' %}" width="80"/>
+          {% endif %}
         </div>
         <div class="text-center">
           {% if message.sender.profile.full_name %}
