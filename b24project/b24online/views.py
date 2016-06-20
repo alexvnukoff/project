@@ -144,9 +144,9 @@ def my_companies(request):
         if current_company is not None:
             organizations = organizations.exclude(pk=current_company)
 
-            if page == 1:
-                user_name = request.user.profile.full_name or request.user.email
-                result['content'] = [{'title': user_name, 'id': 0}]
+            #if page == 1:
+            #    user_name = request.user.profile.full_name or request.user.email
+            #    result['content'] = [{'title': user_name, 'id': 0}]
 
         paginator = Paginator(organizations, paginate_by)
         result['total'] = paginator.count
