@@ -2,8 +2,10 @@
 {% load i18n %}
    	<div class="cabinet-form">
         <div class="current-company">
-            {% trans "Current organization" %}:
             {% comment %}
+            {% trans "Current organization" %}:
+            {% endcomment %}
+
             {% if current %}
                 {% with current.NAME|first as name %}
                     <a href="#" class="cpn-current">{{ name }}</a>
@@ -11,7 +13,6 @@
             {% else %}
                 <a href="#" class="cpn-current">{{ user }}</a>
             {% endif %}
-            {% endcomment %}
             <style>
                 .current-company-select {
                     margin-top: 5px;

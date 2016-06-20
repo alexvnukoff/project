@@ -125,10 +125,10 @@ def get_my_companies_list(context):
         else:
             return {'current_company': item.name}
 
-    if request.user.profile.full_name:
-        return {'current_company': request.user.profile.full_name}
+    #if request.user.profile.full_name:
+    #    return {'current_company': request.user.profile.full_name}
 
-    return {'current_company': request.user.email}
+    return {'current_company': _('Choose a company:')}
 
 
 @register.inclusion_tag('b24online/main/statistic.html')
