@@ -312,13 +312,14 @@ LANGUAGES = (
     ('he', gettext('Hebrew')),
     ('ar', gettext('Arabic')),
     ('zh', gettext('Chinese')),
+    ('es', gettext('Spanish')),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk')
+    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk', 'es')
 }
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'

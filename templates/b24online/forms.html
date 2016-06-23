@@ -61,7 +61,8 @@
                 $(selector).tinymce({
                         mode:"textareas",
                         selector: selector,
-                        plugins : "paste link lists print table preview media -uploadimage",
+                        plugins : "textcolor paste link lists print table preview media -uploadimage",
+                        toolbar1: 'insertfile undo redo | styleselect | uploadimage bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image',
                         paste_as_text: true,
                         media_live_embeds: true,
                         link_assume_external_targets: true,

@@ -45,6 +45,8 @@
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
+<div id="body-content" class="page-row page-row-expanded">
+
     {# Include the header file, the header will put the main menu on top of every page #}
     {% include 'usersites_templates/cineret/header.html' %}
 
@@ -58,10 +60,14 @@
         </div>
     </section>
 
+</div>
+
+<div id="footer-block" class="page-row">
     {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
     {% block footer %}
         {% include 'usersites_templates/cineret/footer.html' %}
     {% endblock %}
+</div>
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
