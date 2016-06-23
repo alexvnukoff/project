@@ -51,34 +51,106 @@
 
         });
 
-
-            $('#feedbackform').dialog({
-            autoOpen: false,
-            modal: true,
-            width: 650,
-            height: 400,
-            draggable: false,
-            resizable: false,
-            dialogClass: 'no-close success-dialog',
-            buttons: {
-              'Submit': function() {
-              },
-              'Cancel': function() {
-                $(this).dialog('close');
-              }
-            }
-            });
-
-          $('#feebackform-btn').click(function(e) {
-          e.preventDefault();
-          $('#feedbackform').dialog('open');
-          });
-
-
-
         });
     </script>
     <!-- /Google maps -->
+
+  <script type="text/javascript">
+   $(document).ready(function($) {
+
+    var dialog, form,
+    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    name = $("#fback-name"),
+    email = $("#fback-email"),
+    message = $("#fback-message"),
+    allFields = $([]).add(name).add(email).add(message),
+    tips = $("#validateTips");
+
+    function updateTips(t) {
+        tips.text(t);
+      };
+
+    function checkLength(o, n, min, max) {
+      if (o.val().length > max || o.val().length < min) {
+          o.addClass("ui-state-error");
+          updateTips("{% trans 'This field is required.' %}");
+          return false;
+        } else {
+            return true;
+          }
+      };
+
+    function checkRegexp(o, regexp, n) {
+      if (!( regexp.test(o.val() ))) {
+          o.addClass("ui-state-error");
+          updateTips(n);
+          return false;
+        } else {
+           return true;
+          }
+      };
+
+    function SendFeedbackForm() {
+      var valid = true;
+      allFields.removeClass( "ui-state-error" );
+
+      valid = valid && checkLength(name, "username", 2, 40);
+      valid = valid && checkLength( email, "email", 6, 80 );
+      valid = valid && checkRegexp( email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
+
+      if(valid) {
+          console.log("valid!");
+          dialog.dialog("close");
+        }
+
+        return valid;
+    
+      };
+
+      dialog = $('#feedbackform').dialog({
+      autoOpen: false,
+      modal: true,
+      width: 650,
+      height: 400,
+      draggable: false,
+      resizable: false,
+      buttons: {
+        "{% trans 'Submit' %}": SendFeedbackForm,
+        Cancel: function() {
+              dialog.dialog("close");
+            }
+        },
+        close: function() {
+              form[0].reset();
+              allFields.removeClass("ui-state-error");
+              updateTips("{% trans 'All form fields are required.' %}");
+            }
+      });
+
+
+    form = dialog.find("form").on("submit", function(event) {
+      event.preventDefault();
+      SendFeedbackForm();
+      });
+
+      $('#feebackform-btn').click(function(e) {
+      e.preventDefault();
+      $('#feedbackform').dialog('open');
+      });
+
+  });
+</script>
+
+<style>
+
+.my-feedback {background:#f7f7f7;}
+.my-feedback > label {display:block;font-size:15px;padding:5px 3px 0 3px;margin:5px 3px 0 3px;}
+.my-feedback > input {width:600px;border:1px solid #dedede;padding:3px;margin:3px;}
+.my-feedback > textarea {width:600px;height:110px;resize:none;border:1px solid #dedede;padding:3px;margin:3px;}
+
+#validateTips {color:#cd0a0a;}
+
+</style>
 
     <!-- script for Company-Structure right buttons menu -->
     <script type="text/javascript">
@@ -114,12 +186,12 @@
         var STAFFGROUPS = [
             {% for item in staffgroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}
+            {% endfor %}  
         ];
         var EXTRAGROUPS = [
             {% for item in extragroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}
+            {% endfor %}  
         ];
     </script>
     <script type="text/javascript">
@@ -127,7 +199,7 @@
             function addOneMoreInput() {
                 $('.file-attachment').last().change(function() {
                     $(this).after('<input name="attachment" class="file-attachment" type="file" />');
-                    $(this).off('change');
+                    $(this).off('change');  
                     addOneMoreInput();
                 });
             }
@@ -336,26 +408,41 @@
                                     <span class="right">{{ item.site }}</span>
                                 </li>
                             {% endif %}
-                                <li>
-                                    <span class="left">{% trans 'Feedback' %}: </span>
-                                    <span class="right"><a id="feebackform-btn" href="#">{% trans 'Write a message' %}</a></span>
-                                </li>
+                            <li>
+                            <span class="left">{% trans 'Feedback' %}: </span>
+                            <span class="right"><a id="feebackform-btn" href="#">{% trans 'Write a message' %}</a></span>
+                            </li>
                         </ul>
                     </div>
-
-                    <div class="org-map"> <div id="map-canvas"></div></div>
+                    <div class="org-map"> <div   id="map-canvas"></div></div>
 
                 </div>
-
-
             </div>
           </div>
   </div>
 
   <div id="feedbackform" title="Feedback">
 
-    <p>Dialog!</p>
+    <form action="" method="post">
 
+      <div class="my-feedback">
+      <label>Your name</label>
+      <input type="text" name="username" id="fback-name">
+      </div>
+
+      <div class="my-feedback">
+      <label>Your email</label>
+      <input type="text" name="email" id="fback-email">
+      </div>
+
+      <div class="my-feedback">
+      <label>Your message</label>
+      <textarea name="message" id="fback-message"></textarea>
+      </div>
+
+    </form>
+.
+<p id="validateTips">{% trans 'All form fields are required.' %}</p>
   </div>
 
         <div class="cpn-details-tab" id="tpp-details-tab">
