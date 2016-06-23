@@ -78,6 +78,10 @@
       padding:2px;
   }
 
+#imgs_fields {
+  display:none;
+}
+
 </style>
 
 {% include "b24online/main/add_button.html" %}
@@ -85,7 +89,7 @@
 
     <form id="upload-file" method="post" enctype="multipart/form-data">
       <fieldset>
-        <label style="display:none;" for="file">Select a file</label>
+        <label style="display:none;" for="file">{% trans 'Select a file' %}</label>
         <input  style="display:none;" id="selectAdditionaImage" name="file" type="file">
       </fieldset>
     </form>
@@ -119,7 +123,7 @@
             </div>
 
             <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();" id="additionalButton">{% trans 'Additional images' %}</a>
-            <div style="display:none" id="additionalLoading">Loading...</div>
+            <div style="display:none" id="additionalLoading">{% trans 'Loading..' %}</div>
             <div>
                 <label class="sapce">{% trans 'Product producer' %}</label>
                 {% if form.errors.producer %}

@@ -8,7 +8,7 @@
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/tpp.reset.css' %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/gmapCompany.css' %}" />
 
 {% endblock %}
 {% block js %}
@@ -49,7 +49,34 @@
 
                  initialize(false);
 
-        })});
+        });
+
+
+            $('#feedbackform').dialog({
+            autoOpen: false,
+            modal: true,
+            width: 650,
+            height: 400,
+            draggable: false,
+            resizable: false,
+            dialogClass: 'no-close success-dialog',
+            buttons: {
+              'Submit': function() {
+              },
+              'Cancel': function() {
+                $(this).dialog('close');
+              }
+            }
+            });
+
+          $('#feebackform-btn').click(function(e) {
+          e.preventDefault();
+          $('#feedbackform').dialog('open');
+          });
+
+
+
+        });
     </script>
     <!-- /Google maps -->
 
@@ -87,12 +114,12 @@
         var STAFFGROUPS = [
             {% for item in staffgroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
         var EXTRAGROUPS = [
             {% for item in extragroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
     </script>
     <script type="text/javascript">
@@ -100,7 +127,7 @@
             function addOneMoreInput() {
                 $('.file-attachment').last().change(function() {
                     $(this).after('<input name="attachment" class="file-attachment" type="file" />');
-                    $(this).off('change');  
+                    $(this).off('change');
                     addOneMoreInput();
                 });
             }
@@ -309,13 +336,26 @@
                                     <span class="right">{{ item.site }}</span>
                                 </li>
                             {% endif %}
+                                <li>
+                                    <span class="left">{% trans 'Feedback' %}: </span>
+                                    <span class="right"><a id="feebackform-btn" href="#">{% trans 'Write a message' %}</a></span>
+                                </li>
                         </ul>
                     </div>
-                    <div class="org-map"> <div   id="map-canvas"></div></div>
+
+                    <div class="org-map"> <div id="map-canvas"></div></div>
 
                 </div>
+
+
             </div>
           </div>
+  </div>
+
+  <div id="feedbackform" title="Feedback">
+
+    <p>Dialog!</p>
+
   </div>
 
         <div class="cpn-details-tab" id="tpp-details-tab">

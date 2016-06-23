@@ -662,9 +662,7 @@ class B2CProductUpdate(ItemUpdate):
         """
         form.instance.updated_by = self.request.user
 
-        print(form.changed_data)
         if form.cleaned_data['additional_images']:
-            print(self.imageslist)
             form.instance.additional_images = self.imageslist
 
         if form.changed_data and 'sku' in form.changed_data:
