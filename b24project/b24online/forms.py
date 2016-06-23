@@ -58,3 +58,12 @@ class EditorImageUploadForm(forms.Form):
         full_path = (os.path.join(settings.MEDIA_ROOT, filepath)).replace('\\', '/')
 
         return utils.upload_images({'file': full_path}, base_bucket_path="editor_uploads/images/")[0]
+
+
+class FeedbackForm(forms.Form):
+    co_id = forms.CharField(max_length=11)
+    co_email = forms.CharField(max_length=100)
+    username = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    message = forms.CharField(max_length=1000)
+

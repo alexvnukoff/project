@@ -60,10 +60,10 @@
 
     var dialog, form,
     emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    name = $("#fback-name"),
+    username = $("#fback-name"),
     email = $("#fback-email"),
     message = $("#fback-message"),
-    allFields = $([]).add(name).add(email).add(message),
+    allFields = $([]).add(username).add(email).add(message),
     tips = $("#validateTips");
 
     function updateTips(t) {
@@ -92,19 +92,25 @@
 
     function SendFeedbackForm() {
       var valid = true;
-      allFields.removeClass( "ui-state-error" );
+      allFields.removeClass("ui-state-error");
 
-      valid = valid && checkLength(name, "username", 2, 40);
-      valid = valid && checkLength( email, "email", 6, 80 );
-      valid = valid && checkRegexp( email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
+      valid = valid && checkLength(username, "username", 2, 40);
+      valid = valid && checkLength(email, "email", 6, 80 );
+      valid = valid && checkRegexp(email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
+      valid = valid && checkLength(message, "message", 2, 1000);
 
       if(valid) {
-          console.log("valid!");
-          dialog.dialog("close");
-        }
+        formdata = form.serialize();
+         $.ajax({
+          type: 'POST',
+          url: '/feedback/send/email/',
+          data: formdata,
+          success: function(data) { alert("{% trans 'Your message has been sent!' %}") }
+         });
 
+        dialog.dialog("close");
+      }
         return valid;
-    
       };
 
       dialog = $('#feedbackform').dialog({
@@ -117,16 +123,15 @@
       buttons: {
         "{% trans 'Submit' %}": SendFeedbackForm,
         Cancel: function() {
-              dialog.dialog("close");
-            }
+            dialog.dialog("close");
+          }
         },
         close: function() {
-              form[0].reset();
-              allFields.removeClass("ui-state-error");
-              updateTips("{% trans 'All form fields are required.' %}");
-            }
+            form[0].reset();
+            allFields.removeClass("ui-state-error");
+            updateTips("{% trans 'All form fields are required.' %}");
+          }
       });
-
 
     form = dialog.find("form").on("submit", function(event) {
       event.preventDefault();
@@ -136,6 +141,12 @@
       $('#feebackform-btn').click(function(e) {
       e.preventDefault();
       $('#feedbackform').dialog('open');
+      });
+
+    form.on("keypress", "input[type=text]", function(e) {
+      if(e.keyCode == 13) {
+          SendFeedbackForm();
+        }
       });
 
   });
@@ -423,21 +434,23 @@
 
   <div id="feedbackform" title="Feedback">
 
-    <form action="" method="post">
+    <form action="" method="post">{% csrf_token %}
+      <input type="hidden" name="co_email" value="{{ item.email }}">
+      <input type="hidden" name="co_id" value="{{ item.pk }}">
 
       <div class="my-feedback">
       <label>Your name</label>
-      <input type="text" name="username" id="fback-name">
+      <input type="text" name="username" id="fback-name" maxlength="40">
       </div>
 
       <div class="my-feedback">
       <label>Your email</label>
-      <input type="text" name="email" id="fback-email">
+      <input type="text" name="email" id="fback-email" maxlength="80">
       </div>
 
       <div class="my-feedback">
       <label>Your message</label>
-      <textarea name="message" id="fback-message"></textarea>
+      <textarea name="message" id="fback-message" maxlength="1000"></textarea>
       </div>
 
     </form>
