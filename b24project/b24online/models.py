@@ -2297,6 +2297,9 @@ class Producer(ActiveModelMixing, models.Model):
     def __str__(self):
         return self.name
 
+    def has_perm(self, user):
+        return True
+
     def upload_logo(self, changed_data=None):
         from core import tasks
         params = []
