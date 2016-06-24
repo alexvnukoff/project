@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from copy import copy
 
+import logging
+
 from django import template
 from django.core.paginator import Paginator
 from django.utils.timezone import now
@@ -13,6 +15,8 @@ from b24online.search_indexes import SearchEngine
 from b24online.utils import get_template_with_base_path, load_category_hierarchy
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -276,20 +280,30 @@ def b2c_categories():
         load_category_hierarchy(B2CProductCategory, categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
 
 
-@register.simple_tag
-def b2b_producers():
+@register.assignment_tag
+def b2b_producers(selected_category=None):
     organization = get_current_site().user_site.organization
-    producers = B2BProduct.objects.filter(company_id=organization.pk).filter(
-            producer__isnull=False).values_list('producer__pk', 'producer__name').distinct()
-    return producers
+    producers = B2BProduct.objects\
+        .filter(company_id=organization.pk)\
+        .filter(producer__isnull=False)
+    if selected_category and isinstance(selected_category, B2BProductCategory):
+        producers = producers.filter(
+            producer__b2b_categories__in=[selected_category]
+        )
+    return producers.values_list('producer__pk', 'producer__name').distinct()
 
 
-@register.simple_tag
-def b2c_producers():
+@register.assignment_tag
+def b2c_producers(selected_category=None):
     organization = get_current_site().user_site.organization
-    producers = B2CProduct.objects.filter(company_id=organization.pk).filter(
-            producer__isnull=False).values_list('producer__pk', 'producer__name').distinct()
-    return producers
+    producers = B2CProduct.objects\
+        .filter(company_id=organization.pk)\
+        .filter(producer__isnull=False)
+    if selected_category and isinstance(selected_category, B2CProductCategory):
+        producers = producers.filter(
+            producer__b2c_categories__in=[selected_category]
+        )
+    return producers.values_list('producer__pk', 'producer__name').distinct()
 
 
 @register.filter
