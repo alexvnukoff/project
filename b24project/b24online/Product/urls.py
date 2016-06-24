@@ -104,7 +104,7 @@ urlpatterns = [
     url(r'^category/tree/demo/(?P<b2_type>b2b|b2c)/$',
         category_tree_demo,
         name='category_tree_demo'),
-    # Prodict's producers
+    # Product's producers
     url(r'^producers/$',
         ProducerList.as_view(),
         name='producer_list'),
