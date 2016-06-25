@@ -46,7 +46,12 @@
                 </tr>
                 {% endif %}
             {% endfor %}
-
+                <tr>
+                    <td style="text-align: right">
+                        <input type="checkbox" name="need_delivery" id="need_delivery">
+                    </td>
+                    <td colspan="2">{% trans 'Need a delivery' %}?</td>
+                </tr>
             </tbody>
             <tfoot>
                 <tr>
