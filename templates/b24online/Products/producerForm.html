@@ -3,6 +3,18 @@
 {% load i18n %}
 {% load l10n %}
 
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(function() {
+        $('.select-categories').select2({
+            width: '100%',
+            allowClear: false,
+       });
+    });
+</script>
+{% endblock %}
+
 {% block title %}
     {% if form.instance %}
         {% trans 'Update the producer'%}
@@ -20,7 +32,7 @@
 {% block content %}
 <div class="data" style="margin: 15px;">
     <h1>
-    {% if form.instance %}
+    {% if form.instance and form.instance.pk %}
         {% trans 'Update the producer'%}
     {% else %}
         {% trans 'Add the producer' %}
