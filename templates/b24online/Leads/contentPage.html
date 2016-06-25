@@ -1,0 +1,60 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+<style>
+
+table.leads {
+      width:100%;
+      border-collapse: collapse;
+  }
+
+table.leads, th,  td {
+      border: 1px solid black;
+      color:#555;
+  }
+
+table.leads tr.head {
+      background:#f1f1f1;
+      color:#000;
+      font-weight:bold;
+  }
+
+</style>
+<div class="container">
+
+    {% if object_list %}
+    <h2 style="margin-top:65px;">{% trans 'Total Leads:' %} {{ total_objects }}</h2>
+    {% endif %}
+    <div class="companies">
+        {% include "b24online/main/popupFilter.html" %}
+        {% include "b24online/main/local_menu_script.html" %}
+
+        <div style="margin:5px 0 5px 0;">
+        <table class="leads">
+        {% if object_list %}
+            <tr class="head">
+              <td>{% trans 'Subject' %}</td>
+              <td>{% trans 'Emaail' %}</td>
+              <td>{% trans 'Registred User' %}</td>
+              <td>{% trans 'Creation Date' %}</td>
+            </tr>
+        {% endif %}
+            {% for obj in object_list %}
+
+            <tr>
+              <td>{{ obj.subject }}</td>
+              <td>{{ obj.email }}</td>
+              <td>{{ obj.username }}</td>
+              <td>{{ obj.created_at }}</td>
+            </tr>
+
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
+            </table>
+
+        </div>
+        {% include "b24online/main/paginator.html" %}
+    </div>
+</div>
