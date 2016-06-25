@@ -1265,9 +1265,9 @@ var companyStructure =
             self.hideOverlay();
 
             $.post(self.structureURL, {
-                    name: name, 
-                    id: id, 
-                    action: action, type: 'vacancy', 
+                    name: name,
+                    id: id,
+                    action: action, type: 'vacancy',
                 }, function(data) {
                     contentHolder.replaceWith(data);
             } , 'html');
@@ -1387,7 +1387,7 @@ var companyStaff =
                                     '<div class="title">' + LANG['popup_user_title'] + '</div>' +
                                     '<div class="inputadd">' +
                                             '<input type="text" id="user-name" class="text" />' +
-                                    '</div>' + 
+                                    '</div>' +
                                     '<div class="title">' + LANG['extra_permissions_title'] + '</div>' +
                                     '<div class="holder">' +
                                         '<input type="checkbox" id="for-children">' + LANG['popup_for_children'] +
@@ -1456,7 +1456,7 @@ var companyStaff =
                        self.cache[id] = options;
                        self.setOptions(select, options);
                    }, 'json');
-                   
+
                }
            }
         });
@@ -1559,7 +1559,7 @@ var chatsUI = {
     textArea: '#message-box',
     submitSend: '#submit-send-message',
     messageForm: '#send-message-to-chat',
-    
+
     getMessages: function(container) {
         if (container.hasClass(chatsUI.curChat))
             return false;
@@ -1624,7 +1624,7 @@ var chatsUI = {
         if (current.length > 0) {
             this.getMessages(current);
         }
-        
+
     },
 
 };

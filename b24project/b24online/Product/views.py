@@ -634,6 +634,8 @@ class B2CProductUpdate(ItemUpdate):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+        self.imageslist = request.POST.getlist('additional_images')
+
         additional_page_form = AdditionalPageFormSet(self.request.POST,\
                                                   instance=self.object)
 
@@ -659,6 +661,9 @@ class B2CProductUpdate(ItemUpdate):
         success page.
         """
         form.instance.updated_by = self.request.user
+
+        if form.cleaned_data['additional_images']:
+            form.instance.additional_images = self.imageslist
 
         if form.changed_data and 'sku' in form.changed_data:
             form.instance.metadata['stock_keeping_unit'] =\
@@ -1032,7 +1037,7 @@ def category_tree_json(request, b2_type='b2b'):
         else B2BProductCategory
     tree_builder = MTTPTreeBuilder(model_class)
     data = tree_builder()
-    
+
     return HttpResponse(
         json.dumps(data),
         content_type='application/json'
@@ -1041,13 +1046,13 @@ def category_tree_json(request, b2_type='b2b'):
 
 @login_required
 def category_tree_demo(request, b2_type='b2b'):
-    
+
     def extract_data_fn(node):
         return {
             'id': node.id,
             'text': node.name,
         }
-    
+
     context = {}
     model_class = B2CProductCategory if b2_type == 'b2c' \
         else B2BProductCategory
@@ -1056,10 +1061,10 @@ def category_tree_demo(request, b2_type='b2b'):
         extract_data_fn=extract_data_fn,
     )
     data = tree_builder()
-    context.update({'tree_data': json.dumps(data)})    
+    context.update({'tree_data': json.dumps(data)})
     return render_to_response(
-        'b24online/Products/category_tree_demo.html', 
-        context, 
+        'b24online/Products/category_tree_demo.html',
+        context,
         context_instance=RequestContext(request)
     )
 
@@ -1126,7 +1131,7 @@ class ProducerCreate(LoginRequiredMixin, ItemCreate):
             form.instance.upload_logo()
             return HttpResponseRedirect(self.success_url)
         return self.render_to_response(self.get_context_data(form=form))
-    
+
 
 class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
     model = Producer
@@ -1155,7 +1160,7 @@ class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
             form.instance.upload_logo()
             return HttpResponseRedirect(self.success_url)
         return self.render_to_response(self.get_context_data(form=form))
-    
+
 
 class ProducerDelete(LoginRequiredMixin, DetailView):
     model = Producer
