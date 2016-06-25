@@ -11,6 +11,7 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
+from b24online.Leads.utils import GetLead
 
 
 class PageDetail(UserTemplateMixin, ItemDetail):
@@ -31,14 +32,24 @@ class Contacts(UserTemplateMixin, DetailView):
         form = ContactForm(request.POST)
 
         if form.is_valid():
+            cd = form.cleaned_data
             if not self.object.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "New message from %s" % form.cleaned_data.get('name')
+                subject = "New message from %s" % cd['name']
 
-            mail = EmailMessage(subject, form.cleaned_data.get('message'), form.cleaned_data.get('email'), [email])
+            # Collecting lead
+            getlead = GetLead(request)
+            getlead.collect(
+                    subject=subject,
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=None
+                )
+
+            mail = EmailMessage(subject, cd['message'], cd['email'], [email])
             mail.send()
 
             return HttpResponseRedirect(reverse('pages:contacts'))

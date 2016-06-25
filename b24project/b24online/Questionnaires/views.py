@@ -29,9 +29,9 @@ from guardian.mixins import LoginRequiredMixin
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
                            ItemDeactivate)
 from b24online.Questionnaires.forms import (
-    QuestionnaireForm, 
+    QuestionnaireForm,
     QuestionForm,
-    RecommendationForm, 
+    RecommendationForm,
     ExtraQuestionsForm,
 )
 from b24online.utils import (get_by_content_type, get_permitted_orgs)
@@ -481,8 +481,8 @@ def questionnaire_case_answers(request, pk, participant_type, **kwargs):
                 'code': 'success',
                 'msg': render_to_string(
                     template_name,
-                    {'instance': instance, 
-                     'answers': answers, 
+                    {'instance': instance,
+                     'answers': answers,
                      'responsive': instance.get_participant(participant_type)},
                     context_instance=RequestContext(request),
                 )
@@ -512,9 +512,9 @@ def questionnaire_case_coincedences(request, pk, **kwargs):
                 'code': 'success',
                 'msg': render_to_string(
                     template_name,
-                    {'instance': instance, 
+                    {'instance': instance,
                      'coincedences': coincedences,
-                    }, 
+                    },
                     context_instance=RequestContext(request),
                 )
             }
