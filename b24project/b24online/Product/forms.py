@@ -408,10 +408,14 @@ class ProducerForm(forms.ModelForm):
 
     class Meta:
         model = Producer
-        fields = ['name', 'logo',]
+        fields = ['name', 'logo', 'b2b_categories', 'b2c_categories']
         
     def __init__(self, *args, **kwargs):
         super(ProducerForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget = forms.Textarea(
             attrs={'rows': '2', 'cols': '50'}
         ) 
+        self.fields['b2b_categories'].widget.attrs\
+            .update({'class': 'select-categories'})
+        self.fields['b2c_categories'].widget.attrs\
+            .update({'class': 'select-categories'})
