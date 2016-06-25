@@ -288,7 +288,7 @@ def feedback_form(request):
             cd = form.cleaned_data
             subject = "B24online.com: New message from {0}".format(cd['username'])
             #print(subject, cd['message'], cd['email'], cd['co_email'])
-            mail = EmailMessage(subject, cd['message'], cd['email'], cd['co_email'])
+            mail = EmailMessage(subject, cd['message'], cd['email'], [cd['co_email']])
             mail.send()
             return JsonResponse({}, status=200)
         else:
