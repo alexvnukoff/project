@@ -3,7 +3,8 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField, DateRangeField, JSONField
+from django.contrib.postgres.fields import (HStoreField, DateRangeField,
+                                                    JSONField, ArrayField)
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -53,6 +54,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
                              blank=True, null=True, max_length=255)
+    additional_images = ArrayField(ArrayField(models.CharField(max_length=500, blank=True)), blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='b2c_products')
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)

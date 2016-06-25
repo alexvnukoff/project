@@ -8,7 +8,7 @@
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/tpp.reset.css' %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/gmapCompany.css' %}" />
 
 {% endblock %}
 {% block js %}
@@ -49,9 +49,119 @@
 
                  initialize(false);
 
-        })});
+        });
+
+        });
     </script>
     <!-- /Google maps -->
+
+  <script type="text/javascript">
+   $(document).ready(function($) {
+
+    var dialog, form,
+    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    username = $("#fback-name"),
+    email = $("#fback-email"),
+    message = $("#fback-message"),
+    allFields = $([]).add(username).add(email).add(message),
+    tips = $("#validateTips");
+
+    function updateTips(t) {
+        tips.text(t);
+      };
+
+    function checkLength(o, n, min, max) {
+      if (o.val().length > max || o.val().length < min) {
+          o.addClass("ui-state-error");
+          updateTips("{% trans 'This field is required.' %}");
+          return false;
+        } else {
+            return true;
+          }
+      };
+
+    function checkRegexp(o, regexp, n) {
+      if (!( regexp.test(o.val() ))) {
+          o.addClass("ui-state-error");
+          updateTips(n);
+          return false;
+        } else {
+           return true;
+          }
+      };
+
+    function SendFeedbackForm() {
+      var valid = true;
+      allFields.removeClass("ui-state-error");
+
+      valid = valid && checkLength(username, "username", 2, 40);
+      valid = valid && checkLength(email, "email", 6, 80 );
+      valid = valid && checkRegexp(email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
+      valid = valid && checkLength(message, "message", 2, 1000);
+
+      if(valid) {
+        formdata = form.serialize();
+         $.ajax({
+          type: 'POST',
+          url: '/feedback/send/email/',
+          data: formdata,
+          success: function(data) { alert("{% trans 'Your message has been sent!' %}") }
+         });
+
+        dialog.dialog("close");
+      }
+        return valid;
+      };
+
+      dialog = $('#feedbackform').dialog({
+      autoOpen: false,
+      modal: true,
+      width: 650,
+      height: 400,
+      draggable: false,
+      resizable: false,
+      buttons: {
+        "{% trans 'Submit' %}": SendFeedbackForm,
+        Cancel: function() {
+            dialog.dialog("close");
+          }
+        },
+        close: function() {
+            form[0].reset();
+            allFields.removeClass("ui-state-error");
+            updateTips("{% trans 'All form fields are required.' %}");
+          }
+      });
+
+    form = dialog.find("form").on("submit", function(event) {
+      event.preventDefault();
+      SendFeedbackForm();
+      });
+
+      $('#feebackform-btn').click(function(e) {
+      e.preventDefault();
+      $('#feedbackform').dialog('open');
+      });
+
+    form.on("keypress", "input[type=text]", function(e) {
+      if(e.keyCode == 13) {
+          SendFeedbackForm();
+        }
+      });
+
+  });
+</script>
+
+<style>
+
+.my-feedback {background:#f7f7f7;}
+.my-feedback > label {display:block;font-size:15px;padding:5px 3px 0 3px;margin:5px 3px 0 3px;}
+.my-feedback > input {width:600px;border:1px solid #dedede;padding:3px;margin:3px;}
+.my-feedback > textarea {width:600px;height:110px;resize:none;border:1px solid #dedede;padding:3px;margin:3px;}
+
+#validateTips {color:#cd0a0a;}
+
+</style>
 
     <!-- script for Company-Structure right buttons menu -->
     <script type="text/javascript">
@@ -309,6 +419,10 @@
                                     <span class="right">{{ item.site }}</span>
                                 </li>
                             {% endif %}
+                            <li>
+                            <span class="left">{% trans 'Feedback' %}: </span>
+                            <span class="right"><a id="feebackform-btn" href="#">{% trans 'Write a message' %}</a></span>
+                            </li>
                         </ul>
                     </div>
                     <div class="org-map"> <div   id="map-canvas"></div></div>
@@ -316,6 +430,32 @@
                 </div>
             </div>
           </div>
+  </div>
+
+  <div id="feedbackform" title="Feedback">
+
+    <form action="" method="post">{% csrf_token %}
+      <input type="hidden" name="co_email" value="{{ item.email }}">
+      <input type="hidden" name="co_id" value="{{ item.pk }}">
+
+      <div class="my-feedback">
+      <label>Your name</label>
+      <input type="text" name="username" id="fback-name" maxlength="40">
+      </div>
+
+      <div class="my-feedback">
+      <label>Your email</label>
+      <input type="text" name="email" id="fback-email" maxlength="80">
+      </div>
+
+      <div class="my-feedback">
+      <label>Your message</label>
+      <textarea name="message" id="fback-message" maxlength="1000"></textarea>
+      </div>
+
+    </form>
+.
+<p id="validateTips">{% trans 'All form fields are required.' %}</p>
   </div>
 
         <div class="cpn-details-tab" id="tpp-details-tab">

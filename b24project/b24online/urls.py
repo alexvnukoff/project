@@ -36,6 +36,7 @@ import b24online.Users.urls
 import b24online.Vacancy.urls
 import b24online.Wall.urls
 import b24online.Video.urls
+import b24online.Leads.urls
 import b24online.views
 
 admin.autodiscover()
@@ -93,6 +94,8 @@ urlpatterns = [
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^tos/$', TemplateView.as_view(template_name="b24online/tos.html"), name="tos"),
     url(r'^upload/$', b24online.views.editor_upload, name="upload_editor_image"),
+    url(r'^feedback/send/email/$', b24online.views.feedback_form),
+    url(r'^leads/', include(b24online.Leads.urls, namespace='leads')),
 ]
 
 if settings.DEBUG:

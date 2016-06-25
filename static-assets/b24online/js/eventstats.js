@@ -13,12 +13,12 @@ $(function() {
     // Stats data table rows toggling
     $('.toggle-child').not('.force-open').each(function () {
         var child_class = '.' + $(this).attr('id') + '-child';
-      	$(this).nextAll(child_class).hide();		    
+      	$(this).nextAll(child_class).hide();
     });
     $('.toggle-child.force-open').addClass('toggled');
   	$('.toggle-child').click(function () {
         var child_class = '.' + $(this).attr('id') + '-child';
-        $(this).toggleClass('toggled').nextAll(child_class).toggle();	
+        $(this).toggleClass('toggled').nextAll(child_class).toggle();
     });
 
     // Modal dialogues for charts
@@ -34,7 +34,7 @@ $(function() {
         e.preventDefault();
         $("#bardialog").html('').dialog("open").load(this.href);
     });
-    
+
     $('#diagdialog').dialog({
         autoOpen: false,
         minWidth: 500,

@@ -39,8 +39,8 @@ class B2BProductForm(forms.ModelForm):
 
     class Meta:
         model = B2BProduct
-        fields = ('name', 'description', 'keywords', 'short_description', 
-                  'image', 'currency', 'measurement_unit', 'cost', 
+        fields = ('name', 'description', 'keywords', 'short_description',
+                  'image', 'currency', 'measurement_unit', 'cost',
                   'producer', 'categories')
 
 
@@ -48,6 +48,7 @@ class B2CProductForm(forms.ModelForm):
     sku = forms.CharField(required=True)
     start_coupon_date = forms.DateField(input_formats=["%d/%m/%Y"], required=False)
     end_coupon_date = forms.DateField(input_formats=["%d/%m/%Y"], required=False)
+    additional_image = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -103,10 +104,10 @@ class B2CProductForm(forms.ModelForm):
 
     class Meta:
         model = B2CProduct
-        fields = ('name', 'description', 'keywords', 'short_description', 
-                  'image', 'currency', 'cost', 'categories', 
+        fields = ('name', 'description', 'keywords', 'short_description',
+                  'image', 'currency', 'cost', 'categories',
                   'coupon_discount_percent', 'discount_percent',
-                  'producer')
+                  'producer', 'additional_images')
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
@@ -409,12 +410,12 @@ class ProducerForm(forms.ModelForm):
     class Meta:
         model = Producer
         fields = ['name', 'logo', 'b2b_categories', 'b2c_categories']
-        
+
     def __init__(self, *args, **kwargs):
         super(ProducerForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget = forms.Textarea(
             attrs={'rows': '2', 'cols': '50'}
-        ) 
+        )
         self.fields['b2b_categories'].widget.attrs\
             .update({'class': 'select-categories'})
         self.fields['b2c_categories'].widget.attrs\
