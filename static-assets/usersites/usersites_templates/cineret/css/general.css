@@ -5,14 +5,14 @@ html {
   box-sizing: border-box;
 }
 
-/*body {*/
-  /*display: flex;*/
-  /*min-height: 100vh;*/
-  /*flex-direction: column;*/
-  /*max-width: 100%;*/
-  /*overflow-x: hidden;*/
-  /*!*font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;*!*/
-/*}*/
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
+  /*font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+}
 
 body {
   display: table;
@@ -25,7 +25,9 @@ body {
   height: 1px;
 }
 
-.page-row-expanded { height: 100%; }
+.page-row-expanded {
+    height: 100%;
+}
 
 .content{
 	flex: 1;

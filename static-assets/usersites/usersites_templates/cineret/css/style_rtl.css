@@ -140,6 +140,10 @@ body{
 	padding-left: 10px;
 }
 
+.footer-col{
+    float: right;
+}
+
 /*---------- Banner Advertisment Styling ----------*/
 /* The banner above the footer */
 
