@@ -4,7 +4,7 @@
 
 <div class="chat-title">
     <span>{{ chat.subject|truncatewords:4 }}</span>
-    <span style="float: right;">
+    <span class="chat-title-imgs">
         <a id="add_participant" class="call-process-form" 
             href="{% url 'messages:add_participant' item_id=chat.id %}" 
             data-title="Add participant to chat">
@@ -55,7 +55,7 @@
             {% if message.attachments %}
             <div class="clumnright" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
               {% for attachment in message.attachments.all %}
-              <div style="text-align: center; float: left; margin: 5px; border:1px dotted; border-color: #888888; padding:3px;">
+              <div class="message-attachments">
                   <a href="{{ MEDIA_URL}}{{ attachment.file }}">
                       {% if attachment.is_image %}
                         <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />

@@ -1,14 +1,22 @@
+# -*- encoding: utf-8 -*-
+
 import os
+import logging
+
+from django.db import models
 from django import template
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 from appl import func
-from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal, Company, News, Banner, BannerBlock
+from b24online.models import (Chamber, B2BProduct, Organization, StaticPage,
+    Exhibition, Tender, InnovationProject, BusinessProposal, Company, News,
+    Banner, BannerBlock, Video)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement, Resume
 from tpp.DynamicSiteMiddleware import get_current_site
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -117,10 +125,10 @@ def get_my_companies_list(context):
         else:
             return {'current_company': item.name}
 
-    if request.user.profile.full_name:
-        return {'current_company': request.user.profile.full_name}
+    #if request.user.profile.full_name:
+    #    return {'current_company': request.user.profile.full_name}
 
-    return {'current_company': request.user.email}
+    return {'current_company': _('Choose a company:')}
 
 
 @register.inclusion_tag('b24online/main/statistic.html')
@@ -134,7 +142,8 @@ def statistic(*args, **kwargs):
     return {'model_statistic': model_statistic}
 
 
-@register.inclusion_tag('b24online/main/contextMenu.html', name='setContextMenu', takes_context=True)
+@register.inclusion_tag('b24online/main/contextMenu.html',
+                        name='setContextMenu', takes_context=True)
 def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
     model_name = context.get('model', None)
@@ -167,6 +176,9 @@ def set_context_menu(context, obj, **kwargs):
     elif model_name == Company.__name__:
         set_current = True
         url_namespace = "companies"
+    elif model_name == Video.__name__:
+        top_perm = False
+        url_namespace = "video"
     elif model_name == Chamber.__name__:
         set_current = True
         url_namespace = "tpp"
@@ -181,6 +193,10 @@ def set_context_menu(context, obj, **kwargs):
         'set_current': set_current,
         'delete': delete
     }
+    if isinstance(obj, models.Model):
+        extra_options_meth = getattr(obj, 'get_contextmenu_options', None)
+        if extra_options_meth and callable(extra_options_meth):
+            params['extra_options'] = extra_options_meth(context)
 
     has_perm = getattr(obj, 'has_perm', None)
 
@@ -245,11 +261,12 @@ def show_top_static_pages(site_type='b2b'):
 
 
 @register.inclusion_tag('b24online/main/socialShare.html', takes_context=True)
-def b2b_social_buttons(context, image, title, text):
+def b2b_social_buttons(context, image, title, text, item_id=None):
     return {
         'image': image,
         'title': title,
-        'text': text
+        'text': text,
+        'item_id': item_id or '',
     }
 
 

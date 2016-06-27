@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+<section class="content__info">
+   {% include 'usersites/Video/paginator.html' %}
+       <section class="content__info__news news-page">
+        <h2>{% trans 'Video' %}</h2>
+
+        {% for entry in videos %}
+            <article class="news">
+                <h3><a href="{% url 'video:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h3>
+                <div class="news__content clearfix">
+                    <div class="news__content__cover">
+            {% if entry.image %}
+                <img src="{{ entry.image.small }} " alt="{{ entry.title }}" title="{{ entry.title }}"/>
+            {% endif %}
+            </div>
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{{ entry.created_at|date:'d M Y' }}</p>
+                        <p class="text">
+                            {% if entry.short_description %}
+                                 {{ entry.short_description|force_escape|linebreaks|removetags:"p" }}
+                            {% else %}
+                                 {{ entry.content|safe|truncatewords_html:"30"|removetags:"p" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'video:detail' entry.slug entry.pk %}" class="more vertical"><span>{% trans "More" %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+        </section>
+    {% include 'usersites/Video/paginator.html' %}
+    </section>

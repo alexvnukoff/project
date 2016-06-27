@@ -3,6 +3,7 @@
 import os
 import datetime
 import hashlib
+import uuid
 import logging
 
 from argparse import ArgumentError
@@ -10,6 +11,7 @@ from urllib.parse import urljoin
 
 from django.conf import settings
 from django.utils.functional import curry
+from django.db.models import Max
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group, Permission
@@ -35,6 +37,7 @@ from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from paypal.standard.ipn.models import PayPalIPN
 from registration.signals import user_registered
 from uuslug import uuslug
 from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
@@ -115,6 +118,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
+    def get_full_name(self):
+        """Return the user's full name"""
+        return self.profile.full_name if self.profile else self.email
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -177,7 +184,7 @@ class AbstractRegisterInfoModel(models.Model):
     The abstract model-container of registration info fields.
     """
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        verbose_name=_('Creator'), 
+        verbose_name=_('Creator'),
         related_name='%(class)s_create_user',
         null=True, blank=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -192,7 +199,7 @@ class AbstractRegisterInfoModel(models.Model):
     class Meta:
         abstract = True
 
-    @property    
+    @property
     def created(self):
         """
         Return the created_at datetime text by selected format.
@@ -304,6 +311,8 @@ class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255)
+    description = models.CharField(max_length=225, null=True, blank=True)
+    link = models.CharField(max_length=225, null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -438,7 +447,7 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
         """
         assert issubclass(model_klass, models.Model), \
             _('Invalid parameter. Must be a "Model" subclass')
-        content_type = ContentType.objects.get_for_model(model_klass) 
+        content_type = ContentType.objects.get_for_model(model_klass)
         return self.get_descendants().instance_of(model_klass)
 
     @property
@@ -766,11 +775,11 @@ class Vacancy(models.Model):
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    is_hidden_user = models.BooleanField(_('Hide the vacancy user'), 
+    is_hidden_user = models.BooleanField(_('Hide the vacancy user'),
                                         default=False, db_index=True)
-    staffgroup = models.ManyToManyField('StaffGroup', 
+    staffgroup = models.ManyToManyField('StaffGroup',
                                         related_name='group_vacancies')
-    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup', 
+    permission_extra_group = models.ManyToManyField('PermissionsExtraGroup',
                                         related_name='extra_group_vacancies')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
@@ -968,8 +977,8 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-    producer = models.ForeignKey('Producer', related_name='b2b_products', 
-                                 verbose_name=_('Producer'), 
+    producer = models.ForeignKey('Producer', related_name='b2b_products',
+                                 verbose_name=_('Producer'),
                                  null=True, blank=True)
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
@@ -1035,6 +1044,17 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def gallery_images(self):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
+    def get_contextmenu_options(self, context):
+        """
+        Return extra options for context menu.
+        """
+        model_type = ContentType.objects.get_for_model(self)
+        if getattr(self, 'pk', False):
+            yield (reverse('questionnaires:list',
+                           kwargs={'content_type_id': model_type.id,
+                                   'item_id': self.id}),
+                   _('Questionnaire'))
 
 
 class B2BProductComment(MPTTModel):
@@ -1421,27 +1441,32 @@ class MessageChat(AbstractRegisterInfoModel):
         (CLOSED, _('Closed')),
     )
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=False) 
-    organization = models.ForeignKey('Organization', related_name='chats', 
+                               null=True, blank=False)
+    organization = models.ForeignKey('Organization', related_name='chats',
                                      null=True, blank=True)
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='incoming_chats', null=True,
                                   blank=True)
-    participants = models.ManyToManyField(User, blank=True)    
+    participants = models.ManyToManyField(User, blank=True)
     is_private = models.NullBooleanField()
-    status = models.CharField(_('Chart status'), max_length=10, 
+    status = models.CharField(_('Chart status'), max_length=10,
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
 
     class Meta:
-        verbose_name = _('Messages chat')    
-        verbose_name_plural = _('Messages chats')    
+        verbose_name = _('Messages chat')
+        verbose_name_plural = _('Messages chats')
+
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
 
     def is_incoming(self, user):
         return self.created_at.pk == user.pk
-        
+
     def get_participants(self):
         return self.participants.all()
+
 
 class Message(models.Model):
     """
@@ -1454,21 +1479,21 @@ class Message(models.Model):
         (READ, _('Read')),
     )
 
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='outgoing_messages')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='incoming_messages', null=True,
                                   blank=True)
-    organization = models.ForeignKey('Organization', 
-                                     related_name='organization_messages', 
+    organization = models.ForeignKey('Organization',
+                                     related_name='organization_messages',
                                      null=True, blank=True)
     chat = models.ForeignKey(MessageChat, related_name='chat_messages',
                              null=True, blank=True)
     is_read = models.BooleanField(default=False)
     subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=True, db_index=True) 
+                               null=True, blank=True, db_index=True)
     content = models.TextField(blank=False, null=False)
-    status = models.CharField(_('Message status'), max_length=10, 
+    status = models.CharField(_('Message status'), max_length=10,
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -1489,26 +1514,29 @@ class Message(models.Model):
             func.publish_realtime('private_massage', recipient=recipient_id, fromUser=sender.pk)
 
     def __str__(self):
-        return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
+        return 'From "%s" to chat "%s" at %s' % (
+            self.sender, 
+            self.chat.subject, 
+            self.created_at.strftime('%d/%m/%Y %H:%I:%S')
+        )
 
     def upload_files(self):
         from core import tasks
-
         images = []
         files = []
         for attachment in self.attachments.all():
             if attachment.is_image():
                 images.append({
                     'file': os.path.join(
-                        abspathu(settings.MEDIA_ROOT), 
+                        abspathu(settings.MEDIA_ROOT),
                                  str(attachment.file)),
                     'sizes': {
-                        'th': {'box': (50, 50), 'fit': True},
+                        'th': {'box': (50, 50), 'fit': False},
                     },
                 })
             else:
                 files.append({
-                    'file': os.path.join(settings.MEDIA_ROOT, 
+                    'file': os.path.join(settings.MEDIA_ROOT,
                                          str(attachment.file)),
                     'bucket_path': str(attachment.file),
                 })
@@ -1530,9 +1558,9 @@ class MessageAttachment(models.Model):
     file = models.FileField()
     file_name = models.CharField(_('File name'), max_length=255, null=True,
                                  blank=True, editable=False)
-    content_type = models.CharField(_('Content type'), max_length=255, 
+    content_type = models.CharField(_('Content type'), max_length=255,
                                     null=True, blank=True, editable=False)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    related_name='%(class)s_create_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
@@ -1768,14 +1796,14 @@ class RegisteredEventStats(RegisteredEventMixin):
             data = {}
             for item_key, item_value in self.extra_data.items():
                 item_key_list = item_key.split(':')
-                country_name, city, cnt_type = item_key_list[1:]
+                country_name, city, a_cnt_type = item_key_list[1:]
                 try:
                     _value = int(item_value)
                 except TypeError:
                     continue
                 else:
                     data.setdefault(country_name, {}) \
-                        .setdefault(city, {})[cnt_type] = _value
+                        .setdefault(city, {})[a_cnt_type] = _value
             extra_info = []
             for country_name, data_1 in data.items():
                 cities = []
@@ -1879,7 +1907,8 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     AS_ORGANIZATION, AS_PERSON = 'organization', 'person'
     CUSTOMER_TYPES = ((AS_PERSON, _('Person')),
                       (AS_ORGANIZATION, _('Organization')),)
-
+    ON_PORTAL, ON_USERSITE = 'portal', 'site'
+    DEAL_PLACES = ((ON_PORTAL, _('On portal')), (ON_USERSITE, _('On site')))
     DRAFT, READY, PARTIALLY, PAID = 'draft', 'ready', 'partially', 'paid'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
                 (PARTIALLY, _('Partially paid')), (PAID, _('Paid')))
@@ -1887,10 +1916,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
     customer_type = models.CharField(_('Customer type'), max_length=15,
                                      choices=CUSTOMER_TYPES,
                                      null=False, blank=False)
-    customer_organization = models.ForeignKey(
-        'Organization',
-        related_name='deal_orders',
-        verbose_name=_('Customer organization'),
+    deal_place = models.CharField(_('Deal place'), max_length=15,
+                                     choices=DEAL_PLACES,
+                                     default=ON_PORTAL,
+                                     null=False, blank=False)
+    customer_organization = models.ForeignKey('Organization',
+        related_name='deal_orders', verbose_name=_('Customer organization'),
         null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50,
                                 blank=True, null=True, db_index=True)
@@ -1901,7 +1932,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                               null=False, blank=False)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    
+
     class Meta:
         verbose_name = _('Product order')
         verbose_name_plural = _('Product orders')
@@ -1933,8 +1964,8 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 
     @property
     def customer_person(self):
-        return self.created_by 
-        
+        return self.created_by
+
     def get_customer_type(self):
         """
         Return the customer type title: Company or Person.
@@ -1943,10 +1974,18 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
 
     def get_customer(self):
         if self.customer_type == self.AS_PERSON:
-            if self.created_by.profile:
-                return self.created_by.profile.full_name or self.created_by.email
+            if self.created_by:
+                if self.created_by.profile:
+                    return self.created_by.profile.full_name \
+                        or self.created_by.email
+                else:
+                    return self.created_by
             else:
-                return self.created_by
+                try:
+                    return Deal.objects.filter(deal_order=self)\
+                        .first().person_last_name
+                except Deal.DoesNotExist:
+                    return None
         elif self.customer_type == self.AS_ORGANIZATION:
             return self.customer_organization
         else:
@@ -1997,10 +2036,12 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     The deal No. has been added as some organization can keep records about every
     deal.
     """
-    DRAFT, READY, PAID, ORDERED, REJECTED = \
-        'draft', 'ready', 'paid', 'ordered', 'rejected'
+    DRAFT, READY, PAID, ORDERED, REJECTED, PAID_BY_PAYPAL = \
+        'draft', 'ready', 'paid', 'ordered', 'rejected', 'paypal'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
-                (PAID, _('Paid')), (ORDERED, _('Ordered by Email')),
+                (PAID_BY_PAYPAL, _('Paid by PayPal')), 
+                (PAID, _('Paid')), 
+                (ORDERED, _('Ordered by Email')),
                 (REJECTED, _('Rejected')))
 
     deal_order = models.ForeignKey(DealOrder, related_name='order_deals',
@@ -2014,10 +2055,16 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     deal_no = models.CharField(_('Deal No.'), max_length=50,
                                 blank=True, null=True, db_index=True)
     total_cost = models.DecimalField(_('Total deal cost'),
-                                     max_digits=15, decimal_places=2, 
+                                     max_digits=15, decimal_places=2,
                                      null=True, blank=False, editable=False)
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
+    paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
+                                     null=True, blank=True, db_index=True)
+    models.ForeignKey(PayPalIPN, related_name='order_deals',
+                                      verbose_name=_('PayPal Transaction'), 
+                                      null=True, blank=True,
+                                      editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
                                    null=True, blank=True, db_index=True)
     status = models.CharField(_('Deal status'), max_length=10,
@@ -2139,10 +2186,18 @@ class DealItem(models.Model):
     currency = models.CharField(_('Currence'), max_length=255, blank=True,
                                 null=True, choices=CURRENCY)
     quantity = models.PositiveIntegerField(_('Quantity'))
+    extra_params = JSONField(_('Extra parameters values'), null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Deal product'
-        verbose_name_plural = 'Deal products'
+        verbose_name = _('Deal product')
+        verbose_name_plural = _('Deal products')
+
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
+
+    def __str__(self):
+        return str(self.item)
 
     def get_total(self):
         """
@@ -2151,10 +2206,26 @@ class DealItem(models.Model):
         return self.cost * self.quantity if self.cost and self.quantity \
             else 0
 
+    def get_extra_params(self):
+        """
+        Return the item extra parameters as dictinary {param_name: param_value}
+        """
+        data = []
+        if self.item and hasattr(self.item, 'extra_params') \
+            and hasattr(self, 'extra_params'):
+            param_fields = self.item.extra_params
+            param_values = self.extra_params
+            for param_descr in param_fields:
+                param_name = param_descr.get('name')
+                if param_name:
+                    param_value = param_values.get(param_name)
+                    if param_value:
+                        data.append((param_descr, param_value))
+        return data
 
 class StaffGroup(models.Model):
     """
-    Class for the relations of :class:`auth.models.Group` for 
+    Class for the relations of :class:`auth.models.Group` for
     organization's staff vacancies.
     """
     group = models.OneToOneField(Group, verbose_name=_('Vacancy group'))
@@ -2174,10 +2245,10 @@ class PermissionsExtraGroup(models.Model):
     """
     Class for permission's addiotional groups.
     """
-    name = models.CharField(_('Group name'), max_length=255, 
+    name = models.CharField(_('Group name'), max_length=255,
                             blank=False, null=False)
     permissions = models.ManyToManyField(
-        Permission, 
+        Permission,
         verbose_name=_('Permission extra group')
     )
 
@@ -2191,35 +2262,653 @@ class PermissionsExtraGroup(models.Model):
             for item in cls.objects.order_by('name'))
 
 
-class Producer(models.Model, IndexedModelMixin):
+class Producer(ActiveModelMixing, models.Model):
     """
     The model class for goods producers.
     """
-    name = models.CharField(_('Name'), max_length=255, 
+    name = models.CharField(_('Name'), max_length=255,
                             blank=False, null=False)
     slug = models.SlugField(max_length=255)
-    short_description = models.TextField(_('Short description'), 
+    short_description = models.TextField(_('Short description'),
                                          null=True, blank=True)
     description = models.TextField(_('Descripion'), null=True, blank=True)
-    logo = CustomImageField(upload_to=generate_upload_path, 
+    logo = CustomImageField(upload_to=generate_upload_path,
                             storage=image_storage,
                             sizes=['big', 'small', 'th'],
-                            max_length=255)
-    country = models.CharField(_('Country'), max_length=255, 
-                               blank=False, null=False)
-                               
+                            max_length=255, null=True, blank=True)
+    country = models.CharField(_('Country'), max_length=255,
+                               null=True, blank=True)
+    b2b_categories = models.ManyToManyField(B2BProductCategory,
+                                            related_name='producers')
+    b2c_categories = models.ManyToManyField('centerpokupok.B2CProductCategory',
+                                            related_name='producers')
+    is_approved = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = _('Products producer')
         verbose_name_plural = _('Products producers')
 
-    @staticmethod
-    def get_index_model(**kwargs):
-        from b24online.search_indexes import ProducerIndex
-        return ProducerIndex
+    @classmethod
+    def get_active_objects(cls):
+        return cls.objects.all()
 
     def __str__(self):
         return self.name
-        
+
+    def has_perm(self, user):
+        return True
+
+    def upload_logo(self, changed_data=None):
+        from core import tasks
+        params = []
+        if (changed_data is None or 'logo' in changed_data) and self.logo:
+            params.append({
+                'file': self.logo.path,
+                'sizes': {
+                    'small': {'box': (24, 24), 'fit': False},
+                    'th': {'box': (30, 30), 'fit': False},
+                    'big': {'box': (150, 150), 'fit': False},
+                }
+            })
+        tasks.upload_images(*params)
+
+
+##
+# Models for Questionnaires
+##
+class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The main model class for Questionnaire sub-app.
+    """
+    # The content types are limited by set (B2BProduct, B2CProduct)
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
+        models.Q(app_label='centerpokupok', model='b2cproduct')
+
+    name = models.CharField(_('Questionnaire title'), max_length=255,
+                            blank=False, null=False)
+    short_description = models.TextField(_('Short description'),
+                                         null=True, blank=True)
+    description = models.TextField(_('Descripion'), null=True, blank=True)
+    image = CustomImageField(upload_to=generate_upload_path,
+                             storage=image_storage,
+                             sizes=['big', 'small', 'th'],
+                             max_length=255, null=True, blank=True)
+
+    content_type = models.ForeignKey(ContentType,
+                                     limit_choices_to=CONTENT_TYPE_LIMIT,
+                                     on_delete=models.CASCADE,
+                                     null=False, blank=False)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+
+    red_level = models.PositiveIntegerField(
+        _('How many coincedences for \'red\' color'),
+        default=0, null=False, blank=False,
+    )
+    yellow_level = models.PositiveIntegerField(
+        _('How many coincedences for \'yellow\' color'),
+        default=0, null=False, blank=False,
+    )
+    green_level = models.PositiveIntegerField(
+        _('How many coincedences for \'green\' color'),
+        default=0, null=False, blank=False,
+    )
+    use_show_result = models.BooleanField(
+        _('Use the option "Show the question if someone selected"'),
+        default=False,
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    @classmethod
+    def get_questionnaire(cls, instance):
+        """
+        Return True if the instance has a Questionnaire.
+        """
+        model_type = ContentType.objects.get_for_model(instance)
+        if model_type and getattr(instance, 'id', False):
+            try:
+                qs = cls.get_active_objects().filter(
+                        content_type=model_type,
+                        object_id=instance.id
+                    )
+                return qs[0]
+            except IndexError:
+                pass
+        return None
+
+    class Meta:
+        verbose_name = _('Questionnaire')
+        verbose_name_plural = _('Questionnaires')
+
+    def __str__(self):
+        return self.name
+
+    def upload_image(self, changed_data=None):
+        from core import tasks
+        params = []
+        if (changed_data is None or 'image' in changed_data) and self.image:
+            params.append({
+                'file': self.image.path,
+                'sizes': {
+                    'big': {'box': (250, 250), 'fit': False},
+                    'small': {'box': (24, 24), 'fit': False},
+                    'th': {'box': (50, 50), 'fit': False}
+                }
+            })
+        tasks.upload_images(*params)
+
+    def get_absolute_url(self):
+        return reverse('questionnaires:detail', kwargs={'item_id': self.pk})
+
+    def has_perm(self, user):
+        return True
+
+    def actual_questions(self):
+        return Question.get_active_objects()\
+            .filter(questionnaire=self)\
+            .order_by('position')
+
+    def actual_recommendations(self):
+        return Recommendation.get_active_objects()\
+            .filter(questionnaire=self)
+
+    def get_extra_questions(self):
+        return Question.get_active_objects()\
+            .filter(questionnaire=self,
+                    who_created=Question.BY_MEMBER,
+                    is_approved=False)\
+            .order_by('position')
+
+
+
+class Question(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Question' models class.
+    """
+    # Who created the question
+    BY_AUTHOR, BY_MEMBER = 'author', 'member'
+    WHO_CREATED = (
+        (BY_AUTHOR, _('By author')),
+        (BY_MEMBER, _('By member')),
+    )
+
+    questionnaire = models.ForeignKey(
+        Questionnaire,
+        related_name='questions',
+    )
+    who_created = models.CharField(
+        _('Who is the author'),
+        max_length=10,
+        choices=WHO_CREATED,
+        default=BY_AUTHOR,
+        null=True,
+        blank=True
+    )
+    created_by_participant = models.ForeignKey(
+        'QuestionnaireParticipant',
+        related_name='questions',
+        null=True,
+        blank=True
+    )
+    question_text = models.TextField(
+        _('Question text'),
+        blank=False,
+        null=False
+    )
+    description = models.TextField(
+        _('Descripion'),
+        null=True,
+        blank=True
+    )
+    position = models.PositiveIntegerField(
+        _('The question position in the set'),
+        null=True,
+        blank=True,
+    )
+    is_approved = models.BooleanField(
+        _('User question approved by questionnaire author'),
+        default=False
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Question')
+        verbose_name_plural = _('Questions')
+
+    def __str__(self):
+        return self.question_text
+
+    def save(self, *args, **kwargs):
+        """
+        Save th instance.
+        """
+        max_position = type(self).objects.aggregate(Max('position'))\
+            .get('position_max') or 0
+        self.position = max_position + 1
+        super(Question, self).save(*args, **kwargs)
+
+    def has_perm(self, user):
+        """The stub for using in views.
+        """
+        return True
+
+    @property
+    def author(self):
+        cls = type(self)
+        if self.who_created == cls.BY_AUTHOR:
+            return  self.created_by
+        elif self.who_created == cls.BY_MEMBER:
+            return  self.created_by_participant
+        else:
+            return None
+
+    def __str__(self):
+        return self.question_text
+
+
+class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Recommendation' models class.
+    """
+
+    RED, YELLOW, GREEN = 'red', 'yellow', 'green'
+    COLORS = (
+        (RED, _('Red')),
+        (YELLOW, _('Yellow')),
+        (GREEN, _('Green')),
+    )
+    questionnaire = models.ForeignKey(
+        Questionnaire,
+        related_name='recommendations',
+        null=False,
+        blank=False,
+    )
+    question = models.ForeignKey(
+        Question,
+        related_name='recommendations',
+        null=True,
+        blank=True
+    )
+    for_color = models.CharField(
+        _('For what color'),
+        max_length=10,
+        choices=COLORS,
+        null=True,
+        blank=True)
+    name = models.CharField(
+        _('Name'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    description = models.TextField(
+        _('Descripion'),
+        null=True,
+        blank=True,
+    )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Recommendation')
+        verbose_name_plural = _('Recommendations')
+
+    def __str__(self):
+        return self.description or str(self.id)
+
+    def has_perm(self, user):
+        return True
+
+    def recommendations(self):
+        return Recommendation.objects.filter(question__questionnaire=self)\
+            .order_by('question__position')
+
+
+class QuestionnaireParticipant(ActiveModelMixing, models.Model):
+    email = models.EmailField(verbose_name='E-mail', max_length=255,
+                              db_index=True)
+    user = models.ForeignKey(User, related_name='questionnaire_cases',
+                             null=True, blank=True)
+    is_invited = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Questionnaire participant')
+        verbose_name_plural = _('Questionnaire participants')
+
+    def __str__(self):
+        return str(self.user) if self.user else self.email
+
+
+class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Questionnaire' case models class.
+    """
+    DRAFT, READY, ACTIVE, FINISHED = 'draft', 'ready', 'active', 'FINISHED'
+    STATUSES = (
+        (DRAFT, _('Draft')),
+        (READY, _('Ready')),
+        (ACTIVE, _('Actiive')),
+        (FINISHED, _('Finished')),
+    )
+
+    questionnaire = models.ForeignKey(
+        Questionnaire,
+        related_name='cases',
+    )
+    case_uuid = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+    )
+    status = models.CharField(
+        _('Status'),
+        max_length=20,
+        choices=STATUSES,
+        default=DRAFT,
+        editable=False,
+        null=False,
+        db_index=True
+    )
+
+    participants = models.ManyToManyField(QuestionnaireParticipant)
+    extra_questions = models.ManyToManyField(Question)
+    recommendations = models.ManyToManyField(Recommendation)
+
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Questionnaire case')
+        verbose_name_plural = _('Questionnaire cases')
+
+    def has_perm(self, user):
+        return True
+
+    def get_participants(self):
+        participants = list(self.participants\
+            .order_by('is_invited'))
+        is_correct = True
+        if len(participants) == 2:
+            inviter, invited = participants
+            if inviter.is_invited or not invited.is_invited:
+                is_correct = False
+        else:
+            is_correct = False
+        if is_correct:
+            return (inviter, invited)
+        else:
+            raise RuntimeError(_('The participants are invalid'))
+
+    def get_inviter(self):
+        """
+        Return the first participant.
+        """
+        return self.get_participants()[0]
+
+    def get_invited(self):
+        """
+        Return the second participant.
+        """
+        return self.get_participants()[1]
+
+    def get_participant(self, participant_type):
+        if participant_type == 'inviter':
+            return self.get_inviter()
+        elif participant_type == 'invited':
+            return self.get_invited()
+        else:
+            return None
+
+    def get_coincedences(self):
+        """
+        Return the answers coincendences.
+        """
+        answers = {}
+        shows = {}
+        _questions = []
+        for answer in Answer.objects.filter(
+            questionnaire_case=self):
+            if not answer.question:
+                continue
+
+            _questions.append(answer.question.id)
+
+            answers.setdefault(
+                answer.question.id, {})[answer.participant.pk] = \
+                    answer.answer
+            shows.setdefault(
+                answer.question.id, {})[answer.participant.pk] = \
+                    answer.show_answer
+        _questions = set(_questions)
+
+        inviter, invited = self.get_participants()
+        if all((inviter, invited)):
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
+                data = {
+                    'question': question,
+                    'inviter': answers.get(question.id, {}).get(inviter.id),
+                    'invited': answers.get(question.id, {}).get(invited.id),
+                    'inviter_show': shows.get(question.id, {}).get(inviter.id),
+                    'invited_show': shows.get(question.id, {}).get(invited.id),
+                }
+                data.update({
+                    'is_coincedence': data.get('inviter') and data.get('invited'),
+                    'need_show': (data.get('inviter') and data.get('invited')) or \
+                        (data.get('inviter_show') or data.get('invited_show')),
+                })
+                yield data
+
+    def get_coincedences_total(self):
+        """
+        Return how many coincedences
+        """
+        _coincedences = [item for item in self.get_coincedences() \
+            if item.get('is_coincedence')]
+        return len(_coincedences)
+
+    def get_answers(self, participant_type):
+        """
+        Return the answers.
+        """
+        responsive = None
+        inviter, invited = self.get_participants()
+        if participant_type == 'inviter':
+            responsive = inviter
+        elif participant_type == 'invited':
+            responsive = invited
+
+        if responsive:
+            answers = {}
+            shows = {}
+            _questions = []
+            for answer in Answer.objects.filter(
+                questionnaire_case=self, participant=responsive):
+                if not answer.question:
+                    continue
+                _questions.append(answer.question.pk)
+                answers[answer.question.id] = answer
+            _questions = set(_questions)
+
+            for question in self.questionnaire.questions\
+                .filter(id__in=_questions).order_by('position'):
+                answer = answers.get(question.id)
+                is_true = answer.answer
+                yield {
+                    'question': question,
+                    'answer': answers.get(question.id),
+                    'is_true': is_true,
+                    'show': shows.get(question.id),
+                }
+
+    def get_answers_total(self, participant_type):
+        """
+        Return how many positive answers.
+        """
+        _answers = [item for item in self.get_answers(participant_type) \
+            if item.get('is_true') ]
+        return len(_answers)
+
+    def get_inviter_answers(self):
+        """
+        Return positive answers for inviter.
+        """
+        return self.get_answers('inviter')
+
+    def get_inviter_answers_total(self):
+        """
+        Return how many positive answers for inviter.
+        """
+        return self.get_answers_total('inviter')
+
+    def get_invited_answers(self):
+        """
+        Return positive answers for invited.
+        """
+        return self.get_answers('invited')
+
+    def get_invited_answers_total(self):
+        """
+        Return how many positive answers for invited.
+        """
+        return self.get_answers_total('invited')
+
+
+class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
+    """
+    The 'Question answer' models class.
+    """
+    question = models.ForeignKey(
+        Question,
+        related_name='questions',
+        verbose_name=_('Question'),
+        null=True,
+    )
+    questionnaire_case = models.ForeignKey(
+        QuestionnaireCase,
+        related_name='questionnaire_cases',
+        verbose_name=_('Questionnaire cases'),
+        null=True,
+    )
+    participant = models.ForeignKey(
+        QuestionnaireParticipant,
+        related_name='answers',
+        verbose_name=_('Answer author'),
+    )
+    answer = models.NullBooleanField(
+        _('Answer'),
+        default=False,
+        null=True,
+        blank=True
+    )
+    show_answer = models.NullBooleanField(
+        _('Show'),
+        default=False,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = _('Question answer')
+        verbose_name_plural = _('Questions answers')
+
+    def __str__(self):
+        return 'Yes' if self.answer else 'No'
+
+    def get_answer(self):
+        return str(self)
+
+
+class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
+    class Meta:
+        ordering = ["-id"]
+
+    title = models.CharField(max_length=255, blank=False, null=False)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                             sizes=['big', 'small', 'th'], max_length=255, blank=True)
+    slug = models.SlugField(max_length=255)
+    short_description = models.TextField()
+    content = models.TextField()
+    video_code = models.CharField(max_length=255, blank=True, null=True)
+    keywords = models.CharField(max_length=2048, blank=True, null=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE, related_name='video')
+    country = models.ForeignKey(Country, null=True)
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def upload_images(self):
+        from core import tasks
+        params = {
+            'file': self.image.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
+    @staticmethod
+    def get_index_model(**kwargs):
+        from b24online.search_indexes import VideoIndex
+        return VideoIndex
+
+    def __str__(self):
+        return self.title
+
+    def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
+        if self.organization:
+            return self.organization.has_perm(user)
+
+        return user.is_commando or user.is_superuser
+
+    def get_absolute_url(self):
+        return reverse('video:detail', args=[self.slug, self.pk])
+
+
+
+class LeadsStore(ActiveModelMixing, models.Model):
+    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
+    username = models.ForeignKey(Profile, null=True, blank=True)
+    subject = models.CharField(max_length=2048, null=True, blank=True)
+    email = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=255, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    metadata = JSONField('Meta', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
+        if self.organization:
+            return self.organization.has_perm(user)
+        return user.is_superuser or user.is_commando or self.created_by == user
+
+    class Meta:
+        verbose_name = "Lead"
+        verbose_name_plural = "Leads"
+
+    def __str__(self):
+        return self.organization.name
+
+
 
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
@@ -2293,6 +2982,7 @@ def update_message_chat(sender, instance, created, **kwargs):
     """
     assert isinstance(instance, Message), \
         _('Invalid parameter')
+
     if created and instance.chat:
         instance.chat.updated_by = instance.sender
         instance.chat.updated_at = instance.created_at
@@ -2327,4 +3017,3 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
         recalculate_deal_cost(instance.deal)
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
-

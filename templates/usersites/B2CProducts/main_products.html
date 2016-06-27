@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if products %}
+        <section class="content__info__products">
+
+            <h2>{% trans "B2C Products" %}</h2>
+            <ul class="products-list">
+
+                {% for product in products %}
+                    <li class="product">
+                        <div class="product__cover vertical">
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+
+                            {% if product.image %}
+                               <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" />
+                            {% endif %}
+                            </a>
+                        </div>
+                        {% questionnaire_for_product product as questionnaires %}
+                        {% with questionnaires.count as has_questionnaires %}
+                        <div class="product__about">
+                            {# Register the 'view' event for b2c product #}
+                            {{ product|register_event:"view"|process_event:request }}
+                            <p class="desc"><strong>{{ product.name|truncatechars:80 }}</strong></p>
+                                {% if product.cost %}
+                                <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                {% else %}
+                                    {% if has_questionnaires %}
+                                        <p class="price"><a style="color:#000" href="{% url 'b2c_products:detail' product.slug product.pk %}" >{% trans 'Free' %}</a></p>
+                                    {% else %}
+                                        <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                    {% endif %}
+                                {% endif %}
+                        </div>
+                        {% if product.cost or not has_questionnaires %}
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </section>
+    {% endif %}

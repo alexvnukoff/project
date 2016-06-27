@@ -1,0 +1,107 @@
+/** General Styling ***************/
+/*********************************/
+
+/** Navigation Styling ***************/
+/*********************************/
+.cart-menu-img{
+	float: left;
+}
+
+/** Slider Styling ***************/
+/*********************************/
+
+/** Products Styling ***************/
+/*********************************/
+.btn-main-page{
+	left: 10px;
+}
+
+.main-products__btn{
+	float: right;
+}
+
+.prod-page__discount p{
+	float: left;
+	padding-right: 25px;
+}
+
+#clockdiv>div{
+	float: left;
+}
+
+.timer-mini{
+	float: left;
+	position: relative;
+}
+
+.main-products__timer p{
+	float: left;
+	position: relative;
+	padding-right: 10px;
+}
+
+/** Product Page Styling ***************/
+/*********************************/
+.prod-page__img-col{
+	border-right: 1px solid #ccc;
+}
+
+/** Coupons Styling ***************/
+/*********************************/
+
+/** Banners Styling ***************/
+/*********************************/
+
+/** News Styling ***************/
+/*********************************/
+.main-news__img{
+	float: left;
+	padding: 0 10px 10px 0;
+}
+
+.news-item a{
+	float: left;
+}
+
+.news-main{
+	float: left;
+}
+
+.about-main{
+	float: right;
+}
+
+/** Proposal Styling ***************/
+/*********************************/
+.btn-info {
+    margin-right:15px;
+    float:left;
+}
+
+.more.label {
+    float:right;    
+}
+
+/** Gallery slider Styling ***************/
+/*********************************/
+
+/** Gallery Styling ***************/
+/*********************************/
+
+/** Media carusel Styling ***************/
+/*********************************/
+
+/** Cart Page Styling ***************/
+/*********************************/
+.paypal-icon{
+	margin-right: 10px;
+}
+
+/** Contact Styling ***************/
+/*********************************/
+
+/** footer Styling ***************/
+/*********************************/
+footer span {
+    margin-right: 5px;
+}

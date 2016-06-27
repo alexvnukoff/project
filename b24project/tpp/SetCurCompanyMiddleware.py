@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from b24online.models import Organization
-from b24online.utils import get_current_organization
+from b24online.utils import get_org_by_id
 
 '''
     Set current company in B2B for user when company selected for manging
@@ -33,6 +33,5 @@ class SetCurCompany:
 
                     if not organization.has_perm(request.user):
                         return HttpResponseRedirect(reverse('denied'))
-
-                    get_current_organization.cache_clear()
+                    get_org_by_id.cache_clear()
                     request.session['current_company'] = organization_id

@@ -8,6 +8,7 @@
 {% block title %}{{ object.name }} {{ object.sku }}{% endblock %}
 {% block content %}
     {{ block.super }}
+
    <section class="content__info grid-layout">
         {# Register the 'view' event for b2c product #}
         {{ object|register_event:"click"|process_event:request }}

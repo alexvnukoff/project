@@ -103,36 +103,9 @@
 <div class="news-main">
     {% block left %}
          <div class="news-left">
+         {% comment %}
          <div class="b-filter">
             	<div class="b-filter-left">
-                	<select id="lang_select">
-                    	<option disabled selected>{% trans 'Mother tongue' %}</option>
-                        {% get_available_languages as LANGUAGES %}
-                        {% for code, lang in LANGUAGES %}
-                            <option value="{{ code }}">{{ lang }}</option>
-                        {% endfor %}
-                    </select>
-                     <!-- Google Translate injection -->
-                    <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
-                        <script type="text/javascript">
-                            function googleTranslateElementInit() {
-                                new google.translate.TranslateElement({
-                                    pageLanguage: 'en',
-                                    multilanguagePage: true,
-                                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element_main');
-                            }
-                        </script>
-                        <style type="text/css">
-                        .goog-te-combo {
-                          width: 200px;
-                        }
-                       .goog-te-gadget-simple{background-color:#fff;
-                                              border-left:1px solid #d5d5d5;border-top:1px solid #9b9b9b;border-bottom:1px solid #e8e8e8;border-right:1px solid #d5d5d5;
-                                              font-size: 6pt;display:inline-block;padding-top:1px;cursor:pointer;zoom:1;*display:inline;float: left;width: 107px;}
-                        </style>
-                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                </div>
-            <!-- /Google Translate injection -->
                 </div>
               {% if not addNew or not user.is_authenticated %}
                   <a  class="add-new {% if not user.is_authenticated %}logged-out{% endif %}" href="#">
@@ -150,39 +123,7 @@
                     </a>
               {% endif %}
             </div>
-          <script>
-                    $(document).ready(function() {
-                          var path = (window.location.host).split('.');
-                          path = path[0];
-                         $("#lang_select").find('option').each(function( i, opt ) {
-                            if( opt.value === path )
-                                $(opt).attr('selected', 'selected');
-                        });
-                    });
-                    $( "#lang_select" ).change(function(e) {
-                        if (!$( this ).val())
-                        return;
-
-                        path = (window.location.host).split('.');
-                        if (path[0] == 'www'){
-                            delete path[0]
-                        }
-
-                        if (path.length > 2){
-                            host = path[1] + '.' + path[2]
-                        }
-                        else{
-                            host = window.location.host
-                        }
-
-
-                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
-                                window.location.pathname + window.location.search + window.location.hash;
-
-                    });
-
-                </script>
-
+            {% endcomment %}
 
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
@@ -196,22 +137,23 @@
                 {% endif %}
                 <div id="tabs-1">
                     <ul class="tab1-cate">
-                        <li><a class="single-page" href="{% url 'wall:main' %}">{% trans 'Wall' %}</a></li>
-                    	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
-                        <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products B2B' %}</a></li>
-                        <li><a class="single-page" href="{% url 'products:main_b2c' %}">{% trans 'Products B2C' %}</a></li>
-                        <li><a class="single-page" href="{% url 'products:main_сoupons' %}">{% trans 'Online Coupons' %}</a></li>
-                        <li><a class="single-page" href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
-                        <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
-                        <li><a class="single-page" href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
-                        <li><a class="single-page" href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
-                        <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
-
+                        <li><a class="single-page" href="{% url 'wall:main' %}"><i class="icon-menu"></i>&nbsp;{% trans 'Wall' %}</a></li>
+                    	<li><a class="single-page" href="{% url 'news:main' %}"><i class="icon-coffee"></i>&nbsp;{% trans 'News' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main' %}"><i class="icon-suitcase"></i>&nbsp;{% trans 'Products B2B' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main_b2c' %}"><i class="icon-basket"></i>&nbsp;{% trans 'Products B2C' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main_сoupons' %}"><i class="icon-globe"></i>&nbsp;{% trans 'Online Coupons' %}</a></li>
+                        <li><a class="single-page" href="{% url 'tpp:main' %}"><i class="icon-shield"></i>&nbsp;{% trans 'Organizations' %}</a></li>
+                        <li><a class="single-page" href="{% url 'companies:main' %}"><i class="icon-briefcase"></i>&nbsp;{% trans 'Companies' %}</a></li>
+                        <li><a class="single-page" href="{% url 'innov:main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
+                        <li><a class="single-page" href="{% url 'proposal:main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals' %}</a></li>
+                        <li><a class="single-page" href="{% url 'exhibitions:main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
 {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-{% endcomment %}        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
-                        <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
-                        <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
+                        <li><a class="single-page" href="{% url 'tv:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP TV' %}</a></li>
+{% endcomment %}
+                        <li><a class="single-page" href="{% url 'video:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP CHANNEL' %}</a></li>
+                        <li><a class="single-page" href="{% url 'vacancy:main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
+                        <li><a class="single-page" href="{% url 'resume:main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
 
 
                         <!-- temporary hide..
@@ -228,35 +170,33 @@
                         <ul class="tab1-cate">
                             {% if user.is_authenticated %}
                                 {% if user.is_commando or user.is_superuser %}
-                                    <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}">{% trans 'Admin Panel' %}</a></li>
+                                    <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}"><i class="icon-lock"></i>&nbsp;{% trans 'Admin Panel' %}</a></li>
                                 {% endif %}
                             {% endif %}
-                            <li><a class="single-page" href="{% url 'news:my_main' %}">{% trans 'News' %}</a></li>
-                            <li><a class="single-page" href="{% url 'products:my_main' %}">{% trans 'Products B2B' %}</a></li>
-                            <li><a class="single-page" href="{% url 'products:my_b2c' %}">{% trans 'Products B2C' %}</a></li>
-                            <li><a class="single-page" href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
-                            <li><a class="single-page" href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
-                            <li><a class="single-page" href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
-                            <li><a class="single-page" href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
-
-                            <li><a class="single-page" href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
+                            <li><a class="single-page" href="{% url 'news:my_main' %}"><i class="icon-coffee"></i>&nbsp;{% trans 'News' %}</a></li>
+                            <li><a class="single-page" href="{% url 'products:my_main' %}"><i class="icon-suitcase"></i>&nbsp;{% trans 'Products B2B' %}</a></li>
+                            <li><a class="single-page" href="{% url 'products:my_b2c' %}"><i class="icon-basket"></i>&nbsp;{% trans 'Products B2C' %}</a></li>
+                            <li><a class="single-page" href="{% url 'tpp:my_main' %}"><i class="icon-shield"></i>&nbsp;{% trans 'Organizations' %}</a></li>
+                            <li><a class="single-page" href="{% url 'companies:my_main' %}"><i class="icon-briefcase"></i>&nbsp;{% trans 'Companies' %}</a></li>
+                            <li><a class="single-page" href="{% url 'leads:main' %}"><i class="icon-chart-line"></i>&nbsp;{% trans 'Leads' %}</a></li>
+                            <li><a class="single-page" href="{% url 'video:my_main' %}"><i class="icon-youtube-play"></i>&nbsp;{% trans 'Video Gallery' %}</a></li>
+                            <li><a class="single-page" href="{% url 'innov:my_main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
+                            <li><a class="single-page" href="{% url 'proposal:my_main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals'  %}</a></li>
+                            <li><a class="single-page" href="{% url 'exhibitions:my_main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
 
     {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
                             <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
     {% endcomment %}
-                            <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
+                            <li><a href="{% url 'adv_banners:main' %}"><i class="icon-th-large"></i>&nbsp;{% trans 'Banners' %}</a></li>
     {% comment %}           <li><a href="{% url 'Adv:main' %}">{% trans 'Advertisement' %}</a></li>
-    {% endcomment %}        <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
-                            <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
-                            <li><a class="single-page" href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
-                            <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
+    {% endcomment %}        <li><a href="{% url 'analytic:main' %}"><i class="icon-chart-bar"></i>&nbsp;{% trans 'Analytic' %}</a></li>
+                            <li><a href="{% url 'site:main' %}"><i class="icon-cog"></i>&nbsp;{% trans 'Site' %}</a></li>
+                            <li><a class="single-page" href="{% url 'vacancy:my_main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
+                            <li><a href="{% url 'resume:my_main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
 
                         {# The deals history #}
-                        <li><a href="{% url 'products:deal_list' %}">
-                            {% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
-                        <li><a href="{% url 'products:deal_list' %}">
-                            {% trans 'Deals history' %}</a></li>
-
+                        <li><a href="{% url 'products:deal_list' %}"><i class="icon-list-bullet"></i>&nbsp;{% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
+                        <li><a href="{% url 'products:deal_list' %}"><i class="icon-book"></i>&nbsp;{% trans 'Deals history' %}</a></li>
                             <!-- temporary hide..
                             <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                             <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
@@ -280,7 +220,9 @@
         </div>
     {% endblock %}
         {% block center %}
-            <div class="news-center">
+            {% block centerdiv %}
+            <div class="news-center" {% block extra_center_cls %}{% endblock %}>
+            {% endblock centerdiv%}
                 <div  class="keyword">
                     {% block keywords %}
                         <div class="showFilter">
@@ -319,7 +261,11 @@
               </div>
 
               <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
-              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
+
+              {# Unreaded messages #}
+              {% get_messages_number as messages_number %}
+              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{{ messages_number }} </a>
+
               <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
 
               {% if request.user.is_authenticated %}  
@@ -337,6 +283,7 @@
                             <li><div class="shortcut"><a href="{% url 'proposal:add' %}">{% trans "Add Business Proposal" %}</a></div></li>
                             <li><div class="shortcut"><a href="{% url 'products:add' %}">{% trans "Add B2B Product" %}</a></div></li>
                             <li><div class="shortcut"><a href="{% url 'products:addB2C' %}">{% trans "Add B2C Product" %}</a></div></li>
+                            <li><div class="shortcut"><a href="{% url 'products:producer_add' %}">{% trans "Add Product Producer" %}</a></div></li>
                         </ul>
 
                         <span class="titlesub">{% trans "Jobs &amp; Vacancies" %}</span>

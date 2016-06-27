@@ -1,0 +1,36 @@
+{% extends 'usersites_templates/cineret_blue/index.html' %}
+{% load CustomFilters %}
+{% block content %}
+    {{ block.super }}
+    {# ------------------------------------- #}
+
+    <div class="container">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header in-page">{{ object.title }}</h1>
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="cust-nav">
+               {% for page in site.user_site.organization.additional_pages.all %}
+                    <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
+                {% endfor %}
+            </div>{# /secondary menu #}
+        </div>
+
+        <!-- Intro Content -->
+        <div class="row cust-page">
+            <div id="no-more-tables" class="col-md-12 about-page-content">
+                <p>{{ object.content|cleanHtml|safe }}</p>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+
+    {# ------------------------------------- #}
+
+{% endblock %}

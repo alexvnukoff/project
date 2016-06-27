@@ -1,0 +1,57 @@
+{% load i18n %}
+{% load static from staticfiles %}
+
+<div id="main_wrapper">
+    <form class="dialog-form" method="POST" action="{% url 'registration_register' %}">
+        {% csrf_token %}
+        <table cellPadding="2" celSpaing="2" width="100%">
+            <tr>
+                <td colspan="2">
+                {% for key, value in form.errors.items %}
+                    {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
+                {% endfor %}
+                </td>
+            </tr>
+            <tr valign="top">
+                <td><label>{% trans 'E-mail' %}</label></td>
+                <td>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.email.errors.as_text }}</p>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><label>{% trans 'Password' %}</label></td>
+                <td>
+                    {{ form.password1}}
+                    {% if form.password1.errors %}
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.password1.errors.as_text }}</p>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><label>{% trans 'Confirm password' %}</label></td>
+                <td>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <p style="color: red; font-weight: bold; font-size: 80%;">{{ form.password2.errors.as_text }}</p>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top: 10px;color: red;">{{ form.errors.rules }}</div>
+                    <input type="checkbox" name="tos" />
+                        {% trans 'I have read and accept' %} <a href="#">{% trans 'the terms of use' %}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" class="register_user" name="Register" class="btnlogin" value="{% trans 'Sign up' %}">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

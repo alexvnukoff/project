@@ -14,7 +14,7 @@
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/tpp.reset.css' %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/gmapCompany.css' %}" />
 
 {% endblock %}
 
@@ -74,9 +74,28 @@
             'popup_vac': '{% trans "Vacancy title" %}',
             'popup_administrator': '{% trans "Administrator" %}',
             'popup_title': '{% trans "Add staff" %}',
+            'popup_user_title': '{% trans "Add user email" %}',
+            'popup_title_edit': '{% trans "Edit staff" %}',
             'popup_loading': '{% trans "Loading..." %}',
-            'select_department': '{% trans "Select department" %}'
+            'select_department': '{% trans "Select department" %}',
+            'select_vacancy': '{% trans "Select vacancy" %}',
+            'popup_hidden_user': '{% trans "Do not show user" %}',
+            'extra_permissions_title': '{% trans "Select additional permissions" %}',
+            'popup_staffgroup': '{% trans "Related to staff group" %}',
+            'popup_for_children': '{% trans "Use permissions for child companies" %}',
         };
+
+        var STAFFGROUPS = [
+            {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
+        var EXTRAGROUPS = [
+            {% for item in extragroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
+
     </script>
 {% endblock %}
 
@@ -178,9 +197,6 @@
                         {% trans "Companies" %}
                     </a>
                 </li>
-                {% for page in item.additional_pages.all %}
-                     <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
-                {% endfor %}
             </ul>
         </div>
         <div id="cpn-tabs-about">
@@ -236,11 +252,25 @@
                       <div class="org-map"> <div   id="map-canvas"></div></div>
                 </div>
             </div>
-            {% for page in item.additional_pages.all %}
-            <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
-                     <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
-             </div>
-         {% endfor %}
         </div>
     </div>
+
+        <div class="cpn-details-tab" id="tpp-details-tab">
+          <div class="tab-cate">
+
+          <ul>
+            {% for page in item.additional_pages.all %}
+                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:40 }}</a></li>
+            {% endfor %}
+         </ul>
+
+        </div>
+
+            {% for page in item.additional_pages.all %}
+              <div id="tabs-{{ forloop.counter0|add:5 }}">
+                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+              </div>
+            {% endfor %}
+        </div>
+
 {% endblock %}

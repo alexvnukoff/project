@@ -38,18 +38,29 @@
             {% if delete_url %}
                 <div class="tender-action">
                     <i class="imgnews remove icon-action"></i>
-                    <a href="{% url url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}">
+                    <a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}">
                         <span class="deletext">{% trans 'remove' %}</span>
                     </a>
                 </div>
             {% elif delete %}
                 <div class="tender-action">
                     <i class="imgnews remove icon-action"></i>
-                    <a href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}">
+                    <a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}">
                         <span class="deletext">{% trans 'remove' %}</span>
                     </a>
                 </div>
             {% endif %}
+            {% if extra_options %}
+                {% for option_url, option_title in extra_options %}
+                 <div class="tender-action">
+                     <i class="imgnews noty icon-action"></i>
+                     <a href="{{ option_url }}?next={{ current_path }}">
+                         <span class="deletext">{{ option_title }}</span>
+                     </a>
+                 </div>
+                 {% endfor %}
+            {% endif %}
+
         </div>
     </div>
 {% endif %}

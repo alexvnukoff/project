@@ -14,6 +14,12 @@ from usersites.models import UserSite
 class SiteForm(forms.ModelForm):
     domain = forms.URLField(required=False)
     sub_domain = forms.CharField(required=False)
+    facebook = forms.CharField(required=False)
+    youtube = forms.CharField(required=False)
+    twitter = forms.CharField(required=False)
+    instagram = forms.CharField(required=False)
+    vkontakte = forms.CharField(required=False)
+    odnoklassniki = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.gallery_images_form = kwargs.pop('gallery_images_form')
@@ -24,6 +30,13 @@ class SiteForm(forms.ModelForm):
                 self.initial['domain'] = self.instance.domain_part
             else:
                 self.initial['sub_domain'] = self.instance.domain_part
+
+        self.initial['facebook'] = self.instance.facebook
+        self.initial['youtube'] = self.instance.youtube
+        self.initial['twitter'] = self.instance.twitter
+        self.initial['instagram'] = self.instance.instagram
+        self.initial['vkontakte'] = self.instance.vkontakte
+        self.initial['odnoklassniki'] = self.instance.odnoklassniki
 
     def clean_sub_domain(self):
         sub_domain = self.cleaned_data.get('sub_domain', None)
@@ -103,13 +116,13 @@ class SiteForm(forms.ModelForm):
 
     class Meta:
         model = UserSite
-        fields = ('slogan', 'template', 'footer_text', 'logo')
+        fields = ('slogan', 'template', 'footer_text', 'logo', 'language')
 
 
 class GalleryForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
-        fields = ('image',)
+        fields = ('image', 'description', 'link')
 
    # def clean_image(self):
    #     image_obj = self.cleaned_data.get('image', None)
@@ -144,7 +157,7 @@ class BannerForm(forms.ModelForm):
 
 
 GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
-                                            form=GalleryForm, max_num=5, validate_max=True, extra=5)
+                                            form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description', 'link'))
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),

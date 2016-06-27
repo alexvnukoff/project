@@ -1,0 +1,115 @@
+/*---------- General Styling ----------*/
+
+/*---------- Navigation Styling ----------*/
+.xs-navbar ul li{
+	float: left;
+}
+
+.top-nav li{
+	float: right;
+}
+
+.top-nav{
+	float: right;
+}
+
+.side-nav-wrapper{
+	float: left;
+}
+
+.social-header .button{
+	float: left;
+}
+
+.slider-wrapper{
+	float: left;
+}
+
+#banner1{
+	float: right;
+}
+
+.side-nav-wrapper{
+	float: left;
+}
+
+.banner_cat{
+	padding-right: 5px;
+}
+
+.banner_cat:last-child{
+	padding-right: 0;
+}
+
+
+.coupons{
+	float: right;
+}
+
+.banner{
+	float: left;
+}
+
+.sidebar-list .lvl0-sidebar span{
+	padding-right: 5px;
+}
+
+.paginator, .category{
+	float: left;
+}
+
+
+.pagination li{
+	float: left;
+}
+
+.product__btn{
+	right: 15px;
+}
+
+.item-page__coupon div {
+    float: left;
+    padding-right: 30px;
+}
+/*---------- Product Styling ----------*/
+.coupon{
+	float: right;
+}
+
+.news__img{
+	float: left;
+	padding-right: 10px
+}
+
+/*---------- Footer Styling ----------*/
+footer span{
+	margin-right: 5px;
+}
+
+.footer-col{
+	float: left;
+}
+
+.pay{
+	float: right;
+}
+
+.news__btn{
+	float: right;
+}
+/*---------- Banner Advertisment Styling ----------*/
+.membership-banner__member{
+	float: left;
+}
+
+.membership-banner__ad{
+	float: right;
+}
+
+.membership-banner__member img{
+	float: left;
+}
+
+.membership-banner__member-text{
+	float: left;
+}

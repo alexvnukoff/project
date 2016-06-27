@@ -1,0 +1,12 @@
+{% extends 'usersites_templates/golan/index.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load content_tags %}
+
+{% block content %}
+    {{ block.super }}
+
+    {% proposal 'Proposals/list.html' 10 page %}
+
+{% endblock %}

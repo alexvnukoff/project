@@ -1,0 +1,138 @@
+/*---------- General Styling ----------*/
+
+.btn-default{
+    float: right;
+}
+
+/* ----------- Navigation Styling -------------------- */
+
+.navbar-right{
+    clear: right;
+	 margin-right: 0;
+    float: right!important;
+}
+
+.navbar-nav{
+	float: right!important;
+	clear: right;
+}
+
+.navbar-nav>li{
+	float: left;
+}
+
+.overlay {
+    left: 0;
+}
+
+.social-header .button{
+	float: left;
+}
+
+.social-header{
+    float: right!important;
+}
+
+.tel{
+    float: left;
+}
+
+
+
+/* ----------- Proposal Styling -------------------- */
+
+.proposal-thumb .btn-default {
+    float: right;
+}
+
+.proposal-link{
+    float: right;
+}
+
+.proposal-link span{
+    float: left;
+    padding-right: 5px;
+}
+
+/* ----------- News Styling -------------------- */
+.main-news{
+    float: right;
+}
+
+.news__img{
+    float: left;
+    padding-right: 10px;
+    margin: 20px 0 20px;
+}
+
+ /* ----------- Coupons Styling -------------------- */
+.coupon-div{
+	float: left;
+}
+
+
+/* ----------- Product Styling -------------------- */
+
+.category{
+    float: left;
+    padding-left: 10px;
+}
+
+.btn-mail-order{
+    float: left;
+}
+
+.dec,
+.inc{
+    float: none;
+}
+
+.product__btn{
+	float: none;
+}
+
+/* ----------- Contact Styling -------------------- */
+
+.main-contact .control-group{
+	text-align: left;
+}
+
+.contact-info{
+	float: left;
+}
+
+.contact-fields{
+	float: right;
+}
+
+/* ----------- Counter Styling -------------------- */
+
+/*---------- Footer Styling ----------*/
+.footer-col span{
+	padding-right: 10px;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+
+
+/* ----------- Product list Styling -------------------- */
+.item-page__coupon div{
+	float: left;
+	padding-left: 15px;
+}
+
+.item-page{
+	float: left;
+}
+
+.item-price-table{
+	float: right;
+}
+
+
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+.pay{
+    float: right;
+}

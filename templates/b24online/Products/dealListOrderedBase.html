@@ -1,12 +1,24 @@
 {% extends 'b24online/Products/dealListBase.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
 
 {% block extra_headers %}
-    <th>Already paid</th>
-    <th>Reject deal</th>
+  <th>Already paid</th>
+  <th>Reject deal</th>
 {% endblock %}
 
+{% block product_amount_header %}
+  <th class="child" colspan="3">{% trans 'Amount' %}</th>
+{% endblock %}
+
+{% block product_amount %}
+  <td align="center" colspan="3">{{ deal_item.quantity }}</td>
+{% endblock %}
+
+
 {% block extra_data %}
-    <td></td>
-    <td></td>
+  <td></td>
+  <td></td>
 {% endblock %}
 

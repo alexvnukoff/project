@@ -10,7 +10,7 @@
             <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" />
         {% else %}
             {% for i in site.user_site.slider_images %}
-            <img src="{{ i.image.big }}" alt="">
+            <img src="{{ i.image.big }}" alt="" title="{% if i.description %}{{ i.description }}{% endif %}">
             {% endfor %}
         {% endif %}
     </div>

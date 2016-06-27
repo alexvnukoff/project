@@ -8,9 +8,9 @@
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
     <style>
         .custom-content {
             float: left;
@@ -57,7 +57,7 @@
                 <div class="message-tabcontent message-tabcontent-org">
                     <ul class="custom-ms">
                         <li style="display: none"><a href="#placeholder"></a> </li>
-                        {% for chat in organization_chats %}
+                        {% for chat in page_obj.object_list %}
                             {% get_chat_other_side chat as other_side %}
                             <li class="data-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
                             <span class="thumb">

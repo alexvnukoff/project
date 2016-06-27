@@ -166,6 +166,8 @@ if ($('.fancybox').length > 0) {
     $('.content__info').addClass('grid-layout');
 
   });
+
+
 });
 
 $('.select-dropdown a').on('click', function(event) {
@@ -245,4 +247,152 @@ $(function(){
 
   });
 };
+
+
+// The dialog forms
+var DIALOG_FORM_OPEN_CLS = '.dialog-open',
+    DIALOG_FORM_CLS = '.dialog-form',
+    DIALOG_HREF_CLS = '.dialog-href';
+
+$(document).ready(function() {
+    // The search with autocomplete
+    if (typeof SEARCH_Q_URL !== 'undefined') {
+        var search_cache = {};
+        $('#search_q').autocomplete({
+            minLength: 2,
+            source: function(request, response) {
+                var term = request.term;
+                if (term in search_cache) {
+                    response(search_cache[term]);
+                    return;
+                }
+                $.getJSON(SEARCH_Q_URL, request, function(data, status, xhr) {
+                    search_cache[term] = data;
+                    response(data);
+                });
+            }
+        }).data('ui-autocomplete')._renderItem = function(ul, item) {
+            return $('<li></li>')
+                .data('item.autocomplete', item)
+                .append('<img style="margin: 5px; height="20" src="' + item.img + '" />')
+                .append(item.label)
+                .appendTo(ul);
+        };
+    }
+
+    $(DIALOG_FORM_OPEN_CLS).on('click', function(e) {
+        e.preventDefault();
+        $('#navbarCollapse').collapse('hide');
+        processDialogForm(this);
+    });
+    
+});    
+
+
+var processDataDialogDivId = 'processDataDialog',
+    processDataDialogId = '#' + processDataDialogDivId;
+
+/**
+ * Process the dialog form for clicked 'href'
+ */
+function processDialogForm(selectedHref) {
+    var url = $(selectedHref).attr('href'),
+        processDataDialog = $(processDataDialogId);
+    if (processDataDialog.length == 0) {
+        var processDataDialog = $('<div/>')
+            .attr('height', 300)
+            .attr('id', processDataDialogDivId)
+            .hide();
+        $('body').children(':first').prepend(processDataDialog);
+    }
+    $(processDataDialog).dialog({
+        autoOpen: false,
+        minHeight: 300,
+        minWidth: 200,
+        maxWidth: 400,
+        width: 300,
+        modal: true,
+        draggable: true,
+        resizable: true,
+        open: function() {
+            initDialogForms();
+            initDialogHrefs();
+        }
+    });
+    
+    $.get(url, function(data) {
+        var title = $(selectedHref).data('title') || 'User registration';
+        $(processDataDialog).dialog('option', 'title', title);
+        $(processDataDialog).html(data).dialog('open');
+        $(processDataDialog).dialog("widget").css('height', 'auto');
+    });
+}
+
+/**
+ * Assign the handler for form submitting
+ */
+function initDialogForms() {
+    $(DIALOG_FORM_CLS).each(function() {
+        $(this).submit(function(event) {
+            event.preventDefault();
+            $(this).ajaxSubmit({
+                success: function(data, textStatus, jqXHR) {
+                    var newFormDiv,
+                        newContent = $.parseHTML(data),
+                        newDiv = $.grep(newContent, function(item) {
+                            return $(item).is('div');
+                        }),
+                        checkMeta = $.grep(newContent, function(item) {
+                            return $(item).is('meta');
+                        });
+                    if (checkMeta.length > 0) {
+                        $(processDataDialogId).dialog('close');                    
+                        location.reload();
+                    } else if ((newDiv.length > 0) && $(processDataDialogId).dialog('isOpen')) {
+                        newFormDiv = $(newDiv).children(':first');
+                        $(DIALOG_FORM_CLS).each(function() {
+                            $(this).remove();
+                        });
+                        $('#main_wrapper').empty().append(newFormDiv);
+                        initDialogForms();
+                        initDialogHrefs();
+                    }
+                },
+                error: function(jqXHR, testStatus) {
+                    $(processDataDialogId).dialog('close');                    
+                }
+            });
+        });
+    });
+}
+
+
+/**
+ * Assign the handler for hrefs in dialogs
+ */
+function initDialogHrefs() {
+    $(DIALOG_HREF_CLS).each(function() {
+        $(this).click(function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.get(url, function(data) {
+                var newFormDiv,
+                    newContent = $.parseHTML(data),
+                    newDiv = $.grep(newContent, function(item) {
+                        return $(item).is('div');
+                    });
+                if ((newDiv.length > 0) && $(processDataDialogId).dialog('isOpen')) {
+                    newFormDiv = $(newDiv).children(':first');
+                    $(DIALOG_FORM_CLS).each(function() {
+                        $(this).remove();
+                    });
+                    $('#main_wrapper').empty().append(newFormDiv);
+                    initDialogForms();
+                    initDialogHrefs();
+                 }
+            });
+        });
+    });
+}
+
 

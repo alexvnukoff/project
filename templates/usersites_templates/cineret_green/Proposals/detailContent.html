@@ -1,0 +1,32 @@
+{% extends 'usersites_templates/cineret_green/index.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+    {{ block.super }}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header in-page">{{ object.title }}</h1>
+        </div>
+    </div>
+    {# /.row #}
+
+    {# Proposal Content #}
+    <div class="row">
+
+            {# Register the 'view' event for b2b product #}
+            {{ object|register_event:"view"|process_event:request }}
+
+            <div class="col-md-12 desc-detail-page">
+                <p>{{ object.description|cleanHtml|safe }}</p>
+            </div>
+
+    </div>{# /.row #}{# /Proposal Content #}
+
+    <a href="{% url 'proposal:main' %}" class="proposal-link"><span class="glyphicon glyphicon-paperclip proposal-clip"></span>{% trans 'More' %} {% trans 'Business proposals' %}</a>
+</div>
+
+
+{% endblock %}

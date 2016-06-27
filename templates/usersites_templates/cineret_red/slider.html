@@ -1,0 +1,62 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{# ------------------------------ #}
+
+<!-- Header Carousel -->
+    <header id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators hidden-xs">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+
+            {% if site.user_site.slider_images|length == 0 %}
+
+                <div class="item active">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+
+            {% else %}
+
+                {% for i in site.user_site.slider_images %}
+                    {% if forloop.first %}
+                        <div class="item active ">
+                            <img src="{{ i.image.original }}" >
+                        </div>
+                    {% else %}
+                        <div class="item fill">
+                            <img src="{{ i.image.original }}" >
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+
+
+    </header>
+
+{# ------------------------------- #}
+
+
+
+{# secondary menu - custom gages #}
+      <div class="container">
+        <div class="cust-nav">
+           {% for page in site.user_site.organization.additional_pages.all %}
+                <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
+            {% endfor %}
+        </div>{# /secondary menu #}
+      </div>

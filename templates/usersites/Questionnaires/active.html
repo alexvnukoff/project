@@ -1,0 +1,37 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% with object.item as product %}
+    <section class="content__info grid-layout">
+        <div class="data">
+            <h2>{{ object.name }}</h2>
+            <hr class="hr-divider-one">
+            <div id="description">
+                {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
+                {{ object.short_description }}
+            </div>
+            <div class="data">
+                {% if already %}
+                    <p class="notify">
+                    {% trans 'You have activated this questionnaire case already' %}.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endwith %}
+{% endblock %}

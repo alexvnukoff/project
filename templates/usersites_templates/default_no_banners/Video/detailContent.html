@@ -1,0 +1,24 @@
+{% extends 'usersites_templates/default_no_banners/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <section class="content__info">
+        <article>
+
+            <h3>{{ object.title }}</h3>
+
+            {% if object.video_code %}
+                <iframe width="540" height="322" src="//www.youtube.com/embed/{{ object.video_code }}" frameborder="0" allowfullscreen></iframe>
+            {% endif %}
+
+            {{ object.content|cleanHtml|safe }}
+
+
+        </article>
+    </section>
+{% endblock %}

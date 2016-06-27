@@ -1,0 +1,95 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
+{# the coupon will take 50% of the page. #}
+{% if b2c_coupons %}
+    <div class="container">
+    <div class="col-md-12 col-sm-12 col-xs-12 main-coupons ">
+
+        <div class="row">
+            <!-- Coupons header -->
+            <div class="col-md-12 col-sm-12">
+                <h2 class="page-header">{% trans 'Coupons' %}</h2>
+            </div>
+        </div>
+
+        {# Coupons display. Template display 2 coupons. #}
+        {# Coupon is a product, so it will get the product declarations unless there is another need. #}
+        <div class="row">
+            {# Looping the coupons. #}
+            {% for product in coupons %}
+
+                <div class="col-sm-12 col-md-12 col-xs-12 product coupon">
+
+                        <div class="col-sm-3 col-md-3 hidden-xs coupon-div">
+
+                            {% if product.image %}
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" class="img-responsive" >
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-xs-6 coupon-div">
+
+                            <div class="product__caption">
+
+                             <h3 class="product__title ">{{ product.name|truncatechars:20 }}</h3>
+
+                            {# KRN here i want the product category to be #}
+                            {% comment %}
+                            {% for category in product.categories %}
+                                <p class="product__cat">{{ category|truncatechars:20 }}</p>
+                            {% endfor %}
+                            {% endcomment %}
+
+                            {# Description of the coupon product #}
+                            <p class="product__desc">{{ product.short_description|truncatechars:105 }}</p>
+
+                            <div class="coupon-timer">
+                                <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                            </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-3 col-md-3 col-xs-6 coupon-div">
+
+                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+
+                            {% if product.cost %}
+                                <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+
+                                {# If there is a discount, display it #}
+                                {% if product.cost != product.get_discount_price %}
+                                    <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                {% endif %}
+
+                                </p>
+
+                                {% else %}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
+
+                            {# The button will lead to the product details. #}
+                            <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+
+                        </div>
+
+
+                </div>
+
+            {% endfor %}
+        </div>
+
+{#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>#}
+
+    </div>{# /Coupons modoul #}
+    </div>
+{% endif %}

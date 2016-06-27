@@ -144,7 +144,11 @@ CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.use
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
 ACCOUNT_ACTIVATION_DAYS = 7  # One week user's account activation period
@@ -171,6 +175,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
     'b24online.stats.middleware.RegisteredEventMiddleware',
+    'tpp.GeolocationFilterByRegion.GeolocationMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -180,22 +185,26 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 WSGI_APPLICATION = 'tpp.wsgi.application'
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/1",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     }
-# }
-
 CACHES = {
-    'default': {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    'locmem': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'unique-snowflake',
     }
 }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'unique-snowflake',
+#     }
+# }
 
 # SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # SESSION_COOKIE_DOMAIN=".stackoverflow.com"
@@ -303,13 +312,14 @@ LANGUAGES = (
     ('he', gettext('Hebrew')),
     ('ar', gettext('Arabic')),
     ('zh', gettext('Chinese')),
+    ('es', gettext('Spanish')),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk')
+    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk', 'es')
 }
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
@@ -361,3 +371,19 @@ ORDER_NOTIFICATION_TEMPLATE = 'b24online/Products/notification.txt'
 ORDER_NOTIFICATION_DISABLE = False
 ORDER_NOTIFICATION_FROM = 'noreply@tppcenter.com'
 ORDER_NOTIFICATION_TO = 'orders@b24online.com'
+
+# Countries ID's form our database
+GEO_COUNTRY_DB = {
+    'Azerbaydjan': '1',
+    'Armenia': '2',
+    'Belarus': '3',
+    'Georgia': '4',
+    'Israel': '5',
+    'Kazakhstan': '6',
+    'Kyrgyzstan': '7',
+    'Latvia': '8',
+    'Lithuania': '9',
+    'Moldova': '10',
+    'Russia': '11',
+}
+

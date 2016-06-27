@@ -1,0 +1,85 @@
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
+{# the coupon will take 50% of the page. #}
+{% if b2c_coupons %}
+
+    <div class="container">
+
+        <div class="row">
+            <!-- Coupons header -->
+            <div class="col-md-12 col-sm-12">
+                <h2 class="page-header">{% trans 'Coupons' %}</h2>
+            </div>
+        </div>
+
+        {% for product in coupons %}
+
+            <div class="row ver-coupon-wrap">
+
+                <div class="col-md-12 col-sm-12 hidden-xs">
+                    <h3 class="ver-coupon__title">{{ product.name|truncatechars:80 }}</h3>
+                </div>
+
+                <div class="col-md-12 col-sm-12 visible-xs">
+                    <h3 class="ver-coupon__title">{{ product.name|truncatechars:30 }}</h3>
+                </div>
+
+                <div class="col-md-2 col-sm-2 col-xs-6 ver-coupon-col ver-coupon-img">
+
+
+                    {% if product.image %}
+                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" />
+                    {% endif %}
+
+{#                    <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">#}
+                </div>
+
+                <div class="col-md-5 col-sm-5 col-xs-6 ver-coupon-col ver-coupon-discount">
+                    <div class="col-md-6 col-xs-12 ">
+                        <p class="ver-coupon__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                    </div>
+
+                     <div class="col-md-6 col-xs-12 ver-coupon-timer-wrap">
+                        {# Diisplay the coupon timer #}
+                        <div class="ver-coupon-timer">
+                            <p class="timer-heading">{% trans "Promotion ends" %}:</p>
+                            <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                        </div>
+                     </div>
+
+                </div>
+
+                <div class="col-md-5 col-sm-5 col-xs-12 ver-coupon-col ver-coupon-price">
+                    <a type="button" class="btn btn-default ver-coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+
+                    {% if product.cost %}
+                        <p class="ver-coupon__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+
+                        {# If there is a discount, display it #}
+                        {% if product.cost != product.get_discount_price %}
+                            <span class="ver-coupon__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                        {% endif %}
+
+                        </p>
+
+                        {% else %}
+                            <p class="ver-coupon__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                    {% endif %}
+                </div>
+
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}

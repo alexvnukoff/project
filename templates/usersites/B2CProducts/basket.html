@@ -13,21 +13,18 @@
     {% if total > 0 %}
     <form method="post" action="">{% csrf_token %}
         <h2>{% trans 'List of products:' %}</h2>
-    <table>
-         <tbody>
-
-    {% for row in basket.src %}
-        {% if row.product.currency != request.session.basket_currency %}{% else %}
-
-        <tr>
-            <td>
-                {% if row.product.image %}
-                    <img src="{{ row.product.image.small }}" alt="row.product.name">
-                {% else %}
-                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </td>
-
+        <table>
+            <tbody>
+            {% for row in basket.src %}
+                {% if row.product.currency != request.session.basket_currency %}{% else %}
+                <tr>
+                    <td>
+                        {% if row.product.image %}
+                            <img src="{{ row.product.image.small }}" alt="row.product.name">
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                        {% endif %}
+                    </td>
                     <td>
                         <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }} ({{ row.product.name }})</a></h3>
                         <p>{{ row.product.short_description|truncatewords:30 }}</p>
@@ -46,7 +43,13 @@
                 </tr>
                 {% endif %}
             {% endfor %}
-
+                <tr>
+                    <td style="text-align: right">
+                        <input type="checkbox" name="need_delivery" id="need_delivery" style="width: 25%;">
+                    </td>
+                    <td colspan="2">{% trans 'Need a delivery' %}?</td>
+                </tr>
+    
             </tbody>
             <tfoot>
                 <tr>
@@ -59,7 +62,7 @@
         <a href="{% url 'b2c_products:basket' %}?clean=1" class="clean">Clean bascket</a>
         <a class="clean btn-green" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
         <button class="update">Update price</button>
-        </form>
+    </form>
 
         <div class="pay">
             {% if paypal_form %}
@@ -75,9 +78,5 @@
         {% endif %}
 
         </section>
-
-
-</div>
-</div>
 
 {% endblock %}

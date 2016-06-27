@@ -6,6 +6,11 @@
 {% load inclusionTags %}
 {% load humanize %}
 {% block title %}{{ object.name }}{% endblock %}
+{% block after_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
 
@@ -23,7 +28,43 @@
                 {% endif %}
             </div>
             <div class="info">
+                {% if extra_form %}
+                <form action="" method="post" id="ExtraParamsForm">
+                    {% csrf_token %}
+                    {% for hidden in extra_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    <table class="q_data" width="90%">
+                    {% for field in extra_form.visible_fields %}
+                        {% get_item_by_key extra_form.pre_texts field.name as field_pre_text %}
+                        {% if field_pre_text %}
+                        <tr>
+                            <td colspan="2" style="padding: 10px 0; font-weight: bold;">{{ field_pre_text }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr valign="top">
+                            <td class="field-label {% if field.requeired %}required{% endif %}">
+                                <label>{{ field.label }}</label>
+                            </td>
+                            <td>
+                                <span>{{ field }}</span>
+                                {% if extra_form.is_bound and field.errors %}
+                                    <p class="errors">{{ field.errors|striptags }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="submit" name="presave" value="{% trans 'Save' %}">
+                            </td>
+                        </tr>
+                    </table>
+                </form>                
+                {% else %}
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
+                    {% if extra_params_uuid %}
+                    <input type="hidden" name="extra_params_uuid" value="{{ extra_params_uuid }}">
+                    {% endif %}
                     <input type="hidden" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
@@ -57,7 +98,6 @@
                                 <td></td>
                                 <td>
                                     <button id="result">{% trans 'Add to basket' %}</button>
-
                                 </td>
                             </tr>
 
@@ -65,20 +105,21 @@
                     </table>
                 </form>
 
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td></td>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
                             <td>
                                 {% if paypal_form %}
                                     <div style="">{{ paypal_form.render }}</div>
                                 {% else %}
                                     <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-                                {% endif %}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endif %}
             </div>
 
 
@@ -100,19 +141,20 @@
             </li>
             {% endcomment %}
 
+        {% questionnaire_for_product object as questionnaires %}
+        {% with questionnaires.count as hm_questionnaires %}
         <div class="InfoTabs">
             <ul>
                 <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
                 <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
                 <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
+                {% if hm_questionnaires %}
+                    <li><a href="#tabs-4">{% trans 'Questionnaires' %}</a></li>
+                {% endif %}
             </ul>
-
-
             <div id="tabs-1">
                 {{ object.description|cleanHtml|safe }}
             </div>
-
-
             <div id="tabs-2">
                 <ul class="tpp-gallery gallery">
                     {% for document_obj in object.documents.all %}
@@ -146,7 +188,32 @@
                 {% endfor %}
                  </ul>
             </div>
+
+            {% if hm_questionnaires %}
+            <div id="tabs-4">
+                <ul class="tpp-gallery gallery">
+                {% for questionnaire in questionnaires %}    
+                    <li>
+                    <div class="b-img">
+                        <a target="_blank" href="{% url 'questionnaires:detail' item_id=questionnaire.id %}">
+                            {% if questionnaire.image %}
+                                <img src="{{ questionnaire.image.big }}" />
+                            {% else %}
+                                <img src="{% static 'b24online/img/file_icon.png' %}" />
+                            {% endif %}
+                        </a>
+                        <div class="gray-img"></div>
+                    </div>
+                    <div>
+                        <a href="{% url 'questionnaires:detail' item_id=questionnaire.id %}">{{ questionnaire.name }}</a>
+                    </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
+        {% endwith %}
     </section>
 
 

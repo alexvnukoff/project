@@ -3,6 +3,7 @@
 import json
 import logging
 
+
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
@@ -18,12 +19,12 @@ from django.utils.translation import ugettext as _
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
-    DeleteGalleryImage, DeleteDocument, DocumentList
-from b24online.models import (Company, News, Tender, Exhibition, B2BProduct, 
-                              BusinessProposal, InnovationProject, 
-                              Vacancy, Organization, Branch, Chamber, StaffGroup,
-                              PermissionsExtraGroup)
+from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate,
+                      GalleryImageList, DeleteGalleryImage, DeleteDocument, DocumentList)
+from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
+        BusinessProposal, InnovationProject, Vacancy, Organization, Branch,
+        Chamber, StaffGroup, PermissionsExtraGroup, Video)
+from centerpokupok.models import B2CProduct
 from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
 from b24online.Messages.forms import MessageForm
 
@@ -163,13 +164,13 @@ def _tabs_exhibitions(request, company, page=1):
                               context_instance=RequestContext(request))
 
 
-def _tab_products(request, company, page=1):
+def _tab_b2b_products(request, company, page=1):
     products = B2BProduct.get_active_objects().filter(company=company)
     paginator = Paginator(products, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
 
-    url_paginator = "companies:tab_products_paged"
+    url_paginator = "companies:tab_b2b_products_paged"
 
     template_params = {
         'page': page,
@@ -178,7 +179,25 @@ def _tab_products(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabProducts.html', template_params, context_instance=RequestContext(request))
+    return render_to_response('b24online/Companies/tab_B2BProducts.html', template_params, context_instance=RequestContext(request))
+
+
+def _tab_b2c_products(request, company, page=1):
+    products = B2CProduct.get_active_objects().filter(company=company)
+    paginator = Paginator(products, 10)
+    page = paginator.page(page)
+    paginator_range = func.get_paginator_range(page)
+
+    url_paginator = "companies:tab_b2c_products_paged"
+
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('b24online/Companies/tab_B2CProducts.html', template_params, context_instance=RequestContext(request))
 
 
 def _tab_proposals(request, company, page=1):
@@ -362,6 +381,25 @@ def _tab_staff(request, company, page=1):
     return render_to_response('b24online/Companies/tabStaff.html', template_params, context_instance=RequestContext(request))
 
 
+def _tab_video(request, company, page=1):
+    video = Video.get_active_objects().filter(organization=company)
+    paginator = Paginator(video, 10)
+    page = paginator.page(page)
+    paginator_range = func.get_paginator_range(page)
+
+    url_paginator = "companies:tab_video_paged"
+
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('b24online/Companies/tabVideo.html', template_params, context_instance=RequestContext(request))
+
+
+
 class DeleteCompany(ItemDeactivate):
     model = Company
 
@@ -401,17 +439,17 @@ def send_message(request):
     elif request.user.is_anonymous() or not request.user.is_authenticated():
         response_text = _('Only registered users can send the messages')
     else:
-        form = MessageForm(request, data=request.POST, files=request.FILES)    
+        form = MessageForm(request, data=request.POST, files=request.FILES)
         if form.is_valid():
             try:
-                form.send()        
+                form.send()
             except IntegrityError as exc:
                 response_text = _('Error during data saving') + str(exc)
             else:
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
         else:
-            response_text = form.get_errors()  
+            response_text = form.get_errors()
     return HttpResponse(
         json.dumps({'code': response_code, 'message': response_text}),
         content_type='application/json'

@@ -1,19 +1,23 @@
 {% load CustomFilters %}
-                    <script>
-                        var ptext = '{{ text|truncatechars:200|cleanHtml|striptags|safe }}';
-                        var purl = window.location.origin + window.location.pathname;
-                        var ptitle = '{{ title }}';
-                        var pimage = '';
 
-                        {% if image %}
-                            pimage = '{{ image.small }}';
-                        {% endif %}
-                    </script>
-                    <div class="social">
-                        <!-- Share for social networks -->
-                        <a href="#" target="_blank" onclick="Share.facebook(purl, ptitle, pimage, ptext); return false;"><i class="imgnews share-1"></i></a>
-                        <a href="#" target="_blank" onclick="Share.vkontakte(purl, ptitle, pimage, ptext); return false;"><i class="imgnews share-2"></i></a>
-                        <a href="#" target="_blank" onclick="Share.odnoklassniki(purl, ptext); return false;"><i class="imgnews share-3"></i></a>
-                        <a href="#" target="_blank" onclick="Share.twitter(purl, ptitle); return false;"><i class="imgnews share-4"></i></a>
-                        <!-- /Share for social networks -->
-                    </div>
+<script>
+    var ptext_{{ item_id }} = '{{ text|truncatechars:200|cleanHtml|striptags|safe }}';
+    var purl = window.location.origin + window.location.pathname;
+    var ptitle_{{ item_id }} = '{{ title }}';
+    var pimage_{{ item_id}} = '';
+    {% if image %}
+        pimage_{{ item_id }} = '{{ image.small }}';
+    {% endif %}
+</script>
+<div class="social">
+    <!-- Share for social networks -->
+    <a href="#" target="_blank" 
+        onclick="Share.facebook(purl, ptitle_{{ item_id }}, pimage_{{ item_id }}, ptext_{{ item_id }}); return false;"><i class="imgnews share-1"></i></a>
+    <a href="#" target="_blank" 
+        onclick="Share.vkontakte(purl, ptitle_{{ item_id }}, pimage_{{ item_id }}, ptext_{{ item_id }}); return false;"><i class="imgnews share-2"></i></a>
+    <a href="#" target="_blank" 
+        onclick="Share.odnoklassniki(purl, ptext_{{ item_id }}); return false;"><i class="imgnews share-3"></i></a>
+    <a href="#" target="_blank" 
+        onclick="Share.twitter(purl, ptitle_{{ item_id }}); return false;"><i class="imgnews share-4"></i></a>
+    <!-- /Share for social networks -->
+</div>

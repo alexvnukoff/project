@@ -1,0 +1,10 @@
+{% extends 'usersites_templates/golan/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load content_tags %}
+
+{% block content %}
+    {{ block.super }}
+    {% videos 'Video/list.html' 10 page %}
+{% endblock %}

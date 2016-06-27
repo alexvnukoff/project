@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
+from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -15,10 +16,13 @@ from guardian.shortcuts import get_objects_for_user
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, DeleteGalleryImage, GalleryImageList, \
     DocumentList, DeleteDocument
-from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
-    Organization, Vacancy
+from b24online.models import (Chamber, Company, News, Tender, Exhibition,
+                              BusinessProposal, InnovationProject,
+                              Organization, Vacancy, StaffGroup,
+                              PermissionsExtraGroup, Country)
 from b24online.utils import handle_uploaded_file
 from b24online.Tpp.forms import AdditionalPageFormSet, ChamberForm
+from b24online.search_indexes import SearchEngine
 
 
 class ChamberList(ItemsList):
@@ -39,7 +43,35 @@ class ChamberList(ItemsList):
     # allowed filter list
     # filter_list = ['country']
 
+    filter_list = {
+        'countries': Country
+    }
+
     model = Chamber
+
+    def get_filtered_items(self):
+        s = SearchEngine(doc_type=self.model.get_index_model())
+        q = self.request.GET.get('q', '').strip()
+
+        for filter_key in list(self.filter_list.keys()):
+            filter_lookup = "filter[%s][]" % filter_key
+            values = self.request.GET.getlist(filter_lookup)
+            print(values)
+            if values:
+                s = s.filter('terms', **{filter_key: values})
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            s = s.filter('terms', **{'countries': [self.request.session['geo_country']]})
+
+        if q:
+            s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
+
+        return self.filter_search_object(s)
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Tpp/contentPage.html'
@@ -63,12 +95,44 @@ class ChamberList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                return queryset.filter(pk=current_org)
+                queryset = self.model.get_active_objects().filter(Q(parent_id=current_org) | Q(pk=current_org))
             else:
                 queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
                                                 Organization.get_active_objects().all()).instance_of(Chamber)
 
         return queryset
+
+            #if current_org is not None:
+            #    return queryset.filter(pk=current_org)
+            #else:
+            #    queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
+            #                                    Organization.get_active_objects().all()).instance_of(Chamber)
+
+        #return queryset
+
+    def get(self, request, *args, **kwargs):
+        for f, model in self.filter_list.items():
+            key = "filter[%s][]" % f
+            values = request.GET.getlist(key)
+
+            if values:
+                self.applied_filters[f] = model.objects.filter(pk__in=values)
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session['geo_country']
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            geo_country = self.request.session['geo_country']
+            self.applied_filters['countries'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
+        if request.is_ajax():
+            self.ajax(request, *args, **kwargs)
+        else:
+            self.no_ajax(request, *args, **kwargs)
+
+        return super(ItemsList, self).get(request, *args, **kwargs)
 
 
 class ChamberDetail(ItemDetail):
@@ -81,8 +145,15 @@ class ChamberDetail(ItemDetail):
     def get_add_url(self):
         if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
             return self.addUrl
-
         return None
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({'staffgroups': StaffGroup.get_options()})
+        context_data.update({
+            'extragroups': PermissionsExtraGroup.get_options()
+        })
+        return context_data
 
 
 def _tab_companies(request, tpp, page=1):

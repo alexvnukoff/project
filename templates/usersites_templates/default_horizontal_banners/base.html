@@ -21,12 +21,13 @@
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
+    <link rel="stylesheet" href="{% static 'b24online/css/icons.css' %}">
 
 </head>
 
-<body{% if request.path == "/" %} id="main"{% endif %} class="{% if LANGUAGE_BIDI %} hebrew{% endif %}">
+<body{% if request.path == "/" %} id="main"{% endif %} {% if LANGUAGE_BIDI %}class="hebrew{% endif %}">
 
-    {% include 'usersites_templates/default_horizontal_banners/header.html' %}
+    {% include 'usersites/header.html' %}
 
         <section class="offer">
             <div class="wrapper">
@@ -63,13 +64,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                        <div class="tmp_search">
+                        <div class="tmp_search hideitplease">
                         <form action="{% url 'b2c_products:search' %}">
                             <input type="text" placeholder="Search" name="s">
                         </form>
                         </div>
 
-                    <div class="select -lang">
+                    <div class="select -lang hideitplease">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
@@ -93,6 +94,7 @@
                         <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
                     {% endif %}
                 {% endif %}
+                        <li><a href="{% url 'video:main' %}">{% trans 'Videos' %}</a></li>
                 {% comment %}
                     {% for page in site.user_site.organization.additional_pages %}
                         <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
@@ -137,8 +139,6 @@
         <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
-
-
 
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>

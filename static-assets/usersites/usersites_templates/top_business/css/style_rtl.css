@@ -1,0 +1,141 @@
+/** General Styling ***************/
+/*********************************/
+body{
+	direction: rtl;
+}
+
+/** Navigation Styling ***************/
+/*********************************/
+.cart-menu-img{
+	float: right;
+}
+
+.navbar-right {
+    float: left!important;
+    margin-left: -15px;
+    margin-right: 0;
+}
+
+.navbar-header{
+    float: right;
+}
+
+.navbar-toggle {
+    float: left;
+    margin-left: 15px;
+}
+
+.navbar-brand {
+    float: right;
+}
+
+.navbar-nav {
+    float: right;
+}
+
+.navbar-nav>li {
+    float: right;
+}
+
+.main-about__row p{
+	padding-left: 15px;
+}
+
+/** Slider Styling ***************/
+/*********************************/
+
+/** Products Styling ***************/
+/*********************************/
+.btn-main-page{
+	right: 10px;
+}
+
+.main-products__btn{
+	float: left;
+}
+
+.prod-page__discount p{
+	float: right;
+	padding-left: 25px;
+}
+
+#clockdiv>div{
+	float: right;
+}
+
+.timer-mini{
+	float: right;
+	position: relative;
+}
+
+.main-products__timer p{
+	float: right;
+	position: relative;
+	padding-left: 10px;
+}
+
+/** Product Page Styling ***************/
+/*********************************/
+.prod-page__img-col{
+	border-left: 1px solid #ccc;
+}
+
+/** Coupons Styling ***************/
+/*********************************/
+
+/** Banners Styling ***************/
+/*********************************/
+
+/** News Styling ***************/
+/*********************************/
+.main-news__img{
+	float: right;
+	padding: 0 0 10px 10px;
+}
+
+.news-item a{
+	float: right;
+}
+
+.news-main{
+	float: right;
+}
+
+.about-main{
+	float: left;
+}
+
+/** Proposal Styling ***************/
+/*********************************/
+.btn-info {
+    margin-left:15px;
+    float: right;
+}
+
+.more.label {
+    float: left;    
+}
+
+/** Gallery slider Styling ***************/
+/*********************************/
+
+/** Gallery Styling ***************/
+/*********************************/
+
+/** Media carusel Styling ***************/
+/*********************************/
+
+/** Cart Page Styling ***************/
+/*********************************/
+.paypal-icon{
+	margin-left: 10px;
+}
+
+/** Contact Styling ***************/
+/*********************************/
+
+/** footer Styling ***************/
+/*********************************/
+footer span {
+    margin-left: 5px;
+}

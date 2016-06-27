@@ -1,9 +1,9 @@
+# -*- encoding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from loginas.views import user_login
 from django.views.generic import TemplateView
-
 import b24online.AdminTpp
 import b24online.AdminTpp.urls
 import b24online.AdvBanner
@@ -26,6 +26,7 @@ import b24online.Product.urls
 import b24online.Profile.urls
 import b24online.Project
 import b24online.Project.urls
+import b24online.Questionnaires.urls
 import b24online.Resume.urls
 import b24online.Tenders.urls
 import b24online.Tpp.urls
@@ -34,6 +35,8 @@ import b24online.UserSites.urls
 import b24online.Users.urls
 import b24online.Vacancy.urls
 import b24online.Wall.urls
+import b24online.Video.urls
+import b24online.Leads.urls
 import b24online.views
 
 admin.autodiscover()
@@ -59,7 +62,10 @@ urlpatterns = [
     url(r'^site/', include(b24online.UserSites.urls, namespace='site')),
     url(r'^users/', include(b24online.Users.urls, namespace='users')),
     url(r'^payments/', include(b24online.Payments.urls, namespace='payments')),
-
+    url(r'^questionnaires/',
+        include(b24online.Questionnaires.urls,
+        namespace='questionnaires')),
+    url(r'^video/', include(b24online.Video.urls, namespace='video')),
     url(r'^admin-tpp/', include(b24online.AdminTpp.urls, namespace='AdminTpp')),
 
     url(r'^register/exhibition/$', b24online.views.register_to_exhibition),
@@ -87,6 +93,9 @@ urlpatterns = [
     url(r'^branch-list$', b24online.views.branch_list, name="branch_list"),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^tos/$', TemplateView.as_view(template_name="b24online/tos.html"), name="tos"),
+    url(r'^upload/$', b24online.views.editor_upload, name="upload_editor_image"),
+    url(r'^feedback/send/email/$', b24online.views.feedback_form),
+    url(r'^leads/', include(b24online.Leads.urls, namespace='leads')),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,58 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="container-fluid">  
+  {% for message in messages %}
+    {% if not message.is_read and message.sender != request.user %}
+      {# Mark the message as read #}
+      {{ message|mark_as_read }}
+    {% endif %}
+    <div class="row" style="margin: 15px 0; border-bottom: 2px dotted #aaaaaa;">
+      <div class="col-md-2 col-sm-2 text-center">
+        <div class="circle-avatar">
+          {% if message.sender.profile and message.sender.profile.avatar %}
+            <img class="chat-participant" src="{{ message.sender.profile.avatar.big }}" width="80"/>
+          {% else %}
+            <img class="chat-participant" src="{% static 'usersites/images/profile.png' %}" width="80"/>
+          {% endif %}
+        </div>
+        <div class="text-center">
+          {% if message.sender.profile.full_name %}
+            {{ message.sender.profile.full_name }}
+          {% else %}
+            {{ message.sender.email }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-10 col-sm-10">
+        <div class="message-time">
+          {{ message.created_at|date:"d M Y H:i" }}
+        </div>
+        <div>
+          {{ message.content }}
+        </div>
+        {% if message.attachments %}
+        <div class="clumnright clearfix" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
+          {% for attachment in message.attachments.all %}
+            <div class="message-attachments">
+              <a href="{{ MEDIA_URL}}{{ attachment.file }}">
+                {% if attachment.is_image %}
+                  <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
+                {% else %}
+                  <img src="{% static attachment.get_icon %}" height="50px" />
+                {% endif %}
+              </a>
+              <div style="text-align: center;">{{ attachment.get_shorted_name }}</div>
+            </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script type="text/javascript">
+  $('#chat_title').html('{{ chat.subject|escape }}');
+</script>

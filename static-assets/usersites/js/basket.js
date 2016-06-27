@@ -13,26 +13,29 @@ $("#BasketItemAdd").submit(function( event ) {
 
     event.preventDefault();
     var $form = $(this),
-
         currency    = $form.find("input[name='currency']").val(),
         paypal      = $form.find("input[name='company_paypal']").val(),
         product_id  = $form.find("input[name='product_id']").val(),
         quantity    = $form.find("input[name='quantity']").val(),
-
         url = $form.attr("action");
-        var posting = $.post(url, {
-                                currency: currency,
-                                company_paypal: paypal,
-                                product_id: product_id,
-                                quantity: quantity
-                            } );
-
-      posting.done(function(data) {
+        
+    var post_data = {
+        currency: currency,
+        company_paypal: paypal,
+        product_id: product_id,
+        quantity: quantity
+    };
+    var extra_params_uuid_field = $form.find("input[name='extra_params_uuid']");
+    if (extra_params_uuid_field.length > 0) {
+        post_data['extra_params_uuid'] = $(extra_params_uuid_field).val();
+    }    
+    console.log(post_data);        
+    var posting = $.post(url, post_data);
+    posting.done(function(data) {
         $("#result").empty().append('<i class="icon-ok"></i>');
         console.log(data);
         window.location = '/' + $(location).prop('pathname').split('/')[1];
-      });
-
+    });
 });
 
 

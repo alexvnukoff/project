@@ -5,6 +5,7 @@
 
 
 <div class="container">
+    {% include "b24online/main/add_button.html" %}
     {% include "b24online/main/popupFilter.html" %}
     {% include "b24online/main/paginator.html" %}
     {% include "b24online/main/local_menu_script.html" %}
@@ -25,7 +26,7 @@
                 </div>
 
                 <div class="infoprd">
-                    <a href="{{ news.get_absolute_url }}" class="name">{{ news.title }}</a>
+                    <a href="{{ news.get_absolute_url }}" class="name">{% if news.video_code %}<span title="YouTube" class="icon-youtube-play"></span>{% endif %}{{ news.title }}</a>
                     <p class="date">
                     {% if news.organization %}
                         {% if news.organization.flag %}
@@ -36,7 +37,7 @@
                     {% elif news.country %}
                         <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
                     {% endif %}
-                    {{ news.created_at|date:'d M Y' }}</p>
+                    {{ news.created_at|date:'d M Y' }}, <a href="{{ news.organization.get_absolute_url }}" title="{{ news.organization.name }}">{{ news.organization.name }}</a></p>
                     <p>
                         {% if news.short_description %}
                             {% autoescape off %}

@@ -1,4 +1,6 @@
 import os
+import logging
+
 from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -16,12 +18,14 @@ from django.utils.text import Truncator
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView, ListView
 from appl import func
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
-    GalleryImage, Document, Chamber
+    GalleryImage, Document, Chamber, IndexedModelMixin
 from b24online.search_indexes import SearchEngine
 from core import tasks
 from core.cbv import HybridListView
 from b24online.forms import GalleryImageForm, DocumentForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
+
+logger = logging.getLogger(__name__)
 
 
 class TabItemList(HybridListView):
@@ -67,8 +71,8 @@ class ItemDeactivate(DeleteView):
         success_url = self.get_success_url()
         self.object.is_deleted = True
         self.object.save()
-        self.object.reindex(is_active_changed=True)
-
+        if hasattr(self.object, 'reindex'):
+            self.object.reindex(is_active_changed=True)
         return HttpResponseRedirect(success_url)
 
 
@@ -180,9 +184,17 @@ class ItemsList(HybridListView):
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
             values = self.request.GET.getlist(filter_lookup)
-
+            print(values)
             if values:
                 s = s.filter('terms', **{filter_key: values})
+
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session.get('geo_country')
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            s = s.filter('terms', **{'country': [self.request.session['geo_country']]})
 
         if q:
             s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
@@ -251,6 +263,15 @@ class ItemsList(HybridListView):
             if values:
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
 
+        # Apply geo_country by our internal code
+        if (not self.my
+            and self.request.session.get('geo_country')
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'
+           ):
+            geo_country = self.request.session['geo_country']
+            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
         else:
@@ -296,9 +317,9 @@ class ItemsList(HybridListView):
         return queryset
 
     def get_queryset(self):
-        if self.is_filtered() and not self.is_my():
+        if issubclass(self.model, IndexedModelMixin) \
+            and self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
-
         queryset = self.model.get_active_objects().filter(is_active=True).order_by(*self._get_sorting_params())
         return self.optimize_queryset(queryset)
 
@@ -459,7 +480,7 @@ class UploadGalleryImage(CreateView):
             }
         }
 
-        tasks.upload_images.apply((params,), {'async': True})
+        tasks.upload_images.apply((params,))
 
         return HttpResponse('')
 

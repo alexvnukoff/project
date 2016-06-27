@@ -174,7 +174,7 @@ class BusinessProposalIndex(DocType):
 
 class CountryIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete, fields={'raw': String(index='no')}, )
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
 
     @staticmethod
     def get_model():
@@ -193,7 +193,7 @@ class CountryIndex(DocType):
 
 class NewsCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
+    name_auto = String(analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -212,7 +212,7 @@ class NewsCategoryIndex(DocType):
 
 class B2bProductCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
 
     @staticmethod
     def get_model():
@@ -231,7 +231,7 @@ class B2bProductCategoryIndex(DocType):
 
 class B2cProductCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
 
     @staticmethod
     def get_model():
@@ -250,7 +250,7 @@ class B2cProductCategoryIndex(DocType):
 
 class BusinessProposalCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
 
     @staticmethod
     def get_model():
@@ -269,7 +269,7 @@ class BusinessProposalCategoryIndex(DocType):
 
 class BranchIndex(DocType):
     django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete, fields={'raw': String(index='no')})
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
 
     @staticmethod
     def get_model():
@@ -289,7 +289,7 @@ class BranchIndex(DocType):
 class ChamberIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
-    name_auto = String(index_analyzer=autocomplete, search_analyzer='simple', fields={'raw': String(index='no')})
+    name_auto = String(analyzer=autocomplete, fields={'raw': String(index='no')})
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     countries = Integer(multi=True)
     is_active = Boolean()
@@ -640,24 +640,6 @@ class RequirementIndex(DocType):
         return index_instance
 
 
-class ProducerIndex(DocType):
-    django_id = Integer()
-    name_auto = String(index_analyzer=autocomplete)
-
-    @staticmethod
-    def get_model():
-        from b24online.models import Producer
-        return Producer
-
-    @classmethod
-    def to_index(cls, obj):
-        index_instance = cls(
-            django_id=obj.pk,
-            name_auto=obj.name
-        )
-        return index_instance
-
-
 class SearchEngine(Search):
     _cached_connection = None
 
@@ -685,3 +667,45 @@ def remove_index(sender, instance, **kwargs):
 
         if hits.total:
             hits[0].delete()
+
+
+class VideoIndex(DocType):
+    django_id = Integer()
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    content = String(analyzer=html_strip, fields={'raw': String(index='no')})
+    organization = Integer()
+    country = Integer()
+    is_active = Boolean()
+    is_deleted = Boolean()
+    created_at = Date()
+
+    @staticmethod
+    def get_model():
+        from b24online.models import Video
+        return Video
+
+    @classmethod
+    def get_queryset(cls):
+        return cls.get_model().objects.all().prefetch_related(
+                'organization',
+                'organization__countries',
+                'country'
+                )
+
+    @classmethod
+    def to_index(cls, obj):
+        index_instance = cls(
+            django_id=obj.pk,
+            title=obj.title,
+            content=obj.content,
+            organization=getattr(obj.organization, 'pk', None),
+            is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
+            created_at=obj.created_at
+        )
+
+        country = obj.country if obj.country else getattr(obj.organization, 'country', None)
+        index_instance.country = getattr(country, 'pk', None)
+
+        return index_instance
+

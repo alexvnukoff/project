@@ -1,0 +1,60 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+
+<div class="container">
+    {% include "b24online/main/add_button.html" %}
+    {% include "b24online/main/popupFilter.html" %}
+    {% include "b24online/main/paginator.html" %}
+    {% include "b24online/main/local_menu_script.html" %}
+
+    <ul class="listnews">
+        {% for video in object_list %}
+            <li>
+            {% setContextMenu video %}
+
+                <div class="thumb shadow">
+                    <a href="{{ video.get_absolute_url }}">
+                        {% if video.image %}
+                            <img src="{{ video.image.big }} " alt="{{ video.title }}" title="{{ video.title }}"/>
+                        {% else %}
+                            <img src="{% static "b24online/img/news.jpg" %}" alt="" />
+                        {% endif %}
+                    </a>
+                </div>
+
+                <div class="infoprd">
+                    <a href="{{ video.get_absolute_url }}" class="name">{% if video.video_code %}<span title="YouTube" class="icon-youtube-play"></span>{% endif %}{{ video.title }}</a>
+                    <p class="date">
+                    {% if video.organization %}
+                        {% if video.organization.flag %}
+                            <img src="{{ video.organization.flag_url }}" class="flag" title="{{ video.organization.name }}" alt="{{ video.organization.name }}" />
+                        {% else %}
+                            <i class="sprite {{ video.organization.country.flag }}" title="{{ video.organization.country.name }}"></i>
+                        {% endif %}
+                    {% elif video.country %}
+                        <i class="sprite {{ video.country.flag }}" title="{{ video.country.name }}"></i>
+                    {% endif %}
+                    {{ video.created_at|date:'d M Y' }}, <a href="{{ video.organization.get_absolute_url }}" title="{{ video.organization.name }}">{{ video.organization.name }}</a></p>
+                    <p>
+                        {% if video.short_description %}
+                            {% autoescape off %}
+                                {{ video.short_description|force_escape|linebreaks }}
+                            {% endautoescape %}
+                        {% else %}
+                            {{ video.content|cleanHtml|safe|truncatewords_html:"30" }}
+                        {% endif %}
+                    </p>
+                    <!--noindex--><a href="{{ video.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                </div>
+            </li>
+
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+
+    </ul>
+    {% include "b24online/main/paginator.html" %}
+</div>

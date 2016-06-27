@@ -1,25 +1,34 @@
 import os
+import logging
 
+from django.db.models import Q
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
+from django.db import transaction, IntegrityError
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.views import APIView
+from rest_framework.decorators import (permission_classes, api_view,
+                                       detail_route, list_route)
 from rest_framework.filters import BaseFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
-    Banner, AdditionalPage, Company
+    Banner, AdditionalPage, Company, Questionnaire, Question, QuestionnaireCase
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
     DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
-    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer
+    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
+    ListQuestionSerializer, QuestionnaireSerializer, AtFirstAnswersSerializer, \
+    AtSecondAnswersSerializer, ListRecommendationSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -247,6 +256,7 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
             .order_by('level').distinct()
 
 
+
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def interface(request):
@@ -403,3 +413,135 @@ def settings_api(request):
             })
 
     return Response(result)
+
+
+class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Rest API for Questionnaires.
+    """
+    queryset = Questionnaire.get_active_objects()
+    serializer_class = QuestionnaireSerializer
+
+    def filter_queryset(self, queryset):
+        """
+        Filter the Quest-e only for current Company.
+        """
+        from b24online.utils import get_company_questionnaire_qs
+    
+        organization = get_current_site().user_site.organization
+        return get_company_questionnaire_qs(organization)
+
+    @detail_route(methods=['GET', ])
+    def recommendations(self, request, pk=None):
+        """
+        Return the Questionnaire's recommendations
+        """
+        instance = self.get_object()
+        queryset = instance.recommendations.all()
+        serializer = ListRecommendationSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def _get_questions(self, instance):
+        return instance.questions\
+            .filter((Q(who_created=Question.BY_AUTHOR) | \
+                     Q(is_approved=True)),
+                    is_active=True, is_deleted=False)
+    
+    @detail_route(methods=['GET', 'POST'])
+    def inviter(self, request, pk=None):
+        """
+        Return the Questionnaire's questions
+        """
+        instance = self.get_object()
+        questions = self._get_questions(instance)
+        if request.method == 'POST':
+            data = request.data.copy()
+            data['questionnaire_id'] = instance.id
+            serializer = AtFirstAnswersSerializer(data=data)
+            if serializer.is_valid():
+                new_questionnaire_case = serializer.save()
+                return Response(
+                    {'result': 'success', 
+                     'case_id': new_questionnaire_case.id,
+                     'case_uuid': new_questionnaire_case.case_uuid})
+            else:
+                return Response({'result': 'error', 
+                                 'errors': serializer.errors})
+        
+        serializer = ListQuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+
+
+class QuestionnaireInviterView(APIView):
+    """
+    Process the participants questions answers.
+    """
+    def _get_questions(self, instance):
+        extra_ids = [q.id for q in instance.extra_questions.all()]
+        return instance.questionnaire.questions\
+            .filter((Q(who_created=Question.BY_AUTHOR) | \
+                Q(id__in=extra_ids)),
+                is_active=True, is_deleted=False)
+    
+    def get(self, request, uuid, format=None):
+        try:           
+            instance = QuestionnaireCase.objects.get(case_uuid=uuid)
+        except QuestionnaireCase.DoesNotExist:
+            return Response({'result': 'error', 
+                'errors': [
+                    _('There is no such QuestionnaireCase with UUID=%d') % \
+                        uuid]})
+        else:
+            questions = self._get_questions(instance)
+            serializer = ListQuestionSerializer(questions, many=True)
+            return Response(serializer.data)
+
+    def post(self, request, uuid, format=None):
+        try:           
+            instance = QuestionnaireCase.objects.get(case_uuid=uuid)
+        except QuestionnaireCase.DoesNotExist:
+            return Response({'result': 'error', 
+                'errors': [
+                    _('There is no such QuestionnaireCase with UUID=%d') % \
+                        uuid]})
+        else:
+            data = request.data.copy()
+            data['questionnaire_case_id'] = instance.id
+            serializer = AtSecondAnswersSerializer(data=data)
+            if serializer.is_valid():
+                instance = serializer.save()
+                if instance:
+                    serializer.process_answers(instance)
+                    return Response(
+                        {'result': 'success',}
+                    ) 
+                else:
+                    return Response({'result': 'error', 
+                                     'errors': [
+                                         'There is an error at saving',
+                                     ]})
+            else:
+                return Response({'result': 'error', 'errors': serializer.errors})
+
+
+class QuestionnaireCaseRecommendationsView(APIView):
+    """
+    Process the participants questions answers.
+    """
+    def get(self, request, pk, format=None, **kwargs):
+        logger.debug(pk)
+        logger.debug(kwargs)
+        try:           
+            instance = QuestionnaireCase.objects.get(pk=pk)
+        except QuestionnaireCase.DoesNotExist:
+            return Response({'result': 'error', 
+                'errors': [
+                    _('There is no such QuestionnaireCase with ID=%s') % \
+                        pk]})
+        else:
+            serializer = ListRecommendationSerializer(
+                instance.recommendations.all(), 
+                many=True
+            )
+            return Response(serializer.data)
+

@@ -1,16 +1,12 @@
 # -*- encoding: utf-8 -*-
 
-import os
 import datetime
 import logging
+import os
 from collections import OrderedDict, Iterable, namedtuple
 from copy import copy
 from decimal import Decimal
 from urllib.parse import urljoin
-import os
-
-from copy import copy
-from decimal import Decimal
 
 from django import template
 from django.conf import settings
@@ -19,16 +15,16 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Model
 from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
-from lxml.html.clean import clean_html
+from lxml.html.clean import Cleaner
 
 import b24online.urls
 from appl.func import currency_symbol
-from b24online.models import (Chamber, Notification, RegisteredEventType,
-                              RegisteredEvent, MessageChat, Message)
+from b24online.models import (Chamber, Notification, MessageChat, Message,
+                              Questionnaire, Company, Banner)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -37,6 +33,8 @@ from tpp.SiteUrlMiddleWare import get_request
 logger = logging.getLogger(__name__)
 
 register = template.Library()
+
+cleaner = Cleaner(embedded=False)
 
 
 @register.filter()
@@ -110,7 +108,7 @@ def remove_whitespaces(sentence):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
     if value is not None and len(value) > 0:
-        return clean_html(value)
+        return cleaner.clean_html(value)
     else:
         return ""
 
@@ -240,23 +238,25 @@ def set_notification_count(context):
     return notification
 
 
-@register.simple_tag(takes_context=True)
-def set_message_count(context):
+@register.assignment_tag(takes_context=True)
+def get_messages_number(context, for_current_organization=False):
     """
-    Return the number od unread messages.
+    Return the number of unread messages.
     """
     request = context.get('request')
-    if request.user.is_authenticated():
-        message = Message.objects.select_related('chat')\
-            .filter(chat__participants__id__exact=request.user.id,
-                    chat__status=MessageChat.OPENED,
-                    is_read=False)\
-            .filter(~Q(sender=request.user))\
-            .distinct()\
-            .count()
-    else:
-        message = 0
-    return message
+    filters = {
+        'chat__participants__id__exact': request.user.id,
+        'chat__status': MessageChat.OPENED,
+        'is_read': False,
+    }
+    if for_current_organization:
+        filters['organization'] = get_current_organization(request)
+
+    return Message.objects.select_related('chat')\
+        .filter(**filters)\
+        .filter(~Q(sender=request.user))\
+        .distinct()\
+        .count() if request.user.is_authenticated() else 0
 
 
 @register.simple_tag(takes_context=True)
@@ -317,14 +317,12 @@ def get_length(some_list):
 
 ### FIXME: (andrey_k) delete it ###
 @register.filter()
-def to_list(some_dict):
-    return [(k, v) for k, v in some_dict.items()]
-
-
-@register.filter()
-def show_type(instance):
-    return type(instance)
-### -- ###    
+def log_instance(instance):
+    logger.debug(instance)
+    logger.debug(type(instance))
+    logger.debug(dir(instance))
+    return ''
+### -- ###
 
 
 @register.filter
@@ -357,7 +355,7 @@ def deal_order_quantity(request):
             .filter(~Q(deal__status__in=[Deal.PAID, Deal.ORDERED]) & \
             (Q(deal__deal_order__customer_type=DealOrder.AS_PERSON,
                deal__deal_order__created_by=request.user) | \
-             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION, 
+             (Q(deal__deal_order__customer_type=DealOrder.AS_ORGANIZATION,
                 deal__deal_order__customer_organization__in=orgs))))\
             .count()
     else:
@@ -381,7 +379,7 @@ def get_by_content_type(item):
     """
     content_type_id = item.get('content_type_id')
     instance_id = item.get('object_id')
-    if content_type_id and instance_id:        
+    if content_type_id and instance_id:
         try:
             content_type = ContentType.objects.get(pk=content_type_id)
         except ContentType.DoesNotExist:
@@ -402,7 +400,7 @@ def thumbnail(img, param_str):
     """
     img_url = str(img)
     if not getattr(settings, 'STORE_FILES_LOCAL', False):
-        return urljoin(settings.MEDIA_URL, 'th/', img_url)
+        return urljoin(settings.MEDIA_URL, 'th/' + img_url)
     else:
         try:
             sizes, cropped = param_str.split('_')
@@ -416,16 +414,16 @@ def thumbnail(img, param_str):
                 pass
             else:
                 try:
-                    _path, _filename = os.path.split(img_url)    
+                    _path, _filename = os.path.split(img_url)
                     _file, _ext = _filename.split('.')
                 except ValueError:
                     pass
                 else:
                     thumbnail_name = r'%s__%s.%s' % (_file, param_str, _ext)
                     thumbnail_path = os.path.join(
-                        settings.MEDIA_ROOT, 
+                        settings.MEDIA_ROOT,
                         'thumbnails',
-                        _path, 
+                        _path,
                         thumbnail_name
                     )
                     thumbnail_url = urljoin('thumbnails/', _path + '/') + thumbnail_name
@@ -440,7 +438,7 @@ def thumbnail(img, param_str):
                             except OSError as e:
                                 if e.errno != errno.EEXIST:
                                     raise
-                        resize(image_path, (size_px, size_px), cropped, sized_image_path) 
+                        resize(image_path, (size_px, size_px), cropped, sized_image_path)
                     return urljoin(settings.MEDIA_URL, thumbnail_url)
         return urljoin(settings.MEDIA_URL, img_url)
 
@@ -486,6 +484,11 @@ def get_item(container, key):
     return container.get(key, None)
 
 
+@register.assignment_tag()
+def get_item_by_key(container, key):
+    return container.get(key, None)
+
+
 # Class for filter form results colorizing
 DataToColorize = namedtuple('DataToColorize', ['value', 'q_name'])
 
@@ -508,3 +511,57 @@ def colorize_by(wrapped_value, filter_form):
         else:
             return wrapped_value.value
     return wrapped_value
+
+
+@register.assignment_tag()
+def questionnaire_for_product(item):
+    """
+    Return the Questionnarie's qs for selected product.
+    """
+    if isinstance(item, Model) and item.pk:
+        content_type = ContentType.objects.get_for_model(item)
+        if content_type:
+            return Questionnaire.get_active_objects().filter(
+                content_type_id=content_type.id,
+                object_id=item.id
+            )
+    return Questionnaire.objects.none()
+
+
+@register.assignment_tag()
+def questionnaire_for_company_products():
+    """
+    Return the Questionnarie's qs for current company products.
+    """
+    from b24online.utils import get_company_questionnaire_qs
+
+    organization = get_current_site().user_site.organization
+    return get_company_questionnaire_qs(organization)
+
+
+@register.assignment_tag()
+def site_banner_total(side, block):
+    """
+    Return the number of selected type banners.
+    """
+    site_pk = get_current_site().pk
+    return Banner.objects\
+        .filter(site_id=site_pk,
+                block__code=block,
+                block__block_type='user_site')\
+        .count()
+
+
+@register.assignment_tag()
+def get_currentsite():
+    """
+    Return the current site.
+    """
+    return get_current_site()
+
+
+@register.assignment_tag()
+def check_banner_exist(block):
+    site_pk = get_current_site().pk
+    return Banner.objects.filter(site_id=site_pk, block__code=block,
+                block__block_type='user_site').exists()

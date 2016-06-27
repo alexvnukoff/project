@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField, DateRangeField
+from django.contrib.postgres.fields import (HStoreField, DateRangeField,
+                                                    JSONField, ArrayField)
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -14,10 +16,10 @@ from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from b24online.custom import CustomImageField
-from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, 
-                              image_storage, IndexedModelMixin, 
-                              ActiveModelMixing, GalleryImage, 
-                              Producer)
+from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery,
+                              image_storage, IndexedModelMixin,
+                              ActiveModelMixing, GalleryImage,
+                              Producer, Questionnaire)
 from b24online.utils import generate_upload_path, reindex_instance
 import uuid
 from decimal import Decimal
@@ -52,12 +54,13 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
                              blank=True, null=True, max_length=255)
+    additional_images = ArrayField(ArrayField(models.CharField(max_length=500, blank=True)), blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='b2c_products')
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
-    producer = models.ForeignKey(Producer, related_name='b2c_products', 
-                                 verbose_name=_('Producer'), 
+    producer = models.ForeignKey(Producer, related_name='b2c_products',
+                                 verbose_name=_('Producer'),
                                  null=True, blank=True)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
@@ -67,6 +70,8 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     discount_percent = models.FloatField(null=True, blank=True)
     coupon_discount_percent = models.FloatField(null=True, blank=True)
     coupon_dates = DateRangeField(null=True, blank=True)
+
+    extra_params = JSONField(_('Extra param fields'), null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -113,7 +118,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        return reverse('products:detail', args=[self.slug, self.pk])
+        return reverse('products:B2CDetail', args=[self.slug, self.pk])
 
     @property
     def gallery_images(self):
@@ -157,7 +162,16 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def has_discount(self):
         return self.is_coupon or self.discount_percent
 
-
+    def get_contextmenu_options(self, context):
+        """
+        Return extra options for context menu.
+        """
+        model_type = ContentType.objects.get_for_model(self)
+        if getattr(self, 'pk', False):
+            yield (reverse('questionnaires:list',
+                           kwargs={'content_type_id': model_type.id,
+                                   'item_id': self.id}),
+                   _('Questionnaire'))
 
 
 class B2CProductComment(MPTTModel):
@@ -202,6 +216,7 @@ class BasketItem(models.Model):
     basket = models.ForeignKey(UserBasket, verbose_name=_('basket'), related_name='items')
     product = models.ForeignKey('B2CProduct', related_name='basket_product')
     quantity = models.PositiveIntegerField(_('Quantity'), default=0)
+    extra_params = JSONField(_('Extra parameters values'), null=True, blank=True)
 
     def __str__(self):
         return '{0}'.format(self.product_id)

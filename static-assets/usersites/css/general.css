@@ -2195,139 +2195,37 @@ float: right;
 }
 
 /* Social buttons from sprite ========================================================= */
-.imgnews {
-    background:url(/static/b24online/img/news.png);
-}
-
-.social{
-    position:relative;
-    float:left;
-    width:100%;
-    margin:12px 0 0 0;
-}
-
-.social i{
-    display:inline-block;
-    width:24px;
-    height:26px;
-    margin-right:6px;
-}
-
-.share-1{
-    background-position:0px -60px;
-}
-
-.share-2{
-    background-position:-30px -60px;
-}
-
-.share-3{
- background-position:-60px -60px;
-}
-
-.share-4{
-    background-position:-90px -60px;
-}
-
-
-.busket a {color:#fff;}
-.cart .pay { text-align:right;}
-.hebrew .cart .pay { text-align:left;}
-.product_box form.ng-pristine {margin:0;}
-.product_box .info input[type="image"] {width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0;}
-.content__info input[type="image"] {width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0;}
-p#total_cost strong {font-weight:600 !important;}
+.imgnews{background:url(/static/b24online/img/news.png)}
+.social{position:relative;float:left;width:100%;margin:12px 0 0}
+.social i{display:inline-block;width:24px;height:26px;margin-right:6px}
+.share-1{background-position:0 -60px}
+.share-2{background-position:-30px -60px}
+.share-3{background-position:-60px -60px}
+.share-4{background-position:-90px -60px}
+.busket a{color:#fff}
+.cart .pay{text-align:right}
+.hebrew .cart .pay{text-align:left}
+.product_box form.ng-pristine{margin:0}
+.product_box .info input[type="image"]{width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0}
+.content__info input[type="image"]{width:auto!important;height:31px!important;border:none!important;margin-top:8px;padding:0}
+p#total_cost strong{font-weight:600!important}
 
 /* Products SALE / Coupon stuff ============================================= */
+.product-sale::after{content:" ";border-width:3px 3px 4px 4px;border-style:solid;border-color:transparent #954232 #954232 transparent;position:absolute;top:0;right:100%}
+.product-sale{background:#dd4b39;color:#fff;font-weight:700;padding:5px 8px;margin:-5px 0 0 10px;position:absolute}
+.product-sale-box{width:100%;background:#eee;margin:20px 0 30px}
+.product-sale-box .product-sale{background:#dd4b39;color:#fff;font-size:15px;font-weight:700;padding:5px 8px;margin:-5px 0 0 600px;position:absolute}
+.product-sale-box .cover-image{text-align:center}
+.product-sale-box .cover-image img{width:100px;margin:10px;float:left}
+.product-sale-box .cover-text{margin:10px 0;float:left}
+.product-sale-box .cover-text h2{font-size:18px;padding:5px 5px 10px;color:#444}
+.product-sale-box .white-line{width:550px;background:#fff;padding:10px}
+.product-sale-box p.lead{font-size:15px}
+.product-sale-box span.price{font-weight:700}
+.product-sale-box span.date{color:#848484}
+a.green-btn-sale{display:inline-block;margin:15px 0 10px;border:1px solid #2ca93b;background:#2ca93b;text-align:center;color:#fff;font-size:12px!important;padding:6px 10px;cursor:pointer;border:0;box-shadow:0 1px 2px #ddd}
+a.green-btn-sale:hover{text-decoration:none}
+.main-b2c-cat-rl {text-align:right !important;}
+.hebrew .main-b2c-cat-rl {text-align:left !important;}
+.hebrew select {direction: rtl !important;}
 
-.product-sale::after {
-    content: " ";
-    border-width: 3px 3px 4px 4px;
-    border-style: solid;
-    border-color: transparent #954232 #954232 transparent;
-    position: absolute;
-    top: 0px;
-    right: 100%;
-}
-
-.product-sale {
-  background:#dd4b39;
-  color:#fff;
-  font-weight:bold;
-  padding:5px 8px 5px 8px;
-  margin:-5px 0 0 10px;
-  position:absolute;
-}
-
-.product-sale-box {
-  width:100%;
-  background:#eeeeee;
-  margin:20px 0 30px 0;
-}
-
-.product-sale-box .product-sale {
-  background:#dd4b39;
-  color:#fff;
-  font-size:15px;
-  font-weight:bold;
-  padding:5px 8px 5px 8px;
-  margin:-5px 0 0 600px;
-  position:absolute;
-}
-
-.product-sale-box .cover-image {
-  text-align:center;
-}
-
-.product-sale-box .cover-image img {
-  width:100px;
-  margin:10px;
-  float:left;
-}
-
-.product-sale-box .cover-text {
-  margin:10px 0;
-  float:left;
-}
-
-.product-sale-box .cover-text h2 {
-  font-size:18px;
-  padding:5px 5px 10px 5px;
-  color:#444;
-}
-
-.product-sale-box .white-line {
-  width:550px;
-  background:#fff;
-  padding:10px;
-}
-
-.product-sale-box p.lead {
-  font-size:15px;
-}
-
-.product-sale-box span.price {
-  font-weight: bold;
-}
-
-.product-sale-box span.date {
-  color:#848484;
-}
-
-a.green-btn-sale {
-    display:inline-block;
-    margin:15px 0 10px 0;
-    border:1px solid #2ca93b;
-    background: #2ca93b;
-    text-align:center;
-    color: #fff;
-    font-size:12px !important;
-    padding:6px 10px 6px 10px;
-    cursor:pointer;
-    border:0;
-    box-shadow: 0px 1px 2px #ddd;
-}
-
-a.green-btn-sale:hover {
-  text-decoration:none;
-}

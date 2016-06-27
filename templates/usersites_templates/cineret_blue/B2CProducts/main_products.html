@@ -1,0 +1,89 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if products %}
+    {% with num_of_prod=products|length %}
+    <div class="container clearfix main-products">
+
+        {# Products header #}
+        <div class="col-lg-12">
+            <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans "B2C Products" %}</a></h2>
+        </div>
+
+        {# Row of products in main page. Template holds 4 products in main page #}
+        <div class="row">
+            {# Looping the products from that came from the view #}
+            {# display only the products that aren't coupons #}
+            {% for product in products %}
+
+                {# Order of elements in the product thumbnail: #}
+                {# img, title, category, short description, price, deleted price, button group #}
+                {% if num_of_prod  == 4  %}
+                    <div class="col-sm-6 col-xs-12 col-md-3 product">
+                {% elif num_of_prod  == 3  %}
+                    <div class="col-sm-6 col-xs-12 col-md-4 product">
+                {% elif num_of_prod  == 2  %}
+                    <div class="col-sm-6 col-xs-12 col-md-6 product">
+                {% elif num_of_prod  == 1  %}
+                    <div class="col-sm-12 col-xs-12 col-md-12 product">
+                {% endif %}
+
+                    <div class="thumbnail">
+
+                        {% if product.image %}
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                        {% endif %}
+
+                        {# Product details #}
+                        <div class="product__caption">
+
+                            {# Product title - up 20 char to keep design #}
+                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+
+                            {# KRN here i want the product category to be #}
+                            {% comment %}
+                            {% for category in product.categories %}
+                                <p class="product__cat">{{ category|truncatechars:20 }}</p>
+                            {% endfor %}
+                            {% endcomment %}
+
+                            {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
+                            <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
+
+
+                            {# Displaying a price if there is one. Cheching if there is a discount too. #}
+                            {% if product.cost %}
+                                <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+
+                                {% if product.cost != product.get_discount_price %}
+                                    <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                {% endif %}
+
+                                </p>
+
+                                {% else %}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
+
+                            {# Button to go the details - attached to the bottom of the thumbnail #}
+                            <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+
+{#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Products{% endblocktrans %} </a>#}
+        <br/><br/>
+
+    </div>
+    {% endwith %}
+{% endif %}{# End of products section. #}

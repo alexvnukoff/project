@@ -4,7 +4,11 @@
 Change cookie domain to accept form sub domains( Lang sub domains )
 """
 
+import logging
+
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 class ChangeCsrfCookieDomainMiddleware:

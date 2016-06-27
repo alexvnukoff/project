@@ -1,9 +1,11 @@
 import threading
+import logging
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.http import HttpResponse, HttpResponseBadRequest
 
+logger = logging.getLogger(__name__)
 
 def get_current_site():
     return DynamicSiteMiddleware.get_site()
@@ -67,7 +69,13 @@ class DynamicSiteMiddleware(object):
     @classmethod
     def set_site(cls, site):
         cls.__sites[threading.current_thread()] = site
+        if hasattr(site, 'pk') and not getattr(settings, 'SITE_ID', None):
+            settings.SITE_ID = site.pk
 
     @classmethod
     def del_site(cls):
-        cls.__sites.pop(threading.current_thread(), None)
+        _site_id = getattr(settings, 'SITE_ID', None)
+        _current_thread = threading.current_thread()
+        if _site_id and cls.__sites.get(_current_thread) == _site_id:
+            settings.SITE_ID = None
+        cls.__sites.pop(_current_thread, None)

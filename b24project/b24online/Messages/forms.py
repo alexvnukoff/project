@@ -18,7 +18,6 @@ from b24online.utils import handle_uploaded_file
 from django.core.mail import EmailMessage
 from b24online import InvalidParametersError
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -85,7 +84,6 @@ class MessageForm(forms.ModelForm):
 
                     if self.request.FILES \
                         and 'attachment' in self.request.FILES:
-
                         for _attachment in self.request.FILES.getlist('attachment'):
                             new_message_attachment = MessageAttachment.objects\
                                 .create(
@@ -95,7 +93,6 @@ class MessageForm(forms.ModelForm):
                                     file_name=_attachment.name,
                                     content_type=_attachment.content_type,
                                 )
-
             except IntegrityError as exc:
                 raise
             else:
@@ -125,7 +122,7 @@ class MessageForm(forms.ModelForm):
                             attachment.content_type)
             mail.send()
 
-    def get_errors(self):
+    def get_errors_msg(self):
         """
         Return the errors as one string.
         """
@@ -136,6 +133,19 @@ class MessageForm(forms.ModelForm):
                     . join(map(lambda x: strip_tags(x), field_messages)))
                 )
         return '; ' . join(errors)
+
+    def get_errors(self):
+        """
+        Return the errors as one string.
+        """
+        errors = {}
+        for field_name, field_messages in self.errors.items():
+            errors[field_name] = ', ' . join(
+                map(lambda x: strip_tags(x), field_messages)
+            )
+        return errors
+
+
 
     def save(self, *args, **kwargs):
         pass
@@ -300,7 +310,7 @@ class MessageSendForm(forms.ModelForm):
             else:
                 new_message.upload_files()
 
-        if send_as_email:
+        if send_as_email and organization:
             if not organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to '

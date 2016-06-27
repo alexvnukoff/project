@@ -20,11 +20,13 @@ from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
 from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
-                              RegisteredEventStats, RegisteredEventType, User, 
-                              Profile, BusinessProposal, 
-                              BusinessProposalCategory, DealOrder, Deal, 
+                              RegisteredEventStats, RegisteredEventType, User,
+                              Profile, BusinessProposal,
+                              BusinessProposalCategory, DealOrder, Deal,
                               DealItem, StaffGroup, PermissionsExtraGroup,
-                              MessageChat, Message, Producer)
+                              MessageChat, Message, Producer,
+                              Questionnaire, Question, Recommendation,
+                              AdditionalPage, LeadsStore)
 from b24online.stats.utils import convert_date
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -204,6 +206,18 @@ class B24UserAdmin(UserAdmin):
     change_form_template = 'loginas/change_form.html'
 
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_filter = ('questionnaire',)
+
+
+class LeadsAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = ('organization', 'email', 'username', 'subject', 'created_at',)
+    search_fields = ['subject', 'message',]
+    raw_id_fields = ('organization', 'username', )
+    #list_filter = ('organization',)
+
+
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
@@ -225,3 +239,8 @@ admin.site.register(PermissionsExtraGroup, ModelAdmin)
 admin.site.register(MessageChat, ModelAdmin)
 admin.site.register(Message, ModelAdmin)
 admin.site.register(Producer, ModelAdmin)
+admin.site.register(Questionnaire, ModelAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Recommendation, ModelAdmin)
+admin.site.register(AdditionalPage, ModelAdmin)
+admin.site.register(LeadsStore, LeadsAdmin)

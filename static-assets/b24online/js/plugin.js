@@ -16,7 +16,7 @@
 
 		if (diff !== 0) {
 			$slides.css( "position", "relative" );
-			
+
 			for (var i = 0; i < $slides.length; i++) {
 				$slides.eq(i).css( "left", (diff * i) + "px" );
 			}
@@ -282,15 +282,15 @@
 					$slide = $el.find(opt.slide),
 					constrain = ui.dir === 'prev' ? left != 0 : -left < ($slide.length - 1) * 100,
 					$target = $( '[href="#' + this.id + '"]');
-					
+
 				if (!$el.is(":animated") && constrain ) {
-					
+
 					if ( ui.dir === 'prev' ) {
 						left = ( left % 100 != 0 ) ? carousel.roundDown(left) : left + 100;
 					} else {
 						left = ( ( left % 100 ) != 0 ) ? carousel.roundDown(left) - 100 : left - 100;
 					}
-					
+
 					$el.trigger('carouselmove', { 'moveTo': left });
 
 					$target
@@ -313,8 +313,8 @@
 					}
 				} else {
 					var reset = carousel.roundDown(left);
-					
-					if(opt.backToStart) {					
+
+					if(opt.backToStart) {
 						if ( ui.dir === 'next' ) {
 							left = 0;
 						} else if ( ui.dir === 'prev' && ui.event === 'notauto' ) {
@@ -348,7 +348,7 @@
 					} else {
 						event = '';
 					}
-					
+
 					$slider.trigger('nextprev', { 'dir': dir, 'event': event });
 
 				e.preventDefault();
@@ -357,13 +357,13 @@
 				var $el = $(this),
 			            link = this.hash,
 				    event = '';
-				
+
 				if(opt.backToStart) {
 					event = 'notauto';
 				} else {
 					event = '';
 				}
-				
+
 				switch (e.which) {
 					case 37:
 					case 38:
@@ -405,11 +405,11 @@
 				autoAdvance = function() {
 					var $slider  = $el.find(opt.slider),
 						active   = -( $(opt.slider).getPercentage() / 100 ) + 1;
-						
+
 					switch( active ) {
 						case slidenum:
 							clearInterval(auto);
-							
+
 							auto = setInterval(function() {
 								autoAdvance();
 								$slider.trigger("nextprev", { 'dir': 'prev' });

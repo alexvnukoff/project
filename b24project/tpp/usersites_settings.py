@@ -8,3 +8,11 @@ PARTIALS_PATH = os.path.join(BASE_DIR, '..', 'templates', 'usersites_angular', '
 
 WSGI_APPLICATION = 'usersites.wsgi.application'
 ROOT_URLCONF = 'usersites.urls'
+
+SESSION_COOKIE_NAME = 'site_session_id'
+
+if TEMPLATES:
+    TEMPLATES[0]['DIRS'].insert(0, 
+        os.path.join(BASE_DIR, '..', 'templates/_usersites/'))
+
+LOGIN_REDIRECT_URL = '/'

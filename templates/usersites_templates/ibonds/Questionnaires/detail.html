@@ -1,0 +1,82 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+{% block after_css %}
+    <link rel="stylesheet" href="{% static 'b24online/css/extra.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/questionnaire.css' %}">
+    <style type="text/css">
+        .frame {
+            overflow: auto; 
+            width: 90%;
+            min-width: 200px;
+            max-width: 550px; 
+            height: 300px; 
+            text-align: justify; 
+            padding: 15px; 
+            margin-left: 0;
+            border-left: #000000 1px solid; 
+            border-right: #000000 1px solid; 
+            border-top: #000000 1px solid; 
+            border-bottom: #000000 1px solid; 
+            scrollbar-face-color: #DF0000; 
+            scrollbar-highlight-color: #FF0000; 
+            scrollbar-shadow-color: #BB0000; 
+            scrollbar-3dlight-color: #660000; 
+            scrollbar-arrow-color: #FFFFFF; 
+            scrollbar-track-color: #F5F5F5; 
+            scrollbar-darkshadow-color: #660000;
+        }
+    </style>    
+
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% with object.item as product %}
+    <section class="content__info grid-layout">
+        <div class="container">
+            <div class="data">
+                <h2 class="page-header">{{ object.name }}</h2>
+                <hr class="hr-divider-one">
+                <div id="description">
+                    {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
+                    {{ object.short_description }}
+                </div>
+                <div class="data">
+                    <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.answer_formset.management_form }}
+                    {% for hidden in q_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    {% include "usersites_templates/ibonds/Questionnaires/questionsForm.html" %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endwith %}
+{% endblock %}
+
+{% block js %}
+    {% if not user.is_authenticated %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var submit_button = $('#save-button');
+            $(submit_button).css('cursor', 'text').attr('disabled', 'disabled');
+            $('#agree-tos').change(function() {
+                if($(this).is(":checked")) {
+                    $(submit_button).css('cursor', 'pointer').removeAttr('disabled');
+                } else {
+                    $(submit_button).css('cursor', 'text').attr('disabled', 'disabled');
+                }
+            }) 
+        });
+    </script>
+    {% endif %}
+
+{% endblock %}

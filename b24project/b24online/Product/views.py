@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 import sys
+import json
 import logging
 
 from django.db import transaction
 from django.db.models import Q, Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
@@ -21,15 +22,16 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
 from b24online.models import (B2BProduct, Company, Chamber, Country,
-    B2BProductCategory, DealOrder, Deal, DealItem, Organization)
+    B2BProductCategory, DealOrder, Deal, DealItem, Organization, Producer)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
-    DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet)
+    DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
+    ProducerForm)
 from paypal.standard.forms import PayPalPaymentsForm
 from usersites.models import UserSite
-from b24online.utils import (get_current_organization, get_permitted_orgs)
-
+from b24online.utils import (get_current_organization, get_permitted_orgs,
+                             MTTPTreeBuilder)
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +117,6 @@ class B2BProductUpdateList(B2BProductList):
             'current_organization': get_current_organization(self.request),
             'item_formset': self.item_formset,
         })
-        logger.debug(context['page'].number)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -268,11 +269,16 @@ class B2CPCouponsList(ItemsList):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
     def get_queryset(self):
-        queryset = super(B2CPCouponsList, self).get_queryset().filter(\
-                                  coupon_dates__contains=now().date())\
-                        .exclude(coupon_discount_percent__isnull=True)
-        return queryset
+        if self.is_filtered():
+            return self.get_filtered_items().sort(*self._get_sorting_params())
 
+        queryset = self.model.get_active_objects().filter(
+                is_active=True,
+                coupon_dates__contains=now().date(),
+                coupon_discount_percent__gt=0
+                ).order_by(*self._get_sorting_params())
+
+        return self.optimize_queryset(queryset)
 
 
 class B2BProductDetail(ItemDetail):
@@ -628,6 +634,8 @@ class B2CProductUpdate(ItemUpdate):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+        self.imageslist = request.POST.getlist('additional_images')
+
         additional_page_form = AdditionalPageFormSet(self.request.POST,\
                                                   instance=self.object)
 
@@ -653,6 +661,9 @@ class B2CProductUpdate(ItemUpdate):
         success page.
         """
         form.instance.updated_by = self.request.user
+
+        if form.cleaned_data['additional_images']:
+            form.instance.additional_images = self.imageslist
 
         if form.changed_data and 'sku' in form.changed_data:
             form.instance.metadata['stock_keeping_unit'] =\
@@ -873,8 +884,8 @@ class DealList(LoginRequiredMixin, ItemsList):
     current_section = _('Deals history')
     form_class = DealListFilterForm
     url_paginator = 'products:deal_list_paginator'
-    paginate_by = 5
-    sortField1 = 'creatd_at'
+    paginate_by = 10
+    sortField1 = 'created_at'
     order1 = 'asc'
     by_status = None
 
@@ -999,6 +1010,12 @@ class DealPayPal(LoginRequiredMixin, ItemDetail):
         return context
 
 
+class DealItemDetail(LoginRequiredMixin, ItemDetail):
+    model = DealItem
+    template_name = 'b24online/Products/dealItemDetail.html'
+    current_section = _('Deals history')
+
+
 class DealItemDelete(LoginRequiredMixin, ItemDetail):
     model = DealItem
     template_name = 'b24online/Products/dealDetail.html'
@@ -1014,3 +1031,146 @@ class DealItemDelete(LoginRequiredMixin, ItemDetail):
             item.delete()
         return HttpResponseRedirect(next)
 
+
+def category_tree_json(request, b2_type='b2b'):
+    model_class = B2CProductCategory if b2_type == 'b2c' \
+        else B2BProductCategory
+    tree_builder = MTTPTreeBuilder(model_class)
+    data = tree_builder()
+
+    return HttpResponse(
+        json.dumps(data),
+        content_type='application/json'
+    )
+
+
+@login_required
+def category_tree_demo(request, b2_type='b2b'):
+
+    def extract_data_fn(node):
+        return {
+            'id': node.id,
+            'text': node.name,
+        }
+
+    context = {}
+    model_class = B2CProductCategory if b2_type == 'b2c' \
+        else B2BProductCategory
+    tree_builder = MTTPTreeBuilder(
+        model_class,
+        extract_data_fn=extract_data_fn,
+    )
+    data = tree_builder()
+    context.update({'tree_data': json.dumps(data)})
+    return render_to_response(
+        'b24online/Products/category_tree_demo.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+
+class ProducerList(LoginRequiredMixin, ItemsList):
+    model = Producer
+    template_name = 'b24online/Products/producerList.html'
+    current_section = _('Producers')
+    url_paginator = 'products:producer_list_paginator'
+    paginate_by = 10
+    sortField1 = 'name'
+    order1 = 'asc'
+
+    def _get_sorting_params(self):
+        return ['name',]
+
+    def get_queryset(self):
+        self.current_organization = get_current_organization(self.request)
+        if isinstance(self.current_organization, Company):
+            return Producer.objects.all()
+            ## Current company products producers IDs list
+            #producer_ids = [item.producer.id for item \
+            #    in B2BProduct.objects.filter(
+            #        company=self.current_organization,
+            #        producer__isnull=False)] + [item.producer.id for item \
+            #    in B2BProduct.objects.filter(
+            #        company=self.current_organization,
+            #        producer__isnull=False)]
+            #return Producer.objects.filter(id__in=producer_ids)
+        else:
+            return Producer.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super(ProducerList, self).get_context_data(**kwargs)
+        context.update({
+            'current_organization': self.current_organization,
+        })
+        return context
+
+
+class ProducerCreate(LoginRequiredMixin, ItemCreate):
+    model = Producer
+    form_class = ProducerForm
+    template_name = 'b24online/Products/producerForm.html'
+    success_url = reverse_lazy('products:producer_list')
+    current_section = _('Producers')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = None
+        return super(ProducerCreate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            form.instance.upload_logo()
+            return HttpResponseRedirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
+    model = Producer
+    form_class = ProducerForm
+    template_name = 'b24online/Products/producerForm.html'
+    success_url = reverse_lazy('products:producer_list')
+    current_section = _('Producers')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(ProducerUpdate, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(instance=self.object)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            instance=self.object,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            form.instance.upload_logo()
+            return HttpResponseRedirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class ProducerDelete(LoginRequiredMixin, DetailView):
+    model = Producer
+    template_name = 'b24online/Products/producerForm.html'
+    current_section = _('Producers')
+
+    def get(self, request, *args, **kwargs):
+        # FIXME: add the notification
+        item = self.get_object()
+        if item:
+            item.delete()
+        next = reverse('products:producer_list')
+        return HttpResponseRedirect(next)

@@ -11,6 +11,7 @@
     <meta name="MSSmartTagsPreventParsing" content="true">
     <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
+    {% block after_meta %}{% endblock %}
 
     <!--<link rel="shortcut icon" href="images/favicon.ico">-->
     <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
@@ -21,7 +22,9 @@
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
+    <link rel="stylesheet" href="{% static 'b24online/css/icons.css' %}">
 
+    {% block after_css %}{% endblock %}
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
@@ -38,9 +41,7 @@
                 </div>
 
                 {% block slider %}
-                    {% cache 3600 slider site.pk LANGUAGE_CODE %}
                         {% include 'usersites/slider.html' %}
-                    {% endcache %}
                 {% endblock %}
 
             <div class="offer__icons">
@@ -63,13 +64,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                        <div class="tmp_search">
+                        <div class="tmp_search hideitplease">
                         <form action="{% url 'b2c_products:search' %}">
-                            <input type="text" placeholder="Search" name="s">
+                            <input id="search_q" type="text" placeholder="Search" name="s">
                         </form>
                         </div>
 
-                    <div class="select -lang">
+                    <div class="select -lang hideitplease">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
@@ -93,6 +94,7 @@
                         <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
                     {% endif %}
                 {% endif %}
+                        <li><a href="{% url 'video:main' %}">{% trans 'Videos' %}</a></li>
                 {% comment %}
                     {% for page in site.user_site.organization.additional_pages %}
                         <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
@@ -125,6 +127,11 @@
     {% include 'usersites/footer.html' %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
+    {% block before_js %}
+        <script  type="text/javascript">
+            var SEARCH_Q_URL = '{% url "b2c_products:b2c_product_json" %}';
+        </script>
+    {% endblock %}
 
         <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
         <script src="{% static 'usersites/js/angular.min.js' %}"></script>
@@ -138,8 +145,8 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
 
-
-    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+        <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+        <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
 
     <script>

@@ -7,6 +7,7 @@
 
 <div class="container">
      <div class="companies">
+        {% include "b24online/main/add_button.html" %}
         {% include "b24online/main/popupFilter.html" %}
         {% include "b24online/main/paginator.html" %}
         {% include "b24online/main/local_menu_script.html" %}
@@ -34,9 +35,9 @@
                             {% endif %}
 
                             {% if company.short_description %}
-                                {{ company.short_description|cleanHtml|safe|truncatechars:200 }}
+                                {{ company.short_description|cleanHtml|safe|truncatechars_html:200 }}
                             {% else %}
-                                {{ company.description|cleanHtml|safe|truncatewords_html:200 }}
+                                {{ company.description|cleanHtml|safe|truncatechars_html:200 }}
                             {% endif %}
                             <a href="{{ company.get_absolute_url }}">{% trans "More" %}...</a>
 
@@ -63,7 +64,7 @@
                             {% if company.site %}
                                 <div class="line">
                                     <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
-                                    <div class="nameinfo"><a href="http://{{ company.site }}">{{ company.site }}</a></div>
+                                    <div class="nameinfo"><a href="{{ company.site }}" rel="nofollow" target="_blank">{{ company.site }}</a></div>
                                 </div>
                             {% endif %}
                             <div class="line">

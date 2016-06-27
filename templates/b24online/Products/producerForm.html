@@ -1,0 +1,74 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(function() {
+        $('.select-categories').select2({
+            width: '100%',
+            allowClear: false,
+       });
+    });
+</script>
+{% endblock %}
+
+{% block title %}
+    {% if form.instance %}
+        {% trans 'Update the producer'%}
+    {% else %}
+        {% trans 'Add the producer' %}
+    {% endif %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="data" style="margin: 15px;">
+    <h1>
+    {% if form.instance and form.instance.pk %}
+        {% trans 'Update the producer'%}
+    {% else %}
+        {% trans 'Add the producer' %}
+    {% endif %}
+    </h1>
+    <hr class="hr-divider-one">
+    <div class="newsform form-container">
+        <form enctype="multipart/form-data" method="post" action="">
+            {% csrf_token %}
+            <ul class="uploadconfig">
+                <li>
+                    <label>{{ form.item_label }}</label>
+                    <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>
+                </li>
+                {% for field in form %}
+                <li>
+                    <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}:</label>
+                    {% if form.bound and .content_type %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ field.errors|striptags }}</div>
+                        </div>
+                    {% endif %}
+                    {% if field.name == 'logo' and form.initial.logo %}
+                        <div>
+                            <div><img src="{{ form.initial.logo.big }}"></div>
+                        </div>
+                    {% endif %}
+                    {{ field }}
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="newform-button">
+                <input type="submit" class="btntype2" name="submit" value="{% trans 'Save' %}">
+                <a href="#" class="btntype1" onclick="javascript:window.location.href='{{ success_url }}'; retun false;">{% trans 'Cancel' %}</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

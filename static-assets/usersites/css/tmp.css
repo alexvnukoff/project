@@ -310,6 +310,15 @@ background:#2ca93b !important;
   overflow:hidden!important;
 }
 
+#wrapper .form-group > select {
+  margin:3px 0 10px 0;
+  border:2px solid #919191;
+}
+
+#wrapper .form-group select#id_language {
+  width:30%;
+}
+
 #wrapper .form-group textarea {
   width:600px;margin:3px 0;
   padding:5px;
@@ -473,13 +482,21 @@ a.green-btn-sale:hover {
 
 @media only screen and (max-width:1250px){
 
-.sidebar {
+/* .sidebar {
   display:none;
 }
-
 .adv, .banners {
   display:none;
 }
+*/
+
+.hideitplease {
+display:none !important;
+}
+.hideitplease select, input {
+display:none !important;
+}
+
 
 .wrapper {
   width:100%;

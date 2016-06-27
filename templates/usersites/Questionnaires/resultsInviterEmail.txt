@@ -1,0 +1,5 @@
+{% autoescape off %}
+Вам пришло сообщение от {{ inviter }}. 
+
+Прочитайте и ответьте на него: {{ result_href }}
+{% endautoescape %}
