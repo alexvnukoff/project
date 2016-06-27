@@ -439,17 +439,17 @@ def send_message(request):
     elif request.user.is_anonymous() or not request.user.is_authenticated():
         response_text = _('Only registered users can send the messages')
     else:
-        form = MessageForm(request, data=request.POST, files=request.FILES)    
+        form = MessageForm(request, data=request.POST, files=request.FILES)
         if form.is_valid():
             try:
-                form.send()        
+                form.send()
             except IntegrityError as exc:
                 response_text = _('Error during data saving') + str(exc)
             else:
                 response_code = 'success'
                 response_text = _('You have successfully sent the message')
         else:
-            response_text = form.get_errors()  
+            response_text = form.get_errors()
     return HttpResponse(
         json.dumps({'code': response_code, 'message': response_text}),
         content_type='application/json'
