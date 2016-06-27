@@ -27,10 +27,22 @@ class UserDetail(forms.Form):
 
 
 class OrderEmailForm(forms.Form):
+    """The form class for orders by email"""
     name = forms.CharField(required=True, label=_("Name"))
     last_name = forms.CharField(required=False, label=_("Last Name"))
     email = forms.CharField(required=True, label=_("Email"))
     message = forms.CharField(label=_("Description"), widget=forms.Textarea)
-    name.widget.attrs.update({'placeholder': 'Your Name'})
-    email.widget.attrs.update({'placeholder': 'Email'})
-    message.widget.attrs.update({'placeholder': 'Message'})
+    
+    def __init__(self, *args, **kwargs):
+        super(OrderEmailForm, self).__init__(*args, **kwargs)
+        
+        # Add the 'placeholders' to the fields
+        self.fields['name'].widget.attrs.update(
+            {'placeholder': 'Your Name'}
+        )
+        self.fields['email'].widget.attrs.update(
+            {'placeholder': 'Email'}
+        )
+        self.fields['message'].widget.attrs.update(
+            {'placeholder': 'Message'}
+        )
