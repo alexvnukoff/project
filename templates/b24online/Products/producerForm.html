@@ -2,7 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% load l10n %}
-
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'b24online/js/jstree/jstree.js' %}"></script>
@@ -56,6 +55,11 @@
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
     <link type="text/css" rel="stylesheet" href='{% static "b24online/js/jstree/themes/default/style.css" %}' />
+    <style>
+        ul.data-form-list > li {
+            margin: 15px 5px;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -71,7 +75,7 @@
     <div class="newsform form-container">
         <form enctype="multipart/form-data" method="post" action="">
             {% csrf_token %}
-            <ul>
+            <ul class="data-form-list">
                 <li>
                     <label>{{ form.item_label }}</label>
                     <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>
@@ -80,15 +84,17 @@
                 <li>
                     <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}:</label>
                     {% if form.bound and .content_type %}
-                        <div class="error-handler">
-                            <div class="formserror">{{ field.errors|striptags }}</div>
-                        </div>
+                    <div class="error-handler">
+                        <div class="formserror">{{ field.errors|striptags }}</div>
+                    </div>
                     {% endif %}
+
                     {% if field.name == 'logo' and form.initial.logo %}
-                        <div>
-                            <div><img src="{{ form.initial.logo.big }}"></div>
-                        </div>
+                    <div>
+                        <div><img src="{{ form.initial.logo.big }}"></div>
+                    </div>
                     {% endif %}
+
                     {{ field }}
                 </li>
                 {% endfor %}

@@ -1033,12 +1033,15 @@ class DealItemDelete(LoginRequiredMixin, ItemDetail):
 
 
 def category_tree_json(request, b2_type='b2b'):
-
+    """
+    Return the json-ed tree of categories (B2B or B2C).
+    """
     def extract_data_fn(node):
-        return {
-            'id': node.id,
-            'text': node.name,
-        }
+        """
+        Extract the node info for jstree fiels.
+        """
+        node_info = {'id': node.id, 'text': node.name,}
+        return node_info
 
     model_class = B2CProductCategory if b2_type == 'b2c' \
         else B2BProductCategory
