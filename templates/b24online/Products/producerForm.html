@@ -4,15 +4,43 @@
 {% load l10n %}
 
 {% block js %}
-{{ block.super }}
-<script type="text/javascript">
-    $(function() {
-        $('.select-categories').select2({
-            width: '100%',
-            allowClear: false,
-       });
-    });
-</script>
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'b24online/js/jstree/jstree.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            // По всем полям  сзаданным классом
+            $('.js-tree-field').each(function() {
+                var self = this;
+                if ($(self).is('input') && $(self).is(':hidden')) {
+                    // Если input[type=hidden]
+                    var fieldId = $(self).attr('id'),
+                        initValues = $(self).val();
+                    if (typeof fieldId !== 'undefined') {
+                        var divTreeWrapperId = fieldId + '_tree_wrapper',
+                            divTreeId = fieldId + '_tree';
+
+                        var url = $(self).data('url');
+                        
+                        // Добавляем слои
+                        var divTree = $('<div/>').addClass('tree-container').attr('id', divTreeId),
+                            divTreeWrapper = $('<div/>').attr('id', divTreeWrapperId);
+                        $(divTreeWrapper).append(divTree);
+                        $(divTreeWrapper).insertAfter($(self));
+                   
+                        $.getJSON(url, function(tree_data) {
+                            $(divTree).jstree({
+                                core: {
+                                    data: tree_data,
+                                },
+                                plugins: ['checkbox',]
+                            });
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
 
 {% block title %}
@@ -27,6 +55,7 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/js/jstree/themes/default/style.css" %}' />
 {% endblock %}
 
 {% block content %}
@@ -42,7 +71,7 @@
     <div class="newsform form-container">
         <form enctype="multipart/form-data" method="post" action="">
             {% csrf_token %}
-            <ul class="uploadconfig">
+            <ul>
                 <li>
                     <label>{{ form.item_label }}</label>
                     <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>

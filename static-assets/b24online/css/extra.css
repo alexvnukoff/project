@@ -319,3 +319,6 @@ table.q_data td input[type='file'] {
     border: none;
 }
 
+.tree-container {
+    clear: both;
+}
