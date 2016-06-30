@@ -21,14 +21,13 @@ table.leads tr.head {
   }
 
 </style>
-<div class="container">
+
+    <div class="companies" style="width:100%">
 
     {% if object_list %}
-    <h2 style="margin-top:65px;">{% trans 'Total Leads:' %} {{ total_objects }}</h2>
+    <h2 style="margin:15px 15px 0 5px;">{% trans 'Total Leads:' %} {{ total_objects }}</h2>
     {% endif %}
-    <div class="companies">
-
-        <div style="margin:5px 0 5px 0;">
+        <div style="margin:5px 15px 5px 5px;">
         <table class="leads">
         {% if object_list %}
             <tr class="head">
@@ -57,4 +56,3 @@ table.leads tr.head {
         </div>
         {% include "b24online/main/paginator.html" %}
     </div>
-</div>
