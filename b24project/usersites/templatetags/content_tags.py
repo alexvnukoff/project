@@ -287,8 +287,9 @@ def b2b_producers(selected_category=None):
         .filter(company_id=organization.pk)\
         .filter(producer__isnull=False)
     if selected_category and isinstance(selected_category, B2BProductCategory):
+        filters_list = [selected_category,] + selected_category.get_descendants()
         producers = producers.filter(
-            producer__b2b_categories__in=[selected_category]
+            producer__b2b_categories__in=filters_list
         )
     return producers.values_list('producer__pk', 'producer__name').distinct()
 

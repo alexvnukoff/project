@@ -2,17 +2,69 @@
 {% load static %}
 {% load i18n %}
 {% load l10n %}
-
 {% block js %}
-{{ block.super }}
-<script type="text/javascript">
-    $(function() {
-        $('.select-categories').select2({
-            width: '100%',
-            allowClear: false,
-       });
-    });
-</script>
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'b24online/js/jstree/jstree.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            // По всем полям  сзаданным классом
+            $('.js-tree-field').each(function() {
+                var dataField = this;
+                if ($(dataField).is('input') && $(dataField).is(':hidden')) {
+                    // Если input[type=hidden]
+                    var fieldId = $(dataField).attr('id'),
+                        initValues = $(dataField).val();
+                    console.log(fieldId);
+                    if (typeof fieldId !== 'undefined') {
+                        var divTreeWrapperId = fieldId + '_tree_wrapper',
+                            divTreeId = fieldId + '_tree';
+
+                        var url = $(dataField).data('url');
+                        
+                        // Добавляем слои
+                        var divTree = $('<div/>').addClass('tree-container').attr('id', divTreeId),
+                            divTreeWrapper = $('<div/>').attr('id', divTreeWrapperId);
+                        $(divTreeWrapper).append(divTree);
+                        $(divTreeWrapper).insertAfter($(dataField));
+                
+                        var data = {};
+                        var contentTypeField = $('#content_type_id'),
+                            itemIdField = $('#item_id');
+                        if ((contentTypeField.length > 0) && (itemIdField.length)) {
+                            var contentTypeId = $(contentTypeField).val(),
+                                itemId = $(itemIdField).val();
+                            if (contentTypeId && itemId) {
+                                data['content_type_id'] = contentTypeId;
+                                data['item_id'] = itemId;
+                            }
+                        } 
+                   
+                        $.getJSON(url, data, function(tree_data) {
+                            $(divTree).jstree({
+                                core: {
+                                    data: tree_data,
+                                },
+                                plugins: ['checkbox',]
+                            });
+                            $(divTree).on('changed.jstree', function (e, data) {
+                                var self = this;
+                                if (data.node) {
+                                    var dataFieldList = [],
+                                        dataFieldValue = '';
+                                    $.each($(self).jstree('get_checked'), function() {
+                                        dataFieldList.push(this);
+                                    });
+                                    dataFieldValue = dataFieldList.toString();
+                                    $(dataField).val(dataFieldList);
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
 
 {% block title %}
@@ -27,6 +79,12 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+    <link type="text/css" rel="stylesheet" href='{% static "b24online/js/jstree/themes/default/style.css" %}' />
+    <style>
+        ul.data-form-list > li {
+            margin: 15px 5px;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -42,7 +100,12 @@
     <div class="newsform form-container">
         <form enctype="multipart/form-data" method="post" action="">
             {% csrf_token %}
-            <ul class="uploadconfig">
+            {% if form.content_type and form.instance and form.instance.id %}
+                <input type="hidden" id="content_type_id" name="content_type_id" 
+                    value="{{ form.content_type.id }}">
+                <input type="hidden" id="item_id" name="item_id" value="{{ form.instance.id }}">
+            {% endif %}
+            <ul class="data-form-list">
                 <li>
                     <label>{{ form.item_label }}</label>
                     <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>
@@ -51,15 +114,17 @@
                 <li>
                     <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}:</label>
                     {% if form.bound and .content_type %}
-                        <div class="error-handler">
-                            <div class="formserror">{{ field.errors|striptags }}</div>
-                        </div>
+                    <div class="error-handler">
+                        <div class="formserror">{{ field.errors|striptags }}</div>
+                    </div>
                     {% endif %}
+
                     {% if field.name == 'logo' and form.initial.logo %}
-                        <div>
-                            <div><img src="{{ form.initial.logo.big }}"></div>
-                        </div>
+                    <div>
+                        <div><img src="{{ form.initial.logo.big }}"></div>
+                    </div>
                     {% endif %}
+
                     {{ field }}
                 </li>
                 {% endfor %}

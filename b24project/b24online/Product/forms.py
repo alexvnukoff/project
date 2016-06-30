@@ -9,6 +9,7 @@ from django import forms
 from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
+from django.core.urlresolvers import reverse
 from django.forms import modelformset_factory
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -21,6 +22,7 @@ from b24online.models import (B2BProduct, AdditionalPage, Organization,
     DealOrder, Deal, DealItem, Company, Producer)
 from centerpokupok.models import B2CProduct
 from b24online.utils import get_permitted_orgs
+from b24online.widgets import JsTreeInput
 
 logger = logging.getLogger(__name__)
 
@@ -413,10 +415,15 @@ class ProducerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProducerForm, self).__init__(*args, **kwargs)
+        self.content_type = ContentType.objects.get_for_model(Producer)
         self.fields['name'].widget = forms.Textarea(
             attrs={'rows': '2', 'cols': '50'}
         )
-        self.fields['b2b_categories'].widget.attrs\
-            .update({'class': 'select-categories'})
-        self.fields['b2c_categories'].widget.attrs\
-            .update({'class': 'select-categories'})
+        self.fields['b2b_categories'].widget = JsTreeInput(
+            attrs={'data-url': reverse('products:category_tree_json', 
+                kwargs={'b2_type': 'b2b'})})
+        self.fields['b2c_categories'].widget = JsTreeInput(
+            attrs={'data-url': reverse('products:category_tree_json', 
+                kwargs={'b2_type': 'b2c'})})
+        self.fields['b2b_categories'].required = False
+        self.fields['b2c_categories'].required = False

@@ -124,7 +124,9 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
 
 class B2CProductBasket(View):
     template_name = 'B2CProducts/basket.html'
+
     def get(self, request):
+        logger.debug('Step 1')
         basket = Basket(request)
         del_product = request.GET.get('del')
         clean = request.GET.get('clean')
@@ -164,12 +166,13 @@ class B2CProductBasket(View):
                 return HttpResponseRedirect((reverse('b2c_products:basket')))
             return HttpResponseNotFound()
         return render_to_response(
-                get_template_with_base_path(self.template_name),
-                data,
-                context_instance=RequestContext(request)
-                )
+            get_template_with_base_path(self.template_name),
+            data,
+            context_instance=RequestContext(request)
+        )
 
     def post(self, request):
+        logger.debug(request.POST)
         basket = Basket(request)
         product = request.POST.getlist('product_id')
         quantity = request.POST.getlist('quantity')
