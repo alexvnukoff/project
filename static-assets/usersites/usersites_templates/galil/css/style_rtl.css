@@ -267,7 +267,7 @@ body{
 }
 
 .banner-main-page:last-child{
-	padding-left: 0;
+	/*padding-left: 0;*/
 }
 
 /*---------- Jobs Styling ----------*/
