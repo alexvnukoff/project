@@ -415,6 +415,7 @@ class ProducerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProducerForm, self).__init__(*args, **kwargs)
+        self.content_type = ContentType.objects.get_for_model(Producer)
         self.fields['name'].widget = forms.Textarea(
             attrs={'rows': '2', 'cols': '50'}
         )
@@ -424,3 +425,5 @@ class ProducerForm(forms.ModelForm):
         self.fields['b2c_categories'].widget = JsTreeInput(
             attrs={'data-url': reverse('products:category_tree_json', 
                 kwargs={'b2_type': 'b2c'})})
+        self.fields['b2b_categories'].required = False
+        self.fields['b2c_categories'].required = False

@@ -9,29 +9,54 @@
         $(function() {
             // По всем полям  сзаданным классом
             $('.js-tree-field').each(function() {
-                var self = this;
-                if ($(self).is('input') && $(self).is(':hidden')) {
+                var dataField = this;
+                if ($(dataField).is('input') && $(dataField).is(':hidden')) {
                     // Если input[type=hidden]
-                    var fieldId = $(self).attr('id'),
-                        initValues = $(self).val();
+                    var fieldId = $(dataField).attr('id'),
+                        initValues = $(dataField).val();
+                    console.log(fieldId);
                     if (typeof fieldId !== 'undefined') {
                         var divTreeWrapperId = fieldId + '_tree_wrapper',
                             divTreeId = fieldId + '_tree';
 
-                        var url = $(self).data('url');
+                        var url = $(dataField).data('url');
                         
                         // Добавляем слои
                         var divTree = $('<div/>').addClass('tree-container').attr('id', divTreeId),
                             divTreeWrapper = $('<div/>').attr('id', divTreeWrapperId);
                         $(divTreeWrapper).append(divTree);
-                        $(divTreeWrapper).insertAfter($(self));
+                        $(divTreeWrapper).insertAfter($(dataField));
+                
+                        var data = {};
+                        var contentTypeField = $('#content_type_id'),
+                            itemIdField = $('#item_id');
+                        if ((contentTypeField.length > 0) && (itemIdField.length)) {
+                            var contentTypeId = $(contentTypeField).val(),
+                                itemId = $(itemIdField).val();
+                            if (contentTypeId && itemId) {
+                                data['content_type_id'] = contentTypeId;
+                                data['item_id'] = itemId;
+                            }
+                        } 
                    
-                        $.getJSON(url, function(tree_data) {
+                        $.getJSON(url, data, function(tree_data) {
                             $(divTree).jstree({
                                 core: {
                                     data: tree_data,
                                 },
                                 plugins: ['checkbox',]
+                            });
+                            $(divTree).on('changed.jstree', function (e, data) {
+                                var self = this;
+                                if (data.node) {
+                                    var dataFieldList = [],
+                                        dataFieldValue = '';
+                                    $.each($(self).jstree('get_checked'), function() {
+                                        dataFieldList.push(this);
+                                    });
+                                    dataFieldValue = dataFieldList.toString();
+                                    $(dataField).val(dataFieldList);
+                                }
                             });
                         });
                     }
@@ -75,6 +100,11 @@
     <div class="newsform form-container">
         <form enctype="multipart/form-data" method="post" action="">
             {% csrf_token %}
+            {% if form.content_type and form.instance and form.instance.id %}
+                <input type="hidden" id="content_type_id" name="content_type_id" 
+                    value="{{ form.content_type.id }}">
+                <input type="hidden" id="item_id" name="item_id" value="{{ form.instance.id }}">
+            {% endif %}
             <ul class="data-form-list">
                 <li>
                     <label>{{ form.item_label }}</label>
