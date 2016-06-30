@@ -627,7 +627,7 @@ span.percent{
 
 .banner-main-page img {
     padding: 0px 0px 10px 10px;
-    max-width: 100%;
+    width: 100%;
 }
 
 /*---------- Jobs Styling ----------*/
