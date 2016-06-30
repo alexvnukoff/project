@@ -254,6 +254,22 @@ body{
 	padding-left: 10px
 }
 
+.wall-news-img{
+	float: right;
+}
+
+.wall-news-content{
+	float: right;
+}
+
+.banner-main-page:first-child{
+	/*padding-right: 0;*/
+}
+
+.banner-main-page:last-child{
+	padding-left: 0;
+}
+
 /*---------- Jobs Styling ----------*/
 .jobs-content{
 	float: right;
