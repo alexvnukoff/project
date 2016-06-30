@@ -27,16 +27,15 @@ table.leads tr.head {
     <h2 style="margin-top:65px;">{% trans 'Total Leads:' %} {{ total_objects }}</h2>
     {% endif %}
     <div class="companies">
-        {% include "b24online/main/popupFilter.html" %}
-        {% include "b24online/main/local_menu_script.html" %}
 
         <div style="margin:5px 0 5px 0;">
         <table class="leads">
         {% if object_list %}
             <tr class="head">
-              <td>{% trans 'Subject' %}</td>
+              <td>{% trans 'Username' %}</td>
               <td>{% trans 'Emaail' %}</td>
-              <td>{% trans 'Registred User' %}</td>
+              <td>{% trans 'Phone' %}</td>
+              <td>{% trans 'Registred User?' %}</td>
               <td>{% trans 'Creation Date' %}</td>
             </tr>
         {% endif %}
@@ -45,6 +44,7 @@ table.leads tr.head {
             <tr>
               <td>{{ obj.subject }}</td>
               <td>{{ obj.email }}</td>
+              <td>{{ obj.phone }}</td>
               <td>{{ obj.username }}</td>
               <td>{{ obj.created_at }}</td>
             </tr>
