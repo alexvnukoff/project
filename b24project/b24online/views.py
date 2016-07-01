@@ -23,6 +23,7 @@ from b24online.forms import EditorImageUploadForm, FeedbackForm
 from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
 from appl import func
 from django.core.mail import EmailMessage
+from b24online.Leads.utils import GetLead
 
 logger = logging.getLogger(__name__)
 
@@ -288,6 +289,16 @@ def feedback_form(request):
             cd = form.cleaned_data
             subject = "B24online.com: New message from {0}".format(cd['username'])
             #print(subject, cd['message'], cd['email'], cd['co_email'])
+
+            # Collecting lead
+            getlead = GetLead(request)
+            getlead.collect(
+                    subject=subject,
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=None
+                )
+
             mail = EmailMessage(subject, cd['message'], cd['email'], [cd['co_email']])
             mail.send()
             return JsonResponse({}, status=200)

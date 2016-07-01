@@ -71,6 +71,14 @@
     float: left;
     padding-right: 30px;
 }
+
+.wall-news-img{
+	float: left;
+}
+
+.wall-news-content{
+	float: left;
+}
 /*---------- Product Styling ----------*/
 .coupon{
 	float: right;

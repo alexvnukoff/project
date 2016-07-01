@@ -15,7 +15,7 @@
                 {# News feed wil contain a photo, header, date, short text and a burron to the main news page. #}
                 {% for article in news %}
                     <li class="media">
-                        <div class="col-3-md">
+                        <div class="wall-news-img">
                             <a href="#" class="news__img">
                                 {% if article.image %}
                                     <img src="{{ article.image.small }}" alt="" class="img-rounded">
@@ -23,7 +23,7 @@
                             </a>
                         </div>
 
-                        <div class="col-9-md">
+                        <div class="wall-news-content">
                             <div class="media-body">
                                 <h4>{{ article.title }}</h4>
                                 <p class="date">{{ article.created_at|date:'d M Y' }}</p>
