@@ -26,10 +26,7 @@ class JsTreeInput(widgets.HiddenInput):
     def value_from_datadict(self, data, files, name):
         data_values_str = data.get(name)
         if data_values_str:
-            if data_values_str[0] == '[':
-                data_values_str = data_values_str[1:]
-            if data_values_str[-1] == ']':
-                data_values_str = data_values_str[:-1]
+            data_values_str = data_values_str[1:-1]
             data_values = [item.strip() for item in data_values_str.split(',')]
             return data_values
         else:
