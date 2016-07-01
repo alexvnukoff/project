@@ -14,16 +14,18 @@
                     // Если input[type=hidden]
                     var fieldId = $(dataField).attr('id'),
                         initValues = $(dataField).val();
-                    console.log(fieldId);
                     if (typeof fieldId !== 'undefined') {
                         var divTreeWrapperId = fieldId + '_tree_wrapper',
                             divTreeId = fieldId + '_tree';
+                            divTreeSearchId = fieldId + '_tree_search';
 
                         var url = $(dataField).data('url');
                         
                         // Добавляем слои
                         var divTree = $('<div/>').addClass('tree-container').attr('id', divTreeId),
+                            divTreeSearch = $('<input/>').css('margin-bottom', '5px').attr('id', divTreeSearchId),
                             divTreeWrapper = $('<div/>').attr('id', divTreeWrapperId);
+                        $(divTreeWrapper).append(divTreeSearch);
                         $(divTreeWrapper).append(divTree);
                         $(divTreeWrapper).insertAfter($(dataField));
                 
@@ -44,7 +46,17 @@
                                 core: {
                                     data: tree_data,
                                 },
-                                plugins: ['checkbox',]
+                                plugins: ['checkbox', 'search']
+                            });
+                            var to = false;
+                            $(divTreeSearch).keyup(function () {
+                                if (to) { 
+                                    clearTimeout(to); 
+                                }
+                                to = setTimeout(function () {
+                                    var v = $(divTreeSearch).val();
+                                    $(divTree).jstree(true).search(v);
+                                }, 250);
                             });
                             $(divTree).on('changed.jstree', function (e, data) {
                                 var self = this;
