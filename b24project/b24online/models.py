@@ -2297,6 +2297,9 @@ class Producer(ActiveModelMixing, models.Model):
     def __str__(self):
         return self.name
 
+    def has_perm(self, user):
+        return True
+
     def upload_logo(self, changed_data=None):
         from core import tasks
         params = []
@@ -2875,6 +2878,36 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def get_absolute_url(self):
         return reverse('video:detail', args=[self.slug, self.pk])
+
+
+
+class LeadsStore(ActiveModelMixing, models.Model):
+    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
+    username = models.ForeignKey(Profile, null=True, blank=True)
+    subject = models.CharField(max_length=2048, null=True, blank=True)
+    email = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=255, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    metadata = JSONField('Meta', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
+        if self.organization:
+            return self.organization.has_perm(user)
+        return user.is_superuser or user.is_commando or self.created_by == user
+
+    class Meta:
+        verbose_name = "Lead"
+        verbose_name_plural = "Leads"
+
+    def __str__(self):
+        return self.organization.name
+
 
 
 @receiver(pre_save)

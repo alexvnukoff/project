@@ -9,7 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
+from django.http import (HttpResponse, HttpResponseRedirect,
+                    HttpResponseBadRequest, JsonResponse, HttpResponseNotFound)
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -18,9 +19,11 @@ from guardian.shortcuts import get_objects_for_user
 from django.core.mail import send_mail
 
 from b24online.cbv import ItemCreate
-from b24online.forms import EditorImageUploadForm
+from b24online.forms import EditorImageUploadForm, FeedbackForm
 from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
 from appl import func
+from django.core.mail import EmailMessage
+from b24online.Leads.utils import GetLead
 
 logger = logging.getLogger(__name__)
 
@@ -275,3 +278,33 @@ def editor_upload(request):
         return JsonResponse({'image': {'url': urljoin(settings.MEDIA_URL, image_path)}})
 
     return JsonResponse({'error': {'message': form.errors.get('file', [])[0]}})
+
+
+@csrf_protect
+def feedback_form(request):
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            subject = "B24online.com: New message from {0}".format(cd['username'])
+            #print(subject, cd['message'], cd['email'], cd['co_email'])
+
+            # Collecting lead
+            getlead = GetLead(request)
+            getlead.collect(
+                    subject=subject,
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=None
+                )
+
+            mail = EmailMessage(subject, cd['message'], cd['email'], [cd['co_email']])
+            mail.send()
+            return JsonResponse({}, status=200)
+        else:
+            #print(form.errors)
+            return JsonResponse({}, status=403)
+    else:
+        return HttpResponseNotFound()
+

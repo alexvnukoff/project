@@ -406,7 +406,10 @@ def upload_images(*args, base_bucket_path=""):
 
         filename = os.path.basename(image['file'])
         filepath = os.path.dirname(image['file'])
-        image_descriptor = Image.open(image['file'])
+        try:
+            image_descriptor = Image.open(image['file'])
+        except IOError:
+            continue
         content_type = Image.MIME.get(image_descriptor.format) or 'image/png'
 
         del image_descriptor

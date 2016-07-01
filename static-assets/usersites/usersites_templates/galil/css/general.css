@@ -520,6 +520,10 @@ span.percent{
 	height: 100%;
 }
 
+.main-prod-thumb-p{
+	height: 90px;
+}
+
 .main-products-thumb{
 	height: 100%;
 }
@@ -616,6 +620,16 @@ span.percent{
 
 }
 
+.banner-ad-main-collection{
+	padding: 20px 0 0 0px;
+	width: 100%;
+}
+
+.banner-main-page img {
+    padding: 0px 0px 10px 10px;
+    width: 100%;
+}
+
 /*---------- Jobs Styling ----------*/
 .job_offer{
 	padding-top: 0;
@@ -660,6 +674,14 @@ span.percent{
 
 .news-wrapper, .main-proposal{
 	margin-bottom: 10px;
+}
+
+.wall-news-img{
+	width: 20%;
+}
+
+.wall-news-content{
+	width: 80%;
 }
 
 /*---------- Footer Styling ----------*/

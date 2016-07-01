@@ -4,7 +4,7 @@
 {% load content_tags %}
 {% block after_paginator %}
     {% b2c_categories as categories %}
-    {% b2c_producers as prods %}
+    {% b2c_producers selected_category as prods %}
 
     <div class="view vertical">
         <button class="display-list"></button>
