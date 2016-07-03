@@ -12,7 +12,9 @@ from django.utils import timezone
 from django.db import transaction, IntegrityError
 
 from b24online.custom import CustomImageField
-from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
+from b24online.models import (Organization, image_storage, Gallery, 
+                              ActiveModelMixing, GalleryImage,
+                              CURRENCY)
 from paypal.standard.ipn.models import PayPalIPN
 from b24online.utils import generate_upload_path
 from django.utils.translation import ugettext as _
@@ -76,7 +78,11 @@ class UserSite(ActiveModelMixing, models.Model):
     domain_part = models.CharField(max_length=100, null=False, blank=False)
     galleries = GenericRelation(Gallery, related_query_name='sites')
     metadata = JSONField(default=dict())
-
+    is_delivery_available = models.BooleanField(default=True)
+    delivery_currency = models.CharField(max_length=20, blank=False, 
+                                         null=True, choices=CURRENCY)
+    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, 
+                                        null=True, blank=False)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
