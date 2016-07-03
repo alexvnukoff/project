@@ -24,10 +24,14 @@ class JsTreeInput(widgets.HiddenInput):
         return super(JsTreeInput, self).render(name, value, attrs)
 
     def value_from_datadict(self, data, files, name):
+        result = []
         data_values_str = data.get(name)
         if data_values_str:
             data_values_str = data_values_str[1:-1]
-            data_values = [item.strip() for item in data_values_str.split(',')]
-            return data_values
-        else:
-            return []
+            for _value in [item.strip() for item \
+                in data_values_str.split(',')]:
+                try:
+                    result.append(int(_value))
+                except:
+                    continue
+        return result
