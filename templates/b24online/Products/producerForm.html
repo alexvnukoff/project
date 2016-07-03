@@ -122,10 +122,16 @@
                     <label>{{ form.item_label }}</label>
                     <a href="{{ form.item.get_absolute_url }}" target="_blank">{{ form.item }}</a>
                 </li>
+                {% if form.is_bound and form.errors%}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors }}</div>
+                    </div>
+                {% endif %}
+                
                 {% for field in form %}
                 <li>
                     <label {% if field.field.required %}class="required"{% endif %}>{{ field.label }}:</label>
-                    {% if form.bound and .content_type %}
+                    {% if form.is_bound and field.errors %}
                     <div class="error-handler">
                         <div class="formserror">{{ field.errors|striptags }}</div>
                     </div>
@@ -137,7 +143,7 @@
                     </div>
                     {% endif %}
 
-                    {{ field }}
+                    <div style="clear: both;">{{ field }}</div>
                 </li>
                 {% endfor %}
             </ul>
