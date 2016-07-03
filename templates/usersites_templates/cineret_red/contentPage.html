@@ -176,12 +176,12 @@
                                 <p class="help-block"></p>
                             </div>
                         </div>
-    {#                    <div class="control-group form-group">#}
-    {#                        <div class="controls">#}
-    {#                            <label>{% trans 'Phone Number' %}:</label>#}
-    {#                            <input type="tel" class="form-control" id="phone" required data-validation-required-message="Please enter your phone number.">#}
-    {#                        </div>#}
-    {#                    </div>#}
+                        <div class="control-group form-group">
+                            <div class="controls">
+                                <label>{% trans 'Phone Number' %}:</label>
+                                <input type="tel" class="form-control" id="phone" value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                            </div>
+                        </div>
                         <div class="control-group form-group">
                             <div class="controls">
                                 <label>{% trans 'Your email' %}:</label>
