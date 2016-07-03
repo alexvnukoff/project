@@ -66,8 +66,8 @@
                                     $.each($(self).jstree('get_checked'), function() {
                                         dataFieldList.push(this);
                                     });
-                                    dataFieldValue = dataFieldList.toString();
-                                    $(dataField).val(dataFieldList);
+                                    dataFieldValue = '[' + dataFieldList.toString() + ']';
+                                    $(dataField).val(dataFieldValue);
                                 }
                             });
                         });
