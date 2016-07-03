@@ -1,0 +1,265 @@
+{% extends 'usersites_templates/one/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{# including the slider. The slider will apear only on the main page. #}
+{% block slider %}
+       {% include 'usersites_templates/one/slider.html' %}
+{% endblock %}
+
+{% block content %}
+
+{#<section class="content__info grid-layout">#}
+
+
+
+{#    {% b2c_products 'B2CProducts/main_products.html' 6 %}#}
+
+{#    {% coupons 'B2CProducts/main_coupons.html' 2 %}#}
+
+{#    {% videos 'Video/wall.html' 2 %}#}
+
+    {# About section of the company on the front page. Description + video. #}
+    <div class="container sec-container" id="about">
+        <div class="row">
+            <div class="col-md-12 about-main">
+
+                <div class="col-md-12 about-main__text text-center hidden-xs">
+                    {# Organization name #}
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <hr class="star-primary">
+
+                    <p>
+                        {% if site.user_site.organization.description %}
+                        {# Organization description #}
+                            {{ site.user_site.organization.description|safe }}
+                        {% else %}
+                            {{ site.user_site.organization.short_description|safe }}
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <div class="col-md-12 about-main__text text-center visible-xs">
+                    {# Organization name #}
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <hr class="star-primary">
+
+                    <p>
+                        {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                    </p>
+                </div>
+
+
+                {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
+                {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+                    {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
+                    {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                {#</div>#}
+
+            </div>
+        </div>
+    </div>
+
+    {% if site.user_site.organization.gallery_images %}
+
+    <div class="container sec-container" id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Gallery</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+
+                <ul class="gallery">
+                    {% for gallery_obj in site.user_site.organization.gallery_images %}
+                    <div class="col-sm-4 col-xs-4 portfolio-item">
+                        <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox portfolio-link" data-toggle="modal">
+
+                            <div class="caption">
+                                <div class="caption-content">
+                                    <i class="fa fa-search-plus fa-3x"></i>
+                                </div>
+                            </div>
+
+                            <img src="{{ gallery_obj.image.big }}" class="img-responsive" alt="">
+                        </a>
+                    </div>
+
+                {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+<!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Contact us</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    <form name="sentMessage" id="contactForm" novalidate method="post">
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>{% trans 'Your name' %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'Your name' %}" id="name" required data-validation-required-message="Please enter your name.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>{% trans 'Your email' %}</label>
+                                <input type="email" class="form-control" placeholder="{% trans 'Your email' %}" id="email" required data-validation-required-message="Please enter your email address.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>{% trans 'Your phone' %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'Your phone' %}" id="phone" required data-validation-required-message="Please enter your phone.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>{% trans 'Message' %}</label>
+                                <textarea rows="5" class="form-control" placeholder="{% trans 'Message' %}" id="message" required data-validation-required-message="Please enter a message."></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-success btn-lg">{% trans 'Send' %}</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if form.errors.name %}
+                        <p style="color:red;">{{ form.errors.name.0 }}</p>
+                    {% endif %}
+
+                    {% if form.errors.email %}
+                        <p style="color:red;">{{ form.errors.email.0 }}</p>
+                    {% endif %}
+
+                    {% if form.errors.message %}
+                        <p style="color:red;">{{ form.errors.message.0 }}</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {# Coupons and banners section. 2 coupons and 4 banners. #}
+{#   <div class="container clearfix">#}
+{#        <div class="row">#}
+{##}
+{#            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}#}
+{#            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}#}
+{#            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}#}
+{#            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}#}
+{##}
+            {# 4 banners, will lead to categories or products #}
+            {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
+            {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
+{##}
+{#            {% if right_banner_1 %}#}
+{#                <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">#}
+{##}
+{##}
+{#                    {% if right_banner_4 %}#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 4" %}#}
+{#                        </div>#}
+{##}
+{#                    {% elif right_banner_3 %}#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                        </div>#}
+{##}
+{#                    {% elif right_banner_2 %}#}
+{##}
+{#                        <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                     {% elif right_banner_1 %}#}
+{##}
+{#                        <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                    {% endif %}#}
+{##}
+{##}
+{#                </div>#}
+{##}
+{#            {% endif %}#}
+{##}
+{#        </div><!-- /end of Coupons and news modouls -->#}
+{#    </div><!-- /container -->#}
+
+    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
+    {# The proposals will have the same design as the news, so i am using the news styles. #}
+{#    <div class="container">#}
+{##}
+{#        <div class="row ">#}
+{##}
+{#            {% proposal 'Proposals/wall.html' 2 %}#}
+{##}
+{#            {% news 'News/wall.html' 2 %}#}
+{##}
+{#        </div><!-- end of news modoul -->#}
+{#    </div>#}
+
+
+{#</section>#}
+
+{% endblock %}
