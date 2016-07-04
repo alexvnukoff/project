@@ -1,0 +1,49 @@
+/* style.css and he_style.css is styling the direction of the site. */
+@charset "utf-8";
+
+/*---------- General Styling ----------*/
+body{
+	direction: rtl;
+}
+
+.tel{
+	float: left;
+}
+
+.navbar-brand{
+	float: right;
+}
+
+.navbar-right {
+    float: left!important;
+    margin-left: -15px;
+}
+
+.navbar-nav>li{
+	float: right;
+}
+
+.navbar-header{
+	float: right;
+}
+
+.lang-dropdown a{
+	float: right;
+}
+
+.navbar-right .dropdown-menu{
+	left: 0;
+	right: auto;
+}
+
+#portfolio .portfolio-item {
+    left: 0;
+}
+
+footer .footer-col span{
+    padding-left: 8px;
+}
+
+footer .footer-col {
+    float: right;
+}
