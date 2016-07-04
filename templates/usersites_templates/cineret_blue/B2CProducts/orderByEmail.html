@@ -54,25 +54,35 @@
 
        <div class="col-md-8 contact-fields contact-fields-email">
         <form method="post" action="" class="clearfix">
+           {% csrf_token %}
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.name }}
                 </div>
             </div>
-
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.email }}
                 </div>
             </div>
-
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.message }}
                 </div>
             </div>
-
-           {% csrf_token %}
+            {% if form.need_delivery %}
+            <h3>{% trans 'Delivery info' %}</h3>            
+            <div class="control-group form-group">
+                <div class="controls">
+                    {{ form.address }}
+                </div>
+            </div>
+            <div class="control-group form-group">
+                <div class="controls">
+                    {{ form.phone }}
+                </div>
+            </div>
+            {% endif %}
 
             <button type="submit" class="btn btn-default btn-mail-order">{% trans 'Send' %}</button>
         </form>

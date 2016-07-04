@@ -126,7 +126,6 @@ class B2CProductBasket(View):
     template_name = 'B2CProducts/basket.html'
 
     def get(self, request):
-        logger.debug('Step 1')
         basket = Basket(request)
         del_product = request.GET.get('del')
         clean = request.GET.get('clean')
@@ -172,7 +171,6 @@ class B2CProductBasket(View):
         )
 
     def post(self, request):
-        logger.debug(request.POST)
         basket = Basket(request)
         product = request.POST.getlist('product_id')
         quantity = request.POST.getlist('quantity')
@@ -193,6 +191,11 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
     template_name = '{template_path}/B2CProducts/orderByEmail.html'
     form_class = OrderEmailForm
     success_url = reverse_lazy('b2c_products:order_done')
+
+    def get_form_kwargs(self):
+        kwargs = super(B2CProductByEmail, self).get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         basket = Basket(self.request)
@@ -251,6 +254,8 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                         supplier_company=supplier,
                         person_last_name=data.get('name'),
                         person_email=data.get('email'),
+                        person_address=data.get('address'),
+                        person_phone_number=data.get('phone'),
                         status=Deal.ORDERED,
                     )
                     model_type = ContentType.objects.get_for_model(item.product)
