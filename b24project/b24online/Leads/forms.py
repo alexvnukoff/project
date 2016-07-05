@@ -20,8 +20,12 @@ class InnovationProjectForm(forms.ModelForm):
 
     class Meta:
         model = InnovationProject
-        fields = ('name', 'description', 'keywords', 'product_name', 'currency', 'cost',
-                  'business_plan', 'branches', 'product_name')
+        fields = ('name', 'description', 'keywords', 'product_name',
+               'currency', 'cost', 'business_plan', 'branches', 'product_name')
 
-AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
-                                                      validate_max=True, extra=0)
+AdditionalPageFormSet = generic_inlineformset_factory(
+        AdditionalPage,
+        fields=('title', 'content'), 
+        max_num=5,
+        validate_max=True, extra=0
+        )
