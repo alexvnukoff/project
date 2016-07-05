@@ -38,15 +38,27 @@ class Contacts(UserTemplateMixin, DetailView):
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "New message from %s" % cd['name']
+                subject = "B24online.com: New message from {0}".format(cd['name'])
 
             # Collecting lead
             getlead = GetLead(request)
-            getlead.collect(
-                    subject=subject,
+            if cd['phone']:
+                getlead.collect(
+                    url=cd['url_path'],
+                    realname=cd['name'],
                     email=cd['email'],
                     message=cd['message'],
-                    phone=None
+                    phone=cd['phone'],
+                    company_id=cd['co_id']
+                )
+            else:
+                getlead.collect(
+                    url=cd['url_path'],
+                    realname=cd['name'],
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=None,
+                    company_id=cd['co_id']
                 )
 
             mail = EmailMessage(subject, cd['message'], cd['email'], [email])

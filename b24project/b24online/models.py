@@ -410,7 +410,7 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.pk
+        return "{0}".format(self.pk)
 
     def has_perm(self, user):
         if user is None or not user.is_authenticated() or user.is_anonymous():
@@ -2882,13 +2882,14 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class LeadsStore(ActiveModelMixing, models.Model):
-    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
-    username = models.ForeignKey(Profile, null=True, blank=True)
-    subject = models.CharField(max_length=2048, null=True, blank=True)
+    organization = models.ForeignKey(Company, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, null=True, blank=True)
+    realname = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField(null=True, blank=True)
-    metadata = JSONField('Meta', null=True, blank=True)
+    url_path = models.CharField(max_length=2048, null=True, blank=True)
+    metadata = JSONField(default=dict())
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -2899,6 +2900,7 @@ class LeadsStore(ActiveModelMixing, models.Model):
 
         if self.organization:
             return self.organization.has_perm(user)
+
         return user.is_superuser or user.is_commando or self.created_by == user
 
     class Meta:

@@ -212,10 +212,9 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class LeadsAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ('organization', 'email', 'username', 'subject', 'created_at',)
+    list_display = ('organization', 'email', 'realname', 'username', 'created_at',)
     search_fields = ['subject', 'message',]
     raw_id_fields = ('organization', 'username', )
-    #list_filter = ('organization',)
 
 
 admin.site.register(User, B24UserAdmin)
