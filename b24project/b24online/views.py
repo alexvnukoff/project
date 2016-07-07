@@ -296,7 +296,7 @@ def feedback_form(request):
                     realname=cd['realname'],
                     email=cd['email'],
                     message=cd['message'],
-                    phone=None,
+                    phone=cd['phone'],
                     company_id=cd['co_id']
                 )
 

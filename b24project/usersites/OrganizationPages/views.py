@@ -42,23 +42,13 @@ class Contacts(UserTemplateMixin, DetailView):
 
             # Collecting lead
             getlead = GetLead(request)
-            if cd['phone']:
-                getlead.collect(
-                    url=cd['url_path'],
-                    realname=cd['name'],
-                    email=cd['email'],
-                    message=cd['message'],
-                    phone=cd['phone'],
-                    company_id=cd['co_id']
-                )
-            else:
-                getlead.collect(
-                    url=cd['url_path'],
-                    realname=cd['name'],
-                    email=cd['email'],
-                    message=cd['message'],
-                    phone=None,
-                    company_id=cd['co_id']
+            getlead.collect(
+                url=cd['url_path'],
+                realname=cd['name'],
+                email=cd['email'],
+                message=cd['message'],
+                phone=cd['phone'],
+                company_id=cd['co_id']
                 )
 
             mail = EmailMessage(subject, cd['message'], cd['email'], [email])
