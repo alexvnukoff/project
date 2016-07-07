@@ -167,7 +167,9 @@
         </div>
 
         <div class="col-md-12 contact-fields">
-                <form method="post" action="" name="sentMessage" id="contactForm" novalidate>
+                <form method="post" action="" name="sentMessage">
+                <input type="hidden" name="co_id" value="{{ object.pk }}">
+                <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
                     <div class="col-md-6">
                         <div class="control-group form-group">
                             <div class="controls">

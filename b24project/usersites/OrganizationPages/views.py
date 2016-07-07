@@ -53,7 +53,6 @@ class Contacts(UserTemplateMixin, DetailView):
 
             mail = EmailMessage(subject, cd['message'], cd['email'], [email])
             mail.send()
-
             return HttpResponseRedirect(reverse('pages:contacts'))
 
         context_data['form'] = form
