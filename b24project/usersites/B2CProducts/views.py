@@ -126,31 +126,42 @@ class B2CProductBasket(View):
     template_name = 'B2CProducts/basket.html'
 
     def get(self, request):
-        logger.debug('Step 1')
+        # Корзина
         basket = Basket(request)
+        
+        # Действия
         del_product = request.GET.get('del')
         clean = request.GET.get('clean')
 
-        if basket.summary:
-            paypal_dict = {
-                'business': basket.paypal,
-                'amount': basket.summary,
-                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
-                'return_url': request.build_absolute_uri(),
-                'cancel_return': request.build_absolute_uri(),
-                'item_name': _('Products from website ') + get_current_site().domain,
-                'no_shipping': 0,
-                'quantity': 1,
-                'currency_code': basket.currency
-            }
+        # Сколько наименований товаров в Корзине
+        basket_items_total = len(list(basket))
+        logger.debug(u'Всего наименований товаров: %d', basket_items_total)
+
+        # Набор информации для PayPal
+        paypal_dict = {}
+        if basket_items_total > 1:
+            logger.debug(u'Несколько товаров')
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
         else:
-            paypal_dict = {}
+            if basket.summary:
+                paypal_dict.update({
+                    'business': basket.paypal,
+                    'amount': basket.summary,
+                    'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                    'return_url': request.build_absolute_uri(),
+                    'cancel_return': request.build_absolute_uri(),
+                    'item_name': _('Products from website ') + get_current_site().domain,
+                    'no_shipping': 0,
+                    'quantity': 1,
+                    'currency_code': basket.currency
+                })
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
 
         data = {
             'title': _('B2C Basket'),
             'basket': dict(src=basket),
             'total': basket.summary,
-            'paypal_form': PayPalPaymentsForm(initial=paypal_dict),
+            'paypal_form': paypal_form,
         }
 
         # Delete product form basket
@@ -172,7 +183,6 @@ class B2CProductBasket(View):
         )
 
     def post(self, request):
-        logger.debug(request.POST)
         basket = Basket(request)
         product = request.POST.getlist('product_id')
         quantity = request.POST.getlist('quantity')
