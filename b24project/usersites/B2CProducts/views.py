@@ -155,7 +155,8 @@ class B2CProductBasket(View):
             })
             i = 1
             for item in basket:
-                paypal_dict['amount_%d' % i] = item.quantity
+                paypal_dict['amount_%d' % i] = \
+                    item.product.get_discount_price() * item.quantity
                 paypal_dict['item_name_%d' % i] = item.product.name
                 i += 1    
             paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
