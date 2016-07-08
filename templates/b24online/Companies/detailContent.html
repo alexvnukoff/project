@@ -31,24 +31,19 @@
     <!-- Google maps -->
     <script type="text/javascript">
         var marker;
-
         $(document).ready(function($) {
-                var tabs = $( '#tpp-details-tab' )
-                tabs.tabs();
-                var href = tabs.find('a[href="#cpn-tabs-contacts"]');
-                (href).on('click',function(){
-
-                    {% if item.location %}
-                      {% with item.location|split:"," as LatLng %}
-                      marker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
-
-                        });
-                      {% endwith %}
-                    {% endif %}
-
-                 initialize(false);
-
+          var tabs = $( '#tpp-details-tab' )
+          tabs.tabs();
+          var href = tabs.find('a[href="#cpn-tabs-contacts"]');
+          (href).on('click',function(){
+              {% if item.location %}
+                {% with item.location|split:"," as LatLng %}
+                marker = new google.maps.Marker({
+                  position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
+                  });
+                {% endwith %}
+              {% endif %}
+           initialize(false);
         });
 
         });
@@ -61,9 +56,10 @@
     var dialog, form,
     emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
     realname = $("#fback-name"),
+    phone = $("#fback-phone"),
     email = $("#fback-email"),
     message = $("#fback-message"),
-    allFields = $([]).add(realname).add(email).add(message),
+    allFields = $([]).add(realname).add(phone).add(email).add(message),
     tips = $("#validateTips");
 
     function updateTips(t) {
@@ -95,6 +91,7 @@
       allFields.removeClass("ui-state-error");
 
       valid = valid && checkLength(realname, "realname", 2, 40);
+//      valid = valid && checkLength(phone, "phone", 2, 40);
       valid = valid && checkLength(email, "email", 6, 80 );
       valid = valid && checkRegexp(email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
       valid = valid && checkLength(message, "message", 2, 1000);
@@ -117,7 +114,7 @@
       autoOpen: false,
       modal: true,
       width: 650,
-      height: 400,
+      height: 470,
       draggable: false,
       resizable: false,
       buttons: {
@@ -445,6 +442,11 @@
       </div>
 
       <div class="my-feedback">
+      <label>Your phone</label>
+      <input type="text" name="phone" id="fback-phone" maxlength="40">
+      </div>
+
+      <div class="my-feedback">
       <label>Your email</label>
       <input type="text" name="email" id="fback-email" maxlength="80">
       </div>
@@ -455,7 +457,7 @@
       </div>
 
     </form>
-.
+    <br>
 <p id="validateTips">{% trans 'All form fields are required.' %}</p>
   </div>
 

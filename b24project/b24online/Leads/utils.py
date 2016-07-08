@@ -16,9 +16,9 @@ class GetLead:
     def collect(self, **kwargs):
         url_path = kwargs['url']
         realname = kwargs['realname']
+        phone = kwargs['phone']
         message = kwargs['message']
         email = kwargs['email']
-        phone = kwargs['phone']
 
         try:
             company_id = kwargs['company_id']
@@ -34,6 +34,7 @@ class GetLead:
                 url_path=url_path,
                 organization=self.org,
                 realname=realname,
+                phone=phone,
                 email=email,
                 message=message
                 )

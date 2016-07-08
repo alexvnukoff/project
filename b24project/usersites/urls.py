@@ -35,6 +35,7 @@ urlpatterns = [
         name='denied'),
     url(r'^video/', include(usersites.Video.urls, namespace='video')),
     url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
+    url(r'^sendmessage/$', usersites.views.sendmessage.as_view(), name='sendmessage'),
 ]
 
 if settings.DEBUG:

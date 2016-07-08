@@ -397,15 +397,19 @@ section.success a.active {
     background: #fff;
 }
 
-.floating-label-form-group {
-    position: relative;
-    margin-bottom: 0;
-    padding-bottom: .5em;
-    border-bottom: 1px solid #eee;
+/**** Contact Form *********************/
+.contact-form form{
+    margin: 15px 0;
+
 }
 
-.floating-label-form-group input,
-.floating-label-form-group textarea {
+.contact-form form h2{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.contact-form input,
+.contact-form textarea{
     z-index: 1;
     position: relative;
     padding-right: 0;
@@ -416,42 +420,40 @@ section.success a.active {
     background: 0 0;
     box-shadow: none!important;
     resize: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
 }
 
-.floating-label-form-group label {
-    display: block;
-    z-index: 0;
-    position: relative;
-    top: 2em;
-    margin: 0;
-    font-size: .85em;
-    line-height: 1.764705882em;
-    vertical-align: middle;
-    vertical-align: baseline;
-    opacity: 0;
-    -webkit-transition: top .3s ease,opacity .3s ease;
-    -moz-transition: top .3s ease,opacity .3s ease;
-    -ms-transition: top .3s ease,opacity .3s ease;
-    transition: top .3s ease,opacity .3s ease;
-}
-
-.floating-label-form-group::not(:first-child) {
-    padding-left: 14px;
-    border-left: 1px solid #eee;
-}
-
-.floating-label-form-group-with-value label {
-    top: 0;
-    opacity: 1;
-}
-
-.floating-label-form-group-with-focus label {
-    color: #18bc9c;
-}
-
-form .row:first-child .floating-label-form-group {
+form:first-child .contact-form-elem {
     border-top: 1px solid #eee;
 }
+
+.contact-form-elem {
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: .5em;
+    border-bottom: 1px solid #eee;
+}
+
+.contact-form button{
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    color: #000;
+    background-color: #ebebeb;
+    border-color: #888;
+    margin-top: 10px;
+}
+
+.contact-form button:hover{
+    color: #ebebeb;
+    background-color: #000;
+    border-color: #888;
+}
+
+/**************************************/
 
 footer {
     color: #000;

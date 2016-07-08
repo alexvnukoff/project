@@ -19,8 +19,16 @@ table.leads tr.head {
       color:#000;
       font-weight:bold;
   }
-
+  .ui-tooltip {
+      max-width:500px;
+    }
+    </>
 </style>
+<script>
+$(function() {
+  $(document).tooltip({items: ".llds",});
+});
+</script>
 
     <div class="companies" style="width:100%">
 
@@ -46,12 +54,12 @@ table.leads tr.head {
             {% for obj in object_list %}
 
             <tr style="background:{% cycle '#ffffff' '#f5f5f5' %}">
-              <td><center><a href="{{ obj.url_path }}" target="_blank" title="{{ obj.url_path }}"><i class="icon-globe"></i></a></center></td>
-              <td><center>{% if obj.message %}<a onclick="alert('{% trans 'Message:' %} {{ obj.message }}');" href="#"><i onclick="" class="icon-circle"></i></a>{% else %}<i style="color:#aeaeae" class="icon-circle-empty"></i>{% endif %}</center></td>
+              <td><center><a class="llds" href="{{ obj.url_path }}" target="_blank" title="{{ obj.url_path }}"><i class="icon-globe"></i></a></center></td>
+              <td><center>{% if obj.message %}<a class="llds" title="{{ obj.message }}" href="#"><i class="icon-circle"></i></a>{% else %}<i style="color:#aeaeae" class="icon-circle-empty"></i>{% endif %}</center></td>
               <td>{{ obj.realname }}</td>
               <td>{{ obj.email }}</td>
-              <td><center>{% if obj.phone %}<a onclick="alert('{% trans 'Phone:' %} {{ obj.phone }}');" href="#"><i style="font-size:13px;" class="icon-phone"></i></a>{% else %}<i style="font-size:13px;color:#aeaeae;" class="icon-phone"></i>{% endif %}</center></td>
-              <td><center>{% if obj.username %}<a href="#"><i title="{{ obj.username }}" class="icon-user"></i></a>{% else %}<i style="color:#aeaeae" alt="{% trans 'Anonymous' %}" class="icon-user"></i>{% endif %}</center></td>
+              <td><center>{% if obj.phone %}<a class="llds" title="{{ obj.phone }}" href="#"><i style="font-size:13px;" class="icon-phone"></i></a>{% else %}<i style="font-size:13px;color:#aeaeae;" class="icon-phone"></i>{% endif %}</center></td>
+              <td><center>{% if obj.username %}<a class="llds" title="{{ obj.username }}" href="#"><i class="icon-user"></i></a>{% else %}<i style="color:#aeaeae" alt="{% trans 'Anonymous' %}" class="icon-user"></i>{% endif %}</center></td>
               <td>{{ obj.created_at }}</td>
 
               <td><center><i style="color:#aeaeae" class="icon-pencil"></i></center></td>

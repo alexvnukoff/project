@@ -14,6 +14,7 @@ from django.views.generic import UpdateView, DeleteView
 
 class IndexLeadsList(LoginRequiredMixin, ItemsList):
     # pagination url
+    paginate_by = "30"
     url_my_paginator = "leads:main_paginator"
 
     current_section = _("Leads")
@@ -35,7 +36,7 @@ class IndexLeadsList(LoginRequiredMixin, ItemsList):
             current_org = self._current_organization
             queryset = self.model.get_active_objects().filter(
                 organization=current_org
-                )
+                ).order_by('-id')
         return queryset
 
     def get_context_data(self, **kwargs):
