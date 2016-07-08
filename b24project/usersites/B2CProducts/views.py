@@ -143,7 +143,7 @@ class B2CProductBasket(View):
         paypal_dict = {}
         if basket_items_total > 1:
             paypal_dict.update({
-                'cmd': '_card',
+                'cmd': '_cart',
                 'upload': 1,
                 'business': basket.paypal,
                 'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),

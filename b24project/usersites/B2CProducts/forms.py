@@ -25,3 +25,5 @@ class PayPalBasketForm(PayPalPaymentsForm):
         self.basket = basket
         del self.fields['quantity']
 
+    def get_image(self):
+        return 'https://www.paypalobjects.com/en_GB/i/btn/x-click-but22.gif'
