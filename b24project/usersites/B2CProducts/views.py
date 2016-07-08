@@ -32,6 +32,8 @@ from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
 from usersites.views import ProductJsonData
 from usersites.forms import create_extra_form
+from usersites.B2CProducts.forms import PayPalBasketForm
+
 
 logger = logging.getLogger(__name__)
 
@@ -140,8 +142,24 @@ class B2CProductBasket(View):
         # Набор информации для PayPal
         paypal_dict = {}
         if basket_items_total > 1:
-            logger.debug(u'Несколько товаров')
-            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+            paypal_dict.update({
+                'cmd': '_card',
+                'upload': 1,
+                'business': basket.paypal,
+                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                'return_url': request.build_absolute_uri(),
+                'cancel_return': request.build_absolute_uri(),
+                'no_shipping': 0,
+                'quantity': 1,
+                'currency_code': basket.currency
+            })
+            i = 1
+            for item in basket:
+                paypal_dict['amount_%d' % i] = item.quantity
+                paypal_dict['item_name_%d' % i] = item.product.name
+                i += 1    
+            paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
+
         else:
             if basket.summary:
                 paypal_dict.update({
