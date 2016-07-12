@@ -3,12 +3,15 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
+{% load compress %}
 {% block styles %}
      {{ block.super }}
+     {% compress css %}
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/tpp.reset.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/gmapCompany.css' %}" />
+      {% endcompress %}
 
 {% endblock %}
 {% block js %}

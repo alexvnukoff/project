@@ -127,7 +127,8 @@ EXTERNAL_APPS = (
     'guardian',
     'captcha',
     'paypal.standard.ipn',
-    'rest_framework'
+    'rest_framework',
+    'compressor'
 )
 
 # the order is important!
@@ -176,6 +177,12 @@ MIDDLEWARE_CLASSES = (
     'centerpokupok.BasketMiddleware.Basket',
     'b24online.stats.middleware.RegisteredEventMiddleware',
     'tpp.GeolocationFilterByRegion.GeolocationMiddleware',
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

@@ -1,7 +1,9 @@
+{% spaceless %}
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load cache %}
+{% load compress %}
 {% load inclusionTags %}
 {% get_current_language as LANGUAGE_CODE %}
 <!doctype html>
@@ -63,13 +65,15 @@
 
         {% block styles %}
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
+            {%  compress css %}
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/main.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/reset.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/flags.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/icons.css' %}" />
-            <link type="text/css" rel="stylesheet" href='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css' />
+            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/fancybox.min.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
             <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery-ui.custom.css' %}" />
+            {% endcompress %}
         {% endblock %}
 
 
@@ -94,7 +98,7 @@
     <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
 
 </head>
-
+{% endspaceless %}
 <body>
 
     <div id="fb-root"></div>
@@ -119,6 +123,7 @@
     {% endblock %}
 
 {% block footer %}
+{% spaceless %}
     <div class="wrapper">
         <div class="linkbottom">
             {% show_static_pages %}
@@ -137,6 +142,7 @@
     </div>
 
  <div class="black_overlay" id="fade-profile"></div>
+ {% endspaceless %}
  {% endblock %}
 
              <!-- Yandex.Metrika counter -->
@@ -167,7 +173,6 @@
             <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
             <!-- /Yandex.Metrika counter -->
 
-
             <!-- Google analytics -->
             <script>
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -190,6 +195,8 @@
      ga('send', 'pageview');
     </script>
 
+
+{% spaceless %}
 <div style="display: none;" class="white_content" id="light-contact">
     <div class="contact-table">
         <div class="contact-tablein">
@@ -211,7 +218,7 @@
                 	<label>{% trans 'For user' %}:</label>
                 	<span style="float: left; font-weight: bold; font-size:120%;" id="recipient-name"></span>
               </li>
-              
+
             	<li>
                 	<label>{% trans 'Message subject' %}:</label>
                   <div class=""><input name="subject" style="width: 498px;" /></div>
@@ -257,13 +264,8 @@
     </div>
 </div>
 <div class="black_overlay" id="fade-contact"></div>
-
 <div id="process-data-dialog" style="display: none;"></div>
-
-
-{% block vacancy %}
-
-
-{% endblock %}
+{% endspaceless %}
+{% block vacancy %}{% endblock %}
 </body>
 </html>
