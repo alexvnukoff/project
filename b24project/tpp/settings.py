@@ -179,6 +179,14 @@ MIDDLEWARE_CLASSES = (
     'tpp.GeolocationFilterByRegion.GeolocationMiddleware',
 )
 
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.cssmin.CSSCompressorFilter'
+]
+
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter'
+]
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
