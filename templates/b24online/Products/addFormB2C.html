@@ -182,6 +182,12 @@
                 </div>
             </div>
             <div>
+                <label class="sapce">{% trans 'Show on main page' %}</label>
+                <div class="clumn1">
+                    {{ form.show_on_main }}
+                </div>
+            </div>
+            <div>
                 {% if form.errors.categories %}
                     <div class="error-handler">
                         <div class="formserror">{{ form.errors.categories.0 }}</div>
