@@ -63,7 +63,9 @@ class EditorImageUploadForm(forms.Form):
 class FeedbackForm(forms.Form):
     co_id = forms.CharField(max_length=11)
     co_email = forms.CharField(max_length=100)
-    username = forms.CharField(max_length=100)
+    url_path = forms.CharField(max_length=225)
+    realname = forms.CharField(max_length=100)
+    phone = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()
     message = forms.CharField(max_length=1000)
 

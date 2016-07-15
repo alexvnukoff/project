@@ -287,23 +287,23 @@ def feedback_form(request):
 
         if form.is_valid():
             cd = form.cleaned_data
-            subject = "B24online.com: New message from {0}".format(cd['username'])
-            #print(subject, cd['message'], cd['email'], cd['co_email'])
+            subject = "B24online.com: New message from {0}".format(cd['realname'])
 
             # Collecting lead
             getlead = GetLead(request)
             getlead.collect(
-                    subject=subject,
+                    url=cd['url_path'],
+                    realname=cd['realname'],
                     email=cd['email'],
                     message=cd['message'],
-                    phone=None
+                    phone=cd['phone'],
+                    company_id=cd['co_id']
                 )
 
             mail = EmailMessage(subject, cd['message'], cd['email'], [cd['co_email']])
             mail.send()
             return JsonResponse({}, status=200)
         else:
-            #print(form.errors)
             return JsonResponse({}, status=403)
     else:
         return HttpResponseNotFound()

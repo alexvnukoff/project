@@ -1,0 +1,65 @@
+{% load i18n %}{% load staticfiles %}
+{% load CustomFilters %}
+
+{#----------------------------#}
+
+<!-- Navigation -->
+    <nav class="navbar navbar-default navbar-cust">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll navbar-header-cust">
+                <button type="button" class="navbar-toggle hidden-xs" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <div class="tel vertical visible-xs">
+                    <i class="fa fa-phone-square" aria-hidden="true"></i>
+                    <a href="tel:{{ site.user_site.organization.phone }}"></a>
+                </div>
+                <a class="navbar-brand" href="#page-top"><img src="{{ site.user_site.logo.big }}" alt=""></a>
+
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-collapse-cust" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right navbar-nav-cust">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about">{% trans 'About us' %}</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#portfolio">{% trans 'Gallery' %}</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#contact">{% trans 'Contact us' %}</a>
+                    </li>
+                    <li>
+                        <a data-toggle="dropdown" class="dropdown-toggle lang-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
+
+                        {% get_available_languages as LANGUAGES %}
+
+                        <div id="lang-dropdown" role="menu" class="dropdown-menu">
+                            {% for code, lang in LANGUAGES %}
+                              {% if not code == LANGUAGE_CODE %}
+                                  <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                              {% endif %}
+                          {% endfor %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+{#----------------------------#}

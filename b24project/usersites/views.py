@@ -3,11 +3,12 @@
 import json
 import logging
 
+from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.generic import View
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 
 from registration.backends.default.views import RegistrationView
@@ -16,7 +17,8 @@ from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
 from tpp.DynamicSiteMiddleware import get_current_site
-
+from usersites.OrganizationPages.forms import ContactForm
+from b24online.Leads.utils import GetLead
 
 logger = logging.getLogger(__name__)
 
@@ -96,3 +98,40 @@ class UsersitesRegistrationView(RegistrationView):
     """
     template_name = 'registration/registration_form.html'
 
+
+class sendmessage(View):
+    def get_object(self, queryset=None):
+        return get_current_site().user_site.organization
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            if not self.object.email:
+                email = 'admin@tppcenter.com'
+                subject = _('This message was sent to company:')
+            else:
+                email = self.object.email
+                subject = "B24online.com: New message from {0}".format(cd['name'])
+
+            # Collecting lead
+            getlead = GetLead(request)
+            getlead.collect(
+                url=cd['url_path'],
+                realname=cd['name'],
+                email=cd['email'],
+                message=cd['message'],
+                phone=cd['phone'],
+                company_id=cd['co_id']
+                )
+
+            mail = EmailMessage(subject, cd['message'], cd['email'], [email])
+            mail.send()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    def get(self, request):
+        raise Http404

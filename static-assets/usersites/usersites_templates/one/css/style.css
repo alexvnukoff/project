@@ -1,0 +1,26 @@
+/*---------- General Styling ----------*/
+
+/*---------- Navigation Styling ----------*/
+body{
+	direction: ltr;
+}
+
+.tel{
+	float: right;
+}
+
+.lang-dropdown a{
+	float: left;
+}
+
+#portfolio .portfolio-item {
+    right: 0;
+}
+
+footer .footer-col span{
+    padding-right: 8px;
+}
+
+footer .footer-col {
+    float: left;
+}

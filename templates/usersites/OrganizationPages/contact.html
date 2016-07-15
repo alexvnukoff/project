@@ -18,6 +18,9 @@
                 <form method="post" action="" class="clearfix">
 
                     <h2>{% trans 'Ask a question' %}</h2>
+
+                    <input type="hidden" name="co_id" value="{{ object.pk }}">
+                    <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
                     <input type="text" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
                     <input type="text" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
                     <textarea name="message" id="" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
