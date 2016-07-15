@@ -33,7 +33,8 @@ def wall(request):
     news = News.get_active_objects().filter(organization=organization)
 
     if isinstance(organization, Company):
-        b2c_products = B2CProduct.get_active_objects().filter(company=organization)
+        b2c_products = B2CProduct.get_active_objects()\
+            .filter(company=organization).order_by('-show_on_main')
         b2c_coupons = B2CProduct.get_active_objects().filter(company=organization,
                                                              coupon_dates__contains=now().date(),
                                                              coupon_discount_percent__gt=0).order_by("-created_at")

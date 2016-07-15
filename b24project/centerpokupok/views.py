@@ -15,7 +15,9 @@ from centerpokupok.models import B2CProduct
 
 
 def home(request, country=None):
-    products = B2CProduct.get_active_objects().order_by('-created_at')[:4]
+
+    products = B2CProduct.get_active_objects()\
+        .order_by('-show_on_main', '-created_at')[:4]
     top_product_list = B2CProduct.get_active_objects().order_by('?')[:4]
     coupons = B2CProduct.get_active_objects().filter(coupon_dates__contains=now().date(), coupon_discount_percent__gt=0) \
                   .order_by("-created_at")[:3]

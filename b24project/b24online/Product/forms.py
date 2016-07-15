@@ -109,7 +109,7 @@ class B2CProductForm(forms.ModelForm):
         fields = ('name', 'description', 'keywords', 'short_description',
                   'image', 'currency', 'cost', 'categories',
                   'coupon_discount_percent', 'discount_percent',
-                  'producer', 'additional_images')
+                  'producer', 'additional_images', 'show_on_main')
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
