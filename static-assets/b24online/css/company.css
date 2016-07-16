@@ -6,7 +6,7 @@
 .company-list li .title .flag{ float: left; margin:2px 8px 0 12px; display: inline;}
 .company-list li .title a{ display: block; font-size: 16px; font-weight: bold; padding-right: 10px;}
 .company-list li .company-infor{ position: relative; float: left; width: 100%; margin: 10px 0 0 0;}
-.company-list li .company-infor .logocompany{ float: left; max-width: 70px; max-height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom: 4px; margin: 0 10px 0 12px; display: inline;}
+.company-list li .company-infor .logocompany{ float: left; max-width: 70px; max-height: 60px; background: url(/static/b24online/img/shadow-cpn.png) no-repeat left bottom; padding-bottom: 4px; margin: 0 10px 0 12px; display: inline;}
 .company-list li .company-infor .desc{ float: left; width: 348px; color: #595959;}
 .company-list li .company-infor .desc a.more{ display: block; padding-top: 12px;}
 .company-list li .company-infor .desc p.link{ display:block; padding:0; padding-bottom: 5px;}
@@ -41,7 +41,7 @@ rgb(33,136,187) 100%);}
 .companies .social{ float:right; text-align:right;}
 .cpn-details-tab{ position:relative; float:left; width:100%; background-color:#f5f5f5; border-radius:3px; border:1px solid; border-color:#CCC #FFF #FFF #CCC; box-sizing:border-box; margin: 20px 0 0 0;
 box-shadow:inset 0 0 3px #CCC;}
-.cpn-details-tab .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
+.cpn-details-tab .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(/static/b24online/img/dot.png) repeat-x bottom center; font-size:11px;}
 .cpn-details-tab .tab-top{position:relative; float:left; width:100%; padding:8px 0;background-color:#e6e6e6;}
 .cpn-details-tab .tab-top a{ padding: 0 3px;}
 .cpn-details-tab .ui-tabs-nav li a { padding:0 9px;}
@@ -52,7 +52,7 @@ box-shadow:inset 0 0 3px #CCC;}
 
 .uploadimgage input.text, .uploadimgage select, .uploadimgage textarea{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
 .uploadimgage select{  padding:6px;}
-.uploadimgage input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.uploadimgage input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(/static/img/date.png) no-repeat right center;}
 .uploadconfig .company{ float:left; width:168px; border:1px #bdbdbd solid; background-color:#FFF;}
 .uploadconfig .company li{ display:block; padding:3px 8px 4px 8px; color:#484848; margin-bottom:0; width:152px; cursor:pointer; margin:0;}
 .uploadconfig .company li.selected{ background-color:#4a4a4a; color:#FFF;}
@@ -67,7 +67,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .table-deals tr.top td{ font-size:12px; font-weight:bold;}
 .deal-details{ position:relative; float:left; width:97%; background-color:#fafafa; padding:10px; margin:12px 0 0 0;}
 .deal-details h3{ font-size:16px; font-weight:bold; padding-bottom:10px; float:left; width:100%;}
-.deal-details .thumb-deal{ float:left; width:150px; background:url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom:4px; margin:0 10px 10px 0; color:#595959;}
+.deal-details .thumb-deal{ float:left; width:150px; background:url(/static/b24online/img/shadow-cpn.png) no-repeat left bottom; padding-bottom:4px; margin:0 10px 10px 0; color:#595959;}
 .deal-details .flag{ float:left; }
 .deal-details p{ padding-top:12px;}
 .deals-info{ position:relative; float:left; width:100%; margin:20px 0 0 0;}
@@ -87,7 +87,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .tenderline li .clumn1, .tenderline li .clumn3, .tenderline li .clumn5{ float:left;}
 .tenderline li .clumn2, .tenderline li .clumn4, .tenderline li .clumn6{ float:right;}
 .tenderline li .clumn5, .tenderline li .clumn6{ width:32%;}
-.tenderline li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.tenderline li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(/static/img/date.png) no-repeat right center;}
 .tenderline li .editor{ float:left; border:1px #bdbdbd solid;}
 .tenderline li .line{ float: left; width: 100%; margin-top: 5px;}
 .tenderline li .line .buttonclear{ width: auto; padding: 0 35px;}
@@ -130,7 +130,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .vacancy-list{ position: relative; float: left; width: 100%;}
 .vacancy-list li{ position: relative; float: left; width: 636px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
 .vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold; padding-top: 12px;}
-.vacancy-list li .logovacancy{ float: left; width: 70px; height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; margin: 8px 10px 0 0; display: inline;}
+.vacancy-list li .logovacancy{ float: left; width: 70px; height: 60px; background: url(/static/b24online/img/shadow-cpn.png) no-repeat left bottom; margin: 8px 10px 0 0; display: inline;}
 .vacancy-list li .vacancy-desc{ position:relative; float:left; width:555px; margin:8px 0 0 0;}
 .vacancy-list li .vacancy-desc .flag{ float:left; }
 .vacancy-list li .vacancy-desc .date{ color:#9b9b9b;}
@@ -161,7 +161,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; color: #595959;}
 .tpp-gallery{ float:left; width:100%; padding-bottom:20px;}
 .tpp-gallery li{float:left; width: 110px; margin:20px 0 0 20px; display:inline;}
-.tpp-gallery li .b-img{ border:0; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+.tpp-gallery li .b-img{ border:0; background:url(/static/img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
 .tpp-gallery li p{ padding-top:5px; text-align:center;}
 
 .viewimge{ position:absolute; height:20px; line-height:20px; bottom:8px; right:0; cursor:pointer; display:none;}
@@ -185,7 +185,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; color: #595959;}
 .tpp-gallery{ float:left; width:100%; padding-bottom:20px;}
 .tpp-gallery li{float:left; width:110px; margin:20px 0 0 12px; display:inline;}
-.tpp-gallery li .b-img{ border:0; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+.tpp-gallery li .b-img{ border:0; background:url(/static/img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
 .tpp-gallery li p{ padding-top:5px; text-align:center;}
 
 .viewimge{ position:absolute; height:20px; line-height:20px; bottom:8px; right:0; cursor:pointer; display:none;}
@@ -200,7 +200,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .analytics-top{ position:relative; float:left; width:100%; margin:12px 0 0 0;}
 .analytics-top span.clumn{ float:left; margin-right:8px; color:#595959; line-height:24px;}
 .analytics-top span.clumn label{ float:left; margin-right:4px;}
-.analytics-top span.clumn input.date{ float:left; min-width:70px; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.analytics-top span.clumn input.date{ float:left; min-width:70px; border:1px #bdbdbd solid; padding:5px; background:#FFF url(/static/img/date.png) no-repeat right center;}
 .analytics .title{ float:left; width:100%; margin:24px 0 8px 0; font-size:18px; font-weight:normal;}
 
 .table-analytics{ float:left; width:100%; margin:12px 0 0 0;}
@@ -213,7 +213,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .table-analytics tr td.date .number{ position:absolute; width:20px; height:20px; border-radius:10px; background-color:#ff0000; text-align:center; line-height:20px; color:#FFF; left:-20px;}
 
 .messages-l{ position:relative; float:left; width:30%; border-right:1px #d8d8d8 solid; min-height:850px; background-color:#f5f5f5; box-sizing: border-box;}
-.messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
+.messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(/static/b24online/img/dot.png) repeat-x bottom center; font-size:11px;}
 .message-tabcontent{ position:relative; float:left; width:100%;}
 .custom-ms{ position:relative; float:left; width:100%;}
 .custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px; white-space: nowrap;}
@@ -224,7 +224,7 @@ box-shadow:inset 0 0 3px #CCC;}
 border-style: solid; border-width: 4px 7px 4px 0; border-color: transparent #fafafa transparent transparent;}
 .custom-contentin{ position:absolute; left: 0; top: 0;}
 .customtable{ position:relative; float:left; margin:0 10px;}
-.dateline{ float:left; width:100%; padding:10px 0; text-align:center; background:url(../img/dota.png) repeat-x center center;}
+.dateline{ float:left; width:100%; padding:10px 0; text-align:center; background:url(/static/img/dota.png) repeat-x center center;}
 .dateline span{ background:#f5f5f5; padding:0 8px; color:#9b9b9b; font-style:italic;}
 .customline{ position:relative; float:left; width:100%; margin-bottom:15px; color:#595959;}
 .customline label.time{ float:left; width:100%; color:#9b9b9b; padding-bottom:5px;}
@@ -259,8 +259,8 @@ rgb(33,136,187) 100%);}
 
 .portal-service{ position:relative; float:left; width:100%;}
 .portal-service li{ position:relative; float:left; width:100%; margin:10px 0 0 0; width:636px; padding:12px; background-color:#fafafa;}
-.portal-service li .titlemore, .portal-service li .titleless{ font-size:16px; font-weight:bold; color:#0089bc; text-decoration:underline; background:url(../img/more.png) no-repeat left center; padding-left:12px; display:block;}
-.portal-service li .titleless{ background:url(../img/less.png) no-repeat left center;}
+.portal-service li .titlemore, .portal-service li .titleless{ font-size:16px; font-weight:bold; color:#0089bc; text-decoration:underline; background:url(/static/img/more.png) no-repeat left center; padding-left:12px; display:block;}
+.portal-service li .titleless{ background:url(/static/img/less.png) no-repeat left center;}
 .portal-service li .contentportal{ position:relative; float:left; width:100%; color:#595959; display:none;}
 .portal-service li .contentportal p{ padding-top:14px;}
 
@@ -289,7 +289,7 @@ rgb(33,136,187) 100%);}
 #advertising .table-deals tr td .thumb{ display:inline-block; width:24px; height:24px; background-color:#afafaf;}
 #advertising .table-deals tr td .stt-close{ color:#f69679;}
 #advertising .table-deals tr td .stt-active{ color:#197b30;}
-#advertising .table-deals tr td .stt-add{ display:inline-block; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; padding:0 20px; text-shadow:1px -1px 1px #327fa4;}
+#advertising .table-deals tr td .stt-add{ display:inline-block; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("/static/img/btnbuy.gif") repeat-x; padding:0 20px; text-shadow:1px -1px 1px #327fa4;}
 #advertising .table-deals tr td.end{ text-align:center;}
 .ads-bottom{ position:relative; float:left; width:100%; padding:8px 0; margin:12px 0 0 0;background-color:#e8e8e8; font-size:13px; font-weight:bold; color:#4a4a4a; text-indent:18px;}
 .ads-bottom .red{ color:#FF0000;}
@@ -297,8 +297,8 @@ rgb(33,136,187) 100%);}
 
 .slimScrollDiv{ margin:15px 2px 15px 0;}
 .arrow-scroll-up, .arrow-scroll-down{ position:absolute; width:10px; height:7px; right:0; z-index:9999; cursor:pointer;}
-.arrow-scroll-up{ background:url(../img/up.png) no-repeat; top:5px;}
-.arrow-scroll-down{ background:url(../img/down.png) no-repeat; bottom:5px;}
+.arrow-scroll-up{ background:url(/static/img/up.png) no-repeat; top:5px;}
+.arrow-scroll-down{ background:url(/static/img/down.png) no-repeat; bottom:5px;}
 .custom-outline{ position:relative; float:left; width:100%;}
 .ads-details{ position:relative; float:right; width:880px;}
 .ads-details-center{ position:relative; float:left; width:580px;}
@@ -309,7 +309,7 @@ rgb(33,136,187) 100%);}
 .ads-line li select{ float:left; width:98%; padding:6px;}
 .ads-line li label{ float:left; width:100%; font-weight:bold; padding-bottom:5px;}
 .ads-line li .gray-img{ width:215px; height:72px;}
-.ads-line li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.ads-line li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(/static/img/date.png) no-repeat right center;}
 .ads-line li .clumn1{ float:left; width:385px;}
 .ads-line li .clumn2{ float:right; width:180px;}
 
@@ -343,7 +343,7 @@ rgb(33,136,187) 100%);}
 .ads-details-right .btnprice{ color:#FFF; font-size:17px; border-radius:3px; margin-top:10px; display:inline-block;}
 .ads-order-details .btnprice:hover,
 .ads-details-right .btnprice:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
-.btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
+.btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("/static/img/btnbuy.gif") repeat-x; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
 .btncatedt:hover{ opacity:0.9; filter:alpha(opacity=90); color:#FFF; text-decoration:none;}
 .social-l{ float:left; line-height:25px;}
 .social-l a{ padding:0 3px;}
@@ -369,10 +369,10 @@ rgb(33,136,187) 100%);}
 
 .sitemap{ position:relative; float:left; width:80%; margin: 0 0 0 25px; display:inline; padding-bottom:20px;}
 .sitemap li{ position:relative; float:left; width:95%; margin:18px 0 0 0;}
-.sitemap li a{background:url(../img/more.png) no-repeat left center; padding-left:15px; }
-.sitemap li a.lesssitemap{background:url(../img/less.png) no-repeat left center;}
+.sitemap li a{background:url(/static/img/more.png) no-repeat left center; padding-left:15px; }
+.sitemap li a.lesssitemap{background:url(/static/img/less.png) no-repeat left center;}
 .sitemap li .sub{ position:relative; float:left; width:90%; margin-left:25px; display:none;}
-.sitemap li .sub li{ position:relative; float:left; width:90%; padding-left:25px; background:url(../img/bullet1.png) no-repeat left top; margin:5px 0 0 0;}
+.sitemap li .sub li{ position:relative; float:left; width:90%; padding-left:25px; background:url(/static/img/bullet1.png) no-repeat left top; margin:5px 0 0 0;}
 /*.sitemap li:first-child .sub{ display:block;}
 */
 .staffadd{ position:fixed; width:364px; top:150px; left:50%; margin-left:-182px;background-color:#FFF; border-radius:3px; padding-bottom:20px; z-index:1002;}
@@ -399,7 +399,7 @@ rgb(33,136,187) 100%);}
 .keyword-formadd .list-key{ width:100%; margin-left:0;}
 .keyword-formadd .list-key li{ margin:8px 5px 0 0;}
 .formadd-button{ position:relative; float:left; width:100%; margin:10px 0 0 0;}
-.formadd-button .btntype1 { background: #FFF url(../img/bgbutton.gif) repeat-x bottom center; border:0;}
+.formadd-button .btntype1 { background: #FFF url(/static/img/bgbutton.gif) repeat-x bottom center; border:0;}
 .formadd-button .btntype2, .formadd-button .btntype1{ font-size:17px; padding:8px 38px;}
 .formadd-button .btntype2{ border:0;
 background-color:#2186b8;
@@ -444,8 +444,8 @@ rgb(33,136,187) 100%);}
 .menucategoriesin{ position:relative; float:left; width:100%; height:620px;}
 .community .newslink .left a.selected{ text-decoration:none; background:#e6e6e6; border:1px #cfcfcf solid; border-bottom:0; position:relative; z-index:100; padding:7px 12px 8px 12px; box-shadow:0px -3px 3px #cfcfcf; border-radius:2px 2px 0px 0px;}
 .arrow-up, .arrow-down{ position:absolute; width:24px; height:24px; right:0; z-index:99; cursor:pointer;}
-.arrow-up{ top:0; background:url(../img/arrow-up.png) no-repeat;}
-.arrow-down{ bottom:0; background:url(../img/arrow-down.png) no-repeat;}
+.arrow-up{ top:0; background:url(/static/img/arrow-up.png) no-repeat;}
+.arrow-down{ bottom:0; background:url(/static/img/arrow-down.png) no-repeat;}
 #page-wrap{ position:relative; width:100%; height:588px; margin-top:12px;}
 .menucategoriesin .slimScrollBar{ background:#E6E6E6!important; z-index:1!important;}
 .submenu{ position:absolute; clearfix:after;}
@@ -469,7 +469,7 @@ rgb(33,136,187) 100%);}
     padding: 5px;
 }
 /*---------- Styles for TPP and Company Staff -------------------*/
-.img-status{ background:url(../img/news.png);}
+.img-status{ background:url(/static/img/news.png);}
 .staff-status-passive{ width: 13px; height: 13px; background-position: -91px -130px; margin-left: 15px; float: left; display: inline;}
 .staff-status-active{ width: 13px; height: 13px; background-position: -104px -130px; margin-left: 15px; float: left; display: inline;}
 .staff-contact-msg{ width: 13px; height: 13px; background-position: -188px -90px; margin-left: 18px; float: left; display: inline; cursor: pointer;}

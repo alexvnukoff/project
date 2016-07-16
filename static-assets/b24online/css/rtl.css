@@ -116,11 +116,11 @@ body, input, textarea, select{direction:rtl;}
 .btn-clumn{ right:auto; left:-22px;}
 .content-staffin{ float:right;}
 
-.sitemap li .sub li span{background: url("../img/bullet2.png") no-repeat right center rgba(0, 0, 0, 0); padding-right:25px;}
+.sitemap li .sub li span{background: url("/static/img/bullet2.png") no-repeat right center rgba(0, 0, 0, 0); padding-right:25px;}
 .sitemap li .sub li{ padding-right:25px;}
-.sitemap li a{ background:url("../img/more-r.png") no-repeat scroll right center; padding-right:15px;}
+.sitemap li a{ background:url("/static/img/more-r.png") no-repeat scroll right center; padding-right:15px;}
 
-.sitemap li a.lesssitemap{background:url(../img/less.png) no-repeat left 10px center;}
+.sitemap li a.lesssitemap{background:url(/static/img/less.png) no-repeat left 10px center;}
 .sitemap li.current a{ padding-right:15px;}
 .uploadimgage{ float:right; margin-right:14px; margin-left:0;}
 .uploadconfig{ float:left;}
@@ -205,15 +205,15 @@ div.org-contacts ul li span.left{float: right;}
 .wall-title-bg{ direction:rtl;}
 .vacancy-list li .vacancy-desc {width: 630px;}
 
-.slide1{ width:770px; height:260px; background-image:url(../img/right/slide1.jpg);}
-.slide2{ width:770px; height:260px; background-image:url(../img/right/slide2.jpg);}
-.slide3{ width:770px; height:260px; background-image:url(../img/right/slide3.jpg);}
-.slide4{ width:770px; height:260px; background-image:url(../img/right/slide4.jpg);}
+.slide1{ width:770px; height:260px; background-image:url(/static/img/right/slide1.jpg);}
+.slide2{ width:770px; height:260px; background-image:url(/static/img/right/slide2.jpg);}
+.slide3{ width:770px; height:260px; background-image:url(/static/img/right/slide3.jpg);}
+.slide4{ width:770px; height:260px; background-image:url(/static/img/right/slide4.jpg);}
 
 .slide3 .desc{ padding-right:175px!important;}
 .slide4 .desc{ width:330px; padding-right:155px;}
 .slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align: left; padding-bottom:12px;}
-.desc ul.list li{ padding-right:32px; padding-left:0; background:url(../img/bullet.png) no-repeat top right; float:right;width: 85%;}
+.desc ul.list li{ padding-right:32px; padding-left:0; background:url(/static/img/bullet.png) no-repeat top right; float:right;width: 85%;}
 .vacancy-list li .vacancy-desc a.more{ text-align:left;}
 
 .slide2 .desc h2, .slide3 .desc h2, .slide4 .desc h2{ padding-bottom:0; text-align: center;}
