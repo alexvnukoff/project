@@ -167,6 +167,7 @@
         </div>
 
         <div class="col-md-12 contact-fields">
+
           <form action="{% url 'sendmessage' %}" method="post">
                 <input type="hidden" name="co_id" value="{{ site.pk }}">
                 <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
