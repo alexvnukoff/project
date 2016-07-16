@@ -70,13 +70,27 @@
 
 {#                                                {% endif %}#}
                                             {% endfor %}
-                                            <tr>
+                                            
+                                            {% if site.user_site.is_delivery_available %}
+                                            <tr valign="top">
                                                 <td style="text-align: right">
-                                                    <input type="checkbox" name="need_delivery" id="need_delivery">
+                                                    <input type="checkbox" id="need_delivery" name="need_delivery">
                                                 </td>
-                                                <td colspan="4">{% trans 'Need a delivery' %}?</td>
+                                                <td colspan="4">
+                                                    <div>{% trans 'Need a delivery' %}?</div>
+                                                    <div>
+                                                        {% if not site.user_site.delivery_cost %}
+                                                            {% trans 'Delivery is unpaid' %}
+                                                        {% else %}
+                                                            {% trans 'Delivery cost' %}: 
+                                                            {{ site.user_site.delivery_currency|getSymbol }} 
+                                                            {{ site.user_site.delivery_cost|formatPrice }}
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
                                             </tr>
-
+                                            {% endif %}
+                                            
                                         </tbody>
 
                                         <tfoot>
@@ -91,7 +105,7 @@
                                     </table>
 
                                     <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
-                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
+                                    <a id="order_by_email" class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
                                     <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
 
 
@@ -123,4 +137,21 @@
         </div>
 
         </section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        $('#order_by_email').on('click', function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            if ($('#need_delivery').is(":checked")) {
+                url += '?need_delivery=true';
+            }
+            window.location.href = url;
+            return false;
+        });
+    });
+    </script>    
 {% endblock %}

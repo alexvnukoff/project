@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 
 import re
 import logging
@@ -223,6 +223,11 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
     form_class = OrderEmailForm
     success_url = reverse_lazy('b2c_products:order_done')
 
+    def get_form_kwargs(self):
+        kwargs = super(B2CProductByEmail, self).get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         basket = Basket(self.request)
         has = basket.count
@@ -280,6 +285,8 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                         supplier_company=supplier,
                         person_last_name=data.get('name'),
                         person_email=data.get('email'),
+                        person_address=data.get('address'),
+                        person_phone_number=data.get('phone'),
                         status=Deal.ORDERED,
                     )
                     model_type = ContentType.objects.get_for_model(item.product)
