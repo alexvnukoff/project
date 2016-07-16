@@ -323,14 +323,15 @@ msgstr ""
 msgid ""
 "This message was sent to company with id = %(organization_id)d, subject: "
 "%(subject)s"
-msgstr "Сообщение отправлено компании с  id"
+msgstr "Сообщение отправлено компании с id = %(organization_id)d, тема:"
+"%(subject)s"
 
 #: b24project/b24online/Messages/forms.py:114
 #: b24project/b24online/Messages/forms.py:313
 #, fuzzy, python-format
 #| msgid "New message"
 msgid "New message: %(subject)s"
-msgstr "Новое сообщение от Tppcenter"
+msgstr "Новое сообщение: %(subject)s"
 
 #: b24project/b24online/Messages/forms.py:159
 #, fuzzy
@@ -1228,7 +1229,7 @@ msgstr "Обзоры товаров"
 #, fuzzy, python-format
 #| msgid "Order number"
 msgid "Order from %s"
-msgstr "Номер заказа"
+msgstr "Номер заказа %s"
 
 #: b24project/b24online/models.py:1928
 #, fuzzy
