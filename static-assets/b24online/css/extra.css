@@ -54,7 +54,7 @@ table.table-data td.is-child {
 
 tr.toggle-child td.toggler {
     cursor: pointer;
-    background:url('../img/rarr-blue.png') left 3px no-repeat;
+    background:url('/static/img/rarr-blue.png') left 3px no-repeat;
     padding-left:20px !important;
     width: -moz-fit-content; /* mozilla only */
     width: intrinsic; /* webkit only */
@@ -62,33 +62,33 @@ tr.toggle-child td.toggler {
 }
 
 tr.toggle-child.toggled td.toggler {
-    background:url('../img/darr-blue.png') left 3px no-repeat;
+    background:url('/static/img/darr-blue.png') left 3px no-repeat;
     border-bottom:0;
 }
 
 .toggle-next {
     cursor: pointer;
-    background:url('../img/rarr-blue.png') right 3px no-repeat;
+    background:url('/static/img/rarr-blue.png') right 3px no-repeat;
     padding-right:20px;
     width: -moz-fit-content; /* mozilla only */
     width: intrinsic; /* webkit only */
     border-bottom:1px dotted blue;
 }
 .toggle-next.toggled {
-    background:url('../img/darr-blue.png') right 3px no-repeat;
+    background:url('/static/img/darr-blue.png') right 3px no-repeat;
     border-bottom:0;
 }
 
 .toggle-next {
     cursor: pointer;
-    background:url('../img/rarr-blue.png') right 3px no-repeat;
+    background:url('/static/img/rarr-blue.png') right 3px no-repeat;
     padding-right:20px;
     width: -moz-fit-content; /* mozilla only */
     width: intrinsic; /* webkit only */
     border-bottom:1px dotted blue;
 }
 .toggle-next.toggled {
-    background:url('../img/darr-blue.png') right 3px no-repeat;
+    background:url('/static/img/darr-blue.png') right 3px no-repeat;
     border-bottom:0;
 }
 
@@ -97,7 +97,7 @@ tr.toggle-child.toggled td.toggler {
     width: 20px;
     height: 20px;
     padding: 5px;
-    background-image: url(../img/basket.png);
+    background-image: url('/static/img/basket.png');
     background-repeat: no-repeat;
     text-align: center;
     font-weight: bold;
@@ -126,7 +126,7 @@ a.mediumbuy {
     margin: 0 2px;
     font-size:12px;
     padding: 1px;
-    background:url(../img/btnbuy.gif) repeat-x;
+    background:url(/static/img/btnbuy.gif) repeat-x;
     text-align:center;
     color: #e1e1e1;
     text-shadow: #-1px -1px 1px #317ca1;
@@ -206,13 +206,13 @@ tr.without-border td {
 }
 
 .incoming-chat {
-    background-image: url("../img/incoming.png");
+    background-image: url("/static/img/incoming.png");
     background-repeat: no-repeat;
     background-position: 95% 50%;
 }
 
 .outgoing-chat {
-    background-image: url("../img/outgoing.png");
+    background-image: url("/static/img/outgoing.png");
     background-repeat: no-repeat;
     background-position: 95% 50%;
 
