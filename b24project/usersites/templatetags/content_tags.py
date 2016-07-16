@@ -87,6 +87,9 @@ class ProductsTag(ItemsTag):
                 categories = [self.category.pk]
             else:
                 categories = list(self.category.get_descendants(include_self=True).values_list('pk', flat=True))
+        
+        order_by_list = self.order_by if \
+            isinstance(self.order_by, (list, tuple)) else [self.order_by,]
 
         if self.search_query:
             s = SearchEngine(doc_type=self.queryset.model.get_index_model())
@@ -97,8 +100,7 @@ class ProductsTag(ItemsTag):
 
             if categories:
                 s = s.filter('terms', b2c_categories=categories, b2b_categories=categories)
-
-            return s.sort(self.order_by)
+            return s.sort(*order_by_list)
         else:
             if categories and self.producer:
                 return self.queryset.filter(categories__in=categories, producer__pk=self.producer)
@@ -109,7 +111,7 @@ class ProductsTag(ItemsTag):
             if not categories and self.producer:
                 return self.queryset.filter(producer__pk=self.producer)
 
-            return self.queryset.order_by(self.order_by)
+            return self.queryset.order_by(*order_by_list)
 
     @property
     def result_data(self):
@@ -162,7 +164,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def b2c_products(context, template_name, on_page, page=1, selected_category=None, search_query=None,
-                 order_by='-created_at'):
+                 order_by=('-show_on_main', '-created_at')):
 
     if search_query is None:
         url_paginator = "b2c_products:category_paged" if selected_category else "b2c_products:paginator"
@@ -171,9 +173,12 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
 
     organization = get_current_site().user_site.organization
 
+    if not isinstance(order_by, (list, tuple)):
+        order_by = [order_by, ]
+        
     if isinstance(organization, Company):
         queryset = B2CProduct.get_active_objects()\
-            .filter(company=organization).order_by('-show_on_main')
+            .filter(company=organization).order_by(*order_by)
     else:
         queryset = B2CProduct.objects.none()
 
