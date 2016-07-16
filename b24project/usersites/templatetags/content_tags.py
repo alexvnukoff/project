@@ -172,7 +172,8 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
     organization = get_current_site().user_site.organization
 
     if isinstance(organization, Company):
-        queryset = B2CProduct.get_active_objects().filter(company=organization)
+        queryset = B2CProduct.get_active_objects()\
+            .filter(company=organization).order_by('-show_on_main')
     else:
         queryset = B2CProduct.objects.none()
 

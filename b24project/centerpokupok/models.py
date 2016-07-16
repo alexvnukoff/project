@@ -63,6 +63,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
                                  verbose_name=_('Producer'),
                                  null=True, blank=True)
     galleries = GenericRelation(Gallery)
+    show_on_main = models.BooleanField(default=False, db_index=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)

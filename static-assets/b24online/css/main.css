@@ -1,12 +1,12 @@
 @charset "utf-8";
 body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#4a4a4a;}
-.logo-main{ background:url(../img/b24_big.png) no-repeat; }
-.imgmain{ background:url(../img/imgmain.png);}
-.icons{ background:url(../img/icons.png);}
+.logo-main{ background:url(/static/b24online/img/b24_big.png) no-repeat; }
+.imgmain{ background:url(/static/b24online/img/imgmain.png);}
+.icons{ background:url(/static/b24online/img/icons.png);}
 .wrapper{ width:1000px; margin:0 auto;}
-.header{ position:relative; float:left; width:100%; background:url(../img/dotb.png) repeat-x bottom center; padding-bottom:18px;}
+.header{ position:relative; float:left; width:100%; background:url(/static/b24online/img/dotb.png) repeat-x bottom center; padding-bottom:18px;}
 .header-r{ position:relative; float:right; width:606px; margin:22px 0 0 0;}
-.header-r li{ position:relative; float:left; width:190px; height:70px; border:1px #e5e5e5 solid; background:#FFF url(../img/dotc.png) repeat-x top center; margin-left:10px; display:inline; border-radius:3px;
+.header-r li{ position:relative; float:left; width:190px; height:70px; border:1px #e5e5e5 solid; background:#FFF url(/static/b24online/img/dotc.png) repeat-x top center; margin-left:10px; display:inline; border-radius:3px;
 box-shadow:0 6px 6px -4px #e5e5e5; font-family: 'robotothin',Arial,sans-serif;}
 .header-r li .icon-l{ display:table-cell; width:55px; height:70px; border-right:1px #efeff0 solid; text-align:center; vertical-align:middle;}
 .header-r li a{ color:#888;}
@@ -26,7 +26,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-r a:hover{ text-decoration:underline;}
 #logo{ position:relative; float:left; width:286px; height:98px; margin:10px 0 0 0; background-position:0px 0px;}
 #search{ position:relative; float:right; width:612px; padding:10px 6px 10px 10px; background-color:#4a4a4a; border-radius:3px; margin:30px 20px 0 0; display:inline;}
-.styled-select, .styled-select2{ position:relative; float: left; width: 200px; height: 30px; background: url(../img/arrowselect.png) no-repeat right #e6e6e6; margin: 0 4px 0 0;}
+.styled-select, .styled-select2{ position:relative; float: left; width: 200px; height: 30px; background: url(/static/b24online/img/arrowselect.png) no-repeat right #e6e6e6; margin: 0 4px 0 0;}
 .styled-select .textfilter, .styled-select .texttype, .styled-select .textpart{ position:relative; float:left; width:100%; height:100%; line-height:30px; color:#9b9b9b; text-indent:12px;}
 #country, #type, #part{ cursor:pointer;}
 .country-list{ position:absolute; width:178px; border:1px #e9e9e9 solid; border-bottom:1px #a8adb3 solid; background-color:#FFF; border-top:0; box-shadow:0px 1px 1px #a9b2b8; padding:6px 10px; display:none; top:31px; left:0px; z-index:9;}
@@ -48,8 +48,8 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .part-list ul li a:hover{ background-color:#3ca1d3; color:#FFF; text-decoration:none;}
 
 .bottom-type{ position:relative; float:left; width:100%; padding:5px 0; background-color:#e6e6e6; text-align:center;}
-.btntype1,.btntype2{ display:inline-block; border-radius:3px; background:#FFF url(../img/btntype1.gif) repeat-x; padding:5px 15px; font-weight:normal; color:#4a4a4a; text-shadow: 2px 1px 0 #FFFFFF; box-shadow:0px 1px 1px #767676; font-family:Arial, Helvetica, sans-serif; text-decoration:none;}
-.btntype2{ background:#FFF url(../img/btntype2.gif) repeat-x; color:#FFF;text-shadow: 2px 1px 0 #418aad;}
+.btntype1,.btntype2{ display:inline-block; border-radius:3px; background:#FFF url(/static/b24online/img/btntype1.gif) repeat-x; padding:5px 15px; font-weight:normal; color:#4a4a4a; text-shadow: 2px 1px 0 #FFFFFF; box-shadow:0px 1px 1px #767676; font-family:Arial, Helvetica, sans-serif; text-decoration:none;}
+.btntype2{ background:#FFF url(/static/b24online/img/btntype2.gif) repeat-x; color:#FFF;text-shadow: 2px 1px 0 #418aad;}
 .btntype1:hover,.btntype2:hover{ color:#4a4a4a; text-decoration:none; opacity:0.8; filter:alpha(opacity=80);}
 .btntype2:hover{ color:#FFF;}
 .styled-select2{ overflow:hidden;}
@@ -115,7 +115,7 @@ border-style:solid; border-width: 20px 0 0 16px; border-color: transparent trans
 .formregister li a{ color:#FFF; text-decoration:underline;}
 .formregister li input.check{ float:left; margin-right:8px;}
 .formregister li.end{ margin-top:15px;}
-.formregister li .btnreg{ float:left; width:100%; border-radius:3px; background:#FFF url(../img/bgbutton.gif) repeat-x; text-align:center; padding:10px 0; font-size:16px; font-weight:normal; color:#4a4a4a;text-shadow: 2px 1px 0 #FFFFFF; box-shadow:0px 1px 1px #296e90; font-family:Arial, Helvetica, sans-serif; text-decoration:none;}
+.formregister li .btnreg{ float:left; width:100%; border-radius:3px; background:#FFF url(/static/b24online/bgbutton.gif) repeat-x; text-align:center; padding:10px 0; font-size:16px; font-weight:normal; color:#4a4a4a;text-shadow: 2px 1px 0 #FFFFFF; box-shadow:0px 1px 1px #296e90; font-family:Arial, Helvetica, sans-serif; text-decoration:none;}
 .formregister li .btnreg:hover{ opacity:0.9; filter:alpha(opacity=90);}
 .content-l{ position:relative; float:left; width:500px; margin:35px 0 0 0;}
 .content-l .best-title{ position:relative; float:left; width:100%; text-align:center; font-size:24px; font-weight:300; color:#4a4a4a; font-family: 'Roboto', sans-serif;}
@@ -175,8 +175,8 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
 
   /*---------People---------*/
 .people-slide .bx-wrapper .bx-viewport{ left:28px!important; width:100%!important;}
-.people-slide .bx-wrapper .bx-prev {left: 0;background: url(../img/icons.png) no-repeat 0 -60px;}
-.people-slide .bx-wrapper .bx-next {right: -50px;background: url(../img/icons.png) no-repeat 0px -113px;}
+.people-slide .bx-wrapper .bx-prev {left: 0;background: url(/static/b24online/icons.png) no-repeat 0 -60px;}
+.people-slide .bx-wrapper .bx-next {right: -50px;background: url(/static/b24online/icons.png) no-repeat 0px -113px;}
 .people-slide .bx-wrapper .bx-prev:hover {background-position: 0 -219px;}
 .people-slide .bx-wrapper .bx-next:hover {background-position: 0 -166px;}
 .people-slide .bx-wrapper .bx-controls-direction a {position: absolute;top: 50%;margin-top:-26px;outline: 0;width: 30px;height: 53px;text-indent: -9999px;z-index: 9999;}
@@ -193,10 +193,10 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
  .mainright .bx-wrapper .bx-viewport{ width:98%!important;}
 .bxslider li .items{ display:inline-block; width:30px; height:20px; margin:0 0 0 8px;}
 .mainright .bxslider li .items{ margin:0 0 0 9px;}
-.slide1{ width:770px; height:260px; background-image:url(../img/slide1.jpg);}
-.slide2{ width:770px; height:260px; background-image:url(../img/slide2.jpg);}
-.slide3{ width:770px; height:260px; background-image:url(../img/slide3.jpg);}
-.slide4{ width:770px; height:260px; background-image:url(../img/slide4.jpg);}
+.slide1{ width:770px; height:260px; background-image:url(/static/b24online/slide1.jpg);}
+.slide2{ width:770px; height:260px; background-image:url(/static/b24online/slide2.jpg);}
+.slide3{ width:770px; height:260px; background-image:url(/static/b24online/slide3.jpg);}
+.slide4{ width:770px; height:260px; background-image:url(/static/b24online/slide4.jpg);}
 .homeslider .bx-wrapper .bx-viewport{ width:100%!important; left:0!important;}
 .desc{ position:relative; float:left; width:290px; padding-left:20px; font-family: 'Roboto', sans-serif; color:#4a4a4a;}
 .desc h2{ text-align:center; font-size:26px; font-weight:bold; line-height:28px; padding:42px 0 25px 0; text-transform:uppercase;}
@@ -206,14 +206,14 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
 .slide2 .desc h2, .slide3 .desc h2, .slide4 .desc h2{ padding-bottom:0; text-align:left;}
 .slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align:right; padding-bottom:12px;}
 .desc ul.list{ float:left; width:100%;}
-.desc ul.list li{ float:left; padding-left:32px; margin-top:5px; font-size:14px; background:url(../img/bullet.png) no-repeat top left; padding-bottom:5px; font-family:Arial, Helvetica, sans-serif;}
+.desc ul.list li{ float:left; padding-left:32px; margin-top:5px; font-size:14px; background:url(/static/b24online/bullet.png) no-repeat top left; padding-bottom:5px; font-family:Arial, Helvetica, sans-serif;}
 .slide3 .desc{ padding-left:195px;}
 .slide4 .desc{ width:330px; padding-left:175px;}
 
 /*-----------External site----------------*/
 .external-slide .bx-wrapper .bx-viewport{ left:10px!important; width:100%!important;}
-.external-slide .bx-wrapper .bx-prev {left: -18px;background: url(../img/icons.png) no-repeat 0 -60px;}
-.external-slide .bx-wrapper .bx-next {background: url(../img/icons.png) no-repeat 0px -113px;}
+.external-slide .bx-wrapper .bx-prev {left: -18px;background: url(/static/b24online/icons.png) no-repeat 0 -60px;}
+.external-slide .bx-wrapper .bx-next {background: url(/static/b24online/icons.png) no-repeat 0px -113px;}
 .external-slide .bx-wrapper .bx-prev:hover {background-position: 0 -219px;}
 .external-slide .bx-wrapper .bx-next:hover {background-position: 0 -166px;}
 .external-slide .bx-wrapper .bx-controls-direction a {position: absolute;top: 50%;margin-top:-26px;outline: 0;width:30px;height:53px;text-indent: -9999px;z-index: 9999;}
@@ -241,7 +241,7 @@ ul li.big-coupon .bot .context .current-price small{color:#c8f2ff;font-size:12px
 ul li.big-coupon .bot .context .but{display:inline-block;text-align:right;width:80px}
 ul li.big-coupon .bot .context .but a span.buyout{background:#dd201c;color:#fff;font-weight:700;padding:8px 18px;font-size:16px;text-align:center}
 ul li.big-coupon .bot .context .but a{text-decoration:none}
-li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url(../img/coupon_btnbuy.gif) repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
+li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url(/s/font//coupon_btnbuy.gif) repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
 li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .universal-sale{position:absolute;margin-left:20px;margin-right:20px;background:#dd201c;color:#fff;font-size:12px;font-weight:600;text-align:center;padding:4px 6px;z-index:1}
 .universal-sale::after{content:" ";border-width:3px 3px 4px 4px;border-style:solid;border-color:transparent #dd201c #dd201c transparent;position:absolute;top:0;right:100%}
