@@ -1,25 +1,19 @@
 # -*- encoding: utf-8 -*-
 
 import datetime
-import json
 import logging
 import re
 from collections import OrderedDict
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response, HttpResponse
-from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
 
-from appl import func
 from b24online.Analytic.forms import SelectPeriodForm
-from b24online.models import (Organization, Company, Tender, Exhibition,
+from b24online.models import (Company, Tender, Exhibition,
                               RegisteredEventStats, RegisteredEventType, B2BProduct,
                               InnovationProject, BusinessProposal)
 from b24online.utils import get_current_organization
@@ -35,62 +29,6 @@ PROCESSED_MODELS = (
     (Tender, 'organization_id'),
     (Exhibition, 'organization_id'),
 )
-
-
-@login_required
-def main(request):
-    current_organization = request.session.get('current_company', False)
-
-    if current_organization is False:
-        return HttpResponseRedirect(reverse('denied'))
-
-    current_organization = Organization.objects.get(pk=current_organization)
-
-    template_params = {'current_company': current_organization.name}
-
-    if current_organization.parent and isinstance(current_organization, Company):
-        key = "analytic:main:chamber:%s" % current_organization.parent.pk
-        template_params['chamber_events'] = cache.get(key)
-
-        if not template_params['chamber_events']:
-            org_filter = Q(organization=current_organization.parent) | Q(organization__parent=current_organization.parent)
-            template_params['chamber_events'] = {
-                'tenders': Tender.objects.filter(org_filter).count(),
-                'proposals': Tender.objects.filter(org_filter).count(),
-                'exhibitions': Tender.objects.filter(org_filter).count()
-            }
-
-            cache.set(key, template_params['chamber_events'], 60 * 60 * 24)
-
-    return render_to_response("b24online/Analytic/main.html", template_params, context_instance=RequestContext(request))
-
-
-@login_required
-def get_analytic(request):
-    """
-        Get analytic of current organization
-    """
-
-    current_company = request.session.get('current_company', None)
-
-    if not current_company:
-        return HttpResponseRedirect(reverse('denied'))
-
-    params = {'dimensions': 'ga:dimension2'}
-
-    if Company.objects.filter(pk=current_company).exists():
-        params['filters'] = 'ga:dimension1==' + str(current_company)
-    else:
-        params['filters'] = 'ga:dimension3==' + str(current_company)
-
-    analytic = func.get_analytic(params)
-
-    result = {}
-
-    if analytic:
-        result = [{'type': row[0], 'count': row[1]} for row in analytic]
-
-    return HttpResponse(json.dumps(result))
 
 
 class RegisteredEventStatsDetailView(TemplateView):

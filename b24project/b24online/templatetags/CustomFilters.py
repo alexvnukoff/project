@@ -24,7 +24,7 @@ from lxml.html.clean import Cleaner
 import b24online.urls
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, MessageChat, Message,
-                              Questionnaire, Company, Banner)
+                              Questionnaire, Banner)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site

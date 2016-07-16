@@ -12,8 +12,6 @@ import newrelic.agent
 
 newrelic.agent.initialize('/var/www/b24app/newrelic.ini')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tpp.settings")
-os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS",
-                      "/var/www/b24app/b24project/b24online/Analytic/B24Online-660eba9c05c9.json")
 
 from django.core.wsgi import get_wsgi_application
 
