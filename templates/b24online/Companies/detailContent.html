@@ -96,7 +96,7 @@
       valid = valid && checkLength(realname, "realname", 2, 40);
 //      valid = valid && checkLength(phone, "phone", 2, 40);
       valid = valid && checkLength(email, "email", 6, 80 );
-      valid = valid && checkRegexp(email, emailRegex, "{% trans 'Enter a valid email address.' %}" );
+      valid = valid && checkRegexp(email, emailRegex, '{% trans 'Enter a valid email address.' %}' );
       valid = valid && checkLength(message, "message", 2, 1000);
 
       if(valid) {
