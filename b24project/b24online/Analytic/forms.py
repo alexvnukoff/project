@@ -5,8 +5,6 @@ import logging
 
 from django import forms
 from django.utils.translation import gettext as _
-from django.utils import timezone
-from b24online.models import RegisteredEvent
 
 logger = logging.getLogger(__name__)
 

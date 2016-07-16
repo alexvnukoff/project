@@ -11,7 +11,6 @@ from django.utils.timezone import make_aware, is_naive, get_current_timezone, no
 from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
 
-from b24online.Analytic.analytic import get_results
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
 from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
@@ -213,20 +212,6 @@ def publish_realtime(publication_type, **params):
     ).publish
 
     service_queue(publication_type, json.dumps(params))
-
-
-def get_analytic(params=None):
-    if not isinstance(params, dict):
-        raise ValueError('Filter required')
-
-    if 'end_date' not in params:
-        params['end_date'] = '2050-01-01'
-    if 'start_date' not in params:
-        params['start_date'] = '2014-01-01'
-
-    params['metrics'] = 'ga:visitors'
-
-    return get_results(**params)
 
 
 
