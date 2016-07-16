@@ -17,7 +17,6 @@ class GetLead:
         url_path = kwargs['url']
         realname = kwargs['realname']
         phone = kwargs['phone']
-        message = kwargs['message']
         email = kwargs['email']
 
         try:
@@ -25,11 +24,16 @@ class GetLead:
         except:
             company_id = False
 
+        try:
+            message = kwargs['message']
+        except:
+            message = None
+
         if not self.org and company_id:
             self.org = Company.objects.get(pk=company_id)
 
         # Collect form usersites form
-        if self.org and realname and message and email:
+        if self.org and realname and email:
             lead = LeadsStore(
                 url_path=url_path,
                 organization=self.org,
