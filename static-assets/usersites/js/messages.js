@@ -21,6 +21,7 @@ $(function() {
             url: this.href,
             type: 'post',
             success: function(data) {
+                $(this).prop('disabled', true);
                 if (data.code == 'error') {
                     $.each(data.errors, function(field_name, field_errors) {
                         var fieldId = '#id_' + field_name,
@@ -40,6 +41,7 @@ $(function() {
                     }
                     $('#chat_tabs a[href="#chats_list_tab"]').tab('show');  
                 }
+                $(this).prop('disabled', false);
             }
         });
         return false;

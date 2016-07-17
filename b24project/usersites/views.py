@@ -10,15 +10,20 @@ from django.shortcuts import render_to_response
 from django.views.generic import View
 from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse_lazy
 
 from registration.backends.default.views import RegistrationView
-from b24online.models import BusinessProposal, B2BProduct, News, Company
+from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
 from django.utils.timezone import now
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
+from usersites.forms import ProfileForm
+from b24online.cbv import ItemUpdate
 from b24online.Leads.utils import GetLead
+from usersites.mixins import UserTemplateMixin
+
 
 logger = logging.getLogger(__name__)
 
@@ -138,3 +143,32 @@ class sendmessage(View):
 
     def get(self, request):
         raise Http404
+
+
+class ProfileUpdate(ItemUpdate, UserTemplateMixin):
+    model = Profile
+    form_class = ProfileForm
+    # template_name = '{template_path}/profileForm.html'
+    template_name = 'usersites_templates/ibonds/profileForm.html'
+    success_url = reverse_lazy('main')
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_object(self, queryset=None):
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except ObjectDoesNotExist:
+            return Profile.objects.create(user=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.birthday = form.cleaned_data.get('birthday', None)
+        result = super().form_valid(form)
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'avatar' in form.changed_data:
+                self.object.upload_images()
+
+        return result

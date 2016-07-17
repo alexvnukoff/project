@@ -20,6 +20,7 @@ from appl import func
 urlpatterns = [
     url(r'^$', usersites.views.wall, name='main'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
     url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     url(r'^api/', include(usersites.Api.urls, namespace='api')),
     url(r'^news/', include(usersites.News.urls, namespace='news')),
