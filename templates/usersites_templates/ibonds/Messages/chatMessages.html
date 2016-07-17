@@ -38,7 +38,7 @@
             <div class="message-attachments">
               
               {% if attachment.is_image %}
-                <a href="{{ attachment.file|original }}">
+                <a href="{{ attachment.file|original }}" class="fancybox">
                   <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
                 </a>
               {% else %}
@@ -57,5 +57,13 @@
 </div>
 
 <script type="text/javascript">
-  $('#chat_title').html('{{ chat.subject|escape }}');
+    $('#chat_title').html('{{ chat.subject|escape }}');
+    if ($('.fancybox').length > 0) {
+        $('.fancybox').fancybox({   
+            centerOnScroll: true,     
+            helpers: {
+                overlay: { locked: false }
+            }  
+        });
+    };   
 </script>

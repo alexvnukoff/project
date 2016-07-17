@@ -39,6 +39,7 @@
                 <li><a href="{% url 'messages:main' %}">
                   <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}</a>
                 </li>
+                <li><a href="{% url 'my_profile' %}">{% trans 'Profile' %}</a></li>
                 <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
               {% else %}
                 <li>

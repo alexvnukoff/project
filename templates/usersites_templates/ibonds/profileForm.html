@@ -1,0 +1,114 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+{% csrf_token %}
+    <div class="user-profile">
+      <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
+        <div class="profile-l">
+            <div class="avatar">
+                {% if form.initial.avatar %}
+                    <img style="max-width: 150px;max-height: 156px;" src="{{ form.initial.avatar.big }}" alt="" />
+                {% else %}
+                    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width: 150px;max-height: 156px;" />
+                {% endif %}
+            </div>
+            <div class="line"><b>{% trans 'Change avatar' %}</b></div>
+            {% if form.errors.avatar %}
+                <div class="error-handler"> <div class="formserror2">{{ form.errors.avatar.0 }}</div></div>
+            {% endif %}
+            <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
+            <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
+        </div>
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Last name' %}</label>
+                {% if form.errors.last_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.last_name.0 }}</div></div>
+                {% endif %}
+                {{ form.last_name }}
+            </li>
+            <li>
+                <label>{% trans 'First Name' %}</label>
+                {% if form.errors.first_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.first_name.0 }}</div></div>
+                {% endif %}
+                {{ form.first_name }}
+            </li>
+            <li>
+                <label>{% trans 'Middle name' %}</label>
+                {% if form.errors.middle_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.middle_name.0 }}</div></div>
+                {% endif %}
+                {{ form.middle_name }}
+            </li>
+            <li>
+                <label>{% trans 'Profile type' %}</label>
+                {% if form.errors.user_type %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.user_type.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.user_type %}
+                    <div class="radio">{{ radio }}</div>
+                {% endfor %}
+            </li>
+            <li style="margin-bottom: 10px;">
+                <label>{% trans 'WWW' %}</label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                {{ form.site }}
+            </li>
+        </ul>
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Country' %}</label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </li>
+            <li>
+                <label>{% trans 'Birthday' %}</label>
+                {% if form.errors.birthday %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.birthday.0 }}</div></div>
+                {% endif %}
+                {{ form.birthday }}
+            </li>
+            <li>
+                <label>{% trans 'Phone Number' %}</label>
+                {% if form.errors.mobile_number %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.mobile_number.0 }}</div></div>
+                {% endif %}
+                {{ form.mobile_number }}
+            </li>
+            <li>
+                <label>{% trans 'Sex' %}</label>
+                {% if form.errors.sex %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.sex.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.sex %}
+                    <div class="radio">
+                        {{ radio }}
+                    </div>
+                {% endfor %}
+            </li>
+            <li>
+                <label>{% trans 'Profession' %}</label>
+                {% if form.errors.profession %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.profession.0 }}</div></div>
+                {% endif %}
+                {{ form.profession }}
+            </li>
+        </ul>
+
+        <div class="profilebutton">
+
+            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
+            <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
