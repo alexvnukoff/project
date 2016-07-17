@@ -171,14 +171,6 @@ class ItemsList(HybridListView):
     def dispatch(self, request, *args, **kwargs):
         self.applied_filters = {}
 
-        # Apply geo_country by our internal code
-        if (not self.is_my() and request.session.get('geo_country')
-            and not request.GET.get('order1')
-            and not request.path == '/products/сoupons/'
-            ):
-            geo_country = request.session['geo_country']
-            self.applied_filters['country'] = Country.objects.filter(pk=geo_country)
-
         return super().dispatch(request, *args, **kwargs)
 
     def is_filtered(self):
@@ -189,10 +181,18 @@ class ItemsList(HybridListView):
         s = SearchEngine(doc_type=self.model.get_index_model())
         q = self.request.GET.get('q', '').strip()
 
+        # Apply geo_country by our internal code
+        if (not self.is_my() and self.request.session.get('geo_country')
+            and not self.request.GET.get('order1')
+            and not self.request.path == '/products/сoupons/'):
+            geo_country = self.request.session['geo_country']
+            s = s.filter('terms', country=geo_country)
+
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
             values = self.request.GET.getlist(filter_lookup)
             print(values)
+
             if values:
                 s = s.filter('terms', **{filter_key: values})
 
@@ -264,6 +264,13 @@ class ItemsList(HybridListView):
 
             if values:
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
+
+        # Apply geo_country by our internal code
+        if (not self.is_my() and request.session.get('geo_country')
+            and not request.GET.get('order1')
+            and not request.path == '/products/сoupons/'):
+            geo_country = request.session['geo_country']
+            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
