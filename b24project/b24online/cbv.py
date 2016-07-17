@@ -186,7 +186,7 @@ class ItemsList(HybridListView):
             and not self.request.GET.get('order1')
             and not self.request.path == '/products/сoupons/'):
             geo_country = self.request.session['geo_country']
-            s = s.filter('terms', country=geo_country)
+            s = s.filter('terms', country=[geo_country])
 
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
