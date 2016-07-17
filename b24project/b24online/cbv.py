@@ -171,6 +171,14 @@ class ItemsList(HybridListView):
     def dispatch(self, request, *args, **kwargs):
         self.applied_filters = {}
 
+        # Apply geo_country by our internal code
+        if (not self.is_my() and request.session.get('geo_country')
+            and not request.GET.get('order1')
+            and not request.path == '/products/сoupons/'
+            ):
+            geo_country = request.session['geo_country']
+            self.applied_filters['country'] = Country.objects.filter(pk=geo_country)
+
         return super().dispatch(request, *args, **kwargs)
 
     def is_filtered(self):
@@ -187,14 +195,6 @@ class ItemsList(HybridListView):
             print(values)
             if values:
                 s = s.filter('terms', **{filter_key: values})
-
-        # Apply geo_country by our internal code
-        if (not self.my
-            and self.request.session.get('geo_country')
-            and not self.request.GET.get('order1')
-            and not self.request.path == '/products/сoupons/'
-           ):
-            s = s.filter('terms', **{'country': [self.request.session['geo_country']]})
 
         if q:
             s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
@@ -245,7 +245,9 @@ class ItemsList(HybridListView):
 
         if isinstance(context['object_list'], SearchEngine):
             object_ids = [hit.django_id for hit in context['object_list']]
-            context['object_list'] = self.optimize_queryset(self.model.objects.filter(pk__in=object_ids))
+            context['object_list'] = \
+                self.optimize_queryset(self.model.objects.filter(pk__in=object_ids))\
+                    .order_by(*self._get_sorting_params())
 
         return context
 
@@ -262,15 +264,6 @@ class ItemsList(HybridListView):
 
             if values:
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
-
-        # Apply geo_country by our internal code
-        if (not self.my
-            and self.request.session.get('geo_country')
-            and not self.request.GET.get('order1')
-            and not self.request.path == '/products/сoupons/'
-           ):
-            geo_country = self.request.session['geo_country']
-            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
@@ -318,7 +311,7 @@ class ItemsList(HybridListView):
 
     def get_queryset(self):
         if issubclass(self.model, IndexedModelMixin) \
-            and self.is_filtered() and not self.is_my():
+                and self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
         queryset = self.model.get_active_objects().filter(is_active=True).order_by(*self._get_sorting_params())
         return self.optimize_queryset(queryset)
