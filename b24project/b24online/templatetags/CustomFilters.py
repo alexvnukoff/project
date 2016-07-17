@@ -565,3 +565,14 @@ def check_banner_exist(block):
     site_pk = get_current_site().pk
     return Banner.objects.filter(site_id=site_pk, block__code=block,
                 block__block_type='user_site').exists()
+
+
+@register.filter
+def original(img):
+    """
+    Make and return the path to original image.
+    """
+    return urljoin(settings.MEDIA_URL, 'original/' + str(img)) \
+        if not getattr(settings, 'STORE_FILES_LOCAL', False) else \
+            urljoin(settings.MEDIA_URL, str(img))
+        

@@ -36,13 +36,16 @@
         <div class="clumnright clearfix" style="width=100%; background-color: #d9d9f1; margin: 10px 0;">
           {% for attachment in message.attachments.all %}
             <div class="message-attachments">
-              <a href="{{ MEDIA_URL}}{{ attachment.file }}">
-                {% if attachment.is_image %}
+              
+              {% if attachment.is_image %}
+                <a href="{{ attachment.file|original }}">
                   <img src="{{ attachment.file|thumbnail:'50x0_0' }}" height="50px" />
-                {% else %}
+                </a>
+              {% else %}
+                <a href="{{ MEDIA_URL}}{{ attachment.file }}">
                   <img src="{% static attachment.get_icon %}" height="50px" />
-                {% endif %}
-              </a>
+                </a>
+              {% endif %}
               <div style="text-align: center;">{{ attachment.get_shorted_name }}</div>
             </div>
           {% endfor %}

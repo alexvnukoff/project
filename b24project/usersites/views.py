@@ -110,6 +110,7 @@ class sendmessage(View):
         form = ContactForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
+
             if not self.object.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
@@ -119,6 +120,7 @@ class sendmessage(View):
 
             # Collecting lead
             getlead = GetLead(request)
+
             getlead.collect(
                 url=cd['url_path'],
                 realname=cd['name'],
