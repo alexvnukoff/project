@@ -76,7 +76,7 @@ def _wall_content(request):
         hits = apply_filters(request, InnovationProject, q, filter_list).sort(*sort)[:1].execute().hits
 
         if hits.total > 0:
-            innovation_project = innovation_project.filter(pk=hits[0].django_id).first()
+            innovation_project = innovation_project.get(pk=hits[0].django_id)
         else:
             innovation_project = None
 
@@ -84,7 +84,7 @@ def _wall_content(request):
         sort = get_sorting(request)
         hits = apply_filters(request, B2BProduct, q, filter_list).sort(*sort)[:4].execute().hits
         obj_ids = [hit.django_id for hit in hits]
-        products = products.filter(pk__in=obj_ids)
+        products = products.filter(pk__in=obj_ids).order_by(*sort)
 
         #####################
         sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
@@ -184,7 +184,7 @@ def get_sorting(request, sort_fields=None):
         else:
             order.append(sort_fields[sort_field1])
     else:
-        order.append(sort_fields['date'])
+        order.append('-' + sort_fields['date'])
 
     if sort_field2 and sort_field1 in sort_fields:
         if order2 == 'desc':
