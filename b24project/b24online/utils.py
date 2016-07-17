@@ -22,7 +22,7 @@ from django.utils.timezone import now
 from mptt.models import MPTTModel
 from mptt.utils import get_cached_trees
 from unidecode import unidecode
-
+from django.utils.translation import activate, deactivate
 from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
@@ -60,6 +60,7 @@ def reindex_instance(instance):
     languages = [lan[0] for lan in settings.LANGUAGES]
 
     for lang in languages:
+        activate(lang)
         search_results = SearchEngine(lang=lang, doc_type=instance.get_index_model()) \
             .query('match', django_id=instance.pk).execute().hits
         index_representation = instance.get_index_model().to_index(instance)
@@ -69,7 +70,7 @@ def reindex_instance(instance):
         else:
             index_name = get_index_name(lang)
             index_representation.save(using=conn, index=index_name)
-
+        deactivate()
 
 def create_slug(string):
     """

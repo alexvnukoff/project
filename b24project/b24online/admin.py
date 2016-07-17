@@ -26,7 +26,7 @@ from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               DealItem, StaffGroup, PermissionsExtraGroup,
                               MessageChat, Message, Producer,
                               Questionnaire, Question, Recommendation,
-                              AdditionalPage, LeadsStore)
+                              AdditionalPage, LeadsStore, Banner)
 from b24online.stats.utils import convert_date
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -217,6 +217,10 @@ class LeadsAdmin(admin.ModelAdmin):
     raw_id_fields = ('organization', 'username', )
 
 
+class BannerAdmin(admin.ModelAdmin):
+    list_filter = ('site', 'organization')
+    search_fields = ['site',]
+
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
@@ -243,3 +247,4 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Recommendation, ModelAdmin)
 admin.site.register(AdditionalPage, ModelAdmin)
 admin.site.register(LeadsStore, LeadsAdmin)
+admin.site.register(Banner, BannerAdmin)
