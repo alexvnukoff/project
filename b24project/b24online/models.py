@@ -2131,7 +2131,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
 
     @property
     def description(self):
-        _data = [_('Deal from %s for order %s') % (self.created, self.deal_order)]
+        _data = [_("Deal from {0} for order {0}").format(self.created, self.deal_order)]
         if self.deal_no:
             _data.append(_('deal No. %s') % self.deal_no)
         return ', ' . join(_data)
