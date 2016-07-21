@@ -62,7 +62,7 @@ $(function() {
               <td><center>{% if obj.username %}<a class="llds" title="{{ obj.username }}" href="#"><i class="icon-user"></i></a>{% else %}<i style="color:#aeaeae" alt="{% trans 'Anonymous' %}" class="icon-user"></i>{% endif %}</center></td>
               <td>{{ obj.created_at }}</td>
 
-              <td><center><i style="color:#aeaeae" class="icon-pencil"></i></center></td>
+              <td><center><a href="{% url 'leads:update' obj.id %}"><i class="icon-pencil"></i></a></center></td>
               <td><center><a onclick="return confirm('{% trans "Are you sure want to delete this request?" %}');" href="{% url 'leads:delete' obj.id %}"><i class="icon-trash"></i></a></center></td>
             </tr>
 
