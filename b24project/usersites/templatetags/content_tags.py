@@ -276,14 +276,19 @@ def b2b_categories():
         load_category_hierarchy(B2BProductCategory, categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
 
 
-@register.simple_tag
-def b2c_categories():
+@register.assignment_tag
+def b2c_categories(show_as_list=False):
     organization = get_current_site().user_site.organization
     categories = B2CProductCategory.objects.filter(products__company_id=organization.pk) \
         .order_by('level').distinct()
 
-    return OrderedDict(sorted(
-        load_category_hierarchy(B2CProductCategory, categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
+    if not show_as_list:
+        return OrderedDict(sorted(
+            load_category_hierarchy(B2CProductCategory, categories)\
+                .items(), key=lambda x: [x[1].tree_id, x[1].lft]))
+    else:
+        return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': 0})\
+            for c in categories)}
 
 
 @register.assignment_tag
