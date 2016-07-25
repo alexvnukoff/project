@@ -5,37 +5,89 @@
 {% load staticfiles %}
 {% load humanize %}
 {% block title %}{{ title }}{% endblock %}
+
+{% block after_css %}
+    {{ block.super }}
+    <style type="text/css">
+      p.form_field { 
+        margin: 10px 0;
+      }
+      p.form_field_error { 
+        color: red;
+        font-size: 80%;
+        margin: 5px 0 15px 0;
+      }
+      #order_form textarea {
+        border-top-width: 2px;
+        margin: 0 -2px;
+      }
+    </style>    
+{% endblock %}
+
 {% block content %}
-
-     <section class="content__info">
-
+<section class="content__info">
     <h2>{% trans 'Your Order' %}</h2>
-        <p>&nbsp;</p>{{ test }}
-        {% for i in basket.src %}
-            <p>{{ i.product }} ({{ i.quantity }})</p>
-        {% endfor %}
-        <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <table class="table table-striped" width="90%">
+        <thead>
+            <tr>
+                <th class="tb-item"></th>
+                <th class="tb-qty">{% trans "Amount" %}</th>
+                <th class="tb-price">{% trans 'Price' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in basket.src %}
+            <tr>
+                <td align="left">
+                    {{ i.product }}
+                </td>
+                <td>
+                    {{ i.quantity }}
+                </td>
+                <td>
+                    {{ i.product.get_discount_price|formatPrice }} {{ i.product.currency|getSymbol }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>&nbsp;</p>
 
-        <form method="post" action="" class="clearfix">
-            {{ form.name }}
-            {{ form.email }}
-            {{ form.message }}
-            {% csrf_token %}
+    <h2>{% trans 'Your Info' %}</h2>
+    <form id="order_form" method="post" action="" class="clearfix">
+        {% csrf_token %}
+
+        <p class="form_field">{{ form.name }}</p>
+        {% if form.errors.name %}
+            <p class="form_field_error">{{ form.errors.name.0 }}</p>
+        {% endif %}
+        
+        <p class="form_field">{{ form.email }}</p>
+        {% if form.errors.email %}
+            <p class="form_field_error">{{ form.errors.email.0 }}</p>
+        {% endif %}
+
+        <p class="form_field">{{ form.message }}</p>
+        {% if form.errors.message %}
+            <p class="form_field_error">{{ form.errors.message.0 }}</p>
+        {% endif %}
+
+        {% if form.need_delivery %}
+            <h2>{% trans 'Your Info for delivery' %}</h2>
+            <p class="form_field">{{ form.address }}</p>
+            {% if form.errors.address %}
+                <p class="form_field_error">{{ form.errors.address.0 }}</p>
+            {% endif %}
+        
+            <p class="form_field">{{ form.phone }}</p>
+            {% if form.errors.phone %}
+                <p class="form_field_error">{{ form.errors.phone.0 }}</p>
+            {% endif %}
+
+        {% endif %}
         <button>{% trans 'Sumbit' %}</button>
-        </form>
+    </form>
 
-            {% if form.errors.name %}
-                <p style="color:red;">{{ form.errors.name.0 }}</p>
-            {% endif %}
-
-            {% if form.errors.email %}
-                <p style="color:red;">{{ form.errors.email.0 }}</p>
-            {% endif %}
-
-            {% if form.errors.message %}
-                <p style="color:red;">{{ form.errors.message.0 }}</p>
-            {% endif %}
-
-    </section>
-
+</section>
 {% endblock %}
