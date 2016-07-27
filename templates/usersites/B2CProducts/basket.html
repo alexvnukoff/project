@@ -74,11 +74,11 @@
             <button class="update">Update price</button>
         </form>
 
-        <div class="pay">
+        <div id="paypal_form_layer" class="pay">
             {% if paypal_form %}
                 {{ paypal_form.render }}
             {% else %}
-                <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
+                <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a>
             {% endif %}
         </div>
 
@@ -90,9 +90,12 @@
 {% endblock %}
 
 {% block js %}
-    {{ block.super }}
-    <script type="text/javascript">
+
+{{ block.super }}
+<script type="text/javascript">
+    var DELIVERY_URL = '/b2c-products/delivery.html';
     $(function() {
+        // Для кнопки "Order by E-mail"
         $('#order_by_email').on('click', function(event) {
             event.preventDefault();
             var url = $(this).attr('href');
@@ -102,6 +105,21 @@
             window.location.href = url;
             return false;
         });
+        
+        // Для кнопки-рисунка отправки информации на PayPal
+        var paypalForm = $('#paypal_form_layer > form'),
+            paypalFormButton = $(paypalForm).find('input[type="image"]:first');
+        if (paypalFormButton.length > 0) {
+            $(paypalFormButton).on('click', function(event) {
+                event.preventDefault();
+                if ($('#need_delivery').is(":checked")) {
+                    window.location.href = DELIVERY_URL;
+                } else {
+                    $(paypalForm).submit();
+                }
+                return false;
+            });        
+        }
     });
-    </script>    
+</script>    
 {% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block after_css %}
+    {{ block.super }}
+    <style type="text/css">
+      p.form_field { 
+        margin: 10px 0;
+        position: relative;
+      }
+      p.form_field_error { 
+        color: red;
+        font-size: 80%;
+        margin: 5px 0 15px 0;
+      }
+      span.form_field_required {  
+        color: red;
+        padding: 0 10px;
+        font-size: 150%;
+        font-weight: bold;
+        position: absolute;
+        top: 0;
+      }
+      #delivery_form textarea {
+        border-top-width: 2px;
+        margin: 0 -2px;
+        width: 50%;
+      }
+      .hide_layer {
+        display: none;
+      }
+          
+    </style>    
+{% endblock %}
+
+{% block content %}
+<section class="content__info">
+    <h2>{% trans 'Your Order' %}</h2>
+    <p>&nbsp;</p>
+    <table class="table table-striped" width="90%">
+        <thead>
+            <tr>
+                <th class="tb-item"></th>
+                <th class="tb-qty">{% trans "Amount" %}</th>
+                <th class="tb-price">{% trans 'Price' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in basket.src %}
+            <tr>
+                <td align="left">
+                    {{ item.product }}
+                </td>
+                <td>
+                    {{ item.quantity }}
+                </td>
+                <td>
+                    {{ item.product.get_discount_price|formatPrice }} {{ item.product.currency|getSymbol }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>&nbsp;</p>
+
+    {% if form %}
+    <h2>{% trans 'Enter Your Info for delivery' %}</h2>
+        <form id="delivery_form" method="post" action="{% url 'b2c_products:delivery_info_json' %}" class="clearfix">
+        {% csrf_token %}
+        {% for field in form %}
+            <p class="form_field">{{ field }}{% if field.field.required %}<span class="form_field_required">*</span>{% endif %}</p>
+            <p id="{{ field.name }}_errors" class="form_field_error hide_layer"></>
+        {% endfor %}
+        </form>
+        <div id="paypal_form_layer" class="pay">
+            {{ paypal_form.render }}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(function() {
+        var deliveryDataForm = $('#delivery_form'), 
+            paypalForm = $('#paypal_form_layer > form'),
+            paypalFormButton = $(paypalForm).find('input[type="image"]:first');
+        if (paypalFormButton.length > 0) {
+            $(paypalFormButton).on('click', function(event) {
+                event.preventDefault();
+                $(deliveryDataForm).ajaxSubmit({
+                    url: this.href,
+                    type: 'post',
+                    success: function(data) {
+                        if (data.code == 'success') {
+
+                        } else if (data.code == 'error') {
+                            $.each(data.errors, function(index, item) {
+                                var p_errors = $('#' + index + '_errors');
+                                if (p_errors.length) {
+                                    p_errors.html(item).toggle('hide-errors');
+                                }
+                            });
+                        }
+                    }
+                });
+                return false;
+            });        
+        }
+    });
+</script>    
+{% endblock %}

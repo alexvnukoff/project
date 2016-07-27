@@ -2,9 +2,9 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from django.utils.translation import ugettext as _
 from usersites.views import render_page
-from usersites.B2CProducts.views import (B2CProductDetail, B2CProductBasket,
-                                         B2CProductByEmail, B2CProductJsonData,
-                                         B2C_orderDone)
+from usersites.B2CProducts.views import (
+    B2CProductDetail, B2CProductBasket, B2CProductByEmail, B2CProductJsonData,
+    B2C_orderDone, B2CProductDelivery, delivery_info_json)
 
 urlpatterns = [
     url(r'^$', render_page,
@@ -25,4 +25,7 @@ urlpatterns = [
     url(r'^order\.html$', B2CProductByEmail.as_view(), name='order_by_email'),
     url(r'^json/$', B2CProductJsonData.as_view(), name='b2c_product_json'),
     url(r'^order_done\.html$', B2C_orderDone.as_view(), name='order_done'),
+    url(r'^delivery\.html$', B2CProductDelivery.as_view(), name='delivery_info'),
+    url(r'^delivery/json/$', delivery_info_json, name='delivery_info_json'),
+
 ]

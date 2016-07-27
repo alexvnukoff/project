@@ -2,6 +2,7 @@
 
 import re
 import logging
+import json
 
 from collections import OrderedDict
 
@@ -23,7 +24,7 @@ from django.contrib.contenttypes.models import ContentType
 from paypal.standard.forms import PayPalPaymentsForm
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
-from centerpokupok.forms import OrderEmailForm
+from centerpokupok.forms import OrderEmailForm, DeliveryForm
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.models import (Questionnaire, DealOrder, Deal, DealItem)
 from b24online.search_indexes import B2cProductIndex
@@ -137,7 +138,6 @@ class B2CProductBasket(View):
 
         # Сколько наименований товаров в Корзине
         basket_items_total = len(list(basket))
-        logger.debug(u'Всего наименований товаров: %d', basket_items_total)
 
         # Набор информации для PayPal
         paypal_dict = {}
@@ -315,3 +315,91 @@ class B2C_orderDone(UserTemplateMixin, TemplateView):
     def get_queryset(self):
         return get_current_site().user_site.organization.additional_pages.all()
 
+
+class B2CProductDelivery(UserTemplateMixin, FormView):
+    template_name = '{template_path}/B2CProducts/delivery.html'
+    form_class = DeliveryForm
+    success_url = reverse_lazy('b2c_products:basket')
+
+    def get_form_kwargs(self):
+        kwargs = super(B2CProductDelivery, self).get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        basket = Basket(self.request)
+        has = basket.count
+        context = super(B2CProductDelivery, self).get_context_data(**kwargs)
+        context['basket'] = dict(src=basket)
+        context['total'] = basket.summary
+        
+        # Сколько наименований товаров в Корзине
+        basket_items_total = len(list(basket))
+
+        # Набор информации для PayPal
+        paypal_dict = {}
+        if basket_items_total > 1:
+            paypal_dict.update({
+                'cmd': '_cart',
+                'upload': 1,
+                'business': basket.paypal,
+                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                'return_url': self.request.build_absolute_uri(),
+                'cancel_return': self.request.build_absolute_uri(),
+                'no_shipping': 0,
+                'quantity': 1,
+                'currency_code': basket.currency
+            })
+            i = 1
+            for item in basket:
+                paypal_dict['amount_%d' % i] = \
+                    item.product.get_discount_price() * item.quantity
+                paypal_dict['item_name_%d' % i] = item.product.name
+                i += 1    
+            paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
+        else:
+            if basket.summary:
+                paypal_dict.update({
+                    'business': basket.paypal,
+                    'amount': basket.summary,
+                    'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                    'return_url': self.request.build_absolute_uri(),
+                    'cancel_return': self.request.build_absolute_uri(),
+                    'item_name': _('Products from website ') + get_current_site().domain,
+                    'no_shipping': 0,
+                    'quantity': 1,
+                    'currency_code': basket.currency
+                })
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+        context.update({'paypal_form': paypal_form,})
+        return context
+
+
+def delivery_info_json(request, **kwargs):
+    logger.debug('Step 1')
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = DeliveryForm(
+                request=request, 
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully add new participant'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+            return HttpResponse(
+                json.dumps(data), 
+                content_type='application/json'
+            )
+    return HttpResponseBadRequest()
