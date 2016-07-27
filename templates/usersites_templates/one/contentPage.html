@@ -80,18 +80,28 @@
 
                 <ul class="gallery">
                     {% for gallery_obj in site.user_site.organization.gallery_images %}
-                    <div class="col-sm-4 col-xs-4 portfolio-item">
-                        <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox portfolio-link" data-toggle="modal">
 
-                            <div class="caption">
-                                <div class="caption-content">
-                                    <i class="fa fa-search-plus fa-3x"></i>
+                        <div class="col-sm-4 col-xs-4 portfolio-item">
+                            <a href="{{ gallery_obj.image.original }}" data-lightbox="portfolio-images" title="" class=" portfolio-link" >
+
+                                <div class="caption">
+                                    <div class="caption-content">
+                                        <i class="fa fa-search-plus fa-3x"></i>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <img src="{{ gallery_obj.image.big }}" class="img-responsive" alt="">
-                        </a>
-                    </div>
+                                <div class="crop-portfolio">
+                                    <img src="{{ gallery_obj.image.original }}"  alt="">
+                                </div>
+                            </a>
+
+{#                        <a href="{{ gallery_obj.image.original }}" data-lightbox="portfolio-images" title="" class="fancybox" >#}
+{##}
+{##}
+{##}
+{#                                    <img src="{{ gallery_obj.image.original }}"  alt="">#}
+{#                            </a>#}
+                        </div>
 
                 {% endfor %}
                 </ul>
@@ -114,22 +124,22 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 contact-form">
 
-                    <form method="post" action="" class="clearfix">
+                    <form method="post" action="" class="clearfix" name="sentMessage" id="contactForm" novalidate>
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
+                            <input type="text" value="{{ form.name.value|default_if_none:"" }}" name="name" id="name" placeholder="{% trans 'Your name' %}">
                         </div>
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                            <input type="text" value="{{ form.email.value|default_if_none:"" }}" name="email" id="email" placeholder="{% trans 'Your email' %}">
                         </div>
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                            <input type="text" value="{{ form.phone.value|default_if_none:"" }}" name="phone" id="phone" placeholder="{% trans 'Your phone' %}">
                         </div>
 
                         <div class="contact-form-elem">
-                            <textarea name="message" id="" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
+                            <textarea name="message" id="message" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
                         </div>
                         {% csrf_token %}
 
