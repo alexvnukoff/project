@@ -115,3 +115,6 @@ class DeliveryForm(forms.Form):
                 map(lambda x: strip_tags(x), field_messages)
             )
         return errors
+        
+    def save(self, *args, **kwargs):
+        pass
