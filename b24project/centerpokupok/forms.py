@@ -5,6 +5,7 @@ import logging
 from django import forms
 from django.utils.translation import ugettext as _
 from django.forms.extras.widgets import SelectDateWidget
+from django.utils.html import strip_tags
 
 logger = logging.getLogger(__name__)
 
@@ -62,11 +63,11 @@ class OrderEmailForm(forms.Form):
         )
 
         if self.need_delivery:
-            self.fields['address'].requesired = True
+            self.fields['address'].required = True
             self.fields['address'].widget.attrs.update(
                 {'placeholder': 'Adress', 'rows': 4}
             )
-            self.fields['phone'].requesired = True
+            self.fields['phone'].required = True
             self.fields['phone'].widget.attrs.update(
                 {'placeholder': 'Phone'}
             )
@@ -74,3 +75,46 @@ class OrderEmailForm(forms.Form):
             del self.fields['address']
             del self.fields['phone']
             
+            
+class DeliveryForm(forms.Form):
+
+    first_name = forms.CharField(label=_('First Name'), required=True)
+    last_name = forms.CharField(label=_('Last Name'), required=False)
+    email = forms.CharField(label=_('Email'), required=True)
+    address = forms.CharField(label=_('Address'), required=True,
+                              widget=forms.Textarea)
+    phone = forms.CharField(label=_('Contact phone'), required=True)
+    
+    def __init__(self, *args, **kwargs):
+        self._request = kwargs.pop('request')
+        super(DeliveryForm, self).__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update(
+            {'placeholder': self.fields[field_name].label}
+        )
+
+    def get_errors_msg(self):
+        """
+        Return the errors as one string.
+        """
+        errors = []
+        for field_name, field_messages in self.errors.items():
+            errors.append('{0} : {1}' \
+                . format(field_name, ', ' \
+                    . join(map(lambda x: strip_tags(x), field_messages)))
+                )
+        return '; ' . join(errors)
+
+    def get_errors(self):
+        """
+        Return the errors as one string.
+        """
+        errors = {}
+        for field_name, field_messages in self.errors.items():
+            errors[field_name] = ', ' . join(
+                map(lambda x: strip_tags(x), field_messages)
+            )
+        return errors
+        
+    def save(self, *args, **kwargs):
+        pass
