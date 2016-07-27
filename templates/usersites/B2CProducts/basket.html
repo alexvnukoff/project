@@ -90,36 +90,6 @@
 {% endblock %}
 
 {% block js %}
-
-{{ block.super }}
-<script type="text/javascript">
-    var DELIVERY_URL = '/b2c-products/delivery.html';
-    $(function() {
-        // Для кнопки "Order by E-mail"
-        $('#order_by_email').on('click', function(event) {
-            event.preventDefault();
-            var url = $(this).attr('href');
-            if ($('#need_delivery').is(":checked")) {
-                url += '?need_delivery=true';
-            }
-            window.location.href = url;
-            return false;
-        });
-        
-        // Для кнопки-рисунка отправки информации на PayPal
-        var paypalForm = $('#paypal_form_layer > form'),
-            paypalFormButton = $(paypalForm).find('input[type="image"]:first');
-        if (paypalFormButton.length > 0) {
-            $(paypalFormButton).on('click', function(event) {
-                event.preventDefault();
-                if ($('#need_delivery').is(":checked")) {
-                    window.location.href = DELIVERY_URL;
-                } else {
-                    $(paypalForm).submit();
-                }
-                return false;
-            });        
-        }
-    });
-</script>    
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}

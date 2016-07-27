@@ -54,6 +54,7 @@
 
        <div class="col-md-8 contact-fields contact-fields-email">
         <form method="post" action="" class="clearfix">
+            
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.name }}
@@ -71,8 +72,20 @@
                     {{ form.message }}
                 </div>
             </div>
+            {% if form.need_delivery %}
+                <div class="control-group form-group">
+                    <div class="controls">
+                        {{ form.address }}
+                    </div>
+                </div>
+                <div class="control-group form-group">
+                    <div class="controls">
+                        {{ form.phone }}
+                    </div>
+                </div>
+            {% endif %}
 
-           {% csrf_token %}
+            {% csrf_token %}
 
             <button type="submit" class="btn special_offer__btn">{% trans 'Send' %}</button>
         </form>

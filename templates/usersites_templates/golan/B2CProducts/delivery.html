@@ -1,4 +1,4 @@
-{% extends 'usersites/index.html' %}
+{% extends 'usersites_templates/golan/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -39,8 +39,13 @@
 {% endblock %}
 
 {% block content %}
-<section class="content__info">
-    <h2>{% trans 'Your Order' %}</h2>
+<section class="content__info grid-layout cart">
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-12 col-lg-12">
+    <h2 class="page-header">{% trans 'Your Order' %}</h2>
     <p>&nbsp;</p>
     <table class="table table-striped" width="90%">
         <thead>
@@ -73,7 +78,9 @@
     <form id="delivery_form" method="post" action="{% url 'b2c_products:delivery_info_json' %}" class="clearfix">
         {% csrf_token %}
         {% for field in form %}
-            <p class="form_field">{{ field }}{% if field.field.required %}<span class="form_field_required">*</span>{% endif %}</p>
+            <div class="control-group form-group">
+                <p class="form_field controls">{{ field }}{% if field.field.required %}<span class="form_field_required">*</span>{% endif %}</p>
+            </div>
             <p id="{{ field.name }}_errors" class="form_field_error hide_layer"></>
         {% endfor %}
     </form>
@@ -81,6 +88,11 @@
         {{ paypal_form.render }}
     </div>
     {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}
 
