@@ -102,6 +102,14 @@
             {% if form.errors.message %}
                 <p style="color:red;">{{ form.errors.message.0 }}</p>
             {% endif %}
+
+            {% if form.errors.address %}
+                <p style="color:red;">{{ form.errors.address.0 }}</p>
+            {% endif %}
+
+            {% if form.errors.phone %}
+                <p style="color:red;">{{ form.errors.phone.0 }}</p>
+            {% endif %}
 </div>
     </section>
 
