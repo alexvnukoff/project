@@ -549,6 +549,11 @@ footer .footer-below {
     box-shadow: none;
 }
 
+.crop-portfolio{
+    height: 240px;
+    overflow: hidden;
+}
+
 .portfolio-modal .modal-content h2 {
     margin: 0;
     font-size: 3em;

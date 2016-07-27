@@ -16,7 +16,7 @@
 {#    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">#}
 {#    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick-theme.css' %}">#}
 {#    <link rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}">#}
-{#    <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />#}
+    <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
@@ -33,7 +33,7 @@
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/one/css/style.css' %}" />
     {% endif %}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/one/css/lightbox.css' %}" />
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
@@ -74,14 +74,15 @@
         <script src="{% static 'usersites/js/main.js' %}"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
         <script src="{% static 'usersites/usersites_templates/one/js/script.js' %}"></script>
+        <script src="{% static 'usersites/usersites_templates/one/js/lightbox.js' %}"></script>
+
 
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 
 
-    <script>
+    <script type="text/javascript" charset="utf-8">
     function initMap() {
         {% if site.user_site.organization.location %}
           {% with site.user_site.organization.location|split:"," as LatLng %}
@@ -105,6 +106,9 @@
         map: map
       });
     }
+
+
+
 
     </script>
 

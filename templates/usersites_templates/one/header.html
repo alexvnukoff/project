@@ -32,9 +32,13 @@
                     <li class="page-scroll">
                         <a href="#about">{% trans 'About us' %}</a>
                     </li>
-                    <li class="page-scroll">
-                        <a href="#portfolio">{% trans 'Gallery' %}</a>
-                    </li>
+
+                    {% if site.user_site.organization.gallery_images %}
+                        <li class="page-scroll">
+                            <a href="#portfolio">{% trans 'Gallery' %}</a>
+                        </li>
+                    {% endif %}
+
                     <li class="page-scroll">
                         <a href="#contact">{% trans 'Contact us' %}</a>
                     </li>
