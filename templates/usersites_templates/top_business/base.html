@@ -22,25 +22,23 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/bootstrap-theme.min.css' %}">
 
-
-    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan_purple/css/theme_w_purple.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/theme.css' %}">
 
     {% if LANGUAGE_BIDI %}
-        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/style_rtl.css' %}" />
     {% else %}
-        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/style.css' %}" />
     {% endif %}
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {# Include the header file, the header will put the main menu on top of every page #}
-    {% include 'usersites_templates/golan/header.html' %}
+    {% include 'usersites_templates/top_business/header.html' %}
 
     {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
     {% block slider %}  {% endblock %}
@@ -54,29 +52,31 @@
 
     {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
     {% block footer %}
-        {% include 'usersites_templates/golan/footer.html' %}
+        {% include 'usersites_templates/top_business/footer.html' %}
     {% endblock %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
-    <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
-    <script src="{% static 'usersites/js/angular.min.js' %}"></script>
-    <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
-    <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
-    <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'usersites/js/basket.js' %}"></script>
-    <script src="{% static 'usersites/js/main.js' %}"></script>
-    <script src="{% static 'usersites/usersites_templates/golan/js/script.js' %}"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'usersites/js/basket.js' %}"></script>
+        <script src="{% static 'usersites/js/main.js' %}"></script>
+        <script src="{% static 'usersites/usersites_templates/top_business/js/script.js' %}"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" charset="utf-8">
+
+    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+
+
+    <script>
     function initMap() {
         {% if site.user_site.organization.location %}
           {% with site.user_site.organization.location|split:"," as LatLng %}
@@ -106,5 +106,4 @@
 {% block js %}{% endblock %}
 
 </body>
-</html>
 

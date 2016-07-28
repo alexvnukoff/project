@@ -1,0 +1,32 @@
+{% extends 'usersites_templates/top_business/index.html' %}
+{% load CustomFilters %}
+{% load content_tags %}
+
+
+{% block content %}
+    {{ block.super }}
+
+
+    <div class="container gallery-slider-container hidden-xs">
+	    <div class="row">
+	      	<h1>{{ site.user_site.organization.name }}</h1>
+	    </div>
+
+	    <div class="row">
+	    	<div class="col-md-4">
+	    		<p>
+                    {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                </p>
+	    	</div>
+
+	    	<div id="no-more-tables" class="col-md-8 about-page-content">
+	    		<p>
+	    			{{ site.user_site.organization.description|cleanHtml|safe }}
+                </p>
+	    	</div>
+	    </div>
+    </div>
+
+    {% b2c_products 'B2CProducts/banner_products.html' 9 %}
+
+{% endblock %}

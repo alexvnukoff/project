@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if news %}
+
+        <div class="row">
+            <h1><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h1>
+        </div>
+
+        <div class="row main-news__row">
+            <div class="panel panel-default main-news__panel">
+                <div class="panel-body main-news__panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="main-news__list">
+
+                                {% for article in news %}
+                                    <li class="news-item clear">
+                                        {% if article.image %}
+                                            <img src="{{ article.image.small }}" alt="" class="main-news__img">
+                                        {% endif %}
+
+                                        <h3>{{ article.title }}</h3>
+
+                                        {% if article.short_description %}
+                                            <p>{{ article.short_description|force_escape|linebreaks|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
+                                        {% else %}
+                                            <p>{{ article.content|cleanHtml|safe|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
+                                        {% endif %}
+
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+{% endif %}
