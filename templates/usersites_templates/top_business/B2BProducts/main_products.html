@@ -1,0 +1,53 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if products %}
+
+    <div class="container prod-container">
+
+    	<div class="row">
+	    	<h1><a href="{% url 'b2b_products:main' %}">{% trans "B2B Products" %}</a></h1>
+	    </div>
+
+{#	    <!-- consider max-height with visible attr -->#}
+        {# Row of products in main page. Template holds 4 products in main page #}
+	    <div class="row main-products__row">
+
+            {% for product in products %}
+                <div class="col-xs-12 col-md-3 col-sm-6 main-products__col">
+                    <div class="thumbnail thumbnail__page">
+                        {% if product.image %}
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="main-products__img">
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" class="main-products__img">
+                        {% endif %}
+
+                        <div class="caption">
+                            <h3><a href="{% url 'b2b_products:detail' product.slug product.pk %}">{{ product.name|truncatewords:8 }}</a></h3>
+
+                            <p class="main-products__price">
+                                {% if product.cost %}
+                                    {{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                        <span>
+
+                                            {% if product.cost != product.get_discount_price %}
+                                                <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                            {% endif %}
+
+                                        </span>
+                                {% endif %}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+		</div>
+
+	</div>
+
+{% endif %}{# End of products section. #}

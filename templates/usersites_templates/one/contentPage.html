@@ -124,18 +124,21 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 contact-form">
 
-                    <form method="post" action="" class="clearfix" name="sentMessage" id="contactForm" novalidate>
+                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm" novalidate>
+
+                        <input type="hidden" name="co_id" value="{{ site.pk }}">
+                        <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.name.value|default_if_none:"" }}" name="name" id="name" placeholder="{% trans 'Your name' %}">
+                            <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" id="name" placeholder="{% trans 'Your name' %}">
                         </div>
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.email.value|default_if_none:"" }}" name="email" id="email" placeholder="{% trans 'Your email' %}">
+                            <input type="text" class="form-control" value="{{ form.email.value|default_if_none:"" }}" name="email" id="email" placeholder="{% trans 'Your email' %}">
                         </div>
 
                         <div class="contact-form-elem">
-                            <input type="text" value="{{ form.phone.value|default_if_none:"" }}" name="phone" id="phone" placeholder="{% trans 'Your phone' %}">
+                            <input type="text" class="form-control" value="{{ form.phone.value|default_if_none:"" }}" name="phone" id="phone" placeholder="{% trans 'Your phone' %}">
                         </div>
 
                         <div class="contact-form-elem">
@@ -143,7 +146,7 @@
                         </div>
                         {% csrf_token %}
 
-                        <button>{% trans 'Send' %}</button>
+                        <button type="submit">{% trans 'Send' %}</button>
 
                     </form>
 
