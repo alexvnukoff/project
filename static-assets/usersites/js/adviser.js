@@ -5,10 +5,11 @@
 var START_TIMEOUT = 2000;
 var ADVISER_ID = 'online_adviser';
 var ADVISER_DIALOG_ID = 'online_adviser_dialog';
-
+var ADVISER_URL = '/messages/adviser/';
 
 function initAdviser() {
     // Слой для вызова 
+    var isLoaded = false;
     var adviserMainDiv =  $('<div/>').addClass('online_adviser').attr('id', ADVISER_ID);
     $(adviserMainDiv).html('<span>Онлайн-конультант</span>').hide();
     $('body').append(adviserMainDiv);
@@ -20,18 +21,34 @@ function initAdviser() {
         $(adviserMainDialogDiv).hide();
         $('body').append(adviserMainDialogDiv);
     }
+    var launcherPosition = $(adviserMainDiv).position(),
+        launcherWidth = $(adviserMainDiv).width();
+    
     $(adviserMainDialogDiv).dialog({
-        autoOpen: false
+        autoOpen: false,
+        height: 320,
+        width: launcherWidth + 100,
+        minWidth: launcherWidth + 50,
+        position: { my: 'center center-200', of: '#' + ADVISER_ID},
     });
     $(adviserMainDiv).click(function(event) {
         event.preventDefault();
-        var launcherPosition = $(adviserMainDiv).position(),
-            launcherWidth = $(adviserMainDiv).width();
-        $(adviserMainDialogDiv).dialog('open');
-        $(adviserMainDialogDiv).dialog('widget').css('height', '280px');
-        //$(adviserMainDialogDiv).dialog('widget').css('width', launcherWidth);
-        //$(adviserMainDialogDiv).dialog('widget').css('minWidth', launcherWidth);
-        $(adviserMainDialogDiv).dialog('option', 'position', 'center');
+        if (!isLoaded) {
+            $.getJSON(ADVISER_URL, function(data) {
+                if ('title' in data) {
+                    $(adviserMainDialogDiv).dialog('option', 'title', data.title);
+                }
+                if ('msg' in data) {
+                    $(adviserMainDialogDiv).html(data.msg);
+                }
+                var action = ($(adviserMainDialogDiv).dialog('isOpen')) ? 'close' : 'open';
+                $(adviserMainDialogDiv).dialog(action);
+                isLoaded = true;
+            });
+        } else {
+            var action = ($(adviserMainDialogDiv).dialog('isOpen')) ? 'close' : 'open';
+            $(adviserMainDialogDiv).dialog(action);
+        }
         return false;                          
     });
     $(adviserMainDiv).show('slow');

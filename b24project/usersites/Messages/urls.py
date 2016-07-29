@@ -10,10 +10,12 @@ from usersites.Messages.views import (
     UsersitesChatsListView, 
     UsersitesChatMessagesView,
     add_to_chat,
+    online_adviser,
 )  
 
 urlpatterns = [
     url(r'^$', UsersitesChatsListView.as_view(), name='main'),
+    url(r'^adviser/$', online_adviser, name='online_adviser'),
     url(r'^chats/$', UsersitesChatsListView.as_view(), 
         name="chats_list"),
     url(r'^chats/page(?P<page>[0-9]+)?/$', UsersitesChatsListView.as_view(), 
