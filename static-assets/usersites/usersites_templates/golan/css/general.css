@@ -382,7 +382,7 @@ collapse the menu on 991px. */
 .carousel-text li {
     color: #fff;
     text-transform: uppercase;
-    font-size: 2em;
+    font-size: 1em;
 	cursor: pointer;
 }
 
