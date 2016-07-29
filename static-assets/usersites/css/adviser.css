@@ -1,0 +1,21 @@
+.online_adviser {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    padding: 10px 50px;
+    border-radius: 2px 15px 15px 2px;
+    background: #00af53;
+    font-weight: bold;
+    color: #ffffff;
+    z-index: 101;
+}
+
+.online_adviser:hover {
+    background-color: #008c42;
+}
+
+.online_adviser span {
+    cursor: default;
+}
+
+.
