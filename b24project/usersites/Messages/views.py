@@ -10,6 +10,8 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
+
 from guardian.mixins import LoginRequiredMixin
 from b24online.models import (MessageChat, Message)
 from b24online.cbv import (ItemDetail, ItemsList)
@@ -117,3 +119,16 @@ class UsersitesChatMessagesView(LoginRequiredMixin, UserTemplateMixin,
             'messages': messages,
         }
         return context
+
+
+def online_adviser(request, *args, **kwargs):
+    template_name = 'usersites/Messages/onlineAdviser.html'
+    data = {
+        'title': u'Ваш вопрос',
+        'msg': render_to_string(template_name, {}, 
+            context_instance=RequestContext(request))
+    }
+    return HttpResponse(
+        json.dumps(data),
+        content_type='application/json'
+    )

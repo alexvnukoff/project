@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="container-fluid" id="adviser_chat">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <form id="new_message_form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea id="id_content" name="content" class="form-control" 
+                    rows="3" cols="30" style="width: 180px;"
+                    placeholder="{% trans 'Enter Your message' %}"></textarea>
+                </div>
+                <button class="btn btn-primary btn-sm">{% trans 'Send message' %}</button>
+            </form>
+        </div>
+    </div>
+</div>            
+
