@@ -274,25 +274,27 @@
                 <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
               {% endif %}
             </div>
-                <div>
-                    <div class="help-desk">
-                        <div class="title">{% trans "Shortcuts" %}</div>
-                        <span class="titlesub">{% trans "Business" %}</span>
-                        <ul class="list-shortcuts">
-                            <li><div class="shortcut"><a href="{% url 'companies:add' %}">{% trans "Create a Company Account" %}</a></div></li>
-                            <li><div class="shortcut"><a href="{% url 'proposal:add' %}">{% trans "Add Business Proposal" %}</a></div></li>
-                            <li><div class="shortcut"><a href="{% url 'products:add' %}">{% trans "Add B2B Product" %}</a></div></li>
-                            <li><div class="shortcut"><a href="{% url 'products:addB2C' %}">{% trans "Add B2C Product" %}</a></div></li>
-                            <li><div class="shortcut"><a href="{% url 'products:producer_add' %}">{% trans "Add Product Producer" %}</a></div></li>
-                        </ul>
+            {% comment %}
+            <div>
+              <div class="help-desk">
+                <div class="title">{% trans "Shortcuts" %}</div>
+                <span class="titlesub">{% trans "Business" %}</span>
+                <ul class="list-shortcuts">
+                  <li><div class="shortcut"><a href="{% url 'companies:add' %}">{% trans "Create a Company Account" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'proposal:add' %}">{% trans "Add Business Proposal" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:add' %}">{% trans "Add B2B Product" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:addB2C' %}">{% trans "Add B2C Product" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:producer_add' %}">{% trans "Add Product Producer" %}</a></div></li>
+                </ul>
 
-                        <span class="titlesub">{% trans "Jobs &amp; Vacancies" %}</span>
-                        <ul class="list-shortcuts">
-                            <li><div class="shortcut"><a href="{% url 'vacancy:add' %}">{% trans "Post a Vacancy" %}</a></div></li>
-                            <li><div class="shortcut"><a href="{% url 'resume:add' %}">{% trans "Post Your Resume Online" %}</a></div></li>
-                        </ul>
-                    </div>
-                </div>
+                <span class="titlesub">{% trans "Jobs &amp; Vacancies" %}</span>
+                <ul class="list-shortcuts">
+                  <li><div class="shortcut"><a href="{% url 'vacancy:add' %}">{% trans "Post a Vacancy" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'resume:add' %}">{% trans "Post Your Resume Online" %}</a></div></li>
+                </ul>
+              </div>
+            </div>
+            {% endcomment %}
                 {% get_top_on_page item %}
                  <div class="banner-wrapper-right">
                  {% get_banner "Right 1" item %}

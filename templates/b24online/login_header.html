@@ -32,9 +32,15 @@
               {% endfor %}
             </div>
             </div>
-    {% if user.email %}
-        {% trans 'Profile' %}:
-         <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
+
+    {% if request.user.is_authenticated %}
+    <div style="display:inline-block;width:auto;margin-top:2px;">
+
+    <a href="{% url "profile:main" %}" style="text-decoration:none">
+    <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:-4px;width:18px;">
+    </a>
+    <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
+    </div>
     {% endif %}
 
         {% if user.is_authenticated %}
