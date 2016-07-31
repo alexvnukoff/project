@@ -36,18 +36,21 @@
                     {% else %}
                         <div class="item fill">
                     {% endif %}
-                            <img src="{{ i.image.original }}" >
-                            {% if i.description %}
-                                {% if i.link %}
-                                    <div class="slider-desc">
-                                        <a href="{{  i.title }}">{{ i.description }}</a>
-                                    </div>
-                                {% else %}
-                                    <div class="slider-desc">
-                                        {{ i.description }}
-                                    </div>
-                                {% endif %}
-                            {% endif %}
+
+		    {% if i.link %}
+			 <a href="{{ i.link }}" title="{{ i.description }}">
+			    <img src="{{ i.image.original }}" alt="{{ i.description }}" title="{{ i.description }}">
+			    {% if i.description %}
+			       <div class="slider-desc">{{ i.description }}</div>
+			    {% endif %}
+			 </a>
+		    {% else %}
+			    <img src="{{ i.image.original }}" alt="{{ i.description }}" title="{{ i.description }}">
+			    {% if i.description %}
+			       <div class="slider-desc">{{ i.description }}</div>
+			    {% endif %}
+		    {% endif %}
+
 {#                            <div class="slider-desc">#}
 {#                                <a href="/">slider title and description is here</a>#}
 {#                            </div>#}
