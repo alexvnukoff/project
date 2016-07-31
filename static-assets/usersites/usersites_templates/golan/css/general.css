@@ -391,6 +391,10 @@ collapse the menu on 991px. */
     font-size: 0.5em;
 }
 
+.carousel-text .nav{
+	line-height: 0;
+}
+
 /*---------- About main page Styling ----------*/
 /* The about section is in: main page */
 .about-main{
