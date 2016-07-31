@@ -3,10 +3,13 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% block content %}
+
 <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 {% csrf_token %}
     <div class="user-profile">
       <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
+
+
         <div class="profile-l">
             <div class="avatar">
                 {% if form.initial.avatar %}
@@ -22,6 +25,12 @@
             <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
             <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
         </div>
+
+      <div style="display:block;margin:0 158px 5px 158px;">
+      <label style="font-weight:bold;display:block;margin:5px 0;">{% trans 'Email' %}</label>
+      <div style="border:1px solid #c5c5c5;background:#f1f1f1;width:222px;padding:4px;"><strong>{{ request.user.email }}</strong></div>
+      </div>
+
         <ul class="profile-clumn">
             <li>
                 <label>{% trans 'Last name' %}</label>

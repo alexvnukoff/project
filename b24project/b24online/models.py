@@ -1259,7 +1259,7 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                               sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     mobile_number = models.CharField(max_length=255, blank=True, null=True)
-    site = models.URLField(max_length=255, blank=True, null=True)
+    site = models.CharField(max_length=255, blank=True, null=True)
     profession = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey(Country)
     birthday = models.DateField(null=True, blank=True)
