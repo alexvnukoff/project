@@ -316,6 +316,29 @@ h3 a:focus{
 }
 
 
+/* ----------- Slider Styling -------------------- */
+.slider-desc{
+    position: absolute;
+    bottom: 30%;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    color: #fff;
+    width: 100%;
+}
+
+.slider-desc a {
+    color: #fff;
+    text-decoration: none;
+}
+
+@media(max-width:767px) {
+    .slider-desc{
+        bottom: 20%;
+        font-size: 1em;
+    }
+}
+
 /* ----------- Proposal Styling -------------------- */
 .proposal-thumb .panel-body>p{
     font-size: 1em;

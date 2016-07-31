@@ -33,13 +33,26 @@
                 {% for i in site.user_site.slider_images %}
                     {% if forloop.first %}
                         <div class="item active ">
-                            <img src="{{ i.image.original }}" >
-                        </div>
                     {% else %}
                         <div class="item fill">
-                            <img src="{{ i.image.original }}" >
-                        </div>
                     {% endif %}
+                            <img src="{{ i.image.original }}" >
+                            {% if i.description %}
+                                {% if i.title %}
+                                    <div class="slider-desc">
+                                        <a href="{{  i.title }}">{{ i.description }}</a>
+                                    </div>
+                                {% else %}
+                                    <div class="slider-desc">
+                                        {{ i.description }}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+{#                            <div class="slider-desc">#}
+{#                                <a href="/">slider title and description is here</a>#}
+{#                            </div>#}
+
+                        </div>{# End of item div #}
                 {% endfor %}
             {% endif %}
 
