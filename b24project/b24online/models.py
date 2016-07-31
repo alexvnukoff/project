@@ -1271,6 +1271,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     TYPES = [('businessman', _('Businessman')), ('individual', _('Individual'))]
     user_type = models.CharField(max_length=255, default='individual', choices=TYPES)
 
+    contacts = models.CharField(max_length=1000, blank=True, null=True)
+    metadata = JSONField(default=dict())
+
     def upload_images(self):
         from core import tasks
         params = {
@@ -1306,6 +1309,18 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
             return False
 
         return user.is_commando or user.is_superuser or self.user == user
+
+    @property
+    def facebook(self):
+        if self.metadata:
+            return self.metadata.get('facebook', '')
+        return None
+
+    @property
+    def linkedin(self):
+        if self.metadata:
+            return self.metadata.get('linkedin', '')
+        return None
 
 
 class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
