@@ -20,13 +20,15 @@ class ProfileForm(forms.ModelForm):
         self.fields['site'].widget.attrs.update({'class': 'text'})
         self.fields['profession'].widget.attrs.update({'class': 'text'})
         self.fields['birthday'].widget.attrs.update({'class': 'date'})
+        self.fields['contacts'].widget.attrs.update({'class': 'textarea'})
 
     class Meta:
         model = Profile
         fields = ('country', 'first_name', 'middle_name', 'last_name', 'avatar', 'mobile_number',
-                  'site', 'profession', 'sex', 'user_type')
+                  'site', 'profession', 'sex', 'user_type', 'contacts')
         widgets = {
             'sex': forms.RadioSelect,
-            'user_type': forms.RadioSelect
+            'user_type': forms.RadioSelect,
+            'contacts': forms.Textarea
         }
 

@@ -112,6 +112,14 @@
             </li>
         </ul>
 
+        <div class="profile-contacts">
+              <label>{% trans 'Contacts' %}</label>
+              {% if form.errors.contacts %}
+                  <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
+              {% endif %}
+              {{ form.contacts }}
+        </div>
+
         <div class="profilebutton">
 
             <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
