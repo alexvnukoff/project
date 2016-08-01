@@ -44,7 +44,7 @@ class MessageForm(forms.ModelForm):
         model = Message
         fields = ('subject', 'content')
 
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, request, compact=False, *args, **kwargs):
         self.request = request
         self.organization = get_current_site().user_site.organization
         self.chat = kwargs.pop('chat', None)
@@ -58,6 +58,10 @@ class MessageForm(forms.ModelForm):
         for field_name in ('subject', 'content', 'recipient'):
             self.fields[field_name].widget.attrs\
                 .update({'class': 'form-control'})
+        if compact:
+            self.fields['content'].widget.attrs\
+                .update({'rows': 3, 'cols': 30})
+            
 
     def clean(self):
         chat = self.cleaned_data.get('chat')
