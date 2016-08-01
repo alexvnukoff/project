@@ -80,8 +80,10 @@ border-color:rgba(0,0,0,0.3);
     <div class="col-lg-12">
     <center><a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a></center>
 
+    {% if object.profile.contacts %}
     <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
     <p style="margin:5px 0 15px 0;text-align:center;">{{ object.profile.contacts }}</p>
+    {% endif %}
 
     {% if object.profile.mobile_number %}
     <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h2>
