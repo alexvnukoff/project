@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.http import (HttpResponse, HttpResponseRedirect,
                     HttpResponseBadRequest, JsonResponse, HttpResponseNotFound)
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
@@ -20,10 +20,12 @@ from django.core.mail import send_mail
 
 from b24online.cbv import ItemCreate
 from b24online.forms import EditorImageUploadForm, FeedbackForm
-from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
+from b24online.models import (Chamber, B2BProduct, Greeting, BusinessProposal,
+                    Exhibition, Organization, Branch, User)
 from appl import func
 from django.core.mail import EmailMessage
 from b24online.Leads.utils import GetLead
+
 
 logger = logging.getLogger(__name__)
 
@@ -307,4 +309,15 @@ def feedback_form(request):
             return JsonResponse({}, status=403)
     else:
         return HttpResponseNotFound()
+
+
+def get_profile_card(request, user_id):
+    obj = get_object_or_404(User, pk=user_id)
+
+    return render_to_response(
+            'b24online/Profile/Public/contentPage.html',
+            {'object': obj},
+            context_instance=RequestContext(request)
+            )
+
 

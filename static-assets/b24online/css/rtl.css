@@ -231,7 +231,7 @@ li.big-coupon .top .sale {left:470px !important;}
 select#id_language {float:right;}
 
 .language-navi {float:right;margin:5px 0 0 15px;}
-.language-navi-dropdown {margin:-10px -5 0 0;z-index:99;}
+.language-navi-dropdown {margin:-10px -101px 0 0;z-index:99;}
 .language-navi-dropdown img {width:24px;}
 .language-navi:hover .language-navi-dropdown {display:block;}
 

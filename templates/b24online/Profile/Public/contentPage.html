@@ -1,0 +1,81 @@
+{% extends "b24online/Profile/Public/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+
+a.main-button {
+display: inline-block;
+margin:10px 0 20px 0;
+color: #666;
+background-color: #eee;
+text-transform: uppercase;
+letter-spacing: 2px;
+font-size: 12px;
+padding: 10px 30px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border: 1px solid rgba(0,0,0,0.3);
+border-bottom-width: 3px;
+outline:none;
+}
+
+a.main-button:hover {
+background-color: #e3e3e3;
+border-color: rgba(0,0,0,0.5);
+}
+  
+a.main-button:active {
+background-color: #dedede;
+border-color: rgba(0,0,0,0.9);
+}
+
+a.main-button {text-decoration:none;}
+a.main-button {
+background-color:#6cbb4a;
+border-color:rgba(0,0,0,0.2);
+text-shadow:0 1px 0 rgba(0,0,0,0.5);
+color:#fff;
+}
+
+a.main-button:hover {
+background-color: #75cb52;
+border-color:rgba(0,0,0,0.3);
+}
+
+a.main-button:active {
+background-color:#75cb52;
+border-color:rgba(0,0,0,0.3);
+}
+
+</style>
+
+<div class="container-fluid" style="border-top:1px solid #dedede;">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <center><img src="{{ object.profile.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede"></center>
+      <h1 style="text-align:center;margin:15px 0 0 0;">{{ object.profile }}</h1>
+      <p style="text-align:center;margin:0;color:#848484;">{{ object.profile.country }}</p>
+      <h2 style="text-align:center;margin:10px 0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h2>
+    </div>
+
+  <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:10px;padding-bottom:20px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
+    <p style="text-align:center;font-size:16px;">
+    <span class="icon-globe" style="font-size:16px;color:#2a92ce"></span>
+
+    <a href="{{ object.profile.site }}">{{ object.profile.site }}</a>
+    </p>
+
+    <center><a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a></center>
+    <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
+    <p style="margin:5px 0;text-align:center;">{{ object.profile.contacts }}</p>
+  </div>
+
+</div>
+
+
+{% endblock %}

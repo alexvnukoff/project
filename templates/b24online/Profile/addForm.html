@@ -9,7 +9,6 @@
     <div class="user-profile">
       <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
 
-
         <div class="profile-l">
             <div class="avatar">
                 {% if form.initial.avatar %}
@@ -24,6 +23,8 @@
             {% endif %}
             <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
             <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
+
+            <p style="font-size:15px"><a href="{% url 'get_profile' request.user.id  %}"><span class="icon-user">{% trans 'Profile' %}</span></a></p>
         </div>
 
       <div style="display:block;margin:0 158px 5px 158px;">
@@ -113,7 +114,7 @@
         </ul>
 
         <div class="profile-contacts">
-              <label>{% trans 'Contacts' %}</label>
+              <label>{% trans 'Adress' %}</label>
               {% if form.errors.contacts %}
                   <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
               {% endif %}

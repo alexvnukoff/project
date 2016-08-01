@@ -96,6 +96,7 @@ urlpatterns = [
     url(r'^upload/$', b24online.views.editor_upload, name="upload_editor_image"),
     url(r'^feedback/send/email/$', b24online.views.feedback_form),
     url(r'^leads/', include(b24online.Leads.urls, namespace='leads')),
+    url('id(?P<user_id>.+)/$', b24online.views.get_profile_card, name='get_profile'),
 ]
 
 if settings.DEBUG:
