@@ -110,6 +110,24 @@
 {#                    {% endif %}#}
 
                 <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
+              {# Registration. login and logout #}
+              {% if user.is_authenticated %}
+                {% get_messages_number as messages_number %}
+                <li><a href="{% url 'messages:main' %}">
+                  <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}</a>
+                </li>
+                <li><a href="{% url 'my_profile' %}">{% trans 'Profile' %}</a></li>
+                <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
+              {% else %}
+                <li>
+                  <a href="{% url 'registration_register' %}" class="dialog-open"
+                    data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                </li>
+                <li>
+                  <a href="{% url 'auth_login' %}" class="dialog-open"
+                    data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a>
+                </li>
+              {% endif %}
 
             </ul>
 

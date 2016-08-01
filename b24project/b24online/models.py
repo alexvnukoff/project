@@ -120,7 +120,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         """Return the user's full name"""
-        return self.profile.full_name if self.profile else self.email
+        try:
+            return self.profile.full_name if self.profile else self.email
+        except Exception as exc:
+            return self.email
 
     @property
     def is_staff(self):
