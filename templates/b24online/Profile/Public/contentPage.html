@@ -64,15 +64,33 @@ border-color:rgba(0,0,0,0.3);
     </div>
 
   <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:10px;padding-bottom:20px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
-    <p style="text-align:center;font-size:16px;">
-    <span class="icon-globe" style="font-size:16px;color:#2a92ce"></span>
 
-    <a href="{{ object.profile.site }}">{{ object.profile.site }}</a>
-    </p>
+    {% if object.profile.mobile_number %}
+    <div class="col-lg-12">
+      <p style="text-align:center;font-size:16px;margin:20px 0 10px 0;">
+      <span class="icon-globe" style="font-size:16px;color:#2a88b0;"></span>
+      <a href="{{ object.profile.site }}">{{ object.profile.site }}</a>
+      </p>
+    </div>
+    {% else %}
+    &nbsp;
+    {% endif %}
 
+
+    <div class="col-lg-12">
     <center><a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a></center>
+
     <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
-    <p style="margin:5px 0;text-align:center;">{{ object.profile.contacts }}</p>
+    <p style="margin:5px 0 15px 0;text-align:center;">{{ object.profile.contacts }}</p>
+
+    {% if object.profile.mobile_number %}
+    <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h2>
+    <p style="margin:5px 0;text-align:center;">{{ object.profile.mobile_number }}</p>
+    {% endif %}
+    </div>
+
+
+
   </div>
 
 </div>
