@@ -123,9 +123,11 @@ class UsersitesChatMessagesView(LoginRequiredMixin, UserTemplateMixin,
 
 def online_adviser(request, *args, **kwargs):
     template_name = 'usersites/Messages/onlineAdviser.html'
+    form = MessageForm(request, compact=True)
+    context = {'new_message_form': form}
     data = {
         'title': u'Ваш вопрос',
-        'msg': render_to_string(template_name, {}, 
+        'msg': render_to_string(template_name, context, 
             context_instance=RequestContext(request))
     }
     return HttpResponse(

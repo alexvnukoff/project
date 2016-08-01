@@ -26,10 +26,10 @@ function initAdviser() {
     
     $(adviserMainDialogDiv).dialog({
         autoOpen: false,
-        height: 320,
-        width: launcherWidth + 100,
-        minWidth: launcherWidth + 50,
-        position: { my: 'center center-200', of: '#' + ADVISER_ID},
+        height: 450,
+        width: launcherWidth + 200,
+        minWidth: launcherWidth + 150,
+        position: { my: 'center center-250', of: '#' + ADVISER_ID},
     });
     $(adviserMainDiv).click(function(event) {
         event.preventDefault();
