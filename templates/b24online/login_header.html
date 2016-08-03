@@ -37,7 +37,11 @@
     <div style="display:inline-block;width:auto;margin-top:2px;">
 
     <a href="{% url "profile:main" %}" style="text-decoration:none">
+    {% if request.user.profile.avatar %}
     <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:-4px;width:18px;">
+    {% else %}
+    <div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin-top:-4px;border:1px solid #aeaeae;"></div>
+    {% endif %}
     </a>
     <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
     </div>
