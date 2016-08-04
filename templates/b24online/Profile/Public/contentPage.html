@@ -85,19 +85,19 @@ opacity:0.8;
         {% endif %}
 
         {% if object.profile.site %}
-        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Site' %}</h2>
+        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Site' %}</h4>
         <p style="margin:5px 0 15px 0;"><a href="{{ object.profile.site }}">{{ object.profile.site }}</a></p>
         {% endif %}
 
         {% if object.profile.mobile_number %}
-        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h2>
+        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h4>
         <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
         {% endif %}
 
         <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a>
 
         {% if object.profile.contacts %}
-        <h4 style="margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
+        <h4 style="margin:5px 0;color:#828282;">{% trans 'Adress' %}</h4>
         <p style="margin:5px 0 15px 0;">{{ object.profile.contacts }}</p>
         {% endif %}
 
