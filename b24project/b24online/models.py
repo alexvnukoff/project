@@ -1325,6 +1325,24 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
             return self.metadata.get('linkedin', '')
         return None
 
+    @property
+    def co(self):
+        if self.metadata:
+            return self.metadata.get('co', '')
+        return None
+
+    @property
+    def co_slogan(self):
+        if self.metadata:
+            return self.metadata.get('co_slogan', '')
+        return None
+
+    @property
+    def co_description(self):
+        if self.metadata:
+            return self.metadata.get('co_description', '')
+        return None
+
 
 class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)

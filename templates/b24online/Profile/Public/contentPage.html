@@ -51,51 +51,59 @@ background-color:#75cb52;
 border-color:rgba(0,0,0,0.3);
 }
 
+a span.ophover {
+opacity:1;
+}
+
+a span.ophover:hover {
+opacity:0.8;
+}
+
 </style>
 
 <div class="container-fluid" style="border-top:1px solid #dedede;">
 
   <div class="row">
-    <div class="col-lg-12">
-      <center><img src="{{ object.profile.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede"></center>
-      <h1 style="text-align:center;margin:15px 0 0 0;">{{ object.profile }}</h1>
-      <p style="text-align:center;margin:0;color:#848484;">{{ object.profile.country }}</p>
-      <h2 style="text-align:center;margin:10px 0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h2>
+    <div class="col-lg-12" style="text-align:center">
+      <img src="{{ object.profile.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede">
+      <h1 style="margin:15px 0 0 0;">{{ object.profile }}</h1>
+      {% comment %}<p style="margin:0;color:#848484;">{{ object.profile.country }}</p>{% endcomment %}
+      <h3 style="margin:0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h3>
+
+      {% if object.profile.facebook %}<a href="{{ object.profile.facebook }}"><span class="ophover icon-facebook-official"></span></a>{% endif %}
+      {% if object.profile.linkedin %}<a href="{{ object.profile.linkedin }}"><span class="ophover icon-linkedin-squared"></span></a>{% endif %}
+
     </div>
 
-  <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:10px;padding-bottom:20px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
+  <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:20px;padding-bottom:10px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
+    <div class="col-lg-12" style="margin-top:20px;text-align:center;">
 
-    {% if object.profile.mobile_number %}
-    <div class="col-lg-12">
-      <p style="text-align:center;font-size:16px;margin:20px 0 10px 0;">
-      <span class="icon-globe" style="font-size:16px;color:#2a88b0;"></span>
-      <a href="{{ object.profile.site }}">{{ object.profile.site }}</a>
-      </p>
+        {% if object.profile.co %}
+            <h3 style="text-align:center;margin:0;padding:0;">{{ object.profile.co }}</h3>
+            {% if object.profile.co_slogan %}<p style="margin:0;color:#828282">{{ object.profile.co_slogan }}</p>{% endif %}
+            {% if object.profile.co_description %}<p style="margin:0;">{{ object.profile.co_description|linebreaks }}</p>{% endif %}
+        {% endif %}
+
+        {% if object.profile.site %}
+        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Site' %}</h2>
+        <p style="margin:5px 0 15px 0;"><a href="{{ object.profile.site }}">{{ object.profile.site }}</a></p>
+        {% endif %}
+
+        {% if object.profile.mobile_number %}
+        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h2>
+        <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
+        {% endif %}
+
+        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a>
+
+        {% if object.profile.contacts %}
+        <h4 style="margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
+        <p style="margin:5px 0 15px 0;">{{ object.profile.contacts }}</p>
+        {% endif %}
+
     </div>
-    {% else %}
-    &nbsp;
-    {% endif %}
-
-
-    <div class="col-lg-12">
-    <center><a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a></center>
-
-    {% if object.profile.contacts %}
-    <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Adress' %}</h2>
-    <p style="margin:5px 0 15px 0;text-align:center;">{{ object.profile.contacts }}</p>
-    {% endif %}
-
-    {% if object.profile.mobile_number %}
-    <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h2>
-    <p style="margin:5px 0;text-align:center;">{{ object.profile.mobile_number }}</p>
-    {% endif %}
-    </div>
-
-
-
   </div>
-
+  
 </div>
-
 
 {% endblock %}

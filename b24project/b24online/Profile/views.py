@@ -22,7 +22,13 @@ class ProfileUpdate(ItemUpdate):
             return Profile.objects.create(user=self.request.user)
 
     def form_valid(self, form):
-        form.instance.birthday = form.cleaned_data.get('birthday', None)
+        cd = form.cleaned_data
+        form.instance.birthday = cd.get('birthday', None)
+        form.instance.metadata['facebook'] = cd.get('facebook', None)
+        form.instance.metadata['linkedin'] = cd.get('linkedin', None)
+        form.instance.metadata['co'] = cd.get('co', None)
+        form.instance.metadata['co_slogan'] = cd.get('co_slogan', None)
+        form.instance.metadata['co_description'] = cd.get('co_description', None)
         result = super().form_valid(form)
 
         if form.changed_data:

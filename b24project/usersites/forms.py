@@ -95,7 +95,7 @@ class ExtraParamsForm(forms.Form):
         )
         data = dict(
             [(field_name, field_value) for field_name, field_value \
-                in self.cleaned_data.items() 
+                in self.cleaned_data.items()
                 if field_name in self.valuable_fields])
         self.request.session[uuid_key] = data
         if self.image_fields:
@@ -107,7 +107,7 @@ class ExtraParamsForm(forms.Form):
                     full_path = (os.path.join(settings.MEDIA_ROOT, filepath))\
                         .replace('\\', '/')
                     utils.upload_images({'file': full_path})
-        
+
 
 def create_extra_form(instance, request):
     """

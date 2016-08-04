@@ -24,7 +24,7 @@
             <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
             <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
 
-            <p style="font-size:15px"><a href="{% url 'get_profile' request.user.id  %}"><span class="icon-user">{% trans 'Profile' %}</span></a></p>
+            <p style="font-size:15px"><a href="{% url 'get_profile' request.user.id  %}"><span class="icon-user">{% trans 'Business Card' %}</span></a></p>
         </div>
 
       <div style="display:block;margin:0 158px 5px 158px;">
@@ -70,6 +70,13 @@
                 {% endif %}
                 {{ form.site }}
             </li>
+            <li>
+                <label>{% trans 'Facebook' %}</label>
+                {% if form.errors.facebook %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.facebook.0 }}</div></div>
+                {% endif %}
+                {{ form.facebook }}
+            </li>
         </ul>
         <ul class="profile-clumn">
             <li>
@@ -111,14 +118,49 @@
                 {% endif %}
                 {{ form.profession }}
             </li>
+
+            <li>
+                <label>{% trans 'Linkedin' %}</label>
+                {% if form.errors.linkedin %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.linkedin.0 }}</div></div>
+                {% endif %}
+                {{ form.linkedin }}
+            </li>
         </ul>
 
-        <div class="profile-contacts">
+        <div style="clear:both"></div>
+
+        <div class="profile-fieldsets">
               <label>{% trans 'Adress' %}</label>
               {% if form.errors.contacts %}
                   <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
               {% endif %}
               {{ form.contacts }}
+        </div>
+
+        <div style="clear:both;"></div>
+        <div class="profile-fieldsets">
+
+              <h2 style="margin:20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
+
+                <label>{% trans 'Company name' %}</label>
+                {% if form.errors.co %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co.0 }}</div></div>
+                {% endif %}
+                {{ form.co }}
+
+                <label>{% trans 'Company slogan' %}</label>
+                {% if form.errors.co_slogan %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_slogan.0 }}</div></div>
+                {% endif %}
+                {{ form.co_slogan }}
+
+              <label>{% trans 'Company description' %}</label>
+              {% if form.errors.co_description %}
+                  <div class="error-handler"> <div class="formserror2">{{ form.errors.co_description.0 }}</div></div>
+              {% endif %}
+              {{ form.co_description }}
+
         </div>
 
         <div class="profilebutton">
