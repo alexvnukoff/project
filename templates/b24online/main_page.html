@@ -154,7 +154,8 @@
                         <li><a class="single-page" href="{% url 'video:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP CHANNEL' %}</a></li>
                         <li><a class="single-page" href="{% url 'vacancy:main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
-
+                        
+                        {# Added the reference to Producers list #}
 
                         <!-- temporary hide..
 
@@ -193,6 +194,10 @@
                             <li><a href="{% url 'site:main' %}"><i class="icon-cog"></i>&nbsp;{% trans 'Site' %}</a></li>
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
+
+                            {% if user.is_staff %}
+                                <li><a class="single-page" href="{% url 'products:producer_list' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Producers' %}</a></li>
+                            {% endif %}
 
                         {# The deals history #}
                         <li><a href="{% url 'products:deal_list' %}"><i class="icon-list-bullet"></i>&nbsp;{% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
