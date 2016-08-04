@@ -195,7 +195,7 @@
                             <li><a class="single-page" href="{% url 'vacancy:my_main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
                             <li><a href="{% url 'resume:my_main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
 
-                            {% if user.is_staff %}
+                            {% if perms.producer and perms.b24online.change_producer %}
                                 <li><a class="single-page" href="{% url 'products:producer_list' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Producers' %}</a></li>
                             {% endif %}
 

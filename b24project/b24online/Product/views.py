@@ -1061,7 +1061,7 @@ def category_tree_json(request, b2_type='b2b'):
                         existed = [p.id for p in item.b2c_categories.all()]
                     elif b2_type == 'b2b':
                         existed = [p.id for p in item.b2b_categories.all()]
-    
+
     def extract_data_fn(node):
         """
         Extract the node info for jstree fiels.
@@ -1123,7 +1123,7 @@ class ProducerList(LoginRequiredMixin, ItemsList):
         self.template_name = 'b24online/Products/producerList.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:    
+        if not request.user.has_perm('b24online.change_producer'):
             return HttpResponseRedirect(reverse('denied'))
         return super(ProducerList, self).dispatch(request, *args, **kwargs)
 
@@ -1151,11 +1151,8 @@ class ProducerCreate(LoginRequiredMixin, ItemCreate):
     current_section = _('Producers')
 
     def dispatch(self, request, *args, **kwargs):
-        logger.debug('Step 1')
-        if not request.user.is_staff:    
-            logger.debug('Step 2')
+        if not request.user.has_perm('b24online.change_producer'):
             return HttpResponseRedirect(reverse('denied'))
-        logger.debug('Step 3')
         self.object = None
         return super(ProducerCreate, self)\
             .dispatch(request, *args, **kwargs)
@@ -1184,7 +1181,7 @@ class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
     current_section = _('Producers')
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:    
+        if not request.user.has_perm('b24online.change_producer'):
             return HttpResponseRedirect(reverse('denied'))
         self.object = self.get_object()
         return super(ProducerUpdate, self)\
@@ -1213,7 +1210,7 @@ class ProducerDelete(LoginRequiredMixin, DetailView):
     current_section = _('Producers')
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:    
+        if not request.user.has_perm('b24online.change_producer'):
             return HttpResponseRedirect(reverse('denied'))
         return super(ProducerDelete, self)\
             .dispatch(request, *args, **kwargs)
