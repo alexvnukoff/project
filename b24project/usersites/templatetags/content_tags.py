@@ -279,7 +279,9 @@ def b2b_categories():
 @register.assignment_tag
 def b2c_categories(show_as_list=False):
     organization = get_current_site().user_site.organization
-    categories = B2CProductCategory.objects.filter(products__company_id=organization.pk) \
+    categories = B2CProductCategory.objects\
+        .filter(products__company_id=organization.pk)\
+        .filter(products__is_deleted=False, products__is_active=True)\
         .order_by('level').distinct()
 
     if not show_as_list:

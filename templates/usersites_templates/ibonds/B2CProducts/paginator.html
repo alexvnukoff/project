@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load content_tags %}
 {% block after_paginator %}
-    {% b2c_categories as categories %}
+    {% b2c_categories show_as_list=1 as categories %}
 
     <div class="select pagination category">
         <select class="category-selector">
