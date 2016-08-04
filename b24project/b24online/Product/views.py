@@ -1061,7 +1061,7 @@ def category_tree_json(request, b2_type='b2b'):
                         existed = [p.id for p in item.b2c_categories.all()]
                     elif b2_type == 'b2b':
                         existed = [p.id for p in item.b2b_categories.all()]
-    
+
     def extract_data_fn(node):
         """
         Extract the node info for jstree fiels.
@@ -1116,24 +1116,23 @@ class ProducerList(LoginRequiredMixin, ItemsList):
     sortField1 = 'name'
     order1 = 'asc'
 
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/producerListContent.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'b24online/Products/producerList.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('b24online.change_producer'):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(ProducerList, self).dispatch(request, *args, **kwargs)
+
     def _get_sorting_params(self):
         return ['name',]
 
     def get_queryset(self):
         self.current_organization = get_current_organization(self.request)
-        if isinstance(self.current_organization, Company):
-            return Producer.objects.all()
-            ## Current company products producers IDs list
-            #producer_ids = [item.producer.id for item \
-            #    in B2BProduct.objects.filter(
-            #        company=self.current_organization,
-            #        producer__isnull=False)] + [item.producer.id for item \
-            #    in B2BProduct.objects.filter(
-            #        company=self.current_organization,
-            #        producer__isnull=False)]
-            #return Producer.objects.filter(id__in=producer_ids)
-        else:
-            return Producer.objects.none()
+        return Producer.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super(ProducerList, self).get_context_data(**kwargs)
@@ -1148,9 +1147,12 @@ class ProducerCreate(LoginRequiredMixin, ItemCreate):
     form_class = ProducerForm
     template_name = 'b24online/Products/producerForm.html'
     success_url = reverse_lazy('products:producer_list')
+    org_required = False
     current_section = _('Producers')
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('b24online.change_producer'):
+            return HttpResponseRedirect(reverse('denied'))
         self.object = None
         return super(ProducerCreate, self)\
             .dispatch(request, *args, **kwargs)
@@ -1179,6 +1181,8 @@ class ProducerUpdate(LoginRequiredMixin, ItemUpdate):
     current_section = _('Producers')
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('b24online.change_producer'):
+            return HttpResponseRedirect(reverse('denied'))
         self.object = self.get_object()
         return super(ProducerUpdate, self)\
             .dispatch(request, *args, **kwargs)
@@ -1204,6 +1208,12 @@ class ProducerDelete(LoginRequiredMixin, DetailView):
     model = Producer
     template_name = 'b24online/Products/producerForm.html'
     current_section = _('Producers')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('b24online.change_producer'):
+            return HttpResponseRedirect(reverse('denied'))
+        return super(ProducerDelete, self)\
+            .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         # FIXME: add the notification

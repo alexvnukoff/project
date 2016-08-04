@@ -1,0 +1,27 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block content %}
+<div class="cpn-details-tab ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <div class="data" style="margin: 15px;">
+        <h1>{% trans 'Producer list' %} 
+            {% trans 'for' %} 
+            <a href="{{ current_organization.get_absolute_url }}" target="_blank">
+                {{ current_organization }}
+            </a>
+        </h1>
+        <hr class="hr-divider-one">
+        <span style="float: right; margin: 5px;">
+            <a href="{% url 'products:producer_add' %}">
+                {% trans 'Add new product producer' %}
+            </a>
+        </span>
+
+        <div class="data">
+            {% include "b24online/Products/producerListBase.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
