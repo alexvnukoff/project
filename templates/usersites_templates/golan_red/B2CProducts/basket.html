@@ -91,13 +91,13 @@
                                     </table>
 
                                     <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
-                                    <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
+                                    <a id="order_by_email" class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
                                     <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
 
 
                                 </form>
 
-                                <div class="pay">
+                                <div id="paypal_form_layer" class="pay">
                                     {% if paypal_form %}
                                         {{ paypal_form.render }}
                                     {% else %}
@@ -123,4 +123,9 @@
         </div>
 
         </section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}
