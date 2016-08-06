@@ -59,21 +59,29 @@
                     {{ form.name }}
                 </div>
             </div>
-
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.email }}
                 </div>
             </div>
-
             <div class="control-group form-group">
                 <div class="controls">
                     {{ form.message }}
                 </div>
             </div>
-
-           {% csrf_token %}
-
+            {% if form.need_delivery %}
+                <div class="control-group form-group">
+                    <div class="controls">
+                        {{ form.address }}
+                    </div>
+                </div>
+                <div class="control-group form-group">
+                    <div class="controls">
+                        {{ form.phone }}
+                    </div>
+                </div>
+            {% endif %}
+            {% csrf_token %}
             <button type="submit" class="btn btn-default btn-mail-order">{% trans 'Send' %}</button>
         </form>
         </div>
@@ -89,7 +97,14 @@
             {% if form.errors.message %}
                 <p style="color:red;">{{ form.errors.message.0 }}</p>
             {% endif %}
-</div>
+            {% if form.errors.address %}
+                <p style="color:red;">{{ form.errors.address.0 }}</p>
+            {% endif %}
+
+            {% if form.errors.phone %}
+                <p style="color:red;">{{ form.errors.phone.0 }}</p>
+            {% endif %}
+        </div>
     </section>
 
 {% endblock %}

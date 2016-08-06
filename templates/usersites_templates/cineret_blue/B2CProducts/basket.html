@@ -111,7 +111,7 @@
 
                                 </form>
 
-                                <div class="pay">
+                                <div id="paypal_form_layer" class="pay">
                                     {% if paypal_form %}
                                         {{ paypal_form.render }}
                                     {% else %}
@@ -141,17 +141,5 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
-    $(function() {
-        $('#order_by_email').on('click', function(event) {
-            event.preventDefault();
-            var url = $(this).attr('href');
-            if ($('#need_delivery').is(":checked")) {
-                url += '?need_delivery=true';
-            }
-            window.location.href = url;
-            return false;
-        });
-    });
-    </script>    
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}
