@@ -300,10 +300,15 @@
                 {{ banners_form.non_form_errors }}
                 <ul class="custom_images">
                 {% for banner_form in banners_form %}
+
                     {{ banner_form.id }}
                     {% with valid_blocks|pop_val:banner_form.block.value as block %}
                         <li>
-                            <div class="label">{{ block.name }}{% if "RIGHT" in block.name %} ({% trans 'Dimensions' %} 205x102){% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125){% elif "FOOTER" in block.name %} ({% trans 'Dimensions' %} 540x70){% endif %}</div>
+                            <div class="label">{{ block.name }}
+                              {% if "RIGHT" in block.name %} ({% trans 'Dimensions' %} 205x102)
+                              {% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125)
+                              {% elif "FOOTER" in block.name %} ({% trans 'Dimensions' %} 540x70){%  endif %}
+                            </div>
                             <div class="right">
                                 {% if banner_form.initial.image %}
                                     <div class="b-img banner">

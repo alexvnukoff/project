@@ -563,8 +563,23 @@ def get_currentsite():
 @register.assignment_tag()
 def check_banner_exist(block):
     site_pk = get_current_site().pk
-    return Banner.objects.filter(site_id=site_pk, block__code=block,
-                block__block_type='user_site').exists()
+    return Banner.objects.filter(
+                site_id=site_pk,
+                block__code=block,
+                block__block_type='user_site'
+            ).exists()
+
+
+@register.assignment_tag()
+def get_banners_list():
+    site_pk = get_current_site().pk
+    return Banner.objects.filter(
+                site_id=site_pk,
+                block__block_type='user_site'
+            ).values_list(
+                'block__code',
+                flat=True
+            )
 
 
 @register.filter
@@ -575,4 +590,4 @@ def original(img):
     return urljoin(settings.MEDIA_URL, 'original/' + str(img)) \
         if not getattr(settings, 'STORE_FILES_LOCAL', False) else \
             urljoin(settings.MEDIA_URL, str(img))
-        
+
