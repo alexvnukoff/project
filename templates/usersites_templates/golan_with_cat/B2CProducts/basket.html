@@ -1,0 +1,131 @@
+{% extends 'usersites_templates/golan_with_cat/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+
+    <section class="content__info grid-layout cart">
+    <!-- Check domain name {{ site.domain }} -->
+
+        <div class="container">
+            {% if total > 0 %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-12">
+
+                                <form method="post" action="">{% csrf_token %}
+                                    <h2 class="page-header">{% trans 'List of products:' %}</h2>
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th class="tb-pic"></th>
+                                            <th class="tb-item"></th>
+                                            <th class="tb-qty">{% trans "Price" %}</th>
+                                            <th class="tb-price">{% trans 'Amount' %}</th>
+                                            <th class="tb-remove"></th>
+                                          </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for row in basket.src %}
+{#                                                {% if row.product.currency != request.session.basket_currency %}{% else %}#}
+
+                                                    <tr>
+                                                        <td>
+                                                            {% if row.product.image %}
+                                                                <img src="{{ row.product.image.big }}" alt="row.product.name" class="tb-img">
+                                                            {% else %}
+                                                                <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                                                            {% endif %}
+                                                        </td>
+
+                                                        <td>
+                                                            <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }}</a></h3>
+                                                            <p>{{ row.product.short_description|truncatewords:30 }}</p>
+                                                        </td>
+
+                                                        <td>
+                                                            {% if row.product.cost %}
+                                                                <span>{{ row.product.get_discount_price|formatPrice }} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
+                                                            {% else %}
+                                                                 <a style="display:block;background:none!important;color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                                                            {% endif %}
+                                                        </td>
+
+                                                        <td class="col-xs-1">
+                                                            <input type="hidden" name="product_id" value="{{ row.product.id }}">
+                                                            <input class="form-control tb-in-qty" type="text" name="quantity" value="{{ row.quantity }}">
+                                                        </td>
+
+                                                        <td>
+                                                            <a class="btn btn-danger btn-xs" href="{% url 'b2c_products:basket' %}?del={{ row.product.id }}" onclick="return confirm('{% trans 'Are you sure delete this product?' %}');"><span class="glyphicon glyphicon-remove"></span></a>
+                                                        </td>
+                                                    </tr>
+
+{#                                                {% endif %}#}
+                                            {% endfor %}
+                                            <tr>
+                                                <td style="text-align: right">
+                                                    <input type="checkbox" name="need_delivery" id="need_delivery">
+                                                </td>
+                                                <td colspan="4">{% trans 'Need a delivery' %}?</td>
+                                            </tr>
+
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr class="dl-horizontal cart-sum-field" >
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td ><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></p></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                    <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
+                                    <a  id="order_by_email" class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
+                                    <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
+
+
+                                </form>
+
+                                <div id="paypal_form_layer" class="pay">
+                                    {% if paypal_form %}
+                                        {{ paypal_form.render }}
+                                    {% else %}
+                                        <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            {% else %}
+                <br/>
+                <br/>
+                <br/>
+                <div class="empty-basket">
+                    <span class="glyphicon glyphicon-shopping-cart "></span>
+                    <p>{% trans 'Your basket is empty.' %}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        </section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
+{% endblock %}

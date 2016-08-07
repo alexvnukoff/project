@@ -218,7 +218,7 @@ class LeadsAdmin(admin.ModelAdmin):
 
 
 class BannerAdmin(admin.ModelAdmin):
-    list_filter = ('site', 'organization')
+    list_filter = ('site')
     search_fields = ['site',]
 
 admin.site.register(User, B24UserAdmin)

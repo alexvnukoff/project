@@ -2,11 +2,15 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load CustomFilters %}
+{% load compress %}
+
 {% block content %}
+{% compress css %}
 <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
-<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>{% endcompress %}
+{% compress js %}
 <script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
-<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>{% endcompress %}
 
 <script type="text/javascript">
     $(document).ready(function(e) {
@@ -141,7 +145,7 @@
         <h3>{% trans 'Products delivery' %}</h3>
         <div class="form-group">
             <label>{% trans "Is delivery available on site?" %}</label>
-            <input type="checkbox" name="is_delivery_available" 
+            <input type="checkbox" name="is_delivery_available"
                 {% if form.is_delivery_available %} checked{% endif %}>
             {% if form.errors.is_delivery_available %}
             <small class="error">{{ form.is_delivery_available.errors|striptags }}</small>
@@ -157,14 +161,14 @@
         <br>
         <div class="form-group">
             <label>{% trans "Delivery cost" %}</label>
-            <input type="text" name="delivery_cost" 
-                placeholder="{% trans 'Delivery cost' %}" maxlength="225" 
+            <input type="text" name="delivery_cost"
+                placeholder="{% trans 'Delivery cost' %}" maxlength="225"
                 class="text" style="width:60%;" value="{{ form.delivery_cost.value|default_if_none:'' }}">
             {% if form.delivery_cost.errors %}
                 <small class="error">{{ form.delivery_currency.errors|striptags }}</small>
             {% endif %}
         </div>
-        
+
         <br>
 
         <h3>{% trans 'Social links' %}</h3>
