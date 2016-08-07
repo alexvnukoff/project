@@ -218,8 +218,15 @@ class LeadsAdmin(admin.ModelAdmin):
 
 
 class BannerAdmin(admin.ModelAdmin):
-    list_filter = ('site')
+    list_filter = ('site',)
     search_fields = ['site',]
+    raw_id_fields = (
+            'organization',
+            'username',
+            'created_by',
+            'updated_by',
+            'site',
+        )
 
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
