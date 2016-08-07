@@ -1,4 +1,4 @@
-{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}{% load compress %}<!DOCTYPE html>
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
@@ -13,12 +13,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
 
     <!--<link rel="shortcut icon" href="images/favicon.ico">-->
-    {% compress css %}
     <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/js/slick/slick-theme.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
-    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">{% endcompress %}
+    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
     <!-- Latest compiled and minified CSS -->
@@ -57,7 +56,6 @@
         {% include 'usersites_templates/golan_with_cat/footer.html' %}
     {% endblock %}
 
-  {% compress js %}
     <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
     <script src="{% static 'usersites/js/angular.min.js' %}"></script>
     <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
@@ -70,7 +68,7 @@
     <script src="{% static 'usersites/js/basket.js' %}"></script>
     <script src="{% static 'usersites/js/main.js' %}"></script>
     <script src="{% static 'usersites/usersites_templates/golan/js/script.js' %}"></script>
-  {% endcompress %}
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
