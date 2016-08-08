@@ -222,7 +222,6 @@ class BannerAdmin(admin.ModelAdmin):
     search_fields = ['site',]
     raw_id_fields = (
             'organization',
-            'username',
             'created_by',
             'updated_by',
             'site',
