@@ -1,22 +1,62 @@
 /*---------- General Styling ----------*/
 
-html {
-  height: 100%;
-  box-sizing: border-box;
+/*html {*/
+  /*height: 100%;*/
+  /*box-sizing: border-box;*/
+/*}*/
+
+/*body {*/
+	/*display: flex;*/
+	/*min-height: 100vh;*/
+	/*flex-direction: column;*/
+	/*max-width: 100%;*/
+	/*height: 100%;*/
+	/*!*overflow-x: hidden;*!*/
+/*}*/
+
+/*.content{*/
+	/*flex: 1;*/
+/*}*/
+
+* {margin:0;padding:0;}
+
+html, body {height: 100%;}
+
+#wrap-main {min-height: 100%;}
+
+#main {
+    overflow:auto;
+	padding-bottom: 300px;
+}  /* must be same height as the footer */
+
+#main-footer {
+    position: relative;
+	margin-top: -300px; /* negative value of footer height */
+	height: 300px;
+	clear:both;
 }
 
-body {
-	display: flex;
-	min-height: 100vh;
-	flex-direction: column;
-	max-width: 100%;
-	height: 100%;
-	/*overflow-x: hidden;*/
+/*Opera Fix*/
+body:before {/* thanks to Maleika (Kohoutec)*/
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;/* thank you Erik J - negate effect of float*/
 }
 
-.content{
-	flex: 1;
-}
+/* IMPORTANT
+
+You also need to include this conditional style in the <head> of your HTML file to feed this style to IE 6 and lower and 8 and higher.
+
+<!--[if !IE 7]>
+	<style type="text/css">
+		#wrap {display:table;height:100%}
+	</style>
+<![endif]-->
+
+*/
+/* ----------------- End of sticky fooer ---------------------*/
 
 .icon-ok:before {
 	font-family: "Glyphicons Halflings";

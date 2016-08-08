@@ -39,22 +39,31 @@
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-    {# Include the header file, the header will put the main menu on top of every page #}
-    {% include 'usersites_templates/golan_with_cat/header.html' %}
+    <div id="wrap-main">
+        <div id="main">
 
-    {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
-    {% block slider %}  {% endblock %}
+            {# Include the header file, the header will put the main menu on top of every page #}
+            {% include 'usersites_templates/golan_with_cat/header.html' %}
 
-    {# Content will be in the contant page. #}
-    <section class="content">
-        <div class="wrapper">
-            {% block content %}{% endblock %}
+            {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
+            {% block slider %}  {% endblock %}
+
+            {# Content will be in the contant page. #}
+            <section class="content">
+                <div class="wrapper">
+                    {% block content %}{% endblock %}
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 
-    {% block footer %}
-        {% include 'usersites_templates/golan_with_cat/footer.html' %}
-    {% endblock %}
+    <div id="main-footer">
+
+        {% block footer %}
+            {% include 'usersites_templates/golan_with_cat/footer.html' %}
+        {% endblock %}
+
+    </div>
 
     <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
     <script src="{% static 'usersites/js/angular.min.js' %}"></script>
