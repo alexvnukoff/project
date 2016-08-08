@@ -164,6 +164,8 @@ GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
                                             form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description', 'link'))
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
+IndividualCompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
+                                             validate_max=True, max_num=24, extra=24)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
 

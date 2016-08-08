@@ -1668,6 +1668,9 @@ class Banner(ActiveModelMixing, Advertisement):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.block.name
+
     def upload_images(self):
         from core import tasks
         params = {

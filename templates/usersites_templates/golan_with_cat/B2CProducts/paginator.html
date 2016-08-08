@@ -1,0 +1,28 @@
+{% extends 'usersites_templates/golan_with_cat/Paginator.html' %}
+{% load CustomFilters %}
+{% load i18n %}
+{% load content_tags %}
+{% block after_paginator %}
+    {% b2c_categories show_as_list=1 as categories %}
+
+    <div class="select pagination category">
+        <select class="category-selector">
+            {% if 'b2c-products' in request.path %}
+                <option value="{% url 'b2c_products:main' %}">{% trans 'Select Category' %}</option>
+                    {% for pk, category in categories.items %}
+                        <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">
+                        {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                        </option>
+                    {% endfor %}
+            {% else %}
+              <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
+                  {% for pk, category in categories.items %}
+                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                      {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                      </option>
+                  {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    {{ block.super }}
+{% endblock %}

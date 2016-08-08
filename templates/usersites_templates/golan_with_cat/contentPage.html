@@ -1,0 +1,152 @@
+{% extends 'usersites_templates/golan_with_cat/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{% block slider %}
+       {% include 'usersites_templates/golan_with_cat/slider.html' %}
+{% endblock %}
+
+{% block content %}
+
+<section class="content__info grid-layout">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 about-main">
+
+                <div class="col-md-12 about-main__text">
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <p>{{ site.user_site.organization.short_description|cleanHtml|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+   <div class="container clearfix">
+
+            {% coupons 'B2CProducts/main_coupons.html' 2 %}
+
+            {% get_banners_list as mybanners %}
+
+            {% comment %}
+
+              mybanners - is a list of all codes (banners names) for current site.
+              It a better pick for a big loop.
+                
+
+            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
+            {% endcomment %}
+
+
+            {% if "SITES RIGHT 1" in mybanners %}
+                    <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
+
+            {% if "SITES RIGHT 4" in mybanners %}
+
+                <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 3" %}
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 4" %}
+                </div>
+
+            {% elif "SITES RIGHT 3" in mybanners %}
+
+                <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 3" %}
+                </div>
+
+            {% elif "SITES RIGHT 2" in mybanners %}
+
+                <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+
+            {% elif "SITES RIGHT 1" in mybanners %}
+
+                <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+            {% endif %}
+
+          </div>
+
+      {% endif %}
+
+    </div>
+
+    {# {{ mybanners }} show all the banner codes. #}
+
+    <div class="container">
+
+      {% comment %}
+      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+        {% site_banner "top" "SITES CAT 1" %}
+      </div>
+
+      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+        {% site_banner "top" "SITES CAT 2" %}
+      </div>
+
+      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+        {% site_banner "top" "SITES CAT 3" %}
+      </div>
+
+      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+        {% site_banner "top" "SITES CAT 4" %}
+      </div>
+      {% endcomment %}
+
+        {% for i in mybanners %}
+        {% if 'SITES CAT' in i %}
+
+      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+        {% site_banner "top" i %}
+        </div>
+
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% comment %}
+    {% b2c_products 'B2CProducts/main_products.html' 4 %}
+    {% endcomment %}
+
+    <div class="container">
+        <div class="row ">
+            {% proposal 'Proposals/wall.html' 2 %}
+            {% news 'News/wall.html' 2 %}
+        </div>
+    </div>
+
+</section>
+{% endblock %}
