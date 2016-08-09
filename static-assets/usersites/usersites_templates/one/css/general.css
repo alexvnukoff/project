@@ -169,6 +169,11 @@ header .intro-text .skills {
     header .intro-text .skills {
         font-size: 1.75em;
     }
+
+    .tel a{
+        font-size: 12pt;
+        color: #000;
+    }
 }
 
 @media(min-width:768px) {
@@ -210,6 +215,14 @@ header .intro-text .skills {
 
     .sec-container{
         padding-top: 0;
+    }
+
+    .crop-portfolio {
+        height: 100%;
+    }
+
+    header {
+        margin-top: 10px;
     }
 }
 
@@ -269,15 +282,19 @@ header img{
 
 .mid h2 {
   font-family: 'Roboto', sans-serif;
-  font-weight: 900;
+  /*font-weight: 900;*/
   color: white;
   text-transform: uppercase;
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: 2em;
+  font-size: 4em;
   transform: translate(-50%, -50%);
+}
+
+table {
+    width: 100%!important;
 }
 
 /*----------------------*/
@@ -320,6 +337,10 @@ section.success a.active {
 
     .about-main p{
         font-size: 12pt;
+    }
+
+    .mid h2 {
+      font-size: 2em;
     }
 }
 
@@ -398,8 +419,13 @@ section.success a.active {
 }
 
 /**** Contact Form *********************/
+
+#contact{
+    margin-top: 10px;
+}
+
 .contact-form form{
-    margin: 15px 0;
+    margin: 15px;
 
 }
 
