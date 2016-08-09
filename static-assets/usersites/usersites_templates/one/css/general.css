@@ -169,11 +169,6 @@ header .intro-text .skills {
     header .intro-text .skills {
         font-size: 1.75em;
     }
-
-    .tel a{
-        font-size: 12pt;
-        color: #000;
-    }
 }
 
 @media(min-width:768px) {
@@ -223,6 +218,14 @@ header .intro-text .skills {
 
     header {
         margin-top: 10px;
+    }
+    .tel a{
+        font-size: 12pt;
+        color: #000;
+    }
+
+    #portfolio .portfolio-item {
+        height: 80px;
     }
 }
 
