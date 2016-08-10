@@ -11,10 +11,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView
 from b24online.models import Organization, Company, BannerBlock
 from b24online.UserSites.forms import (GalleryImageFormSet, SiteForm,
-        TemplateForm, CompanyBannerFormSet, IndividualCompanyBannerFormSet,
-        ChamberBannerFormSet)
+                TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet)
 from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate
-
 
 
 @login_required()
@@ -56,8 +54,15 @@ class SiteCreate(CreateView):
                 "SITES RIGHT 5"
             ]
 
-        return OrderedDict(BannerBlock.objects.filter(block_type='user_site', code__in=valid_blocks).order_by('code')
-                           .values_list('pk', 'name'))
+        additional = []
+        for i in range(1,18):
+            additional.append("SITES CAT {0}".format(i))
+        valid_blocks += additional
+
+        return OrderedDict(BannerBlock.objects.filter(
+            block_type='user_site',
+            code__in=valid_blocks
+            ).order_by('id').values_list('pk', 'name'))
 
     def get(self, request, *args, **kwargs):
         """
@@ -194,29 +199,18 @@ class SiteUpdate(UpdateView):
                 "SITES RIGHT 5"
             ]
 
-        if self.organization.id == 165433:
-            additional = []
-            for i in range(1,18):
-                additional.append("SITES CAT {0}".format(i))
-            valid_blocks += additional
+        additional = []
+        for i in range(1,18):
+            additional.append("SITES CAT {0}".format(i))
+        valid_blocks += additional
 
-            qs = OrderedDict(BannerBlock.objects.filter(
-                block_type='user_site',
-                code__in=valid_blocks
-                ).order_by('id').values_list('pk', 'name'))
-        else:
-
-            qs = OrderedDict(BannerBlock.objects.filter(
-                block_type='user_site',
-                code__in=valid_blocks
-                ).order_by('code').values_list('pk', 'name'))
-
-        return qs
+        return OrderedDict(BannerBlock.objects.filter(
+            block_type='user_site',
+            code__in=valid_blocks
+            ).order_by('id').values_list('pk', 'name'))
 
     def get_banners_form(self, *args, **kwargs):
         if isinstance(self.organization, Company):
-            if self.organization.id == 165433:
-                return IndividualCompanyBannerFormSet(*args, **kwargs)
             return CompanyBannerFormSet(*args, **kwargs)
 
         return ChamberBannerFormSet(*args, **kwargs)
