@@ -5,7 +5,7 @@
 {% load humanize %}
 
     {% if form %}
-    <h2>{% trans 'Enter Your Info for delivery' %}</h2>
+    <h2 class="page-header">{% trans 'Enter Your Info for delivery' %}</h2>
     <form id="delivery_form" method="post" 
         action="{% url 'b2c_products:delivery_info_json' %}" class="clearfix">
         {% csrf_token %}

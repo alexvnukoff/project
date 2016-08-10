@@ -309,4 +309,7 @@ footer a:active{
 	color: #000;
 }
 
-
+.field_error {
+    font-size: 80%;
+    color: red;
+}
