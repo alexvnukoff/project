@@ -1,0 +1,35 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+    
+    {# Form for order-by-email #}        
+    <p class="form_field">{{ form.name }}</p>
+    {% if form.errors.name %}
+        <p class="form_field_error">{{ form.errors.name.0 }}</p>
+    {% endif %}
+    
+    <p class="form_field">{{ form.email }}</p>
+    {% if form.errors.email %}
+        <p class="form_field_error">{{ form.errors.email.0 }}</p>
+    {% endif %}
+
+    <p class="form_field">{{ form.message }}</p>
+    {% if form.errors.message %}
+        <p class="form_field_error">{{ form.errors.message.0 }}</p>
+    {% endif %}
+
+    {% if form.need_delivery %}
+        <h2>{% trans 'Your Info for delivery' %}</h2>
+        <p class="form_field">{{ form.address }}</p>
+        {% if form.errors.address %}
+            <p class="form_field_error">{{ form.errors.address.0 }}</p>
+        {% endif %}
+    
+        <p class="form_field">{{ form.phone }}</p>
+        {% if form.errors.phone %}
+            <p class="form_field_error">{{ form.errors.phone.0 }}</p>
+        {% endif %}
+
+    {% endif %}
