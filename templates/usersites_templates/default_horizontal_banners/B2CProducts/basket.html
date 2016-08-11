@@ -4,81 +4,22 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+
 {% block title %}{{ title }}{% endblock %}
+
 {% block content %}
-
-
-    <section class="content__info grid-layout cart">
+<section class="content__info grid-layout cart">
     <!-- Check domain name {{ site.domain }} -->
     {% if total > 0 %}
-    <form method="post" action="">{% csrf_token %}
-        <h2>{% trans 'List of products:' %}</h2>
-    <table>
-         <tbody>
-
-    {% for row in basket.src %}
-        {% if row.product.currency != request.session.basket_currency %}{% else %}
-
-        <tr>
-            <td>
-                {% if row.product.image %}
-                    <img src="{{ row.product.image.small }}" alt="row.product.name">
-                {% else %}
-                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </td>
-
-                    <td>
-                        <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }} ({{ row.product.name }})</a></h3>
-                        <p>{{ row.product.short_description|truncatewords:30 }}</p>
-                    </td>
-                    <td>
-                         {% if row.product.cost %}
-                        <p>{% trans 'Price' %}:</p>
-                        <span>{{ row.product.get_discount_price|formatPrice }} <strong class="currency_symbol">{{ row.product.currency|getSymbol }}</strong></span>
-                        {% else %}
-                             <a style="display:block;background:none!important;color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-                        {% endif %}
-                        <input type="hidden" name="product_id" value="{{ row.product.id }}">
-                        <input class="quantity" type="text" name="quantity" value="{{ row.quantity }}">
-                        <a href="{% url 'b2c_products:basket' %}?del={{ row.product.id }}" onclick="return confirm('{% trans 'Are you sure delete this product?' %}');">Delete</a>
-                    </td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-                <tr>
-                    <td style="text-align: right">
-                        <input type="checkbox" name="need_delivery" id="need_delivery">
-                    </td>
-                    <td colspan="2">{% trans 'Need a delivery' %}?</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td><p id="total_cost"><strong>{% trans 'Total' %}: {{ total }}</strong>&nbsp;<strong class="currency_for_total_cost"></strong></td>
-                </tr>
-            </tfoot>
-        </table>
-        <a href="{% url 'b2c_products:basket' %}?clean=1" class="clean">Clean bascket</a>
-        <a class="clean btn-green" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
-        <button class="update">Update price</button>
-        </form>
-
-        <div class="pay">
-            {% if paypal_form %}
-            {{ paypal_form.render }}
-            {% else %}
-            <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
-            {% endif %}
-        </div>
-
-        {% else %}
+        {% include "usersites/B2CProducts/include/basketListForm_default.html" %}
+    {% else %}
         <br>
         <p>{% trans 'Your basket is empty.' %}</p>
-        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}
 
-        </section>
-
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}

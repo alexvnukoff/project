@@ -40,6 +40,7 @@
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
+    {% block after_css %}{% endblock %}
 
 </head>
 
@@ -98,11 +99,8 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'usersites/usersites_templates/cineret/js/agency.js' %}"></script>
-
-
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-
-
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
     <script>
     function initMap() {
         {% if site.user_site.organization.location %}

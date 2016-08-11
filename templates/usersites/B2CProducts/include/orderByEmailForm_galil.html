@@ -1,0 +1,47 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+
+<div class="control-group form-group">
+    <div class="controls">
+        {{ form.name }}
+    </div>
+    {% if form.is_bound and form.name.errors %}
+        <p class="field_error">{{ form.name.errors|striptags }}</p>
+    {% endif %}
+</div>
+<div class="control-group form-group">
+    <div class="controls">
+        {{ form.email }}
+    </div>
+    {% if form.is_bound and form.email.errors %}
+        <p class="field_error">{{ form.email.errors|striptags }}</p>
+    {% endif %}
+</div>
+<div class="control-group form-group">
+    <div class="controls">
+        {{ form.message }}
+    </div>
+    {% if form.is_bound and form.message.errors %}
+        <p class="field_error">{{ form.message.errors|striptags }}</p>
+    {% endif %}
+</div>
+{% if form.need_delivery %}
+<div class="control-group form-group">
+    <div class="controls">
+        {{ form.address }}
+    </div>
+    {% if form.is_bound and form.address.errors %}
+        <p class="field_error">{{ form.address.errors|striptags }}</p>
+    {% endif %}
+</div>
+<div class="control-group form-group">
+    <div class="controls">
+        {{ form.phone }}
+    </div>
+    {% if form.is_bound and form.phone.errors %}
+        <p class="field_error">{{ form.phone.errors|striptags }}</p>
+    {% endif %}
+</div>
+{% endif %}

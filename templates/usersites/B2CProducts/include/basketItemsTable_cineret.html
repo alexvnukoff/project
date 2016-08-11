@@ -1,0 +1,34 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="tb-item"></th>
+                <th class="tb-qty">{% trans "Amount" %}</th>
+                <th class="tb-price">{% trans 'Price' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in basket.src %}
+            <tr>
+                <td>{{ i.product }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>
+                    {{ i.product.get_discount_price|formatPrice }} 
+                    {{ i.product.currency|getSymbol }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="dl-horizontal cart-sum-field" >
+                <td></td>
+                <td><p id="total_cost"><strong>{% trans 'Total' %}:</strong></p></td>
+                <td ><p id="total_cost"><strong>{{ total }}</strong>&nbsp;</p></td>
+            </tr>
+        </tfoot>
+    </table>
