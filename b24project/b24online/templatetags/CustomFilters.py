@@ -294,9 +294,12 @@ def basename(value):
 def pop_val(value, key=None):
     if not isinstance(value, (list, OrderedDict)):
         return value
-
-    key = key or list(value.keys())[0]
-    return {'name': value.pop(int(key)), 'pk': key}
+    try:
+        key = key or list(value.keys())[0]
+    except IndexError:
+        return value
+    else:
+        return {'name': value.pop(int(key)), 'pk': key}
 
 
 @register.filter

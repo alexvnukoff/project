@@ -4,30 +4,27 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+
 {% block title %}{{ title }}{% endblock %}
+
 {% block content %}
-
-
-    <section class="content__info grid-layout cart">
+<section class="content__info grid-layout cart">
     <!-- Check domain name {{ site.domain }} -->
     {% if total > 0 %}
     <form method="post" action="">{% csrf_token %}
         <h2>{% trans 'List of products:' %}</h2>
-    <table>
-         <tbody>
-
-    {% for row in basket.src %}
-        {% if row.product.currency != request.session.basket_currency %}{% else %}
-
-        <tr>
-            <td>
-                {% if row.product.image %}
-                    <img src="{{ row.product.image.small }}" alt="row.product.name">
-                {% else %}
-                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </td>
-
+        <table>
+            <tbody>
+            {% for row in basket.src %}
+                {% if row.product.currency != request.session.basket_currency %}{% else %}
+                <tr>
+                    <td>
+                    {% if row.product.image %}
+                        <img src="{{ row.product.image.small }}" alt="row.product.name">
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                    {% endif %}
+                    </td>
                     <td>
                         <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }} ({{ row.product.name }})</a></h3>
                         <p>{{ row.product.short_description|truncatewords:30 }}</p>
@@ -62,23 +59,24 @@
             </tfoot>
         </table>
         <a href="{% url 'b2c_products:basket' %}?clean=1" class="clean">Clean bascket</a>
-        <a class="clean btn-green" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
+        <a id="order_by_email" class="clean btn-green" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
         <button class="update">Update price</button>
-        </form>
-
-        <div class="pay">
-            {% if paypal_form %}
+    </form>
+    <div id="paypal_form_layer" class="pay">
+        {% if paypal_form %}
             {{ paypal_form.render }}
-            {% else %}
-            <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
-            {% endif %}
-        </div>
-
         {% else %}
+            <a style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
+        {% endif %}
+    </div>
+    {% else %}
         <br>
         <p>{% trans 'Your basket is empty.' %}</p>
-        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}
 
-        </section>
-
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}
