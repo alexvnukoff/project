@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
+    {% block after_css %}{% endblock %}
+
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
@@ -60,24 +62,23 @@
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
-        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
-        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
-        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
-        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
-        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
-        <script src="{% static 'usersites/js/basket.js' %}"></script>
-        <script src="{% static 'usersites/js/main.js' %}"></script>
-        <script src="{% static 'usersites/usersites_templates/galil/js/script.js' %}"></script>
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
+    <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+    <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+    <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+    <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+    <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'usersites/js/basket.js' %}"></script>
+    <script src="{% static 'usersites/js/main.js' %}"></script>
+    <script src="{% static 'usersites/usersites_templates/galil/js/script.js' %}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
     <script>
     function initMap() {
@@ -106,7 +107,7 @@
 
     </script>
 
-{% block js %}{% endblock %}
+    {% block js %}{% endblock %}
 
 </body>
 

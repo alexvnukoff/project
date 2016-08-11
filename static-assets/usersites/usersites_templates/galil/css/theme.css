@@ -175,3 +175,7 @@ footer .row{
     border: 1px solid #83ba3a;
 }
 
+.field_error {
+    font-size: 80%;
+    color: red;
+}

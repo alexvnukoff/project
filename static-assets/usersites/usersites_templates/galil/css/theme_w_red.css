@@ -173,3 +173,8 @@ footer a:active{
 .footer-col span{
 	color: #a40000;
 }
+
+.field_error {
+    font-size: 80%;
+    color: red;
+}
