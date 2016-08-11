@@ -42,29 +42,31 @@
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-{#<div id="body-content" class="page-row page-row-expanded">#}
+    <div id="wrap-main">
+        <div id="main">
+            {# Include the header file, the header will put the main menu on top of every page #}
+            {% include 'usersites_templates/cineret/header.html' %}
 
-    {# Include the header file, the header will put the main menu on top of every page #}
-    {% include 'usersites_templates/cineret/header.html' %}
+            {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
+            {% block slider %}  {% endblock %}
 
-    {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
-    {% block slider %}  {% endblock %}
-
-    {# Content will be in the contant page. #}
-    <section class="content">
-        <div class="wrapper">
-            {% block content %}{% endblock %}
+            {# Content will be in the contant page. #}
+            <section class="content">
+                <div class="wrapper">
+                    {% block content %}{% endblock %}
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 
 {#</div>#}
 
-{#<div id="footer-block" class="page-row">#}
-    {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
-    {% block footer %}
-        {% include 'usersites_templates/cineret/footer.html' %}
-    {% endblock %}
-{#</div>#}
+    <div id="main-footer">
+        {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
+        {% block footer %}
+            {% include 'usersites_templates/cineret/footer.html' %}
+        {% endblock %}
+    </div>
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
