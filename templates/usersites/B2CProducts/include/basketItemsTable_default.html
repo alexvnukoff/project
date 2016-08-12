@@ -1,0 +1,30 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+    <table class="table table-striped" width="90%">
+        <thead>
+            <tr>
+                <th class="tb-item"></th>
+                <th class="tb-qty">{% trans "Amount" %}</th>
+                <th class="tb-price">{% trans 'Price' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in basket.src %}
+            <tr>
+                <td align="left">
+                    {{ i.product }}
+                </td>
+                <td>
+                    {{ i.quantity }}
+                </td>
+                <td>
+                    {{ i.product.get_discount_price|formatPrice }} {{ i.product.currency|getSymbol }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>

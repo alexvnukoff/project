@@ -1,0 +1,29 @@
+{% extends 'usersites_templates/default_horizontal_banners/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block after_css %}
+    {{ block.super }}
+    {% include "usersites/B2CProducts/include/deliveryFormCss_default.html" %}
+{% endblock %}
+
+{% block content %}
+<section class="content__info">
+    <h2>{% trans 'Your Order' %}</h2>
+    <p>&nbsp;</p>
+    {# Basket items list #}
+    {% include "usersites/B2CProducts/include/basketItemsTable_default.html" %}
+    <p>&nbsp;</p>
+    {# Delivery info form #}
+    {% include "usersites/B2CProducts/include/deliveryForm_default.html" %}
+</section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
+{% endblock %}

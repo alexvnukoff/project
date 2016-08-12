@@ -2,9 +2,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
-
     <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
     <meta http-equiv="ImageResize" content="no">
     <meta http-equiv="ImageToolbar" content="no">
@@ -22,8 +20,6 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/cineret/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/cineret/css/theme.css' %}">
 
@@ -40,6 +36,7 @@
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
+    {% block after_css %}{% endblock %}
 
 </head>
 
@@ -101,9 +98,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'usersites/usersites_templates/cineret/js/agency.js' %}"></script>
 
-
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
     <script>
     function initMap() {
@@ -132,7 +128,7 @@
 
     </script>
 
-{% block js %}{% endblock %}
+    {% block js %}{% endblock %}
 
 </body>
 

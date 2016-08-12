@@ -18,23 +18,17 @@
         font-size: 80%;
         margin: 5px 0 15px 0;
       }
-      span.form_field_required {  
-        color: red;
-        padding: 0 10px;
-        font-size: 150%;
-        font-weight: bold;
-        position: absolute;
-        top: 0;
+      .form_field_required { 
+        border-color: #555555;
       }
       #delivery_form textarea {
-        border-top-width: 2px;
         margin: 0 -2px;
         width: 50%;
       }
       .hide_layer {
         display: none;
       }
-          
+
     </style>    
 {% endblock %}
 
@@ -44,7 +38,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-12 col-lg-12">
+                    <div class="col-6 col-lg-6">
     <h2 class="page-header">{% trans 'Your Order' %}</h2>
     <p>&nbsp;</p>
     <table class="table table-striped" width="90%">
@@ -79,7 +73,7 @@
         {% csrf_token %}
         {% for field in form %}
             <div class="control-group form-group">
-                <p class="form_field controls">{{ field }}{% if field.field.required %}<span class="form_field_required">*</span>{% endif %}</p>
+                <p class="form_field controls">{{ field }}</p>
             </div>
             <p id="{{ field.name }}_errors" class="form_field_error hide_layer"></>
         {% endfor %}
