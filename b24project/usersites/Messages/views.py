@@ -126,7 +126,7 @@ def online_adviser(request, *args, **kwargs):
     form = MessageForm(request, compact=True)
     context = {'new_message_form': form}
     data = {
-        'title': u'Ваш вопрос',
+        'title': _(u'Your question'),
         'msg': render_to_string(template_name, context, 
             context_instance=RequestContext(request))
     }
