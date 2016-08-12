@@ -6,9 +6,7 @@
 
     <div class="container">
 
-        <!-- Page Heading -->
         <div class="row">
-
           <div class="col-lg-12 in-page">
           <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
             <input type="hidden" name="co_id" value="{{ site.pk }}">
@@ -32,7 +30,9 @@
               </div>
           </form>
           </div>
+        </div>
 
+        <div class="row">
           <div class="col-lg-12">
             <h1 class="page-header">{{ object.title }}</h1>
           </div>
