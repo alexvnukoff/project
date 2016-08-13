@@ -32,8 +32,32 @@
         </div>
     </div>
 </div>            
-
+{{ mew_message_form.get_staff_avatars }}
 <script type="text/javascript">
+
+    {% with new_message_form.get_staff_avatars as avatars %}
+    var userAvatars = {
+        {% for user_id, user_avatar in avatars.items %}'{{ user_id }}' : '{{ user_avatar }}',{% endfor %}    
+    };
+    {% endwith %}
+
+    function formatOption(opti) {
+        if (opti.id) { 
+            var opti_id = opti.id.toString();
+            if (opti_id in userAvatars) {
+                var optiText = '<img src="' + userAvatars[opti_id] + '">&nbsp;' + opti.text;
+                return optiText;
+            }
+        } 
+        return '<img src="static/b24online/img/profile_24x24.jpg">&nbsp;' + opti.text;
+    }
+
+    var recipientId = '#id_recipient';
+    $(recipientId).select2({
+        formatResult: formatOption,
+        formatSelection: formatOption,
+    });
+
     $(document).on('click', '#adviser_save_message', function(e) {
         e.preventDefault(); 
         var processed_form = $(this).parents('form:first');
