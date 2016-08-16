@@ -80,6 +80,19 @@ class MessageForm(forms.ModelForm):
             data.append((item.user.id, item_info))
         return data
 
+    def get_staff_avatars(self):
+        """Return the list of current organization staff"""
+        data = {}
+        for item in Vacancy.objects\
+            .filter(department__organization=self.organization,
+                    user__isnull=False):
+            try:
+                if item.user.profile.avatar:
+                    data[item.user.id] = item.user.profile.avatar.th
+            except Exception as exc:
+                pass
+        return data
+
     def clean_recipient(self):
         recipient_id = self.cleaned_data.get('recipient')
         if recipient_id:
