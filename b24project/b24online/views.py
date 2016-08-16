@@ -289,7 +289,7 @@ def feedback_form(request):
 
         if form.is_valid():
             cd = form.cleaned_data
-            subject = "B24online.com: New message from {0}".format(cd['realname'])
+            subject = "B24online.com: New Lead from {0}".format(cd['realname'])
 
             # Collecting lead
             getlead = GetLead(request)
@@ -302,7 +302,24 @@ def feedback_form(request):
                     company_id=cd['co_id']
                 )
 
-            mail = EmailMessage(subject, cd['message'], cd['email'], [cd['co_email']])
+            mail = EmailMessage(subject,
+                    """
+                    From: {0}
+                    URL: {1}
+                    Email: {2}
+                    Phone: {3}
+
+                    Message: {4}
+                    """.format(
+                        cd['realname'],
+                        cd['url_path'],
+                        cd['email'],
+                        cd['phone'],
+                        cd['message']
+                        ),
+                    cd['email'],
+                    [cd['co_email']
+                ])
             mail.send()
             return JsonResponse({}, status=200)
         else:

@@ -121,7 +121,7 @@ class sendmessage(View):
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "B24online.com: New message from {0}".format(cd['name'])
+                subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
             # Collecting lead
             getlead = GetLead(request)
@@ -135,7 +135,24 @@ class sendmessage(View):
                 company_id=cd['co_id']
                 )
 
-            mail = EmailMessage(subject, cd['message'], cd['email'], [email])
+            mail = EmailMessage(subject,
+                    """
+                    From: {0}
+                    URL: {1}
+                    Email: {2}
+                    Phone: {3}
+
+                    Message: {4}
+                    """.format(
+                        cd['name'],
+                        cd['url_path'],
+                        cd['email'],
+                        cd['phone'],
+                        cd['message']
+                        ),
+                    cd['email'],
+                    [email]
+                )
             mail.send()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
