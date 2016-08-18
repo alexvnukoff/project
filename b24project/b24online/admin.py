@@ -189,7 +189,7 @@ class B24UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('email',)}),
-        (_('Permissions'), {'fields': ('is_active', 'user_permissions')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_admin', 'user_permissions')}),
         (_('Important dates'), {'fields': ('date_joined',)}),
     )
     add_fieldsets = (
