@@ -82,7 +82,7 @@ class B2BProductList(ItemsList):
 
 class B2BProductUpdateList(B2BProductList):
     url_paginator = "products:b2b_product_update_paginator"
-    paginate_by = 20
+    paginate_by = 12
     template_name = 'b24online/Products/contentUpdate.html'
 
     def ajax(self, request, *args, **kwargs):
@@ -191,7 +191,7 @@ class B2CProductList(ItemsList):
 
 class B2CProductUpdateList(B2CProductList):
     url_paginator = "products:b2c_product_update_paginator"
-    paginate_by = 10
+    paginate_by = 12
     template_name = 'b24online/Products/contentUpdateB2C.html'
 
     def ajax(self, request, *args, **kwargs):
