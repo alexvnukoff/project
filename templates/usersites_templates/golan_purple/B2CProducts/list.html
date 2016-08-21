@@ -6,14 +6,14 @@
 
     {# Products page content #}
     <div class="container">
-{#        {% include 'usersites_templates/golan_purple/B2CProducts/paginator.html' %}#}
+        {% include 'usersites_templates/golan_purple/B2CProducts/paginator.html' %}
 
         {# Page title #}
         <div class="col-lg-12">
             <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
         </div>
 
-        <div class="row ">
+        <div class="row products-list-page">
             {% for product in products %}
 
                 <div class="col-sm-6 col-xs-12 col-md-3 product ">

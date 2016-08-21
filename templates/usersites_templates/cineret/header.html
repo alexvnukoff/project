@@ -82,6 +82,36 @@
 
             </ul>
 
+        <div class="social-header hidden-xs" style="padding: 5px 15px;">
+              <div style="text-align:center;margin:0 auto; padding-top: 0;">
+
+                {% if site.user_site.facebook %}
+                <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.youtube %}
+                <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.twitter %}
+                <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.instagram %}
+                <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.vkontakte %}
+                <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.odnoklassniki %}
+                <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
+                {% endif %}
+
+              </div>
+        </div>
+
             <ul class="nav navbar-nav hidden-xs">
                 <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
                 <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
@@ -166,7 +196,7 @@
                 <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
             </div>
 
-    <div class="social-header">
+    <div class="social-header visible-xs">
               <div style="text-align:center;margin:0 auto;">
 
                 {% if site.user_site.facebook %}
@@ -194,7 +224,7 @@
                 {% endif %}
 
               </div>
-            </div>
+        </div>
     </div>
     <!-- /.container -->
 </nav>

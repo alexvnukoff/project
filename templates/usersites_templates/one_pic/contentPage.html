@@ -1,0 +1,262 @@
+{% extends 'usersites_templates/one/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{# including the slider. The slider will apear only on the main page. #}
+{% block slider %}
+       {% include 'usersites_templates/one/slider.html' %}
+{% endblock %}
+
+{% block content %}
+
+{#<section class="content__info grid-layout">#}
+
+
+
+{#    {% b2c_products 'B2CProducts/main_products.html' 6 %}#}
+
+{#    {% coupons 'B2CProducts/main_coupons.html' 2 %}#}
+
+{#    {% videos 'Video/wall.html' 2 %}#}
+
+    {# About section of the company on the front page. Description + video. #}
+    <div class="container sec-container" id="about">
+        <div class="row">
+            <div class="col-md-12 about-main">
+
+                <div class="col-md-12 about-main__text text-center hidden-xs">
+                    {# Organization name #}
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <hr class="star-primary">
+
+                    <p>
+                        {% if site.user_site.organization.description %}
+                        {# Organization description #}
+                            {{ site.user_site.organization.description|safe }}
+                        {% else %}
+                            {{ site.user_site.organization.short_description|safe }}
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <div class="col-md-12 about-main__text text-center visible-xs">
+                    {# Organization name #}
+                    <h2>{{ site.user_site.organization.name }}</h2>
+                    <hr class="star-primary">
+
+                    <p>
+                        {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                    </p>
+                </div>
+
+
+                {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
+                {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+                    {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
+                    {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                {#</div>#}
+
+            </div>
+        </div>
+    </div>
+
+    {% if site.user_site.organization.gallery_images %}
+
+    <div class="container sec-container" id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Gallery</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+
+                <ul class="gallery">
+                    {% for gallery_obj in site.user_site.organization.gallery_images %}
+
+                        <div class="col-sm-4 col-xs-4 portfolio-item">
+                            <a href="{{ gallery_obj.image.original }}" data-lightbox="portfolio-images" title="" class=" portfolio-link" >
+
+                                <div class="caption">
+                                    <div class="caption-content">
+                                        <i class="fa fa-search-plus fa-3x"></i>
+                                    </div>
+                                </div>
+
+                                <div class="crop-portfolio">
+                                    <img src="{{ gallery_obj.image.original }}"  alt="">
+                                </div>
+                            </a>
+
+{#                        <a href="{{ gallery_obj.image.original }}" data-lightbox="portfolio-images" title="" class="fancybox" >#}
+{##}
+{##}
+{##}
+{#                                    <img src="{{ gallery_obj.image.original }}"  alt="">#}
+{#                            </a>#}
+                        </div>
+
+                {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+<!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Contact us</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 contact-form">
+
+                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm" novalidate>
+
+                        <input type="hidden" name="co_id" value="{{ site.pk }}">
+                        <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+
+                        <div class="contact-form-elem">
+                            <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" id="name" placeholder="{% trans 'Your name' %}">
+                        </div>
+
+                        <div class="contact-form-elem">
+                            <input type="text" class="form-control" value="{{ form.email.value|default_if_none:"" }}" name="email" id="email" placeholder="{% trans 'Your email' %}">
+                        </div>
+
+                        <div class="contact-form-elem">
+                            <input type="text" class="form-control" value="{{ form.phone.value|default_if_none:"" }}" name="phone" id="phone" placeholder="{% trans 'Your phone' %}">
+                        </div>
+
+                        <div class="contact-form-elem">
+                            <textarea name="message" id="message" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
+                        </div>
+                        {% csrf_token %}
+
+                        <button type="submit">{% trans 'Send' %}</button>
+
+                    </form>
+
+                    {% if form.errors.name %}
+                        <p style="color:red;">{{ form.errors.name.0 }}</p>
+                    {% endif %}
+
+                    {% if form.errors.email %}
+                        <p style="color:red;">{{ form.errors.email.0 }}</p>
+                    {% endif %}
+
+                    {% if form.errors.message %}
+                        <p style="color:red;">{{ form.errors.message.0 }}</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {# Coupons and banners section. 2 coupons and 4 banners. #}
+{#   <div class="container clearfix">#}
+{#        <div class="row">#}
+{##}
+{#            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}#}
+{#            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}#}
+{#            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}#}
+{#            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}#}
+{##}
+            {# 4 banners, will lead to categories or products #}
+            {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
+            {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
+{##}
+{#            {% if right_banner_1 %}#}
+{#                <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">#}
+{##}
+{##}
+{#                    {% if right_banner_4 %}#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 4" %}#}
+{#                        </div>#}
+{##}
+{#                    {% elif right_banner_3 %}#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-4 col-sm-4 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 3" %}#}
+{#                        </div>#}
+{##}
+{#                    {% elif right_banner_2 %}#}
+{##}
+{#                        <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">#}
+{#                        {% site_banner "top" "SITES RIGHT 2" %}#}
+{#                        </div>#}
+{##}
+{#                     {% elif right_banner_1 %}#}
+{##}
+{#                        <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">#}
+{#                            {% site_banner "top" "SITES RIGHT 1" %}#}
+{#                        </div>#}
+{##}
+{#                    {% endif %}#}
+{##}
+{##}
+{#                </div>#}
+{##}
+{#            {% endif %}#}
+{##}
+{#        </div><!-- /end of Coupons and news modouls -->#}
+{#    </div><!-- /container -->#}
+
+    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
+    {# The proposals will have the same design as the news, so i am using the news styles. #}
+{#    <div class="container">#}
+{##}
+{#        <div class="row ">#}
+{##}
+{#            {% proposal 'Proposals/wall.html' 2 %}#}
+{##}
+{#            {% news 'News/wall.html' 2 %}#}
+{##}
+{#        </div><!-- end of news modoul -->#}
+{#    </div>#}
+
+
+{#</section>#}
+
+{% endblock %}
