@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse_lazy
@@ -154,7 +154,7 @@ class sendmessage(View):
                     [email]
                 )
             mail.send()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(reverse_lazy('message_sent'))
         else:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -189,3 +189,8 @@ class ProfileUpdate(ItemUpdate, UserTemplateMixin):
                 self.object.upload_images()
 
         return result
+
+
+class MessageSent(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/message_sent.html'
+

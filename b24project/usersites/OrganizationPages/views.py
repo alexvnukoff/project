@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView, TemplateView
 from django.utils.translation import ugettext as _
@@ -70,7 +70,7 @@ class Contacts(UserTemplateMixin, DetailView):
                     [email]
                 )
             mail.send()
-            return HttpResponseRedirect(reverse('pages:contacts'))
+            return HttpResponseRedirect(reverse_lazy('message_sent'))
 
         context_data['form'] = form
         return self.render_to_response(context_data)
