@@ -1,0 +1,228 @@
+/*---------- General Styling ----------*/
+body {
+	background-color: #000;
+    color: #fff;
+    /* main color: color: #83ba3a */
+}
+
+/*---------- Text Styling - The theme main color ----------*/
+h2.page-header a,
+h1.page-header,
+h2.page-header,
+.section-header,
+.navbar-nav>li.active a,
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus,
+.navbar-nav>li>a:active,
+.cust-nav ul li a:hover,
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus,
+.carousel-text li.active,
+.cust-nav ul li a:hover,
+.about-main h2,
+.product__price,
+.go-to-full:hover,
+.go-to-full:active,
+.go-to-full:focus,
+.job_offer__header,
+footer a:hover,
+footer a:active,
+.table h3 a,
+.product__price a{
+	color: #a40000 !important;
+}
+
+.tel .fa,
+.tel a{
+    color: #fff;
+}
+
+/*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
+.navbar-nav>li>a,
+.cust-nav ul li a,
+.about-main,
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active,
+.product .thumbnail,
+.product__title,
+.product__desc,
+.product__btn .btn,
+a.product__btn,
+.news__btn,
+.go-to-full,
+footer a,
+.special_offer__btn, .job_offer__btn,
+#timer-detail-page,
+.smalltext,
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active,
+.item-price-table,
+.membership-banner__member-text,
+.coupon-timer,
+.cust-nav__btn a{
+	color: #fff !important;
+}
+
+/*---------- Text Styling - Black text ----------*/
+.side-bar a,
+.select-lang,
+.item-page__qty-box,
+.cart{
+	color: #000;
+}
+
+/*---------- Text Styling - Dimming with gray ----------*/
+.product__cat,
+.product__valid__coupon,
+.product__deleted-price{
+	color: #979797;
+}
+
+/*---------- Background color Styling ----------*/
+.navbar-inverse,
+#timer-detail-page > div,
+#timer-detail-page div > span,
+.cust-nav__btn{
+	background-color: #000;
+}
+
+/*---------- Background theme color Styling ----------*/
+.product__btn .btn,
+a.product__btn,
+.news__btn,
+.special_offer__btn, .job_offer__btn{
+	background-color: #930303;
+}
+
+/*---------- More custome Styling ----------*/
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active{
+	background-color: #ebb66a !important;
+}
+
+/*---------- carousel Styling ----------*/
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus {
+    background: rgba(0,0,0,0);
+}
+
+/*---------- Product Styling ----------*/
+.product .thumbnail{
+	background-color: #262626;
+}
+
+.product__title{
+	border-bottom: 1px solid #fff;
+}
+
+.news__text .product__title{
+	border: none;
+}
+
+.product__title a{
+	color: #fff;
+}
+
+.product__discount{
+	color: #f7b400;
+}
+
+.product__btn .btn,
+a.product__btn,
+.news__btn{
+	border-color: #000;
+}
+
+a.coupon__btn{
+	background-color: #f7b400;
+	border-color: #8b6500;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	background-color: #fff;
+	border: 1px solid #979797;
+}
+
+.job_offer__p{
+	color: #262626;
+}
+
+/*---------- Footer Styling ----------*/
+footer{
+	background-color: #000;
+}
+
+.membership-banner{
+	background-color: #272727;
+}
+
+.rights{
+	border-top: 1px solid #fff;
+}
+
+.tmp_search{
+	color: #000;
+}
+
+.top_search input{
+	background-color: #000;
+	border: 1px solid #fff;
+	color: #fff;
+}
+/*---------- Page Item Styling ----------*/
+.special_offer__btn, .job_offer__btn{
+    border-color: #004400;
+}
+
+.special_offer__btn:hover,
+.special_offer__btn:focus,
+.special_offer__btn:active,
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active,
+.coupon__btn:hover,
+.coupon__btn:focus,
+.coupon__btn:active,
+.product__btn:hover,
+.product__btn:focus,
+.product__btn:active,
+.news__btn:hover,
+.news__btn:focus,
+.news__btn:active{
+	background-color: #262626;
+    border-color: #ece9d6;
+}
+
+#timer-detail-page{
+    border: 1px solid #930303;
+}
+
+.pagination>li>a, .pagination>li>span{
+	color: #930303;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	background-color: #a00c0b;
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+.category{
+	background-color: #fff;
+	color: #000;
+}
+

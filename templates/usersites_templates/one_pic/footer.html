@@ -1,0 +1,71 @@
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load staticfiles %}
+{% load i18n %}
+
+<footer>
+
+    <div class="footer-cols clearfix">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+                    <h4>{% trans 'Contact us' %}:</h4>
+                    <span class="glyphicon glyphicon-home"></span>{{ site.user_site.organization.address }}<br/>
+                    <span class="glyphicon glyphicon-phone-alt"></span>{{ site.user_site.organization.phone }}<br/>
+                    <span class="glyphicon glyphicon-envelope"></span>{{ site.user_site.organization.email }}<br/>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+                    <div class="social-header">
+                        <h4>{% trans 'Find us' %}:</h4>
+                          <div>
+
+                                {% if site.user_site.facebook %}
+                                    <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-footer"></i></a>
+                                {% endif %}
+
+                                {% if site.user_site.youtube %}
+                                    <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-footer"></i></a>
+                                {% endif %}
+
+                                {% if site.user_site.twitter %}
+                                    <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-footer"></i></a>
+                                {% endif %}
+
+                                {% if site.user_site.instagram %}
+                                    <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-footer"></i></a>
+                                {% endif %}
+
+                                {% if site.user_site.vkontakte %}
+                                    <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-footer"></i></a>
+                                {% endif %}
+
+                                {% if site.user_site.odnoklassniki %}
+                                    <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-footer"></i></a>
+                                {% endif %}
+
+                          </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+                    <div class="map" id="map" long="" lat="">
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright-footer-line clearfix" >
+        <div class="container">
+            All rights reserved © <a href="b24online.com">b24online.com</a> 2011-2016
+        </div>
+    </div>
+
+    </div>
+
+</footer>

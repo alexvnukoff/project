@@ -127,19 +127,17 @@
       {% endcomment %}
 
         {% for i in mybanners %}
-        {% if 'SITES CAT' in i %}
+            {% if 'SITES CAT' in i %}
 
-      <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
-        {% site_banner "top" i %}
-        </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                {% site_banner "top" i %}
+              </div>
 
-        {% endif %}
+            {% endif %}
         {% endfor %}
     </div>
 
-    {% comment %}
     {% b2c_products 'B2CProducts/main_products.html' 4 %}
-    {% endcomment %}
 
     <div class="container">
         <div class="row ">

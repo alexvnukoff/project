@@ -100,6 +100,14 @@ footer a,
 .navbar-nav>li>a:active{
 	color: #000;
 }
+
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: #000;
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #ddd;
+}
 /*---------- Text Styling - Black text ----------*/
 .side-bar a,
 .select-lang,

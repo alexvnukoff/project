@@ -195,39 +195,6 @@ header .intro-text .skills {
     }
 }
 
-/* Portrait phones and smaller */
-@media (max-width: 480px) {
-
-	.navbar-brand{
-		padding: 0;
-		margin-top: 0;
-	}
-
-	.navbar-brand>img{
-		margin: -10px 5px 5px 5px;
-		padding: 0;
-	}
-
-    .sec-container{
-        padding-top: 0;
-    }
-
-    .crop-portfolio {
-        height: 100%;
-    }
-
-    header {
-        margin-top: 10px;
-    }
-    .tel a{
-        font-size: 12pt;
-        color: #000;
-    }
-
-    #portfolio .portfolio-item {
-        height: 80px;
-    }
-}
 
 .navbar {
     text-transform: uppercase;
@@ -642,4 +609,42 @@ footer .footer-below {
 
 #portfolio img{
     width: 100%;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+	.navbar-brand{
+		padding: 0;
+		margin-top: 0;
+	}
+
+	.navbar-brand>img{
+		margin: -10px 5px 5px 5px;
+		padding: 0;
+	}
+
+    .sec-container{
+        padding-top: 0;
+    }
+
+    .crop-portfolio {
+        height: 100%;
+    }
+
+    header {
+        margin-top: 10px;
+    }
+    .tel a{
+        font-size: 12pt;
+        color: #000;
+    }
+
+    #portfolio .portfolio-item {
+        height: 80px;
+    }
+
+    .crop-portfolio {
+        height: 80px;
+    }
 }

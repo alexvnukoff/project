@@ -1,0 +1,35 @@
+{% extends 'usersites_templates/golan_blue/index.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+
+{{ block.super }}
+
+    <script>
+
+        setTimeout(function(){ 
+            window.location.href = document.referrer;
+        }, 2000);
+
+    </script>
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header in-page">{% trans 'Message sent!' %}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <p>{% trans 'Redirecting...' %}</p>
+            </div>
+      </div>
+
+      </div>
+
+
+{% endblock %}

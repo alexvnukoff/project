@@ -1,0 +1,26 @@
+{% extends 'usersites_templates/default_horizontal_banners/index.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+
+{{ block.super }}
+
+    <script>
+
+        setTimeout(function(){ 
+            window.location.href = document.referrer;
+        }, 2000);
+
+    </script>
+
+
+    <section class="content__info">
+
+        <h2>{% trans 'Message sent!' %}</h2>
+        <p>{% trans 'Redirecting...' %}</p>
+
+    </section>
+
+
+{% endblock %}

@@ -131,8 +131,8 @@ h2.page-header.inner-page{
 
 /*---------- logo Styling ----------*/
 .tel{
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
     padding-top: 10px;
     font-size: 18px;
 }
@@ -564,6 +564,11 @@ collapse the menu on 991px. */
 	padding-bottom: 10px;
 }
 
+/*------------------------------*/
+.products-list-page{
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+}
 /*---------- News Styling ----------*/
 .news{
     margin-bottom: 20px;

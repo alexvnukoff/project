@@ -1,0 +1,29 @@
+{% extends 'usersites_templates/ibonds/index.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+
+{{ block.super }}
+
+    <script>
+
+        setTimeout(function(){ 
+            window.location.href = document.referrer;
+        }, 2000);
+
+    </script>
+
+
+    <div class="container">
+        <div class="row">
+
+        <div class="col-lg-12">
+            <h2>{% trans 'Message sent!' %}</h2>
+            <p>{% trans 'Redirecting...' %}</p>
+        </div>
+
+        </div>
+    </div>
+
+{% endblock %}
