@@ -13,16 +13,30 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in basket.src %}
-            <tr>
-                <td>{{ i.product }}</td>
-                <td>{{ i.quantity }}</td>
-                <td>
-                    {{ i.product.get_discount_price|formatPrice }} 
-                    {{ i.product.currency|getSymbol }}
-                </td>
-            </tr>
-            {% endfor %}
+            {% if product and quantity %}
+                <tr>
+                    <td align="left">
+                        {{ product }}
+                    </td>
+                    <td>
+                        {{ quantity }}
+                    </td>
+                    <td>
+                        {{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}
+                    </td>
+                </tr>
+            {% else %}
+                {% for i in basket.src %}
+                <tr>
+                    <td>{{ i.product }}</td>
+                    <td>{{ i.quantity }}</td>
+                    <td>
+                        {{ i.product.get_discount_price|formatPrice }} 
+                        {{ i.product.currency|getSymbol }}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
         <tfoot>
             <tr class="dl-horizontal cart-sum-field" >

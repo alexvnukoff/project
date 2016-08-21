@@ -5,7 +5,7 @@
 $(function() {
     var DELIVERY_URL = '/b2c-products/delivery.html',
         PRODUCT_FIELD_ID = '#product_id',
-        QUANTITY_FIELD_ID = '#quantity';
+        QUANTITY_FIELD_ID = '#id_quantity_src';
     var orderByEmailButton = $('#order_by_email'),
         paypalForm = $('#paypal_form_layer > form'),
         paypalFormButton = $(paypalForm).find('input[type="image"]:first'),

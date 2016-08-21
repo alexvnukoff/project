@@ -83,7 +83,7 @@
                             <tr>
                                 <td>{% trans 'Amount' %}:</td>
                                 <td>
-                                    <input type="text" id="quantity" name="quantity" value="1" autocomplete="off" list="quantity" maxlength="2" onkeyup="this.value=this.value.replace(/[^\d]/,'')" id="id_quantity_src">
+                                    <input type="text" name="quantity" value="1" autocomplete="off" list="quantity" maxlength="2" onkeyup="this.value=this.value.replace(/[^\d]/,'')" id="id_quantity_src">
                                         <datalist id="quantity">{% for i in loop_times %}<option value="{{ i }}" />{% endfor %}</datalist>
                                 </td>
                             </tr>

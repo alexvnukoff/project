@@ -331,7 +331,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
         try:
             product = B2CProduct.objects\
                 .get(pk=int(self.request.GET.get('product_id')))
-        except (ValueError, B2CProduct.DoesNotExist) as exc:
+        except (TypeError, ValueError, B2CProduct.DoesNotExist) as exc:
             product = None
 
         domain = get_current_site().domain
