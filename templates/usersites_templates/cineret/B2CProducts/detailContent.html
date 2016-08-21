@@ -88,31 +88,16 @@
                     {% if object.coupon_discount_percent %}
                         <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
                     {% endif %}
-
                     <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
-
                 </form>
-
-                    <div style="margin-top: 10px;">
-                        <input type="checkbox" name="need_delivery" id="need_delivery">
-                        <span>{% trans 'Need a delivery' %}?</span>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        {% if not site.user_site.delivery_cost %}
-                            {% trans 'Delivery is unpaid' %}
-                        {% else %}
-                            {% trans 'Delivery cost' %}: 
-                            {{ site.user_site.delivery_currency|getSymbol }} 
-                            {{ site.user_site.delivery_cost|formatPrice }}
-                        {% endif %}
-                    </div>
-
+                {% include "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
+                
                 {% if paypal_form %}
                     <div id="paypal_form_layer">
                         {{ paypal_form.render }}
                     </div>
                 {% else %}
-                    <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                    <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Contact us' %}</a>
                 {% endif %}
 
                 <h4>{% trans 'About Company' %}</h4>
