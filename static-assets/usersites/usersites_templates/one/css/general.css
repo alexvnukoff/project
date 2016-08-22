@@ -488,6 +488,10 @@ footer .footer-below {
     text-align: center;
 }
 
+.wazeLink:active{
+    color: #000;
+}
+
 .copyright-footer-line{
     color: #fff;
     background-color: #0a0a0a;

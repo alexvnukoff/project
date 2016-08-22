@@ -53,6 +53,15 @@ h1.page-header{
 	position: relative;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
 /*---------- Navigation Styling ----------*/
 .main-navbar{
 	border: none;
