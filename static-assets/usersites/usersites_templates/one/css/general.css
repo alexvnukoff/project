@@ -292,6 +292,7 @@ section.success a.active {
     color: #2c3e50;
 }
 
+
 @media(max-width:767px) {
     section {
         padding: 15px 0;
@@ -467,6 +468,7 @@ footer .footer-above {
 
 footer .footer-col {
     margin-bottom: 50px;
+    margin-top: 10px;
 }
 
 footer .footer-below {
