@@ -1,0 +1,20 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load humanize %}
+
+<div style="margin-top: 10px;">
+    <input type="checkbox" name="need_delivery" id="need_delivery">
+    <span>{% trans 'Need a delivery' %}?</span>
+</div>
+<div style="margin-bottom: 10px;">
+    {% if not site.user_site.delivery_cost %}
+        {% trans 'Delivery is unpaid' %}
+    {% else %}
+        {% trans 'Delivery cost' %}: 
+        {{ site.user_site.delivery_currency|getSymbol }} 
+        {{ site.user_site.delivery_cost|formatPrice }}
+    {% endif %}
+</div>
