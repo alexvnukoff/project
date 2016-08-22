@@ -483,6 +483,11 @@ footer .footer-below {
     margin-top: 20px;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
 .copyright-footer-line{
     color: #fff;
     background-color: #0a0a0a;
