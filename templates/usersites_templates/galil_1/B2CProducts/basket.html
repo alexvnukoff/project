@@ -8,9 +8,8 @@
 {% block content %}
 
 
-    <section class="content__info grid-layout cart">
+<section class="content__info grid-layout cart">
     <!-- Check domain name {{ site.domain }} -->
-
         <div class="container">
             {% if total > 0 %}
                 <div class="panel panel-default">
@@ -116,4 +115,9 @@
         </div>
 
         </section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
 {% endblock %}

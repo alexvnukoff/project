@@ -105,24 +105,7 @@
 
                 <table>
                     <tbody>
-                        <tr valign="top">
-                            <td style="text-align: right">
-                                <input type="checkbox" name="need_delivery" id="need_delivery" style="width: 25%;">
-                            </td>
-                            <td colspan="2">
-                                <div>{% trans 'Need a delivery' %}?</div>
-                                <div>
-                                    {% if not site.user_site.delivery_cost %}
-                                        {% trans 'Delivery is unpaid' %}
-                                    {% else %}
-                                        {% trans 'Delivery cost' %}: 
-                                        {{ site.user_site.delivery_currency|getSymbol }} 
-                                        {{ site.user_site.delivery_cost|formatPrice }}
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-
+                        {% include "usersites/B2CProducts/include/deliveryNeed_default.html" %}
                         <tr>
                             <td></td>
                             <td>
