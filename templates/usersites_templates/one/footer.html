@@ -9,14 +9,14 @@
         <div class="container">
             <div class="row">
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
                     <h4>{% trans 'Contact us' %}:</h4>
                     <span class="glyphicon glyphicon-home"></span>{{ site.user_site.organization.address }}<br/>
                     <span class="glyphicon glyphicon-phone-alt"></span>{{ site.user_site.organization.phone }}<br/>
                     <span class="glyphicon glyphicon-envelope"></span>{{ site.user_site.organization.email }}<br/>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
                     <div class="social-header">
                         <h4>{% trans 'Find us' %}:</h4>
                           <div>
@@ -50,8 +50,14 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
-                    <div class="map" id="map" long="" lat="">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 clearfix footer-col hidden-xs">
+                    <iframe id="wazeFrame" src="" width="300" height="150"></iframe>
+                    <a id="wazeLink" href="">Open in Waze</a>
+                </div>
+
+                <div class="col-xs-12 clearfix footer-col visible-xs">
+                    <iframe id="wazeFrameMobile" src="" width="200" height="100"></iframe>
+                    <a id="wazeLinkMobile" href="">Open in Waze</a>
                 </div>
 
 
