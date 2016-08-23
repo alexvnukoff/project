@@ -120,6 +120,9 @@
 {% endblock %}
 
 {% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
+
     <script>
         $(".inc").on("click", function() {
 
