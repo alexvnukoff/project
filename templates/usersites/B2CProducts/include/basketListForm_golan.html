@@ -9,13 +9,13 @@
 
     <table class="table table-striped">
         <thead>
-          <tr>
-            <th class="tb-pic"></th>
-            <th class="tb-item"></th>
-            <th class="tb-qty">{% trans "Price" %}</th>
-            <th class="tb-price">{% trans 'Amount' %}</th>
-            <th class="tb-remove"></th>
-          </tr>
+            <tr>
+                <th class="tb-pic"></th>
+                <th class="tb-item"></th>
+                <th class="tb-qty">{% trans "Price" %}</th>
+                <th class="tb-price">{% trans 'Amount' %}</th>
+                <th class="tb-remove"></th>
+            </tr>
         </thead>
 
         <tbody>
@@ -66,10 +66,11 @@
                             {{ site.user_site.delivery_currency|getSymbol }} 
                             {{ site.user_site.delivery_cost|formatPrice }}
                         {% endif %}
-                    </div>
+                    </div>                    
                 </td>
             </tr>
         </tbody>
+
         <tfoot>
             <tr class="dl-horizontal cart-sum-field" >
                 <td></td>
@@ -84,9 +85,10 @@
     <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
     <a id="order_by_email" class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
     <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
+
+
 </form>
 
-{# PayPal form #}
 <div id="paypal_form_layer" class="pay">
     {% if paypal_form %}
         {{ paypal_form.render }}
