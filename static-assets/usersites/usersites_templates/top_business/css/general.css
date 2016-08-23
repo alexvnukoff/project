@@ -27,6 +27,15 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
     text-decoration: none;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
 /** Navigation Styling ***************/
 /*********************************/
 #cart-dropdown,

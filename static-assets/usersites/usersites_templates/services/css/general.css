@@ -17,6 +17,15 @@ body {
 	flex: 1;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
 .icon-ok:before {
 	font-family: "Glyphicons Halflings";
     content:"\e013";

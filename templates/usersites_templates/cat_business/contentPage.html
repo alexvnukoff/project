@@ -1,0 +1,75 @@
+{% extends 'usersites_templates/top_business/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{# including the slider. The slider will apear only on the main page. #}
+{% block slider %}
+       {% include 'usersites_templates/top_business/slider.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% b2c_products 'B2CProducts/main_products.html' 4 %}
+
+    {% include 'usersites_templates/top_business/banner.html' %}
+
+    {% coupons 'B2CProducts/main_coupons.html' 2 %}
+
+    {% proposal 'Proposals/wall.html' 1 %}
+
+    {% b2b_products 'B2BProducts/main_products.html' 4 %}
+
+    {# About section of the company on the front page. News + about #}
+    <div class="container">
+        <div class="row">
+
+            {% if news %}
+
+                <div class="col-md-8 news-main">
+                    {% news 'News/wall.html' 2 %}
+                </div>
+
+                <div class="col-md-4 about-main">
+
+                    <div class="about-main__text">
+                        {# Organization name #}
+                        <h1>{{ site.user_site.organization.name }}</h1>
+                        <p>
+                            {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                        </p>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="col-md-12 about-main">
+
+                    <div class="about-main__text">
+                        {# Organization name #}
+                        <h1>{{ site.user_site.organization.name }}</h1>
+                        <p>
+                            {# Organization description #}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                        </p>
+                    </div>
+
+                    {#KRN when adding a youtube movie link - changing the prev div to be 6 col #}
+                    {#<div class="col-md-6 about-main__movie hidden-xs hidden-sm">#}
+                        {#<iframe width="560" height="315" src="https://www.youtube.com/embed/WeiLczOOH0w" frameborder="0" allowfullscreen></iframe>#}
+                        {#<img src="{% static 'usersites/images/tmp/youtube.jpg' %}" />#}
+                    {#</div>#}
+
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{#    here come the gallery #}
+
+{% endblock %}

@@ -16,6 +16,19 @@ body {
 	flex: 1;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
+.wazeLink img{
+	width: auto;
+}
+
 .center-wrap {
   line-height: 120px;
   text-align: center;
@@ -718,6 +731,7 @@ footer .btn-default{
 
 .footer-col{
 	position: relative;
+	margin-top: 10px;
 }/*---------- Footer Styling ----------*/
 footer{
 	margin-top: 20px;

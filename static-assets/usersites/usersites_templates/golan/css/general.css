@@ -761,6 +761,7 @@ footer .btn-default{
 
 .footer-col{
 	position: relative;
+	margin-top: 10px;
 }
 
 /*---------- Banner Advertisment Styling ----------*/
@@ -937,6 +938,19 @@ footer .btn-default{
 
 .table h3{
 	margin-top: 0px;
+}
+
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
+.wazeLink img{
+	width: auto;
 }
 
 /*---------- Item Styling ----------*/

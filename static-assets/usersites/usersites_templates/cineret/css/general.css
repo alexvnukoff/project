@@ -623,6 +623,19 @@ h3 a:focus{
     flex: 2;
 }
 
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
+.wazeLink img{
+	width: auto;
+}
+
 /* ----------- News Styling -------------------- */
 .main-news{
     position: relative;
@@ -930,6 +943,7 @@ footer .btn-default{
 
 .footer-col{
 	position: relative;
+    margin-top: 10px;
 }
 
 /*---------- Banner Advertisment Styling ----------*/
