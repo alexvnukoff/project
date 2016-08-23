@@ -98,9 +98,14 @@
            </div>
           </div>
 
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
-            <div class="map" id="map" long="" lat="">
-          </div><!-- /row -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col hidden-xs">
+            <iframe id="wazeFrame" src="" width="300" height="150"></iframe>
+        </div>
+
+        <div class="col-xs-12 clearfix footer-col visible-xs">
+            <iframe id="wazeFrameMobile" src="" width="200" height="100"></iframe>
+                    <a class="wazeLink" href="#"><img src="{% static 'usersites/images/logowaze.png' %}">{% trans 'Open with Waze' %}</a>
+        </div>
 
         </div><!-- /container -->
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >

@@ -1,0 +1,36 @@
+{% load CustomFilters %}
+{% load i18n %}
+
+{% block before_paginator %}
+<section class="content__info__actions">
+    <div class="header vertical clearfix">
+{% endblock %}
+
+    {% if is_paginated %}
+        <div class="paginator">
+               {% if page_obj.has_previous %}
+                <a href="{% dynurl url_paginator url_parameter page_obj.previous_page_number %}" class="paginator__prev"></a>
+              {% endif %}
+                <ul class="pagination">
+
+                  {% for i in paginator_range %}
+                       {% ifequal i page_obj.number %}
+                           <li><a href="" class="active">{{ page_obj.number }}</a></li>
+                              {% else %}
+                            <li><a href="{% dynurl url_paginator url_parameter i%}">{{ i }}</a></li>
+                       {% endifequal %}
+                  {% endfor %}
+                </ul>
+             {%  if page_obj.has_next %}
+                <a href="{% dynurl url_paginator url_parameter page_obj.next_page_number %}" class="paginator__next"></a>
+             {% endif %}
+        </div>
+    {% endif %}
+
+{% block after_paginator %}
+    </div>
+</section>
+{% endblock %}
+
+
+

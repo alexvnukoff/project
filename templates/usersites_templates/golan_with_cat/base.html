@@ -84,31 +84,40 @@
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
-
-    <script>
-    function initMap() {
+    <script type="text/javascript" charset="utf-8">
+    function wazeMapInfo(){
         {% if site.user_site.organization.location %}
           {% with site.user_site.organization.location|split:"," as LatLng %}
-            var myLatLng = { lat: {{ LatLng.0 }}, lng: {{ LatLng.1 }} };
+            var wazeInfo = {
+                lat: {{ LatLng.0 }},
+                lon: {{ LatLng.1 }}
+            };
           {% endwith %}
         {% endif %}
 
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        disableDefaultUI: true,
-        scrollwheel: false,
-        navigationControl: false,
-        mapTypeControl: false,
-        zoomControl: true,
-        scaleControl: true,
-        center: myLatLng
-      });
+        var srcString, linkString;
+        if($( window ).width() > 480) {
+            srcString = "https://embed.waze.com/iframe?pin=1&zoom=16&lat=" + wazeInfo.lat + "&lon=" + wazeInfo.lon;
+            document.getElementById("wazeFrame").setAttribute("src", srcString);
+        } else {
+            srcString = "https://embed.waze.com/iframe?pin=1&zoom=14&lat=" + wazeInfo.lat + "&lon=" + wazeInfo.lon;
+            document.getElementById("wazeFrameMobile").setAttribute("src", srcString);
+        }
 
-      var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map
-      });
+        if (navigator.appVersion.indexOf("Mac")!=-1){
+            linkString = "waze://?ll=" + wazeInfo.lat + wazeInfo.lon + "&navigate=yes";
+            $(".wazeLink").attr("href", linkString);
+        }else{
+            linkString = "geo:" + wazeInfo.lat + "," + wazeInfo.lon;
+            $(".wazeLink").attr("href", linkString);
+        }
+
+{#        alert(srcString);#}
     }
+
+        window.onload = function() {
+           wazeMapInfo();
+        }
 
     </script>
 
