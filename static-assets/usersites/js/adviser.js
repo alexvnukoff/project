@@ -11,7 +11,7 @@ function initAdviser() {
     // Слой для вызова 
     var isLoaded = false;
     var adviserMainDiv =  $('<div/>').addClass('online_adviser').attr('id', ADVISER_ID);
-    $(adviserMainDiv).html('<span>Онлайн-конультант</span>').hide();
+    $(adviserMainDiv).html('<span>Online-adviser</span>').hide();
     $('body').append(adviserMainDiv);
     
     // Слой для диалога

@@ -89,9 +89,12 @@ class DeliveryForm(forms.Form):
         self._request = kwargs.pop('request')
         super(DeliveryForm, self).__init__(*args, **kwargs)
         for field_name in self.fields:
+            class_value = 'form-control'
+            if self.fields[field_name].required:
+                class_value += ' form_field_required'
             self.fields[field_name].widget.attrs.update(
-            {'placeholder': self.fields[field_name].label}
-        )
+                {'placeholder': self.fields[field_name].label,
+                 'class': class_value, 'style': 'width: 90%'})
 
     def get_errors_msg(self):
         """

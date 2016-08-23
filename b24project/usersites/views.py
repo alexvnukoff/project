@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse_lazy
@@ -121,7 +121,7 @@ class sendmessage(View):
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "B24online.com: New message from {0}".format(cd['name'])
+                subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
             # Collecting lead
             getlead = GetLead(request)
@@ -135,9 +135,26 @@ class sendmessage(View):
                 company_id=cd['co_id']
                 )
 
-            mail = EmailMessage(subject, cd['message'], cd['email'], [email])
+            mail = EmailMessage(subject,
+                    """
+                    From: {0}
+                    URL: {1}
+                    Email: {2}
+                    Phone: {3}
+
+                    Message: {4}
+                    """.format(
+                        cd['name'],
+                        cd['url_path'],
+                        cd['email'],
+                        cd['phone'],
+                        cd['message']
+                        ),
+                    cd['email'],
+                    [email]
+                )
             mail.send()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(reverse_lazy('message_sent'))
         else:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -172,3 +189,8 @@ class ProfileUpdate(ItemUpdate, UserTemplateMixin):
                 self.object.upload_images()
 
         return result
+
+
+class MessageSent(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/message_sent.html'
+

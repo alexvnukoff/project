@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
     <link rel="stylesheet" href="{% static 'b24online/css/icons.css' %}">
-
+    {% block after_css %}{% endblock %}
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
@@ -120,22 +120,19 @@
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
-        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
-        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
-        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
-        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
-        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
-        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
-        <script src="{% static 'usersites/js/basket.js' %}"></script>
-        <script src="{% static 'usersites/js/main.js' %}"></script>
-
-
+    <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+    <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+    <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+    <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+    <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'usersites/js/basket.js' %}"></script>
+    <script src="{% static 'usersites/js/main.js' %}"></script>
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-
-
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
     <script>
     function initMap() {
         {% if site.user_site.organization.location %}
@@ -160,7 +157,6 @@
         map: map
       });
     }
-
     </script>
 
 {% block js %}{% endblock %}

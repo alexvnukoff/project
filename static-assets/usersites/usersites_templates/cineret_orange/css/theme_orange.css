@@ -315,3 +315,8 @@ footer a:active{
 }
 
 
+.field_error {  
+    font-size: 80%;
+    color: red;
+}
+

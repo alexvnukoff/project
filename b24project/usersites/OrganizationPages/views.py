@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView, TemplateView
 from django.utils.translation import ugettext as _
@@ -38,7 +38,7 @@ class Contacts(UserTemplateMixin, DetailView):
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "B24online.com: New message from {0}".format(cd['name'])
+                subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
             # Collecting lead
             getlead = GetLead(request)
@@ -51,9 +51,26 @@ class Contacts(UserTemplateMixin, DetailView):
                 company_id=cd['co_id']
                 )
 
-            mail = EmailMessage(subject, cd['message'], cd['email'], [email])
+            mail = EmailMessage(subject,
+                    """
+                    From: {0}
+                    URL: {1}
+                    Email: {2}
+                    Phone: {3}
+
+                    Message: {4}
+                    """.format(
+                        cd['name'],
+                        cd['url_path'],
+                        cd['email'],
+                        cd['phone'],
+                        cd['message']
+                        ),
+                    cd['email'],
+                    [email]
+                )
             mail.send()
-            return HttpResponseRedirect(reverse('pages:contacts'))
+            return HttpResponseRedirect(reverse_lazy('message_sent'))
 
         context_data['form'] = form
         return self.render_to_response(context_data)
