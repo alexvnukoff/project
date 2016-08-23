@@ -4,15 +4,15 @@
 {% load staticfiles %}
 {% load humanize %}
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th class="tb-item"></th>
-                <th class="tb-qty">{% trans "Amount" %}</th>
-                <th class="tb-price">{% trans 'Price' %}</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="tb-item"></th>
+            <th class="tb-qty">{% trans "Amount" %}</th>
+            <th class="tb-price">{% trans 'Price' %}</th>
+        </tr>
+    </thead>
+    <tbody>
             {% if product and quantity %}
                 <tr>
                     <td align="left">
@@ -37,12 +37,12 @@
                 </tr>
                 {% endfor %}
             {% endif %}
-        </tbody>
-        <tfoot>
-            <tr class="dl-horizontal cart-sum-field" >
-                <td></td>
-                <td><p id="total_cost"><strong>{% trans 'Total' %}:</strong></p></td>
-                <td ><p id="total_cost"><strong>{{ total }}</strong>&nbsp;</p></td>
-            </tr>
-        </tfoot>
-    </table>
+    </tbody>
+    <tfoot>
+        <tr class="dl-horizontal cart-sum-field" >
+            <td></td>
+            <td><p id="total_cost"><strong>{% trans 'Total' %}:</strong></p></td>
+            <td ><p id="total_cost"><strong> {{ total }}</strong>&nbsp;</p></td>
+        </tr>
+    </tfoot>
+</table>

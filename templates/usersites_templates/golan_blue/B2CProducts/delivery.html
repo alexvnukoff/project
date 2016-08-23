@@ -1,35 +1,15 @@
-{% extends 'usersites_templates/golan_purple/index.html' %}
+{% extends 'usersites_templates/golan_blue/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block after_css %}
     {{ block.super }}
-    <style type="text/css">
-      p.form_field { 
-        margin: 10px 0;
-        position: relative;
-      }
-      p.form_field_error { 
-        color: red;
-        font-size: 80%;
-        margin: 5px 0 15px 0;
-      }
-      .form_field_required { 
-        border-color: #555555;
-      }
-      #delivery_form textarea {
-        margin: 0 -2px;
-        width: 50%;
-      }
-      .hide_layer {
-        display: none;
-      }
-
-    </style>    
+    {% include "usersites/B2CProducts/include/deliveryFormCss_cineret.html" %}
 {% endblock %}
 
 {% block content %}
@@ -39,49 +19,13 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-6 col-lg-6">
-    <h2 class="page-header">{% trans 'Your Order' %}</h2>
-    <p>&nbsp;</p>
-    <table class="table table-striped" width="90%">
-        <thead>
-            <tr>
-                <th class="tb-item"></th>
-                <th class="tb-qty">{% trans "Amount" %}</th>
-                <th class="tb-price">{% trans 'Price' %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in basket.src %}
-            <tr>
-                <td align="left">
-                    {{ item.product }}
-                </td>
-                <td>
-                    {{ item.quantity }}
-                </td>
-                <td>
-                    {{ item.product.get_discount_price|formatPrice }} {{ item.product.currency|getSymbol }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>&nbsp;</p>
-
-    {% if form %}
-    <h2>{% trans 'Enter Your Info for delivery' %}</h2>
-    <form id="delivery_form" method="post" action="{% url 'b2c_products:delivery_info_json' %}" class="clearfix">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="control-group form-group">
-                <p class="form_field controls">{{ field }}</p>
-            </div>
-            <p id="{{ field.name }}_errors" class="form_field_error hide_layer"></>
-        {% endfor %}
-    </form>
-    <div id="paypal_form_layer" class="pay">
-        {{ paypal_form.render }}
-    </div>
-    {% endif %}
+                        <h2 class="page-header">{% trans 'Your Order' %}</h2>
+                        <p>&nbsp;</p>
+                        {# Basket items list #}
+                        {% include "usersites/B2CProducts/include/basketItemsTable_golan.html" %}
+                        <p>&nbsp;</p>
+                        {# Delivery info form #}
+                        {% include "usersites/B2CProducts/include/deliveryForm_cineret.html" %}
                     </div>
                 </div>
             </div>

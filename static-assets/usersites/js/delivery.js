@@ -3,9 +3,9 @@
  */
 
 $(function() {
-
-    // Для корзины
-    var DELIVERY_URL = '/b2c-products/delivery.html';
+    var DELIVERY_URL = '/b2c-products/delivery.html',
+        PRODUCT_FIELD_ID = '#product_id',
+        QUANTITY_FIELD_ID = '#id_quantity_src';
     var orderByEmailButton = $('#order_by_email'),
         paypalForm = $('#paypal_form_layer > form'),
         paypalFormButton = $(paypalForm).find('input[type="image"]:first'),
@@ -56,6 +56,20 @@ $(function() {
                     }
                 }
             });
+            return false;
+        });        
+    } else if (paypalFormButton.length > 0) {
+        $(paypalFormButton).on('click', function(event) {
+            event.preventDefault();
+            var rawProductId = $(PRODUCT_FIELD_ID).val(),
+                rawQuantity = $(QUANTITY_FIELD_ID).val(),
+                productId = parseInt(rawProductId),
+                quantity = parseInt(rawQuantity);
+            if ($('#need_delivery').is(":checked") && productId > 0 && quantity > 0) {
+                window.location.href = DELIVERY_URL + '?product_id=' + rawProductId + '&quantity=' + rawQuantity;
+            } else {
+                $(paypalForm).submit();
+            }
             return false;
         });        
     }

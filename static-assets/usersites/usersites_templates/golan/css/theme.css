@@ -226,3 +226,7 @@ footer{
 	color: #000;
 }
 
+.field_error {
+    font-size: 80%;
+    color: white;
+}

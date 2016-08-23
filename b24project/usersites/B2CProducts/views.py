@@ -327,51 +327,79 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
         return kwargs
 
     def get_context_data(self, **kwargs):
-        basket = Basket(self.request)
-        has = basket.count
         context = super(B2CProductDelivery, self).get_context_data(**kwargs)
-        context['basket'] = dict(src=basket)
-        context['total'] = basket.summary
-        
-        # Сколько наименований товаров в Корзине
-        basket_items_total = len(list(basket))
+        try:
+            product = B2CProduct.objects\
+                .get(pk=int(self.request.GET.get('product_id')))
+        except (TypeError, ValueError, B2CProduct.DoesNotExist) as exc:
+            product = None
 
-        # Набор информации для PayPal
-        paypal_dict = {}
-        if basket_items_total > 1:
-            paypal_dict.update({
-                'cmd': '_cart',
-                'upload': 1,
-                'business': basket.paypal,
-                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
-                'return_url': self.request.build_absolute_uri(),
-                'cancel_return': self.request.build_absolute_uri(),
-                'no_shipping': 0,
-                'quantity': 1,
-                'currency_code': basket.currency
-            })
-            i = 1
-            for item in basket:
-                paypal_dict['amount_%d' % i] = \
-                    item.product.get_discount_price() * item.quantity
-                paypal_dict['item_name_%d' % i] = item.product.name
-                i += 1    
-            paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
-        else:
-            if basket.summary:
+        domain = get_current_site().domain
+        if not product:    
+            basket = Basket(self.request)
+            has = basket.count
+            context['basket'] = dict(src=basket)
+            context['total'] = basket.summary
+
+            # Сколько наименований товаров в Корзине
+            basket_items_total = len(list(basket))
+
+            # Набор информации для PayPal
+            paypal_dict = {}
+            if basket_items_total > 1:
                 paypal_dict.update({
+                    'cmd': '_cart',
+                    'upload': 1,
                     'business': basket.paypal,
-                    'amount': basket.summary,
-                    'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                    'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
                     'return_url': self.request.build_absolute_uri(),
                     'cancel_return': self.request.build_absolute_uri(),
-                    'item_name': _('Products from website ') + get_current_site().domain,
                     'no_shipping': 0,
                     'quantity': 1,
                     'currency_code': basket.currency
                 })
-            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
-
+                i = 1
+                for item in basket:
+                    paypal_dict['amount_%d' % i] = \
+                        item.product.get_discount_price() * item.quantity
+                    paypal_dict['item_name_%d' % i] = item.product.name
+                    i += 1    
+                paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
+            else:
+                if basket.summary:
+                    paypal_dict.update({
+                        'business': basket.paypal,
+                        'amount': basket.summary,
+                        'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
+                        'return_url': self.request.build_absolute_uri(),
+                        'cancel_return': self.request.build_absolute_uri(),
+                        'item_name': _('Products from website ') + domain,
+                        'no_shipping': 0,
+                        'quantity': 1,
+                        'currency_code': basket.currency
+                    })
+                paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+        else:
+            try:
+                quantity = int(self.request.GET.get('quantity'))
+            except ValueError as exc:
+                quantity = 0
+            
+            context.update({'product': product, 'quantity': quantity})
+            if product.currency and product.cost and quantity:
+                paypal_dict = {
+                    "business": product.company.company_paypal_account or '',
+                    "amount": product.get_discount_price,
+                    "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
+                    "return_url": self.request.build_absolute_uri(),
+                    "cancel_return": self.request.build_absolute_uri(),
+                    "item_number": product.pk,
+                    "item_name": product.name,
+                    "no_shipping": 0,
+                    "quantity": 1,
+                    "currency_code": product.currency
+                }
+                paypal_form = PayPalPaymentsForm(initial=paypal_dict)
         context.update({'paypal_form': paypal_form,})
         return context
 

@@ -34,6 +34,7 @@
     {% endif %}
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    {% block after_css %}{% endblock %}
 
 </head>
 
@@ -84,8 +85,6 @@
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
     <script type="text/javascript" charset="utf-8">
-
-
     function wazeMapInfo(){
         {% if site.user_site.organization.location %}
           {% with site.user_site.organization.location|split:"," as LatLng %}
