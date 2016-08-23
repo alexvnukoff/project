@@ -1,0 +1,53 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
+{# the coupon will take 50% of the page. #}
+{% if b2c_coupons %}
+
+    <!-- Coupons. pulling 2. display according to the amount -->
+    <div class="container coupon-container">
+
+    	<div class="row">
+	    	<h1>{% trans 'Coupons' %}</h1>
+	    </div>
+
+	        <div class="row main-coupons__row">
+
+                {% for product in coupons %}
+                    <div class="col-xs-12 col-md-6 col-sm-6 main-coupons__col">
+                        <div class="thumbnail thumbnail__page">
+
+                            {% if product.image %}
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="main-coupons__img">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" class="main-coupons__img" />
+                            {% endif %}
+
+                            <div class="caption">
+                                <h3><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatewords:20 }}</a></h3>
+
+                                <p class="main-products__price">
+                                    {% if product.cost %}
+                                        {{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+                                        <span>{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</span>
+                                    {% endif %}
+                                </p>
+
+                                <div class="main-products__timer">
+                                    <p >{% trans "Promotion ends" %}:</p>
+                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                </div>
+{#                                <p class="main-products__timer">Valid until: <span>1d 27h 56m 12s</span></p>#}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+	        </div>
+
+	</div><!-- end of coupons container -->
+
+{% endif %}

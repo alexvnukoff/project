@@ -1,0 +1,66 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+
+{#<!-- Slider in the container -->#}
+<div class="container">
+
+    <div class="bs-example">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Carousel indicators -->
+            {% if site.user_site.slider_images|length > 0 %}
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+            {% endif %}
+
+            <!-- Wrapper for carousel items -->
+            <div class="carousel-inner">
+
+                {# in case the user doesnt have slides, there will be default slides. #}
+                {% if site.user_site.slider_images|length == 0 %}
+
+                    <div class="item active">
+                        <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" />
+                    </div>
+                    <div class="item">
+                        <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" />
+                    </div>
+                    <div class="item">
+                        <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" />
+                    </div>
+
+                {% else %}
+
+                    {% for i in site.user_site.slider_images %}
+                        {% if forloop.first %}
+                            <div class="item active">
+                                <img src="{{ i.image.original }}">
+                            </div>
+                        {% else %}
+                            <div class="item">
+                                <img src="{{ i.image.original }}">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+{#            <!-- Carousel controls. display if there is more than 1 slide -->#}
+            {% if site.user_site.slider_images|length > 0 %}
+                <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
