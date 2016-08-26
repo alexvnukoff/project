@@ -16,3 +16,6 @@ if TEMPLATES:
         os.path.join(BASE_DIR, '..', 'templates/_usersites/'))
 
 LOGIN_REDIRECT_URL = '/'
+
+# For PayPal button
+PAYPAL_IMAGE = 'https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif'
