@@ -11,9 +11,9 @@
 <div class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
-            {% if page.object_list|length > 0 %}
+            {% if departments|length > 0 %}
                 <ul class="sitemap department">
-                    {% for department in page.object_list %}
+                    {% for department in departments %}
                         <li data-item-id="{{ department.pk }}" data-type="department">
                             <a href="#" title="{{ department.name }}">{{ department.name }}</a>
                             <ul class="sub vacancy">
@@ -39,5 +39,4 @@
             </div>
         </div>
     </div>
-    {% include "b24online/main/paginator.html" %}
 </div>

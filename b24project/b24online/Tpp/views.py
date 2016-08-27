@@ -305,16 +305,10 @@ def _tab_structure(request, tpp, page=1):
 
     departments = organization.departments.all().prefetch_related('vacancies').order_by('name')
 
-    paginator = Paginator(departments, 10)
-    page = paginator.page(page)
-    paginator_range = func.get_paginator_range(page)
-    url_paginator = "tpp:tab_structure_paged"
 
     template_params = {
         'has_perm': organization.has_perm(request.user),
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
+        'departments': departments,
         'url_parameter': tpp,
         'item_pk': tpp
     }
