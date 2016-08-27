@@ -9,19 +9,6 @@ from elasticsearch_dsl import Index, DocType
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_index_name
 
-a = {}
-activate('en')
-for d in organization.departments.all():
-    a[d.id] = d.name
-
-deactivate()
-
-for d in organization.departments.all():
-    d.name = a[d.id]
-    d.save()
-
-
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
