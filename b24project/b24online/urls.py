@@ -43,6 +43,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', b24online.views.home, name="main"),
+    url(r'^dashboard.html$', TemplateView.as_view(template_name="b24online/main/dashboard.html"), name="dashboard"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^news/', include(b24online.News.urls, namespace='news')),
     url(r'^products/', include(b24online.Product.urls, namespace='products')),

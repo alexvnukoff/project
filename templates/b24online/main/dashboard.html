@@ -1,0 +1,134 @@
+{% extends 'b24online/main_page.html' %}
+{% load CustomFilters %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block keywords %}{% endblock %}
+
+{% block title %}
+   {% trans 'Control Panel' %}
+{% endblock %}
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if current_organization %}
+            <div class="wall-title-bg">{% trans 'Actions for:' %} {{ current_organization.name }}</div>
+            <ul class="listprd lstactions">
+                <li>
+                   <div><a href="{% url 'products:my_main' %}" class="name"><h3>{% trans 'B2B products' %}</h3></a></div><br />
+                    {% trans 'Add and manage your products and services' %}
+                    <a href="{% url 'products:add' %}" class="btnbuy">{% trans 'Add new B2B product' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'products:my_main' %}" class="name"><h3>{% trans 'B2C products' %}</h3></a></div><br />
+                    {% trans 'Add and manage your products and services' %}
+                    <a href="{% url 'products:addB2C' %}" class="btnbuy">{% trans 'Add new B2C product' %}</a>
+                </li>
+
+               <li>
+                   <div><a href="{% url 'site:main' %}" class="name"><h3>{% trans 'Company site' %}</h3></a></div><br />
+                    {% trans 'Create and manage your external site' %}
+                    <a href="{% url 'site:main' %}" class="btnbuy">{% trans 'Manage company site' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'leads:main' %}" class="name"><h3>{% trans 'Leads' %}</h3></a></div><br />
+                    {% trans 'Manage collected leads ' %}
+                    <a href="{% url 'leads:main' %}" class="btnbuy">{% trans 'Manage leads' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'news:my_main' %}" class="name"><h3>{% trans 'News' %}</h3></a></div><br />
+                    {% trans 'Announce evens using you news repository' %}
+                    <a href="{% url 'news:add' %}" class="btnbuy">{% trans 'Add news' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'video:my_main' %}" class="name"><h3>{% trans 'Video gallery' %}</h3></a></div><br />
+                    {% trans 'Post videos in your videos blog' %}
+                    <a href="{% url 'video:add' %}" class="btnbuy">{% trans 'Add video' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'analytic:main' %}" class="name"><h3>{% trans 'Analytic' %}</h3></a></div><br />
+                    {% trans 'Check our items analytic' %}
+                    <a href="{% url 'analytic:main' %}" class="btnbuy">{% trans 'Check company analytic' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'adv_banners:main' %}" class="name"><h3>{% trans 'Advertisement' %}</h3></a></div><br />
+                    {% trans 'Upload your banners and use advertisement to grow sales' %}
+                    <a href="{% url 'adv_banners:main' %}" class="btnbuy">{% trans 'Upload banner' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'vacancy:my_main' %}" class="name"><h3>{% trans 'Vacancies' %}</h3></a></div><br />
+                    {% trans 'Find employees in our system' %}
+                    <a href="{% url 'vacancy:add' %}" class="btnbuy">{% trans 'Publish new vacancy' %}</a>
+                </li>
+
+
+                <li>
+                    <div><a href="{% url 'products:producer_list' %}" class="name"><h3>{% trans 'Product producers' %}</h3></a></div><br />
+                    {% trans 'Manage product producers' %}
+                    <a href="{% url 'products:producer_list' %}" class="btnbuy">{% trans 'Manage producers' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'products:deal_list' %}" class="name"><h3>{% trans 'Active deals' %} ({{ request|deal_number|default:"0" }})</h3></a></div><br />
+                    {% trans 'Track and manage your deals' %}
+                    <a href="{% url 'products:deal_list' %}" class="btnbuy">{% trans 'Manage deals' %}</a>
+                </li>
+
+                <li>
+                    <div><a href="{% url 'innov:my_main' %}" class="name"><h3>{% trans 'Innovation projects' %}</h3></a></div><br />
+                    {% trans 'Publish and contribute on innovation projects' %}
+                    <a href="{% url 'innov:add' %}" class="btnbuy">{% trans 'Publish new project' %}</a>
+                </li>
+
+
+                <li>
+                    <div><a href="{% url 'proposal:my_main' %}" class="name"><h3>{% trans 'Business proposals' %}</h3></a></div><br />
+                    {% trans 'Publish business proposals and find partners' %}
+                    <a href="{% url 'proposal:add' %}" class="btnbuy">{% trans 'Publish new proposal' %}</a>
+                </li>
+
+
+                <li>
+                    <div><a href="{% url 'exhibitions:my_main' %}" class="name"><h3>{% trans 'Exhibitions / Forums' %}</h3></a></div><br />
+                    {% trans 'Announce exhibitions and meetups' %}
+                    <a href="{% url 'exhibitions:add' %}" class="btnbuy">{% trans 'Announce event' %}</a>
+                </li>
+
+            </ul>
+        {% endif %}
+        <div class="wall-title-bg">{% trans 'Actions for:' %} {% userName %}</div>
+        <ul class="listprd lstactions">
+
+            <li>
+                <div><a href="{% url 'companies:my_main' %}" class="name"><h3>{% trans 'Companies' %}</h3></a></div><br />
+                {% trans 'Manage your companies' %}
+                <a href="{% url 'companies:add' %}" class="btnbuy">{% trans 'Register new company' %}</a>
+            </li>
+
+            <li>
+                <div><a href="{% url 'tpp:my_main' %}" class="name"><h3>{% trans 'Organizations' %}</h3></a></div><br />
+                {% trans 'Want register your organization (Chamber of commerce, bank, etc..)' %}
+                <a href="{% url 'tpp:add' %}" class="btnbuy">{% trans 'Register organization' %}</a>
+            </li>
+
+            <li>
+                <div><a href="{% url 'resume:my_main' %}" class="name"><h3>{% trans 'Resume' %}</h3></a></div><br />
+                {% trans 'Find joub on our site, add and manage your online resume' %}
+                <a href="{% url 'resume:add' %}" class="btnbuy">{% trans 'Publish new resume' %}</a>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}
