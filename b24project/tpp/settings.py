@@ -86,7 +86,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "tpp.context_processors.site_processor",
-                "tpp.context_processors.current_organization_processor"
+                "tpp.context_processors.current_organization_processor",
                 "social.apps.django_app.context_processors.backends",
                 "social.apps.django_app.context_processors.login_redirect"
             )
