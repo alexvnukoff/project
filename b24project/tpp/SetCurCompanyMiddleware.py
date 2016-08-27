@@ -39,5 +39,5 @@ class SetCurCompany:
                     get_org_by_id.cache_clear()
                     request.session['current_company'] = organization_id
 
-        elif current_company is None and len(request.user.manageable_organizations) > 0:
+        elif current_company is None and request.user.is_authenticated() and len(request.user.manageable_organizations) > 0:
             request.session['current_company'] = request.user.manageable_organizations[0]
