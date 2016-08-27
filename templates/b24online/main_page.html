@@ -129,14 +129,23 @@
                 <div class="tab-cate">
                     <ul>
                         <li><a href="#tabs-1" class="tab1">{% trans "Main" %}</a></li>
-                        {% if user.is_authenticated %}<li><a href="#tabs-2" class="tab2">{% trans "My" %}</a></li>{% endif %}
                     </ul>
                 </div>
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and user.manageable_organizations > 1 %}
                    {% get_my_companies_list %}
                 {% endif %}
                 <div id="tabs-1">
                     <ul class="tab1-cate">
+                        {% if user.is_authenticated %}
+                            {% if user.is_commando or user.is_superuser %}
+                                <li class="highlight"><a href="{% url "AdminTpp:adv" %}"><i class="icon-lock"></i>&nbsp;{% trans 'Admin Panel' %}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <li class="highlight"><a href="{% url 'dashboard' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'Control Panel' %}</a></li>
+                        {% else %}
+                            <li class="highlight"><a href="{% url 'registration_register' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Join Us' %}</a></li>
+                        {% endif %}
                         <li><a class="single-page" href="{% url 'wall:main' %}"><i class="icon-menu"></i>&nbsp;{% trans 'Wall' %}</a></li>
                     	<li><a class="single-page" href="{% url 'news:main' %}"><i class="icon-coffee"></i>&nbsp;{% trans 'News' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main' %}"><i class="icon-suitcase"></i>&nbsp;{% trans 'Products B2B' %}</a></li>
@@ -147,74 +156,11 @@
                         <li><a class="single-page" href="{% url 'innov:main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
                         <li><a class="single-page" href="{% url 'proposal:main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals' %}</a></li>
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
-{% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
-                        <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-                        <li><a class="single-page" href="{% url 'tv:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP TV' %}</a></li>
-{% endcomment %}
                         <li><a class="single-page" href="{% url 'video:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP CHANNEL' %}</a></li>
                         <li><a class="single-page" href="{% url 'vacancy:main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
-                        
-                        {# Added the reference to Producers list #}
-
-                        <!-- temporary hide..
-
-                        <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
-                        <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
-
-                        -->
-
                     </ul>
                 </div>
-                {% if user.is_authenticated %}
-                    <div id="tabs-2">
-                        <ul class="tab1-cate">
-                            {% if user.is_authenticated %}
-                                {% if user.is_commando or user.is_superuser %}
-                                    <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}"><i class="icon-lock"></i>&nbsp;{% trans 'Admin Panel' %}</a></li>
-                                {% endif %}
-                            {% endif %}
-                            <li><a class="single-page" href="{% url 'news:my_main' %}"><i class="icon-coffee"></i>&nbsp;{% trans 'News' %}</a></li>
-                            <li><a class="single-page" href="{% url 'products:my_main' %}"><i class="icon-suitcase"></i>&nbsp;{% trans 'Products B2B' %}</a></li>
-                            <li><a class="single-page" href="{% url 'products:my_b2c' %}"><i class="icon-basket"></i>&nbsp;{% trans 'Products B2C' %}</a></li>
-                            <li><a class="single-page" href="{% url 'tpp:my_main' %}"><i class="icon-shield"></i>&nbsp;{% trans 'Organizations' %}</a></li>
-                            <li><a class="single-page" href="{% url 'companies:my_main' %}"><i class="icon-briefcase"></i>&nbsp;{% trans 'Companies' %}</a></li>
-                            <li><a href="{% url 'leads:main' %}"><i class="icon-chart-line"></i>&nbsp;{% trans 'Leads' %}</a></li>
-                            <li><a class="single-page" href="{% url 'video:my_main' %}"><i class="icon-youtube-play"></i>&nbsp;{% trans 'Video Gallery' %}</a></li>
-                            <li><a class="single-page" href="{% url 'innov:my_main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
-                            <li><a class="single-page" href="{% url 'proposal:my_main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals'  %}</a></li>
-                            <li><a class="single-page" href="{% url 'exhibitions:my_main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
-
-    {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
-                            <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-    {% endcomment %}
-                            <li><a href="{% url 'adv_banners:main' %}"><i class="icon-th-large"></i>&nbsp;{% trans 'Banners' %}</a></li>
-    {% comment %}           <li><a href="{% url 'Adv:main' %}">{% trans 'Advertisement' %}</a></li>
-    {% endcomment %}        <li><a href="{% url 'analytic:main' %}"><i class="icon-chart-bar"></i>&nbsp;{% trans 'Analytic' %}</a></li>
-                            <li><a href="{% url 'site:main' %}"><i class="icon-cog"></i>&nbsp;{% trans 'Site' %}</a></li>
-                            <li><a class="single-page" href="{% url 'vacancy:my_main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
-                            <li><a href="{% url 'resume:my_main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
-
-                            {% if perms.producer and perms.b24online.change_producer %}
-                                <li><a class="single-page" href="{% url 'products:producer_list' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Producers' %}</a></li>
-                            {% endif %}
-
-                        {# The deals history #}
-                        <li><a href="{% url 'products:deal_list' %}"><i class="icon-list-bullet"></i>&nbsp;{% trans 'Current deals' %} ({{ request|deal_number|default:"0" }})</a></li>
-                        <li><a href="{% url 'products:deal_list' %}"><i class="icon-book"></i>&nbsp;{% trans 'Deals history' %}</a></li>
-                            <!-- temporary hide..
-                            <li><a class="single-page" href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
-                            <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
-                            <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
-                            <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
-
-                            -->
-
-
-    {% comment %}           <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
-    {% endcomment %}    </ul>
-                    </div>
-                {% endif %}
             </div>
             <div class="banner-wrapper-left">
 

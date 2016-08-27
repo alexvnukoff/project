@@ -1,6 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from guardian.shortcuts import get_objects_for_user
+
 from b24online.models import Organization
 from b24online.utils import get_org_by_id
 
@@ -12,6 +14,7 @@ from b24online.utils import get_org_by_id
 class SetCurCompany:
     def process_request(self, request):
         organization_id = request.GET.get('set', None)
+        current_company = request.session.get('current_company', None)
 
         if organization_id is not None:
             try:
@@ -35,3 +38,6 @@ class SetCurCompany:
                         return HttpResponseRedirect(reverse('denied'))
                     get_org_by_id.cache_clear()
                     request.session['current_company'] = organization_id
+
+        elif current_company is None and len(request.user.manageable_organizations) > 0:
+            request.session['current_company'] = request.user.manageable_organizations[0]
