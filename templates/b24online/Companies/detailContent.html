@@ -16,16 +16,6 @@
 {% endblock %}
 {% block js %}
     {{ block.super }}
-    <script>
-        {% getOwner item as owner %}
-        if (typeof ga !== "undefined") {
-            ga('set', 'dimension1', {{ item.pk }});
-            {% if owner %}
-                ga('set', 'dimension3', {{ owner.pk }});
-            {% endif %}
-            ga('set', 'dimension2', 'company');
-        }
-    </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script src="{% static 'b24online/js/gmapSearchMarker.js' %}"></script>

@@ -20,18 +20,6 @@
     {{ block.super }}
     <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
     <script>
-        {% getOwner item as owner %}
-
-        {% if owner %}
-            {% if owner.type == 'tpp' %}
-                ga('set', 'dimension1', {{ owner.pk }});
-            {% else %}
-                ga('set', 'dimension3', {{ owner.pk }});
-            {% endif %}
-        {% endif %}
-        ga('set', 'dimension2', 'exhibition');
-    </script>
-    <script>
     $(function() {
          $(".goods-details-tab").tabs();});
     </script>

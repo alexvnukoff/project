@@ -18,18 +18,6 @@
 
 {% block keywords %}{% endblock %}
 
-<script>
-    {% getOwner item as owner %}
-
-    {% if owner %}
-        {% if owner.type == 'tpp' %}
-            ga('set', 'dimension1', {{ owner.pk }});
-        {% else %}
-            ga('set', 'dimension3', {{ owner.pk }});
-        {% endif %}
-    {% endif %}
-    ga('set', 'dimension2', 'news');
-</script>
     {% block content %}
     <div class="new-details">
         <h1>{% if item.video_code %}<span title="YouTube" class="icon-youtube-play"></span>{% endif %}{{ item.title }}</h1>
