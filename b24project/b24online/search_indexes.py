@@ -382,6 +382,7 @@ class B2cProductIndex(DocType):
     b2c_categories = Integer(multi=True)
     organization = Integer()
     price = Double()
+    show_on_main = Boolean()
     is_active = Boolean()
     is_deleted = Boolean()
     created_at = Date()
@@ -404,6 +405,7 @@ class B2cProductIndex(DocType):
             organization=obj.company.pk,
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
+            show_on_main=obj.show_on_main,
             country=obj.company.country.pk,
             price=obj.cost,
             created_at=obj.created_at
