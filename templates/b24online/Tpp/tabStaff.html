@@ -45,6 +45,7 @@
                             data-organization-id="{{ item_pk }}"
                             data-organization-name="{{ organization.name }}" 
                             data-user-id="{{ user.pk }}"
+                            data-id="{{ user.pk }}"
                             data-user-name="{% if user.profile.full_name %}{{ user.profile.full_name }}{% else %}{{ user.email }}{% endif %}">
                           </i>
                         </td>
