@@ -8,7 +8,6 @@
         <div class="header-top">
             <div class="pull-left">
                 <div class="top-search-block">
-
                     <div class="tmp_search  top_search clearfix hidden-xs">
                         <form action="{% url 'b2c_products:search' %}">
                             <input type="text" placeholder="Search" name="s">
@@ -49,7 +48,6 @@
                     <a data-toggle="dropdown" class="dropdown-toggle lang-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
 
                     {% get_available_languages as LANGUAGES %}
-
                     <div id="lang-dropdown" role="menu" class="dropdown-menu">
                         {% for code, lang in LANGUAGES %}
                           {% if not code == LANGUAGE_CODE %}
@@ -57,6 +55,35 @@
                           {% endif %}
                       {% endfor %}
                     </div>
+
+                    {# Registration. login and logout #}
+                    {% if user.is_authenticated %}
+                        {% get_messages_number as messages_number %}
+                        <a href="{% url 'my_profile' %}">
+                            {% if request.user.profile.avatar %}
+                                <img src="{{ request.user.profile.avatar.th }}" 
+                                    style="vertical-align:middle;margin-top:-4px;width:18px;">
+                            {% else %}
+                                <img src="/static/b24online/img/profile_24x24.jpg">         
+                            {% endif %}
+                            &nbsp;
+                            {% if request.user.profile %}
+                                {{ request.user.profile.full_name }}
+                            {% else %}
+                                {{ request.user }}
+                            {% endif %}                            
+                        </a>
+                        <a href="{% url 'auth_logout' %}">{% trans 'Sign out' %}</a>
+                        <a href="{% url 'messages:main' %}">
+                            <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'registration_register' %}" class="dialog-open"
+                            data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                        <a href="{% url 'auth_login' %}" class="dialog-open"
+                            data-title="{% trans 'Sign in' %}">{% trans 'Sign in' %}</a>
+                   {% endif %}
+
 
                   </div>
 

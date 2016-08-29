@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'usersites/css/adviser.css' %}">
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -81,11 +82,17 @@
     <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
     <script src="{% static 'usersites/js/basket.js' %}"></script>
     <script src="{% static 'usersites/js/main.js' %}"></script>
+    {% block adviser %}
+        {% if user.is_authenticated %}
+            <script src="{% static 'usersites/js/adviser.js' %}"></script>
+        {% endif %}
+    {% endblock %}
     <script src="{% static 'usersites/usersites_templates/golan/js/script.js' %}"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+    <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
     <script type="text/javascript" charset="utf-8">
 
