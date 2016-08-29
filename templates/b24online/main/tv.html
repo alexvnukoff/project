@@ -14,8 +14,8 @@
                 });
             });
         </script>
-        <a class="various fancybox.iframe" href="http://www.youtube.com/embed/_nwFkguMsxI?autoplay=1">
-            <img width="200" height="160" src="http://img.youtube.com/vi/_nwFkguMsxI/0.jpg" />
+        <a class="various fancybox.iframe" href="http{% if request.is_secure %}s{% endif %}//www.youtube.com/embed/_nwFkguMsxI?autoplay=1">
+            <img width="200" height="160" src="//img.youtube.com/vi/_nwFkguMsxI/0.jpg" />
         </a>
 
 {% else %}

@@ -265,8 +265,8 @@ def search_query(context):
     return escape(request.GET.get('q', ''))
 
 
-@register.simple_tag(name='detail_page_to_tppcenter')
-def detail_page_to_tppcenter(url, *args):
+@register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
+def detail_page_to_tppcenter(context, url, *args):
     cache_name = "site:domain:b24online"
     prefix = cache.get(cache_name)
 
@@ -275,7 +275,9 @@ def detail_page_to_tppcenter(url, *args):
         cache.set(cache_name, prefix, 60 * 60 * 24 * 7)
     url = (reverse(viewname=url, urlconf=b24online.urls, args=args, prefix=prefix))
 
-    return 'http://%s' % url
+    request = context.get('request')
+
+    return 'https://%s' % url if request.is_secure() else 'http://%s' % url
 
 
 @register.assignment_tag

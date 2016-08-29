@@ -265,7 +265,7 @@ SITE_ID = 143
 
 AUTH_USER_MODEL = 'b24online.User'
 
-MEDIA_URL = 'http://static.tppcenter.com/'
+MEDIA_URL = '//static.b24online.com/'
 MEDIA_ROOT = (os.path.join(BASE_DIR, '..', 'uploads').replace('\\', '/'))
 
 # FACEBOOK

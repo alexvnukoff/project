@@ -261,5 +261,5 @@
     </div>
 </div>
 <div style="clear:both;"></div>
-<div class="fb-comments" data-href="http://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
+<div class="fb-comments" data-href="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
 {% endblock %}
