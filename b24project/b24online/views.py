@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import (HttpResponse, HttpResponseRedirect,
                     HttpResponseBadRequest, JsonResponse, HttpResponseNotFound)
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
@@ -249,7 +249,7 @@ def branch_list(request):
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('b24online/branchList.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/branchList.html', template_params)
 
 
 def set_current(request, item_id):
@@ -331,10 +331,6 @@ def feedback_form(request):
 def get_profile_card(request, user_id):
     obj = get_object_or_404(User, pk=user_id)
 
-    return render_to_response(
-            'b24online/Profile/Public/contentPage.html',
-            {'object': obj},
-            context_instance=RequestContext(request)
-            )
+    return render(request, 'b24online/Profile/Public/contentPage.html', {'object': obj})
 
 

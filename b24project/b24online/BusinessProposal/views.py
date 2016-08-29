@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.utils.translation import ugettext as _
 
 from b24online.models import Branch, BusinessProposal, Organization, BusinessProposalCategory
@@ -90,7 +90,7 @@ def bp_categories_list(request):
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('b24online/BusinessProposal/BpCategoryList.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/BusinessProposal/BpCategoryList.html', template_params)
 
 
 class BusinessProposalUpdate(ItemUpdate):

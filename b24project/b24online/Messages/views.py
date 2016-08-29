@@ -13,7 +13,7 @@ from django.db.models import Q, Case, When, CharField, Max, Count
 from django.views.generic import (TemplateView, ListView)
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.http import (HttpResponse, HttpResponseBadRequest, Http404, 
                          HttpResponseRedirect)
 from django.utils.timezone import now
@@ -55,7 +55,7 @@ def view_messages(request, recipient_id=None):
             'current_section': _('Private messages')
         }
 
-        return render_to_response("b24online/Messages/index.html", template_params, context_instance=RequestContext(request))
+        return render(request, "b24online/Messages/index.html", template_params)
     else:
         if recipient_id is None:
             raise ValueError('Receiver is not provided')
@@ -74,8 +74,7 @@ def view_messages(request, recipient_id=None):
                 'messages': messages
             }
 
-            return render_to_response("b24online/Messages/contentBox.html", template_params,
-                                      context_instance=RequestContext(request))
+            return render(request, "b24online/Messages/contentBox.html", template_params)
 
 
 def _get_message_list(request, recipient_id, date=None, last_message_id=None):
@@ -248,8 +247,7 @@ def chat_messages(request, item_id):
             'chat': chat,
             'messages': chat.chat_messages.order_by('created_at')
         }
-        return render_to_response("b24online/Messages/chatMessages.html",
-            context, context_instance=RequestContext(request))
+        return render(request ,"b24online/Messages/chatMessages.html")
 
 
 @login_required

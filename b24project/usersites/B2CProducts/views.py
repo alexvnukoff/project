@@ -1,40 +1,36 @@
 # -*- encoding: utf-8 -*-
 
-import re
-import logging
 import json
+import logging
 
-from collections import OrderedDict
-
-from django.db import transaction, IntegrityError
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db import transaction, IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render_to_response
-from django.template import loader, RequestContext
+from django.shortcuts import render
+from django.template import loader
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from django.views.generic import View
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView
-from django.contrib.contenttypes.models import ContentType
-
 from paypal.standard.forms import PayPalPaymentsForm
+
+from b24online.models import (Questionnaire, DealOrder, Deal, DealItem)
+from b24online.search_indexes import B2cProductIndex
 from b24online.utils import get_template_with_base_path
 from centerpokupok.Basket import Basket
 from centerpokupok.forms import OrderEmailForm, DeliveryForm
-from centerpokupok.models import B2CProduct, B2CProductCategory
-from b24online.models import (Questionnaire, DealOrder, Deal, DealItem)
-from b24online.search_indexes import B2cProductIndex
+from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
+from usersites.B2CProducts.forms import PayPalBasketForm
 from usersites.cbv import ItemDetail
+from usersites.forms import create_extra_form
 from usersites.mixins import UserTemplateMixin
 from usersites.views import ProductJsonData
-from usersites.forms import create_extra_form
-from usersites.B2CProducts.forms import PayPalBasketForm
-
 
 logger = logging.getLogger(__name__)
 
@@ -195,11 +191,7 @@ class B2CProductBasket(View):
                 basket.clear()
                 return HttpResponseRedirect((reverse('b2c_products:basket')))
             return HttpResponseNotFound()
-        return render_to_response(
-            get_template_with_base_path(self.template_name),
-            data,
-            context_instance=RequestContext(request)
-        )
+        return render(request, get_template_with_base_path(self.template_name), data)
 
     def post(self, request):
         basket = Basket(request)
