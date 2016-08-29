@@ -127,7 +127,7 @@
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="{{ item.total_cost }}"
-                                    data-callback="http://b24online.com/payments/advertisement/"
+                                    data-callback="http{% if request.is_secure %}s{% endif %}://b24online.com/payments/advertisement/"
                                     data-env="sandbox"
                                 ></script>
         </div>

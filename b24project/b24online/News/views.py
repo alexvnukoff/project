@@ -135,9 +135,9 @@ class CustomFeedGenerator(Rss201rev2Feed):
         handler.addQuickElement("link", self.feed['link'])
         handler.addQuickElement("description", self.feed['description'])
         handler.startElement('image', {})
-        handler.addQuickElement("url", 'http://b24online.com/static/b24online/img/logo.png')
+        handler.addQuickElement("url", '//b24online.com/static/b24online/img/logo.png')
         handler.addQuickElement("title", "ТПП-Центер новости")
-        handler.addQuickElement("link", 'http://www.b24online.com')
+        handler.addQuickElement("link", '//www.b24online.com')
         handler.endElement('image')
 
         return False
@@ -148,7 +148,7 @@ class CustomFeedGenerator(Rss201rev2Feed):
         handler.addQuickElement("yandex:full-text", item["content"])
         if item.get('video_url', False):
             handler.addQuickElement("enclosure", "",
-                                    {'type': "video/x-ms-asf", 'url': 'http://b24online.com' + item['video_url']})
+                                    {'type': "video/x-ms-asf", 'url': '//b24online.com' + item['video_url']})
         if item.get('image'):
             handler.addQuickElement("enclosure", "", {'type': "image/png", 'url': item['image']})
 

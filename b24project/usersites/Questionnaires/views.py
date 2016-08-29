@@ -59,17 +59,18 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = InviteForm(
-            self.request,
+            request,
             self.object,
             instance=self.case,
-            data=self.request.POST
+            data=request.POST
         )
         if form.is_valid():
             q_case = form.save()
             if q_case.case_uuid:
                 if form.is_invited:
                     domain = get_current_site().domain
-                    next_url = 'http://{0}{1}' . format(
+                    next_url = '{0}://{1}{2}' . format(
+                        request.scheme,
                         domain,
                         reverse('questionnaires:results',
                                 kwargs={'uuid': q_case.case_uuid,
@@ -120,7 +121,8 @@ class QuestionnaireDetail(UserTemplateMixin, ItemDetail):
                 else:
                     inviter = q_case.get_inviter()
                     domain = get_current_site().domain
-                    next_url = 'http://{0}{1}' . format(
+                    next_url = '{0}://{1}{2}' . format(
+                        request.scheme,
                         domain,
                         reverse('questionnaires:activate',
                                 kwargs={'uuid': q_case.case_uuid,})
@@ -315,7 +317,7 @@ class QuestionnaireCaseHistory(UserTemplateMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = HistoryForm(
-            data=self.request.POST
+            data=request.POST
         )
         self.email = None
         if form.is_valid():
@@ -323,7 +325,8 @@ class QuestionnaireCaseHistory(UserTemplateMixin, TemplateView):
             history_uuid = str(uuid.uuid4())
             request.session['history_info'] = {history_uuid: self.email}
             domain = get_current_site().domain
-            history_url = 'http://{0}{1}' . format(
+            history_url = '{0}://{1}{2}' . format(
+                request.scheme,
                 domain,
                 reverse('questionnaires:case_list',
                         kwargs={'uuid': history_uuid}))

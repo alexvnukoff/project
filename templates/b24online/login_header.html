@@ -27,7 +27,7 @@
             <div class="language-navi-dropdown">
               {% for code, lang in LANGUAGES %}
                   {% if not code == LANGUAGE_CODE %}
-                  <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                  <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
                   {% endif %}
               {% endfor %}
             </div>

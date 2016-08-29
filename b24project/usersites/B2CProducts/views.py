@@ -110,7 +110,7 @@ class B2CProductDetail(UserTemplateMixin, ItemDetail):
             paypal_dict = {
                 "business": self.object.company.company_paypal_account or '',
                 "amount": self.object.get_discount_price,
-                "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
+                "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
                 "return_url": self.request.build_absolute_uri(),
                 "cancel_return": self.request.build_absolute_uri(),
                 "item_number": self.object.pk,
@@ -146,7 +146,7 @@ class B2CProductBasket(View):
                 'cmd': '_cart',
                 'upload': 1,
                 'business': basket.paypal,
-                'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                'notify_url': '{0}://{1}{2}'.format(request.scheme, get_current_site().domain, reverse('paypal-ipn')),
                 'return_url': request.build_absolute_uri(),
                 'cancel_return': request.build_absolute_uri(),
                 'no_shipping': 0,
@@ -166,7 +166,7 @@ class B2CProductBasket(View):
                 paypal_dict.update({
                     'business': basket.paypal,
                     'amount': basket.summary,
-                    'notify_url': 'http://{0}{1}'.format(get_current_site().domain, reverse('paypal-ipn')),
+                    'notify_url': '{0}://{1}{2}'.format(self.request.scheme, get_current_site().domain, reverse('paypal-ipn')),
                     'return_url': request.build_absolute_uri(),
                     'cancel_return': request.build_absolute_uri(),
                     'item_name': _('Products from website ') + get_current_site().domain,
@@ -351,7 +351,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     'cmd': '_cart',
                     'upload': 1,
                     'business': basket.paypal,
-                    'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
+                    'notify_url': '{0}://{1}{2}'.format(self.request.scheme, domain, reverse('paypal-ipn')),
                     'return_url': self.request.build_absolute_uri(),
                     'cancel_return': self.request.build_absolute_uri(),
                     'no_shipping': 0,
@@ -370,7 +370,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     paypal_dict.update({
                         'business': basket.paypal,
                         'amount': basket.summary,
-                        'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
+                        'notify_url': '{0}://{1}{2}'.format(self.request.scheme, domain, reverse('paypal-ipn')),
                         'return_url': self.request.build_absolute_uri(),
                         'cancel_return': self.request.build_absolute_uri(),
                         'item_name': _('Products from website ') + domain,
@@ -390,7 +390,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                 paypal_dict = {
                     "business": product.company.company_paypal_account or '',
                     "amount": product.get_discount_price,
-                    "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
+                    "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
                     "return_url": self.request.build_absolute_uri(),
                     "cancel_return": self.request.build_absolute_uri(),
                     "item_number": product.pk,
