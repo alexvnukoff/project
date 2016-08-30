@@ -1,0 +1,63 @@
+{% extends 'usersites_templates/galil/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{# including the slider. The slider will apear only on the main page. #}
+{% block slider %}
+       {% include 'usersites_templates/galil/slider.html' %}
+{% endblock %}
+
+{% block content %}
+
+<section class="content__info grid-layout">
+
+{#----------------------------#}
+
+{#      <div class="container">#}
+{#        <div class="col-md-12 full-banner">#}
+{#          <img src="images/fullbanner.jpg" class="img-responsive" />#}
+{#        </div>#}
+{#        </div>#}
+
+    <div class="container">
+        <div class="col-md-3 col-sm-6 col-xs-12 side-nav-wrapper"><!-- left nav -->
+            {% include 'usersites_templates/galil_2/site_sidebar.html' %}
+
+        </div><!-- End of left nav -->
+
+
+        <div class="col-md-9 col-sm-6 col-xs-12"><!-- left nav -->
+            {% b2c_products 'B2CProducts/main_products.html' 12 %}
+
+        </div><!-- End of left nav -->
+
+          <hr class="divider">
+
+        </div>
+
+{#-----------------------------#}
+
+
+
+
+
+    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
+    {# The proposals will have the same design as the news, so i am using the news styles. #}
+    <div class="container">
+
+        <div class="row news">
+                {% proposal 'Proposals/wall.html' 2 %}
+
+                {% news 'News/wall.html' 2 %}
+
+        </div><!-- end of news modoul -->
+    </div>
+
+
+</section>
+
+{% endblock %}
