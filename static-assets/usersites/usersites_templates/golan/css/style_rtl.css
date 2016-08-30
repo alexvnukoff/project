@@ -442,3 +442,20 @@ th, td{
 .ver-coupon .product__price__coupon{
 	left: 0;
 }
+
+/* Profile page design */
+#profile-usersite-page .image-col{
+	float: right;
+}
+
+#profile-usersite-page .profile-clumn .radio{
+	float: right;
+	padding-left: 15px;
+}
+
+#profile-usersite-page .profile-clumn .radio label{
+	float: left;
+	padding-right: 15px;
+	vertical-align: middle;
+}
+

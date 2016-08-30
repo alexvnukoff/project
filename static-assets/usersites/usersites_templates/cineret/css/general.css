@@ -1489,3 +1489,65 @@ footer {
   background: -o-linear-gradient(top, #0d385e, #286090);
     color: #fff;
 }
+
+/* Profile page design */
+#profile-usersite-page .avatar img{
+	margin: 10px;
+}
+
+#profile-usersite-page .avatar-btn{
+	width: 150px;
+	margin: 10px;
+	height: 30px;
+}
+
+#profile-usersite-page .change-passwd-link a{
+	color: #000;
+	text-decoration: underline;
+	margin: 10px;
+}
+
+ #profile-usersite-page .profile-clumn{
+	color: #000;
+	margin: 10px;
+	list-style-type: none;
+}
+
+#profile-usersite-page .profile-clumn li{
+	margin: 10px 0;
+}
+
+#profile-usersite-page .profile-clumn input.text,
+#profile-usersite-page .profile-clumn select ,
+#profile-usersite-page .profile-clumn input.date{
+	height: 30px;
+}
+
+#profile-usersite-page .profile-clumn fieldset {
+	border:1px solid #aaa;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
+#profile-usersite-page .profile-clumn legend {
+    padding: 0.2em 0.5em;
+    border:1px solid #aaa;
+    color:#aaa;
+    font-size:90%;
+	width: 150px;
+	text-align: center;
+}
+
+#profile-usersite-page .profile-clumn .name-lbl {
+  width: 150px;
+}
+
+#profile-usersite-page .radio+.radio,
+#profile-usersite-page .radio{
+     margin-top: 0;
+}
+
+#profile-usersite-page .profilebutton{
+	text-align: center;
+	margin-bottom: 20px;
+}
