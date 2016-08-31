@@ -26,7 +26,7 @@
                                         <h3>{{ article.title }}</h3>
 
                                         {% if article.short_description %}
-                                            <p>{{ article.short_description|force_escape|linebreaks|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
+                                            <p>{{ article.short_description|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
                                         {% else %}
                                             <p>{{ article.content|cleanHtml|safe|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
                                         {% endif %}

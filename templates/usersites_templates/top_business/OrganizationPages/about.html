@@ -7,13 +7,13 @@
     {{ block.super }}
 
 
-    <div class="container gallery-slider-container hidden-xs">
+    <div class="container about-container hidden-xs">
 	    <div class="row">
 	      	<h1>{{ site.user_site.organization.name }}</h1>
 	    </div>
 
 	    <div class="row">
-	    	<div class="col-md-4">
+	    	<div class="col-md-4 about-short-col">
 	    		<p>
                     {{ site.user_site.organization.short_description|cleanHtml|safe }}
                 </p>
@@ -27,6 +27,22 @@
 	    </div>
     </div>
 
+    <div class="container about-container visible-xs">
+	    <div class="row">
+	      	<h1>{{ site.user_site.organization.name }}</h1>
+	    </div>
+
+	    <div class="row">
+	    	<div id="no-more-tables" class="col-md-12 about-page-content">
+	    		<p>
+	    			{{ site.user_site.organization.description|cleanHtml|safe }}
+                </p>
+	    	</div>
+	    </div>
+    </div>
+
+
     {% b2c_products 'B2CProducts/banner_products.html' 9 %}
+
 
 {% endblock %}

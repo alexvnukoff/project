@@ -6,16 +6,10 @@ html {
 }
 
 body {
-    margin: 0 0 250px; /* bottom = footer height */
+    margin: 0; /* bottom = footer height */
 }
 
-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    min-height: 200px;
-    width: 100%;
-}
+
 
 .container{
 	padding-right: 30px;
@@ -147,35 +141,35 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
 	#myCarousel .carousel-inner{
-	  height: 600px !important;
+	  max-height: 600px !important;
 	}
 }
 
 /* Landscape tablets and medium desktops */
 @media (min-width: 992px) and (max-width: 1199px) {
 	#myCarousel .carousel-inner{
-	  height: 500px !important;
+	  max-height: 500px !important;
 	}
 }
 
 /* Portrait tablets and small desktops */
 @media (min-width: 768px) and (max-width: 991px) {
 	#myCarousel .carousel-inner{
-	  height: 400px !important;
+	  max-height: 400px !important;
 	}
 }
 
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	#myCarousel .carousel-inner{
-	  height: 300px !important;
+	  max-height: 300px !important;
 	}
 }
 
 /* Portrait phones and smaller */
 @media (max-width: 480px) {
 	#myCarousel .carousel-inner{
-	  height: 150px !important;
+	  max-height: 150px !important;
 	}
 }
 
@@ -243,9 +237,6 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	text-align: center;
 }
 
-#clockdiv>div{
-	padding: 20px;
-}
 
 .prod-page__btn p a{
 	width: 100%;
@@ -303,6 +294,23 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	margin: 20px;
 }
 
+.category-selector{
+	height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
 /** Product Page Styling ***************/
 /*********************************/
 .prod-page-container{
@@ -319,6 +327,83 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 
 .prod-page__caption-col{
 	padding: 10px;
+}
+
+.product-page-container .item-page img{
+	width: 100%;
+	padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.item-page__price{
+	font-size: 18pt;
+	font-weight:bold;
+	padding: 10px 0 10px 0;
+}
+
+.item-page__regular{
+	font-size: 18pt;
+	font-weight: bold;
+	padding: 10px 0 10px 0;
+	color: #999999;
+	text-decoration: line-through;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.product-page-btn{
+	width: 100%;
+	height: 50px;
+	margin-bottom: 15px;
+}
+
+.categories-side{
+	position: relative;
+	float: right;
+}
+
+.products-side{
+	position: relative;
+	float: left;
+}
+
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    font-family: sans-serif;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border-radius: 3px;
+	padding: 10px;
+}
+
+#timer-detail-page > div{
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+}
+
+#timer-detail-page div > span{
+    padding: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
 }
 
 /** Coupons Styling ***************/
@@ -339,6 +424,108 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	height: 20px;
 }
 
+.coupon-hr{
+	border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.main-coupons__col .caption h3{
+	font-size: 13pt;
+	line-height: 18pt;
+	height: 30px;
+	text-align: center;
+}
+.main-coupons__col .caption h3 a{
+	color: #000;
+}
+
+.main-coupons__col .caption{
+	margin: 0 auto;
+	text-align: center;
+}
+
+.main-products__price{
+	font-size: 14pt;
+	color: #000;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.main-products__price-original{
+	color: #999;
+	text-decoration: line-through;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 991px) {
+	.main-coupons__col .caption h3{
+		font-size: 12pt;
+		line-height: 15pt;
+		height: 45px;
+	}
+
+	.coupon-hr{
+		margin-top: 10px;
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.main-coupons__col .caption h3{
+		height: 45px;
+	}
+
+	.coupon-hr{
+		margin-top: 10px;
+	}
+}
+
+/** Timer Styling ******************/
+#clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 30px;
+	padding-bottom: 20px;
+	width: 300px;
+    margin: 0 auto;
+}
+
+#clockdiv > div{
+    margin: 2px;
+    border-radius: 3px;
+    background: #aaa;
+    display: inline-block;
+	float: left;
+	padding: 1px;
+}
+
+#clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #666;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.clock-container{
+	width: 100%;
+	text-align: center;
+}
+
+
 /** Banners Styling ***************/
 /*********************************/
 .banners__img{
@@ -347,6 +534,10 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 
 .banners__col{
 	padding: 2px;
+}
+
+.banners__col img{
+	width: 100%;
 }
 
 /** News Styling ***************/
@@ -506,6 +697,10 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	padding: 0 0 25px 0;
 }
 
+.about-container{
+	padding: 0 0 25px 0;
+}
+
 
 /** Gallery Styling ***************/
 /*********************************/
@@ -654,7 +849,7 @@ i.red{
 }
 .gal-container{
     /*padding-top :25px;*/
-    padding-bottom:75px;
+    padding-bottom:40px;
 }
 
 
@@ -808,14 +1003,18 @@ font-size: 24px;
 
 /** footer Styling ***************/
 /*********************************/
-.footer-ad-b24 img{
-	width: 100%;
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    /*height: 190px;*/
+    width: 100%;margin: 0;
+	padding: 20px 0 0 0;
+	margin-top: 20px;
 }
 
-footer{
-
-	margin: 0;
-	padding: 20px 0;
+.footer-ad-b24 img{
+	width: 100%;
 }
 
 footer p{

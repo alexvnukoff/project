@@ -59,10 +59,6 @@ body{
 	padding-left: 25px;
 }
 
-#clockdiv>div{
-	float: right;
-}
-
 .timer-mini{
 	float: right;
 	position: relative;
@@ -74,12 +70,47 @@ body{
 	padding-left: 10px;
 }
 
+/** About Page Styling ***************/
+/*********************************/
+.about-short-col{
+	float: right;
+}
+
 /** Product Page Styling ***************/
 /*********************************/
 .prod-page__img-col{
 	border-left: 1px solid #ccc;
 }
 
+.search-in-pag{
+	float: right!important;
+}
+
+.search-in-pag-btn{
+	float: left;
+}
+
+.search-in-pag-input{
+	float: right;
+}
+
+.pagination{
+	float: left;
+	padding-left: 10px;
+}
+
+.item-page{
+	float: right;
+}
+
+.item-page__price{
+	padding: 10px 0 10px 25px;
+	float: right;
+}
+
+.item-page__qty{
+	padding: 10px 0 10px 25px;
+}
 /** Coupons Styling ***************/
 /*********************************/
 
@@ -94,7 +125,7 @@ body{
 }
 
 .news-item a{
-	float: right;
+	float: left;
 }
 
 .news-main{

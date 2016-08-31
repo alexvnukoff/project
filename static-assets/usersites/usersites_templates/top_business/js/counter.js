@@ -32,10 +32,16 @@ function initializeClock(id, endtime){
 	function updateClock(){
 		var t = getTimeRemaining(endtime);
 
-		daysSpan.innerHTML = ('0' + t.days).slice(-2);
-		hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-		minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-		secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+		//daysSpan.innerHTML = ('0' + t.days).slice(-2);
+		//hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+		//minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+		//secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+		daysSpan.innerHTML = "<span class='number-wrapper'><div class='line'></div><div class='caption'>DAYS</div><span class='number day'>" + ('0' + t.days).slice(-2) + "</span></span>";
+		hoursSpan.innerHTML = '<span class="number-wrapper"><div class="line"></div><div class="caption">HOURS</div><span class="number hour">'+ ('0' + t.hours).slice(-2) +'</span></span>';
+		minutesSpan.innerHTML = '<span class="number-wrapper"><div class="line"></div><div class="caption">MINS</div><span class="number min">'+ ('0' + t.minutes).slice(-2) +'</span></span>';
+		secondsSpan.innerHTML = '<span class="number-wrapper"><div class="line"></div><div class="caption">SECS</div><span class="number sec">'+ ('0' + t.seconds).slice(-2) +'</span></span>' ;
+
 	  	if(t.total<=0){
 	    	clearInterval(timeinterval);
 	  	}
