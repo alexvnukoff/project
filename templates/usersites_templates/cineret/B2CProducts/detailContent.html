@@ -40,6 +40,8 @@
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
                     <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
 
+                {% if object.cost %}
+
                     <p>{% trans "Price" %}:<br/></p>
                     <div class="item-page__price">
                       {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
@@ -91,17 +93,50 @@
 
                     <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
 
+                {% endif %}
+
                 </form>
 
                     {% if paypal_form %}
                         <div style="">{{ paypal_form.render }}</div>
                     {% else %}
-                        <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+{#                        <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>#}
                     {% endif %}
 
                     <h4>{% trans 'About Company' %}</h4>
 
                     <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
+
+            {% if not object.cost %}
+
+                <div class="row">
+                          <div class="col-lg-12" id="product-lead">
+                              <h3>{% trans 'Countact us' %}</h3>
+                              <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="co_id" value="{{ site.pk }}">
+                                <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+
+                                  <div class="control-group form-group">
+                                    <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
+                                  </div>
+
+                                  <div class="control-group form-group">
+                                    <input type="tel" class="form-control"  value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                                  </div>
+
+                                  <div class="control-group form-group mail-input">
+                                    <input type="email" class="form-control " value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                                  </div>
+
+
+                                  <div class="control-group form-group group-btn">
+                                    <input type="submit" class="btn btn-default main-contact-btn" value="{% trans 'Send' %}"></input>
+                                  </div>
+                              </form>
+                          </div>
+                        </div>
+
+            {% endif %}
 
             </div>{# end of details table #}
 

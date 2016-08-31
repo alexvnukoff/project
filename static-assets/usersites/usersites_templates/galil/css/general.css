@@ -179,6 +179,10 @@ h2.page-header.inner-page{
 	padding: 0;
 }
 
+.galil_2 .banner img{
+	padding: 15px 15px 0 15px;
+}
+
 #banner1,
 .slider-wrapper,
 .side-nav-wrapper,
@@ -402,7 +406,7 @@ span.percent{
 /*}*/
 
 .thumbnail img {
-    width: 100%;
+    max-width: 100%;
 }
 
 /*tmpcomm*/
@@ -531,6 +535,7 @@ span.percent{
 
 .main-products .product{
 	height: 100%;
+	margin-bottom: 10px;
 }
 
 .main-prod-thumb-p{
