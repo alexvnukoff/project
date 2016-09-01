@@ -1,4 +1,4 @@
-{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!doctype html>
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
@@ -14,338 +14,477 @@
                  Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
                  Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
                  международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
-                 
+
     <meta property="og:site_name" content="{% trans 'B24Online' %}"/>
 
-    <title>{% block title %}{% trans 'B24Online' %}{% endblock %}</title>
+    <title>{% block title %}{% trans "B24Online" %}{% endblock %}</title>
 
-     <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
-     <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+    <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
 
-    <link href="{% static 'b24online/bt/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
-    <link href="{% static 'b24online/bt/css/style.css' %}" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'b24online/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'b24online/css/landing-page.css' %}" rel="stylesheet">
 
     {% if LANGUAGE_BIDI %}
-    <link href="{% static 'b24online/bt/css/bootstrap-rtl.css' %}" rel="stylesheet">
-    <link href="{% static 'b24online/bt/css/style-rtl.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/css/bootstrap-rtl.css' %}" rel="stylesheet">
+    <link href="{% static 'b24online/css/style-rtl.css' %}" rel="stylesheet">
     {% endif %}
+
+    <!-- Custom Fonts -->
+    {% comment %}
+    <link href="{% static 'b24online/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    {% endcomment %}
+    <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
+
 <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand topnav" id="small-logo" href="/">B24Online.com</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    {% show_top_static_pages_front %}
+                </ul>
 
-  <div class="container">
-    <div class="row mw-header">
+		<ul class="nav navbar-nav navbar-right">
 
-      <div class="col-lg-8 col-md-7 head-left-nav">
+                    <li class="hidden-xs">
+                        <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official" style="font-size:22px;"></span></a>
+                    </li>
 
-        {% show_top_static_pages %}
+                    <li class="hidden-xs">
+                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared" style="font-size:22px;"></span></a>
+                    </li>
 
-        {% comment %}
-            <a href="#">{% trans 'Advertisement' %}</a>
-            <span>|</span>
-            <a href="#">{% trans 'General advices' %}</a>
-            <span>|</span>
-            <a href="#">{% trans 'Public Offer' %}</a>
-            <span>|</span>
-            <a href="#">{% trans 'About us' %}</a>
-            <span>|</span>
-            <a href="#">{% trans 'New user' %}</a>
-        {% endcomment %}
-          </div>
+                    <li>
+                        <a href="{% url 'registration_register' %}">{% trans 'Sign Up' %}</a>
+                    </li>
 
-        <div class="col-lg-4 col-md-5 head-right-nav">
-            {% trans 'Login with '%}
-            <a style="padding:0;" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
-            <a style="padding:0;" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>
-            <a href="{% url 'auth_login' %}">{% trans 'Sign In' %}</a> {% trans 'or '%} <a href="{% url 'registration_register' %}">{% trans 'Sign Up' %}</a>
+		    <li>
+                        <a href="{% url 'auth_login' %}">{% trans 'Sign In' %}</a>
+                    </li>
+
+                    <li class="visible-xs">
+                        <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">{% trans 'Sign In with Facebook' %}</a>
+                    </li>
+
+                    <li class="visible-xs">
+                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">{% trans 'Sign In with Google' %}</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
+        <!-- /.container -->
+    </nav>
 
-    </div>
-</div>
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		<!-- Indicators -->
+		<ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>
+		</ol>
+		<!-- Header -->
+		<!-- Wrapper for slides -->
+		<div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <div class="intro-header">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-10 col-xs-9 col-md-9 center-content">
+                                        <div class="intro-message">
+                                            <h1>{% trans "B24Online for Business" %}</h1>
+                                            <p>{% trans "Growth tools for your business." %}</p>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control input-lg" placeholder="{% trans 'Search for products and services' %}" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-info btn-lg" type="button">
+                                                       <i class="glyphicon glyphicon-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
 
-<div class="container">
-    <div class="row" style="margin-top:25px;">
-        <div class="col-lg-3 col-md-3 main-logo">
-          <a href="/" title="{% trans 'B24Online' %}">
-                <img src="{% static 'b24online/img/b24_big.png' %}">
-            </a>
-        </div>
+                                            <p style="margin-top:10px;">OR</p>
+                                            <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Companies" %}</button>
+                                            <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Products and services" %}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.container -->
+                                </div>
+                            <!-- /.intro-header -->
+                            </div>
+			</div>
 
-        <div class="col-lg-9 col-md-9" style="padding:0;">
-            <nav class="main-fork">
-                <a class="b2c" href="{% url 'products:main_b2c' %}">
+			<div class="item">
+                            <div class="intro-header b2c">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-10 col-xs-9 col-md-9 center-content">
+                                            <div class="intro-message">
+                                                <h1>{% trans "B24Online for Customers" %}</h1>
+                                                <p>{% trans "Your marketplace – from your own neighborhood across the world." %}</p>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control input-lg" placeholder="{% trans 'Search for products and services' %}" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-info btn-lg" type="button">
+                                                           <i class="glyphicon glyphicon-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                                <p style="margin-top: 10px;">OR</p>
+                                                <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Search for Products" %}</button>
+                                                <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Search for Services" %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- /.container -->
+                                </div>
+				<!-- /.intro-header -->
+                            </div>
+			</div>
 
-                    <i class="icon-basket"></i>
-                    <h2>{% trans 'Shopping center' %}</h2>
-                    <p>{% trans 'Get more pleasure from buying' %}</p>
-                    </a>
-
-                <a class="b2b" href="{% url 'products:main' %}">
-                    <i class="icon-suitcase"></i>
-                    <h2>{% trans 'B2B center' %}</h2>
-                    <p>{% trans 'Doing business together' %}</p>
-                    </a>
-
-                    <a class="coupon" href="{% url 'products:main_сoupons' %}">
-                    <i class="icon-globe"></i>
-                    <h2>{% trans 'Coupon' %}</h2>
-                    <p>{% trans 'Crazy discounts' %}</p>
-                    </a>
-            </nav>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-  <ul class="choose-language">
-    <li><a href="//en.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/en.png' %}"><span class="hidden-xs">{% trans 'English' %}</span><span class="visible-xs">{% trans 'EN' %}</span></a></li>
-    <li><a href="//ru.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/ru.png' %}"><span class="hidden-xs">{% trans 'Russian' %}</span><span class="visible-xs">{% trans 'RU' %}</span></a></li>
-    <li><a href="//he.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/he.png' %}"><span class="hidden-xs">{% trans 'Hebrew' %}</span><span class="visible-xs">{% trans 'HE' %}</span></a></li>
-    <li><a href="//am.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/am.png' %}"><span class="hidden-xs">{% trans 'Armenian' %}</span><span class="visible-xs">{% trans 'AM' %}</span></a></li>
-    <li><a href="//bg.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/bg.png' %}"><span class="hidden-xs">{% trans 'Bulgarian' %}</span><span class="visible-xs">{% trans 'BG' %}</span></a></li>
-    <li><a href="//uk.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/uk.png' %}"><span class="hidden-xs">{% trans 'Ukrainian' %}</span><span class="visible-xs">{% trans 'UA' %}</span></a></li>
-    <li><a href="//ar.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/ar.png' %}"><span class="hidden-xs">{% trans 'Arabic' %}</span><span class="visible-xs">{% trans 'AR' %}</span></a></li>
-    <li><a href="//zh.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/zh.png' %}"><span class="hidden-xs">{% trans 'Chinese' %}</span><span class="visible-xs">{% trans 'ZH' %}</span></a></li>
-    <li><a href="//es.b24online.com/"><img class="flag-icon" src="{% static 'b24online/bt/flags/es.png' %}"><span class="hidden-xs">{% trans 'Spanish' %}</span><span class="visible-xs">{% trans 'ES' %}</span></a></li>
-
-  </ul>
-</div>
-
-<div class="container">
-    <div class="row">
-
-        <div class="col-lg-8 col-md-8 hidden-xs">
-            <div id="carousel-generic" class="carousel slide" data-ride="carousel">
-              <!-- Indicators -->
-              <ol class="carousel-indicators">
-                <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-generic" data-slide-to="1"></li>
-                <li data-target="#carousel-generic" data-slide-to="2"></li>
-                <li data-target="#carousel-generic" data-slide-to="3"></li>
-              </ol>
-
-              <!-- Wrapper for slides -->
-              <div class="carousel-inner" role="listbox">
-
-                <div class="item active">
-                  <img src="{% static 'b24online/img/slide1.jpg' %}" alt="...">
-                  <div class="carousel-caption">
-                    <div class="carousel-text">
-                      <i class="icon-user"></i>
-                      <h2>{% trans 'Sign up' %}</h2>
-                      <p>{% trans 'and get tools for business!' %}</p>
+			<div class="item">
+                            <div class="intro-header job">
+                                <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-10 col-xs-9 col-md-9 center-content">
+                                                <div class="intro-message">
+                                                    <h1>{% trans "Employment Center" %}</h1>
+                                                    <p>{% trans "Find the your ideal position or the perfect candidate for your company." %}</p>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control input-lg" placeholder="{% trans 'Search for products and services' %}" />
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-info btn-lg" type="button">
+                                                                <i class="glyphicon glyphicon-search"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <p style="margin-top: 10px;">OR</p>
+                                                    <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Job listings" %}</button>
+                                                    <button class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Candidates and outsourcing" %}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- /.container -->
+                                </div>
+                            <!-- /.intro-header -->
+                        </div>
                     </div>
-                  </div>
-                </div>
+		</div>
 
-                <div class="item">
-                  <img src="{% static 'b24online/img/slide2.jpg' %}" alt="...">
-                  <div class="carousel-caption">
-                    <div class="carousel-text">
-                        <h3>{% trans 'Registration on the portal will allow you to:' %}</h3>
-                        <ul>
-                          <li>{% trans 'run a business behalf of the company (B2B, B2C)' %}</li>
-                          <li>{% trans 'to buy goods as a private person(B2C)' %}</li>
-                          <li>{% trans 'draw attention toward your projects(BANKIP)' %}</li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
+		<!-- Left and right controls -->
+		<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">{% trans "Previous" %}</span>
+		</a>
+		<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">{% trans "Next" %}</span>
+		</a>
+	</div>
 
-                <div class="item">
-                  <img src="{% static 'b24online/img/slide3.jpg' %}" alt="...">
-                  <div class="carousel-caption">
-                    <div class="carousel-text">
-                        <h3>{% trans 'Sign up and you will be able:' %}</h3>
-                        <ul>
-                          <li>{% trans 'create your own online shop' %}</li>
-                          <li>{% trans 'to represent your products and services' %}</li>
-                          <li>{% trans 'communicate with potential customers' %}</li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
+            <div class="section-nav">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 hidden-sm">
+                            <div id="nav-menu">
+                                <ul>
+                                    <li>
+                                        <a href="#site"><span class="icon"><i class="icon-at" aria-hidden="true"></i></span><span class="title">{% trans "Your Own Site" %}</span></a>
+                                    </li>
 
-                <div class="item">
-                  <img src="{% static 'b24online/img/slide4.jpg' %}" alt="...">
-                  <div class="carousel-caption">
-                    <div class="carousel-text">
-                        <h3>{% trans 'Registred users can:' %}</h3>
-                        <ul>
-                          <li>{% trans 'create their own websites' %}</li>
-                          <li>{% trans 'puts advertising on the portal' %}</li>
-                          <li>{% trans 'create their own communities of interest' %}</li>
-                        </ul>
+                                    <li>
+                                        <a href="#products"><span class="icon"><i class="icon-basket" aria-hidden="true"></i></span><span class="title">{% trans "Products & Services" %}</span></a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#leads"><span class="icon"><i class="icon-users" aria-hidden="true"></i></span><span class="title">{% trans "Leads Gathering" %}</span></a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#chat"><span class="icon"><i class="icon-wechat" aria-hidden="true"></i></span><span class="title">{% trans "Live Chat" %}</span></a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#moretools"><span class="icon"><i class="icon-box" aria-hidden="true"></i></span><span class="title">{% trans "More Tools" %}</span></a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
             </div>
+
+	</div>
+    <!-- Page Content -->
+
+    <div class="content-section-a" id="site">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">{% trans "Create Your Own Site in Under 10 Minutes" %}</h2>
+                    <p class="lead">{% blocktrans %}Every company joining B24Online can choose from a wide variety of ready-made, mobile-friendly templates to build and operate its own image and sales websites.  Companies immediately can start operating in their business environments.  All information from the portal is immediately synchronized to your personal site.{% endblocktrans %}</p>
+                </div>
+                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                    <img class="img-responsive" src="{% static 'b24online/img/site.png' %}" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+    <div class="content-section-b" id="products">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">{% trans "Products and Services" %}</h2>
+                    <p class="lead">{% blocktrans %}A virtual shopping center for buying and selling. Users have simultaneous access to both B2B and B2C platforms. The shopping center provides a variety of sales promotion tools, offering coupons, sales offers and discounts.{% endblocktrans %}</p>
+                </div>
+                <div class="col-lg-5 col-sm-pull-6 col-sm-6">
+                    <img class="img-responsive" src="{% static 'b24online/img/cart.png' %}" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-b -->
+
+    <div class="content-section-a" id="leads">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">{% trans "Leads Gathering" %}</h2>
+                    <p class="lead">{% blocktrans %}No more working with external systems and wasting money on temporary landing pages. Every contact module in the website or platform (company’s card) or on any page will be sent to you automatically, including name, phone numbers and e-mails, along with a brief option for text. The management panel makes it easy to receive relevant data on the potential client and the services and products he would like.{% endblocktrans %}</p>
+                </div>
+                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                    <img class="img-responsive" src="{% static 'b24online/img/lead.png' %}" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+	    <div class="content-section-b" id="chat">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">{% trans "Live Chat" %}</h2>
+                    <p class="lead">{% blocktrans %}The live chat messenger system allows communications within the portal and with a company’s external website. Clients can choose the division, department or employee to contact by IM. Chat history is saved for future referenceand documents and photos can be uploaded securely. The app serves as a tool for simultaneous discussions, marketing and support. Groups can be created to bring together employees, or employees and clients.{% endblocktrans %}</p>
+                </div>
+                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+                    <img class="img-responsive" src="{% static 'b24online/img/chat.png' %}" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-b -->
+
+    <div class="content-section-a" id="moretools">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">{% trans "More Tools" %}</h2>
+
+                    </div>
+
+                <div class="icons-list">
+
+                  <div class="row icons-list-inner">
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'companies:main' %}">
+                      <i class="icon-briefcase"></i>
+                      <h2>{% trans 'Companies' %}</h2>
+                      <p>{% trans 'Personal interactive business card, including personal profile and versatile modules to boost your business.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'exhibitions:main' %}">
+                      <i class="icon-users"></i>
+                      <h2>{% trans 'Business community' %}</h2>
+                      <p>{% trans 'Social network enabled intranet, providing vast communication platform for your personnel, partners and clients.' %}</p>
+                        
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'tenders:main' %}">
+                      <i class="icon-chart-pie"></i>
+                      <h2>{% trans 'Tenders' %}</h2>
+                      <p>{% trans 'Conduct and participate in various tenders and auctions.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'innov:main' %}">
+                      <i class="icon-lightbulb"></i>
+                      <h2>{% trans 'Innovative projects' %}</h2>
+                      <p>{% trans 'Present and describe your projects and portfolio, in order to attract potential business partners.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'vacancy:main' %}">
+                      <i class="icon-graduation-cap"></i>
+                      <h2>{% trans 'Jobs' %}</h2>
+                      <p>{% trans 'Fully customizable enterprise recruiting platform, enabling your to post or to search vacancies, either from your company or anonymously.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'news:main' %}">
+                      <i class="icon-coffee"></i>
+                      <h2>{% trans 'News' %}</h2>
+                      <p>{% trans 'News blocks that lets you introduce your latest news.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'proposal:main' %}">
+                      <i class="icon-laptop"></i>
+                      <h2>{% trans 'Business proposals' %}</h2>
+                      <p>{% trans 'Make public offers to your targeted audience worldwide. Each module includes independent, templates-based, responsive mini site.' %}</p>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 icons-box">
+                      <a href="{% url 'tpp:main' %}">
+                      <i class="icon-shield"></i>
+                      <h2>{% trans 'Organizations' %}</h2>
+                      <p>{% trans 'Chamber of Commerce, Business Centers and other international business communities.' %}</p>
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="#about">About</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="#services">Services</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted small">Copyright &copy; Your Company 2014. All Rights Reserved</p>
+                </div>
             </div>
         </div>
+    </footer>
 
-        <div class="col-lg-4 col-md-4 m_banner">
-          <a href="/project/loyalty-program-146699.html">
-            <img src="{% static 'b24online/bt/layality-plan.jpg' %}">
-          </a>
-        </div>
+    <!-- jQuery -->
+    <script src="{% static 'b24online/js/jquery.js' %}"></script>
 
-    </div>
-</div>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'b24online/js/bootstrap.min.js' %}"></script>
 
+	<script>
+		$(document).ready(function(){
+		  // Add scrollspy to <body>
+		  $('body').scrollspy({target: ".section-nav", offset: 50});
 
-<div class="container icons-list">
+		  // Add smooth scrolling on all links inside the navbar
+		  $("#nav-menu a").on('click', function(event) {
+			// Make sure this.hash has a value before overriding default behavior
+			if (this.hash !== "") {
+			  // Prevent default anchor click behavior
+			  event.preventDefault();
 
-  <div class="row icons-list-inner">
+			  // Store hash
+			  var hash = this.hash;
 
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'companies:main' %}">
-      <i class="icon-briefcase"></i>
-      <h2>{% trans 'Companies' %}</h2>
-      <p>{% trans 'Personal interactive business card, including personal profile and versatile modules to boost your business.' %}</p>
-      </a>
-    </div>
+			  // Using jQuery's animate() method to add smooth page scroll
+			  // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+			  $('html, body').animate({
+				scrollTop: $(hash).offset().top
+			  }, 800, function(){
 
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'exhibitions:main' %}">
-      <i class="icon-users"></i>
-      <h2>{% trans 'Business community' %}</h2>
-      <p>{% trans 'Social network enabled intranet, providing vast communication platform for your personnel, partners and clients.' %}</p>
-        
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'tenders:main' %}">
-      <i class="icon-chart-pie"></i>
-      <h2>{% trans 'Tenders' %}</h2>
-      <p>{% trans 'Conduct and participate in various tenders and auctions.' %}</p>
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'innov:main' %}">
-      <i class="icon-lightbulb"></i>
-      <h2>{% trans 'Innovative projects' %}</h2>
-      <p>{% trans 'Present and describe your projects and portfolio, in order to attract potential business partners.' %}</p>
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'vacancy:main' %}">
-      <i class="icon-graduation-cap"></i>
-      <h2>{% trans 'Jobs' %}</h2>
-      <p>{% trans 'Fully customizable enterprise recruiting platform, enabling your to post or to search vacancies, either from your company or anonymously.' %}</p>
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'news:main' %}">
-      <i class="icon-coffee"></i>
-      <h2>{% trans 'News' %}</h2>
-      <p>{% trans 'News blocks that lets you introduce your latest news.' %}</p>
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'proposal:main' %}">
-      <i class="icon-laptop"></i>
-      <h2>{% trans 'Business proposals' %}</h2>
-      <p>{% trans 'Make public offers to your targeted audience worldwide. Each module includes independent, templates-based, responsive mini site.' %}</p>
-      </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 icon-box">
-      <a href="{% url 'tpp:main' %}">
-      <i class="icon-shield"></i>
-      <h2>{% trans 'Organizations' %}</h2>
-      <p>{% trans 'Chamber of Commerce, Business Centers and other international business communities.' %}</p>
-      </a>
-    </div>
-
-  </div>
-</div>
-
-<div class="container">
-
-<hr>
-
-<h2 class="additional-features">{% trans 'Additional Features' %}</h2>
-
-<div class="row">
-
-  <div class="col-lg-6 col-md-6 additional-features">
-    <ul>
-      <li>{% trans 'Personal web sites for companies' %}</li>
-      <li>{% trans 'Multi-Languages' %}</li>
-      <li>{% trans 'Synchronization with social network' %}</li>
-      <li>{% trans 'Build in CRM system' %}</li>
-     </ul>
-  </div>
-
-  <div class="col-lg-6 col-md-6 additional-features">
-    <ul>
-      <li>{% trans 'Ataytics' %}</li>
-      <li>{% trans 'Team collaboration tool' %}</li>
-      <li>{% trans 'Loyalty program and customer club management' %}</li>
-      <li>{% trans 'Special service developments for business' %}*</li>
-    </ul>
-  </div>
-
-
-</div>
-
-  <div class="colg-lg-12" style="padding:10px 0;">
-    <h4 class="additional-features">* {% trans 'Solution developments for insurance companies, digital printings, payment systems and more' %}</h4>
-  </div>
-
-  <hr>
-
-</div>
-
-<p style="text-align:center;color:#999">© 2010–{% now 'Y' %} B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
-
-<br><br>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="{% static 'b24online/bt/js/bootstrap.min.js' %}"></script>
-
-             <!-- Yandex.Metrika counter -->
-        <script type="text/javascript">
-            (function (d, w, c) {
-                (w[c] = w[c] || []).push(function() {
-                    try {
-                        w.yaCounter22547614 = new Ya.Metrika({id:22547614,
-                                webvisor:true,
-                                clickmap:true,
-                                trackLinks:true,
-                                accurateTrackBounce:true});
-                    } catch(e) { }
-                });
-                var n = d.getElementsByTagName("script")[0],
-                    s = d.createElement("script"),
-                    f = function () { n.parentNode.insertBefore(s, n); };
-                s.type = "text/javascript";
-                s.async = true;
-                s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-                if (w.opera == "[object Opera]") {
-                    d.addEventListener("DOMContentLoaded", f, false);
-                } else { f(); }
-            })(document, window, "yandex_metrika_callbacks");
-        </script>
-        <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-        <!-- /Yandex.Metrika counter -->
-
-
-        <!-- Google analytics -->
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-68656058-1', 'auto');
-          ga('send', 'pageview');
-        </script>
-        <!-- /Google analytics -->
+				// Add hash (#) to URL when done scrolling (default click behavior)
+				window.location.hash = hash;
+			  });
+			}  // End if
+		  });
+		});
+	</script>
 
 </body>
 </html>

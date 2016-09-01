@@ -250,13 +250,23 @@ def show_static_pages(site_type='b2b'):
 def show_top_static_pages(site_type='b2b'):
     cache_name = "%s_static_pages_all_top" % get_language()
     cached = cache.get(cache_name)
-
     if not cached:
         pages = StaticPage.objects.filter(is_on_top=True, site_type=site_type).only('title')
         cache.set(cache_name, pages, 60 * 60 * 24 * 7)
     else:
         pages = cache.get(cache_name)
+    return {'pages': pages}
 
+
+@register.inclusion_tag('b24online/main/topStaticPages_Front.html')
+def show_top_static_pages_front(site_type='b2b'):
+    cache_name = "%s_static_pages_all_top" % get_language()
+    cached = cache.get(cache_name)
+    if not cached:
+        pages = StaticPage.objects.filter(is_on_top=True, site_type=site_type).only('title')
+        cache.set(cache_name, pages, 60 * 60 * 24 * 7)
+    else:
+        pages = cache.get(cache_name)
     return {'pages': pages}
 
 
