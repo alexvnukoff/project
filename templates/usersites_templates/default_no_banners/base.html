@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
+    <title>No baners{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
     <meta http-equiv="ImageResize" content="no">
@@ -21,13 +21,12 @@
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}">
-    <link rel="stylesheet" href="{% static 'b24online/css/icons.css' %}">
-    {% block after_css %}{% endblock %}
+
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-    {% include 'usersites_templates/default_no_banners/header.html' %}
+    {% include 'usersites/header.html' %}
 
         <section class="offer">
             <div class="wrapper">
@@ -40,13 +39,14 @@
 
                 {% block slider %}
                     {% cache 3600 slider site.pk LANGUAGE_CODE %}
-                        {% include 'usersites_templates/default_no_banners/slider.html' %}
+                        {% include 'usersites/slider.html' %}
                     {% endcache %}
                 {% endblock %}
 
             <div class="offer__icons">
                 {% if is_chamber %}
                         {% site_context_adv %}
+
                 {% endif %}
                 </div>
 
@@ -58,13 +58,13 @@
             <div class="wrapper">
                 <aside class="sidebar">
 
-                        <div class="tmp_search hideitplease">
+                        <div class="tmp_search">
                         <form action="{% url 'b2c_products:search' %}">
                             <input type="text" placeholder="Search" name="s">
                         </form>
                         </div>
 
-                    <div class="select -lang hideitplease">
+                    <div class="select -lang">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
                             {% get_available_languages as LANGUAGES %}
@@ -88,7 +88,6 @@
                         <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
                     {% endif %}
                 {% endif %}
-                        <li><a href="{% url 'video:main' %}">{% trans 'Videos' %}</a></li>
                 {% comment %}
                     {% for page in site.user_site.organization.additional_pages %}
                         <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
@@ -116,23 +115,26 @@
         </div>
     </section>
 
-    {% include 'usersites_templates/default_no_banners/footer.html' %}
+    {% include 'usersites/footer.html' %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
 
-    <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
-    <script src="{% static 'usersites/js/angular.min.js' %}"></script>
-    <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
-    <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
-    <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'usersites/js/basket.js' %}"></script>
-    <script src="{% static 'usersites/js/main.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'usersites/js/basket.js' %}"></script>
+        <script src="{% static 'usersites/js/main.js' %}"></script>
+
+
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+
+
     <script>
     function initMap() {
         {% if site.user_site.organization.location %}
@@ -157,6 +159,7 @@
         map: map
       });
     }
+
     </script>
 
 {% block js %}{% endblock %}

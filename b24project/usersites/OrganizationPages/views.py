@@ -1,17 +1,17 @@
 from collections import OrderedDict
 
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView
 from django.utils.translation import ugettext as _
 
 from b24online.models import AdditionalPage, Department
-from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
+
 from usersites.mixins import UserTemplateMixin
-from b24online.Leads.utils import GetLead
 
 
 class PageDetail(UserTemplateMixin, ItemDetail):
@@ -19,7 +19,7 @@ class PageDetail(UserTemplateMixin, ItemDetail):
     template_name = '{template_path}/OrganizationPages/page.html'
 
     def get_queryset(self):
-        return get_current_site().user_site.organization.additional_pages.all()
+        return get_current_site(self.request).user_site.organization.additional_pages.all()
 
 
 class Contacts(UserTemplateMixin, DetailView):
@@ -32,51 +32,23 @@ class Contacts(UserTemplateMixin, DetailView):
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            cd = form.cleaned_data
             if not self.object.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
             else:
                 email = self.object.email
-                subject = "B24online.com: New Lead from {0}".format(cd['name'])
+                subject = "New message from %s" % form.cleaned_data.get('name')
 
-            # Collecting lead
-            getlead = GetLead(request)
-            getlead.collect(
-                url=cd['url_path'],
-                realname=cd['name'],
-                email=cd['email'],
-                message=cd['message'],
-                phone=cd['phone'],
-                company_id=cd['co_id']
-                )
-
-            mail = EmailMessage(subject,
-                    """
-                    From: {0}
-                    URL: {1}
-                    Email: {2}
-                    Phone: {3}
-
-                    Message: {4}
-                    """.format(
-                        cd['name'],
-                        cd['url_path'],
-                        cd['email'],
-                        cd['phone'],
-                        cd['message']
-                        ),
-                    cd['email'],
-                    [email]
-                )
+            mail = EmailMessage(subject, form.cleaned_data.get('message'), form.cleaned_data.get('email'), [email])
             mail.send()
-            return HttpResponseRedirect(reverse_lazy('message_sent'))
+
+            return HttpResponseRedirect(reverse('pages:contacts'))
 
         context_data['form'] = form
         return self.render_to_response(context_data)
 
     def get_object(self, queryset=None):
-        return get_current_site().user_site.organization
+        return get_current_site(self.request).user_site.organization
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -91,7 +63,7 @@ class Structure(UserTemplateMixin, ListView):
     ordering = ['name']
 
     def get_queryset(self):
-        return get_current_site().user_site.organization.departments.all()
+        return get_current_site(self.request).user_site.organization.departments.all()
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -105,20 +77,3 @@ class Structure(UserTemplateMixin, ListView):
         context_data['departments'] = departments
 
         return context_data
-
-
-class About(UserTemplateMixin, TemplateView):
-    model = AdditionalPage
-    template_name = '{template_path}/OrganizationPages/about.html'
-
-    def get_queryset(self):
-        return get_current_site().user_site.organization.additional_pages.all()
-
-
-class Gallery(UserTemplateMixin, TemplateView):
-    model = AdditionalPage
-    template_name = '{template_path}/OrganizationPages/gallery.html'
-
-    def get_queryset(self):
-        return get_current_site().user_site.organization.additional_pages.all()
-
