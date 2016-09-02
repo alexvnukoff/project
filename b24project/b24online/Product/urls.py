@@ -36,7 +36,7 @@ urlpatterns = [
     url(r'^my_b2c/update/page(?P<page>[0-9]+)?/$',
         B2CProductUpdateList.as_view(my=True),
         name="b2c_product_update_paginator"),
-    url(r'^сoupons/$', B2CPCouponsList.as_view(), name='main_сoupons'),
+    url(r'^сoupons/$', B2CPCouponsList.as_view(), name='main_coupons'),
     url(r'^сoupons/page(?P<page>[0-9]+)?/$', B2CPCouponsList.as_view(), name="coupons_paginator"),
     url(r'^add/$', B2BProductCreate.as_view(), name="add"),
     url(r'^add-b2c/$', B2CProductCreate.as_view(), name="addB2C"),
