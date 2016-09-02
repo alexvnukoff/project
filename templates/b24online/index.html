@@ -21,11 +21,11 @@
 
     <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
     <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
-
+    {% compress css %}
     <link href="{% static 'b24online/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'b24online/css/landing-page.css' %}" rel="stylesheet">
     <link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
-
+    {% endcompress %}
     {% comment %}
     {% if LANGUAGE_BIDI %}
     <link href="{% static 'b24online/css/bootstrap-rtl.css' %}" rel="stylesheet">
