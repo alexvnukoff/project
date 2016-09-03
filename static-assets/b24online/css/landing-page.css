@@ -213,25 +213,39 @@ p.copyright {
     margin:0 auto;
 }
 
-.moretools-list i {
+.moretools-list a > i {
     color:#006eb9;
     font-size:40px;
     display:block;
     }
 
-.moretools-list h2 {
+.moretools-list a > h2 {
+    color:#333;
     font-size:22px;
     font-weight:normal;
     margin:0 0 5px 0;
 }
 
+.moretools-item a > p {
+    color:#333;
+    font-weight:normal;
+}
+
+.moretools-item a:hover, a:focus, a:active {
+    text-decoration:none;
+    outline:none;
+}
+
+.moretools-item a:hover > p {
+    color:#777;
+}
+
+.moretools-item a:hover > h2 {
+    color:#666;
+}
 .moretools-item {
     margin:5px 0;
     height:180px;
-}
-
-.moretools-item > p {
-    font-weight:normal;
 }
 
 ul.clumn {

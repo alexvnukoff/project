@@ -319,7 +319,6 @@
                     <h2 class="section-heading">{% trans "Leads Gathering" %}</h2>
                     <p class="lead">{% blocktrans %}No more working with external systems and wasting money on temporary landing pages. Every contact module in the website or platform (company’s card) or on any page will be sent to you automatically, including name, phone numbers and e-mails, along with a brief option for text. The management panel makes it easy to receive relevant data on the potential client and the services and products he would like.{% endblocktrans %}</p>
                     <a href="{% url 'registration_register' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Register Now" %}</a>
-                    <a href="#" class="btn btn-danger btn-lg" style="margin:0 5px 12px 5px;">{% trans "Start Chat Now" %}</a>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="{% static 'b24online/img/lead.png' %}" alt="">
@@ -343,6 +342,7 @@
                     <h2 class="section-heading">{% trans "Live Chat" %}</h2>
                     <p class="lead">{% blocktrans %}The live chat messenger system allows communications within the portal and with a company’s external website. Clients can choose the division, department or employee to contact by IM. Chat history is saved for future referenceand documents and photos can be uploaded securely. The app serves as a tool for simultaneous discussions, marketing and support. Groups can be created to bring together employees, or employees and clients.{% endblocktrans %}</p>
                     <a href="{% url 'registration_register' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Register Now" %}</a>
+                    <a href="#" class="btn btn-danger btn-lg" style="margin:0 5px 12px 5px;">{% trans "Start Chat Now" %}</a>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <img class="img-responsive" src="{% static 'b24online/img/chat.png' %}" alt="">
@@ -370,51 +370,67 @@
                 <div class="moretools-list">
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'companies:main' %}">
                       <i class="icon-laptop"></i>
                       <h2>{% trans "Company E-Business Card" %}</h2>
                       <p>{% trans "A business card for your company to help find clients and partners, searchable through the portal’s company database. Full details can be found in the business database and help the company to connect to clients and partners." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'registration_register' %}">
                       <i class="icon-male"></i>
                       <h2>{% trans "Personal E-Business Card" %}</h2>
                       <p>{% trans "Your own personal interactive business card, with easy sharing option." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'video:main' %}">
                       <i class="icon-globe"></i>
                       <h2>{% trans "Business Community" %}</h2>
                       <p>{% trans "A social network providing a broad communication platform for your employees your staff, partners and clients." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'innov:main' %}">
                       <i class="icon-lightbulb"></i>
                       <h2>{% trans "Innovative projects" %}</h2>
                       <p>{% trans "Present and describe your projects and portfolio to attract potential business partners." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'news:main' %}">
                       <i class="icon-coffee"></i>
                       <h2>{% trans "Newsfeed" %}</h2>
                       <p>{% trans "A news feed to keep you updated and let you share the latest from your own company." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'tpp:main' %}">
                       <i class="icon-shield"></i>
                       <h2>{% trans "Organizations" %}</h2>
                       <p>{% trans "Partners include Chamber of Commerce, Business Centers and other international business networks." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'proposal:main' %}">
                       <i class="icon-briefcase"></i>
                       <h2>{% trans "Business Proposals" %}</h2>
                       <p>{% trans "Present public offers to your target audience worldwide. Each module includes its own independent, template-built, responsive mini site." %}</p>
+                      </a>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <a href="{% url 'exhibitions:main' %}">
                       <i class="icon-users"></i>
                       <h2>{% trans "Forums, Exhibitions and Conferences" %}</h2>
                       <p>{% trans "An integrated event management portal with an RSVP system, chatting with other registered participants, forwarding relevant marketing materials and scheduling meetings around the event." %}</p>
+                      </a>
                     </div>
 
                 </div>
