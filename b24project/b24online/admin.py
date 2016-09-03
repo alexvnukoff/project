@@ -10,8 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, \
@@ -128,10 +127,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
                     'has_permission': True,
                     'opts': RegisteredEventStats._meta,
                 }
-                return render_to_response(
-                    'admin/show_stats_detail.html',
-                    context,
-                    context_instance=RequestContext(request))
+                return render(request, 'admin/show_stats_detail.html', context)
 
     def show_stats(self, request):
         site = get_current_site()
@@ -168,10 +164,7 @@ class RegisteredEventStatsAdmin(admin.ModelAdmin):
             'opts': RegisteredEventStats._meta,
         }
 
-        return render_to_response(
-            'admin/show_stats.html',
-            context,
-            context_instance=RequestContext(request))
+        return render(request, 'admin/show_stats.html', context)
 
     def get_urls(self):
         return [

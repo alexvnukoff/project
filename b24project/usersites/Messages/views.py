@@ -4,23 +4,17 @@ import json
 import logging
 
 from django.contrib.auth.decorators import login_required
-from django.http import (HttpResponse, HttpResponseBadRequest, Http404,
-                         HttpResponseRedirect)
-from django.shortcuts import render_to_response
-from django.utils.translation import ugettext as _
-from django.utils.html import strip_tags
-from django.template import RequestContext, loader
+from django.http import (HttpResponse, HttpResponseBadRequest)
+from django.template import RequestContext
 from django.template.loader import render_to_string
-
+from django.utils.translation import ugettext as _
 from guardian.mixins import LoginRequiredMixin
-from b24online.models import (MessageChat, Message)
+
 from b24online.cbv import (ItemDetail, ItemsList)
-from b24online.Messages.views import ChatListView
-
-from usersites.mixins import UserTemplateMixin
-from usersites.Messages.forms import MessageForm
+from b24online.models import (MessageChat)
 from tpp.DynamicSiteMiddleware import get_current_site
-
+from usersites.Messages.forms import MessageForm
+from usersites.mixins import UserTemplateMixin
 
 logger = logging.getLogger(__name__)
 

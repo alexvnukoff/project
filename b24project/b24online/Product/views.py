@@ -8,7 +8,7 @@ from django.db import transaction
 from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -351,8 +351,7 @@ def categories_list(request, model):
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('b24online/Products/categoryList.html',\
-           template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Products/categoryList.html', template_params)
 
 
 class B2BProductCreate(ItemCreate):
@@ -372,8 +371,7 @@ class B2BProductCreate(ItemCreate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet()
 
-        return self.render_to_response(self.get_context_data(form=form,\
-                             additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -451,8 +449,7 @@ class B2BProductUpdate(ItemUpdate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(instance=self.object)
 
-        return self.render_to_response(self.get_context_data(form=form,\
-                            additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -518,8 +515,7 @@ class B2BProductUpdate(ItemUpdate):
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form,\
-                            additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
 class B2CProductCreate(ItemCreate):
@@ -539,8 +535,7 @@ class B2CProductCreate(ItemCreate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet()
 
-        return self.render_to_response(self.get_context_data(form=form,\
-                            additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -623,8 +618,7 @@ class B2CProductUpdate(ItemUpdate):
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(instance=self.object)
 
-        return self.render_to_response(self.get_context_data(form=form,\
-                            additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -704,8 +698,7 @@ class B2CProductUpdate(ItemUpdate):
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form, \
-                            additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
 class B2BProductGalleryImageList(GalleryImageList):
@@ -1100,11 +1093,8 @@ def category_tree_demo(request, b2_type='b2b'):
     data = tree_builder()
 
     context.update({'tree_data': json.dumps(data)})
-    return render_to_response(
-        'b24online/Products/category_tree_demo.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+
+    return render(request, 'b24online/Products/category_tree_demo.html', context)
 
 
 class ProducerList(LoginRequiredMixin, ItemsList):

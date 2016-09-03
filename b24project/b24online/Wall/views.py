@@ -2,8 +2,8 @@ import json
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
@@ -28,7 +28,7 @@ def get_wall_list(request):
             'wallPage': wallPage
         }
 
-        return render_to_response("b24online/Wall/index.html", templateParams, context_instance=RequestContext(request))
+        return render(request, "b24online/Wall/index.html", context=templateParams)
     else:
         serialize = {
             'styles': styles,

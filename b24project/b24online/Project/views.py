@@ -1,5 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, render
 
 from b24online.models import StaticPage
 
@@ -9,10 +8,10 @@ def project(request, template, section):
         'current_section': section,
     }
 
-    return render_to_response("b24online/Project/" + template, template_params, context_instance=RequestContext(request))
+    return render(request, "b24online/Project/" + template, template_params)
 
 
 def show_page(request, item_id=None, slug=None):
     page = get_object_or_404(StaticPage, pk=item_id)
 
-    return render_to_response("b24online/Project/detail.html", {'page': page}, context_instance=RequestContext(request))
+    return render(request, "b24online/Project/detail.html", {'page': page})

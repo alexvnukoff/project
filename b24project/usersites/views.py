@@ -1,27 +1,26 @@
 # -*- encoding: utf-8 -*-
 
-import json
 import logging
 
-from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.views.generic import View, TemplateView
-from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
-
+from django.http import JsonResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render_to_response, render
+from django.template import RequestContext
+from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from django.views.generic import View, TemplateView
 from registration.backends.default.views import RegistrationView
+
+from b24online.Leads.utils import GetLead
+from b24online.cbv import ItemUpdate
 from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
-from django.utils.timezone import now
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
-from b24online.cbv import ItemUpdate
-from b24online.Leads.utils import GetLead
 from usersites.mixins import UserTemplateMixin
 
 
@@ -29,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 def render_page(request, template, **kwargs):
-    return render_to_response(get_template_with_base_path(template), kwargs, context_instance=RequestContext(request))
+    return render(request, get_template_with_base_path(template), kwargs)
 
 
 def wall(request):
@@ -74,7 +73,7 @@ def wall(request):
     except ObjectDoesNotExist:
         template_name = template_name.format(template_path='usersites')
 
-    return render_to_response(template_name, template_params, context_instance=RequestContext(request))
+    return render(request, template_name, template_params)
 
 
 class ProductJsonData(View):

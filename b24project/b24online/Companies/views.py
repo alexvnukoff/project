@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.utils.translation import ugettext as _
 from guardian.shortcuts import get_objects_for_user
 
@@ -122,7 +122,7 @@ def _tab_news(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabNews.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabNews.html', template_params)
 
 
 def _tab_tenders(request, company, page=1):
@@ -141,7 +141,7 @@ def _tab_tenders(request, company, page=1):
 
     }
 
-    return render_to_response('b24online/Companies/tabTenders.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabTenders.html', template_params)
 
 
 def _tabs_exhibitions(request, company, page=1):
@@ -159,8 +159,7 @@ def _tabs_exhibitions(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabExhibitions.html', template_params,
-                              context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabExhibitions.html', template_params)
 
 
 def _tab_b2b_products(request, company, page=1):
@@ -178,7 +177,7 @@ def _tab_b2b_products(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tab_B2BProducts.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tab_B2BProducts.html', template_params)
 
 
 def _tab_b2c_products(request, company, page=1):
@@ -196,7 +195,7 @@ def _tab_b2c_products(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tab_B2CProducts.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tab_B2CProducts.html', template_params)
 
 
 def _tab_proposals(request, company, page=1):
@@ -214,7 +213,7 @@ def _tab_proposals(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabProposal.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabProposal.html', template_params)
 
 
 def _tab_innovation_projects(request, company, page=1):
@@ -232,7 +231,7 @@ def _tab_innovation_projects(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabInnov.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabInnov.html', template_params)
 
 
 def _tab_structure(request, company, page=1):
@@ -292,7 +291,7 @@ def _tab_structure(request, company, page=1):
         'item_pk': company,
     }
 
-    return render_to_response('b24online/Companies/tabStructure.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabStructure.html', template_params)
 
 
 def _tab_staff(request, company, page=1):
@@ -377,7 +376,7 @@ def _tab_staff(request, company, page=1):
         'has_perm': organization.has_perm(request.user),
     }
 
-    return render_to_response('b24online/Companies/tabStaff.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabStaff.html', template_params)
 
 
 def _tab_video(request, company, page=1):
@@ -395,7 +394,7 @@ def _tab_video(request, company, page=1):
         'url_parameter': company
     }
 
-    return render_to_response('b24online/Companies/tabVideo.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabVideo.html', template_params)
 
 
 

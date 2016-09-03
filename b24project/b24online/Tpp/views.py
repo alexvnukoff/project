@@ -1,28 +1,27 @@
 import json
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.template import RequestContext
 from django.db.models import Q
-from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
-from django.conf import settings
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
+from b24online.Tpp.forms import AdditionalPageFormSet, ChamberForm
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, DeleteGalleryImage, GalleryImageList, \
     DocumentList, DeleteDocument
 from b24online.models import (Chamber, Company, News, Tender, Exhibition,
                               BusinessProposal, InnovationProject,
                               Organization, Vacancy, StaffGroup,
                               PermissionsExtraGroup, Country)
-from b24online.utils import handle_uploaded_file
-from b24online.Tpp.forms import AdditionalPageFormSet, ChamberForm
 from b24online.search_indexes import SearchEngine
+from b24online.utils import handle_uploaded_file
 
 
 class ChamberList(ItemsList):
@@ -172,7 +171,7 @@ def _tab_companies(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Tpp/tabCompanies.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabCompanies.html', template_params)
 
 
 def _tab_news(request, tpp, page=1):
@@ -190,7 +189,7 @@ def _tab_news(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Tpp/tabNews.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabNews.html', template_params)
 
 
 def _tab_tenders(request, tpp, page=1):
@@ -208,7 +207,7 @@ def _tab_tenders(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Tpp/tabTenders.html', template_arams, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabTenders.html', template_arams)
 
 
 def _tab_exhibitions(request, tpp, page=1):
@@ -226,7 +225,7 @@ def _tab_exhibitions(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Tpp/tabExhibitions.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabExhibitions.html', template_params)
 
 
 def _tab_proposals(request, tpp, page=1):
@@ -244,7 +243,7 @@ def _tab_proposals(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Companies/tabProposal.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabProposal.html', template_params)
 
 
 def _tab_innovation_projects(request, tpp, page=1):
@@ -262,7 +261,7 @@ def _tab_innovation_projects(request, tpp, page=1):
         'url_parameter': tpp
     }
 
-    return render_to_response('b24online/Companies/tabInnov.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Companies/tabInnov.html', template_params)
 
 
 def _tab_structure(request, tpp, page=1):
@@ -313,7 +312,7 @@ def _tab_structure(request, tpp, page=1):
         'item_pk': tpp
     }
 
-    return render_to_response('b24online/Tpp/tabStructure.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabStructure.html', template_params)
 
 
 def _tab_staff(request, tpp, page=1):
@@ -399,7 +398,7 @@ def _tab_staff(request, tpp, page=1):
         'has_perm': organization.has_perm(request.user)
     }
 
-    return render_to_response('b24online/Tpp/tabStaff.html', template_params, context_instance=RequestContext(request))
+    return render(request, 'b24online/Tpp/tabStaff.html', template_params)
 
 
 class ChamberGalleryImageList(GalleryImageList):
