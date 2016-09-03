@@ -308,12 +308,12 @@ SOCIAL_AUTH_PIPELINE = (
 
 gettext = lambda s: s
 LANGUAGES = (
+    ('en', gettext('English')),
     ('ru', gettext('Russian')),
     ('am', gettext('Armenian')),
     ('bg', gettext('Bulgarian')),
     # ('az', gettext('Azerbaijan')),
     # ('be', gettext('Belarus')),
-    ('en', gettext('English')),
     # ('et', gettext('Estonia')),
     # ('ka', gettext('Georgia')),
     # ('kk', gettext('Kazakhstan')),

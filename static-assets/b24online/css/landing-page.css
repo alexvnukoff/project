@@ -227,7 +227,7 @@ p.copyright {
 
 .moretools-item {
     margin:5px 0;
-    height:210px;
+    height:180px;
 }
 
 .moretools-item > p {
@@ -290,10 +290,10 @@ ul.dropdown-menu > li > a > img.flag-icon {
         font-size:4em;
     }
 
-.moretools-item {
-    margin:5px 0;
-    height:220px;
-    }
+    .moretools-item {
+        margin:5px 0;
+        height:200px;
+        }
 }
 
 @media(max-width:970px) {

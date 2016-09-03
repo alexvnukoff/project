@@ -6,14 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name='yandex-verification' content='7036efbb8c82d0da' />
     <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
-                     <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
-                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
-                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
-                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
-                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
-                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
-                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
-                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
+    <meta name="description" content="{% blocktrans %}B24Online is an integrated international online business networking platform offering B2B and B2C services as well as an employment portal for candidates and companies. Available in English, Russian and a variety of other languages.{% endblocktrans %}"/>
 
     <meta property="og:site_name" content="{% trans 'B24Online' %}"/>
 
@@ -138,18 +131,18 @@
                                         <div class="intro-message">
                                             <h1>{% trans "B24Online for Business" %}</h1>
                                             <p>{% trans "Growth tools for your business." %}</p>
-                                            <form action="{% url 'products:main' %}" method="get">
+                                            <form action="{% url 'products:main' %}" method="get" class="hidden-xs">
                                             <div class="input-group">
                                                 <input type="text" name="q" class="form-control input-lg" placeholder="{% trans 'Search for products and services' %}" />
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-info btn-lg" type="button">
+                                                    <button class="btn btn-info btn-lg" type="submit">
                                                        <i class="glyphicon glyphicon-search"></i>
                                                     </button>
                                                 </span>
                                             </div>
                                             </form>
 
-                                            <p style="margin-top:10px;">{% trans 'OR' %}</p>
+                                            <p style="margin-top:10px;" class="hidden-xs">{% trans 'OR' %}</p>
                                             <a href="{% url 'companies:main' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Companies" %}</a>
                                             <a href="{% url 'products:main' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Products and services" %}</a>
                                         </div>
@@ -169,17 +162,17 @@
                                             <div class="intro-message">
                                                 <h1>{% trans "B24Online for Customers" %}</h1>
                                                 <p>{% trans "Your marketplace – from your own neighborhood across the world." %}</p>
-                                                <form action="{% url 'products:main_b2c' %}" method="get">
+                                                <form action="{% url 'products:main_b2c' %}" method="get" class="hidden-xs">
                                                 <div class="input-group">
                                                     <input type="text" name="q" class="form-control input-lg" placeholder="{% trans 'Search for products' %}" />
                                                     <span class="input-group-btn">
-                                                        <button class="btn btn-info btn-lg" type="button">
+                                                        <button class="btn btn-info btn-lg" type="submit">
                                                            <i class="glyphicon glyphicon-search"></i>
                                                         </button>
                                                     </span>
                                                 </div>
                                                 </form>
-                                                <p style="margin-top: 10px;">{% trans 'OR' %}</p>
+                                                <p style="margin-top: 10px;" class="hidden-xs">{% trans 'OR' %}</p>
                                                 <a href="{% url 'products:main_b2c' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Search for Products" %}</a>
                                                 <a href="{% url 'products:main_coupons' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Search for Coupons" %}</a>
                                             </div>
@@ -199,17 +192,17 @@
                                                 <div class="intro-message">
                                                     <h1>{% trans "Employment Center" %}</h1>
                                                     <p>{% trans "Find the your ideal position or the perfect candidate for your company." %}</p>
-                                                    <form action="{% url 'vacancy:main' %}" method="get">
+                                                    <form action="{% url 'vacancy:main' %}" method="get" class="hidden-xs">
                                                     <div class="input-group">
                                                         <input type="text" name="q" class="form-control input-lg" placeholder="{% trans 'Search for new job opportunitiess' %}" />
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-info btn-lg" type="button">
+                                                            <button class="btn btn-info btn-lg" type="submit">
                                                                 <i class="glyphicon glyphicon-search"></i>
                                                             </button>
                                                         </span>
                                                     </div>
                                                     </form>
-                                                    <p style="margin-top: 10px;">{% trans 'OR' %}</p>
+                                                    <p style="margin-top: 10px;" class="hidden-xs">{% trans 'OR' %}</p>
                                                     <a href="{% url 'vacancy:main' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Job listings" %}</a>
                                                     <a href="{% url 'resume:main' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Candidates and outsourcing" %}</a>
                                                 </div>
@@ -233,7 +226,7 @@
 		</a>
 	</div>
 
-            <div class="section-nav">
+            <div class="section-nav hidden-xs">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -258,7 +251,6 @@
                                     <li>
                                         <a href="#moretools"><span class="icon"><i class="icon-box" aria-hidden="true"></i></span><span class="title">{% trans "More Tools" %}</span></a>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -278,6 +270,7 @@
                     <div class="clearfix"></div>
                     <h2 class="section-heading">{% trans "Create Your Own Site in Under 10 Minutes" %}</h2>
                     <p class="lead">{% blocktrans %}Every company joining B24Online can choose from a wide variety of ready-made, mobile-friendly templates to build and operate its own image and sales websites.  Companies immediately can start operating in their business environments.  All information from the portal is immediately synchronized to your personal site.{% endblocktrans %}</p>
+                    <a href="{% url 'registration_register' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Start Now" %}</a>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="{% static 'b24online/img/site.png' %}" alt="">
@@ -326,6 +319,7 @@
                     <h2 class="section-heading">{% trans "Leads Gathering" %}</h2>
                     <p class="lead">{% blocktrans %}No more working with external systems and wasting money on temporary landing pages. Every contact module in the website or platform (company’s card) or on any page will be sent to you automatically, including name, phone numbers and e-mails, along with a brief option for text. The management panel makes it easy to receive relevant data on the potential client and the services and products he would like.{% endblocktrans %}</p>
                     <a href="{% url 'registration_register' %}" class="btn btn-info btn-lg" style="margin:0 5px 12px 5px;">{% trans "Register Now" %}</a>
+                    <a href="#" class="btn btn-danger btn-lg" style="margin:0 5px 12px 5px;">{% trans "Start Chat Now" %}</a>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="{% static 'b24online/img/lead.png' %}" alt="">
@@ -406,15 +400,15 @@
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
-                      <i class="icon-briefcase"></i>
-                      <h2>{% trans "Business Proposals" %}</h2>
-                      <p>{% trans "Present public offers to your target audience worldwide. Each module includes its own independent, template-built, responsive mini site." %}</p>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
                       <i class="icon-shield"></i>
                       <h2>{% trans "Organizations" %}</h2>
                       <p>{% trans "Partners include Chamber of Commerce, Business Centers and other international business networks." %}</p>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
+                      <i class="icon-briefcase"></i>
+                      <h2>{% trans "Business Proposals" %}</h2>
+                      <p>{% trans "Present public offers to your target audience worldwide. Each module includes its own independent, template-built, responsive mini site." %}</p>
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-6 moretools-item">
