@@ -145,8 +145,6 @@ class MessageForm(forms.ModelForm):
             )
         return errors
 
-
-
     def save(self, *args, **kwargs):
         pass
 

@@ -245,7 +245,7 @@ def get_messages_number(context, for_current_organization=False):
     """
     request = context.get('request')
     filters = {
-        'chat__participants__id__exact': request.user.id,
+        'chat__participants__user__id__exact': request.user.id,
         'chat__status': MessageChat.OPENED,
         'is_read': False,
     }
@@ -254,7 +254,7 @@ def get_messages_number(context, for_current_organization=False):
 
     return Message.objects.select_related('chat')\
         .filter(**filters)\
-        .filter(~Q(sender=request.user))\
+        .filter(~Q(sender__user=request.user))\
         .distinct()\
         .count() if request.user.is_authenticated() else 0
 

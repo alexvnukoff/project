@@ -1467,7 +1467,52 @@ class Notification(models.Model):
         return self.message
 
 
-class MessageChat(AbstractRegisterInfoModel):
+class MessageChatParticipant(ActiveModelMixing, models.Model):
+    """
+    The chat participant class for any user (authenticated and unauthenticated)
+    """
+    user = models.ForeignKey(
+        User, 
+        related_name='chats_participated',
+        null=True, 
+        blank=True
+    )
+    email = models.EmailField(
+        verbose_name='E-mail', 
+        max_length=255,
+        db_index=True,
+    )
+    user_uuid = models.UUIDField(
+        default=uuid.uuid4, 
+        editable=False
+    )
+    site_id = models.IntegerField(
+        _('Site ID'), 
+        default=settings.SITE_ID
+    )
+    nickname = models.EmailField(
+        verbose_name='E-mail', 
+        max_length=255,
+        db_index=True
+    )
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Chat participant')
+        verbose_name_plural = _('Chat participants')
+
+    def __str__(self):
+        if self.user:
+            return str(self.user) 
+        elif self.email:
+            return self.email
+        elif self.nickname:
+            return self.nickname
+        elif self.user_uuid:
+            return 'User <%s>' % str(user_uuid)
+
+
+class MessageChat(models.Model):
     """
     Class for messages chat.
     """
@@ -1480,14 +1525,18 @@ class MessageChat(AbstractRegisterInfoModel):
                                null=True, blank=False)
     organization = models.ForeignKey('Organization', related_name='chats',
                                      null=True, blank=True)
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
+    recipient = models.ForeignKey(MessageChatParticipant,
                                   related_name='incoming_chats', null=True,
                                   blank=True)
-    participants = models.ManyToManyField(User, blank=True)
+    participants = models.ManyToManyField(MessageChatParticipant, blank=True)
     is_private = models.NullBooleanField()
     status = models.CharField(_('Chart status'), max_length=10,
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
+    created_at = models.DateTimeField(_('Creation time'),
+        default=timezone.now, db_index=True)
+    updated_at = models.DateTimeField(_('Update time'),
+        auto_now=True, null=True)
 
     class Meta:
         verbose_name = _('Messages chat')
@@ -1503,6 +1552,13 @@ class MessageChat(AbstractRegisterInfoModel):
     def get_participants(self):
         return self.participants.all()
 
+    @property
+    def created(self):
+        """
+        Return the created_at datetime text by selected format.
+        """
+        return self.created_at.strftime('%d/%m/%Y %H:%I:%S')
+
 
 class Message(models.Model):
     """
@@ -1515,24 +1571,55 @@ class Message(models.Model):
         (READ, _('Read')),
     )
 
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               related_name='outgoing_messages')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                  related_name='incoming_messages', null=True,
-                                  blank=True)
-    organization = models.ForeignKey('Organization',
-                                     related_name='organization_messages',
-                                     null=True, blank=True)
-    chat = models.ForeignKey(MessageChat, related_name='chat_messages',
-                             null=True, blank=True)
-    is_read = models.BooleanField(default=False)
-    subject = models.CharField(_('Chat subject'), max_length=255,
-                               null=True, blank=True, db_index=True)
-    content = models.TextField(blank=False, null=False)
-    status = models.CharField(_('Message status'), max_length=10,
-                              choices=STATUSES, default=DRAFT, editable=False,
-                              null=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    sender = models.ForeignKey(
+        MessageChatParticipant,
+        related_name='outgoing_messages'
+    )
+    recipient = models.ForeignKey(
+        MessageChatParticipant,
+        related_name='incoming_messages', 
+        null=True,
+        blank=True
+    )
+    organization = models.ForeignKey(
+        'Organization',
+        related_name='organization_messages',
+        null=True, 
+        blank=True
+    )
+    chat = models.ForeignKey(
+        MessageChat, 
+        related_name='chat_messages',
+        null=True, 
+        blank=True
+    )
+    is_read = models.BooleanField(
+        default=False
+    )
+    subject = models.CharField(
+        _('Chat subject'), 
+        max_length=255,
+        null=True, 
+        blank=True, 
+        db_index=True
+    )
+    content = models.TextField(
+        blank=False, 
+        null=False
+    )
+    status = models.CharField(
+        _('Message status'), 
+        max_length=10,
+        choices=STATUSES, 
+        default=DRAFT, 
+        editable=False,
+        null=False, 
+        db_index=True
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True, 
+        db_index=True
+    )
 
     class Meta:
         index_together = [
@@ -1547,7 +1634,8 @@ class Message(models.Model):
 
         if notify:
             from appl import func
-            func.publish_realtime('private_massage', recipient=recipient_id, fromUser=sender.pk)
+            func.publish_realtime('private_massage', recipient=recipient_id, 
+                                  fromUser=sender.pk)
 
     def __str__(self):
         return 'From "%s" to chat "%s" at %s' % (

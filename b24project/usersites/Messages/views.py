@@ -3,6 +3,7 @@
 import json
 import logging
 
+from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.http import (HttpResponse, HttpResponseBadRequest)
 from django.template import RequestContext
