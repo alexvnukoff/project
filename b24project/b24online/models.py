@@ -1480,11 +1480,17 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
     email = models.EmailField(
         verbose_name='E-mail', 
         max_length=255,
+        null=True,
+        blank=True,
+        editable=False,
         db_index=True,
     )
     user_uuid = models.UUIDField(
         default=uuid.uuid4, 
-        editable=False
+        null=True,
+        blank=True,
+        editable=False,
+        db_index=True
     )
     site_id = models.IntegerField(
         _('Site ID'), 
@@ -1500,6 +1506,49 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
     class Meta:
         verbose_name = _('Chat participant')
         verbose_name_plural = _('Chat participants')
+
+    @classmethod
+    def get_instance(cls, request, email=None):
+        """
+        Return the MessageChatParticipant
+        """
+        filter = {}
+        if request.user.is_authenticated()
+            filter = {'user__id': requets.user.id}
+        elif email:
+            filter = {'email': email}
+        elif 'user_uuid' in request.session:
+            filter = {'user_uuid': request.session['user_uuid']}
+        if filter:
+            try:
+                return cls.objects.get(**filter)
+            except cls.DoesNotExist:
+                pass
+        return None
+
+    @classmethod
+    def create_instance(cls, request, email=None):
+        """
+        Return the MessageChatParticipant
+        """
+        instance = cls()
+        if request.user.is_authenticated()
+            instance.user = requets.user
+        elif email:
+            instance.email = email
+        elif 'user_uuid' in request.session:
+            instance.user_uuid = request.session['user_uuid']
+        instance.save()
+        return instance
+
+    @classmethod
+    def get_or_create(cls, request, email=None)
+        """Return existed or new chat participant"""
+        instance = cls.get_instance(request, email=email)
+        return instance if instance else cls.create_instance(
+            request, 
+            email=email
+        )
 
     def __str__(self):
         if self.user:
@@ -1533,6 +1582,10 @@ class MessageChat(models.Model):
     status = models.CharField(_('Chart status'), max_length=10,
                               choices=STATUSES, default=OPENED, editable=False,
                               null=False, db_index=True)
+    created_by = models.ForeignKey(MessageChatParticipant, 
+                                   verbose_name=_('Creator'),
+                                   related_name='%(class)s_create_user',
+                                   null=True, blank=True)
     created_at = models.DateTimeField(_('Creation time'),
         default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(_('Update time'),
@@ -1684,7 +1737,8 @@ class MessageAttachment(models.Model):
                                  blank=True, editable=False)
     content_type = models.CharField(_('Content type'), max_length=255,
                                     null=True, blank=True, editable=False)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+
+    created_by = models.ForeignKey(MessageChatParticipant,
                                    related_name='%(class)s_create_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 

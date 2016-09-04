@@ -115,12 +115,20 @@ class MessageForm(forms.ModelForm):
         try:
             with transaction.atomic():
                 # Create new message chat if it's necessary
+                
+                message_recipient = MessageChatParticipant.get_or_create(
+                    user=self.recipient
+                )
+                message_sender = MessageChatParticipant.get_or_create(
+                    request=self.request
+                )
+                
                 new_message_chat = MessageChat.objects.create(
                     subject=subject,
                     organization=self.organization,
-                    recipient=self.recipient,
+                    recipient=message_recipient,
                     status=MessageChat.OPENED,
-                    created_by=self.request.user,
+                    created_by=message_sender,
                 ) if not self.chat else self.chat
 
                 # Create new message
@@ -128,14 +136,14 @@ class MessageForm(forms.ModelForm):
                     subject=new_message_chat.subject,
                     status=Message.READY,
                     organization=self.organization,
-                    sender=self.request.user,
-                    recipient=self.recipient,
+                    sender=message_sender,
+                    recipient=message_recipient,
                     chat=new_message_chat,
                     content=content,
                 )
-                new_message_chat.participants.add(self.request.user)
-                if self.recipient:
-                    new_message_chat.participants.add(self.recipient)
+                new_message_chat.participants.add(message_sender)
+                if message_recipient:
+                    new_message_chat.participants.add(message_recipient)
 
                 if self.request.FILES \
                     and 'attachment' in self.request.FILES:
@@ -144,7 +152,7 @@ class MessageForm(forms.ModelForm):
                             .create(
                                 file=handle_uploaded_file(_attachment),
                                 message=new_message,
-                                created_by=self.request.user,
+                                created_by=message_sender,
                                 file_name=_attachment.name,
                                 content_type=_attachment.content_type,
                             )
