@@ -9,6 +9,12 @@ class GreetingList(ItemsList):
     #pagination url
     url_paginator = "greetings:paginator"
 
+    # Sorting fields
+    sortField1 = 'name'
+    sortField2 = None
+    order1 = 'desc'
+    order2 = None
+
      # Fields to sort by
     sortFields = {
         'name': 'name'
@@ -29,10 +35,7 @@ class GreetingList(ItemsList):
     template_name = 'b24online/Greetings/index.html'
 
     def get_queryset(self):
-        if self.is_filtered() and not self.is_my():
-            return self.get_filtered_items().sort('name')
-
-        queryset = self.model.objects.order_by('name')
+        queryset = self.model.objects.all()
         return self.optimize_queryset(queryset)
 
 

@@ -282,9 +282,9 @@ class ItemsList(HybridListView):
     def _get_sorting_params(self):
         order = []
 
-        self.sortField1 = self.request.GET.get('sortField1', 'date')
+        self.sortField1 = self.request.GET.get('sortField1', self.sortField1)
         self.sortField2 = self.request.GET.get('sortField2', None)
-        self.order1 = self.request.GET.get('order1', 'desc')
+        self.order1 = self.request.GET.get('order1', self.order1)
         self.order2 = self.request.GET.get('order2', None)
 
         if self.sortField1 and self.sortField1 in self.sortFields:
@@ -293,7 +293,8 @@ class ItemsList(HybridListView):
             else:
                 order.append(self.sortFields[self.sortField1])
         else:
-            order.append(self.sortFields['date'])
+            _, val = self.sortFields.popitem()
+            order.append(val)
 
         if self.sortField2 and self.sortField2 in self.sortFields:
             if self.order2 == 'desc':
