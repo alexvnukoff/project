@@ -101,9 +101,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'usersites/usersites_templates/cineret/js/agency.js' %}"></script>
     {% block adviser %}
-        {% if user.is_authenticated %}
         <script src="{% static 'usersites/js/adviser.js' %}"></script>
-        {% endif %}
     {% endblock %}
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>

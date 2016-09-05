@@ -20,7 +20,7 @@ from usersites.mixins import UserTemplateMixin
 logger = logging.getLogger(__name__)
 
 
-class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin, 
+class UsersitesChatsListView(UserTemplateMixin, 
                              ItemsList):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
@@ -56,22 +56,22 @@ class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
         self.participant = MessageChatParticipant.get_instance(
             request=self.request
         )
-        logger.debug('Participant: %s', self.participant)
         self.organization = get_current_site().user_site.organization
-        chats = self.model.objects\
-            .filter(organization=self.organization,
-                    participants__id__exact=self.participant.id,
-                    status=MessageChat.OPENED)\
-            .distinct()\
-            .order_by('-updated_at')
-        logger.debug(chats)
+        if self.participant:
+            chats = self.model.objects\
+                .filter(organization=self.organization,
+                        participants__id__exact=self.participant.id,
+                        status=MessageChat.OPENED)\
+                .distinct()\
+                .order_by('-updated_at')
+        else:
+            chats = self.model.objects.none()
         return chats
 
 
-@login_required
+## @login_required - refs #1065
 def add_to_chat(request):
-    response_code = 'error'
-    response_text = 'Error'
+    response_code, response_text = 'error', 'Error'
     data = {}
     if request.method == 'POST':
         form = MessageForm(request, data=request.POST,
@@ -102,7 +102,7 @@ def add_to_chat(request):
     return HttpResponseBadRequest()
 
 
-class UsersitesChatMessagesView(LoginRequiredMixin, UserTemplateMixin, 
+class UsersitesChatMessagesView(UserTemplateMixin, 
                                 ItemDetail):
     """The chat's messages view"""
     model = MessageChat
@@ -112,13 +112,19 @@ class UsersitesChatMessagesView(LoginRequiredMixin, UserTemplateMixin,
     def get_context_data(self, **kwargs):
         context = super(UsersitesChatMessagesView, self)\
             .get_context_data(**kwargs)
-        messages = self.object.chat_messages.all()
-        messages_cnt = messages.count()
-        if messages_cnt > self.messages_per_page:
-            messages = messages.order_by('created_at')\
-                [messages_cnt - self.messages_per_page:]
+        participant = MessageChatParticipant.get_instance(
+            request=self.request
+        )
+        if participant.id in [p.id for p in self.object.participants.all()]:
+            messages = self.object.chat_messages.all()
+            messages_cnt = messages.count()
+            if messages_cnt > self.messages_per_page:
+                messages = messages.order_by('created_at')\
+                    [messages_cnt - self.messages_per_page:]
+            else:
+                messages = messages.order_by('created_at')
         else:
-            messages = messages.order_by('created_at')
+            messages = Message.objects.none()
         context = {
             'chat': self.object,
             'messages': messages,

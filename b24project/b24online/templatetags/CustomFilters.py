@@ -244,19 +244,23 @@ def get_messages_number(context, for_current_organization=False):
     Return the number of unread messages.
     """
     request = context.get('request')
+    participant = MessageChatParticipant.get_instance(request=request)
+    if not participant:
+        return 0
+    logger.debug(participant)
+    logger.debug(participant.id)
     filters = {
-        'chat__participants__user__id__exact': request.user.id,
+        'chat__participants__id__exact': participant.id,
         'chat__status': MessageChat.OPENED,
         'is_read': False,
     }
     if for_current_organization:
         filters['organization'] = get_current_organization(request)
-
     return Message.objects.select_related('chat')\
         .filter(**filters)\
-        .filter(~Q(sender__user=request.user))\
+        .filter(~Q(sender=participant))\
         .distinct()\
-        .count() if request.user.is_authenticated() else 0
+        .count()
 
 
 @register.simple_tag(takes_context=True)

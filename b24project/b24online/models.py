@@ -1521,8 +1521,8 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
             filter = {'user__id': request.user.id}
         elif email:
             filter = {'email': email}
-        elif request and 'user_uuid' in request.session:
-            filter = {'user_uuid': request.session['user_uuid']}
+        elif request and 'uuid_hash' in request.session:
+            filter = {'user_uuid': request.session['uuid_hash']}
         if filter:
             try:
                 return cls.objects.get(**filter)
@@ -1542,8 +1542,8 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
             instance.user = request.user
         elif email:
             instance.email = email
-        elif request and 'user_uuid' in request.session:
-            instance.user_uuid = request.session['user_uuid']
+        elif request and 'uuid_hash' in request.session:
+            instance.user_uuid = request.session['uuid_hash']
         instance.save()
         return instance
 
