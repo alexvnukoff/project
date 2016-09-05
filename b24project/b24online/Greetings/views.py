@@ -9,6 +9,12 @@ class GreetingList(ItemsList):
     #pagination url
     url_paginator = "greetings:paginator"
 
+    # Sorting fields
+    sortField1 = 'name'
+    sortField2 = None
+    order1 = 'desc'
+    order2 = None
+
      # Fields to sort by
     sortFields = {
         'name': 'name'
