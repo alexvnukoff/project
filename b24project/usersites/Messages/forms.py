@@ -13,8 +13,8 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 
-from b24online.models import (User, Organization, MessageChat,
-                              Message, MessageAttachment, Vacancy)
+from b24online.models import (User, Organization, MessageChatParticipant, 
+                              MessageChat, Message, MessageAttachment, Vacancy)
 from b24online.utils import handle_uploaded_file
 from b24online import InvalidParametersError
 from tpp.DynamicSiteMiddleware import get_current_site

@@ -1494,6 +1494,8 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
     )
     site_id = models.IntegerField(
         _('Site ID'), 
+        null=True,
+        blank=True,
         default=settings.SITE_ID
     )
     nickname = models.EmailField(
@@ -1508,16 +1510,18 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
         verbose_name_plural = _('Chat participants')
 
     @classmethod
-    def get_instance(cls, request, email=None):
+    def get_instance(cls, user=None, request=None, email=None):
         """
         Return the MessageChatParticipant
         """
         filter = {}
-        if request.user.is_authenticated()
-            filter = {'user__id': requets.user.id}
+        if user:
+            filter = {'user': user}
+        elif request and request.user.is_authenticated():
+            filter = {'user__id': request.user.id}
         elif email:
             filter = {'email': email}
-        elif 'user_uuid' in request.session:
+        elif request and 'user_uuid' in request.session:
             filter = {'user_uuid': request.session['user_uuid']}
         if filter:
             try:
@@ -1527,26 +1531,29 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
         return None
 
     @classmethod
-    def create_instance(cls, request, email=None):
+    def create_instance(cls, user=None, request=None, email=None):
         """
         Return the MessageChatParticipant
         """
         instance = cls()
-        if request.user.is_authenticated()
-            instance.user = requets.user
+        if user:
+            instance.user = user
+        elif request and request.user.is_authenticated():
+            instance.user = request.user
         elif email:
             instance.email = email
-        elif 'user_uuid' in request.session:
+        elif request and 'user_uuid' in request.session:
             instance.user_uuid = request.session['user_uuid']
         instance.save()
         return instance
 
     @classmethod
-    def get_or_create(cls, request, email=None)
+    def get_or_create(cls, user=None, request=None, email=None):
         """Return existed or new chat participant"""
-        instance = cls.get_instance(request, email=email)
+        instance = cls.get_instance(user=user, request=request, email=email)
         return instance if instance else cls.create_instance(
-            request, 
+            user=user,
+            request=request, 
             email=email
         )
 
