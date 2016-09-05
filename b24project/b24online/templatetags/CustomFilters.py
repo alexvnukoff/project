@@ -24,7 +24,7 @@ from lxml.html.clean import Cleaner
 import b24online.urls
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, MessageChat, Message,
-                              Questionnaire, Banner)
+                              Questionnaire, Banner, MessageChatParticipant)
 from b24online.stats.helpers import RegisteredEventHelper
 from b24online.utils import resize, get_permitted_orgs
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -466,13 +466,12 @@ def get_chat_other_side(context, chat):
     """
     Return the chat's 'other side'.
     """
+    result = None
     request = context['request']
-    if request.user.is_authenticated():
-        if chat.created_by == request.user:
-            return chat.recipient
-        else:
-            return chat.created_by
-    return None
+    participant = MessageChatParticipant.get_instance(request=request)
+    result = chat.recipient if chat.created_by == participant \
+        else chat.created_by
+    return result
 
 
 @register.assignment_tag(takes_context=True)

@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from guardian.mixins import LoginRequiredMixin
 
 from b24online.cbv import (ItemDetail, ItemsList)
-from b24online.models import (MessageChat)
+from b24online.models import (MessageChat, MessageChatParticipant)
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.Messages.forms import MessageForm
 from usersites.mixins import UserTemplateMixin
@@ -42,19 +42,29 @@ class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
                 data=self.request.POST,
                 files=self.request.FILES) \
             if self.request.method == 'POST' else MessageForm(self.request)
-            context.update({'new_message_form': new_message_form})
+
+            context.update({
+                'new_message_form': new_message_form,
+                'participant': self.participant,
+            })
+
         else:
             self.template_name = '{template_path}/Messages/chatsRefresh.html'
         return context
 
     def get_queryset(self):
+        self.participant = MessageChatParticipant.get_instance(
+            request=self.request
+        )
+        logger.debug('Participant: %s', self.participant)
         self.organization = get_current_site().user_site.organization
         chats = self.model.objects\
             .filter(organization=self.organization,
-                    participants__id__exact=self.request.user.id,
+                    participants__id__exact=self.participant.id,
                     status=MessageChat.OPENED)\
             .distinct()\
             .order_by('-updated_at')
+        logger.debug(chats)
         return chats
 
 

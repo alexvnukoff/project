@@ -1567,6 +1567,26 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
         elif self.user_uuid:
             return 'User <%s>' % str(user_uuid)
 
+    def get_title(self, direction='me'):
+        """
+        Return the MessageChatParticipant title
+        """
+        result = None
+        if self.user:
+            if self.user and getattr(self.user, 'profile', None) \
+                 and self.user.profile.full_name:
+                result = self.user.profile.full_name            
+            else:
+                result = self.user.email
+        elif self.email:
+            result = self.email
+        else:
+            if direction == 'me':
+                result = _('You')
+            else:
+                result = _('Other side user')
+        return result        
+                
 
 class MessageChat(models.Model):
     """

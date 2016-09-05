@@ -58,10 +58,10 @@
                         <ul id="chats_list" class="list-group chats-list">
                           {% for chat in page_obj.object_list %}
                             {% get_chat_other_side chat as other_side %}
-                            <li class="list-group-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
+                            <li class="list-group-item {% if chat.created_by != participant %}incoming-chat{% else %}outgoing-chat{% endif %}">
                               <span class="thumb">
-                                {% if other_side.profile.avatar %}
-                                  <img src="{{ other_side.profile.avatar.th }}" />
+                                {% if other_side.user and other_side.user.profile and other_side.user.profile.avatar %}
+                                  <img src="{{ other_side.user.profile.avatar.th }}" />
                                 {% else %}
                                   <img style="width: 24px;height: 24px;" 
                                     src="{% static 'b24online/img/profile.jpg' %}" />
@@ -69,7 +69,9 @@
                               </span>
                               <a class="no-decoration" 
                                 data-url="{% url 'messages:chat_messages' chat.pk  %}" 
-                                data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                                data-chat-id="{{ chat.pk }}" href="#">
+                                    {{ other_side.get_title }}
+                              </a>
                             </li>
                           {% empty %}
                             <h4 class="list-group-item" style="border: none;">{% trans 'There are no records yet' %}</h4>
