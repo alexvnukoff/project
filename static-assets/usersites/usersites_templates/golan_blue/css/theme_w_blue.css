@@ -279,3 +279,16 @@ footer a:active{
 	color: #aaa;
 
 }
+
+#main-page-coupons .main-coupon-wrap {
+	border: 1px solid #0036a4;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+	background-color: #0036a4;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+	background-color: #0036a4;
+	color: #fff!important;
+}

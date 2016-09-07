@@ -2,6 +2,8 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+{% load content_tags %}
+
 <section class="content__info">
 
     {# Products page content #}
@@ -13,10 +15,33 @@
             <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
         </div>
 
+        <div class="col-md-3 categories-side">
+            {% b2c_categories show_as_list=1 as categories %}
+
+            {% if 'b2c-products' in request.path %}
+                <ul class="categories-menu">
+                    {% for pk, category in categories.items %}
+                        {% if category.name != "b2c-category" %}
+                            <li class="categorie-item">
+                                <a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a>
+{#                                {% if selected_category == category %}selected="selected"{% endif %} #}
+{#                                    value="{% url 'b2c_products:category' category.slug pk %}">#}
+{#                                {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}#}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+
+
+        <div class="col-md-9 products-side">
+
         <div class="row main-products-thumb">
             {% for product in products %}
 
-                <div class="col-sm-6 col-xs-12 col-md-3 product ">
+                <div class="col-sm-6 col-xs-12 col-md-4 product ">
                     <div class="thumbnail ">
                         {% if product.image %}
                             <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
@@ -66,8 +91,9 @@
 
             {% endfor %}
         </div><!-- /Products modoul --><!-- /row -->
+        </div>
 
-        {% include 'usersites_templates/golan_blue/B2CProducts/paginator.html' %}
+{#        {% include 'usersites_templates/golan_blue/B2CProducts/paginator.html' %}#}
     </div>
 
 </section>

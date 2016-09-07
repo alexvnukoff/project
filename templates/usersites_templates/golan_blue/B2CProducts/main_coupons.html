@@ -4,11 +4,11 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
-{# the coupon will take 50% of the page. #}
+
+{# New coupons design#}
 {% if b2c_coupons %}
 
-    <div class="container">
+    <div class="container" id="main-page-coupons">
 
         <div class="row">
             <!-- Coupons header -->
@@ -19,45 +19,26 @@
 
         {% for product in coupons %}
 
-            <div class="row ver-coupon-wrap">
+            <div class="row main-coupon-wrap">
 
-                <div class="col-md-12 col-sm-12 hidden-xs">
-                    <h3 class="ver-coupon__title">{{ product.name|truncatechars:80 }}</h3>
-                </div>
-
-                <div class="col-md-12 col-sm-12 visible-xs">
-                    <h3 class="ver-coupon__title">{{ product.name|truncatechars:30 }}</h3>
-                </div>
-
-                <div class="col-md-2 col-sm-2 col-xs-6 ver-coupon-col ver-coupon-img">
-
-
+                <div class="col-md-4 col-sm-2 col-xs-2 img-coupon hidden-xs">
                     {% if product.image %}
-                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}"><img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}"></a>
                     {% else %}
                         <img src="{% static 'b24online/img/item.jpg' %}" />
                     {% endif %}
-
-{#                    <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">#}
                 </div>
 
-                <div class="col-md-5 col-sm-5 col-xs-6 ver-coupon-col ver-coupon-discount">
-                    <div class="col-md-6 col-xs-12 ">
-                        <p class="ver-coupon__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                <div class="col-md-8 col-sm-10 col-xs-12 info-coupon">
+
+                    <div class="clearfix coupon-title">
+                        <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class=""><h3 >{{ product.name|truncatechars:80 }}</h3></a>
                     </div>
 
-                     <div class="col-md-6 col-xs-12 ver-coupon-timer-wrap">
-                        {# Diisplay the coupon timer #}
-                        <div class="ver-coupon-timer">
+                    <div class="coupon-timer clearfix">
                             <p class="timer-heading">{% trans "Promotion ends" %}:</p>
                             <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                        </div>
-                     </div>
-
-                </div>
-
-                <div class="col-md-5 col-sm-5 col-xs-12 ver-coupon-col ver-coupon-price">
-                    <a type="button" class="btn btn-default ver-coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                    </div>
 
                     {% if product.cost %}
                         <p class="ver-coupon__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
@@ -69,13 +50,16 @@
 
                         </p>
 
-                        {% else %}
+                    {% else %}
                             <p class="ver-coupon__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                     {% endif %}
+
+                    <div class="coupon-per">
+                        <p>{{ product.coupon_discount_percent|intword }}%</p>
+                    </div>
                 </div>
 
-
-            </div>
+            </div>{# end of main-coupon-wrap #}
 
 
         {% endfor %}

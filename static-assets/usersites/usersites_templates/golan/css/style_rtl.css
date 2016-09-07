@@ -459,3 +459,18 @@ th, td{
 	vertical-align: middle;
 }
 
+#main-page-coupons .main-coupon-wrap .img-coupon{
+	float: left;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon{
+	float: right;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+	left: -50px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .timer-heading {
+	float: right;
+}
