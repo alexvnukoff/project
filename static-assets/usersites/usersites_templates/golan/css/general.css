@@ -1333,6 +1333,35 @@ footer .btn-default{
 	margin-bottom: 20px;
 }
 
+/* Products page with categories sidebar */
+.categories-side .categories-menu{
+	list-style-type: none;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item{
+	border-bottom: 1px solid #ddd;
+	padding: 5px;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item:last-child{
+	border-bottom: none;
+}
+
+.categories-side .categories-menu a{
+	color: #888;
+	text-decoration: none;
+}
+
+.categories-side .categories-menu a:hover,
+.categories-side .categories-menu a:active {
+	color: #666;
+}
+
+
+
+
 
 
 
