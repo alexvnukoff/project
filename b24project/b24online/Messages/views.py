@@ -247,7 +247,11 @@ def chat_messages(request, item_id):
             'chat': chat,
             'messages': chat.chat_messages.order_by('created_at')
         }
-        return render(request ,"b24online/Messages/chatMessages.html")
+        return render(
+            request ,
+            'b24online/Messages/chatMessages.html',
+            context
+        )
 
 
 @login_required
