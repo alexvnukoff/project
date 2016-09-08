@@ -136,6 +136,22 @@
 
     </div><!-- /container -->
 
+    <div class="container">
+        {% get_banners_list as mybanners %}
+
+        {% for i in mybanners %}
+            {% if 'SITES CAT' in i %}
+
+              <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                {% site_banner "top" i %}
+              </div>
+
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+
     {% b2c_products 'B2CProducts/main_products.html' 4 %}
 
     {# Row for business proposals and news. If there are no bp the news will take a full line. #}

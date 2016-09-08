@@ -15,7 +15,7 @@
             <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
         </div>
 
-        <div class="col-md-3 categories-side">
+        <div class="col-md-3 categories-side hidden-xs">
             {% b2c_categories show_as_list=1 as categories %}
 
             {% if 'b2c-products' in request.path %}

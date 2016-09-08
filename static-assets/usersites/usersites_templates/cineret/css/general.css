@@ -172,6 +172,15 @@ h3 a:focus{
     position: relative;
 }
 
+.social-footer{
+    padding: 20px;
+}
+
+.social-footer .fa{
+    font-size: 30px;
+    padding: 0 15px;
+}
+
 @media (max-width: 1199px) {
     .social-header{
         padding-top: 15px;
@@ -256,6 +265,10 @@ h3 a:focus{
     text-decoration: none;
 }
 
+.tel-high{
+    font-size: 20px;
+}
+
 #lang-dropdown{
 	/*display: none;*/
 }
@@ -304,6 +317,7 @@ h3 a:focus{
 
 .cust-nav__btn a{
     text-decoration: none;
+    white-space: normal;
 }
 
 @media (min-width: 768px) {
@@ -841,6 +855,16 @@ h3 a:focus{
     max-width: 100%;
     height: auto;
 }
+
+.cat-banner-main-page{
+    padding: 0;
+	position: relative;
+}
+
+.cat-banner-main-page img{
+    width: 100%;
+}
+
 /* ----------- Contact Styling -------------------- */
 .contact-fields-email {
     margin-top: 10px;
@@ -1273,6 +1297,10 @@ header.carousel .carousel-inner {
 @media(max-width:767px) {
     header.carousel .carousel-inner {
         padding-top: 120px;
+    }
+
+    header.carousel .carousel-inner.red-carousel {
+        padding-top: 80px;
     }
 
     .social-header{
