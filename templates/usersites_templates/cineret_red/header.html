@@ -47,6 +47,15 @@
                     </div>
                 </li>
 
+            <li class="visible-xs">
+    {#                 <div class="tel vertical visible-xs">#}
+    {#                    <i class="fa fa-phone-square" aria-hidden="true"></i>#}
+    {#                    <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>#}
+
+                        <a href="tel:{{ site.user_site.organization.phone }}" class="tel "><i class="fa fa-phone-square tel-high" aria-hidden="true"></i></a>
+    {#                </div>#}
+                </li>
+
             </ul>
 
            </div>
@@ -161,12 +170,9 @@
         </div>
         <!-- /.navbar-collapse -->
 
-    <div class="tel vertical visible-xs">
-                <i class="fa fa-phone-square" aria-hidden="true"></i>
-                <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
-            </div>
 
-    <div class="social-header">
+
+    <div class="social-header hidden-xs">
               <div style="text-align:center;margin:0 auto;">
 
                 {% if site.user_site.facebook %}

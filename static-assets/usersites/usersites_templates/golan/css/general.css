@@ -70,7 +70,7 @@ You also need to include this conditional style in the <head> of your HTML file 
 
 .clearfix:after { 
    content: "."; 
-   visibility: hidden; 
+   visibility: hidden;
    display: block; 
    height: 0; 
    clear: both;
@@ -202,6 +202,11 @@ collapse the menu on 991px. */
     .collapsing {
         overflow: hidden!important;
     }
+
+	.navbar-brand img{
+		max-height: 50px;
+	}
+
 }
 
 .header-top {
@@ -1165,6 +1170,185 @@ footer .btn-default{
 	padding-bottom: 5px;
 }
 
+/* New coupon style design*/
+#main-page-coupons{
+	padding: 0;
+}
+
+#main-page-coupons .main-coupon-wrap{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	padding: 0;
+}
+
+#main-page-coupons .main-coupon-wrap .img-coupon{
+	position: relative;
+	padding: 0;
+	overflow: hidden;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon{
+	position: relative;
+	padding: 0 10px;
+}
+
+#main-page-coupons .main-coupon-wrap .img-coupon img{
+	width: 100%;
+	padding: 0;
+	height:auto;
+	object-fit: cover;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per{
+	position: absolute;
+	top: 30%;
+	color: #fff;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	height: 100px;
+	width: 100px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per p{
+	padding: 30% 25%;
+	font-weight: bold;
+	font-size: 20pt;
+
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title{
+	text-transform: capitalize;
+	font-size: 20pt;
+	text-align: center;
+	padding-bottom: 10px;
+	color: #000;
+	height: 80px;
+	margin-bottom: 5px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
+	color: #000;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .timer-heading{
+	position: relative;
+	padding-left: 25px;
+	padding-right: 5px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer{
+	position: relative;
+	bottom: inherit;
+	right: inherit;
+	height: 50px;
+	width: 50%;
+	text-align: center;
+	margin: 0 auto;
+	padding: 10px 20px;
+	font-size: 14pt;
+	font-weight: bold;
+
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__price,
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__deleted-price{
+	text-align: center;
+	font-size: 14pt;
+	font-weight: bold;
+	color: #000;
+	padding: 15px;
+	margin: 0;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__deleted-price{
+	color: #888;
+	text-decoration: line-through;
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon {
+		max-height: 200px;
+	}
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon {
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+	}
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon img{
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 10pt;
+	}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon img{
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 12pt;
+	}
+	}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	#main-page-coupons .main-coupon-wrap{
+		width: 90%;
+		margin: 5%;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title h3{
+		font-size: 16px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per{
+		bottom: 25px;
+		left: 25px!important;
+		-webkit-border-radius: 25px;
+		-moz-border-radius: 25px;
+		border-radius: 25px;
+		height: 50px;
+		width: 50px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per p{
+		padding: 30% 25%;
+		font-weight: bold;
+		font-size: 10pt;
+
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 10pt;
+		height: 60px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .img-coupon img {
+		visibility: hidden;
+	}
+}
+
 /*---------- Counter Styling ----------*/
 #timer-detail-page{
     font-family: sans-serif;
@@ -1332,6 +1516,35 @@ footer .btn-default{
 	text-align: center;
 	margin-bottom: 20px;
 }
+
+/* Products page with categories sidebar */
+.categories-side .categories-menu{
+	list-style-type: none;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item{
+	border-bottom: 1px solid #ddd;
+	padding: 5px;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item:last-child{
+	border-bottom: none;
+}
+
+.categories-side .categories-menu a{
+	color: #888;
+	text-decoration: none;
+}
+
+.categories-side .categories-menu a:hover,
+.categories-side .categories-menu a:active {
+	color: #666;
+}
+
+
+
 
 
 

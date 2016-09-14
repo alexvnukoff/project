@@ -39,10 +39,11 @@
         </div>
     </div>
 
+            {% coupons 'B2CProducts/main_coupons.html' 2 %}
+
     {# Coupons and banners section. 2 coupons and 4 banners. #}
     <div class="container clearfix">
 
-            {% coupons 'B2CProducts/main_coupons.html' 2 %}
 
             {# 4 banners, will lead to categories or products #}
             {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
@@ -134,6 +135,22 @@
 {#            {% endif %}#}
 
     </div><!-- /container -->
+
+    <div class="container">
+        {% get_banners_list as mybanners %}
+
+        {% for i in mybanners %}
+            {% if 'SITES CAT' in i %}
+
+              <div class="col-md-3 col-sm-3 col-xs-6 banner-main-page">
+                {% site_banner "top" i %}
+              </div>
+
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
 
     {% b2c_products 'B2CProducts/main_products.html' 4 %}
 

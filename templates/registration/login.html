@@ -21,6 +21,7 @@
     <form method='post' action=''>
          {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
+
         <ul class="formlogin" id="register">
              <div>
                  {% for key, value in form.errors.items %}
@@ -38,8 +39,14 @@
                {% if form.password.errors   %}<div class="formerror">{{ form.password.errors.as_text }}</div>{% endif %}
             </li>
             <li><input type="submit" name="Login"  class="btnlogin" value="{% trans "Sign in" %}"></li>
+            <li>
+                <a class="#" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span style="font-size:30px;" class="icon-facebook-official"></span></a>
+                <a class="#" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span style="font-size:30px;" class="icon-gplus-squared"></span></a>
+            </li>
              <li><a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a></li>
         </ul>
     </form>
 </div>
+
+
 {% endblock %}

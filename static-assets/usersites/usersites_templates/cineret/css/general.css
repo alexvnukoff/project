@@ -126,15 +126,21 @@ h3 a:focus{
 	}
 }
 
-@media (min-width: 481px) and (max-width: 991px) {
+@media (min-width: 481px) and (max-width: 768px) {
 	.in-page {
-		margin-top: 250px;
+		margin-top: 180px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .in-page {
+		margin-top: 180px;
 	}
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
 	.in-page {
-		margin-top: 180px;
+		margin-top: 120px;
 	}
 }
 
@@ -164,6 +170,15 @@ h3 a:focus{
 	padding-top: 45px;
     padding-bottom: 15px;
     position: relative;
+}
+
+.social-footer{
+    padding: 20px;
+}
+
+.social-footer .fa{
+    font-size: 30px;
+    padding: 0 15px;
 }
 
 @media (max-width: 1199px) {
@@ -250,6 +265,10 @@ h3 a:focus{
     text-decoration: none;
 }
 
+.tel-high{
+    font-size: 20px;
+}
+
 #lang-dropdown{
 	/*display: none;*/
 }
@@ -298,6 +317,7 @@ h3 a:focus{
 
 .cust-nav__btn a{
     text-decoration: none;
+    white-space: normal;
 }
 
 @media (min-width: 768px) {
@@ -806,7 +826,7 @@ h3 a:focus{
 
     .product .thumbnail img{
         max-width: 100%;
-        height: 215px;
+        /*height: 215px;*/
     }
 }
 
@@ -835,6 +855,16 @@ h3 a:focus{
     max-width: 100%;
     height: auto;
 }
+
+.cat-banner-main-page{
+    padding: 5px;
+	position: relative;
+}
+
+.cat-banner-main-page img{
+    width: 100%;
+}
+
 /* ----------- Contact Styling -------------------- */
 .contact-fields-email {
     margin-top: 10px;
@@ -1269,6 +1299,10 @@ header.carousel .carousel-inner {
         padding-top: 120px;
     }
 
+    header.carousel .carousel-inner.red-carousel {
+        padding-top: 80px;
+    }
+
     .social-header{
         padding-top: 7px;
 
@@ -1550,4 +1584,60 @@ footer {
 #profile-usersite-page .profilebutton{
 	text-align: center;
 	margin-bottom: 20px;
+}
+
+/* Product page leads form styling */
+#product-lead{
+
+}
+
+#product-lead .control-group{
+    width: 23%;
+    float: right;
+    margin-left: 5px;
+}
+
+#product-lead .form-group {
+     margin-bottom: 0;
+}
+
+#product-lead .form-group .form-control {
+     width: 100%;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+    #product-lead .control-group{
+        width: 48%;
+        margin-left: 1%;
+        margin-bottom: 10px;
+    }
+
+    #product-lead .form-group.mail-input{
+        width: 70%;
+    }
+
+    #product-lead .form-group.group-btn{
+        width: 23%;
+    }
+
+}
+
+/* Pages leads styling */
+#leads-in-page{
+    background-color: #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+#leads-in-page .leads-form-lbl{
+    font-size: 1.2em;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #leads-in-page input{
+        width: 120px;
+    }
 }

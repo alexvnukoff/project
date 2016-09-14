@@ -35,75 +35,109 @@
 
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
 
-                    <input type="hidden" id="product_id" name="product_id" value="{{ object.pk }}">
+                    <input type="hidden" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
                     <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
 
-                    <p>{% trans "Price" %}:<br/></p>
-                    <div class="item-page__price">
-                      {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
-                        {% if object.measurement_unit %}
-                            <br/>
-                            {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
+                    {% if object.cost %}
+
+                        <p>{% trans "Price" %}:<br/></p>
+                        <div class="item-page__price">
+                          {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
+                            {% if object.measurement_unit %}
+                                <br/>
+                                {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
+                            {% endif %}
+                        </div>
+
+                        {# This div will show only if there is a discount #}
+                        {% if object.discount_percent or object.coupon_discount_percent %}
+                            <div class="item-page__coupon clearfix">
+                              <div class="item-page__regular">
+                                {% trans 'Original Price' %}:<br/>
+                                {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
+                              </div>
+                              <div class="item-page__discount">
+                                {% trans 'Discount' %}:<br/>
+                                  {% if object.discount_percent %}
+                                    % {{ object.discount_percent|formatPrice }}
+                                  {% elif object.coupon_discount_percent %}
+                                      % {{ object.coupon_discount_percent|formatPrice }}
+                                  {% endif %}
+                              </div>
+                              <div class="item-page__save">
+        {#                        {% trans 'You save' %}:<br/>#}
+        {#                        {{ object.original_price|mul: object.discount_percent }}#}
+                              </div>
+                            </div>
                         {% endif %}
-                    </div>
 
-                    {# This div will show only if there is a discount #}
-                    {% if object.discount_percent or object.coupon_discount_percent %}
-                        <div class="item-page__coupon clearfix">
-                          <div class="item-page__regular">
-                            {% trans 'Original Price' %}:<br/>
-                            {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
-                          </div>
-                          <div class="item-page__discount">
-                            {% trans 'Discount' %}:<br/>
-                              {% if object.discount_percent %}
-                                % {{ object.discount_percent|formatPrice }}
-                              {% elif object.coupon_discount_percent %}
-                                  % {{ object.coupon_discount_percent|formatPrice }}
-                              {% endif %}
-                          </div>
-                          <div class="item-page__save">
-    {#                        {% trans 'You save' %}:<br/>#}
-    {#                        {{ object.original_price|mul: object.discount_percent }}#}
-                          </div>
+                        <div class="item-page__qty">
+
+    {#                      <form class="form-inline">#}
+                            <div class="form-group">
+                              <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+                                <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
+                              <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                            </div>
+                              {% b2b_social_buttons object.image object.name object.description %}
+    {#                      </form>#}
+
                         </div>
+
+                        {# display the timer only if coupon #}
+                        {% if object.coupon_discount_percent %}
+                            <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
+                        {% endif %}
+
+                        <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                    {% else %}
+
                     {% endif %}
-
-                    <div class="item-page__qty">
-
-{#                      <form class="form-inline">#}
-                        <div class="form-group">
-                          <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                            <input type="text" id="id_quantity_src" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
-                          <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
-                        </div>
-                          {% b2b_social_buttons object.image object.name object.description %}
-{#                      </form>#}
-
-                    </div>
-
-                    {# display the timer only if coupon #}
-                    {% if object.coupon_discount_percent %}
-                        <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
-                    {% endif %}
-
-                    <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
 
                 </form>
-                {% include "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
-                {% if paypal_form %}
-                    <div id="paypal_form_layer">
-                        {{ paypal_form.render }}
-                    </div>
-                {% else %}
-                    <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Contact us' %}</a>
-                {% endif %}
 
-                <h4>{% trans 'About Company' %}</h4>
+                    {% if paypal_form %}
+                        <div style="">{{ paypal_form.render }}</div>
+                    {% else %}
+{#                        <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>#}
+                    {% endif %}
 
-                <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
+                    <h4>{% trans 'About Company' %}</h4>
+
+                    <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
+
+            {% if not object.cost %}
+
+                <div class="row">
+                          <div class="col-lg-12" id="product-lead">
+                              <h3>{% trans 'Countact us' %}</h3>
+                              <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="co_id" value="{{ site.pk }}">
+                                <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+
+                                  <div class="control-group form-group">
+                                    <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
+                                  </div>
+
+                                  <div class="control-group form-group">
+                                    <input type="tel" class="form-control"  value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                                  </div>
+
+                                  <div class="control-group form-group mail-input">
+                                    <input type="email" class="form-control " value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                                  </div>
+
+
+                                  <div class="control-group form-group group-btn">
+                                    <input type="submit" class="btn btn-default main-contact-btn" value="{% trans 'Send' %}"></input>
+                                  </div>
+                              </form>
+                          </div>
+                        </div>
+
+            {% endif %}
 
             </div>{# end of details table #}
 
@@ -113,8 +147,6 @@
 {% endblock %}
 
 {% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
     <script>
         $(".inc").on("click", function() {
 

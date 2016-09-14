@@ -275,4 +275,20 @@ footer span{
 	left: 0;
 }
 
+#main-page-coupons .main-coupon-wrap .img-coupon{
+	float: right;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon{
+	float: left;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+	right: -50px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .timer-heading {
+	float: left;
+}
+
 
