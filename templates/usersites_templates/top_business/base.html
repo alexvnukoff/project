@@ -26,6 +26,7 @@
 
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/theme.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/accessibility-plugin.css' %}">
 
     {% if LANGUAGE_BIDI %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/top_business/css/style_rtl.css' %}" />
@@ -38,6 +39,7 @@
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {# Include the header file, the header will put the main menu on top of every page #}
+    <div id="accessDialog" class="accessibility" onclick="createModelBox()"></div>
     {% include 'usersites_templates/top_business/header.html' %}
 
     {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
@@ -68,7 +70,9 @@
         <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
         <script src="{% static 'usersites/usersites_templates/top_business/js/script.js' %}"></script>
+        <script src="{% static 'usersites/usersites_templates/top_business/js/accessibility-plugin.js' %}"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
@@ -77,6 +81,10 @@
 
 
     <script type="text/javascript" charset="utf-8">
+    
+{#    $(function(){#}
+{#        $('div.accessibility').accessMySite();#}
+{#    });#}
 
 
     function wazeMapInfo(){

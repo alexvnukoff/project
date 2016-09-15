@@ -1,0 +1,77 @@
+.accessibility{
+    width: 50px;
+    height: 50px;
+    background-color: #000;
+    position: absolute;
+    right: 0;
+    top: 60px;
+    z-index: 1;
+}
+
+.krn #btn-decrease, .krn #btn-orig, .krn #btn-increase, .krn #link-underline{
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #000;
+    text-decoration: none;
+    font-size: 22px;
+    display: inline-block;
+    background-color: #fff;
+    color: #000;
+}
+
+.krn #btn-decrease, .krn #btn-orig, .krn #btn-increase{
+    width: 30%;
+    padding: 1%;
+}
+
+.krn #link-underline{
+    width: 100%;
+    height: 40px;
+}
+
+.krn .accessColor li{
+    height: 30px;
+    width: 30px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: #000;
+    list-style: none;
+    position: relative;
+    float: right;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #000;
+}
+
+.krn .accessColor li.redBg{
+    background-color: red;
+}
+
+.krn .accessColor li.whiteBg{
+    background-color: white;
+}
+
+.krn .accessColor li.blackBg{
+    background-color: black;
+}
+
+.krn .accessColor li.orangeBg{
+    background-color: orange;
+}
+
+.krn .accessColor li.greenBg{
+    background-color: green;
+}
+
+.krn .accessColor li.yellowBg{
+    background-color: yellow;
+}
+
+.krn .accessColor li.purpleBg{
+    background-color: purple;
+}
+
+.krn .accessColor li.aquaBg{
+    background-color: aqua;
+}

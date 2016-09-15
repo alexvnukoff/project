@@ -40,6 +40,12 @@
 	padding-right: 10px;
 }
 
+/** About Page Styling ***************/
+/*********************************/
+.about-short-col{
+	float: left;
+}
+
 /** Product Page Styling ***************/
 /*********************************/
 .prod-page__img-col{
@@ -60,7 +66,7 @@
 }
 
 .news-item a{
-	float: left;
+	float: right;
 }
 
 .news-main{
