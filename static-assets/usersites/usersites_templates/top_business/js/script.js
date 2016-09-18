@@ -59,4 +59,21 @@ jQuery(document).ready(function($) {
 	  });
 	// Resize to fix all iframes on page load.
 	}).resize();
+
+	//menu active
+	$('.navbar-nav>li>a').click(function(){
+		$('.navbar-nav li.active').removeClass('active');
+		$(this).parent().addClass('active');
+	});
 });
+
+//jQuery(window).load(function() {
+//   setFooterStick();
+//});
+
+//getting the height of the footer, make the margin-bottom of the body as the height of the footer.
+(function setFooterStick(){
+	var footerHeight = $('footer').height()+100;
+	var heightStr = footerHeight + "px";
+	document.body.style.marginBottom = heightStr;
+})();

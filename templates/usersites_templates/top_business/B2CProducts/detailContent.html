@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan_blue/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -10,14 +10,9 @@
     {{ block.super }}
 
     {# Page Content #}
-    <div class="container">
+    <div class="container product-page-container">
         {# Register the 'view' event for b2c product #}
         {{ object|register_event:"click"|process_event:request }}
-
-        {# page header - the product name #}
-        <div class="col-lg-12">
-            <h1 class="page-header">{{ object.name }}</h1>
-        </div>
 
         <div class="row">
 
@@ -28,10 +23,18 @@
                 {% else %}
                     <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
                 {% endif %}
+            {% for prod_img in object.additional_images %}
+                <img src="{{ prod_img.image.original }}">
+            {% endfor %}
+            Additional images will come here
             </div>
 
             {# product details - price, quantity, decription and add to cart. If its a coupon, there will be a timer. #}
             <div class="col-md-6 item-price-table">
+
+                <h1 class="page-header">{{ object.name }}</h1>
+
+                <p class="product__desc">{{ product.short_description }}</p>
 
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
 
@@ -41,7 +44,7 @@
                     <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
 
                     {% if object.cost %}
-                        <p>{% trans "Price" %}:<br/></p>
+{#                        <p>{% trans "Price" %}:<br/></p>#}
                         <div class="item-page__price">
                           {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
                             {% if object.measurement_unit %}
@@ -51,25 +54,23 @@
                         </div>
                     {% endif %}
 
+
                     {# This div will show only if there is a discount #}
-                    {% if object.discount_percent or object.coupon_discount_percent %}
+                    {% if object.discount_percent or object.is_coupon %}
                         <div class="item-page__coupon clearfix">
                           <div class="item-page__regular">
-                            {% trans 'Original Price' %}:<br/>
+{#                            {% trans 'Original Price' %}:<br/>#}
                             {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
                           </div>
-                          <div class="item-page__discount">
-                            {% trans 'Discount' %}:<br/>
-                              {% if object.discount_percent %}
-                                % {{ object.discount_percent|formatPrice }}
-                              {% elif object.coupon_discount_percent %}
-                                  % {{ object.coupon_discount_percent|formatPrice }}
-                              {% endif %}
-                          </div>
-                          <div class="item-page__save">
-    {#                        {% trans 'You save' %}:<br/>#}
-    {#                        {{ object.original_price|mul: object.discount_percent }}#}
-                          </div>
+{#                          <div class="item-page__discount">#}
+{#                            {% trans 'Discount' %}:<br/>#}
+{#                              {% if object.discount_percent %}#}
+{#                                % {{ object.discount_percent|formatPrice }}#}
+{#                              {% elif object.coupon_discount_percent %}#}
+{#                                  % {{ object.coupon_discount_percent|formatPrice }}#}
+{#                              {% endif %}#}
+{#                          </div>#}
+
                         </div>
                     {% endif %}
 
@@ -89,12 +90,38 @@
                     {% endif %}
 
                     {# display the timer only if coupon #}
-                    {% if object.coupon_discount_percent %}
-                        <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
+                    {% now "Y-m-d" as todays_date %}
+                    {% if object.end_coupon_date|date:"Y-m-d" > todays_date %}
+{#                        <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>#}
+                        <div class="clock-container">
+
+                            <div id="clockdiv">
+                              <div>
+                                <span class="days"></span>
+                                <div class="smalltext">Days</div>
+                              </div>
+                              <div>
+                                <span class="hours"></span>
+                                <div class="smalltext">Hours</div>
+                              </div>
+                              <div>
+                                <span class="minutes"></span>
+                                <div class="smalltext">Minutes</div>
+                              </div>
+                              <div>
+                                <span class="seconds"></span>
+                                <div class="smalltext">Seconds</div>
+                              </div>
+                            </div>
+
+                        </div>
                     {% endif %}
 
+{#                It is {{ todays_date }}  <br/>#}
+{#                coupon end in {{ object.end_coupon_date|date:"Y-m-d" }}#}
+
                     {% if object.cost %}
-                        <button id="result" class="button more special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                        <button id="result" class="button more product-page-btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
                     {% endif %}
 
                 </form>
@@ -104,7 +131,7 @@
                     {% else %}
                         <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                     {% endif %}
-            
+
                     <p>{{ object.description|cleanHtml|safe }}</p>
 
             </div>{# end of details table #}
@@ -141,5 +168,65 @@
           document.getElementById('product-qty').value = newVal;
 
         });
+
+    // Timer setting ///////////////////////
+    //Setting the ending date
+    //Can be displayed as:  '31/12/2015' or 'December 31 2015' too.
+    var deadline = '{{ object.end_coupon_date|date:"Y-m-d" }}';
+
+    function getTimeRemaining(endtime){
+        //t holds the remaining tome until end
+        var t = Date.parse(endtime) - Date.parse(new Date());
+
+        //Now converting time to usable format
+        var seconds = Math.floor( (t/1000) % 60 );
+        var minutes = Math.floor( (t/1000/60) % 60 );
+        var hours = Math.floor( (t/(1000*60*60)) % 24 );
+        var days = Math.floor( t/(1000*60*60*24) );
+
+        //Returning data as a usable object
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+        //To use it and get for ex the remaining min:
+        //getTimeRemaining(deadline).minutes
+    }
+
+    //Outputting the data to clockdiv
+    //This function will take the id of the div which display the clock and
+    //the counttime ending time.
+    function initializeClock(id, endtime){
+        var clock = document.getElementById(id);
+        var daysSpan = clock.querySelector('.days');
+        var hoursSpan = clock.querySelector('.hours');
+        var minutesSpan = clock.querySelector('.minutes');
+        var secondsSpan = clock.querySelector('.seconds');
+
+        //setInterval will execute an anonymous function every second to calculate the remaining time and display it,
+        //stoping when time gets to zero.
+        function updateClock(){
+            var t = getTimeRemaining(endtime);
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if(t.total<=0){
+                clearInterval(timeinterval);
+            }
+        }
+
+        updateClock(); // run function once at first to avoid delay
+        var timeinterval = setInterval(updateClock,1000);
+    }
+
+    initializeClock('clockdiv', deadline);
+    window.onload = function() {
+{#           alert( {{ object.end_coupon_date|date:'Y-m-d' }} );#}
+        }
     </script>
 {% endblock %}

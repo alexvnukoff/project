@@ -20,7 +20,9 @@
 
                         <div class="pin">
                             {% if product.image %}
-                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                </a>
                             {% else %}
                                 <img src="{% static 'b24online/img/item.jpg' %}" />
                             {% endif %}
@@ -30,7 +32,7 @@
                             {% endif %}
 
                             <div class="caption">
-                                <h5 class="product__title">{{ product.name|truncatechars:20 }}</h5>
+                                <h5 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h5>
                                 <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
 
                                 {# If there is one, display the cost. If there is a discount, display it too. #}

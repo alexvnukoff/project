@@ -33,6 +33,9 @@
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/galil/css/style.css' %}" />
     {% endif %}
 
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 
@@ -43,6 +46,12 @@
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {# Include the header file, the header will put the main menu on top of every page #}
+    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
+        <form action="#">
+            <input type="hidden" id="colorAccess"  value="#aaa" />
+            <input type="hidden" id="topPosAccess"  value="60px" />
+        </form>
+    </div>
     {% include 'usersites_templates/galil/header.html' %}
 
     {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
@@ -79,6 +88,7 @@
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
 
     <script type="text/javascript" charset="utf-8">
 
