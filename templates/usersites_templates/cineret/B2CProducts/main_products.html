@@ -33,7 +33,9 @@
                     <div class="thumbnail">
 
                         {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            </a>
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />
                         {% endif %}
@@ -42,7 +44,7 @@
                         <div class="product__caption">
 
                             {# Product title - up 20 char to keep design #}
-                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
 
                             {# KRN here i want the product category to be #}
                             {% comment %}

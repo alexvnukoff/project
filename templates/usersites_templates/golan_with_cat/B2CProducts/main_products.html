@@ -16,14 +16,16 @@
                     <div class="thumbnail">
 
                         {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            </a>
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />
                         {% endif %}
 
                         <div class="product__caption">
 
-                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
                             <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
                             <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
 
