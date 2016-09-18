@@ -113,6 +113,7 @@ function clearAllStyling(){
 
 var createModelBox = function(){
 
+
     var modelCode = $('<div class="krn dialog" title="Accessibilty">\
         <p>Choose the option you want and click the confirm button.</p>\
         <h3>Change font size</h3>\
@@ -147,16 +148,19 @@ var createModelBox = function(){
     });
 };
 
+
+//changing the color of the accessibility button
+function setInitApearance(mainColor, topElem){
+    $('#accessDialog').css("background-color", mainColor);
+    $('#accessDialog').css("top", topElem);
+}
+
 (function ($, window, document, undefined) {
     "use strict";
 
-    $.fn.accessMySite = function (options) {
 
         initCookies();
         //createModelBox();
-
-        console.log($.cookie());
-    };
 
 })(jQuery);
 
@@ -183,5 +187,8 @@ var createModelBox = function(){
         var linksUnderline = $.cookie("links");
         changeLinks();
     }
+
+    setInitApearance(document.getElementById("colorAccess").value,
+            document.getElementById("topPosAccess").value);
 
 })();

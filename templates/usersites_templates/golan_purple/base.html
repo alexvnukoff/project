@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
     <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="{% static 'usersites/css/adviser.css' %}">
 
     <!-- Latest compiled and minified CSS -->
@@ -34,13 +35,23 @@
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
     {% endif %}
 
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     {% block after_css %}{% endblock %}
 </head>
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-    <div id="wrap-main">
+    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
+        <form action="#">
+            <input type="hidden" id="colorAccess"  value="#5d1a9c" />
+            <input type="hidden" id="topPosAccess"  value="60px" />
+        </form>
+    </div>
+
+<div id="wrap-main">
         <div id="main">
 
             <header>
@@ -80,6 +91,8 @@
     <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
     <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
     <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+            <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
+
     <script src="{% static 'usersites/js/basket.js' %}"></script>
     <script src="{% static 'usersites/js/main.js' %}"></script>
     {% block adviser %}
@@ -93,6 +106,8 @@
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
     <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
+
 
     <script type="text/javascript" charset="utf-8">
 

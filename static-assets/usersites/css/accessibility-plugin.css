@@ -1,11 +1,22 @@
 .accessibility{
     width: 50px;
     height: 50px;
-    background-color: #000;
     position: absolute;
     right: 0;
     top: 60px;
-    z-index: 1;
+    z-index: 9999;
+    color: #fff;
+    font-size: 24pt;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    margin: 0 auto;
+    background-color: #aaa;
+}
+
+.accessibility:before {
+   font-family: FontAwesome;
+   content: "\f29a";
 }
 
 .krn #btn-decrease, .krn #btn-orig, .krn #btn-increase, .krn #link-underline{
