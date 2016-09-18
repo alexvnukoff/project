@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 16:04+0000\n"
+"POT-Creation-Date: 2016-09-18 20:35+0000\n"
 "PO-Revision-Date: 2015-12-12 16:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -83,6 +83,7 @@ msgstr "Организации"
 #: templates/usersites_templates/services/News/list.html:13
 #: templates/usersites_templates/services/News/wall.html:9
 #: templates/usersites_templates/top_business/News/list.html:13
+#: templates/usersites_templates/top_business/News/list.html:49
 #: templates/usersites_templates/top_business/News/wall.html:9
 msgid "News"
 msgstr "Новости"
@@ -214,11 +215,11 @@ msgstr "Топ"
 #: templates/usersites_templates/cineret_red/site_sidebar.html:107
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/list.html:9
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/main_products.html:8
-#: templates/usersites_templates/default_horizontal_banners/base.html:95
+#: templates/usersites_templates/default_horizontal_banners/base.html:104
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:107
 #: templates/usersites_templates/default_no_banners/B2BProducts/list.html:9
 #: templates/usersites_templates/default_no_banners/B2BProducts/main_products.html:8
-#: templates/usersites_templates/default_no_banners/base.html:88
+#: templates/usersites_templates/default_no_banners/base.html:96
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:107
 #: templates/usersites_templates/galil/B2BProducts/contentPage.html:20
 #: templates/usersites_templates/galil/B2BProducts/list.html:9
@@ -299,15 +300,15 @@ msgstr "Товары оптом"
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:103
 #: templates/usersites_templates/cineret_red/B2CProducts/list.html:11
 #: templates/usersites_templates/cineret_red/B2CProducts/main_products.html:12
-#: templates/usersites_templates/cineret_red/header.html:91
+#: templates/usersites_templates/cineret_red/header.html:100
 #: templates/usersites_templates/cineret_red/site_sidebar.html:103
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/list.html:9
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/main_products.html:9
-#: templates/usersites_templates/default_horizontal_banners/base.html:91
+#: templates/usersites_templates/default_horizontal_banners/base.html:100
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:103
 #: templates/usersites_templates/default_no_banners/B2CProducts/list.html:9
 #: templates/usersites_templates/default_no_banners/B2CProducts/main_products.html:9
-#: templates/usersites_templates/default_no_banners/base.html:84
+#: templates/usersites_templates/default_no_banners/base.html:92
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:103
 #: templates/usersites_templates/galil/B2CProducts/list.html:13
 #: templates/usersites_templates/galil/B2CProducts/main_products.html:11
@@ -324,7 +325,7 @@ msgstr "Товары оптом"
 #: templates/usersites_templates/golan/B2CProducts/main_products.html:11
 #: templates/usersites_templates/golan/header.html:121
 #: templates/usersites_templates/golan/site_sidebar.html:103
-#: templates/usersites_templates/golan_blue/B2CProducts/list.html:15
+#: templates/usersites_templates/golan_blue/B2CProducts/list.html:13
 #: templates/usersites_templates/golan_blue/B2CProducts/main_products.html:11
 #: templates/usersites_templates/golan_blue/header.html:92
 #: templates/usersites_templates/golan_blue/site_sidebar.html:103
@@ -335,7 +336,7 @@ msgstr "Товары оптом"
 #: templates/usersites_templates/golan_red/B2CProducts/main_products.html:11
 #: templates/usersites_templates/golan_red/header.html:94
 #: templates/usersites_templates/golan_red/site_sidebar.html:103
-#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:13
+#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:15
 #: templates/usersites_templates/golan_with_cat/B2CProducts/main_products.html:10
 #: templates/usersites_templates/golan_with_cat/header.html:94
 #: templates/usersites_templates/golan_with_cat/site_sidebar.html:103
@@ -348,7 +349,7 @@ msgstr "Товары оптом"
 #: templates/usersites_templates/services/B2CProducts/main_products.html:11
 #: templates/usersites_templates/services/header.html:44
 #: templates/usersites_templates/services/site_sidebar.html:103
-#: templates/usersites_templates/top_business/B2CProducts/list.html:13
+#: templates/usersites_templates/top_business/B2CProducts/list.html:18
 #: templates/usersites_templates/top_business/B2CProducts/main_products.html:11
 #: templates/usersites_templates/top_business/header.html:28
 #: templates/usersites_templates/top_business/site_sidebar.html:103
@@ -373,9 +374,9 @@ msgstr "Продукты в розницу"
 #: templates/usersites_templates/cineret_green/site_sidebar.html:98
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:98
 #: templates/usersites_templates/cineret_red/site_sidebar.html:98
-#: templates/usersites_templates/default_horizontal_banners/base.html:86
+#: templates/usersites_templates/default_horizontal_banners/base.html:95
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:98
-#: templates/usersites_templates/default_no_banners/base.html:79
+#: templates/usersites_templates/default_no_banners/base.html:87
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:98
 #: templates/usersites_templates/golan/site_sidebar.html:98
 #: templates/usersites_templates/golan_blue/site_sidebar.html:98
@@ -428,14 +429,14 @@ msgid "Only registered users can send the messages"
 msgstr "Только зарегистрированные пользователи могут отправлять сообщения."
 
 #: b24project/b24online/Companies/views.py:445
-#: b24project/b24online/Messages/views.py:263
+#: b24project/b24online/Messages/views.py:267
 #: b24project/usersites/Messages/views.py:74
 msgid "Error during data saving"
 msgstr ""
 
 #: b24project/b24online/Companies/views.py:448
-#: b24project/b24online/Messages/views.py:266
-#: b24project/b24online/Messages/views.py:304
+#: b24project/b24online/Messages/views.py:270
+#: b24project/b24online/Messages/views.py:308
 #, fuzzy
 #| msgid "You have successfully sent the message."
 msgid "You have successfully sent the message"
@@ -580,27 +581,27 @@ msgstr "B2B Центр"
 msgid "There is not such message chat"
 msgstr ""
 
-#: b24project/b24online/Messages/views.py:298
+#: b24project/b24online/Messages/views.py:302
 #, python-brace-format
 msgid "Error during data saving: {0}"
 msgstr ""
 
-#: b24project/b24online/Messages/views.py:312
-#: b24project/b24online/Messages/views.py:365
-#: b24project/b24online/Messages/views.py:405
+#: b24project/b24online/Messages/views.py:316
+#: b24project/b24online/Messages/views.py:369
+#: b24project/b24online/Messages/views.py:409
 #: b24project/usersites/B2CProducts/views.py:418
 #: b24project/usersites/Messages/views.py:85
 msgid "There are some errors"
 msgstr ""
 
-#: b24project/b24online/Messages/views.py:359
+#: b24project/b24online/Messages/views.py:363
 #: b24project/usersites/B2CProducts/views.py:412
 #, fuzzy
 #| msgid "You have successfully sent the resume."
 msgid "You have successfully add new participant"
 msgstr "Ваше резюме было успешно отправлено"
 
-#: b24project/b24online/Messages/views.py:399
+#: b24project/b24online/Messages/views.py:403
 #: b24project/usersites/Messages/views.py:79
 #, fuzzy
 #| msgid "You have successfully sent the message."
@@ -832,12 +833,10 @@ msgstr "Добавить бизнес предложение"
 #: templates/usersites_templates/cat_business/footer.html:31
 #: templates/usersites_templates/cat_business/header.html:55
 #: templates/usersites_templates/cat_business/site_sidebar.html:120
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:100
 #: templates/usersites_templates/cineret/contentPage.html:166
 #: templates/usersites_templates/cineret/footer.html:50
 #: templates/usersites_templates/cineret/header.html:174
 #: templates/usersites_templates/cineret/site_sidebar.html:120
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:101
 #: templates/usersites_templates/cineret_blue/contentPage.html:166
 #: templates/usersites_templates/cineret_blue/footer.html:50
 #: templates/usersites_templates/cineret_blue/header.html:112
@@ -849,13 +848,13 @@ msgstr "Добавить бизнес предложение"
 #: templates/usersites_templates/cineret_orange/footer.html:50
 #: templates/usersites_templates/cineret_orange/header.html:112
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:120
-#: templates/usersites_templates/cineret_red/contentPage.html:166
+#: templates/usersites_templates/cineret_red/contentPage.html:182
 #: templates/usersites_templates/cineret_red/footer.html:50
-#: templates/usersites_templates/cineret_red/header.html:112
+#: templates/usersites_templates/cineret_red/header.html:121
 #: templates/usersites_templates/cineret_red/site_sidebar.html:120
-#: templates/usersites_templates/default_horizontal_banners/base.html:109
+#: templates/usersites_templates/default_horizontal_banners/base.html:118
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:120
-#: templates/usersites_templates/default_no_banners/base.html:102
+#: templates/usersites_templates/default_no_banners/base.html:110
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:120
 #: templates/usersites_templates/galil/B2CProducts/detailContent.html:107
 #: templates/usersites_templates/galil/footer.html:54
@@ -2274,7 +2273,7 @@ msgstr ""
 #: templates/usersites_templates/cineret_orange/footer.html:40
 #: templates/usersites_templates/cineret_orange/header.html:86
 #: templates/usersites_templates/cineret_red/footer.html:40
-#: templates/usersites_templates/cineret_red/header.html:86
+#: templates/usersites_templates/cineret_red/header.html:95
 #: templates/usersites_templates/galil/footer.html:44
 #: templates/usersites_templates/galil/header.html:66
 #: templates/usersites_templates/galil_1/footer.html:44
@@ -2336,12 +2335,12 @@ msgstr "Домашняя страница"
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:91
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:111
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/gallery.html:6
-#: templates/usersites_templates/default_horizontal_banners/base.html:106
+#: templates/usersites_templates/default_horizontal_banners/base.html:115
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:117
 #: templates/usersites_templates/default_no_banners/B2BProducts/detailContent.html:91
 #: templates/usersites_templates/default_no_banners/B2CProducts/detailContent.html:109
 #: templates/usersites_templates/default_no_banners/OrganizationPages/gallery.html:6
-#: templates/usersites_templates/default_no_banners/base.html:99
+#: templates/usersites_templates/default_no_banners/base.html:107
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:117
 #: templates/usersites_templates/galil/B2BProducts/detailContent.html:91
 #: templates/usersites_templates/galil/OrganizationPages/gallery.html:6
@@ -2481,15 +2480,15 @@ msgstr "Сообщение отправлено компании :"
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:100
 #: templates/usersites_templates/cineret_red/Proposals/detailContent.html:28
 #: templates/usersites_templates/cineret_red/Proposals/list.html:12
-#: templates/usersites_templates/cineret_red/header.html:101
+#: templates/usersites_templates/cineret_red/header.html:110
 #: templates/usersites_templates/cineret_red/site_sidebar.html:100
 #: templates/usersites_templates/default_horizontal_banners/Proposals/list.html:8
 #: templates/usersites_templates/default_horizontal_banners/Proposals/wall.html:8
-#: templates/usersites_templates/default_horizontal_banners/base.html:88
+#: templates/usersites_templates/default_horizontal_banners/base.html:97
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:100
 #: templates/usersites_templates/default_no_banners/Proposals/list.html:8
 #: templates/usersites_templates/default_no_banners/Proposals/wall.html:8
-#: templates/usersites_templates/default_no_banners/base.html:81
+#: templates/usersites_templates/default_no_banners/base.html:89
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:100
 #: templates/usersites_templates/galil/Proposals/detailContent.html:28
 #: templates/usersites_templates/galil/Proposals/list.html:12
@@ -2720,7 +2719,7 @@ msgstr "Аккаунт Активирован"
 #: templates/_usersites/registration/password_reset_form.html:18
 #: templates/_usersites/registration/registration_form.html:16
 #: templates/centerpokupok/registration/registration_form.html:20
-#: templates/registration/login.html:31
+#: templates/registration/login.html:32
 #: templates/registration/password_reset_form.html:39
 #: templates/registration/registration_form.html:27
 msgid "E-mail"
@@ -2732,7 +2731,7 @@ msgstr "E-mail"
 #: templates/centerpokupok/registration/login.html:23
 #: templates/centerpokupok/registration/registration_form.html:31
 #: templates/centerpokupok/registration/registration_form.html:42
-#: templates/registration/login.html:36
+#: templates/registration/login.html:37
 #: templates/registration/registration_form.html:32
 msgid "Password"
 msgstr "Пароль"
@@ -2742,17 +2741,17 @@ msgstr "Пароль"
 #: templates/b24online/main_header.html:12
 #: templates/centerpokupok/Company/header.html:14
 #: templates/centerpokupok/registration/login.html:3
-#: templates/registration/login.html:40
+#: templates/registration/login.html:41
 #: templates/usersites/B2CProducts/include/registrationBlock_golan.html:37
 #: templates/usersites_templates/cineret/header.html:88
-#: templates/usersites_templates/cineret_red/header.html:128
+#: templates/usersites_templates/cineret_red/header.html:137
 #: templates/usersites_templates/golan/header.html:84
 #: templates/usersites_templates/ibonds/header.html:51
 msgid "Sign in"
 msgstr "Войти"
 
 #: templates/_usersites/registration/login.html:42
-#: templates/registration/login.html:41
+#: templates/registration/login.html:46
 msgid "Forgot password"
 msgstr "Забыли пароль"
 
@@ -3032,7 +3031,7 @@ msgstr "правилами использования "
 #: templates/b24online/login_header.html:55
 #: templates/b24online/main_header.html:12
 #: templates/centerpokupok/registration/registration_form.html:56
-#: templates/registration/registration_form.html:47
+#: templates/registration/registration_form.html:51
 msgid "Sign up"
 msgstr "Зарегистрируйтесь"
 
@@ -3148,15 +3147,15 @@ msgstr ""
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/cat_business/B2CProducts/orderByEmail.html:23
 #: templates/usersites_templates/cineret/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:43
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:45
 #: templates/usersites_templates/cineret_blue/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:43
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:45
 #: templates/usersites_templates/cineret_green/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:43
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:45
 #: templates/usersites_templates/cineret_orange/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:43
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:45
 #: templates/usersites_templates/cineret_red/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:84
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:86
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:30
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:35
 #: templates/usersites_templates/default_no_banners/B2BProducts/detailContent.html:30
@@ -3188,7 +3187,6 @@ msgstr ""
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/top_business/B2BProducts/detailContent.html:30
 #: templates/usersites_templates/top_business/B2CProducts/basket.html:29
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/top_business/B2CProducts/orderByEmail.html:23
 msgid "Price"
 msgstr "Цена"
@@ -3472,7 +3470,7 @@ msgstr "Дата регистрации"
 #: templates/b24online/AdminTpp/users.html:83
 #: templates/usersites/B2CProducts/include/registrationBlock_golan.html:37
 #: templates/usersites_templates/cineret/header.html:88
-#: templates/usersites_templates/cineret_red/header.html:128
+#: templates/usersites_templates/cineret_red/header.html:137
 #: templates/usersites_templates/ibonds/header.html:51
 msgid "Login"
 msgstr "Войти"
@@ -3985,7 +3983,6 @@ msgstr "Номер телефона"
 #: templates/usersites_templates/ibonds/Proposals/detailContent.html:76
 #: templates/usersites_templates/negev/Proposals/detailContent.html:76
 #: templates/usersites_templates/services/Proposals/detailContent.html:76
-#: templates/usersites_templates/top_business/Proposals/detailContent.html:76
 msgid "Fax"
 msgstr "Факс"
 
@@ -4470,8 +4467,8 @@ msgstr ""
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:64
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:63
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:64
-#: templates/usersites_templates/cineret_red/contentPage.html:199
-#: templates/usersites_templates/cineret_red/contentPage.html:200
+#: templates/usersites_templates/cineret_red/contentPage.html:215
+#: templates/usersites_templates/cineret_red/contentPage.html:216
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:25
 #: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:25
 #: templates/usersites_templates/galil/OrganizationPages/contact.html:85
@@ -4623,30 +4620,35 @@ msgstr "Отправить сообщение"
 #: templates/usersites_templates/cat_business/B2CProducts/orderByEmail.html:77
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:87
 #: templates/usersites_templates/cat_business/OrganizationPages/structure.html:38
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:133
 #: templates/usersites_templates/cineret/B2CProducts/orderByEmail.html:26
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:70
 #: templates/usersites_templates/cineret/OrganizationPages/page.html:29
 #: templates/usersites_templates/cineret/OrganizationPages/structure.html:38
 #: templates/usersites_templates/cineret/contentPage.html:206
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:134
 #: templates/usersites_templates/cineret_blue/B2CProducts/orderByEmail.html:26
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:68
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:29
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:30
 #: templates/usersites_templates/cineret_blue/OrganizationPages/structure.html:38
 #: templates/usersites_templates/cineret_blue/contentPage.html:206
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:133
 #: templates/usersites_templates/cineret_green/B2CProducts/orderByEmail.html:26
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:68
 #: templates/usersites_templates/cineret_green/OrganizationPages/page.html:29
 #: templates/usersites_templates/cineret_green/OrganizationPages/structure.html:38
 #: templates/usersites_templates/cineret_green/contentPage.html:207
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:133
 #: templates/usersites_templates/cineret_orange/B2CProducts/orderByEmail.html:26
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:68
 #: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:29
 #: templates/usersites_templates/cineret_orange/OrganizationPages/structure.html:38
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:174
 #: templates/usersites_templates/cineret_red/B2CProducts/orderByEmail.html:26
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:68
 #: templates/usersites_templates/cineret_red/OrganizationPages/page.html:29
 #: templates/usersites_templates/cineret_red/OrganizationPages/structure.html:38
-#: templates/usersites_templates/cineret_red/contentPage.html:207
+#: templates/usersites_templates/cineret_red/contentPage.html:223
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:27
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/structure.html:38
 #: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:27
@@ -4887,51 +4889,51 @@ msgstr "Просмотры"
 #: templates/usersites/B2CProducts/search_content.html:35
 #: templates/usersites_templates/cat_business/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cat_business/B2BProducts/list.html:35
-#: templates/usersites_templates/cat_business/B2CProducts/list.html:39
 #: templates/usersites_templates/cat_business/B2CProducts/list.html:41
+#: templates/usersites_templates/cat_business/B2CProducts/list.html:43
 #: templates/usersites_templates/cat_business/B2CProducts/search_content.html:43
 #: templates/usersites_templates/cineret/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cineret/B2BProducts/list.html:35
 #: templates/usersites_templates/cineret/B2BProducts/main_products.html:29
-#: templates/usersites_templates/cineret/B2CProducts/list.html:49
 #: templates/usersites_templates/cineret/B2CProducts/list.html:51
-#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:82
-#: templates/usersites_templates/cineret/B2CProducts/main_products.html:74
+#: templates/usersites_templates/cineret/B2CProducts/list.html:53
+#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:84
+#: templates/usersites_templates/cineret/B2CProducts/main_products.html:76
 #: templates/usersites_templates/cineret/B2CProducts/search_content.html:47
 #: templates/usersites_templates/cineret/B2CProducts/search_content.html:49
 #: templates/usersites_templates/cineret_blue/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cineret_blue/B2BProducts/list.html:35
 #: templates/usersites_templates/cineret_blue/B2BProducts/main_products.html:29
-#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:49
 #: templates/usersites_templates/cineret_blue/B2CProducts/list.html:51
-#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:82
-#: templates/usersites_templates/cineret_blue/B2CProducts/main_products.html:74
+#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:53
+#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:84
+#: templates/usersites_templates/cineret_blue/B2CProducts/main_products.html:76
 #: templates/usersites_templates/cineret_blue/B2CProducts/search_content.html:47
 #: templates/usersites_templates/cineret_blue/B2CProducts/search_content.html:49
 #: templates/usersites_templates/cineret_green/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cineret_green/B2BProducts/list.html:35
 #: templates/usersites_templates/cineret_green/B2BProducts/main_products.html:29
-#: templates/usersites_templates/cineret_green/B2CProducts/list.html:49
 #: templates/usersites_templates/cineret_green/B2CProducts/list.html:51
-#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:82
-#: templates/usersites_templates/cineret_green/B2CProducts/main_products.html:74
+#: templates/usersites_templates/cineret_green/B2CProducts/list.html:53
+#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:84
+#: templates/usersites_templates/cineret_green/B2CProducts/main_products.html:76
 #: templates/usersites_templates/cineret_green/B2CProducts/search_content.html:47
 #: templates/usersites_templates/cineret_green/B2CProducts/search_content.html:49
 #: templates/usersites_templates/cineret_orange/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cineret_orange/B2BProducts/list.html:35
 #: templates/usersites_templates/cineret_orange/B2BProducts/main_products.html:29
-#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:49
 #: templates/usersites_templates/cineret_orange/B2CProducts/list.html:51
-#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:82
+#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:53
+#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:84
 #: templates/usersites_templates/cineret_orange/B2CProducts/search_content.html:47
 #: templates/usersites_templates/cineret_orange/B2CProducts/search_content.html:49
 #: templates/usersites_templates/cineret_red/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/cineret_red/B2BProducts/list.html:35
 #: templates/usersites_templates/cineret_red/B2BProducts/main_products.html:29
-#: templates/usersites_templates/cineret_red/B2CProducts/list.html:49
 #: templates/usersites_templates/cineret_red/B2CProducts/list.html:51
-#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:82
-#: templates/usersites_templates/cineret_red/B2CProducts/main_products.html:74
+#: templates/usersites_templates/cineret_red/B2CProducts/list.html:53
+#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:84
+#: templates/usersites_templates/cineret_red/B2CProducts/main_products.html:76
 #: templates/usersites_templates/cineret_red/B2CProducts/search_content.html:47
 #: templates/usersites_templates/cineret_red/B2CProducts/search_content.html:49
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/list.html:35
@@ -4949,42 +4951,41 @@ msgstr "Просмотры"
 #: templates/usersites_templates/galil/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/galil/B2BProducts/list.html:35
 #: templates/usersites_templates/galil/B2BProducts/main_products.html:29
-#: templates/usersites_templates/galil/B2CProducts/list.html:75
-#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:68
-#: templates/usersites_templates/galil/B2CProducts/main_products.html:64
+#: templates/usersites_templates/galil/B2CProducts/list.html:77
+#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:70
+#: templates/usersites_templates/galil/B2CProducts/main_products.html:66
 #: templates/usersites_templates/galil/B2CProducts/search_content.html:43
 #: templates/usersites_templates/galil/B2CProducts/temp.html:49
 #: templates/usersites_templates/galil_1/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/galil_1/B2BProducts/list.html:35
 #: templates/usersites_templates/galil_1/B2BProducts/main_products.html:29
-#: templates/usersites_templates/galil_1/B2CProducts/list.html:75
-#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:68
-#: templates/usersites_templates/galil_1/B2CProducts/main_products.html:59
+#: templates/usersites_templates/galil_1/B2CProducts/list.html:77
+#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:70
+#: templates/usersites_templates/galil_1/B2CProducts/main_products.html:61
 #: templates/usersites_templates/galil_1/B2CProducts/search_content.html:43
 #: templates/usersites_templates/galil_1/B2CProducts/temp.html:49
 #: templates/usersites_templates/galil_2/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/galil_2/B2BProducts/list.html:35
 #: templates/usersites_templates/galil_2/B2BProducts/main_products.html:29
-#: templates/usersites_templates/galil_2/B2CProducts/list.html:75
-#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:68
-#: templates/usersites_templates/galil_2/B2CProducts/main_products.html:64
+#: templates/usersites_templates/galil_2/B2CProducts/list.html:77
+#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:70
+#: templates/usersites_templates/galil_2/B2CProducts/main_products.html:66
 #: templates/usersites_templates/galil_2/B2CProducts/search_content.html:43
 #: templates/usersites_templates/galil_2/B2CProducts/temp.html:49
 #: templates/usersites_templates/golan/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/golan/B2BProducts/list.html:35
 #: templates/usersites_templates/golan/B2BProducts/main_products.html:29
-#: templates/usersites_templates/golan/B2CProducts/list.html:39
 #: templates/usersites_templates/golan/B2CProducts/list.html:41
-#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:52
-#: templates/usersites_templates/golan/B2CProducts/main_products.html:49
+#: templates/usersites_templates/golan/B2CProducts/list.html:43
+#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:54
+#: templates/usersites_templates/golan/B2CProducts/main_products.html:51
 #: templates/usersites_templates/golan/B2CProducts/search_content.html:43
 #: templates/usersites_templates/golan_blue/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/golan_blue/B2BProducts/list.html:35
 #: templates/usersites_templates/golan_blue/B2BProducts/main_products.html:29
-#: templates/usersites_templates/golan_blue/B2CProducts/list.html:62
-#: templates/usersites_templates/golan_blue/B2CProducts/list.html:64
-#: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:60
-#: templates/usersites_templates/golan_blue/B2CProducts/main_products.html:49
+#: templates/usersites_templates/golan_blue/B2CProducts/list.html:41
+#: templates/usersites_templates/golan_blue/B2CProducts/list.html:43
+#: templates/usersites_templates/golan_blue/B2CProducts/main_products.html:51
 #: templates/usersites_templates/golan_blue/B2CProducts/search_content.html:43
 #: templates/usersites_templates/golan_purple/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/golan_purple/B2BProducts/list.html:35
@@ -4992,18 +4993,16 @@ msgstr "Просмотры"
 #: templates/usersites_templates/golan_red/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/golan_red/B2BProducts/list.html:35
 #: templates/usersites_templates/golan_red/B2BProducts/main_products.html:29
-#: templates/usersites_templates/golan_red/B2CProducts/list.html:39
 #: templates/usersites_templates/golan_red/B2CProducts/list.html:41
-#: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:60
-#: templates/usersites_templates/golan_red/B2CProducts/main_products.html:49
+#: templates/usersites_templates/golan_red/B2CProducts/list.html:43
+#: templates/usersites_templates/golan_red/B2CProducts/main_products.html:51
 #: templates/usersites_templates/golan_red/B2CProducts/search_content.html:43
 #: templates/usersites_templates/golan_with_cat/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/golan_with_cat/B2BProducts/list.html:35
 #: templates/usersites_templates/golan_with_cat/B2BProducts/main_products.html:29
-#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:39
-#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:41
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:59
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_products.html:28
+#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:66
+#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:68
+#: templates/usersites_templates/golan_with_cat/B2CProducts/main_products.html:30
 #: templates/usersites_templates/golan_with_cat/B2CProducts/search_content.html:43
 #: templates/usersites_templates/ibonds/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/ibonds/B2BProducts/list.html:35
@@ -5025,8 +5024,6 @@ msgstr "Просмотры"
 #: templates/usersites_templates/services/B2CProducts/search_content.html:43
 #: templates/usersites_templates/top_business/B2BProducts/contentPage.html:46
 #: templates/usersites_templates/top_business/B2BProducts/list.html:35
-#: templates/usersites_templates/top_business/B2CProducts/list.html:39
-#: templates/usersites_templates/top_business/B2CProducts/list.html:41
 #: templates/usersites_templates/top_business/B2CProducts/search_content.html:43
 msgid "Buy"
 msgstr "Купить"
@@ -5083,47 +5080,46 @@ msgstr "Скидка"
 #: templates/b24online/Products/detailContentB2C.html:75
 #: templates/usersites/B2CProducts/main_coupons.html:19
 #: templates/usersites/B2CProducts/main_coupons.html:46
-#: templates/usersites_templates/cat_business/B2CProducts/list.html:58
-#: templates/usersites_templates/cat_business/B2CProducts/main_coupons.html:40
-#: templates/usersites_templates/cineret/B2CProducts/list.html:57
-#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:55
+#: templates/usersites_templates/cat_business/B2CProducts/list.html:60
+#: templates/usersites_templates/cat_business/B2CProducts/main_coupons.html:42
+#: templates/usersites_templates/cineret/B2CProducts/list.html:59
+#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:57
 #: templates/usersites_templates/cineret/B2CProducts/search_content.html:55
-#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:57
-#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:55
+#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:59
+#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:57
 #: templates/usersites_templates/cineret_blue/B2CProducts/search_content.html:55
-#: templates/usersites_templates/cineret_green/B2CProducts/list.html:57
-#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:55
+#: templates/usersites_templates/cineret_green/B2CProducts/list.html:59
+#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:57
 #: templates/usersites_templates/cineret_green/B2CProducts/search_content.html:55
-#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:57
-#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:55
+#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:59
+#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:57
 #: templates/usersites_templates/cineret_orange/B2CProducts/search_content.html:55
-#: templates/usersites_templates/cineret_red/B2CProducts/list.html:57
-#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:55
+#: templates/usersites_templates/cineret_red/B2CProducts/list.html:59
+#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:57
 #: templates/usersites_templates/cineret_red/B2CProducts/search_content.html:55
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/main_coupons.html:19
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/main_coupons.html:46
 #: templates/usersites_templates/default_no_banners/B2CProducts/main_coupons.html:19
 #: templates/usersites_templates/default_no_banners/B2CProducts/main_coupons.html:46
-#: templates/usersites_templates/galil/B2CProducts/list.html:68
-#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:63
-#: templates/usersites_templates/galil_1/B2CProducts/list.html:68
-#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:63
-#: templates/usersites_templates/galil_2/B2CProducts/list.html:68
-#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:63
-#: templates/usersites_templates/golan/B2CProducts/list.html:58
-#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:71
-#: templates/usersites_templates/golan_blue/B2CProducts/list.html:81
-#: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:52
-#: templates/usersites_templates/golan_red/B2CProducts/list.html:58
-#: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:52
-#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:58
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:51
+#: templates/usersites_templates/galil/B2CProducts/list.html:70
+#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:65
+#: templates/usersites_templates/galil_1/B2CProducts/list.html:70
+#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:65
+#: templates/usersites_templates/galil_2/B2CProducts/list.html:70
+#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:65
+#: templates/usersites_templates/golan/B2CProducts/list.html:60
+#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:73
+#: templates/usersites_templates/golan_blue/B2CProducts/list.html:60
+#: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:39
+#: templates/usersites_templates/golan_red/B2CProducts/list.html:60
+#: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:39
+#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:85
+#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:39
 #: templates/usersites_templates/ibonds/B2CProducts/list.html:78
 #: templates/usersites_templates/ibonds/B2CProducts/main_coupons.html:71
 #: templates/usersites_templates/services/B2CProducts/list.html:58
 #: templates/usersites_templates/services/B2CProducts/main_coupons.html:71
-#: templates/usersites_templates/top_business/B2CProducts/list.html:58
-#: templates/usersites_templates/top_business/B2CProducts/main_coupons.html:40
+#: templates/usersites_templates/top_business/B2CProducts/main_coupons.html:44
 #, fuzzy
 #| msgid "Permission denied"
 msgid "Promotion ends"
@@ -5406,15 +5402,15 @@ msgstr "Специальная цена"
 #: templates/usersites_templates/cat_business/B2BProducts/detailContent.html:35
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/cineret/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:48
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:50
 #: templates/usersites_templates/cineret_blue/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:48
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:50
 #: templates/usersites_templates/cineret_green/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:48
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:50
 #: templates/usersites_templates/cineret_orange/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:48
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:50
 #: templates/usersites_templates/cineret_red/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:89
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:91
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:35
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:40
 #: templates/usersites_templates/default_no_banners/B2BProducts/detailContent.html:35
@@ -5441,7 +5437,7 @@ msgstr "Специальная цена"
 #: templates/usersites_templates/services/B2BProducts/detailContent.html:35
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/top_business/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:49
+#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:52
 msgid "Unit"
 msgstr "Еденица"
 
@@ -5539,7 +5535,7 @@ msgstr ""
 #: templates/usersites_templates/cineret_green/contentPage.html:184
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:51
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:51
-#: templates/usersites_templates/cineret_red/contentPage.html:184
+#: templates/usersites_templates/cineret_red/contentPage.html:200
 #: templates/usersites_templates/galil/OrganizationPages/contact.html:72
 #: templates/usersites_templates/galil_1/OrganizationPages/contact.html:72
 #: templates/usersites_templates/galil_2/OrganizationPages/contact.html:72
@@ -5595,7 +5591,7 @@ msgid "Company description"
 msgstr "Полное описание"
 
 #: templates/b24online/Profile/index.html:6
-#: templates/usersites_templates/cineret_red/header.html:119
+#: templates/usersites_templates/cineret_red/header.html:128
 #: templates/usersites_templates/ibonds/header.html:42
 msgid "Profile"
 msgstr "Профиль"
@@ -6418,7 +6414,7 @@ msgstr ""
 #: templates/usersites_templates/cineret_orange/footer.html:41
 #: templates/usersites_templates/cineret_orange/header.html:87
 #: templates/usersites_templates/cineret_red/footer.html:41
-#: templates/usersites_templates/cineret_red/header.html:87
+#: templates/usersites_templates/cineret_red/header.html:96
 #: templates/usersites_templates/default_horizontal_banners/header.html:10
 #: templates/usersites_templates/default_no_banners/header.html:10
 #: templates/usersites_templates/galil/footer.html:45
@@ -6474,6 +6470,7 @@ msgstr "Поиск по продуктам и услугам"
 
 #: templates/b24online/index.html:149 templates/b24online/index.html:179
 #: templates/b24online/index.html:209
+#: templates/registration/registration_form.html:46
 msgid "OR"
 msgstr "или"
 
@@ -6557,10 +6554,13 @@ msgstr "Создайте свой сайт менее чем за 10 минут.
 msgid ""
 "Every company joining B24Online can choose from a wide variety of ready-"
 "made, mobile-friendly templates to build and operate its own image and sales "
-"websites.\\u2028 Companies immediately can start operating in their business "
-"environments. \\u2028All information from the portal is immediately "
-"synchronized to your personal site."
+"websites. Companies immediately can start operating in their business "
+"environments. All information from the portal is immediately synchronized to "
+"your personal site."
 msgstr ""
+"Каждая компания, присоединившаяся к B24Online может выбрать себе из "
+"множества готовых, мобильно-ориентированных темплейтов для создания "
+"собственного сайта прямых продаж."
 
 #: templates/b24online/index.html:277
 msgid "Start Now"
@@ -6576,6 +6576,9 @@ msgid ""
 "access to both B2B and B2C platforms. The shopping center provides a variety "
 "of sales promotion tools, offering coupons, sales offers and discounts."
 msgstr ""
+"Виртуальный торговый центр для покупок и продаж. Пользователи одновременно "
+"имеют доступ к B2B и B2C платформам. Торговый центр предлагает различные "
+"инструменты стимулирования продаж, предлагая купоны, распродажи и скидки."
 
 #: templates/b24online/index.html:300
 msgid "B2B Center"
@@ -6606,7 +6609,7 @@ msgstr "Центр Покупок"
 #: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:16
 #: templates/usersites_templates/golan_purple/B2CProducts/main_coupons.html:14
 #: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:16
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:15
+#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:16
 #: templates/usersites_templates/ibonds/B2CProducts/main_coupons.html:14
 #: templates/usersites_templates/negev/contentPage.html:124
 #: templates/usersites_templates/services/B2CProducts/main_coupons.html:14
@@ -6623,6 +6626,12 @@ msgid ""
 "it easy to receive relevant data on the potential client and the services "
 "and products he would like."
 msgstr ""
+"Больше не нужно использовать внешние системы и тратить деньги на временные "
+"целевые страницы. Все созданные страницы или даже визитная карточка компании "
+"уже содержат модули необходимые вам для сбора контактов (Имя, номер "
+"телефона, почта). Удобная панель управления позволяет легко получать "
+"актуальные данные о потенциальных клиентах, продуктах и услугах, которые "
+"были им интересны."
 
 #: templates/b24online/index.html:325 templates/b24online/index.html:348
 msgid "Register Now"
@@ -6631,13 +6640,18 @@ msgstr "Зарегистрироваться"
 #: templates/b24online/index.html:347
 msgid ""
 "The live chat messenger system allows communications within the portal and "
-"with a company’s external website.\\u2028Clients can choose the division, "
-"department or employee to contact by IM.\\u2028Chat history is saved for "
-"future referenceand documents and photos can be uploaded securely.\\u2028The "
-"app serves as a tool for simultaneous discussions, marketing and support."
-"\\u2028Groups can be created to bring together employees, or employees and "
-"clients."
+"with a company’s external website. Clients can choose the division, "
+"department or employee to contact by IM. Chat history is saved for future "
+"reference and documents and photos can be uploaded securely. The app serves "
+"as a tool for simultaneous discussions, marketing and support. Groups can be "
+"created to bring together employees, or employees and clients."
 msgstr ""
+"Живой чат обеспечивает прямую коммуникацию, как для внутреннего портала, так "
+"и для внешнего сайта компании. У клиентов есть возможность выбрать "
+"необходимый отдел или конкретного сотрудника для связи с ним. Вся история "
+"чата, документы и фотографии надёжно хранятся и могу быть использованы в "
+"дальнейшем. Живой чат может быть использован как для маркетинговых задач, "
+"так и для поддержки пользователей."
 
 #: templates/b24online/index.html:349
 msgid "Start Chat Now"
@@ -6653,7 +6667,8 @@ msgid ""
 "searchable through the portal’s company database. Full details can be found "
 "in the business database and help the company to connect to clients and "
 "partners."
-msgstr ""
+msgstr "Бизнес карточка для вашей компании поможет найти клиентов и привлечь "
+"новых партнёров используя поиск по базе данных компаний."
 
 #: templates/b24online/index.html:387
 msgid "Personal E-Business Card"
@@ -6661,7 +6676,8 @@ msgstr "Персональная визитная карточка"
 
 #: templates/b24online/index.html:388
 msgid "Your own personal interactive business card, with easy sharing option."
-msgstr ""
+msgstr "Ваша персональная, интерактивная бизнес карточка с простыми и "
+"удобными способами шаринга конатктов."
 
 #: templates/b24online/index.html:395
 msgid "Business Community"
@@ -6673,7 +6689,7 @@ msgid ""
 "your staff, partners and clients."
 msgstr ""
 "Мультиязычная социальная сеть обеспечивающая коммуникации между "
-"сотрудниками, клиентами и партнёрами вашей Компании."
+"сотрудниками, клиентами и партнёрами вашей компании."
 
 #: templates/b24online/index.html:403 templates/b24online/job_index.html:200
 msgid "Innovative projects"
@@ -6696,6 +6712,8 @@ msgid ""
 "A news feed to keep you updated and let you share the latest from your own "
 "company."
 msgstr ""
+"Будьте в курсе послединх новостей, а также делитесь важной информацией из "
+"блога вашей компании. "
 
 #: templates/b24online/index.html:420
 msgid ""
@@ -6722,6 +6740,8 @@ msgid ""
 "other registered participants, forwarding relevant marketing materials and "
 "scheduling meetings around the event."
 msgstr ""
+"Участие в событиях портала с использованием системы RSVP, прямое общение с "
+"другими участниками, проведение фомуров и отраслевых конференций."
 
 #: templates/b24online/job_index.html:79
 msgid "B2C center"
@@ -6740,9 +6760,9 @@ msgstr "Банк инновационных проектов"
 #: templates/usersites_templates/cineret_green/site_sidebar.html:18
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:18
 #: templates/usersites_templates/cineret_red/site_sidebar.html:18
-#: templates/usersites_templates/default_horizontal_banners/base.html:76
+#: templates/usersites_templates/default_horizontal_banners/base.html:85
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:18
-#: templates/usersites_templates/default_no_banners/base.html:69
+#: templates/usersites_templates/default_no_banners/base.html:77
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:18
 #: templates/usersites_templates/golan/site_sidebar.html:18
 #: templates/usersites_templates/golan_blue/site_sidebar.html:18
@@ -7235,7 +7255,6 @@ msgstr " или создаите новую"
 #: templates/usersites_templates/services/B2BProducts/detailContent.html:110
 #: templates/usersites_templates/services/Proposals/detailContent.html:44
 #: templates/usersites_templates/top_business/B2BProducts/detailContent.html:110
-#: templates/usersites_templates/top_business/Proposals/detailContent.html:44
 msgid "Download"
 msgstr ""
 
@@ -7355,29 +7374,34 @@ msgstr "Подписаться"
 #: templates/usersites/OrganizationPages/contact.html:24
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:63
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:64
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:120
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:45
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:46
 #: templates/usersites_templates/cineret/OrganizationPages/page.html:16
 #: templates/usersites_templates/cineret/contentPage.html:176
 #: templates/usersites_templates/cineret/contentPage.html:177
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:121
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:44
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:17
 #: templates/usersites_templates/cineret_blue/contentPage.html:176
 #: templates/usersites_templates/cineret_blue/contentPage.html:177
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:120
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:44
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:45
 #: templates/usersites_templates/cineret_green/OrganizationPages/page.html:16
 #: templates/usersites_templates/cineret_green/contentPage.html:177
 #: templates/usersites_templates/cineret_green/contentPage.html:178
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:120
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:44
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:45
 #: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:161
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:44
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:45
 #: templates/usersites_templates/cineret_red/OrganizationPages/page.html:16
-#: templates/usersites_templates/cineret_red/contentPage.html:177
-#: templates/usersites_templates/cineret_red/contentPage.html:178
+#: templates/usersites_templates/cineret_red/contentPage.html:193
+#: templates/usersites_templates/cineret_red/contentPage.html:194
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:23
 #: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:23
 #: templates/usersites_templates/galil/OrganizationPages/contact.html:65
@@ -7416,29 +7440,34 @@ msgstr "Ваше имя"
 #: templates/usersites/OrganizationPages/contact.html:25
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:76
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:77
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:128
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:58
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:59
 #: templates/usersites_templates/cineret/OrganizationPages/page.html:24
 #: templates/usersites_templates/cineret/contentPage.html:189
 #: templates/usersites_templates/cineret/contentPage.html:190
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:129
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:57
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:25
 #: templates/usersites_templates/cineret_blue/contentPage.html:189
 #: templates/usersites_templates/cineret_blue/contentPage.html:190
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:128
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:57
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:58
 #: templates/usersites_templates/cineret_green/OrganizationPages/page.html:24
 #: templates/usersites_templates/cineret_green/contentPage.html:190
 #: templates/usersites_templates/cineret_green/contentPage.html:191
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:128
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:57
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:58
 #: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:169
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:57
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:58
 #: templates/usersites_templates/cineret_red/OrganizationPages/page.html:24
-#: templates/usersites_templates/cineret_red/contentPage.html:190
-#: templates/usersites_templates/cineret_red/contentPage.html:191
+#: templates/usersites_templates/cineret_red/contentPage.html:206
+#: templates/usersites_templates/cineret_red/contentPage.html:207
 #: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:24
 #: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:24
 #: templates/usersites_templates/galil/OrganizationPages/contact.html:78
@@ -8331,49 +8360,54 @@ msgstr "Авторизация"
 #: templates/usersites_templates/cat_business/B2CProducts/basket.html:57
 #: templates/usersites_templates/cat_business/B2CProducts/basket.html:97
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:105
-#: templates/usersites_templates/cat_business/B2CProducts/list.html:52
+#: templates/usersites_templates/cat_business/B2CProducts/list.html:54
 #: templates/usersites_templates/cat_business/B2CProducts/search_content.html:56
 #: templates/usersites_templates/cineret/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/cineret/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/cineret/B2BProducts/list.html:32
 #: templates/usersites_templates/cineret/B2BProducts/main_products.html:26
-#: templates/usersites_templates/cineret/B2CProducts/list.html:44
-#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:78
-#: templates/usersites_templates/cineret/B2CProducts/main_products.html:70
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:114
+#: templates/usersites_templates/cineret/B2CProducts/list.html:46
+#: templates/usersites_templates/cineret/B2CProducts/main_coupons.html:80
+#: templates/usersites_templates/cineret/B2CProducts/main_products.html:72
 #: templates/usersites_templates/cineret/B2CProducts/search_content.html:42
 #: templates/usersites_templates/cineret_blue/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/cineret_blue/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/cineret_blue/B2BProducts/list.html:32
 #: templates/usersites_templates/cineret_blue/B2BProducts/main_products.html:26
-#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:44
-#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:78
-#: templates/usersites_templates/cineret_blue/B2CProducts/main_products.html:70
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:115
+#: templates/usersites_templates/cineret_blue/B2CProducts/list.html:46
+#: templates/usersites_templates/cineret_blue/B2CProducts/main_coupons.html:80
+#: templates/usersites_templates/cineret_blue/B2CProducts/main_products.html:72
 #: templates/usersites_templates/cineret_blue/B2CProducts/search_content.html:42
 #: templates/usersites_templates/cineret_green/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/cineret_green/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/cineret_green/B2BProducts/list.html:32
 #: templates/usersites_templates/cineret_green/B2BProducts/main_products.html:26
 #: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:103
-#: templates/usersites_templates/cineret_green/B2CProducts/list.html:44
-#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:78
-#: templates/usersites_templates/cineret_green/B2CProducts/main_products.html:70
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:114
+#: templates/usersites_templates/cineret_green/B2CProducts/list.html:46
+#: templates/usersites_templates/cineret_green/B2CProducts/main_coupons.html:80
+#: templates/usersites_templates/cineret_green/B2CProducts/main_products.html:72
 #: templates/usersites_templates/cineret_green/B2CProducts/search_content.html:42
 #: templates/usersites_templates/cineret_orange/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/cineret_orange/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/cineret_orange/B2BProducts/list.html:32
 #: templates/usersites_templates/cineret_orange/B2BProducts/main_products.html:26
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:102
-#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:44
-#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:78
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:103
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:114
+#: templates/usersites_templates/cineret_orange/B2CProducts/list.html:46
+#: templates/usersites_templates/cineret_orange/B2CProducts/main_coupons.html:80
 #: templates/usersites_templates/cineret_orange/B2CProducts/search_content.html:42
 #: templates/usersites_templates/cineret_red/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/cineret_red/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/cineret_red/B2BProducts/list.html:32
 #: templates/usersites_templates/cineret_red/B2BProducts/main_products.html:26
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:143
-#: templates/usersites_templates/cineret_red/B2CProducts/list.html:44
-#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:78
-#: templates/usersites_templates/cineret_red/B2CProducts/main_products.html:70
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:144
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:155
+#: templates/usersites_templates/cineret_red/B2CProducts/list.html:46
+#: templates/usersites_templates/cineret_red/B2CProducts/main_coupons.html:80
+#: templates/usersites_templates/cineret_red/B2CProducts/main_products.html:72
 #: templates/usersites_templates/cineret_red/B2CProducts/search_content.html:42
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/list.html:32
@@ -8394,9 +8428,9 @@ msgstr "Авторизация"
 #: templates/usersites_templates/galil/B2BProducts/list.html:32
 #: templates/usersites_templates/galil/B2BProducts/main_products.html:26
 #: templates/usersites_templates/galil/B2CProducts/detailContent.html:96
-#: templates/usersites_templates/galil/B2CProducts/list.html:61
-#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:59
-#: templates/usersites_templates/galil/B2CProducts/main_products.html:59
+#: templates/usersites_templates/galil/B2CProducts/list.html:63
+#: templates/usersites_templates/galil/B2CProducts/main_coupons.html:61
+#: templates/usersites_templates/galil/B2CProducts/main_products.html:61
 #: templates/usersites_templates/galil/B2CProducts/search_content.html:56
 #: templates/usersites_templates/galil/B2CProducts/temp.html:62
 #: templates/usersites_templates/galil_1/B2BProducts/contentPage.html:43
@@ -8404,9 +8438,9 @@ msgstr "Авторизация"
 #: templates/usersites_templates/galil_1/B2BProducts/list.html:32
 #: templates/usersites_templates/galil_1/B2BProducts/main_products.html:26
 #: templates/usersites_templates/galil_1/B2CProducts/detailContent.html:96
-#: templates/usersites_templates/galil_1/B2CProducts/list.html:61
-#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:59
-#: templates/usersites_templates/galil_1/B2CProducts/main_products.html:54
+#: templates/usersites_templates/galil_1/B2CProducts/list.html:63
+#: templates/usersites_templates/galil_1/B2CProducts/main_coupons.html:61
+#: templates/usersites_templates/galil_1/B2CProducts/main_products.html:56
 #: templates/usersites_templates/galil_1/B2CProducts/search_content.html:56
 #: templates/usersites_templates/galil_1/B2CProducts/temp.html:62
 #: templates/usersites_templates/galil_2/B2BProducts/contentPage.html:43
@@ -8415,9 +8449,9 @@ msgstr "Авторизация"
 #: templates/usersites_templates/galil_2/B2BProducts/main_products.html:26
 #: templates/usersites_templates/galil_2/B2CProducts/detailContent.html:96
 #: templates/usersites_templates/galil_2/B2CProducts/detailContent.html:105
-#: templates/usersites_templates/galil_2/B2CProducts/list.html:61
-#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:59
-#: templates/usersites_templates/galil_2/B2CProducts/main_products.html:59
+#: templates/usersites_templates/galil_2/B2CProducts/list.html:63
+#: templates/usersites_templates/galil_2/B2CProducts/main_coupons.html:61
+#: templates/usersites_templates/galil_2/B2CProducts/main_products.html:61
 #: templates/usersites_templates/galil_2/B2CProducts/search_content.html:56
 #: templates/usersites_templates/galil_2/B2CProducts/temp.html:62
 #: templates/usersites_templates/golan/B2BProducts/contentPage.html:43
@@ -8425,18 +8459,18 @@ msgstr "Авторизация"
 #: templates/usersites_templates/golan/B2BProducts/list.html:32
 #: templates/usersites_templates/golan/B2BProducts/main_products.html:26
 #: templates/usersites_templates/golan/B2CProducts/detailContent.html:106
-#: templates/usersites_templates/golan/B2CProducts/list.html:52
-#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:66
-#: templates/usersites_templates/golan/B2CProducts/main_products.html:62
+#: templates/usersites_templates/golan/B2CProducts/list.html:54
+#: templates/usersites_templates/golan/B2CProducts/main_coupons.html:68
+#: templates/usersites_templates/golan/B2CProducts/main_products.html:64
 #: templates/usersites_templates/golan/B2CProducts/search_content.html:56
 #: templates/usersites_templates/golan_blue/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/golan_blue/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/golan_blue/B2BProducts/list.html:32
 #: templates/usersites_templates/golan_blue/B2BProducts/main_products.html:26
 #: templates/usersites_templates/golan_blue/B2CProducts/detailContent.html:107
-#: templates/usersites_templates/golan_blue/B2CProducts/list.html:75
-#: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:73
-#: templates/usersites_templates/golan_blue/B2CProducts/main_products.html:62
+#: templates/usersites_templates/golan_blue/B2CProducts/list.html:54
+#: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:54
+#: templates/usersites_templates/golan_blue/B2CProducts/main_products.html:64
 #: templates/usersites_templates/golan_blue/B2CProducts/search_content.html:56
 #: templates/usersites_templates/golan_purple/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/golan_purple/B2BProducts/detailContent.html:54
@@ -8447,18 +8481,18 @@ msgstr "Авторизация"
 #: templates/usersites_templates/golan_red/B2BProducts/list.html:32
 #: templates/usersites_templates/golan_red/B2BProducts/main_products.html:26
 #: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:101
-#: templates/usersites_templates/golan_red/B2CProducts/list.html:52
-#: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:73
-#: templates/usersites_templates/golan_red/B2CProducts/main_products.html:62
+#: templates/usersites_templates/golan_red/B2CProducts/list.html:54
+#: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:54
+#: templates/usersites_templates/golan_red/B2CProducts/main_products.html:64
 #: templates/usersites_templates/golan_red/B2CProducts/search_content.html:56
 #: templates/usersites_templates/golan_with_cat/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/golan_with_cat/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/golan_with_cat/B2BProducts/list.html:32
 #: templates/usersites_templates/golan_with_cat/B2BProducts/main_products.html:26
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:107
-#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:52
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:72
-#: templates/usersites_templates/golan_with_cat/B2CProducts/main_products.html:40
+#: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:79
+#: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:54
+#: templates/usersites_templates/golan_with_cat/B2CProducts/main_products.html:42
 #: templates/usersites_templates/golan_with_cat/B2CProducts/search_content.html:56
 #: templates/usersites_templates/ibonds/B2BProducts/contentPage.html:43
 #: templates/usersites_templates/ibonds/B2BProducts/detailContent.html:54
@@ -8491,8 +8525,7 @@ msgstr "Авторизация"
 #: templates/usersites_templates/top_business/B2BProducts/list.html:32
 #: templates/usersites_templates/top_business/B2CProducts/basket.html:57
 #: templates/usersites_templates/top_business/B2CProducts/basket.html:97
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:105
-#: templates/usersites_templates/top_business/B2CProducts/list.html:52
+#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:132
 #: templates/usersites_templates/top_business/B2CProducts/search_content.html:56
 msgid "Countact us"
 msgstr "Связаться с нами"
@@ -8501,15 +8534,15 @@ msgstr "Связаться с нами"
 #: templates/usersites/B2CProducts/detailContent.html:150
 #: templates/usersites_templates/cat_business/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/cineret/B2BProducts/detailContent.html:89
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:103
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:106
 #: templates/usersites_templates/cineret_blue/B2BProducts/detailContent.html:89
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:104
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:107
 #: templates/usersites_templates/cineret_green/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:106
 #: templates/usersites_templates/cineret_orange/B2BProducts/detailContent.html:89
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:105
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:106
 #: templates/usersites_templates/cineret_red/B2BProducts/detailContent.html:89
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:146
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:147
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:109
 #: templates/usersites_templates/default_no_banners/B2BProducts/detailContent.html:89
@@ -8720,11 +8753,11 @@ msgstr "Ваш заказ"
 
 #: templates/usersites/B2CProducts/detailContent.html:98
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:97
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:91
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:92
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:92
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:92
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:133
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:94
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:94
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:94
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:94
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:135
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:59
 #: templates/usersites_templates/default_no_banners/B2CProducts/detailContent.html:57
 #: templates/usersites_templates/galil/B2CProducts/detailContent.html:94
@@ -8737,7 +8770,7 @@ msgstr "Ваш заказ"
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:97
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:92
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:97
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:97
+#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:124
 #, fuzzy
 msgid "Add to basket"
 msgstr "Реклама на портале"
@@ -8836,7 +8869,7 @@ msgstr "Ваш заказ"
 
 #: templates/usersites/B2CProducts/include/registrationBlock_golan.html:33
 #: templates/usersites_templates/cineret/header.html:84
-#: templates/usersites_templates/cineret_red/header.html:124
+#: templates/usersites_templates/cineret_red/header.html:133
 #: templates/usersites_templates/golan/header.html:82
 #: templates/usersites_templates/ibonds/header.html:47
 #, fuzzy
@@ -8846,7 +8879,7 @@ msgstr "регистрация"
 
 #: templates/usersites/B2CProducts/include/registrationBlock_golan.html:33
 #: templates/usersites_templates/cineret/header.html:84
-#: templates/usersites_templates/cineret_red/header.html:124
+#: templates/usersites_templates/cineret_red/header.html:133
 #: templates/usersites_templates/golan/header.html:82
 #: templates/usersites_templates/ibonds/header.html:47
 msgid "Register"
@@ -9044,11 +9077,11 @@ msgstr ""
 #: templates/usersites_templates/cineret_green/site_sidebar.html:99
 #: templates/usersites_templates/cineret_orange/header.html:105
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:99
-#: templates/usersites_templates/cineret_red/header.html:105
+#: templates/usersites_templates/cineret_red/header.html:114
 #: templates/usersites_templates/cineret_red/site_sidebar.html:99
-#: templates/usersites_templates/default_horizontal_banners/base.html:87
+#: templates/usersites_templates/default_horizontal_banners/base.html:96
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:99
-#: templates/usersites_templates/default_no_banners/base.html:80
+#: templates/usersites_templates/default_no_banners/base.html:88
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:99
 #: templates/usersites_templates/galil/header.html:85
 #: templates/usersites_templates/galil_1/header.html:85
@@ -9074,8 +9107,8 @@ msgid "Company news"
 msgstr "Новости компании"
 
 #: templates/usersites/base.html:96
-#: templates/usersites_templates/default_horizontal_banners/base.html:98
-#: templates/usersites_templates/default_no_banners/base.html:91
+#: templates/usersites_templates/default_horizontal_banners/base.html:107
+#: templates/usersites_templates/default_no_banners/base.html:99
 #: templates/usersites_templates/golan/header.html:139
 #: templates/usersites_templates/golan_purple/header.html:107
 #: templates/usersites_templates/golan_red/header.html:112
@@ -9089,9 +9122,9 @@ msgstr ""
 #: templates/usersites_templates/cineret_green/site_sidebar.html:119
 #: templates/usersites_templates/cineret_orange/site_sidebar.html:119
 #: templates/usersites_templates/cineret_red/site_sidebar.html:119
-#: templates/usersites_templates/default_horizontal_banners/base.html:108
+#: templates/usersites_templates/default_horizontal_banners/base.html:117
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:119
-#: templates/usersites_templates/default_no_banners/base.html:101
+#: templates/usersites_templates/default_no_banners/base.html:109
 #: templates/usersites_templates/default_no_banners/site_sidebar.html:119
 #: templates/usersites_templates/golan/site_sidebar.html:119
 #: templates/usersites_templates/golan_blue/site_sidebar.html:119
@@ -9241,11 +9274,11 @@ msgid ""
 msgstr ""
 
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:58
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:56
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:56
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:56
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:56
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:97
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:58
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:58
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:58
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:58
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:99
 #: templates/usersites_templates/galil/B2CProducts/detailContent.html:58
 #: templates/usersites_templates/galil_1/B2CProducts/detailContent.html:58
 #: templates/usersites_templates/galil_2/B2CProducts/detailContent.html:58
@@ -9257,18 +9290,17 @@ msgstr ""
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:56
 #: templates/usersites_templates/negev/B2CProducts/detailContent.html:45
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:58
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:58
 #, fuzzy
 #| msgid "Special Price"
 msgid "Original Price"
 msgstr "Специальная цена"
 
 #: templates/usersites_templates/cat_business/B2CProducts/detailContent.html:62
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:60
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:60
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:60
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:60
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:101
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:62
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:62
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:62
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:62
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:103
 #: templates/usersites_templates/galil/B2CProducts/detailContent.html:62
 #: templates/usersites_templates/galil_1/B2CProducts/detailContent.html:62
 #: templates/usersites_templates/galil_2/B2CProducts/detailContent.html:62
@@ -9281,7 +9313,6 @@ msgstr "Специальная цена"
 #: templates/usersites_templates/negev/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/negev/contentPage.html:155
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:62
-#: templates/usersites_templates/top_business/B2CProducts/detailContent.html:62
 #, fuzzy
 #| msgid "Discount"
 msgid "Discount"
@@ -9301,20 +9332,25 @@ msgstr "Скидка"
 msgid "Your basket is empty"
 msgstr "Корзина"
 
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:124
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:53
 #: templates/usersites_templates/cineret/OrganizationPages/page.html:20
 #: templates/usersites_templates/cineret/contentPage.html:184
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:125
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:21
 #: templates/usersites_templates/cineret_blue/contentPage.html:184
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:124
 #: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:52
 #: templates/usersites_templates/cineret_green/OrganizationPages/page.html:20
 #: templates/usersites_templates/cineret_green/contentPage.html:185
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:124
 #: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:52
 #: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:165
 #: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:52
 #: templates/usersites_templates/cineret_red/OrganizationPages/page.html:20
-#: templates/usersites_templates/cineret_red/contentPage.html:185
+#: templates/usersites_templates/cineret_red/contentPage.html:201
 #: templates/usersites_templates/galil/OrganizationPages/contact.html:73
 #: templates/usersites_templates/galil_1/OrganizationPages/contact.html:73
 #: templates/usersites_templates/galil_2/OrganizationPages/contact.html:73
@@ -9377,7 +9413,7 @@ msgstr ""
 #: templates/usersites_templates/cineret_blue/header.html:97
 #: templates/usersites_templates/cineret_green/header.html:97
 #: templates/usersites_templates/cineret_orange/header.html:97
-#: templates/usersites_templates/cineret_red/header.html:97
+#: templates/usersites_templates/cineret_red/header.html:106
 #: templates/usersites_templates/galil/header.html:77
 #: templates/usersites_templates/galil_1/header.html:77
 #: templates/usersites_templates/galil_2/header.html:77
@@ -9395,7 +9431,6 @@ msgstr "Купоны"
 #: templates/usersites_templates/cineret_blue/header.html:148
 #: templates/usersites_templates/cineret_green/header.html:148
 #: templates/usersites_templates/cineret_orange/header.html:148
-#: templates/usersites_templates/cineret_red/header.html:166
 #: templates/usersites_templates/golan/header.html:189
 #: templates/usersites_templates/golan_blue/header.html:156
 #: templates/usersites_templates/golan_purple/header.html:157
@@ -9476,6 +9511,12 @@ msgstr "Описание"
 msgid "New message"
 msgstr "Новое сообщение от "
 
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:12
+#, fuzzy
+#| msgid "Contact us"
+msgid "Contact us:"
+msgstr "Связаться с нами"
+
 #: templates/usersites_templates/cineret_blue/profileForm.html:78
 #: templates/usersites_templates/ibonds/profileForm.html:78
 #, fuzzy
@@ -9483,7 +9524,7 @@ msgstr "Новое сообщение от "
 msgid "Personal Information"
 msgstr "Личные данные"
 
-#: templates/usersites_templates/cineret_red/header.html:120
+#: templates/usersites_templates/cineret_red/header.html:129
 #: templates/usersites_templates/ibonds/header.html:43
 #, fuzzy
 #| msgid "Logo"
