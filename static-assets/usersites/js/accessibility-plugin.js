@@ -112,7 +112,7 @@ function clearAllStyling(){
 }
 
 var createModelBox = function(){
-
+    initCookies();
 
     var modelCode = $('<div class="krn dialog" title="Accessibilty">\
         <p>Choose the option you want and click the confirm button.</p>\
@@ -155,20 +155,11 @@ function setInitApearance(mainColor, topElem){
     $('#accessDialog').css("top", topElem);
 }
 
-(function ($, window, document, undefined) {
-    "use strict";
-
-
-        initCookies();
-        //createModelBox();
-
-})(jQuery);
-
 (function() {
     //loading the cookies value when loading the page
     //if you have a fontsize cookie, get the font size
 
-    if($.cookie("fontSize")) {
+    if($.cookie("firstTime") != undefined && $.cookie("fontSize")) {
         var cookieFontsize = $.cookie('fontSize');
 
         $affectedElements.each(function () {
@@ -178,14 +169,16 @@ function setInitApearance(mainColor, topElem){
     }
 
     //if you have the color cookie, get the color
-    if($.cookie("color")) {
+    if($.cookie("firstTime") != undefined && $.cookie("color")) {
         var cookieBgColor = $.cookie("color");
         $('body').css("background-color", cookieBgColor);
     }
 
-    if($.cookie("links")) {
+    if($.cookie("firstTime") != undefined && $.cookie("links")) {
         var linksUnderline = $.cookie("links");
-        changeLinks();
+        if(linksUnderline == "true"){
+            changeLinks();
+        }
     }
 
     setInitApearance(document.getElementById("colorAccess").value,
