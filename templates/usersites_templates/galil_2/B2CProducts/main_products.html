@@ -22,7 +22,9 @@
                 <div class="col-sm-6 col-xs-12 col-md-4  product">
                     <div class="thumbnail main-products-thumb" ">
                         {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid thumb-img">
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid thumb-img">
+                            </a>
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />
                         {% endif %}

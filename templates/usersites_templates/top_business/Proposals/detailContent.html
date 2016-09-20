@@ -1,98 +1,31 @@
-{% extends 'usersites_templates/default_no_banners/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load staticfiles %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% block content %}
     {{ block.super }}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header in-page">{{ object.title }}</h1>
+        </div>
+    </div>
+    {# /.row #}
 
-            <section class="content__info clearfix">
-                <article class="clearfix">
-                    <h3>{{ object.title }}</h3>
-                        <p>
-                            <img src="{{ site.user_site.organization.logo.th }}" />
-                                <br>
-                            <a href="/" style="color:#000">{{ site.user_site.organization.name }}</a>
-                       </p>
-                </article>
+    {# Proposal Content #}
+    <div class="row">
 
+            {# Register the 'view' event for b2b product #}
+            {{ object|register_event:"view"|process_event:request }}
 
-                <div class="InfoTabs">
-                    <ul>
-                    <li><a href="#tabs-1">About</a></li>
-                    <li><a href="#tabs-2">Document</a></li>
-                    <li><a href="#tabs-3">Gallery</a></li>
-                    <li><a href="#tabs-4">Contacts</a></li>
-                {% for page in object.additional_pages.all %}
-                    <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
-                {% endfor %}
-                    </ul>
+            <div class="col-md-12 desc-detail-page">
+                <p>{{ object.description|cleanHtml|safe }}</p>
+            </div>
 
+    </div>{# /.row #}{# /Proposal Content #}
 
-                    <div id="tabs-1">
-                            {{ object.description|cleanHtml|safe }}
-                    </div>
+</div>
 
-
-
-                    <div id="tabs-2">
-                        {% for document in object.documents.all %}
-                        <div class="b-img">
-                            <img src="{% static "b24online/img/file_icon.png" %}" />
-                            <div class="viewimge">
-                                <a target="_blank" href="{{ item.document.url }}">
-                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
-                                </a>
-                            </div>
-                            <div class="gray-img"></div>
-                        </div>
-                        <div>{{ document.name }}</div>
-                        {% endfor %}
-                    </div>
-
-
-
-                    <div id="tabs-3">
-                        <ul class="gallery">
-                        {% for gallery_obj in object.gallery_images %}
-                            <figure>
-                                <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
-                                    <img alt="" src="{{ gallery_obj.image.big }}" />
-                                </a>
-                            </figure>
-                        {% endfor %}
-                        </ul>
-                    </div>
-
-
-
-                    <div id="tabs-4">
-                        <div class="contacts contactUs">
-                        <p class="address clearfix">
-                            {{ site.user_site.organization.address }}<br><br>
-                            {{ site.user_site.organization.email }}
-
-                            {% if site.user_site.organization.fax %}
-                            {% trans 'Fax' %}: {{ site.user_site.organization.fax }}
-                            {% endif %}
-                        </p>
-                        <p class="phone-num"><a href="tel:{{ site.user_site.organization.phone }}"><strong>{{ site.user_site.organization.phone }}</strong></a></p>
-                    </div>
-
-
-
-
-                    {% for page in object.additional_pages.all %}
-                    <div id="tabs-{{ forloop.counter0|add:5 }}">
-                          {{ page.content|cleanHtml|safe }}
-                     </div>
-                    {% endfor %}
-
-
-
-
-                    </div>
-                    </div>
-            </section>
 
 {% endblock %}

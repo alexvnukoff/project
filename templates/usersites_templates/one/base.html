@@ -32,6 +32,8 @@
     {% else %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/one/css/style.css' %}" />
     {% endif %}
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
 
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/one/css/lightbox.css' %}" />
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -42,6 +44,12 @@
 <body id="page-top" class="index {% if LANGUAGE_BIDI %} hebrew{% endif %}" >
 
     {# Include the header file, the header will put the main menu on top of every page #}
+    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
+        <form action="#">
+            <input type="hidden" id="colorAccess"  value="#aaa" />
+            <input type="hidden" id="topPosAccess"  value="60px" />
+        </form>
+    </div>
     {% include 'usersites_templates/one/header.html' %}
 
     {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
@@ -76,6 +84,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="{% static 'usersites/usersites_templates/one/js/script.js' %}"></script>
         <script src="{% static 'usersites/usersites_templates/one/js/lightbox.js' %}"></script>
+    <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
 
 
     <script type="text/javascript" charset="utf-8">

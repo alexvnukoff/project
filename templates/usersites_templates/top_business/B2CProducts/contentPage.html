@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan_blue/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load i18n %}
 {% load content_tags %}
 {% load staticfiles %}
@@ -7,5 +7,5 @@
 
 {% block content %}
     {{ block.super }}
-    {% b2c_products 'B2CProducts/list.html' 15 page category %}
+    {% b2c_products 'B2CProducts/list.html' 16 page category %}
 {% endblock %}

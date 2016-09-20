@@ -29,6 +29,9 @@
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/cineret/css/style.css' %}" />
     {% endif %}
 
+<link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+
     <!-- Custom Fonts -->
     <link  href="{% static 'usersites/usersites_templates/cineret/font-awesome/css/font-awesome.min.css' %}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -45,6 +48,12 @@
     <div id="wrap-main">
         <div id="main">
             {# Include the header file, the header will put the main menu on top of every page #}
+        <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
+        <form action="#">
+            <input type="hidden" id="colorAccess"  value="#fed136" />
+            <input type="hidden" id="topPosAccess"  value="60px" />
+        </form>
+    </div>
             {% include 'usersites_templates/cineret/header.html' %}
 
             {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
@@ -100,6 +109,10 @@
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+                <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
+
+                <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
+
 
     <script type="text/javascript" charset="utf-8">
     function wazeMapInfo(){

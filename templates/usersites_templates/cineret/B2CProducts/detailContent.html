@@ -112,7 +112,7 @@
                 <div class="row">
                           <div class="col-lg-12" id="product-lead">
                               <h3>{% trans 'Countact us' %}</h3>
-                              <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_tעoken %}
+                              <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
                                 <input type="hidden" name="co_id" value="{{ site.pk }}">
                                 <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
 

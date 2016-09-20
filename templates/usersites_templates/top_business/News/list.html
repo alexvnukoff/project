@@ -43,6 +43,97 @@
 
         </div>
     {% endfor %}
+{#----------------------#}
+    <div class="container">
+		<div class="row">
+		    <h1 class="page-header">{% trans 'News' %}</h1>
+		</div>
+
+{#        {% if news.length >= 4 %}#}
+
+          <div class="row">
+			<div class="col-md-5 col-lg-5">
+				<!-- artigo em destaque -->
+				<div class="featured-article">
+                    {% for article in news|slice:":1" %}
+                        <a href="#">
+                            {% if article.image %}
+                                <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}" class="thumb">
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" class="thumb" />
+                            {% endif %}
+                        </a>
+
+                        <div class="block-title">
+                            <h2><a href="news_item.html">{{ article.title }}</a></h2>
+                            <p class="by-author"><small>{{ article.created_at|date:'d M Y' }}</small></p>
+                        </div>
+                    {% endfor %}
+				</div>
+				<!-- /.featured-article -->
+			</div>
+
+			<div class="col-md-7 col-lg-7">
+				<ul class="media-list main-list">
+				  <li class="media">
+				    <a class="pull-left" href="#">
+				      <img class="media-object" src="http://placehold.it/150x90" alt="...">
+				    </a>
+				    <div class="media-body">
+				      <h4 class="media-heading"><a href="news_item.html">Lorem ipsum dolor asit amet</a></h4>
+				      <p class="by-author">Date: 15/5/15</p>
+				      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ex eget porttitor...</p>
+				    </div>
+				  </li>
+				  <li class="media">
+				    <a class="pull-left" href="#">
+				      <img class="media-object" src="http://placehold.it/150x90" alt="...">
+				    </a>
+				    <div class="media-body">
+				      <h4 class="media-heading"><a href="news_item.html">Lorem ipsum dolor asit amet</a></h4>
+				      <p class="by-author">Date: 15/5/15</p>
+				      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ex eget porttitor...</p>
+				    </div>
+				  </li>
+				  <li class="media">
+				    <a class="pull-left" href="#">
+				      <img class="media-object" src="http://placehold.it/150x90" alt="...">
+				    </a>
+				    <div class="media-body">
+				      <h4 class="media-heading"><a href="news_item.html">Lorem ipsum dolor asit amet</a></h4>
+				      <p class="by-author">Date: 15/5/15</p>
+				      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ex eget porttitor...</p>
+				    </div>
+				  </li>
+				</ul>
+			</div>
+		</div>
+
+{#        {% endif %}#}
+
+
+
+		<div class="container">
+
+			<div class="span8">
+		        <h1>Article name first</h1>
+		        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ex eget porttitor sollicitudin. Morbi cursus tempor placerat. Pellentesque suscipit tortor in orci pretium, ac facilisis ex pretium. Fusce hendrerit orci diam, vitae tristique quam porttitor eu. Donec ligula orci, ultricies in sagittis non, porta sed lorem. Aenean interdum posuere mattis. Curabitur dignissim dictum quam, vitae malesuada velit tristique a. </p>
+		        <div>
+		            <div class="more label"><a href="news_item.html">Read more</a></div>
+
+		        </div>
+		        <div class="clear"></div>
+		        <hr>
+		        <h1>Article name second</h1>
+		        <p>Sed interdum massa ac pretium faucibus. Integer semper euismod lorem faucibus molestie. Aenean luctus ut metus eget dignissim. Sed tincidunt augue non elementum pharetra. Suspendisse non feugiat urna. Etiam egestas neque euismod neque sollicitudin consectetur. Fusce facilisis augue a velit porta scelerisque. Sed mattis justo sapien. Sed ultrices lectus diam, id vestibulum ante finibus a. </p>
+		        <div>
+		            <div class="more label"><a href="news_item.html">Read more</a></div>
+
+		        </div>
+		        <div class="clear"></div>
+		        <hr>
+		    </div>
+		</div>
 
     {% include 'usersites_templates/default_no_banners/Paginator.html' %}
 </div><!-- /.container -->

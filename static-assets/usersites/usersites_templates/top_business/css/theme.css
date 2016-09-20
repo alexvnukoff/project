@@ -64,5 +64,10 @@ h1 a:focus,
 /** footer Styling ***************/
 /*********************************/
 footer{
-	background-color: #ddd;
+	background-color: #f8f8f8;
+}
+
+.footer-rights{
+	background: #000;
+	color: #fff;
 }

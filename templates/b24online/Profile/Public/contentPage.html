@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+<title>{% block title %}{{ object.profile }}{% endblock %}</title>
 {% block content %}
 
 <style>
@@ -94,7 +95,7 @@ opacity:0.8;
         <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
         {% endif %}
 
-        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a>
+        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send Email' %}</a>
 
         {% if object.profile.contacts %}
         <h4 style="margin:5px 0;color:#828282;">{% trans 'Adress' %}</h4>
@@ -103,7 +104,5 @@ opacity:0.8;
 
     </div>
   </div>
-  
 </div>
-
 {% endblock %}
