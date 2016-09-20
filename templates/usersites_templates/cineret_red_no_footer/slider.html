@@ -34,12 +34,20 @@
                     {% if forloop.first %}
                         <div class="item active ">
                             <img src="{{ i.image.original }}" >
-                            <a href="{{ i.link }}" class="slider-img-title"> {% trans i.title %} </a>
+                            <a href="{{ i.link }}" class="slider-img-title" title="{% if i.description %}{{ i.description }}{% endif %}">
+                                {% if i.description %}
+                                    {{ i.description }}
+                                {% endif %}
+                            </a>
                         </div>
                     {% else %}
                         <div class="item fill">
                             <img src="{{ i.image.original }}" >
-                            <a href="{{ i.link }}" class="slider-img-title">{{ i.title }}</a>
+                            <a href="{{ i.link }}" class="slider-desc" title="{% if i.description %}{{ i.description }}{% endif %}">
+                                {% if i.description %}
+                                    {{ i.description }}
+                                {% endif %}
+                            </a>
                         </div>
                     {% endif %}
                 {% endfor %}
