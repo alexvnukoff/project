@@ -1,0 +1,19 @@
+{% extends 'usersites_templates/cineret_red/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+     <section class="content__info">
+    <div class="container">
+        <h2 class="page-header in-page">{% trans 'Your Order' %}</h2>
+
+        <p>&nbsp;</p>
+        <p>{% trans 'Your order has been submitted.' %}</p>
+    </div>
+    </section>
+
+{% endblock %}
