@@ -30,6 +30,8 @@
     {% else %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
     {% endif %}
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     {% block after_css %}{% endblock %}
@@ -80,6 +82,7 @@
     <script src="{% static 'usersites/usersites_templates/golan/js/script.js' %}"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
 
     <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>

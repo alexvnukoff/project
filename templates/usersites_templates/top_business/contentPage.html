@@ -13,7 +13,7 @@
 
 {% block content %}
 
-    {% b2c_products 'B2CProducts/main_products.html' 4 %}
+    {% b2c_products 'B2CProducts/main_products.html' 8 %}
 
     {% include 'usersites_templates/top_business/banner.html' %}
 
@@ -21,7 +21,7 @@
 
     {% proposal 'Proposals/wall.html' 1 %}
 
-    {% b2b_products 'B2BProducts/main_products.html' 4 %}
+{#    {% b2b_products 'B2BProducts/main_products.html' 4 %}#}
 
     {# About section of the company on the front page. News + about #}
     <div class="container">
@@ -71,5 +71,6 @@
     </div>
 
 {#    here come the gallery #}
+    {% include 'usersites_templates/top_business/OrganizationPages/main_gallery.html' %}
 
 {% endblock %}

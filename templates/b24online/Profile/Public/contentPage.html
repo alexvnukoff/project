@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+<title>{% block title %}{{ object.profile }}{% endblock %}</title>
 {% block content %}
 
 <style>
@@ -65,7 +66,11 @@ opacity:0.8;
 
   <div class="row">
     <div class="col-lg-12" style="text-align:center">
+        {% if object.profile.avatar %}
       <img src="{{ object.profile.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede">
+      {% else %}
+      <img src="{% static 'b24online/img/avatar_blank.png' %}" style="margin-top:-55px;border:1px solid #dedede">
+      {% endif %}
       <h1 style="margin:15px 0 0 0;">{{ object.profile }}</h1>
       {% comment %}<p style="margin:0;color:#848484;">{{ object.profile.country }}</p>{% endcomment %}
       <h3 style="margin:0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h3>
@@ -85,25 +90,23 @@ opacity:0.8;
         {% endif %}
 
         {% if object.profile.site %}
-        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Site' %}</h4>
+        <h4 style="text-align:center;margin:5px 0;color:#828282;"><i class="icon-globe"></i>{% trans 'Site' %}</h4>
         <p style="margin:5px 0 15px 0;"><a href="{{ object.profile.site }}">{{ object.profile.site }}</a></p>
         {% endif %}
 
         {% if object.profile.mobile_number %}
-        <h4 style="text-align:center;margin:5px 0;color:#828282;">{% trans 'Phone' %}</h4>
+        <h4 style="text-align:center;margin:5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Phone' %}</h4>
         <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
         {% endif %}
 
-        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send message' %}</a>
+        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send Email' %}</a>
 
         {% if object.profile.contacts %}
-        <h4 style="margin:5px 0;color:#828282;">{% trans 'Adress' %}</h4>
+        <h4 style="margin:5px 0;color:#828282;"><i class="icon-location"></i>{% trans 'Address' %}</h4>
         <p style="margin:5px 0 15px 0;">{{ object.profile.contacts }}</p>
         {% endif %}
 
     </div>
   </div>
-  
 </div>
-
 {% endblock %}

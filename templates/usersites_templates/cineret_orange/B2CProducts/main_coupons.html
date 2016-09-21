@@ -27,7 +27,9 @@
                         <div class="col-sm-3 col-md-3 hidden-xs coupon-div">
 
                             {% if product.image %}
-                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive">
+                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive">
+                                </a>
                             {% else %}
                                 <img src="{% static 'b24online/img/item.jpg' %}" class="img-responsive" >
                             {% endif %}
@@ -38,7 +40,7 @@
 
                             <div class="product__caption">
 
-                             <h3 class="product__title ">{{ product.name|truncatechars:20 }}</h3>
+                             <h3 class="product__title "><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
 
                             {# KRN here i want the product category to be #}
                             {% comment %}
