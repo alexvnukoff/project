@@ -320,14 +320,15 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(B2CProductDelivery, self).get_context_data(**kwargs)
-        current_site = get_current_site().user_site
+        current_site = get_current_site()
+        current_user_site = current_site.user_site
+        domain = current_site.domain
         try:
             product = B2CProduct.objects\
                 .get(pk=int(self.request.GET.get('product_id')))
         except (TypeError, ValueError, B2CProduct.DoesNotExist) as exc:
             product = None
 
-        domain = get_current_site().domain
         if not product:    
             basket = Basket(self.request)
             has = basket.count
@@ -358,9 +359,9 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     paypal_dict['item_name_%d' % i] = item.product.name
                     i += 1
 
-                if current_site.delivery_cost \
-                    and current_site.delivery_currency:
-                    paypal_dict['amount_%d' % i] = current_site.delivery_cost
+                if current_user_site.delivery_cost \
+                    and current_user_site.delivery_currency:
+                    paypal_dict['amount_%d' % i] = current_user_site.delivery_cost
                     paypal_dict['item_name_%d' % i] = _('Delivery cost')
                     
                 paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
@@ -381,13 +382,13 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                         'currency_code': basket.currency
                     })
 
-                    if current_site.delivery_cost \
-                        and current_site.delivery_currency:
+                    if current_user_site.delivery_cost \
+                        and current_user_site.delivery_currency:
                         paypal_dict.update({
                             'amount_1': basket.summary,
                             'item_name_1': item_name,
                         })
-                        paypal_dict['amount_2'] = current_site.delivery_cost
+                        paypal_dict['amount_2'] = current_user_site.delivery_cost
                         paypal_dict['item_name_2'] = _('Delivery cost')
                         paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
                     else: 
@@ -404,19 +405,33 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
             
             context.update({'product': product, 'quantity': quantity})
             if product.currency and product.cost and quantity:
+
                 paypal_dict = {
                     "business": product.company.company_paypal_account or '',
-                    "amount": product.get_discount_price,
                     "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
                     "return_url": self.request.build_absolute_uri(),
                     "cancel_return": self.request.build_absolute_uri(),
                     "item_number": product.pk,
-                    "item_name": product.name,
                     "no_shipping": 0,
                     "quantity": 1,
                     "currency_code": product.currency
                 }
-                paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+                if current_user_site.delivery_cost \
+                    and current_user_site.delivery_currency:
+                    paypal_dict.update({
+                        'amount_1': product.get_discount_price,
+                        'item_name_1': product.name,
+                    })
+                    paypal_dict['amount_2'] = current_user_site.delivery_cost
+                    paypal_dict['item_name_2'] = _('Delivery cost')
+                    paypal_form = PayPalBasketForm(None, initial=paypal_dict)
+                else: 
+                    paypal_dict.update({
+                        'amount': product.get_discount_price,
+                        'item_name': product.name,
+                    })
+                    paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
         context.update({
             'paypal_form': paypal_form, 
         })
