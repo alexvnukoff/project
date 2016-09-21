@@ -1721,7 +1721,7 @@ class AdvertisementOrder(Order):
         if user.is_superuser or user.is_commando:
             return True
 
-        return self.purchaser.has_perm()
+        return self.purchaser.has_perm(user)
 
 
 ### Models for stats
