@@ -22,6 +22,7 @@ class PayPalBasketForm(PayPalPaymentsForm):
             *args, 
             **kwargs
         )
+        self.initial['cmd'] = '_cart'
         self.basket = basket
         del self.fields['quantity']
 
