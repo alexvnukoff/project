@@ -78,6 +78,7 @@ class OrderEmailForm(forms.Form):
             
 class DeliveryForm(forms.Form):
 
+    need_delivery = True
     first_name = forms.CharField(label=_('First Name'), required=True)
     last_name = forms.CharField(label=_('Last Name'), required=False)
     email = forms.CharField(label=_('Email'), required=True)
