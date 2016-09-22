@@ -40,5 +40,28 @@
                 </tr>
                 {% endfor %}
             {% endif %}
+            <tr>
+                <td>&nbsp;</td>
+                <td align="center">
+                    <strong>{% trans 'Total' %}:</strong>
+                </td>
+                <td align="center">
+                    <strong>{{ total }}</strong>
+                </td>
+            </tr>
+            {% if form.need_delivery %}
+            <tr>
+                <td>&nbsp;</td>
+                <td align="center">
+                    <strong>{% trans 'Delivery cost' %}:</strong>
+                </td>
+                <td align="center">
+                    <strong>
+                        {{ site.user_site.delivery_cost|formatPrice }}
+                        {{ site.user_site.delivery_currency|getSymbol }} 
+                    </strong>
+                </td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>

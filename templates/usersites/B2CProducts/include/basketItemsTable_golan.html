@@ -43,6 +43,17 @@
             <td></td>
             <td><p id="total_cost"><strong>{% trans 'Total' %}:</strong></p></td>
             <td ><p id="total_cost"><strong> {{ total }}</strong>&nbsp;</p></td>
+            {% if form.need_delivery %}
+            <tr class="dl-horizontal cart-sum-field" >
+                <td></td>
+                <td><p id="total_cost"><strong>{% trans 'Delivery cost' %}:</strong></p></td>
+                <td ><p id="total_cost"><strong>
+                    {{ site.user_site.delivery_currency|getSymbol }} 
+                    {{ site.user_site.delivery_cost|formatPrice }}
+                </strong>&nbsp;</p></td>
+            </tr>
+            {% endif %}
+
         </tr>
     </tfoot>
 </table>
