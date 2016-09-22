@@ -49,8 +49,8 @@
                 <td></td>
                 <td><p id="total_cost"><strong>{% trans 'Delivery cost' %}:</strong></p></td>
                 <td ><p id="total_cost"><strong>
-                    {{ site.user_site.delivery_currency|getSymbol }} 
                     {{ site.user_site.delivery_cost|formatPrice }}
+                    {{ site.user_site.delivery_currency|getSymbol }} 
                 </strong>&nbsp;</p></td>
             </tr>
             {% endif %}
