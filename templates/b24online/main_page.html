@@ -126,7 +126,7 @@
             {% endcomment %}
 
             <div class="categories-news" id="tabs" style="background:#f6f6f6">
-                <div class="tab-cate">
+                <div class="tab-cate" style="display:none;">
                     <ul>
                         <li><a href="#tabs-1" class="tab1">{% trans "Main" %}</a></li>
                     </ul>
@@ -134,7 +134,7 @@
                 {% if user.is_authenticated and user.manageable_organizations > 1 or user.is_commando or user.is_superuser %}
                    {% get_my_companies_list %}
                 {% endif %}
-                <div id="tabs-1">
+                <div id="tabs-1" style="border:0">
                     <ul class="tab1-cate">
                         {% if user.is_authenticated %}
                             {% if user.is_commando or user.is_superuser %}
