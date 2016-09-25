@@ -115,6 +115,7 @@ h3 a:focus,
 
 .product__title{
     color: #F16522;
+    text-align: center;
 }
 
 .product__deleted-price{

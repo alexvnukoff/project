@@ -75,5 +75,6 @@ jQuery(document).ready(function($) {
 (function setFooterStick(){
 	var footerHeight = $('footer').height()+100;
 	var heightStr = footerHeight + "px";
-	document.body.style.marginBottom = heightStr;
+	$('body').css("margin-bottom", heightStr);
+	//document.body.style.marginBottom = heightStr;
 })();

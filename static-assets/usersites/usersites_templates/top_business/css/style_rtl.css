@@ -136,6 +136,22 @@ body{
 	float: left;
 }
 
+.news-big-article{
+	float: right;
+}
+
+.news-side-articals{
+	float: left;
+}
+
+.news-detail-page-container .news-page-img{
+	float: right;
+}
+
+.news-detail-page-container .news-page-content{
+	float: left;
+}
+
 /** Proposal Styling ***************/
 /*********************************/
 .btn-info {
