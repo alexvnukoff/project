@@ -25,6 +25,18 @@
 	float: left;
 }
 
+.galleryCarousel-wrapper{
+	float: left;
+}
+
+#slider-thumbs .thumb-link{
+	float: left;
+}
+
+#reserveRoom .banner-main-page{
+	float: right;
+}
+
 #banner1{
 	float: right;
 }

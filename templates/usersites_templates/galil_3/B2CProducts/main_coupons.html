@@ -1,0 +1,104 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+{# Checking to see if there are coupons. If there are no coupons, the 4 banners will be spread in 1 line. #}
+{# the coupon will take 50% of the page. #}
+{% if b2c_coupons %}
+    <div class="col-md-9 col-sm-6 col-xs-12 coupons">
+
+        <div class="row">
+            <!-- Coupons header -->
+            <div class="col-md-12 col-sm-12">
+                <h2 class="page-header section-header">{% trans 'Coupons' %}</h2>
+            </div>
+        </div>
+
+        {# Coupons display. Template display 2 coupons. #}
+        {# Coupon is a product, so it will get the product declarations unless there is another need. #}
+        <div class="row">
+            {# Looping the coupons. #}
+            {% for product in coupons %}
+
+                <div class="col-sm-12 col-md-6 product">
+                    <div class="thumbnail">
+
+                        {% if product.image %}
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid">
+                            </a>
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                        {% endif %}
+
+                        <div class=" product__badge">
+                            <img src="{% static 'usersites/usersites_templates/galil/css/images/discount_badge.png' %}" class="coupon-badge" >
+                            <div class="coupon_persent">
+                                {{ product.coupon_discount_percent|intword }}<span class="percent">%</span>
+                            </div>
+
+                        </div>
+
+                        <div class="caption">
+
+                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+
+                            <p>{{ product.short_description|truncatechars:105 }}</p>
+
+                            {% if product.cost %}
+                                <p class="product__price__coupon">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
+
+                                {# If there is a discount, display it #}
+                                {% if product.cost != product.get_discount_price %}
+                                    <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
+                                {% endif %}
+
+                                </p>
+
+                                {% else %}
+                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                            {% endif %}
+
+                             <div class="coupon-timer">
+                                    <p class="product__valid__coupon">{% trans "Promotion ends" %}</p>
+                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                </div>
+
+                        <p>
+                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                            </p>
+                        </div>
+
+
+
+                            {# Description of the coupon product #}
+
+                            {# Dispaly the product price if there is one, else display contact us #}
+
+                            {# Diisplay the coupon timer #}
+
+                        </div>
+                    </div>
+
+            {% endfor %}
+        </div>
+
+    <div class="banners-pack">
+          <div class="col-md-4 col-sm-4 col-sm-12 banner banner_cat">
+            {% site_banner "top" "SITES RIGHT 1" %}
+          </div>
+          <div class="col-md-4 col-sm-4 col-sm-12 banner banner_cat">
+            {% site_banner "top" "SITES RIGHT 2" %}
+          </div>
+          <div class="col-md-4 col-sm-4 col-sm-12 banner banner_cat">
+            {% site_banner "top" "SITES RIGHT 3" %}
+          </div>
+    </div>
+
+
+{#        <a href="{% url 'b2c_products:main' %}" class="go-to-full">{% blocktrans %}To all the Coupons{% endblocktrans %} </a>#}
+
+    </div>{# /Coupons modoul #}
+{% endif %}
