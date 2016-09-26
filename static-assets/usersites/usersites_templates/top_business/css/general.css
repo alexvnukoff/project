@@ -9,8 +9,6 @@ body {
     margin: 0; /* bottom = footer height */
 }
 
-
-
 .container{
 	padding-right: 30px;
 	padding-left: 30px;
@@ -584,6 +582,18 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	height: auto;
 }
 
+.media-object {
+    max-width: 150px;
+}
+
+.news-big-article h2 a,
+.news-side-articals h4 a{
+	text-decoration: none;
+}
+
+.news-detail-page-container .news-page-img img{
+	max-width: 100%;
+}
 /* Main Article [Module]
 -------------------------------------
 * Featured Article Thumbnail
@@ -1007,7 +1017,7 @@ footer {
     position: absolute;
     left: 0;
     bottom: 0;
-    /*height: 190px;*/
+    /*height: 450px;*/
     width: 100%;margin: 0;
 	padding: 20px 0 0 0;
 	margin-top: 20px;

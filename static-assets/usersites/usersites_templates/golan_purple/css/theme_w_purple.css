@@ -171,6 +171,7 @@ footer a,
 
 .product__desc{
 	text-align: center;
+	height: 60px;
 }
 
 .product .thumbnail{

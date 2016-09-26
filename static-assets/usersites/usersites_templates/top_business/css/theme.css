@@ -43,6 +43,16 @@ h1 a:focus,
 	color: #aab6aa;
 }
 
+.news-big-article h2,
+.news-big-article h2 a{
+	color: #fff;
+}
+
+.news-side-articals h4,
+.news-side-articals h4 a{
+	color: #444;
+}
+
 /** Proposal Styling ***************/
 /*********************************/
 
@@ -63,7 +73,7 @@ h1 a:focus,
 
 /** footer Styling ***************/
 /*********************************/
-footer{
+.footer-color{
 	background-color: #f8f8f8;
 }
 
