@@ -51,4 +51,17 @@ $(document).ready( function() {
 	// Resize to fix all iframes on page load.
 	}).resize();
 
+
+	$('#galleryCarousel').carousel({
+			interval: 5000
+	});
+
+	//Handles the carousel thumbnails
+   $('[id^=carousel-selector-]').click( function(){
+			var id_selector = $(this).attr("id");
+			var id = id_selector.substr(id_selector.length -1);
+			var id = parseInt(id-1);
+			$('#galleryCarousel').carousel(id);
+	});
+
 });
