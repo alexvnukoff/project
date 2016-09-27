@@ -83,6 +83,13 @@ h2.page-header.inner-page{
 .glyphicon{
 	font-size: 16px;
 }
+
+.hide-bullets {
+	list-style:none;
+	margin-left: -40px;
+	margin-top:20px;
+}
+
 /*---------- logo Styling ----------*/
 .logo{
     width: auto;
@@ -306,6 +313,35 @@ h2.page-header.inner-page{
     list-style: none;
 }
 
+/* gallery carusel style */
+#galleryCarousel .carousel-inner img{
+	max-height: 500px;
+	overflow: hidden;
+}
+
+#slider-thumbs .thumb-link{
+	padding: 5px;
+	margin: 5px;
+}
+
+#slider-thumbs .thumbnail{
+	border: none;
+}
+
+#slider-thumbs .thumbnail img{
+	max-height: 50px;
+	overflow: hidden;
+}
+
+#slider-thumbs .thumbnail a{
+	max-height: 70px;
+	overflow: hidden;
+	float: left;
+}
+
+#reserveRoom .banner-main-page{
+	padding: 0 10px;
+}
 
 /*******************************/
 .banner .s-desc {

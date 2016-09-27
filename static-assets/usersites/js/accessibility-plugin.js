@@ -52,24 +52,25 @@ http://stackoverflow.com/questions/34656142/effective-way-of-increasing-decreasi
 http://richardflick.com/2013/07/28/adjusting-font-size-with-jquery/
  */
 
-var $affectedElements = $("p"); // Can be extended, ex. $("div, p, span.someClass")
+var $sizeAffectedElements = $("div, p"); // Can be extended, ex. $("div, p, span.someClass")
+var $colorAffectedElements = $("div, p");
 var $LinksElements = $("a");
 
 // Storing the original size in a data attribute so size can be reset
-$affectedElements.each( function(){
+$sizeAffectedElements.each( function(){
   var $this = $(this);
   $this.data("orig-size", $this.css("font-size") );
 });
 
 function setOrigSize(){
-  $affectedElements.each( function(){
+  $sizeAffectedElements.each( function(){
         var $this = $(this);
         $this.css( "font-size" , $this.data("orig-size") );
    });
 }
 
 function changeFontSize(direction){
-    $affectedElements.each( function(){
+    $sizeAffectedElements.each( function(){
         var $this = $(this);
         var newFontSize = parseInt($this.css("font-size"))+direction;
         $this.css( "font-size" , newFontSize );
@@ -77,8 +78,14 @@ function changeFontSize(direction){
     });
 }
 
-function changeBgColor(colorBg){
+function changeBgColor(colorBg, textColor){
     $('body').css("background-color", colorBg);
+    var colorStr = colorBg + "!important";
+    $colorAffectedElements.each( function(){
+        var $this = $(this);
+        $this.css( "background-color" , colorStr );
+    });
+
     //$.cookie("color", null);
     if($.cookie("color")) {
         $.cookie("color", colorBg, {expires: 2000, path: '/'});
@@ -103,6 +110,10 @@ function clearAllStyling(){
     //clearing the color
     $.cookie("color", "none", { expires: 2000, path: '/' });
     $('body').css("background-color", "inherit");
+    $colorAffectedElements.each( function(){
+        var $this = $(this);
+        $this.css( "background-color" , inherit );
+    });
 
     $.cookie("links", "false", { expires: 2000, path: '/' });
     $LinksElements.each( function(){
@@ -122,14 +133,14 @@ var createModelBox = function(){
         <button id="btn-increase" onclick="changeFontSize(1);">A+</button><br/><hr/>\
         <h3>Change color</h3>\
         <ul class="accessColor">\
-        <li class="redBg" onclick="changeBgColor(\'red\')"></li>\
+        <li class="redBg" onclick="changeBgColor(\'#9a2617\', \'#fff!important\')"></li>\
         <li class="whiteBg" onclick="changeBgColor(\'white\')"></li>\
         <li class="blackBg" onclick="changeBgColor(\'black\')"></li>\
-        <li class="orangeBg" onclick="changeBgColor(\'orange\')"></li>\
-        <li class="greenBg" onclick="changeBgColor(\'green\')"></li>\
-        <li class="yellowBg" onclick="changeBgColor(\'yellow\')"></li>\
+        <li class="orangeBg" onclick="changeBgColor(\'#c2571a\')"></li>\
+        <li class="greenBg" onclick="changeBgColor(\'#829356\')"></li>\
+        <li class="yellowBg" onclick="changeBgColor(\'#bca136\')"></li>\
         <li class="purpleBg" onclick="changeBgColor(\'purple\')"></li>\
-        <li class="aquaBg" onclick="changeBgColor(\'aqua\')"></li></ul><br/><br/><br/><br/><hr/>\
+        <li class="aquaBg" onclick="changeBgColor(\'#093146\')"></li></ul><br/><br/><br/><br/><hr/>\
         <button id="link-underline" onclick="changeLinks();">Underline Links</button>\
         </div>');
 
@@ -162,7 +173,7 @@ function setInitApearance(mainColor, topElem){
     if($.cookie("firstTime") != undefined && $.cookie("fontSize")) {
         var cookieFontsize = $.cookie('fontSize');
 
-        $affectedElements.each(function () {
+        $sizeAffectedElements.each(function () {
             var $this = $(this);
             $this.css("font-size", cookieFontsize);
         });

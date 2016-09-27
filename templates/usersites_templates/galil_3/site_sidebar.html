@@ -1,0 +1,147 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load cache %}
+{% load inclusionTags %}
+{% load content_tags %}
+{% load mptt_tags %}
+
+
+<h2 class="page-header section-header"><a href="#">Categories</a></h2>
+
+{% b2c_categories as categories %}
+
+{#<div class="panel-group sidebar side-bar" id="accordion">#}
+{##}
+{#        {% for pk, category in categories.items %}#}
+{#            {% if category.name != 'b2c-category' %}#}
+{#                {% if  category.level == 0 %}#}
+{#                    <div class="panel panel-default">#}
+{##}
+{#                        <div class="panel-heading">#}
+{#                            <h4 class="panel-title">#}
+{#                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ pk }}">#}
+{#                                    {% if not category.is_leaf_node  %}#}
+{#                                        <span class="glyphicon glyphicon-plus-sign"></span>#}
+{#                                    {% endif %}#}
+{#                                    {{ category.name }}{{ category.get_previous_sibling.level }}#}
+{#                                </a>#}
+{#                            </h4>#}
+{#                        </div>#}
+{##}
+{#                        {% if not category.is_leaf_node  %}#}
+{#                            <div id="collapse{{ pk }}" class="panel-collapse collapse ">#}
+{#                                <ul class="list-group">#}
+{#                                    {% for next_cat in category.get_descendants %}#}
+{#                                        <li class="list-group-item">#}
+{#                                            {{ "-"|multiply:next_cat.level|multiply:2 }}#}
+{#                                                {{ next_cat.name }}#}
+{#                                        </li>#}
+{#                                    {% endfor %}#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{##}
+{#                     </div>#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#</div>#}
+
+{# Working!!!#}
+
+{#<div class="panel-group sidebar side-bar" id="accordion">#}
+{#    <ul class="sidebar-list">#}
+{#        {% for pk, category in categories.items %}#}
+{#            {% if category.name != 'b2c-category' %}#}
+{#                {% if  category.level == 0 %}#}
+{#                    {% if category.is_leaf_node  %}#}
+{#                        <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>#}
+{#                    {% else %}#}
+{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
+{#                    {% endif %}#}
+                {# If the category is not lvl0#}
+{#                {% else %}#}
+{#                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ " "|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
+
+{# end of Working!!!#}
+
+
+<div class="panel-group sidebar side-bar" id="accordion">
+    <ul class="sidebar-list">
+        {% for pk, category in categories.items %}
+            {% if category.name != 'b2c-category' %}
+                {% if  category.level == 0 %}
+{#                    {% if category.get_children  %}#}
+{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
+{#                    {% else %}#}
+                        <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>
+{#                    {% endif %}#}
+                {# If the category is not lvl0#}
+                {% else %}
+                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+
+{#                    {% if category.get_next_sibling == None or category.get_next_sibling.get_previous_sibling.level == 0%}#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    {% endif %}#}
+
+
+
+
+    {#                {% if not category.is_leaf_node  %}#}
+    {#                    <div id="collapseOne" class="panel-collapse collapse ">#}
+    {#                        <ul class="list-group">#}
+    {#                            {% for lvl1_category in category.get_children %}#}
+    {#                                <li class="list-group-item"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ lvl1_category.name }}</a></li>#}
+    {#    #}
+    {#                                {% if not lvl1_category.is_leaf_node  %}#}
+    {#                                    <ul class="list-group">#}
+    {#                                        {% for lvl2_category in lvl1_category.get_children %}#}
+    {#                                            <li class="list-group-item"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ lvl2_category.name }}</a></li>#}
+    {#                                        {% endfor %}#}
+    {#                                    </ul>#}
+    {#                                {% endif %}#}
+    {#    #}
+    {#                            {% endfor %}#}
+    {#                        </ul>#}
+    {#                    </div>#}
+    {#                {% endif %}#}
+
+
+
+{#<div class="select pagination category">#}
+{#        <select class="category-selector">#}
+{#            {% if 'b2c-products' in request.path %}#}
+{#                <option value="{% url 'b2c_products:main' %}">{% trans 'Select Category' %}</option>#}
+{#                    {% for pk, category in categories.items %}#}
+{#                        <a href="{% url 'b2c_products:category' category.slug pk %}">#}
+{#                        <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">#}
+{#                        {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}#}
+{#                        </option>#}
+{#                        </a>#}
+{#                    {% endfor %}#}
+{#            {% else %}#}
+{#              <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>#}
+{#                  {% for pk, category in categories.items %}#}
+{#                      <a href="{% url 'b2c_products:category' category.slug pk %}">#}
+{#                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">#}
+{#                      {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}#}
+{#                      </option>#}
+{#                      </a>#}
+{#                  {% endfor %}#}
+{#            {% endif %}#}
+{#        </select>#}
+{#    </div>#}
+

@@ -1,0 +1,11 @@
+{% extends 'usersites_templates/galil/index.html' %}
+{% load i18n %}
+{% load content_tags %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+
+{% block content %}
+    {{ block.super }}
+    {% b2c_products 'B2CProducts/list.html' 16 page category %}
+{% endblock %}

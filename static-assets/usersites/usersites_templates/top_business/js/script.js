@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
 
 //getting the height of the footer, make the margin-bottom of the body as the height of the footer.
 (function setFooterStick(){
-	var footerHeight = $('footer').height()+100;
+	var footerHeight = $('footer').height()+50;
 	var heightStr = footerHeight + "px";
 	$('body').css("margin-bottom", heightStr);
 	//document.body.style.marginBottom = heightStr;
