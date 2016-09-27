@@ -354,5 +354,19 @@ ul.dropdown-menu > li > a > img.flag-icon {
     .moretools-item {
         height:180px;
         }
+
+    ul.clumn {
+        float:left;
+        width:50%;
+    }
+
 }
 
+@media(max-width:450px) {
+
+    ul.clumn {
+        float:none;
+        width:100%;
+    }
+
+}

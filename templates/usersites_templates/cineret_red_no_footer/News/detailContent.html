@@ -1,0 +1,53 @@
+{% extends 'usersites_templates/cineret_red_no_footer/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <div class="container news-details">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header in-page">{{ object.title }}</h1>
+            </div>
+        </div>
+        {# /.row #}
+
+        {# Proposal Content #}
+        <div class="row">
+
+                {% if object.image %}
+            <img src="{{ object.image.big }}" alt="{{ object.title }}" title="{{ object.title }}" />
+        {% endif %}
+
+            <div class="col-md-12 desc-detail-page">
+                    <p>{{ object.content|cleanHtml|safe }}</p>
+                </div>
+
+            {% if object.gallery_images %}
+                <ul class="gallery">
+                {% for gallery_obj in object.gallery_images %}
+                        <figure>
+                            <a href="{{ gallery_obj.image }}" rel="gallery" fancybox class="fancybox">
+                                <img src="{{ gallery_obj.image.big }}" alt="" />
+                            </a>
+                        </figure>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if object.video_code %}
+                <iframe width="540" height="322" src="//www.youtube.com/embed/{{ object.video_code }}" frameborder="0" allowfullscreen></iframe>
+            {% endif %}
+
+
+
+
+        </div>{# /.row #}{# /Proposal Content #}
+
+        <a href="{% url 'news:main' %}" class="proposal-link"><span class="glyphicon glyphicon-paperclip proposal-clip"></span>{% trans 'More' %} {% trans 'News' %}</a>
+    </div>
+
+{% endblock %}
