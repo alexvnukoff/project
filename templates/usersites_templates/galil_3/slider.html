@@ -109,23 +109,38 @@
               </div>
             {% endif %}
 
-            <div id="reserveRoom" class="banner col-sm-4">
-                <div>
+            <div class="banner col-sm-4">
 
-                    {% check_banner_exist "SITES LEFT 1" as left_banner_1 %}
+                {% if site.user_site.domain_part == "aladin" %}
 
-                    {% if left_banner_1 %}
-                        <div class="banner-main-page">
-                            {% site_banner "top" "SITES LEFT 1" %}
-                        </div>
-                    {% endif %}
-{#                    reserve a room code #}
+                    <div id="reserveRoom">
+                       {% include 'usersites_templates/galil_3/aladin_code.html' %}
+                    </div>
 
-                </div>
+                {% else %}
+
+                    <div>
+
+                        {% check_banner_exist "SITES LEFT 1" as left_banner_1 %}
+                        {% if left_banner_1 %}
+                            <div class="banner-main-page">
+                                {% site_banner "top" "SITES LEFT 1" %}
+                            </div>
+                        {% endif %}
+    {#                    reserve a room code #}
+
+
+                    </div>
+
+            {% endif %}
+
             </div>
         </div>
       </div>
 
 {#-------------------------------#}
+      <script>
+{#          alert( {{ site.user_site.organization.name }} );#}
+      </script>
 
 

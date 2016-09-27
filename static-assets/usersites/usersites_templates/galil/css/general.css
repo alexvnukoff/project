@@ -319,6 +319,10 @@ h2.page-header.inner-page{
 	overflow: hidden;
 }
 
+#galleryCarousel .carousel-inner div{
+	width: 100%;
+}
+
 #slider-thumbs .thumb-link{
 	padding: 5px;
 	margin: 5px;
@@ -341,6 +345,20 @@ h2.page-header.inner-page{
 
 #reserveRoom .banner-main-page{
 	padding: 0 10px;
+}
+
+/* Galil 3 aladin style */
+#reserveRoom{
+	margin: 0 auto;
+	padding: 0 10px;
+	width: 200px;
+	height: 300px;
+}
+
+#reserveRoom ._wbord_ img {
+	width: auto;
+	height: auto;
+	padding: inherit;
 }
 
 /*******************************/
