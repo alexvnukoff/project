@@ -29,6 +29,44 @@
 {#          <div class="collapse navbar-collapse">#}
               <ul class="nav navbar-nav top-nav">
 
+                  {# Registration. login and logout #}
+                  {% if user.is_authenticated %}
+                        {% get_messages_number as messages_number %}
+                        <li>
+                        <a href="{% url 'my_profile' %}">
+                            {% if request.user.profile.avatar %}
+                                <img src="{{ request.user.profile.avatar.th }}" 
+                                    style="vertical-align:middle;margin-top:-4px;width:18px;">
+                            {% else %}
+                                <img src="/static/b24online/img/profile_24x24.jpg">         
+                            {% endif %}
+                            &nbsp;
+                            {% if request.user.profile %}
+                                {{ request.user.profile.full_name }}
+                            {% else %}
+                                {{ request.user }}
+                            {% endif %}                            
+                        </a>
+                        </li>
+                        <li>
+                        <a href="{% url 'auth_logout' %}">{% trans 'Sign out' %}</a>
+                        </li>
+                        <li>
+                        <a href="{% url 'messages:main' %}">
+                            <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}
+                        </a>
+                        </li>
+                  {% else %}
+                        <li>
+                        <a href="{% url 'registration_register' %}" class="dialog-open"
+                            data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                        </li>
+                        <li>
+                        <a href="{% url 'auth_login' %}" class="dialog-open"
+                            data-title="{% trans 'Sign in' %}">{% trans 'Sign in' %}</a>
+                        </li>
+                   {% endif %}
+
                   <li><a href="{% url 'b2c_products:basket' %}"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a></li>
                   <li>
                     <div class="tmp_search  top_search clearfix">
