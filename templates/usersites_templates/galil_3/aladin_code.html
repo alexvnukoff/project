@@ -1,0 +1,48 @@
+<!--
+    WuBook Javascript Library
+    Eventually, put it inside
+    your <head/> tag
+-->
+<script src="https://wubook.net/js/wbbook.jgz"></script>
+<!--
+     put the following div where WuBook
+     should be designed. Make sure to
+     preserve the div contents (backlink)
+-->
+<div id="_wbord_">
+  <a href="http://ru.wubook.net/" style="display: block; margin-top: 5px; text-decoration:none;border:none">
+    <img src="https://wubook.net/imgs/default/booking_by_wu.gif" alt="Модуль бронирования WuBook" title="Инструменты для отелей" style="border:none;text-decoration:none"/>
+  </a>
+</div>
+<!--
+     Initialize the WuBook Object.
+     Collect params settings.
+     Call WuBook.design_widget().
+
+     Notice WuBook Object provides a
+     lot of interesting features.
+-->
+<script>
+  var WuBook= new _WuBook(1397294976);
+  var wbparams= {
+    lang: '',
+    dates: 1,
+    nights: 0,
+    layout: '',
+    bgcolor: '#ffefaf',
+    failback_lang: 'en',
+    wbgoogle: 1,
+    bids: 0,
+    cards: 1,
+    width: 200,
+    cancel: 1,
+    textcolor: '#2d2f2e',
+    bestprice: 1,
+    email: 1
+  };
+  WuBook.design_widget("_wbord_", wbparams);
+</script>
+<!--
+    that's all :)
+    Thank you for using WuBook!
+-->
