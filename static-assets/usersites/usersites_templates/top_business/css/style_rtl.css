@@ -41,6 +41,11 @@ body{
 	padding-left: 15px;
 }
 
+#navbarCollapse .dropdown-submenu{
+	text-align: right;
+	right: 0;
+}
+
 /** Slider Styling ***************/
 /*********************************/
 

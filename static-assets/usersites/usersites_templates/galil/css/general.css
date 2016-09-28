@@ -361,6 +361,15 @@ h2.page-header.inner-page{
 	padding: inherit;
 }
 
+.carusel-sidebar .banner .banner-main-page{
+	margin: 0 10%;
+	/*padding: 0 10%;*/
+	width: 80%;
+}
+
+.carusel-sidebar .banner{
+	margin: 0;
+}
 /*******************************/
 .banner .s-desc {
     width: 100%;
