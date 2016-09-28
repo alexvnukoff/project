@@ -41,16 +41,18 @@
                 <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>
             {% endif %}
 
-            <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Learn More <b class="caret"></b></a>
-                <ul role="menu" class="dropdown-menu reg-dropdown">
+            {% if site.user_site.organization.additional_pages.exists %}
+                <li class="dropdown ">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Learn More <b class="caret"></b></a>
+                    <ul role="menu" class="dropdown-menu dropdown-submenu reg-dropdown">
 
-                    {% for page in site.user_site.organization.additional_pages.all %}
-                        <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
-                    {% endfor %}
+                        {% for page in site.user_site.organization.additional_pages.all %}
+                            <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
+                        {% endfor %}
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            {% endif %}
 
             <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
         </ul>
@@ -62,6 +64,14 @@
                 </form>
             </div>
         </form>
+
+        {% comment %}<div class="top-search-block">
+            <div class="tmp_search  top_search clearfix hidden-xs">
+                <form action="{% url 'b2c_products:search' %}">
+                    <input type="text" placeholder="Search" name="s">
+                </form>
+            </div>
+        </div>{% endcomment %}
 
         <ul id="cart-menu" class="nav navbar-nav navbar-right">
             <li>
@@ -105,25 +115,22 @@
                         <table class="table cart-page-table">
 
                         <tbody>
-                            <tr>
-                                <td>1 </td>
-                                <td><a href="#"> White Blouse Armani</a>
-                                </td>
 
-                                <td>$246.00</td>
-                            </tr>
-                            <tr>
-                                <td>1 </td>
-                                <td><a href="#"> Black Blouse Armani</a>
-                                </td>
+                            {% for row in basket.src %}
+                                <tr>
+                                    <td>{{ row.quantity }}</td>
+                                    <td><a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }}</a></a>
+                                    </td>
 
-                                <td>$200.00</td>
-                            </tr>
+                                    <td>{{ row.product.get_discount_price|formatPrice }} {{ row.product.currency|getSymbol }}</td>
+                                </tr>
+                            {% endfor %}
+
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="2">Total</th>
-                                <th colspan="1">$446.00</th>
+                                <th colspan="2">{% trans "Total" %}</th>
+                                <th colspan="1">{{ total }} {{ row.product.currency|getSymbol }}</th>
                             </tr>
                         </tfoot>
                     </table>
