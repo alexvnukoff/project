@@ -552,6 +552,10 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	width: 100%;
 }
 
+.banners-container{
+	margin-bottom: 15px;
+}
+
 /** News Styling ***************/
 /*********************************/
 .main-news__img{
@@ -724,6 +728,18 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 
 .about-container{
 	padding: 0 0 25px 0;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.about-container{
+		padding: 0 25px 25px 0;
+		margin: 0;
+	}
+
+	.about-container h1{
+		padding: 10px;
+	}
 }
 
 
@@ -1055,7 +1071,7 @@ footer {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 450px;
+    height: 180px;
     width: 100%;margin: 0;
 	padding: 20px 0 0 0;
 	margin-top: 20px;
@@ -1092,6 +1108,10 @@ footer p{
 
 .footer-menu a{
     text-decoration: none;
+}
+
+.footer-container>div{
+
 }
 
 /* table responsive for pages */

@@ -191,3 +191,7 @@ body{
 footer span {
     margin-left: 5px;
 }
+
+.footer-container>div{
+	float: right;
+}
