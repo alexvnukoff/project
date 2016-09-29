@@ -58,42 +58,15 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': False,
-        },
-    'sentry': {
-        'level': 'ERROR',
-        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        'tags': {'custom-tag': 'x'},
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
         }
     },
     'loggers': {
-       'django.request': {
-           'handlers': ['mail_admins'],
-        },
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['sentry'],
-        },
-        'django.db.backends': {
+        'django.request': {
+            'handlers': ['mail_admins'],
             'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
+            'propagate': True,
         },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    },
+    }
 }
 
 TEMPLATES = [
