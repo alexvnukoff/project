@@ -80,7 +80,6 @@ LOGGING = {
         },
         'django.db.backends': {
             'level': 'ERROR',
-            'propagate': True,
             'handlers': ['console'],
             'propagate': False,
         },
