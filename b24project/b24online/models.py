@@ -78,7 +78,6 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email).lower()
         user = self.model(email=email)
-
         user.set_password(password)
         user.save(using=self._db)
 
@@ -2949,6 +2948,16 @@ class LeadsStore(ActiveModelMixing, models.Model):
     def __str__(self):
         return self.organization.name
 
+
+def user_extended_profile(backend, user, response, *args, **kwargs):
+    if backend.name == 'facebook' or backend.name == 'google':
+        try:
+            profile = user.profile
+        except:
+            profile = None
+
+        if profile is None:
+            Profile.objects.create(user=user, country=Country.objects.first())
 
 
 @receiver(pre_save)

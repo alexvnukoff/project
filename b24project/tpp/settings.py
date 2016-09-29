@@ -78,8 +78,6 @@ TEMPLATES = [
             'debug': False,
             'context_processors': (
                 "django.contrib.auth.context_processors.auth",
-                "django.template.context_processors.request",
-                "django.template.context_processors.debug",
                 "django.template.context_processors.i18n",
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
@@ -301,6 +299,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_by_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
+    'b24online.models.user_extended_profile',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
