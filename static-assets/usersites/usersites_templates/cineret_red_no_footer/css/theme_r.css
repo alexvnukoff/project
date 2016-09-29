@@ -337,3 +337,11 @@ footer a:active{
 h1, h2, h3, h4, h5, h6 {
     text-transform: none;
 }
+
+.no-footer-about img{
+    width: 100%;
+}
+
+.red-carousel .slider-desc:hover{
+    color: #fff;
+}
