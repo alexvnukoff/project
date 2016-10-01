@@ -96,16 +96,19 @@
                 {% endif %}
 
                 </form>
-
+                {% if object.cost %}
+                    {% include
+                    "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
                     {% if paypal_form %}
-                        <div style="">{{ paypal_form.render }}</div>
+                        <div id="paypal_form_layer">
+                            {{ paypal_form.render }}
+                        </div>
                     {% else %}
-{#                        <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>#}
+                        {# <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Contact us' %}</a> #}
                     {% endif %}
-
-                    <h4>{% trans 'About Company' %}</h4>
-
-                    <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
+                {% endif %}
+                <h4>{% trans 'About Company' %}</h4>
+                <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
 
             {% if not object.cost %}
 

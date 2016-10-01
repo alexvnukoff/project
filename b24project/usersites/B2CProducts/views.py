@@ -158,10 +158,10 @@ class B2CProductBasket(View):
             paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
 
         else:
-            if basket.summary:
+            if basket.summary():
                 paypal_dict.update({
                     'business': basket.paypal,
-                    'amount': basket.summary,
+                    'amount': basket.summary(),
                     'notify_url': '{0}://{1}{2}'.format(self.request.scheme, get_current_site().domain, reverse('paypal-ipn')),
                     'return_url': request.build_absolute_uri(),
                     'cancel_return': request.build_absolute_uri(),
@@ -175,7 +175,7 @@ class B2CProductBasket(View):
         data = {
             'title': _('B2C Basket'),
             'basket': dict(src=basket),
-            'total': basket.summary,
+            'total': basket.summary(),
             'paypal_form': paypal_form,
         }
 
@@ -225,7 +225,7 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         has = basket.count
         context = super(B2CProductByEmail, self).get_context_data(**kwargs)
         context['basket'] = dict(src=basket)
-        context['total'] = basket.summary
+        context['total'] = basket.summary()
         return context
 
     def form_valid(self, form):
@@ -329,11 +329,13 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
         except (TypeError, ValueError, B2CProduct.DoesNotExist) as exc:
             product = None
 
+        total = 0
+        
         if not product:    
             basket = Basket(self.request)
             has = basket.count
             context['basket'] = dict(src=basket)
-            context['total'] = basket.summary
+            total = basket.summary()
 
             # Сколько наименований товаров в Корзине
             basket_items_total = len(list(basket))
@@ -363,10 +365,11 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     and current_user_site.delivery_currency:
                     paypal_dict['amount_%d' % i] = current_user_site.delivery_cost
                     paypal_dict['item_name_%d' % i] = _('Delivery cost')
-                    
+                    total += current_user_site.delivery_cost
+                        
                 paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
             else:
-                if basket.summary:
+                if basket.summary():
                     try:
                         item_name = list(basket)[0].product.name
                     except (AttributeError, IndexError):
@@ -391,6 +394,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                         paypal_dict['amount_2'] = current_user_site.delivery_cost
                         paypal_dict['item_name_2'] = _('Delivery cost')
                         paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
+                        total += current_user_site.delivery_cost
                     else: 
                         paypal_dict.update({
                             'amount': basket.summary,
