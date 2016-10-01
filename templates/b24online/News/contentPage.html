@@ -40,7 +40,7 @@
                     {{ news.created_at|date:'d M Y' }}, <a href="{{ news.organization.get_absolute_url }}" title="{{ news.organization.name }}">{{ news.organization.name }}</a></p>
                     <p>
                         {% if news.short_description %}
-                            {{ news.short_description|cleanHtml:"p"|safe|linebreaks }}
+                            {{ news.short_description|cleanHtml:"p"|linebreaks|safe }}
                         {% else %}
                             {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
                         {% endif %}
