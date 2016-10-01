@@ -21,7 +21,7 @@
                         <div class="well main-proposal__well">
                             <h2>{{ proposal.title }}</h2>
 
-                            {{ proposal.description|cleanHtml|striptags|safe|removetags:"p"|truncatewords_html:"150" }}
+                            {{ proposal.description|cleanHtml:"p"|striptags|truncatewords_html:"150" }}
 
                             <p class="main-products__pbtn"><a  href="{{ proposal.get_absolute_url }}" class="btn btn-default main-products__btn">{% trans 'More' %}</a></p>
                         </div>

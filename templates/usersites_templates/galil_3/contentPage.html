@@ -109,7 +109,7 @@
                     <h2 class="page-header section-header">{{ site.user_site.organization.name }}</h2>
                     <p>
                         {# Organization description #}
-                        {{ site.user_site.organization.short_description|cleanHtml|safe|removetags:"p" }}
+                        {{ site.user_site.organization.short_description|cleanHtml:"p"|safe }}
                     </p>
 
                 </div>

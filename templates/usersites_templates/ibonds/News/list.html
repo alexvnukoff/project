@@ -32,7 +32,7 @@
 
             <p>
                 {% if article.short_description %}
-                    {{ article.short_description|force_escape|linebreaks|removetags:"p" }}
+                    {{ article.short_description|linebreaksbr }}
                     <br/>
                     <br/>
                 {% endif %}

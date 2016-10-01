@@ -129,7 +129,8 @@ EXTERNAL_APPS = (
     'captcha',
     'paypal.standard.ipn',
     'rest_framework',
-    'compressor'
+    'compressor',
+    'django_bleach',
 )
 
 # the order is important!
@@ -343,6 +344,9 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 MODELTRANSLATION_AUTO_POPULATE = 'required'
 
 ELASTIC_SEARCH_HOSTS = ['ec2-54-72-220-8.eu-west-1.compute.amazonaws.com']
+
+############################# LXML settings ################################
+ALLOWED_IFRAME_HOSTS = ['www.youtube.com']
 
 ############################# AWS settings ################################
 

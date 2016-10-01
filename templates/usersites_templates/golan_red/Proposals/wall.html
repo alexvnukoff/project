@@ -13,7 +13,7 @@
             {# Each proposal will have a title, description, date and a button which will take to the main page of proposals. #}
             <div class="col-sm-12 col-md-12 proposal">
                 <h2 class="news__title">{{ proposal.title }}</h2>
-                <p class="news__text">{{ proposal.description|cleanHtml|safe|striptags|removetags:"p"|truncatewords_html:"90" }}</p>
+                <p class="news__text">{{ proposal.description|cleanHtml:"p"|striptags|truncatewords_html:"90" }}</p>
                 <p class="news__text">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
                 <a type="button" class="btn btn-default news__btn" href="{% url 'proposal:main' %}" role="button">{% trans 'More' %}</a>
             </div>

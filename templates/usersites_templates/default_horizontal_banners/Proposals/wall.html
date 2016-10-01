@@ -14,7 +14,7 @@
                         <div class="news__content clearfix">
                             <div class="news__content__desc clearfix">
                                 <p class="date">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
-                                <p class="text">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"30" }}</p>
+                                <p class="text">{{ proposal.description|cleanHtml:"p"|safe|truncatewords_html:"30" }}</p>
                             </div>
                             <a href="{{ proposal.get_absolute_url }}" class="more vertical"><span>{% trans 'More' %}</span></a>
                         </div>
