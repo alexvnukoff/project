@@ -20,6 +20,7 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
 from lxml.html.clean import Cleaner
+from django_bleach.templatetags.bleach_tags import bleach_value
 
 import b24online.urls
 from appl.func import currency_symbol
@@ -33,8 +34,6 @@ from tpp.SiteUrlMiddleWare import get_request
 logger = logging.getLogger(__name__)
 
 register = template.Library()
-
-cleaner = Cleaner(embedded=False)
 
 
 @register.filter()
@@ -106,8 +105,10 @@ def remove_whitespaces(sentence):
 
 
 @register.filter(name='cleanHtml')
-def cleanHtml(value):
+def cleanHtml(value, remove_tags=''):
     if value is not None and len(value) > 0:
+        cleaner = Cleaner(host_whitelist=settings.ALLOWED_IFRAME_HOSTS, remove_tags=remove_tags.split(','))
+
         return cleaner.clean_html(value)
     else:
         return ""

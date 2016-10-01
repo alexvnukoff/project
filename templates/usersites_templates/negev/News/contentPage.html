@@ -39,11 +39,11 @@
 
                 <p>
                     {% if news.short_description %}
-                         {{ news.short_description|force_escape|linebreaks|removetags:"p" }}
+                         {{ news.short_description|linebreaksbr }}
                         <br/>
                         <br/>
 {#                    {% else %}#}
-{#                         {{ news.content|cleanHtml|safe|removetags:"p" }}#}
+{#                         {{ news.content|cleanHtml:"p"|safe }}#}
                     {% endif %}
                 </p>
 
