@@ -112,6 +112,13 @@ class Basket:
         for item in self.basket.items.all().select_related('product'):
             result += item.product.get_discount_price() * item.quantity
         return result
+        
+    def currency(self):
+        """
+        Return Basket's first product currentcy.
+        """
+        first_item = self.basket.items.select_related('product').first()
+        return first_item.product.currency if first_item else None
 
     def clear(self):
         for item in self.basket.items.all():

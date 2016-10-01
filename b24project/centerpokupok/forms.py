@@ -81,7 +81,7 @@ class DeliveryForm(forms.Form):
     need_delivery = True
     first_name = forms.CharField(label=_('First Name'), required=True)
     last_name = forms.CharField(label=_('Last Name'), required=False)
-    email = forms.CharField(label=_('Email'), required=True)
+    email = forms.EmailField(label=_('Email'), required=True)
     address = forms.CharField(label=_('Address'), required=True,
                               widget=forms.Textarea)
     phone = forms.CharField(label=_('Contact phone'), required=True)

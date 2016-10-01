@@ -34,6 +34,18 @@
             </tr>
             {% endfor %}
         {% endif %}
+            {# Delivery info #}
+            {% if form.need_delivery %}
+            <tr>
+                <td align="left">{% trans 'Delivery cost' %}</td>
+                <td>&nbsp;</td>
+                <td>
+                    {{ site.user_site.delivery_cost|formatPrice }}
+                    {{ site.user_site.delivery_currency|getSymbol }} 
+                </td>
+            </tr>
+            {% endif %}
+
     </tbody>
     <tfoot>
         <tr class="dl-horizontal cart-sum-field" >
@@ -41,16 +53,5 @@
             <td><p id="total_cost"><strong>{% trans 'Total' %}:</strong></p></td>
             <td ><p id="total_cost"><strong> {{ total }}</strong>&nbsp;</p></td>
         </tr>
-            {% if form.need_delivery %}
-            <tr class="dl-horizontal cart-sum-field" >
-                <td></td>
-                <td><p id="total_cost"><strong>{% trans 'Delivery cost' %}:</strong></p></td>
-                <td ><p id="total_cost"><strong>
-                    {{ site.user_site.delivery_cost|formatPrice }}
-                    {{ site.user_site.delivery_currency|getSymbol }} 
-                </strong>&nbsp;</p></td>
-            </tr>
-            {% endif %}
-
     </tfoot>
 </table>
