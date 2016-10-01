@@ -20,7 +20,6 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
 from lxml.html.clean import Cleaner
-from django_bleach.templatetags.bleach_tags import bleach_value
 
 import b24online.urls
 from appl.func import currency_symbol

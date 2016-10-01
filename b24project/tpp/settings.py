@@ -129,8 +129,7 @@ EXTERNAL_APPS = (
     'captcha',
     'paypal.standard.ipn',
     'rest_framework',
-    'compressor',
-    'django_bleach',
+    'compressor'
 )
 
 # the order is important!
