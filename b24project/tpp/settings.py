@@ -233,7 +233,8 @@ DATABASES = {
         'USER': 'b24online',
         'PASSWORD': 'b24online**',
         'HOST': 'b24online-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
-        'PORT': '5432'
+        'PORT': '5432',
+        'CONN_MAX_AGE': 60
     }
 }
 
