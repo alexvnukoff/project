@@ -361,6 +361,9 @@ import djcelery
 
 djcelery.setup_loader()
 
+######################## DJANGO GUARDIAN SETTINGS #########################
+GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.get_polymorphic_base_content_type'
+
 ##################### Tornado settings ####################################
 ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'
 
