@@ -2,34 +2,30 @@
 
 import json
 import logging
-
 from collections import OrderedDict
 
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Case, When, CharField, Max, Count
-from django.views.generic import (TemplateView, ListView)
-from django.template import RequestContext, loader
-from django.template.loader import render_to_string
-from django.shortcuts import render_to_response, render
-from django.http import (HttpResponse, HttpResponseBadRequest, Http404, 
+from django.http import (HttpResponse, HttpResponseBadRequest, Http404,
                          HttpResponseRedirect)
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.template import loader
+from django.template.loader import render_to_string
+from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
-from django.utils.dateparse import parse_datetime
-
-from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import LoginRequiredMixin
 
 from b24online import InvalidParametersError
-from b24online.models import (Message, MessageChat, MessageAttachment)
-from b24online.utils import deep_merge_dict, get_current_organization
-from b24online.Messages.forms import (MessageForm, MessageSendForm, 
+from b24online.Messages.forms import (MessageForm, MessageSendForm,
                                       AddParticipantForm, UpdateChatForm)
 from b24online.cbv import ItemsList
-
+from b24online.models import (Message, MessageChat)
+from b24online.utils import deep_merge_dict, get_current_organization
 
 logger = logging.getLogger(__name__)
 
@@ -130,9 +126,8 @@ def _get_message_list(request, recipient_id, date=None, last_message_id=None):
     #     msg_attr['CREATE_DATE'] = [utc_dt.astimezone(tz)]
 
     template_params['message_queryset'] = messages
-    template = loader.get_template('b24online/Messages/messagesPage.html')
-    context = RequestContext(request, template_params)
-    return template.render(context)
+
+    return loader.render_to_string('b24online/Messages/messagesPage.html', template_params, request)
 
 
 def _get_last_message_by_contact(sender, recipient):
@@ -201,8 +196,6 @@ class ChatListView(LoginRequiredMixin, ItemsList):
     scripts = []
     styles = []
 
-    paginate_by = 10
-
     current_section = _("Products B2B")
     # addUrl = 'products:add'
     
@@ -270,10 +263,9 @@ def add_to_chat(request):
                 response_text = _('You have successfully sent the message')
         else:
             response_text = form.get_errors_msg()
-        return HttpResponse(
-            json.dumps({'code': response_code, 'message': response_text}),
-            content_type='application/json'
-        )
+
+        return JsonResponse({'code': response_code, 'message': response_text})
+
     return HttpResponseBadRequest()
 
 
@@ -328,7 +320,7 @@ def send_message(request, recipient_type, item_id, **kwargs):
                     'msg': render_to_string(
                         template_name,
                         {'error': 'ERROR: {0}' . format(err)},
-                        context_instance=RequestContext(request),
+                        request,
                     ),
                 })
             else:
@@ -337,10 +329,11 @@ def send_message(request, recipient_type, item_id, **kwargs):
                     'msg': render_to_string(
                         template_name,
                         {'form': form, 'request': request},
-                        context_instance=RequestContext(request),
+                        request,
                     )
                 })
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
+
     return HttpResponseBadRequest()
 
 
@@ -375,10 +368,11 @@ def add_participant(request, item_id, **kwargs):
                 'msg': render_to_string(
                     template_name,
                     {'form': form, 'request': request},
-                    context_instance=RequestContext(request),
+                    request,
                 )
             })
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
+
     return HttpResponseBadRequest()
     
 
@@ -415,10 +409,11 @@ def update_chat(request, item_id, **kwargs):
                 'msg': render_to_string(
                     template_name,
                     {'form': form, 'request': request},
-                    context_instance=RequestContext(request),
+                    request,
                 )
             })
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
+
     return HttpResponseBadRequest()
     
     

@@ -6,8 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
 from django.http import JsonResponse, Http404, HttpResponseRedirect
-from django.shortcuts import render_to_response, render
-from django.template import RequestContext
+from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView

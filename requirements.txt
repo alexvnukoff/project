@@ -18,7 +18,7 @@ django-loginas==0.2.3
 django-modeltranslation==0.12
 django-mptt==0.8.6
 django-paypal==0.3.2
-django-polymorphic==1.0.1
+git+https://github.com/django-polymorphic/django-polymorphic#polymorphic
 django-polymorphic-tree==1.3
 django-recaptcha==1.0.5
 django-redis==4.5.0

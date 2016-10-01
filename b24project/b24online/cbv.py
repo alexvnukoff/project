@@ -1,7 +1,7 @@
-import os
 import logging
-
+import os
 from urllib.parse import urlparse
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -10,20 +10,20 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
-from django.template import RequestContext
-from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.utils._os import abspathu
 from django.utils.decorators import method_decorator
 from django.utils.text import Truncator
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView, ListView
+
 from appl import func
+from b24online.forms import GalleryImageForm, DocumentForm
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
     GalleryImage, Document, Chamber, IndexedModelMixin
 from b24online.search_indexes import SearchEngine
+from centerpokupok.models import B2CProductCategory
 from core import tasks
 from core.cbv import HybridListView
-from b24online.forms import GalleryImageForm, DocumentForm
-from centerpokupok.models import B2CProduct, B2CProductCategory
 
 logger = logging.getLogger(__name__)
 
@@ -209,13 +209,11 @@ class ItemsList(HybridListView):
 
     def get_data(self, context):
         # For JSON response
-        template = get_template(self.template_name)
-        context = RequestContext(self.request, context)
 
         return {
             'styles': self.styles,
             'scripts': self.scripts,
-            'content': template.render(context),
+            'content': render_to_string(self.template_name, context, self.request),
             'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
         }
 

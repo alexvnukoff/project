@@ -1,9 +1,7 @@
-import json
-
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.template import RequestContext, loader
+from django.template import loader
 from django.utils.translation import ugettext as _
 
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
@@ -37,7 +35,7 @@ def get_wall_list(request):
 
         }
 
-        return HttpResponse(json.dumps(serialize))
+        return JsonResponse(serialize)
 
 
 def _wall_content(request):
@@ -124,8 +122,6 @@ def _wall_content(request):
         sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
         news = news.order_by(*sort).first()
 
-    template = loader.get_template('b24online/Wall/contentPage.html')
-
     template_params = {
         'applied_filters': applied_filters,
         'sortField1': request.GET.get('sortField1', 'date'),
@@ -140,9 +136,7 @@ def _wall_content(request):
         'available_filters': list(valid_filters.keys())
     }
 
-    context = RequestContext(request, template_params)
-
-    return template.render(context)
+    return loader.render_to_string('b24online/Wall/contentPage.html', template_params, request)
 
 
 def apply_filters(request, model, q, valid_filters):

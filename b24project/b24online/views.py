@@ -4,28 +4,27 @@ import json
 import logging
 from urllib.parse import urljoin
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.core.urlresolvers import reverse
 from django.http import (HttpResponse, HttpResponseRedirect,
                     HttpResponseBadRequest, JsonResponse, HttpResponseNotFound)
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
-from django.core.urlresolvers import reverse
-from django.conf import settings
+from django.shortcuts import render_to_response, get_object_or_404, render
+from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from guardian.shortcuts import get_objects_for_user
-from django.core.mail import send_mail
 
-from b24online.cbv import ItemCreate
+from appl import func
+from b24online.Leads.utils import GetLead
 from b24online.forms import EditorImageUploadForm, FeedbackForm
 from b24online.models import (Chamber, B2BProduct, Greeting, BusinessProposal,
                     Exhibition, Organization, Branch, User)
-from appl import func
-from django.core.mail import EmailMessage
-from b24online.Leads.utils import GetLead
-
 
 logger = logging.getLogger(__name__)
 
@@ -56,11 +55,7 @@ def home(request):
     # else:
     #    templateParams = cache.get(cache_name)
 
-    template = loader.get_template('b24online/index.html')
-    context = RequestContext(request, template_params)
-    rendered = template.render(context)
-
-    return HttpResponse(rendered)
+    return render(request, 'b24online/index.html', template_params)
 
 
 @ensure_csrf_cookie
@@ -88,11 +83,10 @@ def get_notification_list(request):
         else:
             notifications = notifications.order_by("-pk")[:3]
 
-        template = loader.get_template('b24online/main/notoficationlist.html')
-        context = RequestContext(request, {'notifications': notifications, 'last_line': last_line})
-        data = template.render(context)
+        template_params = {'notifications': notifications, 'last_line': last_line}
+        data = render_to_string('b24online/main/notoficationlist.html', template_params, request)
 
-        return HttpResponse(json.dumps({'data': data, 'count': request.user.notifications.filter(read=False).count()}))
+        return JsonResponse({'data': data, 'count': request.user.notifications.filter(read=False).count()})
     else:
         return HttpResponseBadRequest()
 
@@ -132,10 +126,10 @@ def my_companies(request):
     try:
         page = int(request.GET.get('page', 1))
     except ValueError:
-        return HttpResponse(json.dumps(result))
+        return JsonResponse(result)
 
     if not request.user or not request.user.is_authenticated() or request.user.is_anonymous():
-        return HttpResponse(json.dumps(result))
+        return JsonResponse(result)
 
     if request.is_ajax():
         current_company = request.session.get('current_company', None)
@@ -159,9 +153,9 @@ def my_companies(request):
 
         result['content'] += [{'title': organization.name, 'id': organization.pk}
                               for organization in on_page.object_list]
-        return HttpResponse(json.dumps(result))
+        return JsonResponse(result)
 
-    return HttpResponse(json.dumps(result))
+    return JsonResponse(result)
 
 
 def json_filter(request):
@@ -185,9 +179,9 @@ def json_filter(request):
 
             items = [{'title': item.name, 'id': item.pk} for item in object_list]
 
-            return HttpResponse(json.dumps({'content': items, 'total': total}))
+            return JsonResponse({'content': items, 'total': total})
 
-    return HttpResponse(json.dumps({'content': [], 'total': 0}))
+    return JsonResponse({'content': [], 'total': 0})
 
 
 def get_live_top(request):
@@ -227,11 +221,8 @@ def get_additional_page(request):
 
 
 def perm_denied(request):
-    template = loader.get_template('b24online/permissionDen.html')
-    context = RequestContext(request)
-
-    return render_to_response("b24online/main/denied.html", {'DeniedContent': template.render(context)},
-                              context_instance=RequestContext(request))
+    template_params = {'DeniedContent': render_to_string('b24online/permissionDen.html', None, request)}
+    return render(request, "b24online/main/denied.html", template_params)
 
 
 def branch_list(request):

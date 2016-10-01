@@ -72,6 +72,7 @@ def reindex_instance(instance):
             index_representation.save(using=conn, index=index_name)
         deactivate()
 
+
 def create_slug(string):
     """
         Creating url slug from some string using unicode to acii decoder( unidecode library)
@@ -448,16 +449,57 @@ def get_company_questionnaire_qs(organization):
     if isinstance(organization, Company):
         b2b_content_type, b2c_content_type = map(
             lambda model_class: ContentType.objects.get_for_model(model_class),
-                (B2BProduct, B2CProduct))
+            (B2BProduct, B2CProduct))
         b2b_ids, b2c_ids = map(
             lambda model_class: \
-                [item.id for item in model_class.get_active_objects()\
+                [item.id for item in model_class.get_active_objects() \
                     .filter(company=organization)],
-                     (B2BProduct, B2CProduct))
+            (B2BProduct, B2CProduct))
         return Questionnaire.get_active_objects().filter(
             (Q(content_type=b2b_content_type) & Q(object_id__in=b2b_ids)) | \
             (Q(content_type=b2c_content_type) & Q(object_id__in=b2c_ids))
         )
     else:
         return Questionnaire.objects.none()
-    
+
+
+def find_keywords(tosearch):
+    """
+        Automatically find seo keyword on each text using python libraries
+        str to search - Text to find keywords
+    """
+
+    import string
+    import difflib
+
+    exclude = set(string.punctuation)
+    exclude.remove('-')
+    tosearch = ''.join(ch for ch in tosearch if ch not in exclude and (ch.strip() != '' or ch == ' '))
+    words = [word.lower() for word in tosearch.split(" ") if 3 <= len(word) <= 20 and word.isdigit() is False][:30]
+
+    length = len(words)
+    keywords = []
+
+    for word in words:
+        if len(difflib.get_close_matches(word, keywords)) > 0:
+            continue
+
+        count = len(difflib.get_close_matches(word, words))
+
+        precent = (count * length) / 100
+
+        if 2.5 <= precent <= 3:
+            keywords.append(word)
+
+        if len(keywords) > 5:
+            break
+
+    if len(keywords) < 3:
+        for word in words:
+            if len(difflib.get_close_matches(word, keywords)) == 0:
+                keywords.append(word)
+
+                if len(keywords) == 3:
+                    break
+
+    return ' '.join(keywords)

@@ -5,6 +5,7 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
@@ -165,4 +166,4 @@ def get_staffgroup_options(request, *args, **kwargs):
     options = [{'name': '------', 'id': ''}]
     for item in StaffGroup.objects.order_by('group__name'):
         options.append({'name': item.group.name, 'id': item.pk})
-    return HttpResponse(json.dumps(options), content_type='application/json')
+    return JsonResponse(options)

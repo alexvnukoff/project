@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
@@ -408,7 +409,7 @@ class StaticPageCreate(BaseAdminAuth, CreateView):
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.is_ajax():
-            return HttpResponse(json.dumps(self.get_data(context)), content_type="application/json")
+            return JsonResponse(self.get_data(context))
 
         return super().render_to_response(context, **response_kwargs)
 
@@ -484,7 +485,7 @@ class GreetingCreate(BaseAdminAuth, CreateView):
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.is_ajax():
-            return HttpResponse(json.dumps(self.get_data(context)), content_type="application/json")
+            return JsonResponse(self.get_data(context))
 
         return super().render_to_response(context, **response_kwargs)
 

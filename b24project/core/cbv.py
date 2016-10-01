@@ -1,6 +1,7 @@
 import json
 
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.generic.list import MultipleObjectTemplateResponseMixin, BaseListView
 
 
@@ -13,16 +14,9 @@ class JSONResponseMixin(object):
         """
         Returns a JSON response, transforming 'context' to make the payload.
         """
-        return HttpResponse(json.dumps(self.get_data(context)), content_type="application/json")
+        return JsonResponse(self.get_data(context))
 
     def get_data(self, context):
-        """
-        Returns an object that will be serialized as JSON by json.dumps().
-        """
-        # Note: This is *EXTREMELY* naive; in reality, you'll need
-        # to do much more complex handling to ensure that arbitrary
-        # objects -- such as Django model instances or querysets
-        # -- can be serialized as JSON.
         return context
 
 
