@@ -439,6 +439,9 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
 
 
 def delivery_info_json(request, **kwargs):
+    """
+    Checks and saves the DeliveryForm data.
+    """
     if request.is_ajax():
         data = {}
         if request.method == 'POST':
