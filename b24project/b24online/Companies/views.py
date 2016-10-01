@@ -2,30 +2,28 @@
 import json
 import logging
 
-
-from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
-from django.core.paginator import Paginator
-from django.db import transaction, IntegrityError
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
+from django.core.urlresolvers import reverse_lazy
+from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
+from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+from b24online.Messages.forms import MessageForm
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate,
                       GalleryImageList, DeleteGalleryImage, DeleteDocument, DocumentList)
 from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
         BusinessProposal, InnovationProject, Vacancy, Organization, Branch,
         Chamber, StaffGroup, PermissionsExtraGroup, Video)
 from centerpokupok.models import B2CProduct
-from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
-from b24online.Messages.forms import MessageForm
 
 logger = logging.getLogger(__name__)
 
@@ -310,7 +308,7 @@ def _tab_staff(request, company, page=1):
             for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
-            return HttpResponse(json.dumps(departments))
+            return JsonResponse(departments)
 
         elif action == "vacancy":
             department = int(request.GET.get("department", 0))
@@ -324,7 +322,7 @@ def _tab_staff(request, company, page=1):
                 for vacancy in department.vacancies.all().order_by('name'):
                     vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
-            return HttpResponse(json.dumps(vacancies))
+            return JsonResponse(vacancies)
 
         elif action == "add":
             user = request.POST.get('user', "").strip()
@@ -448,10 +446,7 @@ def send_message(request):
                 response_text = _('You have successfully sent the message')
         else:
             response_text = form.get_errors()
-    return HttpResponse(
-        json.dumps({'code': response_code, 'message': response_text}),
-        content_type='application/json'
-    )
+    return JsonResponse({'code': response_code, 'message': response_text})
 
 
 class CompanyUpdate(ItemUpdate):

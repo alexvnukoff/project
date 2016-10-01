@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,7 +5,8 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
 from guardian.shortcuts import get_objects_for_user
@@ -331,7 +330,7 @@ def _tab_staff(request, tpp, page=1):
             for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
-            return HttpResponse(json.dumps(departments))
+            return JsonResponse(departments)
 
         elif action == "vacancy":
             department = int(request.GET.get("department", 0))
@@ -345,7 +344,7 @@ def _tab_staff(request, tpp, page=1):
                 for vacancy in department.vacancies.all().order_by('name'):
                     vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
-            return HttpResponse(json.dumps(vacancies))
+            return JsonResponse(vacancies)
 
         elif action == "add":
             user = request.POST.get('user', "").strip()

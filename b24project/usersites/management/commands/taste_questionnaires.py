@@ -5,20 +5,16 @@ The tool to taste the :app:`Questionnaires` application.
 """
 
 import json
-import logging 
+import logging
 import random
 
-from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.translation import ugettext as _
-
-from rest_framework import status
-from rest_framework.test import APIRequestFactory, APIClient
+from django.core.management.base import BaseCommand
 from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
 # Models
-from b24online.models import User
 
 logger = logging.getLogger('debug')
 

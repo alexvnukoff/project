@@ -1,15 +1,11 @@
 import hashlib
 
-import lxml
-from PIL import Image
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.template import RequestContext, loader
 from django.utils.timezone import make_aware, is_naive, get_current_timezone, now
 from django.utils.translation import ugettext as _
-from lxml.html.clean import clean_html
 
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
@@ -17,8 +13,6 @@ from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2
     BusinessProposalCategoryIndex, SearchEngine, B2cProductCategoryIndex
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement
-from tpp.SiteUrlMiddleWare import get_request
-
 
 
 def get_paginator_range(page):
@@ -55,141 +49,6 @@ def currency_symbol(currency):
     }
 
     return symbols.get(currency.upper(), currency)
-
-
-# Deprecated
-def setStructureForHiearhy(dictinory, items):
-    '''
-      Method get hierarchy tree and list items with attribute NAME
-      and build structure of object
-      Example of usage:
-       hierarchyStructure = Category.hierarchy.getTree(10)
-       categories_id = [cat['ID'] for cat in hierarchyStructure]
-       categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-       dictStructured = func.setStructureForHiearhy(hierarchyStructure, categories)
-       will return :
-      {
-          {PARENT1}:
-                  {PARENT1:item,
-                  Child1:item},
-           {PARENT2}:
-                  {PARENT2:item,
-                  Child1:item,
-                  Child2:item},
-      }
-
-
-    '''
-    level = 0
-    dictStructured = {}
-
-    for node in dictinory:
-        if node['LEVEL'] == 1:
-            nameOfList = items[node['ID']]['NAME'][0].strip()
-            dictStructured[nameOfList] = {}
-            node['item'] = items[node['ID']]
-            dictStructured[nameOfList]['@Parent'] = node
-        else:
-            node['pre_level'] = level
-            node['item'] = items[node['ID']]
-            node['parent_item'] = items[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
-            level = node['LEVEL']
-            dictStructured[nameOfList][items[node['ID']]['NAME'][0].strip()] = node
-
-    return dictStructured
-
-
-def resize(img, box, fit, out):
-    '''Downsample the image.
-        @param img: Image -  an Image-object
-        @param box: tuple(x, y) - the bounding box of the result image
-        @param fit: boolean - crop the image to fill the box
-        @param out: file-like-object - save the image into the output stream
-        '''
-    # preresize image with factor 2, 4, 8 and fast algorithm
-
-    img = Image.open(img)
-
-    factor = 1
-    while img.size[0] / factor > 2 * box[0] and img.size[1] / factor > 2 * box[1]:
-        factor *= 2
-    if factor > 1:
-        img.thumbnail((img.size[0] / factor, img.size[1] / factor), Image.NEAREST)
-
-    # calculate the cropping box and get the cropped part
-    if fit:
-        x1 = y1 = 0
-        x2, y2 = img.size
-        wRatio = 1.0 * x2 / box[0]
-        hRatio = 1.0 * y2 / box[1]
-        if hRatio > wRatio:
-            y1 = int(y2 / 2 - box[1] * wRatio / 2)
-            y2 = int(y2 / 2 + box[1] * wRatio / 2)
-        else:
-            x1 = int(x2 / 2 - box[0] * hRatio / 2)
-            x2 = int(x2 / 2 + box[0] * hRatio / 2)
-        img = img.crop((x1, y1, x2, y2))
-
-    # Resize the image with best quality algorithm ANTI-ALIAS
-    img.thumbnail(box, Image.ANTIALIAS)
-
-    if img.mode == "CMYK":
-        img = img.convert("RGB")
-
-    # save it into a file-like object
-    img.save(out, "PNG", quality=95)
-
-
-def find_keywords(tosearch):
-    """
-        Automatically find seo keyword on each text using python libraries
-        str to search - Text to find keywords
-    """
-
-    import string
-    import difflib
-
-    exclude = set(string.punctuation)
-    exclude.remove('-')
-    tosearch = ''.join(ch for ch in tosearch if ch not in exclude and (ch.strip() != '' or ch == ' '))
-    words = [word.lower() for word in tosearch.split(" ") if 3 <= len(word) <= 20 and word.isdigit() is False][:30]
-
-    length = len(words)
-    keywords = []
-
-    for word in words:
-        if len(difflib.get_close_matches(word, keywords)) > 0:
-            continue
-
-        count = len(difflib.get_close_matches(word, words))
-
-        precent = (count * length) / 100
-
-        if 2.5 <= precent <= 3:
-            keywords.append(word)
-
-        if len(keywords) > 5:
-            break
-
-    if len(keywords) < 3:
-        for word in words:
-            if len(difflib.get_close_matches(word, keywords)) == 0:
-                keywords.append(word)
-
-                if len(keywords) == 3:
-                    break
-
-    return ' '.join(keywords)
-
-
-# def notify(message_type, notificationtype, **params):
-#     user = params['user']
-#     params['user'] = user.pk
-#     message = SystemMessages.objects.get(type=message_type)
-#     notif = Notification(user=user, message=message, create_user=user)
-#     notif.save()
-#
-#     publish_realtime(notificationtype, **params)
 
 
 def publish_realtime(publication_type, **params):
@@ -426,27 +285,6 @@ def get_list_adv_filter(request):
     return list_filter
 
 
-#deprecated
-def getActiveSQS():
-    pass
-
-
-def emptyCompany():
-    template = loader.get_template('b24online/permissionDen.html')
-    request = get_request()
-    context = RequestContext(request, {})
-    page = template.render(context)
-    return page
-
-def clean_from_html(value):
-    if len(value) > 0:
-        document = lxml.html.document_fromstring(value)
-        raw_text = document.text_content()
-        return raw_text
-    else:
-        return ""
-
-
 def show_toolbar(request):
     if request.user.is_authenticated():
         if request.user.is_superuser:
@@ -454,19 +292,6 @@ def show_toolbar(request):
 
     return False
 
-
-def make_object_dates_aware(obj):
-    timezoneInfo = get_current_timezone()
-
-    if obj.end_date and is_naive(obj.end_date):
-        obj.end_date = make_aware(obj.end_date, timezoneInfo)
-        obj.save()
-
-    if obj.start_date and is_naive(obj.start_date):
-        obj.start_date = make_aware(obj.start_date, timezoneInfo)
-        obj.save()
-
-    return obj
 
 
 def autocomplete_filter(filter_key, q, page):
@@ -532,16 +357,6 @@ def autocomplete_filter(filter_key, q, page):
         paginator = Paginator(objects, 10)
 
         return paginator.page(page).object_list, paginator.count
-
-
-def get_categories_data_for_products(object_list):
-    new_object_list = []
-
-    # for obj in object_list:
-    #     obj.__setattr__('categories', SearchQuerySet().models(Category).filter(django_id__in=obj.categories))
-    #     new_object_list.append(obj)
-
-    return new_object_list
 
 
 def verify_ipn_request(payment_obj):
