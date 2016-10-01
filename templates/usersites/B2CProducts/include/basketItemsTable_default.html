@@ -25,6 +25,18 @@
                         {{ product.get_discount_price|formatPrice }} {{ product.currency|getSymbol }}
                     </td>
                 </tr>
+
+                {# Delivery info #}
+                {% if form.need_delivery %}
+                <tr>
+                    <td align="left">{% trans 'Delivery cost' %}</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        {{ site.user_site.delivery_cost|formatPrice }}
+                        {{ site.user_site.delivery_currency|getSymbol }} 
+                    </td>
+                </tr>
+                {% endif %}
             {% else %}
                 {% for i in basket.src %}
                 <tr>
@@ -46,22 +58,8 @@
                     <strong>{% trans 'Total' %}:</strong>
                 </td>
                 <td align="center">
-                    <strong>{{ total }}</strong>
+                    <strong>{{ total }} {{ currency|getSymbol }}</strong>
                 </td>
             </tr>
-            {% if form.need_delivery %}
-            <tr>
-                <td>&nbsp;</td>
-                <td align="center">
-                    <strong>{% trans 'Delivery cost' %}:</strong>
-                </td>
-                <td align="center">
-                    <strong>
-                        {{ site.user_site.delivery_cost|formatPrice }}
-                        {{ site.user_site.delivery_currency|getSymbol }} 
-                    </strong>
-                </td>
-            </tr>
-            {% endif %}
         </tbody>
     </table>

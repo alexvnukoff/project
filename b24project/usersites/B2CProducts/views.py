@@ -403,9 +403,13 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
             except ValueError as exc:
                 quantity = 0
             
-            context.update({'product': product, 'quantity': quantity})
+            context.update({
+                'product': product, 
+                'quantity': quantity,
+                'currency': product.currency,
+            })
+            total = product.get_discount_price() * quantity
             if product.currency and product.cost and quantity:
-
                 paypal_dict = {
                     "business": product.company.company_paypal_account or '',
                     "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
@@ -425,6 +429,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     paypal_dict['amount_2'] = current_user_site.delivery_cost
                     paypal_dict['item_name_2'] = _('Delivery cost')
                     paypal_form = PayPalBasketForm(None, initial=paypal_dict)
+                    total += paypal_dict['amount_2']
                 else: 
                     paypal_dict.update({
                         'amount': product.get_discount_price,
@@ -434,6 +439,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
 
         context.update({
             'paypal_form': paypal_form, 
+            'total': total,
         })
         return context
 
