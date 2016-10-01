@@ -4,12 +4,11 @@
 The views for Questionnaires, Questions etc
 """
 
-import json
 import logging
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import (HttpResponse, HttpResponseRedirect, Http404,
+from django.http import (HttpResponseRedirect, Http404,
                          HttpResponseBadRequest)
 from django.http import JsonResponse
 from django.template.loader import render_to_string

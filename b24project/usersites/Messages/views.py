@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-import json
 import logging
 
 from django.contrib.auth.decorators import login_required
-from django.http import (HttpResponse, HttpResponseBadRequest)
+from django.http import (HttpResponseBadRequest)
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
