@@ -112,7 +112,7 @@
             {% endif %}
             <p>
                 {% autoescape off %}
-                    {{ item.short_description|cleanHtml|linebreaks }}
+                    {{ item.short_description|cleanHtml|safe|linebreaks }}
                 {% endautoescape %}
             </p>
         </div>

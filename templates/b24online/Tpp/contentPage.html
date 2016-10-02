@@ -30,7 +30,7 @@
                         {% endif %}
                         <div class="desc">
                             {% if tpp.short_description %}
-                                {{ tpp.short_description|cleanHtml|linebreaks }}
+                                {{ tpp.short_description|cleanHtml|safe|linebreaks }}
                             {% else %}
                                 {{ tpp.description|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
