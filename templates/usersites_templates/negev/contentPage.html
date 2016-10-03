@@ -98,7 +98,7 @@
                         {# Business Offer header  #}
                         <h3 class="special_offer__header">{{ proposal.title }}</h3>
                         {# limit to 180 char to keep the design. if there is more there will be 3 points... #}
-                        <p class="special_offer__p">{{ proposal.description|cleanHtml|safe|removetags:"p"|truncatewords_html:"25" }}</p>
+                        <p class="special_offer__p">{{ proposal.description|cleanHtml:"p"|safe|truncatewords_html:"25" }}</p>
                         <p class="special_offer__p">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
                       </div>
                       <div class="col-md-4 offer-btn">

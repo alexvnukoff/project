@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-import json
 import logging
 
 from django.conf import settings
@@ -9,6 +8,8 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import transaction, IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.template import loader
 from django.utils.decorators import method_decorator
@@ -472,8 +473,6 @@ def delivery_info_json(request, **kwargs):
                     'errors': form.get_errors(),
                     'msg': _('There are some errors'),
                 })
-            return HttpResponse(
-                json.dumps(data), 
-                content_type='application/json'
-            )
+            return JsonResponse(data)
+
     return HttpResponseBadRequest()

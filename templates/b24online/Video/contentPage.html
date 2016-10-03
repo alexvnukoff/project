@@ -40,9 +40,7 @@
                     {{ video.created_at|date:'d M Y' }}, <a href="{{ video.organization.get_absolute_url }}" title="{{ video.organization.name }}">{{ video.organization.name }}</a></p>
                     <p>
                         {% if video.short_description %}
-                            {% autoescape off %}
-                                {{ video.short_description|force_escape|linebreaks }}
-                            {% endautoescape %}
+                            {{ video.short_description|cleanHtml|safe|linebreaks }}
                         {% else %}
                             {{ video.content|cleanHtml|safe|truncatewords_html:"30" }}
                         {% endif %}

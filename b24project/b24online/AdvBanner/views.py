@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.generic import ListView, DetailView
@@ -159,7 +160,7 @@ def adv_json_filter(request):
     try:
         page = int(request.GET.get('page', None))
     except ValueError:
-        return HttpResponse(json.dumps({'content': [], 'total': 0}))
+        return JsonResponse({'content': [], 'total': 0})
 
     if filter_model and (len(q) >= 3 or len(q) == 0):
         obj_list, total = func.autocomplete_filter(filter_model, q, page)
@@ -184,9 +185,9 @@ def adv_json_filter(request):
 
                 items.append(result_dict)
 
-            return HttpResponse(json.dumps({'content': items, 'total': total}))
+            return JsonResponse({'content': items, 'total': total})
 
-    return HttpResponse(json.dumps({'content': [], 'total': 0}))
+    return JsonResponse({'content': [], 'total': 0})
 
 
 class OrderDetail(DetailView):

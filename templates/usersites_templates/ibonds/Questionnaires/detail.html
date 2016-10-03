@@ -43,12 +43,16 @@
     <section class="content__info grid-layout">
         <div class="container">
             <div class="data">
+                <article>
                 <h2 class="page-header">{{ object.name }}</h2>
                 <hr class="hr-divider-one">
                 <div id="description">
                     {% if object.image %}<img id="item_image" src="{{ object.image.big }}" />{% endif %}
                     {{ object.short_description }}
+                </article>
                 </div>
+                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57e022d670e3f980"></script>
+
                 <div class="data">
                     <form action="" method="post">
                     {% csrf_token %}
