@@ -1,38 +1,34 @@
 # -*- encoding: utf-8 -*-
 
-import sys
 import json
 import logging
 
-from django.db import transaction
-from django.db.models import Q, Count
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
-from django.shortcuts import render_to_response, render
-from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.db import transaction
+from django.db.models import Q, Count
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.utils.timezone import now
-from django.views.generic import (DetailView, ListView, View,
-                                  TemplateView)
-from guardian.shortcuts import get_objects_for_user
+from django.utils.translation import ugettext as _
+from django.views.generic import (DetailView, ListView)
 from guardian.mixins import LoginRequiredMixin
+from paypal.standard.forms import PayPalPaymentsForm
 
-from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
-                   ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
-                   DeleteDocument, DocumentList
-from b24online.models import (B2BProduct, Company, Chamber, Country,
-    B2BProductCategory, DealOrder, Deal, DealItem, Organization, Producer)
-from centerpokupok.models import B2CProduct, B2CProductCategory
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
     ProducerForm)
-from paypal.standard.forms import PayPalPaymentsForm
-from usersites.models import UserSite
+from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
+                   ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
+                   DeleteDocument, DocumentList
+from b24online.models import (B2BProduct, Company, B2BProductCategory, DealOrder, Deal, DealItem, Producer)
 from b24online.utils import (get_current_organization, get_permitted_orgs,
                              MTTPTreeBuilder)
+from centerpokupok.models import B2CProduct, B2CProductCategory
+from usersites.models import UserSite
 
 logger = logging.getLogger(__name__)
 
@@ -1069,10 +1065,7 @@ def category_tree_json(request, b2_type='b2b'):
         extract_data_fn=extract_data_fn,
     )
     data = tree_builder()
-    return HttpResponse(
-        json.dumps(data),
-        content_type='application/json'
-    )
+    return JsonResponse(data)
 
 
 @login_required

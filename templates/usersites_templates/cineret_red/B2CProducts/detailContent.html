@@ -76,7 +76,7 @@
                     <input type="hidden" name="extra_params_uuid" value="{{ extra_params_uuid }}">
                     {% endif %}
 
-                    <input type="hidden" name="product_id" value="{{ object.pk }}">
+                    <input type="hidden" id="product_id" name="product_id" value="{{ object.pk }}">
                     <input type="hidden" name="currency" value="{{ object.currency }}">
                     <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
                     <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
@@ -119,7 +119,7 @@
 {#                      <form class="form-inline">#}
                         <div class="form-group">
                           <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                            <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
+                            <input type="text" id="id_quantity_src" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
                           <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
                         </div>
                           {% b2b_social_buttons object.image object.name object.description %}
@@ -137,20 +137,21 @@
                 {% endif %}
 
                 </form>
-
+                {% if object.cost %}
+                    {% include "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
                     {% if paypal_form %}
-                        <div style="">{{ paypal_form.render }}</div>
+                        <div id="paypal_form_layer">
+                            {{ paypal_form.render }}
+                        </div>
                     {% else %}
-                        <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                        {# <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Contact us' %}</a> #}
                     {% endif %}
+                {% endif %}
+                <h4>{% trans 'About Company' %}</h4>
+                <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
 
-                    <h4>{% trans 'About Company' %}</h4>
-
-                    <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
-
-                    {% if not object.cost %}
-
-                <div class="row">
+                {% if not object.cost %}
+                    <div class="row">
                           <div class="col-lg-12" id="product-lead">
                               <h3>{% trans 'Countact us' %}</h3>
                               <form class="form-inline" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
@@ -187,6 +188,7 @@
 {% endblock %}
 
 {% block js %}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
     <script>
         $(".inc").on("click", function() {
 

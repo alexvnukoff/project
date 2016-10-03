@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan_blue/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -21,8 +21,8 @@
         <div class="row">
 
             <!-- Contact Details Column -->
-            <div class="col-md-4 contact-info">
-                <h2 class="page-header section-header-rest">{% trans 'Ask a question' %}</h2>
+            <div class="col-md-4 contact-info well">
+{#                <h2 class="page-header section-header-rest">{% trans 'Ask a question' %}</h2>#}
                 <p>
                     {% trans 'Address' %}:&nbsp;{{ object.address }}<br>
                 </p>

@@ -1,0 +1,146 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load content_tags %}
+{% load inclusionTags %}
+
+{#-------------------------------#}
+
+      <div class="container">
+        <div class="row">
+
+            {% if site.user_site.organization.gallery_images %}
+
+                <div class="col-sm-8 col-xs-12 galleryCarousel-wrapper">
+
+                    <div class="row" id="carousel-bounding-box">
+                        <div class="carousel slide" id="galleryCarousel">
+                            <!-- Carousel items -->
+                            <div class="carousel-inner">
+
+                                {% for gallery_obj in site.user_site.organization.gallery_images %}
+                                    {% if forloop.counter == 1 %}
+                                        <div class="active item" data-slide-number="{{ forloop.counter }}">
+                                    {% else %}
+                                        <div class="item" data-slide-number="{{ forloop.counter }}">
+                                    {% endif %}
+
+                                    <img src="{{ gallery_obj.image.original }}"></div>
+                                {% endfor %}
+                            </div><!-- Carousel nav -->
+
+                            <a class="left carousel-control" href="#galleryCarousel" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#galleryCarousel" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                     <div class="row hidden-xs" id="slider-thumbs">
+                            <!-- Bottom switcher of slider -->
+                            <ul class="hide-bullets">
+
+                                {% for gallery_obj in site.user_site.organization.gallery_images %}
+                                    <li class="thumb-link">
+                                        <a class="thumbnail" id="carousel-selector-{{ forloop.counter }}"><img src="{{ gallery_obj.image.original }}"></a>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+              <div class="slider-wrapper fluid_container col-sm-8">
+                    <!-- Slider starts here -->
+                  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                      <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                      <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                      <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+
+                        {% if site.user_site.slider_images|length == 0 %}
+                        <div data-slide-no="0" class="item carousel-item active">
+                          <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" />
+                        </div>
+                        <div data-slide-no="1" class="item carousel-item active">
+                          <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" />
+                        </div>
+                        <div data-slide-no="2" class="item carousel-item active">
+                          <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" />
+                        </div>
+
+                    {% else %}
+                        {% for i in site.user_site.slider_images %}
+                            {% if forloop.first %}
+                                <div data-slide-no="{{ forloop.counter }}" class="item carousel-item active">
+                                    <img src="{{ i.image.original }}" height="625px" width="1140px">
+                                </div>
+                            {% else %}
+                                <div data-slide-no="{{ forloop.counter }}" class="item carousel-item">
+                                    <img src="{{ i.image.original }}" height="625px" width="1140px">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+
+                    </div><!-- /carousel-inner -->
+
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div><!-- End of Slider -->
+              </div>
+            {% endif %}
+
+            <div class="carusel-sidebar col-sm-4 col-xs-12">
+
+                {% if site.user_site.domain_part == "aladin" %}
+
+                    <div id="reserveRoom">
+                       {% include 'usersites_templates/galil_3/aladin_code.html' %}
+                    </div>
+
+                {% else %}
+
+                    <div class="banner">
+
+                        {% check_banner_exist "SITES LEFT 1" as left_banner_1 %}
+                        {% if left_banner_1 %}
+                            <div class="banner-main-page">
+                                {% site_banner "top" "SITES LEFT 1" %}
+                            </div>
+                        {% endif %}
+    {#                    reserve a room code #}
+
+
+                    </div>
+
+            {% endif %}
+
+            </div>
+        </div>
+      </div>
+
+{#-------------------------------#}
+      <script>
+{#          alert( {{ site.user_site.organization.name }} );#}
+      </script>
+
+

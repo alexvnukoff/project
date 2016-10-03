@@ -233,7 +233,8 @@ DATABASES = {
         'USER': 'b24online',
         'PASSWORD': 'b24online**',
         'HOST': 'b24online-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
-        'PORT': '5432'
+        'PORT': '5432',
+        'CONN_MAX_AGE': 60
     }
 }
 
@@ -301,6 +302,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_by_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
+    'b24online.models.user_extended_profile',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
@@ -342,6 +344,9 @@ MODELTRANSLATION_AUTO_POPULATE = 'required'
 
 ELASTIC_SEARCH_HOSTS = ['ec2-54-72-220-8.eu-west-1.compute.amazonaws.com']
 
+############################# LXML settings ################################
+ALLOWED_IFRAME_HOSTS = ['www.youtube.com']
+
 ############################# AWS settings ################################
 
 AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
@@ -359,6 +364,9 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 import djcelery
 
 djcelery.setup_loader()
+
+######################## DJANGO GUARDIAN SETTINGS #########################
+GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
 
 ##################### Tornado settings ####################################
 ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'

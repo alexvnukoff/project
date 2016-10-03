@@ -11,7 +11,7 @@
           <div class="item  active">
             <div class="row">
                 {% for product in products|slice:":3" %}
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-4">
                         <a class="thumbnail" href="{% url 'b2c_products:detail' product.slug product.pk %}"><img alt="" src="{{ product.image.big }}"></a>
                       </div>
                 {% endfor %}
@@ -21,7 +21,7 @@
           <div class="item">
             <div class="row">
               {% for product in products|slice:"3:6" %}
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-4">
                         <a class="thumbnail" href="{% url 'b2c_products:detail' product.slug product.pk %}"><img alt="" src="{{ product.image.big }}"></a>
                       </div>
                 {% endfor %}
@@ -31,7 +31,7 @@
           <div class="item">
             <div class="row">
               {% for product in products|slice:"6:9" %}
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-4">
                         <a class="thumbnail" href="{% url 'b2c_products:detail' product.slug product.pk %}"><img alt="" src="{{ product.image.big }}"></a>
                       </div>
                 {% endfor %}

@@ -2,14 +2,13 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
-from b24online.models import Branch, BusinessProposal, Organization, BusinessProposalCategory
 from b24online.BusinessProposal.forms import BusinessProposalForm, AdditionalPageFormSet
 from b24online.cbv import ItemUpdate, ItemsList, ItemDetail, ItemCreate, ItemDeactivate, GalleryImageList, \
     DeleteGalleryImage, DocumentList, DeleteDocument
+from b24online.models import Branch, BusinessProposal, Organization, BusinessProposalCategory
 
 
 class BusinessProposalList(ItemsList):

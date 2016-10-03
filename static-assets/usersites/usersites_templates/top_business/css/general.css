@@ -14,6 +14,10 @@ body {
 	padding-left: 30px;
 }
 
+p, div {
+    font-size: 15px;
+}
+
 h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 {
     text-decoration: none;
@@ -30,16 +34,26 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 
 /** Navigation Styling ***************/
 /*********************************/
+#navbarCollapse .navbar-nav>li>.dropdown-submenu li{
+	white-space: nowrap;
+}
+
+#navbarCollapse .dropdown-submenu>li>a {
+	padding: 3px 5px;
+}
+
 #cart-dropdown,
 #lang-dropdown{
 	display: none;
 }
 
 /*lang styling*/
-#lang-dropdown{
-	width: 260px;
-	padding: 8px;
-	background: #f8f8f8;
+#lang-dropdown {
+    width: 300px;
+    padding: 8px;
+    background: #f8f8f8;
+    position: absolute;
+   margin-right: -100px;
 }
 
 #cart-menu li:hover #lang-dropdown{
@@ -538,6 +552,10 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	width: 100%;
 }
 
+.banners-container{
+	margin-bottom: 15px;
+}
+
 /** News Styling ***************/
 /*********************************/
 .main-news__img{
@@ -645,6 +663,7 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 /*********************************/
 .main-proposal__well{
 	padding-bottom: 5px;
+	background-image: none;
 }
 
 .clear {
@@ -709,6 +728,18 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 
 .about-container{
 	padding: 0 0 25px 0;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.about-container{
+		padding: 0 25px 25px 0;
+		margin: 0;
+	}
+
+	.about-container h1{
+		padding: 10px;
+	}
 }
 
 
@@ -947,6 +978,10 @@ i.red{
     /*border-top: solid 1px #eee;*/
 }
 
+.cart table .tb-img{
+	max-width: 250px;
+}
+
 @media (max-width: 991px){
 	.cart-page-box .box-footer .btn {
 	    margin-bottom: 20px;
@@ -988,6 +1023,25 @@ i.red{
 	.xs-cart-container{
 		padding: 0;
 	}
+
+	.cart table .tb-img{
+		max-width: 50px;
+	}
+
+	.cart table h3{
+		font-size: 14px;
+		margin-top: 5px;
+    	margin-bottom: 0;
+	}
+
+	.cart .table>tbody>tr>td,
+	.cart .table>tbody>tr>th,
+	.cart .table>tfoot>tr>td,
+	.cart .table>tfoot>tr>th,
+	.cart .table>thead>tr>td,
+	.cart .table>thead>tr>th{
+		padding: 2px;
+	}
 }
 
 /** Contact Styling ***************/
@@ -1017,7 +1071,7 @@ footer {
     position: absolute;
     left: 0;
     bottom: 0;
-    /*height: 450px;*/
+    height: 180px;
     width: 100%;margin: 0;
 	padding: 20px 0 0 0;
 	margin-top: 20px;
@@ -1054,6 +1108,10 @@ footer p{
 
 .footer-menu a{
     text-decoration: none;
+}
+
+.footer-container>div{
+
 }
 
 /* table responsive for pages */

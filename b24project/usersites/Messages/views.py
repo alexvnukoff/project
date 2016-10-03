@@ -1,12 +1,11 @@
 # -*- encoding: utf-8 -*-
 
-import json
 import logging
 
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from django.http import (HttpResponse, HttpResponseBadRequest)
-from django.template import RequestContext
+from django.http import (HttpResponseBadRequest)
+from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from guardian.mixins import LoginRequiredMixin
@@ -20,7 +19,7 @@ from usersites.mixins import UserTemplateMixin
 logger = logging.getLogger(__name__)
 
 
-class UsersitesChatsListView(UserTemplateMixin, 
+class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
                              ItemsList):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
@@ -30,26 +29,26 @@ class UsersitesChatsListView(UserTemplateMixin,
     scripts = []
     styles = []
     without_json = True
-    
+
     def get_context_data(self, **kwargs):
-        context = super(UsersitesChatsListView, self)\
-            .get_context_data(**kwargs)
+        context = super(UsersitesChatsListView, self).get_context_data(**kwargs)
         self.object_list = self.get_queryset()
+
         only_refresh = self.kwargs.get('refresh')
+
         if not only_refresh:
             new_message_form = MessageForm(
                 self.request,
                 data=self.request.POST,
                 files=self.request.FILES) \
             if self.request.method == 'POST' else MessageForm(self.request)
-
             context.update({
                 'new_message_form': new_message_form,
                 'participant': self.participant,
             })
-
         else:
             self.template_name = '{template_path}/Messages/chatsRefresh.html'
+
         return context
 
     def get_queryset(self):
@@ -95,10 +94,8 @@ def add_to_chat(request):
                 'errors': form.get_errors(),
                 'msg': _('There are some errors'),
             })
-        return HttpResponse(
-            json.dumps(data),
-            content_type='application/json'
-        )
+        return JsonResponse(data)
+
     return HttpResponseBadRequest()
 
 
@@ -136,12 +133,8 @@ def online_adviser(request, *args, **kwargs):
     template_name = 'usersites/Messages/onlineAdviser.html'
     form = MessageForm(request, compact=True)
     context = {'new_message_form': form}
-    data = {
+
+    JsonResponse({
         'title': _(u'Your question'),
-        'msg': render_to_string(template_name, context, 
-            context_instance=RequestContext(request))
-    }
-    return HttpResponse(
-        json.dumps(data),
-        content_type='application/json'
-    )
+        'msg': render_to_string(template_name, context, request)
+    })

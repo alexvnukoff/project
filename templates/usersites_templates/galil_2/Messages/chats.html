@@ -1,0 +1,202 @@
+{% extends 'usersites_templates/galil_2/index.html' %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block after_css %}
+  <link rel="stylesheet" href="{% static 'usersites/css/messages.css' %}">
+{% endblock %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  <!-- section class="content__info grid-layout" -->
+    
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+    <div class="container" id="chats">
+      <div class="row">
+        <div class="col-md-4 col-sm-4">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 heading">
+              <h4>{% trans 'Your chats list' %}</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 chats-list">
+              <ul id="chat_tabs" class="nav nav-tabs">
+                <li class="active">
+                  <a href="#chats_list_tab" 
+                    aria-controls="chats_list" 
+                    role="tab" 
+                    data-toggle="tab">{% trans 'Your chats' %}</a></li>
+                <li>
+                  <a href="#add_new_chat_tab" 
+                    aria-controls="add_new_chat_tab" 
+                    role="tab" 
+                    data-toggle="tab">{% trans 'New chat' %}</a></li>
+              </ul>
+              
+              <div class="tab-content">
+                <div id="chats_list_tab" role="tabpanel" class="tab-pane fade in active">
+                  <div class="container-fluid">
+                    {% if page_obj.has_previous %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad text-center">
+                        <a href="{% url 'messages:chats_paginator' page=page_obj.previous_page_number %}"><img src="{% static 'usersites/images/up.png' %}"></a>
+                      </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad">
+                        <ul id="chats_list" class="list-group chats-list">
+                          {% for chat in page_obj.object_list %}
+                            {% get_chat_other_side chat as other_side %}
+                            <li class="list-group-item {% if chat.created_by != request.user %}incoming-chat{% else %}outgoing-chat{% endif %}">
+                              <span class="thumb">
+                                {% if other_side.profile.avatar %}
+                                  <img src="{{ other_side.profile.avatar.th }}" />
+                                {% else %}
+                                  <img style="width: 24px;height: 24px;" 
+                                    src="{% static 'b24online/img/profile.jpg' %}" />
+                                {% endif %}
+                              </span>
+                              <a class="no-decoration" 
+                                data-url="{% url 'messages:chat_messages' chat.pk  %}" 
+                                data-chat-id="{{ chat.pk }}" href="#">{% if other_side.profile.full_name %}{{ other_side.profile.full_name }}{% else %}{{ other_side.email }}{% endif %}</a>
+                            </li>
+                          {% empty %}
+                            <h4 class="list-group-item" style="border: none;">{% trans 'There are no records yet' %}</h4>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                    {% if page_obj.has_next %}
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 smallpad text-center">
+                        <a href="{% url 'messages:chats_paginator' page=page_obj.next_page_number %}"><img src="{% static 'usersites/images/down.png' %}"></a>
+                      </div>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+                
+                {% if new_message_form %}
+                <div id="add_new_chat_tab" role="tabpanel" class="tab-pane fade">
+                  <div class="content">
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12">
+                        <form id="new_message_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="form-group">
+                            <label for="recipient" class="required">{{ new_message_form.recipient.label }}</label>
+                            {{ new_message_form.recipient }}
+                            <span id="id_recipient_errors" class="field-error help-inline error-hidden"></span>
+                          </div>
+                          <div class="form-group">
+                            <label for="subject">{{ new_message_form.subject.label }}</label>
+                            {{ new_message_form.subject }}
+                            <span id="id_subject_errors" class="field-error help-inline error-hidden"></span>
+                          </div>
+                          <div class="form-group">
+                            <label for="content" class="required">{{ new_message_form.content.label }}</label>
+                            {{ new_message_form.content }}
+                            <span id="id_content_errors" class="field-error help-inline error-hidden"></span>
+                          </div>
+                          <div class="form-group">
+                            <label for="attachment">{{ new_message_form.attachment.label }}</label>
+                            {{ new_message_form.attachment }}
+                            <span id="id_attachment_errors" class="field-error help-inline error-hidden"></span>
+                          </div>
+                          <button class="save-new-message btn btn-default">{% trans 'Send message' %}</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-7 col-sm-7">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-md-offset-1 col-sm-offset-1 heading">
+              <h4>{% trans 'Chat content' %}</h4>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="chat_messages" class="col-md-12 col-sm-12 col-md-offset-1 col-sm-offset-1">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="container-fluid">
+                    <div class="row">
+                      <div class="chat-title" id="chat_title"></div>
+                    </div>
+                    <div class="row">                  
+                      <div class="col-md-12 col-sm-12" id="messages_list"></div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="add_to_chat" class="col-md-12 col-sm-12 col-md-offset-1 col-sm-offset-1" 
+              style="margin-top: 15px;">
+              <form id="add_to_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="new_message_chat_id" name="chat" value="" />
+                <div class="form-group">
+                  <label for="content" class="required">{% trans 'New message' %}</label>
+                  <textarea class="form-control" cols="30" id="id_content" name="content" rows="3"></textarea>
+                  <span id="id_content_errors" class="field-error help-inline error-hidden"></span>
+                </div>
+                <div class="form-group">
+                  <label for="content" class="required">{% trans 'Message attachment' %}</label>
+                  <input id="id_attachment" class="file-attachment" type="file" name="attachment"> 
+                </div>
+                
+                <button class="save-new-message btn btn-default">{% trans 'Send message' %}</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- /section -->
+{% endblock %}
+
+{% block adviser %}{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+  <script type="text/javascript" src="{% static 'usersites/js/messages.js' %}"></script>
+  <script type="text/javascript">
+    $(function(){
+      function addOneMoreInput() {
+        $('.file-attachment').last().change(function() {
+          $(this).after('<input name="attachment" class="file-attachment" type="file" />');
+          $(this).off('change');  
+          addOneMoreInput();
+        });
+      }
+      addOneMoreInput();
+    });
+  </script>
+
+{% endblock %}
+
+

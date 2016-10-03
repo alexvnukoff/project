@@ -132,7 +132,7 @@
                         <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
                     {% endif %}
 
-                    <button id="result" class="button more btn-default special_offer__btn coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
+                    <button id="result" class="button more btn-default coupon-panel__btn"><span class="glyphicon glyphicon-shopping-cart"></span>{% trans 'Add to basket' %}</button>
 
                 {% endif %}
 
@@ -144,7 +144,7 @@
                         <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                     {% endif %}
 
-                    <h4>{% trans 'About Company' %}</h4>
+{#                    <h4>{% trans 'About Company' %}</h4>#}
 
                     <p class="product-page-desc">{{ object.description|cleanHtml|safe }}</p>
 

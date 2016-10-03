@@ -1,18 +1,47 @@
-{% extends 'usersites/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load i18n %}
 {% block content %}
 
-    <section class="content__info">
-        <h3>{% trans 'Gallery' %}</h3>
+    {% if site.user_site.organization.gallery_images %}
 
-                <ul class="gallery">
-                    {% for gallery_obj in site.user_site.organization.gallery_images %}
-                    <figure>
-                        <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
-                            <img src="{{ gallery_obj.image.big }}">
+      <div class="container gal-container">
+         <div class="row">
+            <h1>{% trans 'Gallery' %}</h1>
+         </div>
+
+        <div class="gal-items">
+
+            {% for gallery_obj in site.user_site.organization.gallery_images %}
+                {% if forloop.counter == 1 %}
+                    <div class="col-md-8 col-sm-12 co-xs-12 gal-item">
+                {% else %}
+                    <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
+                {% endif %}
+
+                    <div class="box">
+                        <a href="#" data-toggle="modal" data-target="#{{ forloop.counter }}">
+                          <img src="{{ gallery_obj.image.original }}">
                         </a>
-                    </figure>
+                        <div class="modal fade" id="{{ forloop.counter }}" tabindex="-1" role="dialog">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              <div class="modal-body">
+                                <img src="{{ gallery_obj.image.original }}">
+                              </div>
+    {#                            <div class="col-md-12 description">#}
+    {#                              <h4>This is the first one on my Gallery</h4>#}
+    {#                            </div>#}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                {% endfor %}
-                </ul>
+                    </div>
+            {% endfor %}
+
+        </div>
+      </div>
+
+    {% endif %}
 {% endblock %}

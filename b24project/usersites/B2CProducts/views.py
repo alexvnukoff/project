@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-import json
 import logging
 
 from django.conf import settings
@@ -9,6 +8,8 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import transaction, IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.template import loader
 from django.utils.decorators import method_decorator
@@ -158,10 +159,10 @@ class B2CProductBasket(View):
             paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
 
         else:
-            if basket.summary:
+            if basket.summary():
                 paypal_dict.update({
                     'business': basket.paypal,
-                    'amount': basket.summary,
+                    'amount': basket.summary(),
                     'notify_url': '{0}://{1}{2}'.format(self.request.scheme, get_current_site().domain, reverse('paypal-ipn')),
                     'return_url': request.build_absolute_uri(),
                     'cancel_return': request.build_absolute_uri(),
@@ -175,7 +176,7 @@ class B2CProductBasket(View):
         data = {
             'title': _('B2C Basket'),
             'basket': dict(src=basket),
-            'total': basket.summary,
+            'total': basket.summary(),
             'paypal_form': paypal_form,
         }
 
@@ -225,7 +226,7 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
         has = basket.count
         context = super(B2CProductByEmail, self).get_context_data(**kwargs)
         context['basket'] = dict(src=basket)
-        context['total'] = basket.summary
+        context['total'] = basket.summary()
         return context
 
     def form_valid(self, form):
@@ -329,11 +330,13 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
         except (TypeError, ValueError, B2CProduct.DoesNotExist) as exc:
             product = None
 
+        total = 0
+        
         if not product:    
             basket = Basket(self.request)
             has = basket.count
             context['basket'] = dict(src=basket)
-            context['total'] = basket.summary
+            total = basket.summary()
 
             # Сколько наименований товаров в Корзине
             basket_items_total = len(list(basket))
@@ -363,10 +366,11 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     and current_user_site.delivery_currency:
                     paypal_dict['amount_%d' % i] = current_user_site.delivery_cost
                     paypal_dict['item_name_%d' % i] = _('Delivery cost')
-                    
+                    total += current_user_site.delivery_cost
+                        
                 paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
             else:
-                if basket.summary:
+                if basket.summary():
                     try:
                         item_name = list(basket)[0].product.name
                     except (AttributeError, IndexError):
@@ -391,6 +395,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                         paypal_dict['amount_2'] = current_user_site.delivery_cost
                         paypal_dict['item_name_2'] = _('Delivery cost')
                         paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
+                        total += current_user_site.delivery_cost
                     else: 
                         paypal_dict.update({
                             'amount': basket.summary,
@@ -403,9 +408,13 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
             except ValueError as exc:
                 quantity = 0
             
-            context.update({'product': product, 'quantity': quantity})
+            context.update({
+                'product': product, 
+                'quantity': quantity,
+                'currency': product.currency,
+            })
+            total = product.get_discount_price() * quantity
             if product.currency and product.cost and quantity:
-
                 paypal_dict = {
                     "business": product.company.company_paypal_account or '',
                     "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
@@ -425,6 +434,7 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     paypal_dict['amount_2'] = current_user_site.delivery_cost
                     paypal_dict['item_name_2'] = _('Delivery cost')
                     paypal_form = PayPalBasketForm(None, initial=paypal_dict)
+                    total += paypal_dict['amount_2']
                 else: 
                     paypal_dict.update({
                         'amount': product.get_discount_price,
@@ -434,11 +444,15 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
 
         context.update({
             'paypal_form': paypal_form, 
+            'total': total,
         })
         return context
 
 
 def delivery_info_json(request, **kwargs):
+    """
+    Checks and saves the DeliveryForm data.
+    """
     if request.is_ajax():
         data = {}
         if request.method == 'POST':
@@ -459,8 +473,6 @@ def delivery_info_json(request, **kwargs):
                     'errors': form.get_errors(),
                     'msg': _('There are some errors'),
                 })
-            return HttpResponse(
-                json.dumps(data), 
-                content_type='application/json'
-            )
+            return JsonResponse(data)
+
     return HttpResponseBadRequest()

@@ -3,8 +3,9 @@
 {% load staticfiles %}
 {% load humanize %}
 <section class="content__info">
+       {% include 'usersites_templates/top_business/b2cproducts/Paginator.html' %}
+
     <div class="container">
-       {% include 'usersites_templates/golan_blue/b2cproducts/Paginator.html' %}
 
                     <section class="content__info__products">
                         <h2 class="page-header">{% trans 'Search B2C Products' %}</h2>
@@ -66,6 +67,7 @@
 
                     </section>
 
-        {% include 'usersites_templates/golan_blue/b2cproducts/Paginator.html' %}
     </div>
+        {% include 'usersites_templates/top_business/b2cproducts/Paginator.html' %}
+
 </section>

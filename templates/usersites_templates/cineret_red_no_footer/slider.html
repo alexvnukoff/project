@@ -34,7 +34,7 @@
                     {% if forloop.first %}
                         <div class="item active ">
                             <img src="{{ i.image.original }}" >
-                            <a href="{{ i.link }}" class="slider-desc" title="{% if i.description %}{{ i.description }}{% endif %}">
+                            <a href="{{ i.link }}" class="slider-desc" title="{% if i.description %}{{ i.description }}{% endif %}" class="slider-desc">
                                 {% if i.description %}
                                     {{ i.description }}
                                 {% endif %}

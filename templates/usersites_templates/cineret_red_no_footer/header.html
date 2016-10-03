@@ -156,9 +156,9 @@
                     <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Coupons' %}</a></li>
                 {% endif %}
 
-                {% if site.user_site.organization.proposals.exists %}
-                    <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
-                {% endif %}
+{#                {% if site.user_site.organization.proposals.exists %}#}
+{#                    <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>#}
+{#                {% endif %}#}
 
                 {% if site.user_site.organization.news.exists %}
                     <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>

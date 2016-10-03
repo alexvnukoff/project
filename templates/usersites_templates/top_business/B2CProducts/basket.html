@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan_blue/index.html' %}
+{% extends 'usersites_templates/top_business/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -25,7 +25,7 @@
                                         <thead>
                                           <tr>
                                             <th class="tb-pic"></th>
-                                            <th class="tb-item"></th>
+                                            <th class="tb-item hidden-xs"></th>
                                             <th class="tb-qty">{% trans "Price" %}</th>
                                             <th class="tb-price">{% trans 'Amount' %}</th>
                                             <th class="tb-remove"></th>
@@ -37,7 +37,7 @@
 {#                                                {% if row.product.currency != request.session.basket_currency %}{% else %}#}
 
                                                     <tr>
-                                                        <td>
+                                                        <td class="hidden-xs">
                                                             {% if row.product.image %}
                                                                 <img src="{{ row.product.image.big }}" alt="row.product.name" class="tb-img">
                                                             {% else %}
@@ -45,10 +45,22 @@
                                                             {% endif %}
                                                         </td>
 
-                                                        <td>
+                                                        <td class="hidden-xs">
                                                             <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }}</a></h3>
                                                             <p>{{ row.product.short_description|truncatewords:30 }}</p>
                                                         </td>
+
+                                                        {# for mobile screens #}
+                                                        <td class="visible-xs">
+                                                            {% if row.product.image %}
+                                                                <img src="{{ row.product.image.big }}" alt="row.product.name" class="tb-img">
+                                                            {% else %}
+                                                                <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                                                            {% endif %}
+                                                            <h3> <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">{{ row.product.name }}</a></h3>
+                                                        </td>
+
+                                                        {# end for mobile screens #}
 
                                                         <td>
                                                             {% if row.product.cost %}

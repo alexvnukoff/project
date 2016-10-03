@@ -220,6 +220,13 @@ class BannerAdmin(admin.ModelAdmin):
             'site',
         )
 
+
+class ProfileAdmin(admin.ModelAdmin):
+    search_fields = ['user__email',]
+    list_display = ('id', 'user',)
+    raw_id_fields = ('country', 'user',)
+
+
 admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
@@ -229,7 +236,7 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)
-admin.site.register(Profile, ModelAdmin)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(BusinessProposal, ModelAdmin)
 admin.site.register(BusinessProposalCategory, ModelAdmin)
 admin.site.register(RegisteredEventStats, RegisteredEventStatsAdmin)

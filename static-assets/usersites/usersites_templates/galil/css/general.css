@@ -83,6 +83,13 @@ h2.page-header.inner-page{
 .glyphicon{
 	font-size: 16px;
 }
+
+.hide-bullets {
+	list-style:none;
+	margin-left: -40px;
+	margin-top:20px;
+}
+
 /*---------- logo Styling ----------*/
 .logo{
     width: auto;
@@ -306,7 +313,63 @@ h2.page-header.inner-page{
     list-style: none;
 }
 
+/* gallery carusel style */
+#galleryCarousel .carousel-inner img{
+	max-height: 500px;
+	overflow: hidden;
+}
 
+#galleryCarousel .carousel-inner div{
+	width: 100%;
+}
+
+#slider-thumbs .thumb-link{
+	padding: 5px;
+	margin: 5px;
+}
+
+#slider-thumbs .thumbnail{
+	border: none;
+}
+
+#slider-thumbs .thumbnail img{
+	max-height: 50px;
+	overflow: hidden;
+}
+
+#slider-thumbs .thumbnail a{
+	max-height: 70px;
+	overflow: hidden;
+	float: left;
+}
+
+#reserveRoom .banner-main-page{
+	padding: 0 10px;
+}
+
+/* Galil 3 aladin style */
+#reserveRoom{
+	margin: 0 auto;
+	padding: 0 10px;
+	width: 200px;
+	height: 300px;
+}
+
+#reserveRoom ._wbord_ img {
+	width: auto;
+	height: auto;
+	padding: inherit;
+}
+
+.carusel-sidebar .banner .banner-main-page{
+	margin: 0 10%;
+	/*padding: 0 10%;*/
+	width: 80%;
+}
+
+.carusel-sidebar .banner{
+	margin: 0;
+}
 /*******************************/
 .banner .s-desc {
     width: 100%;
@@ -1258,5 +1321,9 @@ footer .btn-default{
     height:auto;
     display:block;
 	padding: 0;
+}
+
+.galil-3-about img{
+	width: 100%;
 }
 

@@ -4,38 +4,29 @@
 The views for Questionnaires, Questions etc
 """
 
-import json
 import logging
 
-from django.http import (HttpResponse, HttpResponseRedirect, Http404,
-                         HttpResponseBadRequest)
-from django.views.generic import TemplateView
-from django.template import RequestContext
-from django.template.loader import render_to_string
-from django.shortcuts import render_to_response
-from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.views.generic import (DetailView, ListView, View,
-                                  TemplateView)
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
-
-from b24online.models import (Company, B2BProduct, Questionnaire,
-                              QuestionnaireCase, Question, Answer,
-                              Recommendation)
-from centerpokupok.models import B2CProduct
-
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import (HttpResponseRedirect, Http404,
+                         HttpResponseBadRequest)
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext as _
 from guardian.mixins import LoginRequiredMixin
-from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
-                           ItemDeactivate)
+
 from b24online.Questionnaires.forms import (
     QuestionnaireForm,
     QuestionForm,
     RecommendationForm,
     ExtraQuestionsForm,
 )
+from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
+                           ItemDeactivate)
+from b24online.models import (Company, B2BProduct, Questionnaire,
+                              QuestionnaireCase, Question, Recommendation)
 from b24online.utils import (get_by_content_type, get_permitted_orgs)
-
+from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
 
@@ -44,8 +35,8 @@ def can_manage_product(user, item):
     """
     Return if the user can manage the product.
     """
-    if isinstance(item, (B2BProduct, B2CProduct)) and item.id and item.company\
-        and item.company in get_permitted_orgs(user, model_klass=Company):
+    if isinstance(item, (B2BProduct, B2CProduct)) and item.id and item.company \
+            and item.company in get_permitted_orgs(user, model_klass=Company):
         return True
     return False
 
@@ -64,10 +55,10 @@ class QuestionnaireCreate(LoginRequiredMixin, ItemCreate):
         self.content_type_id = kwargs.pop('content_type_id')
         self.item_id = kwargs.pop('item_id')
         if not can_manage_product(request.user,
-            get_by_content_type(self.content_type_id, self.item_id)):
+                                  get_by_content_type(self.content_type_id, self.item_id)):
             return HttpResponseRedirect(reverse('denied'))
 
-        return super(QuestionnaireCreate, self)\
+        return super(QuestionnaireCreate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -115,7 +106,7 @@ class QuestionnaireUpdate(LoginRequiredMixin, ItemUpdate):
         if not can_manage_product(request.user, self.object.item):
             return HttpResponseRedirect(reverse('denied'))
 
-        return super(QuestionnaireUpdate, self)\
+        return super(QuestionnaireUpdate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -193,7 +184,7 @@ class QuestionnaireDetail(ItemDetail):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireDetail, self)\
+        return super(QuestionnaireDetail, self) \
             .dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -221,7 +212,7 @@ class QuestionnaireDetail(ItemDetail):
             success_url = reverse(
                 'questionnaires:detail',
                 kwargs={'item_id': self.object.pk,
-                })
+                        })
             return HttpResponseRedirect(success_url)
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -242,7 +233,7 @@ class QuestionnaireDelete(ItemDeactivate):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionnaireDelete, self)\
+        return super(QuestionnaireDelete, self) \
             .dispatch(request, *args, **kwargs)
 
 
@@ -252,9 +243,9 @@ class QuestionDelete(ItemDeactivate):
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if not can_manage_product(request.user,
-            self.object.questionnaire.item):
+                                  self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionDelete, self)\
+        return super(QuestionDelete, self) \
             .dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -271,7 +262,7 @@ class RecommendationDelete(ItemDeactivate):
         self.object = self.get_object()
         if not can_manage_product(request.user, self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(RecommendationDelete, self)\
+        return super(RecommendationDelete, self) \
             .dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -301,7 +292,7 @@ class QuestionCreate(LoginRequiredMixin, ItemCreate):
             if not can_manage_product(request.user, _questionnaire):
                 return HttpResponseRedirect(reverse('denied'))
 
-        return super(QuestionCreate, self)\
+        return super(QuestionCreate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -341,9 +332,9 @@ class QuestionUpdate(LoginRequiredMixin, ItemUpdate):
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if not can_manage_product(request.user,
-            self.object.questionnaire.item):
+                                  self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(QuestionUpdate, self)\
+        return super(QuestionUpdate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -391,7 +382,7 @@ class RecommendationCreate(LoginRequiredMixin, ItemCreate):
             if not can_manage_product(request.user, _quetionnaire):
                 return HttpResponseRedirect(reverse('denied'))
 
-        return super(RecommendationCreate, self)\
+        return super(RecommendationCreate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -431,9 +422,9 @@ class RecommendationUpdate(LoginRequiredMixin, ItemUpdate):
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if not can_manage_product(request.user,
-            self.object.questionnaire.item):
+                                  self.object.questionnaire.item):
             return HttpResponseRedirect(reverse('denied'))
-        return super(RecommendationUpdate, self)\
+        return super(RecommendationUpdate, self) \
             .dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -470,10 +461,10 @@ def questionnaire_case_answers(request, pk, participant_type, **kwargs):
             instance = QuestionnaireCase.objects.get(pk=pk)
         except QuestionnaireCase.DoesNotExist:
             raise Http404(_('There is no such QuestionnaireCase with ID={0}') \
-                . format(pk))
+                          .format(pk))
         else:
             if not can_manage_product(request.user,
-                instance.questionnaire.item):
+                                      instance.questionnaire.item):
                 return HttpResponseRedirect(reverse('denied'))
 
             answers = instance.get_answers(participant_type)
@@ -484,11 +475,11 @@ def questionnaire_case_answers(request, pk, participant_type, **kwargs):
                     {'instance': instance,
                      'answers': answers,
                      'responsive': instance.get_participant(participant_type)},
-                    context_instance=RequestContext(request),
+                    request,
                 )
             }
-            return HttpResponse(json.dumps(data),
-                                content_type='application/json')
+            return JsonResponse(data)
+
     return HttpResponseBadRequest()
 
 
@@ -501,10 +492,10 @@ def questionnaire_case_coincedences(request, pk, **kwargs):
             instance = QuestionnaireCase.objects.get(pk=pk)
         except QuestionnaireCase.DoesNotExist:
             raise Http404(_('There is no such QuestionnaireCase with ID={0}') \
-                . format(pk))
+                          .format(pk))
         else:
             if not can_manage_product(request.user,
-                instance.questionnaire.item):
+                                      instance.questionnaire.item):
                 return HttpResponseRedirect(reverse('denied'))
 
             coincedences = instance.get_coincedences()
@@ -514,12 +505,10 @@ def questionnaire_case_coincedences(request, pk, **kwargs):
                     template_name,
                     {'instance': instance,
                      'coincedences': coincedences,
-                    },
-                    context_instance=RequestContext(request),
+                     },
+                    request,
                 )
             }
-            return HttpResponse(json.dumps(data),
-                                content_type='application/json')
+            return JsonResponse(data)
+
     return HttpResponseBadRequest()
-
-

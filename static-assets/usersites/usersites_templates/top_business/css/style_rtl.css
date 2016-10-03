@@ -41,6 +41,11 @@ body{
 	padding-left: 15px;
 }
 
+#navbarCollapse .dropdown-submenu{
+	text-align: right;
+	right: 0;
+}
+
 /** Slider Styling ***************/
 /*********************************/
 
@@ -185,4 +190,8 @@ body{
 /*********************************/
 footer span {
     margin-left: 5px;
+}
+
+.footer-container>div{
+	float: right;
 }
