@@ -134,7 +134,7 @@ def online_adviser(request, *args, **kwargs):
     form = MessageForm(request, compact=True)
     context = {'new_message_form': form}
 
-    JsonResponse({
+    return JsonResponse({
         'title': _(u'Your question'),
         'msg': render_to_string(template_name, context, request)
     })
