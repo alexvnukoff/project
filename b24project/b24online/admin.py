@@ -33,6 +33,16 @@ from tpp.DynamicSiteMiddleware import get_current_site
 logger = logging.getLogger(__name__)
 
 
+def make_approved(modeladmin, request, queryset):
+    for i in queryset:
+
+        if i.is_active is False:
+            queryset.update(is_active=True)
+        else:
+            queryset.update(is_active=False)
+make_approved.short_description = 'Activate/Deactivate'
+
+
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
     GENERAL_FIELDSET = (None, {
         'fields': ('parent', 'name'),
@@ -197,6 +207,7 @@ class B24UserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions',)
     change_form_template = 'loginas/change_form.html'
+    actions = [make_approved]
 
 
 class QuestionAdmin(admin.ModelAdmin):
