@@ -1,12 +1,15 @@
 from django.conf.urls import url
 
-from b24online.AdminTpp.views import Dashboard, Users, Adv, AdvTargets, AdvPrice, AdvSettings, StaticPageDelete, \
-    StaticPageUpdate, StaticPageCreate, GreetingCreate, GreetingUpdate, GreetingDelete
+from b24online.AdminTpp.views import (Dashboard, Users, Adv, AdvTargets,
+    AdvPrice, AdvSettings, StaticPageDelete, StaticPageUpdate, StaticPageCreate,
+    GreetingCreate, GreetingUpdate, GreetingDelete, Activation, ActivationAction)
 
 urlpatterns = [
     url(r'^$', Dashboard.as_view(), name='dashboard'),
     url(r'^load/(?P<model>[A-z0-9]+)/$', Dashboard.as_view(), name='dashboard_load'),
     url(r'^users/$', Users.as_view(), name='users'),
+    url(r'^activation/$', Activation.as_view(), name='activation'),
+    url(r'^activation/(?P<pk>[0-9]+)/user/$', ActivationAction.as_view()),
     url(r'^adv/$', Adv.as_view(), name='adv'),
     url(r'^adv/targets/(?P<pk>[0-9]+)/$', AdvTargets.as_view(), name='adv_targets'),
     url(r'^adv/prices/$', AdvPrice.as_view(), name='adv_price'),
