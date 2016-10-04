@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/golan/index.html' %}
+{% extends 'usersites/index.html' %}
 
 {% load i18n %}
 {% load CustomFilters %}
@@ -13,13 +13,7 @@
 
 {% block content %}
   {{ block.super }}
-  <!-- section class="content__info grid-layout" -->
-    
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+  <section class="content__info grid-layout">
     <div class="container" id="chats">
       <div class="row">
         <div class="col-md-4 col-sm-4">
@@ -176,7 +170,7 @@
         </div>
       </div>
     </div>
-  <!-- /section -->
+  </section>
 {% endblock %}
 
 {% block adviser %}{% endblock %}
