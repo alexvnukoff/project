@@ -77,8 +77,11 @@
                         "mData": 3,
                         "mRender": function ( data, type, full ) {
 
-                            return '<a href="/admin-tpp/activation/' + data + '/user/">' +
+                            return '<a href="/admin-tpp/activation/' + data + '/user/?a=1">' +
                                     '<button class="btn btn-info">{% trans 'Activate User' %}</button>' +
+                                    '</a>&nbsp;&nbsp;' + 
+                                    '<a href="/admin-tpp/activation/' + data + '/user/?a=2">' +
+                                    '<button class="btn btn-danger">{% trans 'Delete User' %}</button>' +
                                     '</a>';
 
                         }

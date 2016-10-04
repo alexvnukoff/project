@@ -132,14 +132,14 @@ class Users(BaseAdminTpp):
         if search:
             s = SearchEngine(doc_type=ProfileIndex)
             s = s.query("multi_match", query=search, fields=['name', 'email'])
-            paginator = Paginator(s, 10)
+            paginator = Paginator(s, 25)
             on_page = paginator.page(page)
 
             objects = get_user_model().objects.filter(profile__pk__in=[obj.django_id for obj in on_page.object_list.execute().hits]) \
                 .prefetch_related('profile')
         else:
             queryset = get_user_model().objects.order_by(*orderby)
-            paginator = Paginator(queryset, 10)
+            paginator = Paginator(queryset, 25)
             on_page = paginator.page(page)
             objects = on_page.object_list.prefetch_related('profile')
 
@@ -554,13 +554,13 @@ class Activation(BaseAdminTpp):
         if search:
             print(search)
             s = User.objects.filter(is_active=False, email__contains=search)
-            paginator = Paginator(s, 10)
+            paginator = Paginator(s, 25)
             on_page = paginator.page(page)
             objects = on_page
 
         else:
             queryset = User.objects.filter(is_active=False).order_by('id')
-            paginator = Paginator(queryset, 10)
+            paginator = Paginator(queryset, 25)
             on_page = paginator.page(page)
             objects = on_page
 
@@ -586,12 +586,20 @@ class Activation(BaseAdminTpp):
 
 class ActivationAction(RedirectView):
     def get(self, request, *args, **kwargs):
-        url = self.get_redirect_url(*args, **kwargs)
 
-        if request.user.is_superuser:
+        url = self.get_redirect_url(*args, **kwargs)
+        action = request.GET.get('a')
+
+        if request.user.is_superuser and action:
             user = get_object_or_404(User, pk=kwargs['pk'])
-            user.is_active = True
-            user.save()
+            if action == '1':
+                user.is_active = True
+                user.save()
+            elif action == '2':
+                user.delete()
+            else:
+                return HttpResponseBadRequest()
+
             return HttpResponseRedirect(url)
         else:
             return HttpResponseBadRequest()
