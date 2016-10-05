@@ -1065,7 +1065,7 @@ def category_tree_json(request, b2_type='b2b'):
         extract_data_fn=extract_data_fn,
     )
     data = tree_builder()
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
 
 
 @login_required

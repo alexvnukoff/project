@@ -1,17 +1,14 @@
 # -*- encoding: utf-8 -*-
 
-import os
 import datetime
 import hashlib
-import uuid
 import logging
-
+import os
+import uuid
 from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.utils.functional import curry
-from django.db.models import Max
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group, Permission
@@ -25,6 +22,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.db import models, transaction
+from django.db.models import Max
 from django.db.models import Q, F, Sum
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
@@ -36,12 +34,12 @@ from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from paypal.standard.ipn.models import PayPalIPN
+from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
-from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
-                              LocalFileStorage)
+
+from b24online.custom import (CustomImageField, S3ImageStorage, LocalFileStorage)
 from b24online.utils import (generate_upload_path, reindex_instance,
                              document_upload_path, get_current_organization)
 from tpp.celery import app

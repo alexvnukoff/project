@@ -163,4 +163,4 @@ def get_staffgroup_options(request, *args, **kwargs):
     options = [{'name': '------', 'id': ''}]
     for item in StaffGroup.objects.order_by('group__name'):
         options.append({'name': item.group.name, 'id': item.pk})
-    return JsonResponse(options)
+    return JsonResponse(options, safe=False)

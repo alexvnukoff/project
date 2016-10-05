@@ -308,7 +308,7 @@ def _tab_staff(request, company, page=1):
             for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
-            return JsonResponse(departments)
+            return JsonResponse(departments, safe=False)
 
         elif action == "vacancy":
             department = int(request.GET.get("department", 0))
@@ -322,7 +322,7 @@ def _tab_staff(request, company, page=1):
                 for vacancy in department.vacancies.all().order_by('name'):
                     vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
-            return JsonResponse(vacancies)
+            return JsonResponse(vacancies, safe=False)
 
         elif action == "add":
             user = request.POST.get('user', "").strip()
