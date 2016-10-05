@@ -52,6 +52,7 @@
                 </td>
             </tr>
             {% endfor %}
+            {% if site.user_site.is_delivery_available %}
             <tr>
                 <td style="text-align: right">
                     <input type="checkbox" name="need_delivery" id="need_delivery">
@@ -69,6 +70,7 @@
                     </div>
                 </td>
             </tr>
+            {% endif %}
         </tbody>
         <tfoot>
             <tr class="dl-horizontal cart-sum-field" >
