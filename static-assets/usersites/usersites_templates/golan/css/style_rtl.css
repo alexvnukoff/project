@@ -35,6 +35,14 @@ body{
     float: left!important;
 }
 
+.top-nav .dropdown-menu{
+	right: 0;
+    left: auto;
+    float: left;
+    text-align: right;
+}
+
+
 .tel{
     float: right;
 }
