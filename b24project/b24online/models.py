@@ -110,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def __str__(self):
-        return self.email
+        return "{0}".format(self.email)
 
     def has_module_perms(self, app_label):
         return True

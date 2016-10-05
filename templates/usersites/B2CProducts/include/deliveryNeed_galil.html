@@ -5,6 +5,7 @@
 {% load inclusionTags %}
 {% load humanize %}
 
+{% if site.user_site.is_delivery_available %}
 <div style="margin-top: 10px;">
     <input type="checkbox" name="need_delivery" id="need_delivery">
     <span>{% trans 'Need a delivery' %}?</span>
@@ -18,3 +19,4 @@
         {{ site.user_site.delivery_cost|formatPrice }}
     {% endif %}
 </div>
+{% endif %}

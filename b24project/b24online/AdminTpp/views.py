@@ -5,18 +5,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
-from django.views.generic import TemplateView, DetailView, View, CreateView, UpdateView, DeleteView
+from django.views.generic import (TemplateView, DetailView, View, CreateView,
+                                        UpdateView, DeleteView, RedirectView)
 
 from b24online.AdminTpp.forms import AdvertisementPricesForm, BannerBlockForm
-from b24online.models import Branch, Country, B2BProductCategory, AdvertisementOrder, Banner, Chamber, \
-    AdvertisementPrice, BannerBlock, StaticPage, Greeting
+from b24online.models import (User, Branch, Country, B2BProductCategory,
+        AdvertisementOrder, Banner, Chamber, AdvertisementPrice, BannerBlock,
+        StaticPage, Greeting)
 from b24online.search_indexes import SearchEngine, ProfileIndex, GreetingIndex
 from b24online.utils import class_for_name
 from centerpokupok.models import B2CProductCategory
@@ -130,14 +132,14 @@ class Users(BaseAdminTpp):
         if search:
             s = SearchEngine(doc_type=ProfileIndex)
             s = s.query("multi_match", query=search, fields=['name', 'email'])
-            paginator = Paginator(s, 10)
+            paginator = Paginator(s, 25)
             on_page = paginator.page(page)
 
             objects = get_user_model().objects.filter(profile__pk__in=[obj.django_id for obj in on_page.object_list.execute().hits]) \
                 .prefetch_related('profile')
         else:
             queryset = get_user_model().objects.order_by(*orderby)
-            paginator = Paginator(queryset, 10)
+            paginator = Paginator(queryset, 25)
             on_page = paginator.page(page)
             objects = on_page.object_list.prefetch_related('profile')
 
@@ -512,3 +514,97 @@ class GreetingDelete(BaseAdminAuth, DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
+
+
+class Activation(BaseAdminTpp):
+    template_name = "b24online/AdminTpp/activate.html"
+
+    def get_data(self, context):
+        display_start = int(self.request.GET.get('iDisplayStart', 1))
+        display_len = int(self.request.GET.get('iDisplayLength', 10))
+        sortCol_0 = int(self.request.GET.get('iSortCol_0', 0))
+        sortingCols = int(self.request.GET.get('iSortingCols', 0))
+        search = self.request.GET.get('sSearch', "").strip()
+
+        cols = ['email', 'last_login', 'date_joined', 'id']
+        orderby = ['id']
+
+        if sortCol_0 > 0:
+            orderby = []
+
+            for x in range(sortingCols):
+                param = 'iSortCol_%s' % x
+                colIndex = self.request.GET.get(param, -1)
+                colIndex = int(colIndex)
+
+                if colIndex != -1 and colIndex in cols and cols[colIndex]:
+                    param = 'sSortDir_%s' % x
+                    dir = self.request.GET.get(param, 'asc')
+
+                    if dir == 'asc':
+                        orderby.append(cols[colIndex])
+                    else:
+                        orderby.append('-%s' % cols[colIndex])
+
+        if display_start == 1:
+            page = 1
+        else:
+            page = int(display_start / display_len + 1)
+
+        if search:
+            print(search)
+            s = User.objects.filter(is_active=False, email__contains=search)
+            paginator = Paginator(s, 25)
+            on_page = paginator.page(page)
+            objects = on_page
+
+        else:
+            queryset = User.objects.filter(is_active=False).order_by('id')
+            paginator = Paginator(queryset, 25)
+            on_page = paginator.page(page)
+            objects = on_page
+
+        result_data = []
+
+        for obj in objects:
+            #profile = getattr(obj, 'email', None)
+
+            result_data.append([
+                obj.email,
+                obj.last_login.strftime("%Y-%m-%d") if obj.last_login else '',
+                obj.date_joined.strftime("%Y-%m-%d") if obj.date_joined else '',
+                obj.pk
+            ])
+
+        return {
+            "sEcho": int(self.request.GET.get('sEcho', 1)),
+            "iTotalRecords": paginator.count,
+            "iTotalDisplayRecords": paginator.count,
+            "aaData": result_data
+        }
+
+
+class ActivationAction(RedirectView):
+    def get(self, request, *args, **kwargs):
+
+        url = self.get_redirect_url(*args, **kwargs)
+        action = request.GET.get('a')
+
+        if request.user.is_superuser and action:
+            user = get_object_or_404(User, pk=kwargs['pk'])
+            if action == '1':
+                user.is_active = True
+                user.save()
+            elif action == '2':
+                user.delete()
+            else:
+                return HttpResponseBadRequest()
+
+            return HttpResponseRedirect(url)
+        else:
+            return HttpResponseBadRequest()
+
+    def get_redirect_url(self, *args, **kwargs):
+        url = reverse('AdminTpp:activation')
+        return url
+
