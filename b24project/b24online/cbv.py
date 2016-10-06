@@ -182,11 +182,10 @@ class ItemsList(HybridListView):
         q = self.request.GET.get('q', '').strip()
 
         # Apply geo_country by our internal code
-        if (not self.is_my() and self.request.session.get('geo_country')
-            and not self.request.GET.get('order1')
-            and not '/products/сoupons/' in self.request.path):
-            geo_country = self.request.session['geo_country']
-            s = s.filter('terms', country=[geo_country])
+        if self.request.session.get('get_country'):
+            if not self.request.GET.get('order1'):
+                geo_country = self.request.session['geo_country']
+                s = s.filter('terms', country=[geo_country])
 
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
@@ -264,11 +263,11 @@ class ItemsList(HybridListView):
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
 
         # Apply geo_country by our internal code
-        if (not self.is_my() and request.session.get('geo_country')
-            and not request.GET.get('order1')
-            and not request.path == '/products/сoupons/'):
-            geo_country = request.session['geo_country']
-            self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+        if self.request.session.get('get_country'):
+            if not self.request.GET.get('order1'):
+                if '/products/сoupons/' not in self.request.path:
+                    geo_country = request.session['geo_country']
+                    self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
