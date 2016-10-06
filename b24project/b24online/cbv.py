@@ -265,7 +265,7 @@ class ItemsList(HybridListView):
         # Apply geo_country by our internal code
         if self.request.session.get('get_country'):
             if not self.request.GET.get('order1'):
-                if '/products/сoupons/' not in self.request.path:
+                if '/products/coupons/' not in self.request.path:
                     geo_country = request.session['geo_country']
                     self.applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
