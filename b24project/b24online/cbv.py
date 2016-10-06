@@ -184,7 +184,7 @@ class ItemsList(HybridListView):
         # Apply geo_country by our internal code
         if (not self.is_my() and self.request.session.get('geo_country')
             and not self.request.GET.get('order1')
-            and not self.request.path == '/products/сoupons/'):
+            and not '/products/сoupons/' in request.path):
             geo_country = self.request.session['geo_country']
             s = s.filter('terms', country=[geo_country])
 

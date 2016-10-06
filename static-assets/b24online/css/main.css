@@ -241,7 +241,7 @@ ul li.big-coupon .bot .context .current-price small{color:#c8f2ff;font-size:12px
 ul li.big-coupon .bot .context .but{display:inline-block;text-align:right;width:80px}
 ul li.big-coupon .bot .context .but a span.buyout{background:#dd201c;color:#fff;font-weight:700;padding:8px 18px;font-size:16px;text-align:center}
 ul li.big-coupon .bot .context .but a{text-decoration:none}
-li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url(/s/font//coupon_btnbuy.gif) repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
+li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url('/static/b24online/img/coupon_btnbuy.gif') repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
 li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .universal-sale{position:absolute;margin-left:20px;margin-right:20px;background:#dd201c;color:#fff;font-size:12px;font-weight:600;text-align:center;padding:4px 6px;z-index:1}
 .universal-sale::after{content:" ";border-width:3px 3px 4px 4px;border-style:solid;border-color:transparent #dd201c #dd201c transparent;position:absolute;top:0;right:100%}
