@@ -617,7 +617,7 @@ class CompanyCreate(ItemCreate):
             'fax': form.cleaned_data['fax'],
             'email': form.cleaned_data['email'],
             'site': form.cleaned_data['site'],
-            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude'])
+            'location': "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude'])
         }
 
         with transaction.atomic():

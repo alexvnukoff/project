@@ -482,7 +482,7 @@ class ChamberUpdate(ItemUpdate):
                 form.instance.metadata['site'] = form.cleaned_data['site']
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+                form.instance.metadata['location'] = "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude'])
 
             if 'flag' in form.changed_data:
                 flag = form.cleaned_data.get('flag')
@@ -573,7 +573,7 @@ class ChamberCreate(ItemCreate):
             'fax': form.cleaned_data['fax'],
             'email': form.cleaned_data['email'],
             'site': form.cleaned_data['site'],
-            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+            'location': "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude']),
             'flag': handle_uploaded_file(flag) if flag else None
         }
 
