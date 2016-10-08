@@ -24,7 +24,11 @@
             <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
             <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
 
-            <p style="font-size:15px"><a href="{% url 'get_profile' request.user.id  %}"><span class="icon-user">{% trans 'Business Card' %}</span></a></p>
+            <a href="{% url 'get_profile' request.user.id  %}">
+            <img src="{% static 'b24online/img/business_card.png' %}">
+            <p style="font-size:15px;margin-top:2px;"><span class="icon-user">{% trans 'Business Card' %}</span></p>
+            </a>
+
         </div>
 
       <div style="display:block;margin:0 158px 5px 158px;">
