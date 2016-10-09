@@ -141,6 +141,10 @@ h2.page-header.inner-page{
     text-decoration: none;
 }
 
+.top-nav .tel{
+	padding: 5px;
+}
+
 /* Landscape phones and portrait tablets */
 @media (min-width: 480px) and (max-width: 768px) {
     .tel{
@@ -208,6 +212,18 @@ collapse the menu on 991px. */
 	}
 
 }
+
+@media (max-width: 767px) {
+	.navbar{
+		padding-top: 5px;
+	}
+
+	.navbar-toggle{
+		margin: 0;
+	}
+}
+
+
 
 .header-top {
     display: block;
@@ -285,6 +301,10 @@ collapse the menu on 991px. */
 
 .social-header a.lang-toggle img{
 	margin-top: 10px;
+}
+
+.small-navbar a span{
+	font-size: 8pt;
 }
 
 @media(max-width:767px) {
@@ -409,10 +429,19 @@ collapse the menu on 991px. */
 	margin: 0;
 }
 
-.main-red{
+.main-white{
 	height: 130px;
 	padding: 0;
 
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.main-white{
+		height: 50px;
+		padding: 0;
+
+	}
 }
 
 /* -----------------------*/
