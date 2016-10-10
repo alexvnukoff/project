@@ -276,10 +276,10 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                         deal_order=deal_order,
                         currency=item.product.currency,
                         supplier_company=supplier,
-                        person_last_name=data.get('name'),
-                        person_email=data.get('email'),
-                        person_address=data.get('address'),
-                        person_phone_number=data.get('phone'),
+                        person_last_name=data.get('name', ''),
+                        person_email=data.get('email', ''),
+                        person_address=data.get('address', ''),
+                        person_phone_number=data.get('phone', ''),
                         status=Deal.ORDERED,
                     )
                     model_type = ContentType.objects.get_for_model(item.product)
