@@ -435,12 +435,52 @@ collapse the menu on 991px. */
 
 }
 
+.main-white .navbar-brand img {
+    max-width: 150px;
+}
+
+.main-white .navbar{
+	padding-top: 0;
+}
+
+.main-white .navbar-nav {
+    margin-top: 2%;
+}
+
+.main-white .main-nav-btn {
+    margin-top: 5px;
+}
+
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	.main-white{
 		height: 50px;
 		padding: 0;
 
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	h2{
+		font-size: 16pt;
+	}
+
+	p{
+		font-size: 10pt;
+	}
+
+	.about-main {
+		padding-top: 0!important;
+	}
+
+	.about-main__text{
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.banner-ad-main-collection{
+		padding: 0!important;
 	}
 }
 
@@ -1245,7 +1285,7 @@ footer .btn-default{
 
 /* New coupon style design*/
 #main-page-coupons{
-	padding: 0;
+	/*padding: 0;*/
 }
 
 #main-page-coupons .main-coupon-wrap{
