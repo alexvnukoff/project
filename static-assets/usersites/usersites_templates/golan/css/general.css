@@ -141,6 +141,10 @@ h2.page-header.inner-page{
     text-decoration: none;
 }
 
+.top-nav .tel{
+	padding: 5px;
+}
+
 /* Landscape phones and portrait tablets */
 @media (min-width: 480px) and (max-width: 768px) {
     .tel{
@@ -208,6 +212,18 @@ collapse the menu on 991px. */
 	}
 
 }
+
+@media (max-width: 767px) {
+	.navbar{
+		padding-top: 5px;
+	}
+
+	.navbar-toggle{
+		margin: 0;
+	}
+}
+
+
 
 .header-top {
     display: block;
@@ -287,6 +303,10 @@ collapse the menu on 991px. */
 	margin-top: 10px;
 }
 
+.small-navbar a span{
+	font-size: 8pt;
+}
+
 @media(max-width:767px) {
     .social-header{
         padding-top: 7px;
@@ -347,31 +367,124 @@ collapse the menu on 991px. */
     }
 }
 
-/*.logo{*/
-    /*width: auto;*/
-    /*height: 50px;*/
-    /*padding: 0 5%;*/
-/*}*/
-
-/*.navbar-brand{*/
-	/*padding: 0;*/
-/*}*/
-
-/*.navbar-brand>img {*/
-    /*max-height: 100px;*/
-/*}*/
-
 
 /*---------- Navigation Styling ----------*/
-/*.navbar-nav>li>a{*/
-	/*text-transform: uppercase;*/
-	/*font-weight: bold;*/
-/*}*/
+.top-nav{
+	background-color: #000;
+	color: #fff;
+	height: 30px;
+}
 
-/*.navbar-inverse{*/
-	/*margin-top: 20px;*/
-/*}*/
+.top-nav .top_search{
+	margin: 0;
+}
 
+.top-nav input{
+	height: 20px;
+	margin: 5px;
+	background-color: #fff;
+    border: 1px solid #aaa;
+    color: #000;
+}
+
+.top-nav .social-header{
+	padding: 0;
+	margin: 3px;
+}
+
+.top-nav .social-header a.lang-toggle img {
+    margin-top: 5px;
+}
+
+.top-nav .header-cart{
+	padding: 0;
+	margin: 5px;
+}
+
+.top-nav .social-header .button {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.top-nav .language-navi {
+	position:relative;
+	display:inline-block;
+	cursor:pointer;
+	float:left;
+	margin:3px;
+	z-index: 9999;
+}
+
+.top-nav ul.dropdown-menu>li>a>img.flag-icon {
+    border: 1px solid #e7e7e7;
+    margin: -3px 5px 0 5px;
+    width: 24px;
+}
+
+.top-nav ul.dropdown-menu>li>a{
+	padding: 3px 5px;
+	margin: 0;
+}
+
+.main-white{
+	height: 130px;
+	padding: 0;
+
+}
+
+.main-white .navbar-brand img {
+    max-width: 150px;
+}
+
+.main-white .navbar{
+	padding-top: 0;
+}
+
+.main-white .navbar-nav {
+    margin-top: 2%;
+}
+
+.main-white .main-nav-btn {
+    margin-top: 5px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.main-white{
+		height: 50px;
+		padding: 0;
+
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	h2{
+		font-size: 16pt;
+	}
+
+	p{
+		font-size: 10pt;
+	}
+
+	.about-main {
+		padding-top: 0!important;
+	}
+
+	.about-main__text{
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.banner-ad-main-collection{
+		padding: 0!important;
+	}
+}
+
+/* -----------------------*/
 .side-bar a{
 	text-decoration: none;
 }
@@ -1172,7 +1285,7 @@ footer .btn-default{
 
 /* New coupon style design*/
 #main-page-coupons{
-	padding: 0;
+	/*padding: 0;*/
 }
 
 #main-page-coupons .main-coupon-wrap{
