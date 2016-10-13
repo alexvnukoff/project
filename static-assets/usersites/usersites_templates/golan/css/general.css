@@ -466,6 +466,10 @@ collapse the menu on 991px. */
 		font-size: 16pt;
 	}
 
+	h3{
+		font-size: 14pt;
+	}
+
 	p{
 		font-size: 10pt;
 	}
