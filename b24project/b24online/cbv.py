@@ -182,7 +182,7 @@ class ItemsList(HybridListView):
         q = self.request.GET.get('q', '').strip()
 
         # Apply geo_country by our internal code
-        if self.request.session.get('get_country'):
+        if self.request.session.get('geo_country'):
             if not self.request.GET.get('order1'):
                 geo_country = self.request.session['geo_country']
                 s = s.filter('terms', country=[geo_country])
@@ -190,7 +190,6 @@ class ItemsList(HybridListView):
         for filter_key in list(self.filter_list.keys()):
             filter_lookup = "filter[%s][]" % filter_key
             values = self.request.GET.getlist(filter_lookup)
-            print(values)
 
             if values:
                 s = s.filter('terms', **{filter_key: values})
@@ -263,7 +262,7 @@ class ItemsList(HybridListView):
                 self.applied_filters[f] = model.objects.filter(pk__in=values)
 
         # Apply geo_country by our internal code
-        if self.request.session.get('get_country'):
+        if self.request.session.get('geo_country'):
             if not self.request.GET.get('order1'):
                 if '/products/coupons/' not in self.request.path:
                     geo_country = request.session['geo_country']

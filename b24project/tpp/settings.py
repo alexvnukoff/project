@@ -400,7 +400,6 @@ ORDER_NOTIFICATION_TO = 'orders@b24online.com'
 GEO_COUNTRY_DB = {
     'Azerbaydjan': '1',
     'Armenia': '2',
-    'Belarus': '3',
     'Georgia': '4',
     'Israel': '5',
     'Kazakhstan': '6',
@@ -409,5 +408,6 @@ GEO_COUNTRY_DB = {
     'Lithuania': '9',
     'Moldova': '10',
     'Russia': '11',
+    'USA': '142479',
 }
 
