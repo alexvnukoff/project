@@ -353,6 +353,9 @@ class AdditionalPage(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
     def has_perm(self, user):
         return self.item.haxs_perm(user)
 
@@ -408,6 +411,12 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        index_together = [
+            # ("tree_id", "lft", "rght"),
+            # ("tree_id", "rght"),
+        ]
 
     def __str__(self):
         return "{0}".format(self.pk)
