@@ -65,7 +65,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     galleries = GenericRelation(Gallery)
     show_on_main = models.BooleanField(default=False, db_index=True)
     is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False, db_index=True)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
     discount_percent = models.FloatField(null=True, blank=True)
@@ -76,7 +76,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

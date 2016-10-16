@@ -249,7 +249,7 @@ class Advertisement(models.Model):
 
 
 class ContextAdvertisement(ActiveModelMixing, Advertisement):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=True)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
@@ -259,13 +259,16 @@ class ContextAdvertisement(ActiveModelMixing, Advertisement):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
     def has_perm(self, user):
         return self.item.has_perm(user)
 
 
 class AdvertisementTarget(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(db_index=True)
     item = GenericForeignKey('content_type', 'object_id')
     advertisement_item = models.ForeignKey(Advertisement, related_name='targets', on_delete=models.CASCADE)
 
@@ -273,6 +276,9 @@ class AdvertisementTarget(models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
 
     def has_perm(self, user):
         return self.advertisement_item.has_perm(user)
@@ -289,6 +295,9 @@ class Gallery(ActiveModelMixing, models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
 
     def has_perm(self, user):
         return self.item.has_perm(user)
@@ -338,6 +347,9 @@ class Document(models.Model):
 
     def has_perm(self, user):
         return self.item.has_perm(user)
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
 
 
 class AdditionalPage(models.Model):
@@ -2236,6 +2248,7 @@ class DealItem(models.Model):
     class Meta:
         verbose_name = _('Deal product')
         verbose_name_plural = _('Deal products')
+        index_together = ["content_type", "object_id"]
 
     @classmethod
     def get_active_objects(cls):
