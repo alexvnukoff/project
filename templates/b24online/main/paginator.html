@@ -14,7 +14,7 @@
             {% endifequal %}
         {% endfor %}
         {%  if page.has_next %}
-            <a href="{% dynurl url_paginator url_parameter page.next_page_number%}" >{% trans "Forward" %}</a>&rarr;
+            <a href="{% dynurl url_paginator url_parameter page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
         {% endif %}
     </div>
  {% endif %}
