@@ -32,7 +32,7 @@ class GetLead:
         if not self.org and company_id:
             try:
                 self.org = Organization.objects.get(pk=company_id)
-            except:
+            except Organization.DoesNotExist:
                 self.org = False
 
         # Collect form usersites form

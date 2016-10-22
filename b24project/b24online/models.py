@@ -2940,7 +2940,7 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class LeadsStore(ActiveModelMixing, models.Model):
-    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     username = models.ForeignKey(User, null=True, blank=True)
     realname = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=255, null=True, blank=True)

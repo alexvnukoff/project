@@ -372,22 +372,22 @@
       <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
 
       <div class="my-feedback">
-      <label>Your name</label>
+      <label>{% trans "Your name" %}</label>
       <input type="text" name="realname" id="fback-name" maxlength="40">
       </div>
 
       <div class="my-feedback">
-      <label>Your phone</label>
+      <label>{% trans "Your phone" %}</label>
       <input type="text" name="phone" id="fback-phone" maxlength="40">
       </div>
 
       <div class="my-feedback">
-      <label>Your email</label>
+      <label>{% trans "Your email" %}</label>
       <input type="text" name="email" id="fback-email" maxlength="80">
       </div>
 
       <div class="my-feedback">
-      <label>Your message</label>
+      <label>{% trans "Your message" %}</label>
       <textarea name="message" id="fback-message" maxlength="1000"></textarea>
       </div>
 
