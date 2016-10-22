@@ -67,7 +67,7 @@ class UserSite(ActiveModelMixing, models.Model):
 
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     user_template = models.ForeignKey(UserSiteTemplate, blank=True, null=True)
-    organization = models.ForeignKey(Organization, related_name='user_site')
+    organization = models.OneToOneField(Organization, related_name='org_user_site', on_delete=models.CASCADE,)
     slogan = models.CharField(max_length=2048, blank=True, null=True)
     language = models.CharField(max_length=4, choices=LANG_LIST, default='auto')
     is_active = models.BooleanField(default=True)

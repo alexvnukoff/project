@@ -337,7 +337,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk', 'es')
+    'default': ('en', 'ru', 'he')
 }
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
