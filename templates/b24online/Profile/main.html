@@ -149,7 +149,7 @@ opacity:0.8;
 
 <p class="preview-text"><span class="icon-user">{% trans 'Business Card Preview' %}</span></p>
 {% get_card_url request as the_card %}
-<p class="preview-text-link"><span style="font-weight:bold;display:block;">{% trans 'Your Link:' %}</span> <a href="#">{{ the_card }}id{{ profile.id }}</a></span></p>
+<p class="preview-text-link"><span style="font-weight:bold;display:block;">{% trans 'Your Link:' %}</span> <a href="{{ the_card }}id{{ profile.id }}" target="_blank">{{ the_card }}id{{ profile.id }}</a></span></p>
 </div>
 
 </div>

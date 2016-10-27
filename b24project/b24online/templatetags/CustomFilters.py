@@ -603,5 +603,5 @@ def get_card_url(request):
     lang = request.LANGUAGE_CODE
     protocol = 'http' if not request.is_secure() else 'https'
     site = get_current_site()
-    return "{0}://{1}.{2}{3}".format(protocol, lang, site.domain, request.get_full_path())
+    return "{0}://{1}.{2}/".format(protocol, lang, site.domain)
 
