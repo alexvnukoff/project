@@ -369,7 +369,7 @@ class AdditionalPage(models.Model):
         index_together = ["content_type", "object_id"]
 
     def has_perm(self, user):
-        return self.item.haxs_perm(user)
+        return self.item.has_perm(user)
 
     def get_absolute_url(self):
         return reverse('pages:detail', args=[self.slug, self.pk])
