@@ -130,8 +130,8 @@ opacity:0.8;
             <a href="#" class="main-button">{% trans 'Send Email' %}</a>
 
             {% if profile.contacts %}
-            <h4 style="margin:0;color:#828282;"><i class="icon-location"></i>{% trans 'Address' %}</h4>
-            <p style="margin:0 0 5px 0;">{{ profile.contacts }}</p>
+            <h4 style="margin:0;color:#828282;" id="contacts-header"><i class="icon-location"></i>{% trans 'Address' %}</h4>
+            <p style="margin:0 0 5px 0;" id="id_contacts_mobile">{{ profile.contacts }}</p>
             {% endif %}
 
       </div>
@@ -161,14 +161,19 @@ opacity:0.8;
     var firstname = $("#id_first_name");
     var middlename = $("#id_middle_name");
     var profession = $("#id_profession");
+    var contacts = $("#id_contacts");
+
+
     var lastname_mobile = $("#id_last_name_mobile");
     var firstname_mobile = $("#id_first_name_mobile");
     var middlename_mobile = $("#id_middle_name_mobile");
     var profession_mobile = $("#id_profession_mobile");
+    var contacts_mobile = $("#id_contacts_mobile");
 
     lastname_mobile.text("{{ profile.last_name }}");
     firstname_mobile.text("{{ profile.last_name }}");
     profession_mobile.text("{{ profile.profession }}");
+    contacts_mobile.text("{{ profile.contacts }}");
 
     if(middlename.val() != '') {
         middlename_mobile.text("{{ profile.middle_name }}");
@@ -177,6 +182,7 @@ opacity:0.8;
     } else {
         middlename_mobile.append("&nbsp;");
     }
+
 
     lastname.on("change paste keyup", function() {
         lastname_mobile.text($(this).val());
@@ -192,6 +198,16 @@ opacity:0.8;
 
     profession.on("change paste keyup", function() {
         profession_mobile.text($(this).val());
+    });
+
+    contacts.on("change paste keyup", function() {
+        contacts_mobile.text($(this).val());
+
+        if(contacts.val() == '') {
+            $("#contacts-header").hide();
+        } else {
+            $("#contacts-header").show();
+        }
     });
 
 </script>
