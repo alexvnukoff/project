@@ -596,3 +596,12 @@ def original(img):
         if not getattr(settings, 'STORE_FILES_LOCAL', False) else \
             urljoin(settings.MEDIA_URL, str(img))
 
+
+
+@register.simple_tag()
+def get_card_url(request):
+    lang = request.LANGUAGE_CODE
+    protocol = 'http' if not request.is_secure() else 'https'
+    site = get_current_site()
+    return "{0}://{1}.{2}{3}".format(protocol, lang, site.domain, request.get_full_path())
+

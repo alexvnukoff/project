@@ -1,6 +1,7 @@
 {% extends 'b24online/main_page.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 {% block title %}{% trans 'Your Profile' %}{% endblock %}
 
 {% block header %}
@@ -18,6 +19,8 @@
 .rightside-block {margin:30px 0 10px 0;}
 .phoneinner {font-size:60%;overflow:hidden;position:absolute;margin:31px 14px 3px 17px;background:#f5f5f5;width:169px;height:303px;user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-o-user-select:none;}
 .preview-text {color:#949494;font-size:14px;text-align:center;margin-top:10px;}
+.preview-text-link {color:#333;font-size:12px;text-align:center;margin-top:10px;}
+.preview-text-link a {color:#333;}
 .phonewrp {z-index:999;background:#444}
 
 a.main-button {
@@ -100,8 +103,8 @@ opacity:0.8;
           <img src="{% static 'b24online/img/avatar_blank.png' %}" style="width:25px;margin-top:-17px;border:1px solid #dedede">
           {% endif %}
 
-          <h1 style="margin:5px 0 0 0;">{{ profile }}</h1>
-          <h3 style="margin:0;color:#828282;font-weight:300;">{{ profile.profession }}</h3>
+          <h1 style="margin:5px 0 0 0;"><span id="id_last_name_mobile"></span><span id="id_middle_name_mobile"></span><span id="id_first_name_mobile"></span></h1>
+          <h3 style="margin:0;color:#828282;font-weight:300;" id="id_profession_mobile">{{ profile.profession }}</h3>
 
           {% if profile.facebook %}<span style="font-size:90%" class="ophover icon-facebook-official"></span>{% endif %}
           {% if profile.linkedin %}<span style="font-size:90%" class="ophover icon-linkedin-squared"></span>{% endif %}
@@ -113,7 +116,6 @@ opacity:0.8;
                 {% if profile.co_slogan %}<p style="margin:0;color:#828282;">{{ profile.co_slogan }}</p>{% endif %}
                 {% if profile.co_description %}<div style="margin:0;">{{ profile.co_description|linebreaks }}</div>{% endif %}
             {% endif %}
-
 
             {% if profile.site %}
             <h4 style="text-align:center;margin:8px 0 0 0;color:#828282;"><i class="icon-globe"></i>{% trans 'Site' %}</h4>
@@ -146,9 +148,52 @@ opacity:0.8;
 </svg>
 
 <p class="preview-text"><span class="icon-user">{% trans 'Business Card Preview' %}</span></p>
-<p class="preview-text">{% trans 'Your Link:' %} https://b24online.com/id{{ profile.id }}</span></p>
+{% get_card_url request as the_card %}
+<p class="preview-text-link"><span style="font-weight:bold;display:block;">{% trans 'Your Link:' %}</span> <a href="#">{{ the_card }}id{{ profile.id }}</a></span></p>
 </div>
 
 </div>
+
+
+<script>
+
+    var lastname = $("#id_last_name");
+    var firstname = $("#id_first_name");
+    var middlename = $("#id_middle_name");
+    var profession = $("#id_profession");
+    var lastname_mobile = $("#id_last_name_mobile");
+    var firstname_mobile = $("#id_first_name_mobile");
+    var middlename_mobile = $("#id_middle_name_mobile");
+    var profession_mobile = $("#id_profession_mobile");
+
+    lastname_mobile.text("{{ profile.last_name }}");
+    firstname_mobile.text("{{ profile.last_name }}");
+    profession_mobile.text("{{ profile.profession }}");
+
+    if(middlename.val() != '') {
+        middlename_mobile.text("{{ profile.middle_name }}");
+        middlename_mobile.append("&nbsp;");
+        middlename_mobile.prepend("&nbsp;");
+    } else {
+        middlename_mobile.append("&nbsp;");
+    }
+
+    lastname.on("change paste keyup", function() {
+        lastname_mobile.text($(this).val());
+    });
+
+    firstname.on("change paste keyup", function() {
+        firstname_mobile.text($(this).val());
+    });
+
+    middlename.on("change paste keyup", function() {
+        middlename_mobile.text(' ' + $(this).val() + ' ');
+    });
+
+    profession.on("change paste keyup", function() {
+        profession_mobile.text($(this).val());
+    });
+
+</script>
 {% endblock %}
 
