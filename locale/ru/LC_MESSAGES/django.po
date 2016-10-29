@@ -5999,7 +5999,7 @@ msgstr "Предпросмотр карточки"
 
 #: templates/b24online/Profile/main.html:151
 msgid "Your Link:"
-msgstr "Ваш сайт"
+msgstr "Ваша ссылка"
 
 #: templates/b24online/Project/event.html:16
 #: templates/b24online/Project/proposal.html:16
