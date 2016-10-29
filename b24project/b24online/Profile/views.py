@@ -1,6 +1,13 @@
+from django.views.generic.edit import FormView
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import SetPasswordForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
 from b24online.models import Profile
 from b24online.Profile.forms import ProfileForm
 from b24online.cbv import ItemUpdate
@@ -38,3 +45,28 @@ class ProfileUpdate(ItemUpdate):
                 self.object.upload_images()
 
         return result
+
+
+class ChangePassword(FormView):
+    model = Profile
+    form_class = SetPasswordForm
+    template_name = 'b24online/Profile/changePassword.html'
+    success_url = reverse_lazy('profile:change_password_done')
+
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ChangePassword, self).dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePassword, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        return super(ChangePassword, self).form_valid(form)
+
+

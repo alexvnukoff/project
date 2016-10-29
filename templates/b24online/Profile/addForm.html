@@ -7,7 +7,10 @@
 <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 {% csrf_token %}
     <div class="user-profile">
-      <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
+        {% comment %}
+        <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
+        {% endcomment %}
+        <p class="change-passwd-link"><a href="{% url 'profile:change_password' %}">{% trans 'Change password' %}</a></p>
 
         <div class="profile-l">
             <div class="avatar">
@@ -23,11 +26,6 @@
             {% endif %}
             <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
             <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
-
-            <a href="{% url 'get_profile' request.user.id %}">
-            <img src="{% static 'b24online/img/business_card.png' %}">
-            <p style="font-size:15px;margin-top:2px;"><span class="icon-user">{% trans 'Business Card' %}</span></p>
-            </a>
 
         </div>
 

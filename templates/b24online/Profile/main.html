@@ -16,8 +16,9 @@
     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/external.css" %}"/>
 
 <style>
+.newsright {height:1000px;{% if request.path != "/profile/" %}display:none;{% endif %}}
 .rightside-block {margin:30px 0 10px 0;}
-.phoneinner {font-size:60%;overflow:hidden;position:absolute;margin:31px 14px 3px 17px;background:#f5f5f5;width:169px;height:303px;user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-o-user-select:none;}
+.phoneinner {font-size:60%;overflow:hidden;position:absolute;margin:31px 14px 3px 17px;background:#f5f5f5;width:168px;height:302px;user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-o-user-select:none;}
 .preview-text {color:#949494;font-size:14px;text-align:center;margin-top:10px;}
 .preview-text-link {color:#333;font-size:12px;text-align:center;margin-top:10px;}
 .preview-text-link a {color:#333;}
@@ -86,7 +87,7 @@ opacity:0.8;
 
 <div class="newsright">
 <div class="keyword"></div>
-<div class="rightside-block">
+<div class="rightside-block" id="sticky-block">
 
 <div class="phoneinner">
     <div style="background:#fff;">
@@ -111,31 +112,29 @@ opacity:0.8;
 
       <div style="margin:8px 0 8px 0;padding:5px;display:block;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
 
-            {% if profile.co %}
-                <h3 style="text-align:center;margin:0;padding:0;">{{ profile.co }}</h3>
-                {% if profile.co_slogan %}<p style="margin:0;color:#828282;">{{ profile.co_slogan }}</p>{% endif %}
-                {% if profile.co_description %}<div style="margin:0;">{{ profile.co_description|linebreaks }}</div>{% endif %}
-            {% endif %}
+            <h3 style="text-align:center;margin:0;padding:0;" id="id_co_mobile">{{ profile.co }}</h3>
+            <p style="margin:0;color:#828282;" id="id_co_slogan_mobile">{{ profile.co_slogan }}</p>
+            <div style="margin:0;" id="id_co_description_mobile">{{ profile.co_description|linebreaks }}</div>
 
-            {% if profile.site %}
+            <div id="site-header">
             <h4 style="text-align:center;margin:8px 0 0 0;color:#828282;"><i class="icon-globe"></i>{% trans 'Site' %}</h4>
-            <p style="margin:0 0 6px 0;"><a href="#">{{ profile.site }}</a></p>
-            {% endif %}
+            <p style="margin:0;"><a href="#" id="id_site_mobile">{{ profile.site }}</a></p>
+            </div>
 
-            {% if profile.mobile_number %}
-            <h4 style="text-align:center;margin:0 0 0 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Phone' %}</h4>
-            <p style="margin:0 0 6px 0;"><a href="#">{{ profile.mobile_number }}</a></p>
-            {% endif %}
+            <div id="mobile-header">
+            <h4 style="text-align:center;margin:8px 0 0 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Phone' %}</h4>
+            <p style="margin:0;"><a href="#" id="id_mobile_number_mobile">{{ profile.mobile_number }}</a></p>
+            </div>
 
-            <a href="#" class="main-button">{% trans 'Send Email' %}</a>
+            <a href="#" style="margin-top:8px" class="main-button">{% trans 'Send Email' %}</a>
 
-            {% if profile.contacts %}
-            <h4 style="margin:0;color:#828282;" id="contacts-header"><i class="icon-location"></i>{% trans 'Address' %}</h4>
+            <div id="contacts-header">
+            <h4 style="margin:0;color:#828282;"><i class="icon-location"></i>{% trans 'Address' %}</h4>
             <p style="margin:0 0 5px 0;" id="id_contacts_mobile">{{ profile.contacts }}</p>
-            {% endif %}
+            </div>
 
       </div>
-        <p style="padding:0 4px;color:#999">© 2010–{% now 'Y' %} B24Online — {% trans 'Center of chambers of commerce, associations, unions and guilds.' %}</p>
+        <p style="padding:0 4px;color:#999">© 2010–{% now 'Y' %} B24Online.com</p>
     </div>
 
 </div>
@@ -154,7 +153,6 @@ opacity:0.8;
 
 </div>
 
-
 <script>
 
     var lastname = $("#id_last_name");
@@ -162,18 +160,34 @@ opacity:0.8;
     var middlename = $("#id_middle_name");
     var profession = $("#id_profession");
     var contacts = $("#id_contacts");
-
+    var mobile_number = $("#id_mobile_number");
+    var site = $("#id_site");
+    var co = $("#id_co");
+    var co_slogan = $("#id_co_slogan");
+    var co_description = $("#id_co_description");
 
     var lastname_mobile = $("#id_last_name_mobile");
     var firstname_mobile = $("#id_first_name_mobile");
     var middlename_mobile = $("#id_middle_name_mobile");
     var profession_mobile = $("#id_profession_mobile");
     var contacts_mobile = $("#id_contacts_mobile");
+    var mobile_number_mobile = $("#id_mobile_number_mobile");
+    var site_mobile = $("#id_site_mobile");
+    var co_mobile = $("#id_co_mobile");
+    var co_slogan_mobile = $("#id_co_slogan_mobile");
+    var co_description_mobile = $("#id_co_description_mobile");
+
+    $("#sticky-block").stick_in_parent();
 
     lastname_mobile.text("{{ profile.last_name }}");
-    firstname_mobile.text("{{ profile.last_name }}");
+    firstname_mobile.text("{{ profile.first_name }}");
     profession_mobile.text("{{ profile.profession }}");
     contacts_mobile.text("{{ profile.contacts }}");
+    mobile_number_mobile.text("{{ profile.mobile_number }}");
+    site_mobile.text("{{ profile.site }}");
+    co_mobile.text("{{ profile.co }}");
+    co_slogan_mobile.text("{{ profile.co_slogan }}");
+    co_description_mobile.text("{{ profile.co_description }}");
 
     if(middlename.val() != '') {
         middlename_mobile.text("{{ profile.middle_name }}");
@@ -183,6 +197,23 @@ opacity:0.8;
         middlename_mobile.append("&nbsp;");
     }
 
+    if(contacts.val() == '') {
+        $("#contacts-header").hide();
+    } else {
+        $("#contacts-header").show();
+    }
+
+    if(mobile_number.val() == '') {
+        $("#mobile-header").hide();
+    } else {
+        $("#mobile-header").show();
+    }
+
+    if(site.val() == '') {
+        $("#site-header").hide();
+    } else {
+        $("#site-header").show();
+    }
 
     lastname.on("change paste keyup", function() {
         lastname_mobile.text($(this).val());
@@ -210,6 +241,37 @@ opacity:0.8;
         }
     });
 
+    mobile_number.on("change paste keyup", function() {
+        mobile_number_mobile.text($(this).val());
+
+        if(mobile_number.val() == '') {
+            $("#mobile-header").hide();
+        } else {
+            $("#mobile-header").show();
+        }
+    });
+
+    site.on("change paste keyup", function() {
+        site_mobile.text($(this).val());
+
+        if(site.val() == '') {
+            $("#site-header").hide();
+        } else {
+            $("#site-header").show();
+        }
+    });
+
+    co.on("change paste keyup", function() {
+        co_mobile.text($(this).val());
+    });
+
+    co_slogan.on("change paste keyup", function() {
+        co_slogan_mobile.text($(this).val());
+    });
+
+    co_description.on("change paste keyup", function() {
+        co_description_mobile.text($(this).val());
+    });
+
 </script>
 {% endblock %}
-
