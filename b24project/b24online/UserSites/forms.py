@@ -37,9 +37,6 @@ class SiteForm(forms.ModelForm):
         self.initial['instagram'] = self.instance.instagram
         self.initial['vkontakte'] = self.instance.vkontakte
         self.initial['odnoklassniki'] = self.instance.odnoklassniki
-        self.fields['delivery_currency'].widget.attrs.update({
-            'style': 'width:60%;',
-        })
 
     def clean_sub_domain(self):
         sub_domain = self.cleaned_data.get('sub_domain', None)
@@ -119,8 +116,7 @@ class SiteForm(forms.ModelForm):
 
     class Meta:
         model = UserSite
-        fields = ('slogan', 'template', 'footer_text', 'logo', 'language',
-            'is_delivery_available', 'delivery_currency', 'delivery_cost')
+        fields = ('slogan', 'template', 'footer_text', 'logo', 'language',)
 
 
 class GalleryForm(forms.ModelForm):

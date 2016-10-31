@@ -78,11 +78,6 @@ class UserSite(ActiveModelMixing, models.Model):
     domain_part = models.CharField(max_length=100, null=False, blank=False)
     galleries = GenericRelation(Gallery, related_query_name='sites')
     metadata = JSONField(default=dict())
-    is_delivery_available = models.BooleanField(default=True)
-    delivery_currency = models.CharField(max_length=20, blank=False, 
-                                         null=True, choices=CURRENCY)
-    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, 
-                                        null=True, blank=False)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
