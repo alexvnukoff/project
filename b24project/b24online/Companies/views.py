@@ -22,7 +22,8 @@ from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDe
                       GalleryImageList, DeleteGalleryImage, DeleteDocument, DocumentList)
 from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
         BusinessProposal, InnovationProject, Vacancy, Organization, Branch,
-        Chamber, StaffGroup, PermissionsExtraGroup, Video)
+        Chamber, StaffGroup, PermissionsExtraGroup, Video, 
+        CompanyDeliveryLevel)
 from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
@@ -394,6 +395,16 @@ def _tab_video(request, company, page=1):
 
     return render(request, 'b24online/Companies/tabVideo.html', template_params)
 
+
+def _tab_delivery(request, company, **kwargs):
+    """Tab for Company products delivery"""
+    template_params = {
+        'items': CompanyDeliveryLevel.objects.filter(company=company)\
+            .order_by('product_cost'),
+        'url_parameter': company,
+    }
+    return render(request, 'b24online/Companies/tabDelivery.html', 
+                  template_params)
 
 
 class DeleteCompany(ItemDeactivate):

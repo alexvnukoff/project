@@ -3,8 +3,9 @@ from django.conf.urls import url
 from b24online.Companies.views import (CompanyList, CompanyCreate, CompanyUpdate,
         DeleteCompany, CompanyDetail, send_message, _tab_news, _tab_tenders,
         _tabs_exhibitions, _tab_b2b_products, _tab_b2c_products, _tab_structure,
-        _tab_staff, _tab_proposals, _tab_innovation_projects, _tab_video, CompanyGalleryImageList,
-        DeleteCompanyGalleryImage, CompanyDocumentList, DeleteCompanyDocument)
+        _tab_staff, _tab_proposals, _tab_innovation_projects, _tab_video, 
+        _tab_delivery, CompanyGalleryImageList, DeleteCompanyGalleryImage, 
+        CompanyDocumentList, DeleteCompanyDocument)
 
 urlpatterns = [
     url(r'^$', CompanyList.as_view(), name='main'),
@@ -53,4 +54,7 @@ urlpatterns = [
         CompanyDocumentList.as_view(is_structure=True), name="documents_structure"),
     url(r'^tabs/documents/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$',
         DeleteCompanyDocument.as_view(), name="documents_remove_item"),
+    url(r'^tabs/delivery/(?P<company>[0-9]+)/$', _tab_delivery, 
+        name="tab_delivery"),
+
 ]

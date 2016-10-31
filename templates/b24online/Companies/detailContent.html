@@ -357,6 +357,11 @@
                                     {% trans "Staff" %}
                                 </a>
                             </li>
+                            <li>
+                                <a data-id="staff-tab" href="{% url 'companies:tab_delivery' item.pk %}">
+                                    {% trans "Delivery" %}
+                                </a>
+                            </li>
 
                             <li>
                                 <a href="#cpn-tabs-contacts">
