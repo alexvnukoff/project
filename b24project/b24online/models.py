@@ -2974,6 +2974,35 @@ class LeadsStore(ActiveModelMixing, models.Model):
         return self.organization.name
 
 
+class CompanyDeliveryLevel(models.Model):
+    """
+    Model class for delivery costs levels which depend from product price.
+    """
+    company = models.ForeignKey(
+        Company, 
+        verbose_name='Company delivery cost levels',
+        related_name='delivery_levels',
+        blank=False, 
+        null=False
+    )
+    product_cost = models.DecimalField(
+        max_digits=15, 
+        decimal_places=2, 
+        null=True, 
+        blank=False
+    )
+    delivery_cost = models.DecimalField(
+        max_digits=15, 
+        decimal_places=2, 
+        null=True, 
+        blank=False
+    )
+
+    class Meta:
+        verbose_name = 'Multileveled delivery cost'
+
+
+
 def user_extended_profile(backend, user, response, *args, **kwargs):
     if backend.name == 'facebook' or backend.name == 'google':
         try:
