@@ -66,7 +66,7 @@
                 {% endfor %}
             </li>
             <li style="margin-bottom: 10px;">
-                <label>{% trans 'WWW' %}</label>
+                <label>{% trans "WWW" %}&nbsp;<span style="color:#949494;font-size:11px;">{% trans "Don't have a site?" %}&nbsp;<a href="{% url 'site:main' %}" target="_blank">{% trans "Open right Now" %}</a></span></label>
                 {% if form.errors.site %}
                     <div class="error-handler"> <div class="formserror2">{{ form.errors.site.0 }}</div></div>
                 {% endif %}
