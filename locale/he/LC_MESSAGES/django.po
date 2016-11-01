@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-15 07:42+0000\n"
-"PO-Revision-Date: 2016-10-09 13:17+0300\n"
+"POT-Creation-Date: 2016-11-01 10:00+0000\n"
+"PO-Revision-Date: 2016-10-31 10:03+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Bookmarks: 857,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: b24project/appl/func.py:124 templates/b24online/AdminTpp/prices.html:51
@@ -30,7 +30,7 @@ msgstr "ארגונים"
 #: b24project/b24online/News/views.py:93 b24project/usersites/Api/views.py:271
 #: b24project/usersites/News/urls.py:9 b24project/usersites/News/urls.py:11
 #: templates/b24online/Companies/detailContent.html:302
-#: templates/b24online/Tpp/detailContent.html:135
+#: templates/b24online/Tpp/detailContent.html:245
 #: templates/b24online/Wall/contentPage.html:116
 #: templates/b24online/job_index.html:208
 #: templates/b24online/main/dashboard.html:47
@@ -110,7 +110,7 @@ msgstr "מוצרים"
 
 #: b24project/appl/func.py:145 b24project/b24online/Analytic/views.py:258
 #: templates/b24online/Companies/detailContent.html:349
-#: templates/b24online/Tpp/detailContent.html:168
+#: templates/b24online/Tpp/detailContent.html:278
 #: templates/b24online/main_page.html:157
 msgid "Innovation Projects"
 msgstr "פרוייקטים חדשניים"
@@ -121,7 +121,7 @@ msgstr "פרוייקטים חדשניים"
 #: b24project/b24online/templatetags/inclusionTags.py:138
 #: templates/b24online/Companies/index.html:5
 #: templates/b24online/Messages/index.html:39
-#: templates/b24online/Tpp/detailContent.html:193
+#: templates/b24online/Tpp/detailContent.html:303
 #: templates/b24online/forms.html:5 templates/b24online/index.html:147
 #: templates/b24online/job_index.html:188
 #: templates/b24online/main/dashboard.html:115
@@ -132,7 +132,7 @@ msgstr "חברות"
 #: b24project/appl/func.py:159 b24project/b24online/Analytic/views.py:257
 #: templates/b24online/BusinessProposal/index.html:5
 #: templates/b24online/Companies/detailContent.html:354
-#: templates/b24online/Tpp/detailContent.html:173
+#: templates/b24online/Tpp/detailContent.html:283
 #: templates/b24online/index.html:424 templates/b24online/main_page.html:158
 msgid "Business Proposals"
 msgstr "הצעות עסקיות"
@@ -146,7 +146,7 @@ msgstr "דרושים"
 #: b24project/b24online/Exhibitions/views.py:29
 #: b24project/b24online/Exhibitions/views.py:64
 #: templates/b24online/Companies/detailContent.html:334
-#: templates/b24online/Tpp/detailContent.html:163
+#: templates/b24online/Tpp/detailContent.html:273
 #: templates/b24online/Wall/contentPage.html:76
 msgid "Exhibitions"
 msgstr "אירועים"
@@ -416,14 +416,14 @@ msgstr "הצעה עסקית"
 #: b24project/b24online/Companies/views.py:306
 #: b24project/b24online/Tpp/views.py:328
 #: templates/b24online/Companies/detailContent.html:179
-#: templates/b24online/Tpp/detailContent.html:75
+#: templates/b24online/Tpp/detailContent.html:185
 msgid "Select department"
 msgstr "בחר מחלקה"
 
 #: b24project/b24online/Companies/views.py:319
 #: b24project/b24online/Tpp/views.py:341
 #: templates/b24online/Companies/detailContent.html:180
-#: templates/b24online/Tpp/detailContent.html:76
+#: templates/b24online/Tpp/detailContent.html:186
 msgid "Select vacancy"
 msgstr "בחר משרה"
 
@@ -540,7 +540,7 @@ msgstr "אין משתמש רשום בשם זה"
 msgid "Invalid parameters. There is not such organization"
 msgstr "אין ארגון רשום בשם זה"
 
-#: b24project/b24online/Messages/forms.py:225 templates/b24online/base.html:219
+#: b24project/b24online/Messages/forms.py:225 templates/b24online/base.html:218
 msgid "For user"
 msgstr "עבור משתמש"
 
@@ -553,7 +553,7 @@ msgid "Add user to chat"
 msgstr "הוסף משתמש לצ'אט"
 
 #: b24project/b24online/Messages/forms.py:389
-#: b24project/b24online/models.py:1476 b24project/b24online/models.py:1526
+#: b24project/b24online/models.py:1497 b24project/b24online/models.py:1547
 msgid "Chat subject"
 msgstr "נושא שיחה"
 
@@ -627,7 +627,7 @@ msgid "Coupon discount percrnt should be provided"
 msgstr "עליכם לבחור גודל ההנחה ב %"
 
 #: b24project/b24online/Product/forms.py:121
-#: b24project/b24online/models.py:1945
+#: b24project/b24online/models.py:1966
 #: templates/b24online/AdminTpp/greetings.html:29
 #: templates/b24online/AdminTpp/greetings.html:43
 #: templates/b24online/AdminTpp/greetings.html:106
@@ -651,12 +651,12 @@ msgid "Organization"
 msgstr "ארגון"
 
 #: b24project/b24online/Product/forms.py:123
-#: b24project/b24online/models.py:1952
+#: b24project/b24online/models.py:1973
 msgid "Customer type"
 msgstr "לקוח "
 
 #: b24project/b24online/Product/forms.py:125
-#: b24project/b24online/models.py:2224 b24project/centerpokupok/models.py:219
+#: b24project/b24online/models.py:2245 b24project/centerpokupok/models.py:219
 #: templates/b24online/Products/buyB2BProduct.html:102
 #: templates/b24online/Products/buyB2CProduct.html:84
 #: templates/b24online/Products/dealDetail.html:59
@@ -721,7 +721,7 @@ msgid "Basket"
 msgstr "סל קניות"
 
 #: b24project/b24online/Product/views.py:775
-#: b24project/b24online/models.py:3032 b24project/b24online/models.py:3044
+#: b24project/b24online/models.py:3054 b24project/b24online/models.py:3066
 msgid "Invalid parameter"
 msgstr "פרמטר אינו קיים"
 
@@ -752,7 +752,7 @@ msgstr "יוצרים"
 #: templates/b24online/Products/detailContent.html:134
 #: templates/b24online/Products/detailContentB2C.html:221
 #: templates/b24online/Project/about.html:16
-#: templates/b24online/Tpp/detailContent.html:125
+#: templates/b24online/Tpp/detailContent.html:235
 #: templates/b24online/main/staticPages.html:3
 #: templates/centerpokupok/Company/about.html:7
 #: templates/centerpokupok/Company/header.html:49
@@ -808,7 +808,8 @@ msgstr "הוסף הצעה עסקית"
 #: templates/b24online/Products/detailContentB2C.html:164
 #: templates/b24online/Products/detailContentB2C.html:210
 #: templates/b24online/Project/contact.html:16
-#: templates/b24online/Tpp/contentPage.html:66
+#: templates/b24online/Tpp/contentPage.html:69
+#: templates/b24online/Tpp/contentPage.html:71
 #: templates/centerpokupok/Company/contact.html:6
 #: templates/centerpokupok/Company/contact.html:51
 #: templates/usersites/B2CProducts/include/basketListForm_cineret.html:93
@@ -943,7 +944,7 @@ msgstr "קורות חיים"
 #: b24project/b24online/Tenders/views.py:24
 #: b24project/b24online/Tenders/views.py:64
 #: templates/b24online/Companies/detailContent.html:329
-#: templates/b24online/Tpp/detailContent.html:158
+#: templates/b24online/Tpp/detailContent.html:268
 #: templates/b24online/job_index.html:196
 msgid "Tenders"
 msgstr "מכרזים"
@@ -1115,117 +1116,117 @@ msgstr "באנרים"
 msgid "Context Advertisement"
 msgstr "פרסומת הקשר"
 
-#: b24project/b24online/models.py:402
+#: b24project/b24online/models.py:417
 msgid "parent"
 msgstr "תפריט ראשי"
 
-#: b24project/b24online/models.py:449
+#: b24project/b24online/models.py:470
 msgid "Invalid parameter. Must be a \"Model\" subclass"
 msgstr "פרמטר לא חוקי"
 
-#: b24project/b24online/models.py:473
+#: b24project/b24online/models.py:494
 msgid "International"
 msgstr "בינלאומי"
 
-#: b24project/b24online/models.py:474
+#: b24project/b24online/models.py:495
 msgid "National"
 msgstr "מקומי"
 
-#: b24project/b24online/models.py:475
+#: b24project/b24online/models.py:496
 msgid "Affiliate"
 msgstr "שותפים"
 
-#: b24project/b24online/models.py:778
+#: b24project/b24online/models.py:799
 msgid "Hide the vacancy user"
 msgstr "להסתיר"
 
-#: b24project/b24online/models.py:981 b24project/centerpokupok/models.py:63
+#: b24project/b24online/models.py:1002 b24project/centerpokupok/models.py:63
 msgid "Producer"
 msgstr "יוצר"
 
-#: b24project/b24online/models.py:1057 b24project/b24online/models.py:2419
+#: b24project/b24online/models.py:1078 b24project/b24online/models.py:2441
 #: b24project/centerpokupok/models.py:175
 msgid "Questionnaire"
 msgstr "שאלון"
 
-#: b24project/b24online/models.py:1268
+#: b24project/b24online/models.py:1289
 msgid "Male"
 msgstr "זכר"
 
-#: b24project/b24online/models.py:1268
+#: b24project/b24online/models.py:1289
 msgid "Female"
 msgstr "נקבה"
 
-#: b24project/b24online/models.py:1271
+#: b24project/b24online/models.py:1292
 msgid "Businessman"
 msgstr "איש עסקים"
 
-#: b24project/b24online/models.py:1271
+#: b24project/b24online/models.py:1292
 msgid "Individual"
 msgstr "פרטי"
 
-#: b24project/b24online/models.py:1414 b24project/b24online/models.py:1635
+#: b24project/b24online/models.py:1435 b24project/b24online/models.py:1656
 #: b24project/usersites/Api/views.py:292
 msgid "B2B"
 msgstr "מכירות סיטונאיות"
 
-#: b24project/b24online/models.py:1415 b24project/b24online/models.py:1636
+#: b24project/b24online/models.py:1436 b24project/b24online/models.py:1657
 #: b24project/usersites/Api/views.py:286
 msgid "B2C"
 msgstr "מוצרים למכירה"
 
-#: b24project/b24online/models.py:1416 b24project/b24online/models.py:1637
+#: b24project/b24online/models.py:1437 b24project/b24online/models.py:1658
 msgid "User sites"
 msgstr "אתרי משתמשים"
 
-#: b24project/b24online/models.py:1473
+#: b24project/b24online/models.py:1494
 msgid "Opened"
 msgstr "פתוח"
 
-#: b24project/b24online/models.py:1474
+#: b24project/b24online/models.py:1495
 msgid "Closed"
 msgstr "סגור"
 
-#: b24project/b24online/models.py:1485
+#: b24project/b24online/models.py:1506
 msgid "Chart status"
 msgstr "מעמד"
 
-#: b24project/b24online/models.py:1490
+#: b24project/b24online/models.py:1511
 msgid "Messages chat"
 msgstr "הודעות "
 
-#: b24project/b24online/models.py:1491
+#: b24project/b24online/models.py:1512
 msgid "Messages chats"
 msgstr "הודעות "
 
-#: b24project/b24online/models.py:1510 b24project/b24online/models.py:1949
-#: b24project/b24online/models.py:2077 b24project/b24online/models.py:2629
+#: b24project/b24online/models.py:1531 b24project/b24online/models.py:1970
+#: b24project/b24online/models.py:2098 b24project/b24online/models.py:2651
 msgid "Draft"
 msgstr "טיוטה"
 
-#: b24project/b24online/models.py:1511 b24project/b24online/models.py:1949
-#: b24project/b24online/models.py:2077 b24project/b24online/models.py:2630
+#: b24project/b24online/models.py:1532 b24project/b24online/models.py:1970
+#: b24project/b24online/models.py:2098 b24project/b24online/models.py:2652
 msgid "Ready"
 msgstr "מוכן"
 
-#: b24project/b24online/models.py:1512
+#: b24project/b24online/models.py:1533
 msgid "Read"
 msgstr "קרא"
 
-#: b24project/b24online/models.py:1529
+#: b24project/b24online/models.py:1550
 msgid "Message status"
 msgstr "מצב הודעה"
 
-#: b24project/b24online/models.py:1592
+#: b24project/b24online/models.py:1613
 msgid "File name"
 msgstr "שם קובץ"
 
-#: b24project/b24online/models.py:1594
+#: b24project/b24online/models.py:1615
 msgid "Content type"
 msgstr "סוג תוכן"
 
-#: b24project/b24online/models.py:1730 b24project/b24online/models.py:2305
-#: b24project/b24online/models.py:2579 b24project/centerpokupok/forms.py:39
+#: b24project/b24online/models.py:1751 b24project/b24online/models.py:2327
+#: b24project/b24online/models.py:2601 b24project/centerpokupok/forms.py:39
 #: templates/b24online/AdminTpp/adv_sett.html:26
 #: templates/b24online/AdminTpp/adv_sett.html:41
 #: templates/b24online/AdminTpp/dashboard.html:24
@@ -1273,39 +1274,40 @@ msgstr "סוג תוכן"
 msgid "Name"
 msgstr "שם"
 
-#: b24project/b24online/models.py:1731
+#: b24project/b24online/models.py:1752
 msgid "Code"
 msgstr "קוד"
 
-#: b24project/b24online/models.py:1734
+#: b24project/b24online/models.py:1755
 msgid "Registered events type"
 msgstr "הרשמה לאירוע "
 
-#: b24project/b24online/models.py:1735
+#: b24project/b24online/models.py:1756
 msgid "Registered events types"
 msgstr "הרשמה לאירועים"
 
-#: b24project/b24online/models.py:1749
+#: b24project/b24online/models.py:1770
 msgid "Event  type"
 msgstr "סוג האירוע"
 
-#: b24project/b24online/models.py:1750
+#: b24project/b24online/models.py:1771
 #: templates/b24online/AdminTpp/adv_sett.html:27
 #: templates/b24online/AdminTpp/adv_sett.html:42
 #: templates/b24online/Profile/Public/contentPage.html:94
+#: templates/b24online/Profile/main.html:120
 #: templates/b24online/Tpp/tabCompanies.html:10
 msgid "Site"
 msgstr "אתר"
 
-#: b24project/b24online/models.py:1753
+#: b24project/b24online/models.py:1774
 msgid "Instance ID"
 msgstr "קוד מוצר"
 
-#: b24project/b24online/models.py:1765 templates/admin/show_stats.html:59
+#: b24project/b24online/models.py:1786 templates/admin/show_stats.html:59
 msgid "Unique"
 msgstr "כמות"
 
-#: b24project/b24online/models.py:1766 templates/admin/show_stats.html:60
+#: b24project/b24online/models.py:1787 templates/admin/show_stats.html:60
 #: templates/b24online/Products/dealDetail.html:61
 #: templates/b24online/Products/dealItemDetail.html:48
 #: templates/b24online/Products/dealOrderDetail.html:99
@@ -1329,71 +1331,71 @@ msgstr "כמות"
 msgid "Total"
 msgstr "סכום הזמנה כולל"
 
-#: b24project/b24online/models.py:1767 b24project/b24online/models.py:1880
+#: b24project/b24online/models.py:1788 b24project/b24online/models.py:1901
 msgid "Event extra data"
 msgstr "פרטי אירוע נוספים"
 
-#: b24project/b24online/models.py:1770
+#: b24project/b24online/models.py:1791
 msgid "Registered events stats"
 msgstr "נתוני אירועים רשומים"
 
-#: b24project/b24online/models.py:1775
+#: b24project/b24online/models.py:1796
 #, python-brace-format
 msgid "Event stats of type \"{0}\" for \"{1}\""
 msgstr "סטטיסטיקה אירוע מסוג \"{0}\" עבור \"{1}\""
 
-#: b24project/b24online/models.py:1828 b24project/b24online/models.py:1829
-#: b24project/b24online/models.py:1851
+#: b24project/b24online/models.py:1849 b24project/b24online/models.py:1850
+#: b24project/b24online/models.py:1872
 msgid "Undefined"
 msgstr "אינו מוגדר"
 
-#: b24project/b24online/models.py:1868
+#: b24project/b24online/models.py:1889
 msgid "Requested URL"
 msgstr "נדרשת כתובת אתר"
 
-#: b24project/b24online/models.py:1869
+#: b24project/b24online/models.py:1890
 #: templates/b24online/Leads/contentPage.html:44
 msgid "Username"
 msgstr "שם משתמש "
 
-#: b24project/b24online/models.py:1871
+#: b24project/b24online/models.py:1892
 msgid "IP address"
 msgstr "כתובת "
 
-#: b24project/b24online/models.py:1873
+#: b24project/b24online/models.py:1894
 msgid "User Agent"
 msgstr "משתמשים "
 
-#: b24project/b24online/models.py:1875
+#: b24project/b24online/models.py:1896
 msgid "Event hash key"
 msgstr "סוג האירוע"
 
-#: b24project/b24online/models.py:1878
+#: b24project/b24online/models.py:1899
 msgid "Is unique"
 msgstr "כמות"
 
-#: b24project/b24online/models.py:1883
+#: b24project/b24online/models.py:1904
 msgid "Registered event"
 msgstr "אירוע רשום"
 
-#: b24project/b24online/models.py:1884
+#: b24project/b24online/models.py:1905
 msgid "Registered events"
 msgstr "אירועים רשומים"
 
-#: b24project/b24online/models.py:1890
+#: b24project/b24online/models.py:1911
 #, python-brace-format
 msgid "Event of type \"{0}\" for \"{1}\""
 msgstr "אירוע מסוג \"{0}\" עבור \"{1}\""
 
-#: b24project/b24online/models.py:1924
+#: b24project/b24online/models.py:1945
 msgid "Country code"
 msgstr "ארץ "
 
-#: b24project/b24online/models.py:1925
+#: b24project/b24online/models.py:1946
 msgid "Country name"
 msgstr "שם "
 
-#: b24project/b24online/models.py:1926 b24project/centerpokupok/forms.py:15
+#: b24project/b24online/models.py:1947 b24project/centerpokupok/forms.py:15
 #: templates/admin/show_stats_detail.html:32
 #: templates/b24online/Analytic/registered_event_stats_diag.html:16
 #: templates/b24online/Companies/tabExhibitions.html:10
@@ -1404,89 +1406,89 @@ msgstr "שם "
 msgid "City"
 msgstr "עיר"
 
-#: b24project/b24online/models.py:1944
+#: b24project/b24online/models.py:1965
 msgid "Person"
 msgstr "נתונים אישיים "
 
-#: b24project/b24online/models.py:1947
+#: b24project/b24online/models.py:1968
 msgid "On portal"
 msgstr "בפורטל "
 
-#: b24project/b24online/models.py:1947
+#: b24project/b24online/models.py:1968
 msgid "On site"
 msgstr "באתר"
 
-#: b24project/b24online/models.py:1950
+#: b24project/b24online/models.py:1971
 msgid "Partially paid"
 msgstr "שולם חלקית"
 
-#: b24project/b24online/models.py:1950 b24project/b24online/models.py:2079
+#: b24project/b24online/models.py:1971 b24project/b24online/models.py:2100
 msgid "Paid"
 msgstr "שולם"
 
-#: b24project/b24online/models.py:1955
+#: b24project/b24online/models.py:1976
 msgid "Deal place"
 msgstr "מיקום עסקה"
 
-#: b24project/b24online/models.py:1960
+#: b24project/b24online/models.py:1981
 msgid "Customer organization"
 msgstr "הארגון שלך "
 
-#: b24project/b24online/models.py:1962
+#: b24project/b24online/models.py:1983
 msgid "Order No."
 msgstr "הזמנה מספר"
 
-#: b24project/b24online/models.py:1964 b24project/b24online/models.py:2104
+#: b24project/b24online/models.py:1985 b24project/b24online/models.py:2125
 msgid "Payment datetime"
 msgstr "תאריך תשלום"
 
-#: b24project/b24online/models.py:1966
+#: b24project/b24online/models.py:1987
 #: templates/b24online/Products/dealOrderDetail.html:65
 msgid "Order status"
 msgstr "פרטי הזמנה "
 
-#: b24project/b24online/models.py:1973
+#: b24project/b24online/models.py:1994
 msgid "Product order"
 msgstr "פרטי המוצר "
 
-#: b24project/b24online/models.py:1974
+#: b24project/b24online/models.py:1995
 msgid "Product orders"
 msgstr "ביקורת מוצר "
 
-#: b24project/b24online/models.py:1993
+#: b24project/b24online/models.py:2014
 #, python-format
 msgid "Order from %s"
 msgstr "%s הזמן מ-"
 
-#: b24project/b24online/models.py:1995
+#: b24project/b24online/models.py:2016
 msgid "order No."
 msgstr "מספר הזמנה"
 
-#: b24project/b24online/models.py:2078
+#: b24project/b24online/models.py:2099
 msgid "Paid by PayPal"
 msgstr "שולם בפאי פאל"
 
-#: b24project/b24online/models.py:2080
+#: b24project/b24online/models.py:2101
 msgid "Ordered by Email"
 msgstr "הוזמן במייל"
 
-#: b24project/b24online/models.py:2081
+#: b24project/b24online/models.py:2102
 msgid "Rejected"
 msgstr "נדחה"
 
-#: b24project/b24online/models.py:2084
+#: b24project/b24online/models.py:2105
 msgid "Order"
 msgstr "הזמנה"
 
-#: b24project/b24online/models.py:2088
+#: b24project/b24online/models.py:2109
 msgid "Supplier company"
 msgstr "חברה ספקית"
 
-#: b24project/b24online/models.py:2091
+#: b24project/b24online/models.py:2112
 msgid "Deal No."
 msgstr "מספר עסקה"
 
-#: b24project/b24online/models.py:2093
+#: b24project/b24online/models.py:2114
 #: templates/b24online/Products/dealDetail.html:37
 #: templates/b24online/Products/dealOrderBasket.html:44
 #: templates/b24online/Products/dealPayPal.html:88
@@ -1494,34 +1496,34 @@ msgstr "מספר עסקה"
 msgid "Total deal cost"
 msgstr "סכום כולל"
 
-#: b24project/b24online/models.py:2096 b24project/b24online/models.py:2222
+#: b24project/b24online/models.py:2117 b24project/b24online/models.py:2243
 msgid "Currence"
 msgstr "מטבע "
 
-#: b24project/b24online/models.py:2098
+#: b24project/b24online/models.py:2119
 msgid "Transaction ID"
 msgstr "קוד משלוח"
 
-#: b24project/b24online/models.py:2101
+#: b24project/b24online/models.py:2122
 msgid "PayPal Transaction"
 msgstr "משלוח פאי פאל"
 
-#: b24project/b24online/models.py:2106
+#: b24project/b24online/models.py:2127
 msgid "Deal status"
 msgstr "מצב עסקה"
 
-#: b24project/b24online/models.py:2109
+#: b24project/b24online/models.py:2130
 msgid "First name"
 msgstr "שם פרטי"
 
-#: b24project/b24online/models.py:2111 b24project/centerpokupok/forms.py:30
-#: templates/b24online/Profile/addForm.html:41
+#: b24project/b24online/models.py:2132 b24project/centerpokupok/forms.py:30
+#: templates/b24online/Profile/addForm.html:40
 #: templates/usersites_templates/cineret_blue/profileForm.html:43
 #: templates/usersites_templates/ibonds/profileForm.html:43
 msgid "Last name"
 msgstr "שם משפחה"
 
-#: b24project/b24online/models.py:2113
+#: b24project/b24online/models.py:2134
 #: templates/usersites/OrganizationPages/structure.html:21
 #: templates/usersites_templates/cat_business/OrganizationPages/structure.html:21
 #: templates/usersites_templates/cineret/OrganizationPages/structure.html:21
@@ -1548,7 +1550,7 @@ msgstr "שם משפחה"
 msgid "Phone number"
 msgstr "מספר טלפון"
 
-#: b24project/b24online/models.py:2115 b24project/b24online/models.py:2315
+#: b24project/b24online/models.py:2136 b24project/b24online/models.py:2337
 #: b24project/centerpokupok/forms.py:16
 #: templates/admin/show_stats_detail.html:30
 #: templates/b24online/Analytic/registered_event_stats_diag.html:14
@@ -1561,7 +1563,7 @@ msgstr "מספר טלפון"
 #: templates/b24online/Leads/popupFilter.html:19
 #: templates/b24online/News/popupFilter.html:9
 #: templates/b24online/Products/popupFilter.html:9
-#: templates/b24online/Profile/addForm.html:87
+#: templates/b24online/Profile/addForm.html:86
 #: templates/b24online/Tenders/addForm.html:93
 #: templates/b24online/Tenders/popupFilter.html:9
 #: templates/b24online/TppTV/popupFilter.html:9
@@ -1574,7 +1576,7 @@ msgstr "מספר טלפון"
 msgid "Country"
 msgstr "ארץ"
 
-#: b24project/b24online/models.py:2117 b24project/centerpokupok/forms.py:18
+#: b24project/b24online/models.py:2138 b24project/centerpokupok/forms.py:18
 #: b24project/centerpokupok/forms.py:42 b24project/centerpokupok/forms.py:85
 #: templates/b24online/BusinessProposal/detailContent.html:85
 #: templates/b24online/Companies/addForm.html:205
@@ -1582,10 +1584,11 @@ msgstr "ארץ"
 #: templates/b24online/Exhibitions/detailContent.html:107
 #: templates/b24online/Innov/detailContent.html:117
 #: templates/b24online/Profile/Public/contentPage.html:106
+#: templates/b24online/Profile/main.html:132
 #: templates/b24online/Resume/addForm.html:33
 #: templates/b24online/Resume/detailContent.html:64
 #: templates/b24online/Tpp/addForm.html:162
-#: templates/b24online/Tpp/detailContent.html:218
+#: templates/b24online/Tpp/detailContent.html:328
 #: templates/usersites/OrganizationPages/contact.html:12
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:27
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:27
@@ -1611,134 +1614,134 @@ msgstr "ארץ"
 msgid "Address"
 msgstr "כתובת"
 
-#: b24project/b24online/models.py:2127 b24project/b24online/models.py:2128
+#: b24project/b24online/models.py:2148 b24project/b24online/models.py:2149
 msgid "Purchase deal"
 msgstr "מצב עסקה"
 
-#: b24project/b24online/models.py:2163
+#: b24project/b24online/models.py:2184
 #, python-format
 msgid "Deal from %s"
 msgstr "%s מ-"
 
-#: b24project/b24online/models.py:2165 b24project/b24online/models.py:2172
+#: b24project/b24online/models.py:2186 b24project/b24online/models.py:2193
 #, python-format
 msgid "deal No. %s"
 msgstr "%s עסקה מס-"
 
-#: b24project/b24online/models.py:2170
+#: b24project/b24online/models.py:2191
 #, python-brace-format
 msgid "Deal from {0} for order {0}"
 msgstr "{0} הזמן{0} מ- "
 
-#: b24project/b24online/models.py:2212
+#: b24project/b24online/models.py:2233
 #: templates/b24online/Products/dealOrderDetail.html:87
 msgid "Deal"
 msgstr "מספר עסקה"
 
-#: b24project/b24online/models.py:2219
+#: b24project/b24online/models.py:2240
 msgid "The product price"
 msgstr "מחיר מוצר"
 
-#: b24project/b24online/models.py:2225 b24project/centerpokupok/models.py:220
+#: b24project/b24online/models.py:2246 b24project/centerpokupok/models.py:220
 msgid "Extra parameters values"
 msgstr "פרמטרים  נוספים"
 
-#: b24project/b24online/models.py:2228
+#: b24project/b24online/models.py:2249
 msgid "Deal product"
 msgstr "תאריך מוצר"
 
-#: b24project/b24online/models.py:2229
+#: b24project/b24online/models.py:2250
 msgid "Deal products"
 msgstr "מוצרי החברה "
 
-#: b24project/b24online/models.py:2267
+#: b24project/b24online/models.py:2289
 msgid "Vacancy group"
 msgstr "משרה פנויה"
 
-#: b24project/b24online/models.py:2284
+#: b24project/b24online/models.py:2306
 msgid "Group name"
 msgstr "שם קבוצה"
 
-#: b24project/b24online/models.py:2288
+#: b24project/b24online/models.py:2310
 msgid "Permission extra group"
 msgstr "אישור קבוצה נוספת"
 
-#: b24project/b24online/models.py:2292
+#: b24project/b24online/models.py:2314
 msgid "Permission's extra group"
 msgstr "אישור הקבוצה הנוספת"
 
-#: b24project/b24online/models.py:2293
+#: b24project/b24online/models.py:2315
 msgid "Permission's extra groups"
 msgstr "אישור קבוצות נוספות"
 
-#: b24project/b24online/models.py:2308 b24project/b24online/models.py:2367
+#: b24project/b24online/models.py:2330 b24project/b24online/models.py:2389
 msgid "Short description"
 msgstr "תיאור קצר"
 
-#: b24project/b24online/models.py:2310 b24project/b24online/models.py:2369
-#: b24project/b24online/models.py:2498 b24project/b24online/models.py:2585
+#: b24project/b24online/models.py:2332 b24project/b24online/models.py:2391
+#: b24project/b24online/models.py:2520 b24project/b24online/models.py:2607
 msgid "Descripion"
 msgstr "תיאור "
 
-#: b24project/b24online/models.py:2326
+#: b24project/b24online/models.py:2348
 msgid "Products producer"
 msgstr "יצרן"
 
-#: b24project/b24online/models.py:2327
+#: b24project/b24online/models.py:2349
 msgid "Products producers"
 msgstr "יצרנים"
 
-#: b24project/b24online/models.py:2365
+#: b24project/b24online/models.py:2387
 msgid "Questionnaire title"
 msgstr "כותרת שאלון"
 
-#: b24project/b24online/models.py:2383
+#: b24project/b24online/models.py:2405
 msgid "How many coincedences for 'red' color"
 msgstr "צבע אדום"
 
-#: b24project/b24online/models.py:2387
+#: b24project/b24online/models.py:2409
 msgid "How many coincedences for 'yellow' color"
 msgstr "צבע צהוב"
 
-#: b24project/b24online/models.py:2391
+#: b24project/b24online/models.py:2413
 msgid "How many coincedences for 'green' color"
 msgstr "צבע ירוק"
 
-#: b24project/b24online/models.py:2395
+#: b24project/b24online/models.py:2417
 msgid "Use the option \"Show the question if someone selected\""
 msgstr "בחר באפשרות \"הצג שאלה אם משתמש נבחר\""
 
-#: b24project/b24online/models.py:2420
+#: b24project/b24online/models.py:2442
 #: templates/usersites/B2BProducts/detailContent.html:95
 #: templates/usersites/B2CProducts/detailContent.html:154
 msgid "Questionnaires"
 msgstr "שאלון "
 
-#: b24project/b24online/models.py:2470
+#: b24project/b24online/models.py:2492
 msgid "By author"
 msgstr "לפי מחבר"
 
-#: b24project/b24online/models.py:2471
+#: b24project/b24online/models.py:2493
 msgid "By member"
 msgstr "לפי משתמש "
 
-#: b24project/b24online/models.py:2479
+#: b24project/b24online/models.py:2501
 msgid "Who is the author"
 msgstr "מי המחבר?"
 
-#: b24project/b24online/models.py:2493
+#: b24project/b24online/models.py:2515
 msgid "Question text"
 msgstr "תוכן השאלה"
 
-#: b24project/b24online/models.py:2503
+#: b24project/b24online/models.py:2525
 msgid "The question position in the set"
 msgstr "הצב שאלה"
 
-#: b24project/b24online/models.py:2508
+#: b24project/b24online/models.py:2530
 msgid "User question approved by questionnaire author"
 msgstr "השאלה של המשתמש אושרה על ידי מחבר השאלון"
 
-#: b24project/b24online/models.py:2515 b24project/b24online/models.py:2825
+#: b24project/b24online/models.py:2537 b24project/b24online/models.py:2847
 #: templates/b24online/Questionnaires/detail.html:61
 #: templates/b24online/Questionnaires/detail.html:112
 #: templates/b24online/Questionnaires/detail.html:200
@@ -1747,53 +1750,53 @@ msgstr "השאלה של המשתמש אושרה על ידי מחבר השאלו�
 msgid "Question"
 msgstr "שאלה"
 
-#: b24project/b24online/models.py:2516
+#: b24project/b24online/models.py:2538
 #: templates/b24online/Questionnaires/detail.html:40
 msgid "Questions"
 msgstr "שאלות"
 
-#: b24project/b24online/models.py:2556
+#: b24project/b24online/models.py:2578
 msgid "Red"
 msgstr "אדום"
 
-#: b24project/b24online/models.py:2557
+#: b24project/b24online/models.py:2579
 msgid "Yellow"
 msgstr "צהוב"
 
-#: b24project/b24online/models.py:2558
+#: b24project/b24online/models.py:2580
 msgid "Green"
 msgstr "ירוק"
 
-#: b24project/b24online/models.py:2573
+#: b24project/b24online/models.py:2595
 msgid "For what color"
 msgstr "עבור איזה צבע"
 
-#: b24project/b24online/models.py:2593
+#: b24project/b24online/models.py:2615
 msgid "Recommendation"
 msgstr "המלצה"
 
-#: b24project/b24online/models.py:2594
+#: b24project/b24online/models.py:2616
 #: templates/b24online/Questionnaires/detail.html:41
 msgid "Recommendations"
 msgstr "המלצות"
 
-#: b24project/b24online/models.py:2616
+#: b24project/b24online/models.py:2638
 msgid "Questionnaire participant"
 msgstr "משתמש בשאלון"
 
-#: b24project/b24online/models.py:2617
+#: b24project/b24online/models.py:2639
 msgid "Questionnaire participants"
 msgstr "משתתפים בשאלון"
 
-#: b24project/b24online/models.py:2631
+#: b24project/b24online/models.py:2653
 msgid "Actiive"
 msgstr "פעיל "
 
-#: b24project/b24online/models.py:2632
+#: b24project/b24online/models.py:2654
 msgid "Finished"
 msgstr "סיום"
 
-#: b24project/b24online/models.py:2645 templates/b24online/Adv/basket.html:23
+#: b24project/b24online/models.py:2667 templates/b24online/Adv/basket.html:23
 #: templates/b24online/Companies/tabStaff.html:31
 #: templates/b24online/Products/dealListBase.html:44
 #: templates/b24online/Products/dealOrderList.html:35
@@ -1801,30 +1804,30 @@ msgstr "סיום"
 msgid "Status"
 msgstr "מעמד"
 
-#: b24project/b24online/models.py:2662
+#: b24project/b24online/models.py:2684
 msgid "Questionnaire case"
 msgstr "נושא שאלון"
 
-#: b24project/b24online/models.py:2663 b24project/b24online/models.py:2831
+#: b24project/b24online/models.py:2685 b24project/b24online/models.py:2853
 msgid "Questionnaire cases"
 msgstr "נשאים של השאלון"
 
-#: b24project/b24online/models.py:2681
+#: b24project/b24online/models.py:2703
 msgid "The participants are invalid"
 msgstr "המשתתפים אינם מורשים"
 
-#: b24project/b24online/models.py:2837
+#: b24project/b24online/models.py:2859
 msgid "Answer author"
 msgstr "תשובה מחבר"
 
-#: b24project/b24online/models.py:2840
+#: b24project/b24online/models.py:2862
 #: templates/b24online/Questionnaires/questionnaireCaseAnswers.html:13
 #: templates/b24online/Questionnaires/questionnaireCaseCoincedences.html:13
 #: templates/b24online/Questionnaires/questionnaireCaseCoincedences.html:14
 msgid "Answer"
 msgstr "תשובה"
 
-#: b24project/b24online/models.py:2846
+#: b24project/b24online/models.py:2868
 #: templates/usersites/Questionnaires/contentPage.html:34
 #: templates/usersites_templates/ibonds/Questionnaires/contentPage.html:35
 #: templates/usersites_templates/ibonds/Questionnaires/history.html:43
@@ -1832,11 +1835,11 @@ msgstr "תשובה"
 msgid "Show"
 msgstr "הצג"
 
-#: b24project/b24online/models.py:2853
+#: b24project/b24online/models.py:2875
 msgid "Question answer"
 msgstr "תשובה"
 
-#: b24project/b24online/models.py:2854
+#: b24project/b24online/models.py:2876
 msgid "Questions answers"
 msgstr "תשובות"
 
@@ -1908,7 +1911,7 @@ msgid "Fisrt name"
 msgstr "שם פרטי"
 
 #: b24project/centerpokupok/forms.py:32
-#: templates/b24online/Profile/addForm.html:94
+#: templates/b24online/Profile/addForm.html:93
 #: templates/b24online/Resume/detailContent.html:48
 #: templates/usersites_templates/cineret_blue/profileForm.html:87
 #: templates/usersites_templates/ibonds/profileForm.html:87
@@ -1933,9 +1936,9 @@ msgstr "שם משפחה"
 #: templates/b24online/Leads/addForm.html:19
 #: templates/b24online/Leads/contentPage.html:45
 #: templates/b24online/Messages/sendMessage.html:73
-#: templates/b24online/Profile/addForm.html:35
-#: templates/b24online/Tpp/detailContent.html:236
-#: templates/b24online/base.html:244
+#: templates/b24online/Profile/addForm.html:34
+#: templates/b24online/Tpp/detailContent.html:346
+#: templates/b24online/base.html:243
 #: templates/centerpokupok/registration/login.html:17
 msgid "Email"
 msgstr "דוא''ל"
@@ -1960,7 +1963,7 @@ msgid "Description"
 msgstr "תיאור"
 
 #: b24project/centerpokupok/forms.py:82
-#: templates/b24online/Profile/addForm.html:48
+#: templates/b24online/Profile/addForm.html:47
 #: templates/usersites_templates/cineret_blue/profileForm.html:50
 #: templates/usersites_templates/ibonds/profileForm.html:50
 msgid "First Name"
@@ -2142,7 +2145,7 @@ msgstr "בית"
 #: templates/b24online/Products/buyB2BProduct.html:171
 #: templates/b24online/Products/detailContent.html:137
 #: templates/b24online/Tenders/detailContent.html:75
-#: templates/b24online/Tpp/detailContent.html:148
+#: templates/b24online/Tpp/detailContent.html:258
 #: templates/usersites/B2BProducts/detailContent.html:93
 #: templates/usersites/B2CProducts/detailContent.html:152
 #: templates/usersites/OrganizationPages/gallery.html:6
@@ -2225,7 +2228,7 @@ msgstr "גלרייה"
 #: b24project/usersites/Api/views.py:303
 #: b24project/usersites/OrganizationPages/views.py:104
 #: templates/b24online/Companies/detailContent.html:359
-#: templates/b24online/Tpp/detailContent.html:178
+#: templates/b24online/Tpp/detailContent.html:288
 msgid "Structure"
 msgstr "מבנה"
 
@@ -2234,7 +2237,7 @@ msgstr "מבנה"
 #: templates/b24online/Companies/detailContent.html:370
 #: templates/b24online/Exhibitions/detailContent.html:90
 #: templates/b24online/Innov/detailContent.html:75
-#: templates/b24online/Tpp/detailContent.html:188
+#: templates/b24online/Tpp/detailContent.html:298
 #: templates/b24online/Tpp/tabCompanies.html:9
 #: templates/b24online/main/staticPages.html:25
 #: templates/centerpokupok/Company/header.html:48
@@ -2629,7 +2632,10 @@ msgstr "הסיסמא שונתה בהצלחה"
 #: templates/_usersites/registration/password_change_form.html:4
 #: templates/_usersites/registration/password_change_form.html:8
 #: templates/_usersites/registration/password_change_form.html:38
-#: templates/b24online/Profile/addForm.html:10
+#: templates/b24online/Profile/addForm.html:14
+#: templates/b24online/Profile/changePassword.html:4
+#: templates/b24online/Profile/changePassword.html:16
+#: templates/b24online/Profile/changePassword.html:39
 #: templates/centerpokupok/registration/password_change_form.html:8
 #: templates/centerpokupok/registration/password_reset_confirm.html:52
 #: templates/registration/password_change_form.html:4
@@ -2646,6 +2652,7 @@ msgid "Old opassword"
 msgstr "סיסמא ישנה"
 
 #: templates/_usersites/registration/password_change_form.html:21
+#: templates/b24online/Profile/changePassword.html:22
 #: templates/registration/password_change_form.html:21
 msgid "New password"
 msgstr "סיסמא חדשה"
@@ -2672,19 +2679,20 @@ msgstr "אשר סיסמא חדשה"
 #: templates/b24online/Products/addForm.html:243
 #: templates/b24online/Products/addFormB2C.html:301
 #: templates/b24online/Products/producerForm.html:152
-#: templates/b24online/Profile/addForm.html:173
+#: templates/b24online/Profile/addForm.html:172
+#: templates/b24online/Profile/changePassword.html:40
 #: templates/b24online/Questionnaires/form.html:40
 #: templates/b24online/Questionnaires/questionForm.html:36
 #: templates/b24online/Questionnaires/recommendationForm.html:36
 #: templates/b24online/Resume/addForm.html:211
 #: templates/b24online/Tenders/addForm.html:155
 #: templates/b24online/Tpp/addForm.html:219
-#: templates/b24online/Tpp/detailContent.html:59
-#: templates/b24online/Tpp/detailContent.html:67
+#: templates/b24online/Tpp/detailContent.html:169
+#: templates/b24online/Tpp/detailContent.html:177
 #: templates/b24online/TppTV/addForm.html:91
 #: templates/b24online/Vacancy/addForm.html:113
 #: templates/b24online/Vacancy/detailContent.html:116
-#: templates/b24online/Video/addForm.html:95 templates/b24online/base.html:259
+#: templates/b24online/Video/addForm.html:95 templates/b24online/base.html:258
 #: templates/registration/password_change_form.html:39
 #: templates/usersites_templates/cineret_blue/profileForm.html:131
 #: templates/usersites_templates/ibonds/profileForm.html:131
@@ -3154,7 +3162,7 @@ msgstr "קטגוריות מכירות סיטונאיות"
 #: templates/b24online/Products/addForm.html:242
 #: templates/b24online/Products/addFormB2C.html:300
 #: templates/b24online/Products/producerForm.html:151
-#: templates/b24online/Profile/addForm.html:172
+#: templates/b24online/Profile/addForm.html:171
 #: templates/b24online/Questionnaires/form.html:39
 #: templates/b24online/Questionnaires/questionForm.html:35
 #: templates/b24online/Questionnaires/recommendationForm.html:35
@@ -3764,7 +3772,7 @@ msgstr "עוד"
 #: templates/b24online/Products/contentPageB2C_coupons.html:115
 #: templates/b24online/Resume/contentPage.html:30
 #: templates/b24online/Tenders/contentPage.html:40
-#: templates/b24online/Tpp/contentPage.html:72
+#: templates/b24online/Tpp/contentPage.html:79
 #: templates/b24online/Tpp/tabCompanies.html:34
 #: templates/b24online/Tpp/tabExhibitions.html:29
 #: templates/b24online/Tpp/tabInnov.html:27
@@ -3787,7 +3795,7 @@ msgstr "לא נמצאו תוצאות"
 #: templates/b24online/Products/buyB2BProduct.html:176
 #: templates/b24online/Products/detailContent.html:142
 #: templates/b24online/Tenders/detailContent.html:80
-#: templates/b24online/Tpp/detailContent.html:153
+#: templates/b24online/Tpp/detailContent.html:263
 msgid "Documents"
 msgstr "מסמכים"
 
@@ -3800,7 +3808,7 @@ msgstr "מסמכים"
 #: templates/b24online/Resume/addForm.html:56
 #: templates/b24online/Resume/detailContent.html:60
 #: templates/b24online/Tpp/addForm.html:83
-#: templates/b24online/Tpp/detailContent.html:224
+#: templates/b24online/Tpp/detailContent.html:334
 #: templates/centerpokupok/Product/orderStepOne.html:116
 msgid "Telephone number"
 msgstr "מספר טלפון"
@@ -3811,7 +3819,7 @@ msgstr "מספר טלפון"
 #: templates/b24online/Exhibitions/detailContent.html:119
 #: templates/b24online/Innov/detailContent.html:129
 #: templates/b24online/Tpp/addForm.html:90
-#: templates/b24online/Tpp/detailContent.html:230
+#: templates/b24online/Tpp/detailContent.html:340
 #: templates/usersites/Proposals/detailContent.html:77
 #: templates/usersites_templates/cat_business/Proposals/detailContent.html:76
 #: templates/usersites_templates/default_horizontal_banners/Proposals/detailContent.html:77
@@ -3829,8 +3837,8 @@ msgstr "פקס"
 #: templates/b24online/Companies/detailContent.html:414
 #: templates/b24online/Exhibitions/detailContent.html:131
 #: templates/b24online/Innov/detailContent.html:141
-#: templates/b24online/Profile/addForm.html:71
-#: templates/b24online/Tpp/detailContent.html:242
+#: templates/b24online/Profile/addForm.html:70
+#: templates/b24online/Tpp/detailContent.html:352
 #: templates/usersites_templates/cineret_blue/profileForm.html:119
 #: templates/usersites_templates/ibonds/profileForm.html:119
 msgid "WWW"
@@ -3928,52 +3936,58 @@ msgid "Member of"
 msgstr "חבר"
 
 #: templates/b24online/Companies/detailContent.html:65
+#: templates/b24online/Tpp/detailContent.html:73
 msgid "This field is required."
 msgstr "שדה חובה"
 
 #: templates/b24online/Companies/detailContent.html:89
+#: templates/b24online/Tpp/detailContent.html:97
 msgid "Enter a valid email address."
 msgstr "הזן כתובת מייל"
 
 #: templates/b24online/Companies/detailContent.html:98
+#: templates/b24online/Tpp/detailContent.html:106
 msgid "Your message has been sent!"
 msgstr "ההודעה נשלחה!"
 
 #: templates/b24online/Companies/detailContent.html:114
+#: templates/b24online/Tpp/detailContent.html:122
 msgid "Submit"
 msgstr "בצע"
 
 #: templates/b24online/Companies/detailContent.html:122
 #: templates/b24online/Companies/detailContent.html:460
+#: templates/b24online/Tpp/detailContent.html:130
+#: templates/b24online/Tpp/detailContent.html:397
 msgid "All form fields are required."
 msgstr "שדות חובה "
 
 #: templates/b24online/Companies/detailContent.html:159
 #: templates/b24online/Companies/detailContent.html:169
-#: templates/b24online/Tpp/detailContent.html:57
-#: templates/b24online/Tpp/detailContent.html:65
+#: templates/b24online/Tpp/detailContent.html:167
+#: templates/b24online/Tpp/detailContent.html:175
 msgid "Do you want to delete this record?"
 msgstr "אתה רוצה למחוק רשומה זו?"
 
 #: templates/b24online/Companies/detailContent.html:160
 #: templates/b24online/Companies/detailContent.html:170
-#: templates/b24online/Tpp/detailContent.html:58
-#: templates/b24online/Tpp/detailContent.html:66
+#: templates/b24online/Tpp/detailContent.html:168
+#: templates/b24online/Tpp/detailContent.html:176
 msgid "OK"
 msgstr "או קיי"
 
 #: templates/b24online/Companies/detailContent.html:162
 #: templates/b24online/Companies/detailContent.html:172
-#: templates/b24online/Tpp/detailContent.html:60
-#: templates/b24online/Tpp/detailContent.html:68
+#: templates/b24online/Tpp/detailContent.html:170
+#: templates/b24online/Tpp/detailContent.html:178
 msgid "Department name"
 msgstr "שם המחלקה"
 
 #: templates/b24online/Companies/detailContent.html:163
 #: templates/b24online/Companies/detailContent.html:173
 #: templates/b24online/Resume/detailContent.html:34
-#: templates/b24online/Tpp/detailContent.html:61
-#: templates/b24online/Tpp/detailContent.html:69
+#: templates/b24online/Tpp/detailContent.html:171
+#: templates/b24online/Tpp/detailContent.html:179
 msgid "Vacancy title"
 msgstr "כותרת המשרה"
 
@@ -3983,47 +3997,47 @@ msgstr "הוסף משרה"
 
 #: templates/b24online/Companies/detailContent.html:165
 #: templates/b24online/Companies/detailContent.html:178
-#: templates/b24online/Tpp/detailContent.html:74
+#: templates/b24online/Tpp/detailContent.html:184
 msgid "Loading..."
 msgstr "טוען..."
 
 #: templates/b24online/Companies/detailContent.html:174
-#: templates/b24online/Tpp/detailContent.html:70
+#: templates/b24online/Tpp/detailContent.html:180
 msgid "Administrator"
 msgstr "מנהל אתר"
 
 #: templates/b24online/Companies/detailContent.html:175
-#: templates/b24online/Tpp/detailContent.html:71
+#: templates/b24online/Tpp/detailContent.html:181
 msgid "Add staff"
 msgstr "הוסף צוות המשרד"
 
 #: templates/b24online/Companies/detailContent.html:176
-#: templates/b24online/Tpp/detailContent.html:72
+#: templates/b24online/Tpp/detailContent.html:182
 msgid "Add user email"
 msgstr "הוסף דואר אלקטרוני"
 
 #: templates/b24online/Companies/detailContent.html:177
-#: templates/b24online/Tpp/detailContent.html:73
+#: templates/b24online/Tpp/detailContent.html:183
 msgid "Edit staff"
 msgstr "ערוך צוות המשרד"
 
 #: templates/b24online/Companies/detailContent.html:181
-#: templates/b24online/Tpp/detailContent.html:77
+#: templates/b24online/Tpp/detailContent.html:187
 msgid "Do not show user"
 msgstr "לא להראות משתמש "
 
 #: templates/b24online/Companies/detailContent.html:182
-#: templates/b24online/Tpp/detailContent.html:78
+#: templates/b24online/Tpp/detailContent.html:188
 msgid "Select additional permissions"
 msgstr "בחר הרשאות נוספות"
 
 #: templates/b24online/Companies/detailContent.html:183
-#: templates/b24online/Tpp/detailContent.html:79
+#: templates/b24online/Tpp/detailContent.html:189
 msgid "Related to staff group"
 msgstr "מקושר לאיש צוות או סגל"
 
 #: templates/b24online/Companies/detailContent.html:184
-#: templates/b24online/Tpp/detailContent.html:80
+#: templates/b24online/Tpp/detailContent.html:190
 msgid "Use permissions for child companies"
 msgstr "אישור שימוש לילד או חברה"
 
@@ -4044,7 +4058,7 @@ msgid "1-year www.b24online.com membership"
 msgstr "חברות שנה בפורטל"
 
 #: templates/b24online/Companies/detailContent.html:297
-#: templates/b24online/Tpp/detailContent.html:130
+#: templates/b24online/Tpp/detailContent.html:240
 msgid "Recvisits"
 msgstr "פרט"
 
@@ -4058,17 +4072,217 @@ msgid "Video gallery"
 msgstr "גלריית סרטונים"
 
 #: templates/b24online/Companies/detailContent.html:364
-#: templates/b24online/Tpp/detailContent.html:183
+#: templates/b24online/Tpp/detailContent.html:293
 msgid "Staff"
 msgstr "סגל"
 
 #: templates/b24online/Companies/detailContent.html:419
+#: templates/b24online/Tpp/detailContent.html:357
 msgid "Feedback"
 msgstr "תגובה"
 
 #: templates/b24online/Companies/detailContent.html:420
+#: templates/b24online/Tpp/detailContent.html:358
 msgid "Write a message"
 msgstr "כתוב הודעה"
+
+#: templates/b24online/Companies/detailContent.html:439
+#: templates/b24online/Tpp/detailContent.html:376
+#: templates/centerpokupok/Company/contact.html:61
+#: templates/usersites/OrganizationPages/contact.html:24
+#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:63
+#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:64
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:122
+#: templates/usersites_templates/cineret/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret/OrganizationPages/contact.html:46
+#: templates/usersites_templates/cineret/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret/contentPage.html:176
+#: templates/usersites_templates/cineret/contentPage.html:177
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:122
+#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:44
+#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:17
+#: templates/usersites_templates/cineret_blue/contentPage.html:176
+#: templates/usersites_templates/cineret_blue/contentPage.html:177
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:120
+#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:44
+#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret_green/contentPage.html:177
+#: templates/usersites_templates/cineret_green/contentPage.html:178
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:121
+#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:44
+#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:162
+#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:44
+#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:16
+#: templates/usersites_templates/cineret_red/contentPage.html:193
+#: templates/usersites_templates/cineret_red/contentPage.html:194
+#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:161
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:44
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:45
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:16
+#: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:23
+#: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:23
+#: templates/usersites_templates/galil/OrganizationPages/contact.html:65
+#: templates/usersites_templates/galil/OrganizationPages/contact.html:66
+#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:65
+#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:66
+#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:65
+#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:66
+#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:65
+#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan/OrganizationPages/contact.html:65
+#: templates/usersites_templates/golan/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:65
+#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:16
+#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:65
+#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:16
+#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:65
+#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:15
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:65
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:66
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:16
+#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:22
+#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:23
+#: templates/usersites_templates/negev/OrganizationPages/contact.html:71
+#: templates/usersites_templates/one/contentPage.html:133
+#: templates/usersites_templates/one_pic/contentPage.html:133
+#: templates/usersites_templates/services/OrganizationPages/contact.html:63
+#: templates/usersites_templates/services/OrganizationPages/contact.html:64
+#: templates/usersites_templates/top_business/OrganizationPages/contact.html:63
+#: templates/usersites_templates/top_business/OrganizationPages/contact.html:64
+msgid "Your name"
+msgstr "שם"
+
+#: templates/b24online/Companies/detailContent.html:444
+#: templates/b24online/Tpp/detailContent.html:381
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:126
+#: templates/usersites_templates/cineret/OrganizationPages/contact.html:53
+#: templates/usersites_templates/cineret/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret/contentPage.html:184
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:126
+#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:52
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:21
+#: templates/usersites_templates/cineret_blue/contentPage.html:184
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:124
+#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:52
+#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret_green/contentPage.html:185
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:125
+#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:52
+#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:166
+#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:52
+#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:20
+#: templates/usersites_templates/cineret_red/contentPage.html:201
+#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:165
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:52
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:20
+#: templates/usersites_templates/galil/OrganizationPages/contact.html:73
+#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:73
+#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:73
+#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:20
+#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:20
+#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:19
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:73
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:20
+#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:30
+#: templates/usersites_templates/one/contentPage.html:141
+#: templates/usersites_templates/one_pic/contentPage.html:141
+msgid "Your phone"
+msgstr "מספר הטלפון"
+
+#: templates/b24online/Companies/detailContent.html:449
+#: templates/b24online/Tpp/detailContent.html:386
+#: templates/centerpokupok/Company/contact.html:68
+#: templates/usersites/OrganizationPages/contact.html:25
+#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:76
+#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:77
+#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:130
+#: templates/usersites_templates/cineret/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret/OrganizationPages/contact.html:59
+#: templates/usersites_templates/cineret/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret/contentPage.html:189
+#: templates/usersites_templates/cineret/contentPage.html:190
+#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:130
+#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:57
+#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:25
+#: templates/usersites_templates/cineret_blue/contentPage.html:189
+#: templates/usersites_templates/cineret_blue/contentPage.html:190
+#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:128
+#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:57
+#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret_green/contentPage.html:190
+#: templates/usersites_templates/cineret_green/contentPage.html:191
+#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:129
+#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:57
+#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:170
+#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:57
+#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:24
+#: templates/usersites_templates/cineret_red/contentPage.html:206
+#: templates/usersites_templates/cineret_red/contentPage.html:207
+#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:169
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:57
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:58
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:24
+#: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:24
+#: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:24
+#: templates/usersites_templates/galil/OrganizationPages/contact.html:78
+#: templates/usersites_templates/galil/OrganizationPages/contact.html:79
+#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:78
+#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:79
+#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:78
+#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:79
+#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:78
+#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan/OrganizationPages/contact.html:78
+#: templates/usersites_templates/golan/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:78
+#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:24
+#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:78
+#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:24
+#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:78
+#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:23
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:78
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:79
+#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:24
+#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:35
+#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:36
+#: templates/usersites_templates/negev/OrganizationPages/contact.html:84
+#: templates/usersites_templates/one/contentPage.html:137
+#: templates/usersites_templates/one_pic/contentPage.html:137
+#: templates/usersites_templates/services/OrganizationPages/contact.html:76
+#: templates/usersites_templates/services/OrganizationPages/contact.html:77
+#: templates/usersites_templates/top_business/OrganizationPages/contact.html:76
+#: templates/usersites_templates/top_business/OrganizationPages/contact.html:77
+msgid "Your email"
+msgstr "דואר אלקטרוני"
+
+#: templates/b24online/Companies/detailContent.html:454
+#: templates/b24online/Tpp/detailContent.html:391
+#, fuzzy
+#| msgid "As message"
+msgid "Your message"
+msgstr "כהודעה"
 
 #: templates/b24online/Companies/popupFilter.html:11
 #: templates/b24online/Exhibitions/popupFilter.html:11
@@ -4261,12 +4475,13 @@ msgstr "שם "
 #: templates/b24online/Leads/addForm.html:27
 #: templates/b24online/Leads/contentPage.html:46
 #: templates/b24online/Profile/Public/contentPage.html:99
+#: templates/b24online/Profile/main.html:125
 msgid "Phone"
 msgstr "טלפון"
 
 #: templates/b24online/Leads/addForm.html:35
 #: templates/b24online/Messages/sendMessage.html:69
-#: templates/b24online/base.html:228 templates/b24online/base.html:240
+#: templates/b24online/base.html:227 templates/b24online/base.html:239
 #: templates/centerpokupok/Company/contact.html:75
 #: templates/usersites/OrganizationPages/contact.html:26
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:82
@@ -4424,7 +4639,7 @@ msgstr "שלח הודעה"
 #: templates/b24online/Messages/contentBox.html:15
 #: templates/b24online/Messages/sendMessage.html:88
 #: templates/b24online/Vacancy/detailContent.html:115
-#: templates/b24online/base.html:258
+#: templates/b24online/base.html:257
 #: templates/usersites/OrganizationPages/contact.html:28
 #: templates/usersites/OrganizationPages/structure.html:38
 #: templates/usersites_templates/cat_business/B2CProducts/orderByEmail.html:77
@@ -4524,7 +4739,7 @@ msgid "For organization"
 msgstr "עבור ארגון"
 
 #: templates/b24online/Messages/sendMessage.html:65
-#: templates/b24online/base.html:236
+#: templates/b24online/base.html:235
 msgid "Deliver as"
 msgstr "שלח כ-"
 
@@ -5241,42 +5456,34 @@ msgstr "הוסף יצרן"
 msgid "There are no producers"
 msgstr "אין יצרנים"
 
-#: templates/b24online/Profile/Public/base.html:32
-#: templates/b24online/index.html:459
-msgid "Center of chambers of commerce, associations, unions and guilds."
-msgstr "מרכז לשכות מסחר, עמותות, איגודים ואגודות"
-
 #: templates/b24online/Profile/Public/contentPage.html:103
+#: templates/b24online/Profile/main.html:129
 #, fuzzy
 #| msgid "Send as email"
 msgid "Send Email"
 msgstr "שלח כמייל"
 
-#: templates/b24online/Profile/addForm.html:20
+#: templates/b24online/Profile/addForm.html:24
 msgid "Change avatar"
 msgstr "שנה את התמונה"
 
-#: templates/b24online/Profile/addForm.html:29
-msgid "Business Card"
-msgstr "כרטיס ביקור"
-
-#: templates/b24online/Profile/addForm.html:55
+#: templates/b24online/Profile/addForm.html:54
 #: templates/usersites_templates/cineret_blue/profileForm.html:57
 #: templates/usersites_templates/ibonds/profileForm.html:57
 msgid "Middle name"
 msgstr "שם אמצעי"
 
-#: templates/b24online/Profile/addForm.html:62
+#: templates/b24online/Profile/addForm.html:61
 #: templates/usersites_templates/cineret_blue/profileForm.html:66
 #: templates/usersites_templates/ibonds/profileForm.html:66
 msgid "Profile type"
 msgstr "פרופיל"
 
-#: templates/b24online/Profile/addForm.html:78
+#: templates/b24online/Profile/addForm.html:77
 msgid "Facebook"
 msgstr "פייסבוק"
 
-#: templates/b24online/Profile/addForm.html:101
+#: templates/b24online/Profile/addForm.html:100
 #: templates/usersites_templates/cineret/OrganizationPages/contact.html:52
 #: templates/usersites_templates/cineret/contentPage.html:183
 #: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:51
@@ -5302,43 +5509,56 @@ msgstr "פייסבוק"
 msgid "Phone Number"
 msgstr "מספר טלפון"
 
-#: templates/b24online/Profile/addForm.html:108
+#: templates/b24online/Profile/addForm.html:107
 #: templates/usersites_templates/cineret_blue/profileForm.html:101
 #: templates/usersites_templates/ibonds/profileForm.html:101
 msgid "Sex"
 msgstr "מין"
 
-#: templates/b24online/Profile/addForm.html:119
+#: templates/b24online/Profile/addForm.html:118
 #: templates/b24online/Resume/detailContent.html:97
 #: templates/usersites_templates/cineret_blue/profileForm.html:112
 #: templates/usersites_templates/ibonds/profileForm.html:112
 msgid "Profession"
 msgstr "מקצוע"
 
-#: templates/b24online/Profile/addForm.html:127
+#: templates/b24online/Profile/addForm.html:126
 msgid "Linkedin"
 msgstr "לינקדין"
 
-#: templates/b24online/Profile/addForm.html:138
+#: templates/b24online/Profile/addForm.html:137
 #: templates/centerpokupok/Product/orderStepOne.html:109
 msgid "Adress"
 msgstr "כתובת"
 
-#: templates/b24online/Profile/addForm.html:148
+#: templates/b24online/Profile/addForm.html:147
 msgid "Company Info"
 msgstr "מידע "
 
-#: templates/b24online/Profile/addForm.html:150
+#: templates/b24online/Profile/addForm.html:149
 msgid "Company name"
 msgstr "שם חברה"
 
-#: templates/b24online/Profile/addForm.html:156
+#: templates/b24online/Profile/addForm.html:155
 msgid "Company slogan"
 msgstr "סלוגן"
 
-#: templates/b24online/Profile/addForm.html:162
+#: templates/b24online/Profile/addForm.html:161
 msgid "Company description"
 msgstr "תיאור החברה"
+
+#: templates/b24online/Profile/changePassword.html:30
+#, fuzzy
+#| msgid "New password confirmation:"
+msgid "New password confirmation"
+msgstr "אשר סיסמא חדשה"
+
+#: templates/b24online/Profile/changePassword_done.html:4
+#: templates/b24online/Profile/changePassword_done.html:16
+#, fuzzy
+#| msgid "Your password has been changed!"
+msgid "You password has been changed!"
+msgstr "הסיסמא שלך שונתה!"
 
 #: templates/b24online/Profile/index.html:6
 #: templates/usersites_templates/cineret_red/header.html:128
@@ -5346,6 +5566,24 @@ msgstr "תיאור החברה"
 #: templates/usersites_templates/ibonds/header.html:42
 msgid "Profile"
 msgstr "פרופיל"
+
+#: templates/b24online/Profile/main.html:5
+#, fuzzy
+#| msgid "Profile"
+msgid "Your Profile"
+msgstr "פרופיל"
+
+#: templates/b24online/Profile/main.html:149
+#, fuzzy
+#| msgid "Business Card"
+msgid "Business Card Preview"
+msgstr "כרטיס ביקור"
+
+#: templates/b24online/Profile/main.html:151
+#, fuzzy
+#| msgid "YouTube Link"
+msgid "Your Link:"
+msgstr "קישור יוטיוב"
 
 #: templates/b24online/Project/event.html:16
 #: templates/b24online/Project/proposal.html:16
@@ -5917,7 +6155,7 @@ msgid "Type of employments"
 msgstr "סוג משרה"
 
 #: templates/b24online/Vacancy/detailContent.html:88
-#: templates/b24online/base.html:211
+#: templates/b24online/base.html:210
 msgid "You have successfully sent the message."
 msgstr "ההודעה נשלחה בהצלחה"
 
@@ -5987,27 +6225,27 @@ msgstr ""
 "השתתפות בתוכניות B2C. מכירות ללקוחות קצה.\n"
 "מרכז מידע חכם לחיבור בין מעסיקים לדורשי עבודה."
 
-#: templates/b24online/base.html:141
+#: templates/b24online/base.html:140
 msgid "TPP-Center"
 msgstr "ראשי"
 
-#: templates/b24online/base.html:141
+#: templates/b24online/base.html:140
 msgid "Center of chambers of commerce, associations, unions and guilds "
 msgstr "מרכז לשכות מסחר, עמותות, איגודים ואגודות"
 
-#: templates/b24online/base.html:215
+#: templates/b24online/base.html:214
 msgid "Send message to"
 msgstr "שלח הודעה ל"
 
-#: templates/b24online/base.html:224
+#: templates/b24online/base.html:223
 msgid "Message subject"
 msgstr "נושא ההודעה"
 
-#: templates/b24online/base.html:232
+#: templates/b24online/base.html:231
 msgid "File"
 msgstr "קובץ"
 
-#: templates/b24online/base.html:249
+#: templates/b24online/base.html:248
 msgid "Is message private"
 msgstr "הודעה פרטית"
 
@@ -6151,11 +6389,11 @@ msgstr "B24Online לעסקים"
 
 #: templates/b24online/index.html:134
 msgid "Growth tools for your business."
-msgstr "בפורטל B24Online תקבלו כלים כלכליים רבים לניהול וקידום העסק שלך!"
+msgstr "כאן בפורטל תקבלו כלים כלכליים רבים לניהול וקידום העסק שלך!"
 
 #: templates/b24online/index.html:137
 msgid "Search for products and services"
-msgstr "חפשו מוצרים ושירותים"
+msgstr "חפשו מוצרים ושירותים - טקסט חופשי"
 
 #: templates/b24online/index.html:146 templates/b24online/index.html:176
 #: templates/b24online/index.html:206
@@ -6165,11 +6403,11 @@ msgstr "או"
 
 #: templates/b24online/index.html:148
 msgid "Products and services"
-msgstr "מוצרים ושירותים סיטונאיים"
+msgstr "לכל המוצרים והשירותים הסיטונאיים"
 
 #: templates/b24online/index.html:164
 msgid "B24Online for Customers"
-msgstr "B24Online Shopping - קונים בהנאה!"
+msgstr "B24Online Shopping"
 
 #: templates/b24online/index.html:165
 msgid "Your marketplace – from your own neighborhood across the world."
@@ -6177,11 +6415,11 @@ msgstr "אזור המכירות האישי שלך - מהמיקום שלך לכל
 
 #: templates/b24online/index.html:168
 msgid "Search for products"
-msgstr "קנה עכשיו!"
+msgstr "חפשו מוצרים למכירה  - טקסט חופשי."
 
 #: templates/b24online/index.html:177
 msgid "Search for Products"
-msgstr "קנה עכשיו!"
+msgstr "כל המוצרים"
 
 #: templates/b24online/index.html:178
 msgid "Search for Coupons"
@@ -6189,19 +6427,19 @@ msgstr "חפש קופונים ומבצעים"
 
 #: templates/b24online/index.html:194
 msgid "Employment Center"
-msgstr "B24Online מרכז תעסוקה ועבודה"
+msgstr "B24Online מרכז תעסוקה ועבודה לעסקים"
 
 #: templates/b24online/index.html:195
 msgid "Find the your ideal position or the perfect candidate for your company."
-msgstr "מצאו את המועמד הטוב ביותר עבור המשרה המבוקשת."
+msgstr "מצאו את המועמד הטוב ביותר עבור המשרה המבוקשת או הגישו את מועמדותכם."
 
 #: templates/b24online/index.html:198
 msgid "Search for new job opportunitiess"
-msgstr "חפשו משרות ואפשרויות תעסוקה"
+msgstr "חפשו משרות ואפשרויות תעסוקה - טקסט חופשי"
 
 #: templates/b24online/index.html:207
 msgid "Job listings"
-msgstr "כל המשרות"
+msgstr "לכל המשרות"
 
 #: templates/b24online/index.html:208
 msgid "Candidates and outsourcing"
@@ -6240,6 +6478,13 @@ msgid "Create Your Own Site in Under 10 Minutes"
 msgstr "צרו אתר אינטרנט אישי לעסק שלכם בפחות מ-10 דקות!"
 
 #: templates/b24online/index.html:273
+#, fuzzy
+#| msgid ""
+#| "Every company joining B24Online can choose from a wide variety of ready-"
+#| "made, mobile-friendly templates to build and operate its own image and "
+#| "sales websites.\\u2028 Companies immediately can start operating in their "
+#| "business environments. \\u2028All information from the portal is "
+#| "immediately synchronized to your personal site."
 msgid ""
 "Every company joining B24Online can choose from a wide variety of ready-"
 "made, mobile-friendly templates to build and operate its own image and sales "
@@ -6247,15 +6492,15 @@ msgid ""
 "environments. All information from the portal is immediately synchronized to "
 "your personal site."
 msgstr ""
-"כל עסק או חברה שמצטרפים ל- B24Online יכולים לבנות לעצמם אתר אינטרנט עצמאי "
-"לחלוטין, לבחור כיצד ייראה האתר מתוך שלל העיצובים המוצעים לקהל הרחב על פי "
-"האופי שמתאים לעסק שלכם: תדמיתי, מכירתי או שירותי.  מערכת בניית האתרים שלנו "
-"מאפשרת בחירה מתוך מגוון רחב של עיצובים מקוריים, מותאמים לניידים ורספונסיביים "
-"לכל המכשירים הדיגיטאליים הקיימים. "
+"כל עסק או חברה שמצטרפים ל- B24Online יכולה לבנות לעצמם אתר אינטרנט עצמאי "
+"לחלוטין. ביכולתם לבחור כיצד ייראה האתר מתוך שלל העיצובים המוצעים לקהל הרחב, "
+"ועל פי האופי שמתאים לעסק: אתר תדמיתי, מכירתי או שירותי.  מערכת בניית האתרים "
+"שלנו מאפשרת בחירה מתוך מגוון רחב של עיצובים מקוריים, מותאמים לכל מכשירי "
+"הטלפוןן הניידים וכל האתרים רספונסיביים לכל המכשירים הדיגיטאליים הקיימים. "
 
 #: templates/b24online/index.html:274
 msgid "Start Now"
-msgstr "התחל "
+msgstr "התחל עכשיו!"
 
 #: templates/b24online/index.html:295
 msgid "Products and Services"
@@ -6267,18 +6512,18 @@ msgid ""
 "access to both B2B and B2C platforms. The shopping center provides a variety "
 "of sales promotion tools, offering coupons, sales offers and discounts."
 msgstr ""
-"מרכז קניות וירטואלי לקנייה ומכירת מוצרים לכל רחבי העולם. למשתמשים רשומים "
-"ישנן אפשרויות גישה בו-זמנית לפלטפורמות מכירות סיטונאיות וקימונעיות. מרכז "
-"הקניות מספק מגוון רחב של כלי קידום מכירות: קופונים, מבצעים והנחות בלעדיות "
-"לפורטל."
+"בפורטל B24Online מרכז קניות אונליין לקנייה ומכירת מוצרים לכל רחבי העולם. "
+"למשתמשים רשומים ישנן אפשרויות גישה בו-זמנית לפלטפורמות מכירות סיטונאיות "
+"וקימונעיות. מרכז הקניות מספק מגוון רחב של כלי קידום מכירות: קופונים, מבצעים "
+"והנחות בלעדיות לגולשי הפורטל."
 
 #: templates/b24online/index.html:297
 msgid "B2B Center"
-msgstr "מרכז מכירות סיטונאיות"
+msgstr "כניסה למרכז מכירות סיטונאיות"
 
 #: templates/b24online/index.html:298
 msgid "Shopping Center"
-msgstr "מרכז קניות"
+msgstr "כניסה למרכז הקניות "
 
 #: templates/b24online/index.html:299
 #: templates/centerpokupok/Company/coupons.html:7
@@ -6309,7 +6554,7 @@ msgstr "מרכז קניות"
 #: templates/usersites_templates/services/B2CProducts/main_coupons.html:14
 #: templates/usersites_templates/top_business/B2CProducts/main_coupons.html:14
 msgid "Coupons"
-msgstr "קופונים"
+msgstr "קופונים חמים!"
 
 #: templates/b24online/index.html:321
 msgid ""
@@ -6320,7 +6565,7 @@ msgid ""
 "it easy to receive relevant data on the potential client and the services "
 "and products he would like."
 msgstr ""
-"רק משתמשי הפורטל נהנים ממערכת ניהול איסוף לידים עצמאית - בלתי תלויה! אין "
+"רק משתמשי הפורטל נהנים ממערכת ניהול איסוף לידים עצמאית - בלתי תלויה. אין "
 "יותר צורך בעבודה עם מערכות איסוף לידים חיצוניות ובזבוז כסף בדפי נחיתה "
 "זמניים. מעתה כל גולשי הפורטל נהנים מכלי איסוף לידים ופניות לקוחות, בעמודים "
 "הפנימיים של אתר האינטרנט שלכם (אתר עצמאי - ללא תלות בפורטל!). המידע כולל: "
@@ -6331,6 +6576,15 @@ msgid "Register Now"
 msgstr "הירשם"
 
 #: templates/b24online/index.html:344
+#, fuzzy
+#| msgid ""
+#| "The live chat messenger system allows communications within the portal "
+#| "and with a company’s external website.\\u2028Clients can choose the "
+#| "division, department or employee to contact by IM.\\u2028Chat history is "
+#| "saved for future referenceand documents and photos can be uploaded "
+#| "securely.\\u2028The app serves as a tool for simultaneous discussions, "
+#| "marketing and support.\\u2028Groups can be created to bring together "
+#| "employees, or employees and clients."
 msgid ""
 "The live chat messenger system allows communications within the portal and "
 "with a company’s external website. Clients can choose the division, "
@@ -6339,9 +6593,9 @@ msgid ""
 "as a tool for simultaneous discussions, marketing and support. Groups can be "
 "created to bring together employees, or employees and clients."
 msgstr ""
-"מערכת שליחת צ'ט בזמן אמת מאפשרת תקשורת פנימית הפורטל ועם האתר החיצוני של "
-"חברה. באמצעות מערכת ניהול הצ'אטים ניתן לבחור את החטיבה, המחלקה או עובד לפנות "
-"ידי זיהוי אישי. "
+"מערכת שליחת צ'ט אישי בזמן אמת המאפשרת תקשורת עסקית פנימית בפורטל ובמקביל עם "
+"קישור לאתר החברה. באמצעות מערכת ניהול הצ'אטים ניתן לבחור את המחלקה או העובד "
+"הרלוונטי."
 
 #: templates/b24online/index.html:346
 msgid "Start Chat Now"
@@ -6433,6 +6687,10 @@ msgid ""
 "other registered participants, forwarding relevant marketing materials and "
 "scheduling meetings around the event."
 msgstr "מערכת ניהול אירועים וצ'אטים עם משתמשים רשומים נוספים בפורטל."
+
+#: templates/b24online/index.html:459
+msgid "Center of chambers of commerce, associations, unions and guilds."
+msgstr "מרכז לשכות מסחר, עמותות, איגודים ואגודות"
 
 #: templates/b24online/job_index.html:79
 msgid "B2C center"
@@ -6652,7 +6910,7 @@ msgstr "הוסף מוצר למכירה סיטונאית "
 
 #: templates/b24online/main/dashboard.html:29
 msgid "B2C products"
-msgstr "מוצרים למכירה שלי"
+msgstr "המוצרים למכירה שלי"
 
 #: templates/b24online/main/dashboard.html:31
 msgid "Add new B2C product"
@@ -6676,7 +6934,7 @@ msgstr "נהלו לידים שנרשמו בעסק שלכם"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr "ניהול מערכת לידים"
+msgstr "כניסה למערכת ניהול לידים"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
@@ -6688,7 +6946,7 @@ msgstr "הוסף חדשות לעסק שלך"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
-msgstr "פרסמו קבצ וידאו בבלוג"
+msgstr "פרסמו קבצי וידאו או בלוג אישי"
 
 #: templates/b24online/main/dashboard.html:55
 msgid "Add video"
@@ -6696,7 +6954,7 @@ msgstr "הוסף וידאו"
 
 #: templates/b24online/main/dashboard.html:59
 msgid "Analytic"
-msgstr "ניתוח"
+msgstr "מערכת ניתוח נתונים עסקית"
 
 #: templates/b24online/main/dashboard.html:60
 msgid "Check our items analytic"
@@ -6708,15 +6966,15 @@ msgstr "בדקו את נתוני האתר (אנאליטיקס)"
 
 #: templates/b24online/main/dashboard.html:66
 msgid "Upload your banners and use advertisement to grow sales"
-msgstr "העלו באנרים ופרסמו להגדלת המכירות"
+msgstr "העלו באנרים ופרסומות להגדלת המכירות"
 
 #: templates/b24online/main/dashboard.html:67
 msgid "Upload banner"
-msgstr "טען באנר"
+msgstr "להעלאת באנר - לחצו כאן!"
 
 #: templates/b24online/main/dashboard.html:71
 msgid "Vacancies"
-msgstr "משרה פנויה "
+msgstr "מערכת משרות ועבודות"
 
 #: templates/b24online/main/dashboard.html:72
 msgid "Find employees in our system"
@@ -6724,7 +6982,7 @@ msgstr "מצא עובדים במערכת "
 
 #: templates/b24online/main/dashboard.html:73
 msgid "Publish new vacancy"
-msgstr "בחר משרה "
+msgstr "בחר משרה פנויה"
 
 #: templates/b24online/main/dashboard.html:78
 msgid "Product producers"
@@ -6732,11 +6990,11 @@ msgstr "יצרנים "
 
 #: templates/b24online/main/dashboard.html:79
 msgid "Manage product producers"
-msgstr "נהל יצרן"
+msgstr "מערכת ניהול יצרנים"
 
 #: templates/b24online/main/dashboard.html:80
 msgid "Manage producers"
-msgstr "ניהול יצרנים"
+msgstr "לחץ כאן לניהול יצרנים"
 
 #: templates/b24online/main/dashboard.html:84
 msgid "Active deals"
@@ -6748,7 +7006,7 @@ msgstr "עקבו אחר העסקאות שלכם"
 
 #: templates/b24online/main/dashboard.html:86
 msgid "Manage deals"
-msgstr "נהלו עסקאות"
+msgstr "נהלו את העסקאות בעסק שלכם"
 
 #: templates/b24online/main/dashboard.html:91
 msgid "Publish and contribute on innovation projects"
@@ -7013,150 +7271,6 @@ msgstr "קבל הודעות שבועיות ועדכונים מדי שבוע"
 #: templates/centerpokupok/Company/index.html:84
 msgid "Subscripe"
 msgstr "הירשם"
-
-#: templates/centerpokupok/Company/contact.html:61
-#: templates/usersites/OrganizationPages/contact.html:24
-#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:63
-#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:64
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:122
-#: templates/usersites_templates/cineret/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret/OrganizationPages/contact.html:46
-#: templates/usersites_templates/cineret/OrganizationPages/page.html:16
-#: templates/usersites_templates/cineret/contentPage.html:176
-#: templates/usersites_templates/cineret/contentPage.html:177
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:122
-#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:44
-#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:17
-#: templates/usersites_templates/cineret_blue/contentPage.html:176
-#: templates/usersites_templates/cineret_blue/contentPage.html:177
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:120
-#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:44
-#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:16
-#: templates/usersites_templates/cineret_green/contentPage.html:177
-#: templates/usersites_templates/cineret_green/contentPage.html:178
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:121
-#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:44
-#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:16
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:162
-#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:44
-#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:16
-#: templates/usersites_templates/cineret_red/contentPage.html:193
-#: templates/usersites_templates/cineret_red/contentPage.html:194
-#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:161
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:44
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:45
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:16
-#: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:23
-#: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:23
-#: templates/usersites_templates/galil/OrganizationPages/contact.html:65
-#: templates/usersites_templates/galil/OrganizationPages/contact.html:66
-#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:65
-#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:66
-#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:65
-#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:66
-#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:65
-#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan/OrganizationPages/contact.html:65
-#: templates/usersites_templates/golan/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:65
-#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:16
-#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:65
-#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:16
-#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:65
-#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:15
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:65
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:16
-#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:22
-#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:23
-#: templates/usersites_templates/negev/OrganizationPages/contact.html:71
-#: templates/usersites_templates/one/contentPage.html:133
-#: templates/usersites_templates/one_pic/contentPage.html:133
-#: templates/usersites_templates/services/OrganizationPages/contact.html:63
-#: templates/usersites_templates/services/OrganizationPages/contact.html:64
-#: templates/usersites_templates/top_business/OrganizationPages/contact.html:63
-#: templates/usersites_templates/top_business/OrganizationPages/contact.html:64
-msgid "Your name"
-msgstr "שם"
-
-#: templates/centerpokupok/Company/contact.html:68
-#: templates/usersites/OrganizationPages/contact.html:25
-#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:76
-#: templates/usersites_templates/cat_business/OrganizationPages/contact.html:77
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:130
-#: templates/usersites_templates/cineret/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret/OrganizationPages/contact.html:59
-#: templates/usersites_templates/cineret/OrganizationPages/page.html:24
-#: templates/usersites_templates/cineret/contentPage.html:189
-#: templates/usersites_templates/cineret/contentPage.html:190
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:130
-#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:57
-#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:25
-#: templates/usersites_templates/cineret_blue/contentPage.html:189
-#: templates/usersites_templates/cineret_blue/contentPage.html:190
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:128
-#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:57
-#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:24
-#: templates/usersites_templates/cineret_green/contentPage.html:190
-#: templates/usersites_templates/cineret_green/contentPage.html:191
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:129
-#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:57
-#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:24
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:170
-#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:57
-#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:24
-#: templates/usersites_templates/cineret_red/contentPage.html:206
-#: templates/usersites_templates/cineret_red/contentPage.html:207
-#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:169
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:57
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:58
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:24
-#: templates/usersites_templates/default_horizontal_banners/OrganizationPages/contact.html:24
-#: templates/usersites_templates/default_no_banners/OrganizationPages/contact.html:24
-#: templates/usersites_templates/galil/OrganizationPages/contact.html:78
-#: templates/usersites_templates/galil/OrganizationPages/contact.html:79
-#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:78
-#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:79
-#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:78
-#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:79
-#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:78
-#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan/OrganizationPages/contact.html:78
-#: templates/usersites_templates/golan/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:78
-#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:24
-#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:78
-#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:24
-#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:78
-#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:23
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:78
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:24
-#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:35
-#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:36
-#: templates/usersites_templates/negev/OrganizationPages/contact.html:84
-#: templates/usersites_templates/one/contentPage.html:137
-#: templates/usersites_templates/one_pic/contentPage.html:137
-#: templates/usersites_templates/services/OrganizationPages/contact.html:76
-#: templates/usersites_templates/services/OrganizationPages/contact.html:77
-#: templates/usersites_templates/top_business/OrganizationPages/contact.html:76
-#: templates/usersites_templates/top_business/OrganizationPages/contact.html:77
-msgid "Your email"
-msgstr "דואר אלקטרוני"
 
 #: templates/centerpokupok/Company/coupons.html:54
 #: templates/centerpokupok/Company/products.html:35
@@ -8476,7 +8590,7 @@ msgstr "אתה בטוח רוצה למחוק מוצר זה?"
 #: templates/usersites/B2CProducts/include/deliveryNeed_galil.html:11
 #: templates/usersites_templates/ibonds/B2CProducts/basket.html:77
 msgid "Need a delivery"
-msgstr "סמן כאן אם הנכם זקוקים למשלוח, המחיר על פי מחירון העסק. "
+msgstr "סמנו כאן אם הנכם זקוקים למשלוח, עלות המשלוח על פי מחירון העסק. "
 
 #: templates/usersites/B2CProducts/include/basketListForm_cineret.html:60
 #: templates/usersites/B2CProducts/include/basketListForm_default.html:48
@@ -8486,7 +8600,7 @@ msgstr "סמן כאן אם הנכם זקוקים למשלוח, המחיר על �
 #: templates/usersites/B2CProducts/include/deliveryNeed_default.html:17
 #: templates/usersites/B2CProducts/include/deliveryNeed_galil.html:15
 msgid "Delivery is unpaid"
-msgstr "המשלוח טרם שולם"
+msgstr "לא הוגדר מחיר עבור מוצר זה, נא ליצור קשר עם העסק."
 
 #: templates/usersites/B2CProducts/include/basketListForm_cineret.html:82
 #: templates/usersites/B2CProducts/include/basketListForm_galil.html:86
@@ -8999,47 +9113,6 @@ msgstr "הנחה"
 #: templates/usersites_templates/ibonds/B2CProducts/basket.html:120
 msgid "Your basket is empty"
 msgstr "סל הקניות ריק"
-
-#: templates/usersites_templates/cineret/B2CProducts/detailContent.html:126
-#: templates/usersites_templates/cineret/OrganizationPages/contact.html:53
-#: templates/usersites_templates/cineret/OrganizationPages/page.html:20
-#: templates/usersites_templates/cineret/contentPage.html:184
-#: templates/usersites_templates/cineret_blue/B2CProducts/detailContent.html:126
-#: templates/usersites_templates/cineret_blue/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:21
-#: templates/usersites_templates/cineret_blue/contentPage.html:184
-#: templates/usersites_templates/cineret_green/B2CProducts/detailContent.html:124
-#: templates/usersites_templates/cineret_green/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_green/OrganizationPages/page.html:20
-#: templates/usersites_templates/cineret_green/contentPage.html:185
-#: templates/usersites_templates/cineret_orange/B2CProducts/detailContent.html:125
-#: templates/usersites_templates/cineret_orange/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_orange/OrganizationPages/page.html:20
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:166
-#: templates/usersites_templates/cineret_red/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_red/OrganizationPages/page.html:20
-#: templates/usersites_templates/cineret_red/contentPage.html:201
-#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:165
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/contact.html:52
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/page.html:20
-#: templates/usersites_templates/galil/OrganizationPages/contact.html:73
-#: templates/usersites_templates/galil_1/OrganizationPages/contact.html:73
-#: templates/usersites_templates/galil_2/OrganizationPages/contact.html:73
-#: templates/usersites_templates/galil_3/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_blue/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_blue/OrganizationPages/page.html:20
-#: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_purple/OrganizationPages/page.html:20
-#: templates/usersites_templates/golan_red/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:19
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:20
-#: templates/usersites_templates/ibonds/OrganizationPages/contact.html:30
-#: templates/usersites_templates/one/contentPage.html:141
-#: templates/usersites_templates/one_pic/contentPage.html:141
-msgid "Your phone"
-msgstr "מספר הטלפון"
 
 #: templates/usersites_templates/cineret/footer.html:21
 #: templates/usersites_templates/cineret_blue/footer.html:21
