@@ -53,6 +53,7 @@ $(function() {
         var url = this.href,
             title = $(this).data('title'),
             height = $(this).data('height');
+        alert('OKOK: ', url);
         height = (height) ? height : 300;
         title = (title) ? title : 'Process data';
         $.getJSON(url, function(data) {

@@ -9,14 +9,17 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse_lazy
 from django.db import transaction, IntegrityError
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import (HttpResponseRedirect, HttpResponse, 
+                         HttpResponseBadRequest, HttpResponseForbidden)
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
+from django.contrib.auth.decorators import login_required
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
+from b24online.Companies.forms import (AdditionalPageFormSet, CompanyForm, 
+        AdminCompanyForm, DeliveryLevelForm)
 from b24online.Messages.forms import MessageForm
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate,
                       GalleryImageList, DeleteGalleryImage, DeleteDocument, DocumentList)
@@ -678,3 +681,115 @@ class CompanyCreate(ItemCreate):
         """
         context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
         return self.render_to_response(context_data)
+
+
+@login_required
+def refresh_delivery_levels(request, company, **kwargs):
+    """Return the delivery levels table view"""
+    template_name = 'b24online/Company/refreshDeliveryLevels.html'
+    current_organization = get_current_organization(request)
+    if not request.is_ajax():
+        return HttpResponseBadRequest()
+    elif current_organization.id != company:
+        return HttpResponseForbidden()
+    return render_to_response(
+        template_name,
+        {'company': company, 
+         'delivery_cost_levels': CompanyDeliveryLevel.get_active_objects()\
+            .filter(company=company).order_by('product_cost')
+        }
+    )
+
+
+@login_required
+def add_delivery_level(request, company, **kwargs):
+    template_name = 'b24online/Company/deliveryLevelForm.html'
+    if not request.is_ajax():
+        return HttpResponseBadRequest()
+    data = {}
+    if request.method == 'POST':
+        form = DeliveryLevelForm(company, data=request.POST, 
+                                 files=request.FILES)
+        if form.is_valid():
+            form.save()
+            data.update({
+                'code': 'success',
+                'msg': _(
+                    'You have successfully add new delivery level'
+                ),
+            })
+        else:
+            data.update({
+                'code': 'error',
+                'errors': form.get_errors(),
+                'msg': _('There are some errors'),
+            })
+    else:
+        form = DeliveryLevelForm(company)
+        data.update({
+            'code': 'success',
+            'msg': render_to_string(
+                template_name,
+                {'form': form, 'request': request},
+                request,
+            )
+        })
+    return JsonResponse(data)
+
+
+@login_required
+def update_delivery_level(request, company, item_id, **kwargs):
+    template_name = 'b24online/Company/deliveryLevelForm.html'
+    instance = CompanyDeliveryLevel.get_active_objects().get(id=item_id)
+    if not request.is_ajax():
+        return HttpResponseBadRequest()
+    
+    data = {}
+    if request.method == 'POST':
+        form = DeliveryLevelForm(
+            company,
+            instance=instance,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            data.update({
+                'code': 'success',
+                'msg': _('You have successfully updated delivery level'),
+            })
+        else:
+            data.update({
+                'code': 'error',
+                'errors': form.get_errors(),
+                'msg': _('There are some errors'),
+            })
+    else:
+        form = DeliveryLevelForm(
+            company,  
+            instance=instance
+        )
+        data.update({
+            'code': 'success',
+            'msg': render_to_string(
+                template_name,
+                {'form': form, 'request': request},
+                request,
+            )
+        })
+    return JsonResponse(data)
+
+    
+
+@login_required
+def delete_delivery_level(request, company, item_id, **kwargs):
+    if not request.is_ajax():
+        return HttpResponseBadRequest()
+    instance = CompanyDeliveryLevel.get_active_objects()\
+        .get(id=item_id)
+    instance.delete() 
+    data = {
+        'code': 'success',
+        'msg': _('You have successfully deleted delivery level'),
+    }
+    return JsonResponse(data)

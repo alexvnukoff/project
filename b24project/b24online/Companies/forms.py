@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 
-from b24online.models import AdditionalPage, Company, Country, Chamber
+from b24online.models import (AdditionalPage, Company, Country, Chamber,
+    CompanyDeliveryLevel)
 
 
 class CompanyForm(forms.ModelForm):
@@ -54,3 +55,18 @@ class AdminCompanyForm(CompanyForm):
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)
+
+
+class DeliveryLevelForm(forms.ModelForm):
+    
+    class Meta:
+        model = CompanyDeliveryLevel
+        fields = ('product_cost', 'delivery_cost')
+
+    def __init__(self, company_id, *args, **kwargs):
+        super(DeliveryLevelForm, self).__init__(*args, **kwargs)
+        self.company_id = company_id
+                
+    def save(self):
+        self.instance.company_id = self.conpany_id
+        return super(DeliveryLevelForm, self).save()

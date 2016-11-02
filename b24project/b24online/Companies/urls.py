@@ -5,7 +5,10 @@ from b24online.Companies.views import (CompanyList, CompanyCreate, CompanyUpdate
         _tabs_exhibitions, _tab_b2b_products, _tab_b2c_products, _tab_structure,
         _tab_staff, _tab_proposals, _tab_innovation_projects, _tab_video, 
         _tab_delivery, CompanyGalleryImageList, DeleteCompanyGalleryImage, 
-        CompanyDocumentList, DeleteCompanyDocument)
+        CompanyDocumentList, DeleteCompanyDocument,
+        add_delivery_level, update_delivery_level, delete_delivery_level,
+        refresh_delivery_levels)
+
 
 urlpatterns = [
     url(r'^$', CompanyList.as_view(), name='main'),
@@ -58,5 +61,19 @@ urlpatterns = [
         name="tab_delivery"),
     url(r'^tabs/delivery/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$',
         CompanyDocumentList.as_view(), name="tabs_delivery_paged"),
+
+    # Multilevel delivery urls
+    url(r'^deliverylevel/(?P<company>[0-9]+)/add/', 
+        add_delivery_level,
+        name='add_delivery_level'),
+    url(r'^deliverylevel/(?P<company>[0-9]+)/update/(?P<item_id>[0-9]+)', 
+        update_delivery_level,
+        name='update_delivery_level'),
+    url(r'^deliverylevel/(?P<company>[0-9]+)/delete/(?P<item_id>[0-9]+)', 
+        delete_delivery_level,
+        name='delete_delivery_level'),
+    url(r'^deliverylevel/(?P<company>[0-9]+)/refresh/$', 
+        refresh_delivery_levels,
+        name='refresh_delivery_levels'),
 
 ]
