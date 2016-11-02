@@ -2974,7 +2974,7 @@ class LeadsStore(ActiveModelMixing, models.Model):
         return self.organization.name
 
 
-class CompanyDeliveryLevel(models.Model):
+class CompanyDeliveryLevel(ActiveModelMixing, models.Model):
     """
     Model class for delivery costs levels which depend from product price.
     """
@@ -2997,7 +2997,10 @@ class CompanyDeliveryLevel(models.Model):
         null=True, 
         blank=False
     )
-
+    is_active = models.BooleanField(default=True, db_index=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+            
     class Meta:
         verbose_name = 'Multileveled delivery cost'
 

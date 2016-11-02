@@ -6,9 +6,28 @@
     <table class="table-deals" cellpadding="0" cellpadding="0">
         <tr class="top">
             <td>№</td>
-            <td>{% trans "Name" %}</td>
-            <td>{% trans 'Project cost' %}</td>
-            <td>{% trans "Date" %}</td>
+            <td>{% trans 'Product cost' %}</td>
+            <td>{% trans 'Delivery cost' %}</td>
+            <td>&nbsp;</td>
         </tr>
+        {% for item in page.object_list %}
+            <tr>
+                <td>{{ item.pk }}</td>
+                <td>{{ item.product_cost }}</td>
+                <td>{{ item.delivery_cost }}</td>
+                <td>
+                    <a class="call-process-form" 
+                        href="" 
+                        data-title="{% trans 'Update delivery cost level' %}">{% trans 'Update' %}</a>
+                    &nbsp;
+                    <a class="delete_delivery_level"  
+                        href="" 
+                        title="{% trans 'Delete delivery cost level' %}">{% trans 'Delete' %}</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr class="no-results"><td colspan="3">{% trans "No results found" %}</td></tr>
+        {% endfor %}
+        {% include "b24online/main/paginator.html" %}
     </table>
 </div>

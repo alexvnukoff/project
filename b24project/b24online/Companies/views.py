@@ -396,12 +396,20 @@ def _tab_video(request, company, page=1):
     return render(request, 'b24online/Companies/tabVideo.html', template_params)
 
 
-def _tab_delivery(request, company, **kwargs):
+def _tab_delivery(request, company, page=1):
     """Tab for Company products delivery"""
+    paginator = Paginator(
+        CompanyDeliveryLevel.get_active_objects().filter(company=company)\
+            .order_by('product_cost'), 10
+    )
+    page = paginator.page(page)
+    paginator_range = func.get_paginator_range(page)
+    url_paginator = "companies:tab_delivery_paged"
     template_params = {
-        'items': CompanyDeliveryLevel.objects.filter(company=company)\
-            .order_by('product_cost'),
-        'url_parameter': company,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
     }
     return render(request, 'b24online/Companies/tabDelivery.html', 
                   template_params)

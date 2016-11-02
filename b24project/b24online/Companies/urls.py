@@ -56,5 +56,7 @@ urlpatterns = [
         DeleteCompanyDocument.as_view(), name="documents_remove_item"),
     url(r'^tabs/delivery/(?P<company>[0-9]+)/$', _tab_delivery, 
         name="tab_delivery"),
+    url(r'^tabs/delivery/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$',
+        CompanyDocumentList.as_view(), name="tabs_delivery_paged"),
 
 ]
