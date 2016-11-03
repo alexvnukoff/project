@@ -466,6 +466,12 @@ collapse the menu on 991px. */
 		font-size: 16pt;
 	}
 
+	h3{
+		font-size: 14pt;
+		margin-top: 10px;
+    	margin-bottom: 5px;
+	}
+
 	p{
 		font-size: 10pt;
 	}
@@ -481,6 +487,15 @@ collapse the menu on 991px. */
 
 	.banner-ad-main-collection{
 		padding: 0!important;
+	}
+
+	.product .thumbnail {
+		height: 350px!important;
+	}
+
+	.product__price {
+		position: relative!important;
+		bottom: auto!important;
 	}
 }
 
