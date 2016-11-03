@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from loginas.views import user_login
+from loginas.views import user_login, user_logout
 from django.views.generic import TemplateView
 import b24online.AdminTpp
 import b24online.AdminTpp.urls
@@ -44,7 +44,8 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^$', b24online.views.home, name="main"),
     url(r'^dashboard.html$', TemplateView.as_view(template_name="b24online/main/dashboard.html"), name="dashboard"),
-    url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
+    url(r'^login/user/(?P<user_id>.+)/$', user_login, name="loginas-user-login"),
+    url(r'^logout/$', user_logout, name="loginas-user-logout"),
     url(r'^news/', include(b24online.News.urls, namespace='news')),
     url(r'^products/', include(b24online.Product.urls, namespace='products')),
     url(r'^innovation/', include(b24online.Innov.urls, namespace='innov')),
