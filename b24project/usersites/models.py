@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.db import transaction, IntegrityError
 
 from b24online.custom import CustomImageField
-from b24online.models import (Organization, image_storage, Gallery, 
+from b24online.models import (Organization, image_storage, Gallery,
                               ActiveModelMixing, GalleryImage,
                               CURRENCY)
 from paypal.standard.ipn.models import PayPalIPN
