@@ -5565,7 +5565,7 @@ msgstr "כרטיס ביקור - תצוגה"
 
 #: templates/b24online/Profile/main.html:151
 msgid "Your Link:"
-msgstr "קישור יוטיוב"
+msgstr "קישור שלך:"
 
 #: templates/b24online/Project/event.html:16
 #: templates/b24online/Project/proposal.html:16
