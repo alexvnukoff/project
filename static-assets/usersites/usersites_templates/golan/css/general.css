@@ -686,7 +686,14 @@ collapse the menu on 991px. */
 
 .coupon-timer{
 	position: absolute;
-	bottom: 50px;
+	bottom: 60px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.coupon-timer{
+		bottom: 30px;
+	}
 }
 
 .go-to-full{

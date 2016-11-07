@@ -55,11 +55,26 @@
                             {% endif %}
 
                             {# If the product is a coupon, display the timer #}
-                            {% if product.coupon_discount_percent %}
-                                <div class="coupon-timer">
-                                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                                </div>
+                            {% if product.coupon_discount_percent%}
+                                    <div class="coupon-timer">
+
+                                        {% now "Y-m-d" as todays_date %}
+                                        {% if product.end_coupon_date|date:"Y-m-d" > todays_date %}
+                    {#                        <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>#}
+{#                                            <input type="hidden" id="timerVar" name="variable" value="{{ product.end_coupon_date|date:"Y-m-d" }}">#}
+                                            <p class="timer-heading">{% trans "Promotion ends" %} in {{ product.end_coupon_date|date:"d.m.Y" }}</p>
+{#                                            <div class="clock-container">#}
+{##}
+{#                                                <div id="clockdiv">#}
+{#                                                  <div>#}
+{#                                                    <span class="days">days </span><span class="hours">h </span><span class="minutes">m </span><span class="seconds">s </span>#}
+{#                                                  </div>#}
+{#                                                </div>#}
+{##}
+{#                                            </div>#}
+                                        {% endif %}
+                                    </div>
+
                             {% endif %}
                         </div>
 
@@ -71,5 +86,14 @@
 
         {% include 'usersites_templates/golan_red/B2CProducts/paginator.html' %}
     </div>
+
+    <script>
+        $(document).ready( function() {
+        //getting the end time of the coupon
+            var deadline = $("#timerVar").val();
+
+            initializeClock('clockdiv', deadline);
+        });
+    </script>
 
 </section>
