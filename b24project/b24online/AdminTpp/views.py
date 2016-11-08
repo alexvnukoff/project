@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import json
 
 from django.contrib.auth import get_user_model
