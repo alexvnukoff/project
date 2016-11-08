@@ -41,7 +41,7 @@
         <div class="row">
             <div class="cust-nav">
                {% for page in site.user_site.organization.additional_pages.all %}
-                    <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
+                    <a class="addition-pages" href="{{ page.get_absolute_url }}">{{ page.title }}</a>
                 {% endfor %}
             </div>{# /secondary menu #}
         </div>
