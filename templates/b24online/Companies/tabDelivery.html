@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
-||{{ request.user}}||{{ user }}||
 <div class="tpp-dt-content">
+    {% if is_permitted %}
     <table class="table-deals" cellpadding="0" cellpadding="0">
         <tr class="top">
             <td>№</td>
@@ -31,4 +31,7 @@
         {% endfor %}
         {% include "b24online/main/paginator.html" %}
     </table>
+    {% else %}
+        {% trans 'You have not permissions' %}
+    {% endif %}
 </div>

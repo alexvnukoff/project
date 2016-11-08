@@ -244,8 +244,12 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
     from b24online.models import Organization
     from guardian.shortcuts import get_objects_for_user
 
-    qs = get_objects_for_user(user, [permission],
-                              Organization.get_active_objects().all(), with_superuser=False)
+    qs = get_objects_for_user(
+        user, 
+        [permission],
+        Organization.get_active_objects().all(), 
+        with_superuser=False
+    )
 
     if model_klass and issubclass(model_klass, models.Model):
         model_content_type = ContentType.objects.get_for_model(model_klass)
@@ -253,6 +257,14 @@ def get_permitted_orgs(user, permission='b24online.manage_organization',
     return qs
 
 
+def is_managed_organization(request):
+    """Return if organization is managable for user"""
+    current_organization = get_current_organization(request)
+    permitted_orgs = get_permitted_orgs(request.user)
+    return current_organization and permitted_orgs and \
+        current_organization.id in permitted_orgs.values_list('id', flat=True)
+    
+    
 class MTTPTreeBuilder(object):
     """
     Json tree builder fo MTTPModel subclasses.

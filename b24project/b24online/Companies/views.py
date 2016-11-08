@@ -28,7 +28,8 @@ from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
         BusinessProposal, InnovationProject, Vacancy, Organization, Branch,
         Chamber, StaffGroup, PermissionsExtraGroup, Video, 
         CompanyDeliveryLevel)
-from b24online.utils import (get_current_organization, get_permitted_orgs)
+from b24online.utils import (get_current_organization, get_permitted_orgs,
+        is_managed_organization)
 from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
@@ -404,7 +405,7 @@ def _tab_video(request, company, page=1):
 def _tab_delivery(request, company, page=1):
     """Tab for Company products delivery"""
     if not is_managed_organization(request):
-        template_params = {'is_permitted': False,}
+        ctx = {'is_permitted': False,}
     else:
         paginator = Paginator(
             CompanyDeliveryLevel.get_active_objects().filter(company=company)\
@@ -413,15 +414,14 @@ def _tab_delivery(request, company, page=1):
         page = paginator.page(page)
         paginator_range = func.get_paginator_range(page)
         url_paginator = "companies:tab_delivery_paged"
-        template_params = {
+        ctx = {
             'is_permitted' : True,
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
             'url_parameter': company
         }
-    return render(request, 'b24online/Companies/tabDelivery.html', 
-                  template_params)
+    return render(request, 'b24online/Companies/tabDelivery.html', ctx)
 
 
 class DeleteCompany(ItemDeactivate):
