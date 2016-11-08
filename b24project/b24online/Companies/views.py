@@ -21,12 +21,14 @@ from appl import func
 from b24online.Companies.forms import (AdditionalPageFormSet, CompanyForm, 
         AdminCompanyForm, DeliveryLevelForm)
 from b24online.Messages.forms import MessageForm
-from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate,
-                      GalleryImageList, DeleteGalleryImage, DeleteDocument, DocumentList)
+from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, 
+        ItemDeactivate, GalleryImageList, DeleteGalleryImage, 
+        DeleteDocument, DocumentList)
 from b24online.models import (Company, News, Tender, Exhibition, B2BProduct,
         BusinessProposal, InnovationProject, Vacancy, Organization, Branch,
         Chamber, StaffGroup, PermissionsExtraGroup, Video, 
         CompanyDeliveryLevel)
+from b24online.utils import (get_current_organization, get_permitted_orgs)
 from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
@@ -401,19 +403,23 @@ def _tab_video(request, company, page=1):
 
 def _tab_delivery(request, company, page=1):
     """Tab for Company products delivery"""
-    paginator = Paginator(
-        CompanyDeliveryLevel.get_active_objects().filter(company=company)\
-            .order_by('product_cost'), 10
-    )
-    page = paginator.page(page)
-    paginator_range = func.get_paginator_range(page)
-    url_paginator = "companies:tab_delivery_paged"
-    template_params = {
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company
-    }
+    if not is_managed_organization(request):
+        template_params = {'is_permitted': False,}
+    else:
+        paginator = Paginator(
+            CompanyDeliveryLevel.get_active_objects().filter(company=company)\
+                .order_by('product_cost'), 10
+        )
+        page = paginator.page(page)
+        paginator_range = func.get_paginator_range(page)
+        url_paginator = "companies:tab_delivery_paged"
+        template_params = {
+            'is_permitted' : True,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
     return render(request, 'b24online/Companies/tabDelivery.html', 
                   template_params)
 
