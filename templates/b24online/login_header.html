@@ -48,7 +48,7 @@
     {% endif %}
 
         {% if user.is_authenticated %}
-        <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
+        <a style="margin-left: 20px;" href="{% url 'loginas-user-logout' %}" title=""> {% trans 'Sign out'  %}</a>
     {% else %}
         <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
         <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>

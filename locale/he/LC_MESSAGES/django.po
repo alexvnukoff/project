@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-01 10:00+0000\n"
-"PO-Revision-Date: 2016-10-31 10:03+0200\n"
+"PO-Revision-Date: 2016-11-02 11:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: he\n"
@@ -2916,16 +2916,12 @@ msgid "Date joined"
 msgstr "מועד הצטרפות"
 
 #: templates/b24online/AdminTpp/activate.html:81
-#, fuzzy
-#| msgid "Activate"
 msgid "Activate User"
-msgstr "הפעל משתמש"
+msgstr "הפעל משתמש "
 
 #: templates/b24online/AdminTpp/activate.html:84
-#, fuzzy
-#| msgid "Delete item"
 msgid "Delete User"
-msgstr "מחק"
+msgstr "מחק משתמש "
 
 #: templates/b24online/AdminTpp/adv.html:5
 #: templates/b24online/AdminTpp/adv.html:19
@@ -4279,10 +4275,8 @@ msgstr "דואר אלקטרוני"
 
 #: templates/b24online/Companies/detailContent.html:454
 #: templates/b24online/Tpp/detailContent.html:391
-#, fuzzy
-#| msgid "As message"
 msgid "Your message"
-msgstr "כהודעה"
+msgstr "ההודעה שלך"
 
 #: templates/b24online/Companies/popupFilter.html:11
 #: templates/b24online/Exhibitions/popupFilter.html:11
@@ -5458,10 +5452,8 @@ msgstr "אין יצרנים"
 
 #: templates/b24online/Profile/Public/contentPage.html:103
 #: templates/b24online/Profile/main.html:129
-#, fuzzy
-#| msgid "Send as email"
 msgid "Send Email"
-msgstr "שלח כמייל"
+msgstr "שלח מייל "
 
 #: templates/b24online/Profile/addForm.html:24
 msgid "Change avatar"
@@ -5548,17 +5540,13 @@ msgid "Company description"
 msgstr "תיאור החברה"
 
 #: templates/b24online/Profile/changePassword.html:30
-#, fuzzy
-#| msgid "New password confirmation:"
 msgid "New password confirmation"
-msgstr "אשר סיסמא חדשה"
+msgstr "אשר סיסמא חדשה "
 
 #: templates/b24online/Profile/changePassword_done.html:4
 #: templates/b24online/Profile/changePassword_done.html:16
-#, fuzzy
-#| msgid "Your password has been changed!"
 msgid "You password has been changed!"
-msgstr "הסיסמא שלך שונתה!"
+msgstr "הסיסמא שלך שונתה! "
 
 #: templates/b24online/Profile/index.html:6
 #: templates/usersites_templates/cineret_red/header.html:128
@@ -5568,22 +5556,16 @@ msgid "Profile"
 msgstr "פרופיל"
 
 #: templates/b24online/Profile/main.html:5
-#, fuzzy
-#| msgid "Profile"
 msgid "Your Profile"
-msgstr "פרופיל"
+msgstr "הפרופיל שלך"
 
 #: templates/b24online/Profile/main.html:149
-#, fuzzy
-#| msgid "Business Card"
 msgid "Business Card Preview"
-msgstr "כרטיס ביקור"
+msgstr "כרטיס ביקור - תצוגה"
 
 #: templates/b24online/Profile/main.html:151
-#, fuzzy
-#| msgid "YouTube Link"
 msgid "Your Link:"
-msgstr "קישור יוטיוב"
+msgstr "קישור שלך:"
 
 #: templates/b24online/Project/event.html:16
 #: templates/b24online/Project/proposal.html:16
@@ -6389,7 +6371,7 @@ msgstr "B24Online לעסקים"
 
 #: templates/b24online/index.html:134
 msgid "Growth tools for your business."
-msgstr "כאן בפורטל תקבלו כלים כלכליים רבים לניהול וקידום העסק שלך!"
+msgstr "הירשמו ותוכלו לקבל כלים כלכליים רבים לניהול וקידום העסק שלך!"
 
 #: templates/b24online/index.html:137
 msgid "Search for products and services"
@@ -6411,11 +6393,13 @@ msgstr "B24Online Shopping"
 
 #: templates/b24online/index.html:165
 msgid "Your marketplace – from your own neighborhood across the world."
-msgstr "אזור המכירות האישי שלך - מהמיקום שלך לכל עולם!"
+msgstr ""
+"הירשמו ותוכלו להתחיל למכור ולקנות את מיטב המוצרים מהחברות הגדולות ביותר "
+"בישראל ובעולם!"
 
 #: templates/b24online/index.html:168
 msgid "Search for products"
-msgstr "חפשו מוצרים למכירה  - טקסט חופשי."
+msgstr "חפשו מוצרים למכירה  - טקסט חופשי"
 
 #: templates/b24online/index.html:177
 msgid "Search for Products"
@@ -6423,11 +6407,11 @@ msgstr "כל המוצרים"
 
 #: templates/b24online/index.html:178
 msgid "Search for Coupons"
-msgstr "חפש קופונים ומבצעים"
+msgstr "קופונים ומבצעים"
 
 #: templates/b24online/index.html:194
 msgid "Employment Center"
-msgstr "B24Online מרכז תעסוקה ועבודה לעסקים"
+msgstr "B24Online מרכז תעסוקה ועבודה"
 
 #: templates/b24online/index.html:195
 msgid "Find the your ideal position or the perfect candidate for your company."
@@ -6478,13 +6462,6 @@ msgid "Create Your Own Site in Under 10 Minutes"
 msgstr "צרו אתר אינטרנט אישי לעסק שלכם בפחות מ-10 דקות!"
 
 #: templates/b24online/index.html:273
-#, fuzzy
-#| msgid ""
-#| "Every company joining B24Online can choose from a wide variety of ready-"
-#| "made, mobile-friendly templates to build and operate its own image and "
-#| "sales websites.\\u2028 Companies immediately can start operating in their "
-#| "business environments. \\u2028All information from the portal is "
-#| "immediately synchronized to your personal site."
 msgid ""
 "Every company joining B24Online can choose from a wide variety of ready-"
 "made, mobile-friendly templates to build and operate its own image and sales "
@@ -6492,11 +6469,11 @@ msgid ""
 "environments. All information from the portal is immediately synchronized to "
 "your personal site."
 msgstr ""
-"כל עסק או חברה שמצטרפים ל- B24Online יכולה לבנות לעצמם אתר אינטרנט עצמאי "
-"לחלוטין. ביכולתם לבחור כיצד ייראה האתר מתוך שלל העיצובים המוצעים לקהל הרחב, "
-"ועל פי האופי שמתאים לעסק: אתר תדמיתי, מכירתי או שירותי.  מערכת בניית האתרים "
+"כל עסק או חברה שמצטרפים ל- B24Online יכולים לבנות לעצמם אתר אינטרנט עצמאי "
+"לחלוטין. ביכולתכם לבחור כיצד ייראה האתר שלכם מתוך שלל העיצובים המוצעים, ועל "
+"פי האופי שמתאים לעסק שלכם: אתר תדמיתי, מכירתי או שירותי.  מערכת בניית האתרים "
 "שלנו מאפשרת בחירה מתוך מגוון רחב של עיצובים מקוריים, מותאמים לכל מכשירי "
-"הטלפוןן הניידים וכל האתרים רספונסיביים לכל המכשירים הדיגיטאליים הקיימים. "
+"הטלפונים הסלולאריים וכל האתרים רספונסיביים לכל המכשירים הדיגיטאליים הקיימים. "
 
 #: templates/b24online/index.html:274
 msgid "Start Now"
@@ -6504,7 +6481,7 @@ msgstr "התחל עכשיו!"
 
 #: templates/b24online/index.html:295
 msgid "Products and Services"
-msgstr "מוצרים ושירותים "
+msgstr "מרכז קניות "
 
 #: templates/b24online/index.html:296
 msgid ""
@@ -6514,8 +6491,8 @@ msgid ""
 msgstr ""
 "בפורטל B24Online מרכז קניות אונליין לקנייה ומכירת מוצרים לכל רחבי העולם. "
 "למשתמשים רשומים ישנן אפשרויות גישה בו-זמנית לפלטפורמות מכירות סיטונאיות "
-"וקימונעיות. מרכז הקניות מספק מגוון רחב של כלי קידום מכירות: קופונים, מבצעים "
-"והנחות בלעדיות לגולשי הפורטל."
+"וקימונעיות. מרכז הקניות מספק מגוון רחב של כלים לקידום מכירות: קופונים, "
+"מבצעים והנחות בלעדיות לגולשי הפורטל."
 
 #: templates/b24online/index.html:297
 msgid "B2B Center"
@@ -6565,26 +6542,17 @@ msgid ""
 "it easy to receive relevant data on the potential client and the services "
 "and products he would like."
 msgstr ""
-"רק משתמשי הפורטל נהנים ממערכת ניהול איסוף לידים עצמאית - בלתי תלויה. אין "
-"יותר צורך בעבודה עם מערכות איסוף לידים חיצוניות ובזבוז כסף בדפי נחיתה "
-"זמניים. מעתה כל גולשי הפורטל נהנים מכלי איסוף לידים ופניות לקוחות, בעמודים "
-"הפנימיים של אתר האינטרנט שלכם (אתר עצמאי - ללא תלות בפורטל!). המידע כולל: "
-"שם, מספר טלפון ודואר אלקטרוניים, יחד עם אפשרות קצרה לטקסט מהפונים אליכם. "
+"רק משתמשי פורטל B24Online נהנים ממערכת ניהול איסוף לידים עצמאית בלתי תלויה. "
+"אין יותר צורך בעבודה עם מערכות חיצוניות ובזבוז כסף רב. מעתה כל גולשי הפורטל "
+"נהנים מכלים לאיסוף לידים ופניות לקוחות, בעמודים הפנימיים של אתר האינטרנט "
+"שלכם. המידע כולל: שם, מספר טלפון ודואר אלקטרוני, יחד עם אפשרות לטקסט מהפונים "
+"אליכם. "
 
 #: templates/b24online/index.html:322 templates/b24online/index.html:345
 msgid "Register Now"
 msgstr "הירשם"
 
 #: templates/b24online/index.html:344
-#, fuzzy
-#| msgid ""
-#| "The live chat messenger system allows communications within the portal "
-#| "and with a company’s external website.\\u2028Clients can choose the "
-#| "division, department or employee to contact by IM.\\u2028Chat history is "
-#| "saved for future referenceand documents and photos can be uploaded "
-#| "securely.\\u2028The app serves as a tool for simultaneous discussions, "
-#| "marketing and support.\\u2028Groups can be created to bring together "
-#| "employees, or employees and clients."
 msgid ""
 "The live chat messenger system allows communications within the portal and "
 "with a company’s external website. Clients can choose the division, "
@@ -6593,13 +6561,13 @@ msgid ""
 "as a tool for simultaneous discussions, marketing and support. Groups can be "
 "created to bring together employees, or employees and clients."
 msgstr ""
-"מערכת שליחת צ'ט אישי בזמן אמת המאפשרת תקשורת עסקית פנימית בפורטל ובמקביל עם "
-"קישור לאתר החברה. באמצעות מערכת ניהול הצ'אטים ניתן לבחור את המחלקה או העובד "
-"הרלוונטי."
+"לאחר ההרשמה לפורטל B24Online תיהנו ממערכת שליחת צא'ט אישי בזמן אמת, המאפשרת "
+"לעובדי החברה להשתמש ברשת תקשורת עסקית פנימית עם קישור לאתר החברה. באמצעות "
+"מערכת ניהול הצ'אטים ניתן לבחור את המחלקה או העובד הרלוונטי."
 
 #: templates/b24online/index.html:346
 msgid "Start Chat Now"
-msgstr "התחל צ'אט"
+msgstr "התחל צ'אט!"
 
 #: templates/b24online/index.html:376
 msgid "Company E-Business Card"
@@ -6897,44 +6865,44 @@ msgstr "בחרו את הפעולות לביצוע עבור העסק:"
 
 #: templates/b24online/main/dashboard.html:23
 msgid "B2B products"
-msgstr "מכירות סיטונאיות "
+msgstr "כניסה לאזור מכירות סיטונאיות של העסק"
 
 #: templates/b24online/main/dashboard.html:24
 #: templates/b24online/main/dashboard.html:30
 msgid "Add and manage your products and services"
-msgstr "נהל את המוצרים והשירותים שלך"
+msgstr "אזור המוצרים והשירותים הסיטונאיים שלך"
 
 #: templates/b24online/main/dashboard.html:25
 msgid "Add new B2B product"
-msgstr "הוסף מוצר למכירה סיטונאית "
+msgstr "לחצו כאן הוסף מוצר למכירה סיטונאית "
 
 #: templates/b24online/main/dashboard.html:29
 msgid "B2C products"
-msgstr "המוצרים למכירה שלי"
+msgstr "כניסה לאזור המוצרים למכירה שלי"
 
 #: templates/b24online/main/dashboard.html:31
 msgid "Add new B2C product"
-msgstr "הוסף מוצרים למכירה לעסק"
+msgstr "לחצו כאן להוספת מוצרים למכירה לעסק"
 
 #: templates/b24online/main/dashboard.html:35
 msgid "Company site"
-msgstr "מערכת ניהול אתר העסק"
+msgstr "אזור מערכת ניהול אתר העסק"
 
 #: templates/b24online/main/dashboard.html:36
 msgid "Create and manage your external site"
-msgstr "צרו ונהלו אתר אינטרנט חיצוני"
+msgstr "מערכת ניהול אתר האינטרנט שלך"
 
 #: templates/b24online/main/dashboard.html:37
 msgid "Manage company site"
-msgstr "כניסה למערכת ניהול אתר"
+msgstr "לחצו כאן על מנת להיכנס למערכת ניהול האתר"
 
 #: templates/b24online/main/dashboard.html:42
 msgid "Manage collected leads "
-msgstr "נהלו לידים שנרשמו בעסק שלכם"
+msgstr "מערכת ניהול לידים ופניות לקוחות לעסק"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr "כניסה למערכת ניהול לידים"
+msgstr "לחצו כאן על מנת להיכנס למערכת ניהול לידים של העסק"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
@@ -6942,27 +6910,27 @@ msgstr "הודע על אירועים מתוכננים"
 
 #: templates/b24online/main/dashboard.html:49
 msgid "Add news"
-msgstr "הוסף חדשות לעסק שלך"
+msgstr "לחצו כאן על מנת להוסיף חדשות לעסק שלך"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
-msgstr "פרסמו קבצי וידאו או בלוג אישי"
+msgstr "מערכת פרסום וידאו או בלוג אישי"
 
 #: templates/b24online/main/dashboard.html:55
 msgid "Add video"
-msgstr "הוסף וידאו"
+msgstr "להוספת וידאו - לחצו כאן!"
 
 #: templates/b24online/main/dashboard.html:59
 msgid "Analytic"
-msgstr "מערכת ניתוח נתונים עסקית"
+msgstr "כניסה למערכת ניתוח נתונים עסקית"
 
 #: templates/b24online/main/dashboard.html:60
 msgid "Check our items analytic"
-msgstr "בדוק את נתוני המוצרים (אנאליטיקס)"
+msgstr "מערכת ניתוח אתר החברה שלכם (אנאליטיקס)"
 
 #: templates/b24online/main/dashboard.html:61
 msgid "Check company analytic"
-msgstr "בדקו את נתוני האתר (אנאליטיקס)"
+msgstr "לחצו כאן על מנת לבדוק את נתוני האתר"
 
 #: templates/b24online/main/dashboard.html:66
 msgid "Upload your banners and use advertisement to grow sales"
@@ -6974,27 +6942,27 @@ msgstr "להעלאת באנר - לחצו כאן!"
 
 #: templates/b24online/main/dashboard.html:71
 msgid "Vacancies"
-msgstr "מערכת משרות ועבודות"
+msgstr "כניסה למערכת משרות ועבודות"
 
 #: templates/b24online/main/dashboard.html:72
 msgid "Find employees in our system"
-msgstr "מצא עובדים במערכת "
+msgstr "מערכת משרות ועבודות של העסק"
 
 #: templates/b24online/main/dashboard.html:73
 msgid "Publish new vacancy"
-msgstr "בחר משרה פנויה"
+msgstr "לצפייה במשרות פנויות - לחצו כאן!"
 
 #: templates/b24online/main/dashboard.html:78
 msgid "Product producers"
-msgstr "יצרנים "
+msgstr "מערכת ניהול יצרנים "
 
 #: templates/b24online/main/dashboard.html:79
 msgid "Manage product producers"
-msgstr "מערכת ניהול יצרנים"
+msgstr "כניסה למערכת ניהול יצרנים"
 
 #: templates/b24online/main/dashboard.html:80
 msgid "Manage producers"
-msgstr "לחץ כאן לניהול יצרנים"
+msgstr "לחצו כאן לניהול יצרנים במוצרים למכירה"
 
 #: templates/b24online/main/dashboard.html:84
 msgid "Active deals"
@@ -7002,11 +6970,11 @@ msgstr "עסקאות פעילות"
 
 #: templates/b24online/main/dashboard.html:85
 msgid "Track and manage your deals"
-msgstr "עקבו אחר העסקאות שלכם"
+msgstr "מערכת עסקאות של החברה"
 
 #: templates/b24online/main/dashboard.html:86
 msgid "Manage deals"
-msgstr "נהלו את העסקאות בעסק שלכם"
+msgstr "לחצו כאן לכניסה למערכת ניהול עסקאות"
 
 #: templates/b24online/main/dashboard.html:91
 msgid "Publish and contribute on innovation projects"
@@ -7018,11 +6986,11 @@ msgstr "פרסמו מיזם חדש"
 
 #: templates/b24online/main/dashboard.html:98
 msgid "Publish business proposals and find partners"
-msgstr "פרסמו הצעות עסקיות ומצאו שותפים עסקיים"
+msgstr "מרכז הצעות עסקיות ושותפים עסקיים"
 
 #: templates/b24online/main/dashboard.html:99
 msgid "Publish new proposal"
-msgstr "פרסם הצעה עסקית חדשה"
+msgstr "לפרסום הצעה עסקית חדשה - לחצו כאן!"
 
 #: templates/b24online/main/dashboard.html:104
 #: templates/b24online/main_page.html:159
@@ -7035,7 +7003,7 @@ msgstr "צרו אירועים ומפגשים"
 
 #: templates/b24online/main/dashboard.html:106
 msgid "Announce event"
-msgstr "צור אירוע "
+msgstr "צור אירוע חדש"
 
 #: templates/b24online/main/dashboard.html:116
 msgid "Manage your companies"
@@ -8600,7 +8568,7 @@ msgstr "סמנו כאן אם הנכם זקוקים למשלוח, עלות המש
 #: templates/usersites/B2CProducts/include/deliveryNeed_default.html:17
 #: templates/usersites/B2CProducts/include/deliveryNeed_galil.html:15
 msgid "Delivery is unpaid"
-msgstr "לא הוגדר מחיר עבור מוצר זה, נא ליצור קשר עם העסק."
+msgstr "לא הוגדר מחיר משלוח עבור מוצר זה, נא ליצור קשר עם העסק."
 
 #: templates/usersites/B2CProducts/include/basketListForm_cineret.html:82
 #: templates/usersites/B2CProducts/include/basketListForm_galil.html:86
@@ -9260,10 +9228,8 @@ msgid "New message"
 msgstr "הודעה חדשה "
 
 #: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:12
-#, fuzzy
-#| msgid "Contact us"
 msgid "Contact us:"
-msgstr "צור קשר"
+msgstr "צור קשר "
 
 #: templates/usersites_templates/cineret_blue/profileForm.html:78
 #: templates/usersites_templates/ibonds/profileForm.html:78

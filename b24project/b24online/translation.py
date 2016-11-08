@@ -5,7 +5,7 @@ from b24online.models import (Country, Branch, Chamber, Company, Department, Vac
         BusinessProposalCategory, InnovationProject, B2BProductCategory, B2BProduct,
         NewsCategory, Greeting, News, Tender, Profile, Exhibition, StaticPage,
         BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner,
-        Producer, Questionnaire, Question, Recommendation, Video)
+        Producer, Questionnaire, Question, Recommendation, Video, GalleryImage)
 
 
 @register(Gallery)
@@ -100,7 +100,7 @@ class TenderTranslationOptions(TranslationOptions):
 
 @register(Profile)
 class ProfileTranslationOptions(TranslationOptions):
-    fields = ('first_name', 'middle_name', 'last_name', 'profession', )
+    fields = ('first_name', 'middle_name', 'last_name', 'profession',)
 
 
 @register(Exhibition)
@@ -146,4 +146,9 @@ class RecommendationTranslationOptions(TranslationOptions):
 @register(Video)
 class VideoTranslationOptions(TranslationOptions):
     fields = ('title', 'slug', 'content', 'keywords', 'short_description')
+
+
+@register(GalleryImage)
+class GalleryImageTranslationOptions(TranslationOptions):
+    fields = ('description',)
 

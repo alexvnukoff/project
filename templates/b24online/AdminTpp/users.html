@@ -58,6 +58,10 @@
 
         <!-- page script -->
 
+<form method="post" id="loginas-form" action="" style="display:none">
+{% csrf_token %}
+</form>
+
 {% endblock %}
 
 {% block bottomScript %}
@@ -78,15 +82,22 @@
                         "aTargets": [ 4 ],
                         "mData": 4,
                         "mRender": function ( data, type, full ) {
-
-                            return '<a href="/login/user/' + data + '/">' +
-                                    '<button class="btn btn-info">{% trans 'Login' %}</button>' +
-                                    '</a>';
-
+                        return '<a href="#" onclick="loginAsUser(' + data + ');return false;">' +
+                            '<button class="btn btn-info"><span id="spitem' + data + '" class="fa fa-refresh fa-spin fa-fw" style="display:none;"></span>{% trans 'Login' %}</button></a>';
                         }
                     }
                ]
-            } );
+            } )
+
             });
+
+        function loginAsUser(d) {
+            var login = $("#loginas-form");
+            var spin = $("#spitem" + d);
+            spin.removeAttr("style");
+            login.attr("action", "/login/user/" + d + "/");
+            login.submit(); 
+        };
+
     </script>
 {% endblock %}

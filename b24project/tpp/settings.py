@@ -1,16 +1,5 @@
-"""
-Django settings for tpp project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, logging
-
+from django.core.urlresolvers import reverse_lazy
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEFAULT_FROM_EMAIL = 'noreply@b24online.com'
@@ -34,20 +23,11 @@ ADMINS = (
 ANONYMOUS_USER_ID = -1
 
 MANAGERS = ADMINS
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 INTERNAL_IPS = ['80.179.7.34']
-
 ALLOWED_HOSTS = ['*']
-
 USER_SITES_DOMAIN = "b24online.com"
 
 LOGGING = {
@@ -141,6 +121,7 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + EXTERNAL_APPS
 PAYPAL_TEST = False
 PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
+LOGOUT_URL = reverse_lazy('loginas-logout')
 CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
 REST_FRAMEWORK = {
