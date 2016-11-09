@@ -4,33 +4,44 @@
 
 <div class="tpp-dt-content">
     {% if is_permitted %}
-    <table class="table-deals" cellpadding="0" cellpadding="0">
-        <tr class="top">
-            <td>№</td>
-            <td>{% trans 'Product cost' %}</td>
-            <td>{% trans 'Delivery cost' %}</td>
-            <td>&nbsp;</td>
-        </tr>
-        {% for item in page.object_list %}
-            <tr>
-                <td>{{ item.pk }}</td>
-                <td>{{ item.product_cost }}</td>
-                <td>{{ item.delivery_cost }}</td>
-                <td>
-                    <a class="call-process-form" 
-                        href="" 
-                        data-title="{% trans 'Update delivery cost level' %}">{% trans 'Update' %}</a>
-                    &nbsp;
-                    <a class="delete_delivery_level"  
-                        href="" 
-                        title="{% trans 'Delete delivery cost level' %}">{% trans 'Delete' %}</a>
-                </td>
+        {# Delivery #}
+        <h3 style="padding-top: 10px;">{% trans 'Products delivery' %}</h3>
+        <div class="form-group">
+            <label>{% trans "Is delivery available on site?" %}</label>
+        </div>
+        <div class="form-group at-delivery">
+            <label>{% trans "Delivery currency" %}</label>
+        </div>
+        <div class="form-group">
+            <label>{% trans "Delivery cost" %}</label>
+        </div>
+        <table class="table-deals" cellpadding="0" cellpadding="0">
+            <tr class="top">
+                <td>№</td>
+                <td>{% trans 'Product cost' %}</td>
+                <td>{% trans 'Delivery cost' %}</td>
+                <td>&nbsp;</td>
             </tr>
-        {% empty %}
-            <tr class="no-results"><td colspan="3">{% trans "No results found" %}</td></tr>
-        {% endfor %}
-        {% include "b24online/main/paginator.html" %}
-    </table>
+            {% for item in page.object_list %}
+                <tr>
+                    <td>{{ item.pk }}</td>
+                    <td>{{ item.product_cost }}</td>
+                    <td>{{ item.delivery_cost }}</td>
+                    <td>
+                        <a class="call-process-form" 
+                            href="" 
+                            data-title="{% trans 'Update delivery cost level' %}">{% trans 'Update' %}</a>
+                        &nbsp;
+                        <a class="delete_delivery_level"  
+                            href="" 
+                            title="{% trans 'Delete delivery cost level' %}">{% trans 'Delete' %}</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr class="no-results"><td colspan="3">{% trans "No results found" %}</td></tr>
+            {% endfor %}
+            {% include "b24online/main/paginator.html" %}
+        </table>
     {% else %}
         {% trans 'You have not permissions' %}
     {% endif %}

@@ -578,7 +578,7 @@ class CompanyUpdate(ItemUpdate):
                     self.object.save()
 
         if form.changed_data:
-            self.object.reindex()
+            # self.object.reindex()
 
             if 'logo' in form.changed_data:
                 self.object.upload_images()

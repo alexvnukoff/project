@@ -659,11 +659,11 @@ class Company(Organization, IndexedModelMixin):
     address = models.CharField(max_length=2048, blank=True, null=False)
     slogan = models.CharField(max_length=2048, blank=True, null=False)
     company_paypal_account = models.EmailField(blank=True, null=True)
-    is_delivery_available = models.BooleanField(default=True)
-    delivery_currency = models.CharField(max_length=20, blank=False, 
-                                         null=True, choices=CURRENCY)
+    is_delivery_available = models.BooleanField(default=False)
+    delivery_currency = models.CharField(max_length=20, null=True,
+                                         blank=True, choices=CURRENCY)
     delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, 
-                                        null=True, blank=False)
+                                        null=True, blank=True)
     metadata = HStoreField()
     branches = models.ManyToManyField(Branch)
     additional_pages = GenericRelation(AdditionalPage)

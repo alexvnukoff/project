@@ -170,6 +170,35 @@
                     }
                 </script>
             </div>
+            <div>
+                <label class="sapce">{% trans "Is delivery available on site?" %}</label>
+                {% if form.errors.is_delivery_available %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.is_delivery_available.0 }}</div>
+                    </div>
+                {% endif %}
+                {{ form.is_delivery_available }}
+            </div>
+            <div>
+                <label class="sapce">{% trans "Delivery currency" %}</label>
+                {% if form.errors.delivery_currency %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.delivery_currency.0 }}</div>
+                    </div>
+                {% endif %}
+                {{ form.delivery_currency }}
+            </div>
+            <div>
+                <label class="sapce">{% trans "Delivery cost" %}</label>
+                {% if form.errors.delivery_cost %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.delivery_cost.0 }}</div>
+                    </div>
+                {% endif %}
+                {{ form.delivery_cost }}
+            </div>
+
+
         </div>
         <ul class="uploadconfig">
             <li>
