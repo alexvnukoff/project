@@ -553,7 +553,6 @@ class Activation(BaseAdminTpp):
             page = int(display_start / display_len + 1)
 
         if search:
-            print(search)
             s = User.objects.filter(is_active=False, email__contains=search)
             paginator = Paginator(s, 25)
             on_page = paginator.page(page)
