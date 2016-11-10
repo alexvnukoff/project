@@ -469,7 +469,7 @@ rgb(33,136,187) 100%);}
     padding: 5px;
 }
 /*---------- Styles for TPP and Company Staff -------------------*/
-.img-status{ background:url(/static/img/news.png);}
+.img-status{ background:url(/static/b24online/img/news.png);}
 .staff-status-passive{ width: 13px; height: 13px; background-position: -91px -130px; margin-left: 15px; float: left; display: inline;}
 .staff-status-active{ width: 13px; height: 13px; background-position: -104px -130px; margin-left: 15px; float: left; display: inline;}
 .staff-contact-msg{ width: 13px; height: 13px; background-position: -188px -90px; margin-left: 18px; float: left; display: inline; cursor: pointer;}
