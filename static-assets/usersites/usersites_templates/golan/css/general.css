@@ -740,9 +740,12 @@ collapse the menu on 991px. */
 	margin-top: 0;
 }
 
-.news__title{
+.news__title,
+.news__title a{
 	font-size: 25px;
 	margin: 0 0 10px 0;
+	color: #000;
+	text-decoration: none;
 }
 
 .news__img img,
@@ -1719,6 +1722,48 @@ footer .btn-default{
     #leads-in-page input{
         width: 120px;
     }
+}
+
+/* gallery style */
+.gal-item img{
+	width: 100%;
+}
+
+.gal-item {
+	padding: 5px;
+}
+
+.galllery-page-wrapper .gallery img{
+	float: right;
+	padding: 0;
+}
+
+.galllery-page-wrapper{
+	margin-bottom: 20px;
+}
+
+/* video styling */
+.video-wrap{
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.video-wrap .news{
+	margin: 0;
+}
+
+.video-wrap .text{
+	margin: 0;
+}
+
+.video-wrap .news__content__cover{
+	float: right;
+	padding: 0 0 10px 10px;
+}
+
+.video-wrap .date{
+	font-size: 9pt;
+	color: #bbb;
 }
 
 
