@@ -316,5 +316,23 @@ footer a:active{
 	color: #fff!important;
 }
 
+#leads-in-product,
+#leads-in-page{
+	background-color: #eee;
+}
+
+#leads-in-product .main-contact-btn,
+#leads-in-page .main-contact-btn{
+	background-color: #a00c0b;
+	color: #fff;
+}
+
+#leads-in-product .main-contact-btn:hover,
+#leads-in-page .main-contact-btn:hover{
+	background-color: #5a0000;
+	color: #fff;
+}
+
+
 
 
