@@ -1,5 +1,7 @@
+# -*- encoding: utf-8 -*-
 import os, logging
 from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEFAULT_FROM_EMAIL = 'noreply@b24online.com'
@@ -220,13 +222,9 @@ DATABASES = {
 }
 
 USE_X_FORWARDED_HOST = True
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = False
-
 USE_TZ = True
 
 LOCALE_PATHS = (
@@ -289,30 +287,31 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details'
 )
 
-gettext = lambda s: s
-LANGUAGES = (
-    ('en', gettext('English')),
-    ('ru', gettext('Russian')),
-    ('am', gettext('Armenian')),
-    ('bg', gettext('Bulgarian')),
-    # ('az', gettext('Azerbaijan')),
-    # ('be', gettext('Belarus')),
-    # ('et', gettext('Estonia')),
-    # ('ka', gettext('Georgia')),
-    # ('kk', gettext('Kazakhstan')),
-    # ('kg', gettext('Kyrgyzstan')),
-    # ('lt', gettext('Lithuania')),
-    # ('lv', gettext('Latvia')),
-    # ('mo', gettext('Moldova')),
-    # ('tg', gettext('Tajikistan')),
-    # ('tm', gettext('Turkmenistan')),
-    ('uk', gettext('Ukrainian')),
-    # ('uz', gettext('Uzbekistan')),
-    ('he', gettext('Hebrew')),
-    ('ar', gettext('Arabic')),
-    ('zh', gettext('Chinese')),
-    ('es', gettext('Spanish')),
-)
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('ru', _('Russian')),
+    ('am', _('Armenian')),
+    ('bg', _('Bulgarian')),
+    # ('az', _('Azerbaijan')),
+    # ('be', _('Belarus')),
+    # ('et', _('Estonia')),
+    # ('ka', _('Georgia')),
+    # ('kk', _('Kazakhstan')),
+    # ('kg', _('Kyrgyzstan')),
+    # ('lt', _('Lithuania')),
+    # ('lv', _('Latvia')),
+    # ('mo', _('Moldova')),
+    # ('tg', _('Tajikistan')),
+    # ('tm', _('Turkmenistan')),
+    ('uk', _('Ukrainian')),
+    # ('uz', _('Uzbekistan')),
+    ('he', _('Hebrew')),
+    ('ar', _('Arabic')),
+    ('zh', _('Chinese')),
+    ('es', _('Spanish')),
+]
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
