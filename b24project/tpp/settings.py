@@ -390,5 +390,6 @@ GEO_COUNTRY_DB = {
     'Moldova': '10',
     'Russia': '11',
     'USA': '142479',
+    'Ukraine': '15',
 }
 
