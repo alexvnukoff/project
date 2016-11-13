@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import json
 
 from django.contrib.auth import get_user_model
@@ -23,6 +24,7 @@ from b24online.search_indexes import SearchEngine, ProfileIndex, GreetingIndex
 from b24online.utils import class_for_name
 from centerpokupok.models import B2CProductCategory
 from core.cbv import JSONResponseMixin
+from django.contrib import messages
 
 
 class BaseAdminAuth(View):
@@ -552,7 +554,6 @@ class Activation(BaseAdminTpp):
             page = int(display_start / display_len + 1)
 
         if search:
-            print(search)
             s = User.objects.filter(is_active=False, email__contains=search)
             paginator = Paginator(s, 25)
             on_page = paginator.page(page)
@@ -590,16 +591,17 @@ class ActivationAction(RedirectView):
         url = self.get_redirect_url(*args, **kwargs)
         action = request.GET.get('a')
 
-        if request.user.is_superuser and action:
+        if request.user.is_superuser or request.user.is_admin and action:
             user = get_object_or_404(User, pk=kwargs['pk'])
             if action == '1':
+                messages.success(request, _('User has been activated!'))
                 user.is_active = True
                 user.save()
             elif action == '2':
+                messages.success(request, _('User has beeen deleted!'))
                 user.delete()
             else:
                 return HttpResponseBadRequest()
-
             return HttpResponseRedirect(url)
         else:
             return HttpResponseBadRequest()

@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 import json
 import logging
 from urllib.parse import urljoin

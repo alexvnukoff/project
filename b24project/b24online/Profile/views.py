@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.views.generic.edit import FormView
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist

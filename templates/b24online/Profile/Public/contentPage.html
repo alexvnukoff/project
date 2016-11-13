@@ -3,6 +3,36 @@
 {% load i18n %}
 
 <title>{% block title %}{{ object.profile }}{% endblock %}</title>
+
+{% block header %}
+        <meta name="description" content="{{ object.profile.profession }}"/>
+        <meta name="url" content="https://b24online.com/"/>
+        <meta name="title" content="{{ object.profile }}"/>
+        {% if object.profile.avatar %}
+        <meta name="image" content="{{ object.profile.avatar.small }}"/>
+        {% else %}
+        <meta name="image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>
+        {% endif %}
+
+        <meta name="og:description" content="{{ object.profile.profession }}"/>
+        <meta name="og:url" content="https://b24online.com/"/>
+        <meta name="og:title" content="{{ object.profile }}"/>
+        {% if object.profile.avatar %}
+        <meta name="og:image" content="{{ object.profile.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
+
+        <meta property="og:title" content="{{ object.profile }}" />
+        <meta property="og:description" content="{{ object.profile.profession }}" />
+        {% if object.profile.avatar %}<meta property="og:image:secure_url" itemprop="image" content="{{ object.profile.avatar.small }}">{% else %}<meta property="og:image:secure_url" itemprop="image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}">{% endif %}
+        <meta property="og:type" content="website" />
+
+        <meta name="og:description" content="{{ object.profile.profession }}"/>
+        <meta name="og:url" content="https://b24online.com/"/>
+        <meta name="og:title" content="{{ object.profile }}"/>
+        {% if object.profile.avatar %}<meta name="og:image" content="{{ object.profile.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
+        <meta name="og:type" content="website" />
+
+{% endblock %}
+
 {% block content %}
 
 <style>

@@ -23,10 +23,10 @@
                 {% else %}
                     <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
                 {% endif %}
-            {% for prod_img in object.additional_images %}
-                <img src="{{ prod_img.image.original }}">
-            {% endfor %}
-            Additional images will come here
+
+{#                {% for prod_img in object.additional_images %}#}
+{#                    <img src="{{ prod_img.image.original }}">#}
+{#                {% endfor %}#}
             </div>
 
             {# product details - price, quantity, decription and add to cart. If its a coupon, there will be a timer. #}

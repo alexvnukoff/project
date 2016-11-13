@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-29 15:35+0000\n"
+"POT-Creation-Date: 2016-11-10 15:16+0000\n"
 "PO-Revision-Date: 2015-12-12 16:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -151,13 +151,25 @@ msgstr "Требуются"
 msgid "Exhibitions"
 msgstr "Выставки"
 
-#: b24project/b24online/AdminTpp/views.py:198
+#: b24project/b24online/AdminTpp/views.py:200
 msgid "Banner"
 msgstr "Баннер"
 
-#: b24project/b24online/AdminTpp/views.py:198
+#: b24project/b24online/AdminTpp/views.py:200
 msgid "Top"
 msgstr "Топ"
+
+#: b24project/b24online/AdminTpp/views.py:597
+#, fuzzy
+#| msgid "You password has been changed!"
+msgid "User has been activated!"
+msgstr "Ваш пароль был изменен!"
+
+#: b24project/b24online/AdminTpp/views.py:601
+#, fuzzy
+#| msgid "Your password has been changed!"
+msgid "User has beeen deleted!"
+msgstr "Ваш пароль был изменен "
 
 #: b24project/b24online/AdvTop/forms.py:23
 #: b24project/b24online/Exhibitions/forms.py:37
@@ -416,31 +428,31 @@ msgid "Business Proposal"
 msgstr "Бизнес предложения"
 
 #: b24project/b24online/Companies/views.py:306
-#: b24project/b24online/Tpp/views.py:328
+#: b24project/b24online/Tpp/views.py:329
 #: templates/b24online/Companies/detailContent.html:179
 #: templates/b24online/Tpp/detailContent.html:185
 msgid "Select department"
 msgstr "Выберите отдел"
 
 #: b24project/b24online/Companies/views.py:319
-#: b24project/b24online/Tpp/views.py:341
+#: b24project/b24online/Tpp/views.py:342
 #: templates/b24online/Companies/detailContent.html:180
 #: templates/b24online/Tpp/detailContent.html:186
 msgid "Select vacancy"
 msgstr "Выбрать Вакансию"
 
 #: b24project/b24online/Companies/views.py:339
-#: b24project/b24online/Tpp/views.py:361
+#: b24project/b24online/Tpp/views.py:362
 msgid "User not found"
 msgstr "Пользователь не найден"
 
 #: b24project/b24online/Companies/views.py:343
-#: b24project/b24online/Tpp/views.py:365
+#: b24project/b24online/Tpp/views.py:366
 msgid "The vacancy already have employee attached"
 msgstr ""
 
 #: b24project/b24online/Companies/views.py:346
-#: b24project/b24online/Tpp/views.py:368
+#: b24project/b24online/Tpp/views.py:369
 msgid "The user already employed in your organization"
 msgstr ""
 
@@ -482,17 +494,13 @@ msgstr "Инновационные проекты "
 #: b24project/b24online/Leads/views.py:21
 #: templates/b24online/main/dashboard.html:41
 msgid "Leads"
-msgstr ""
+msgstr "Лиды"
 
 #: b24project/b24online/Messages/forms.py:28
-#, fuzzy
-#| msgid "You email"
 msgid "As email"
 msgstr "Ваша почта"
 
 #: b24project/b24online/Messages/forms.py:29
-#, fuzzy
-#| msgid "New message"
 msgid "As message"
 msgstr "Новое сообщение от Tppcenter"
 
@@ -568,9 +576,8 @@ msgid "the organization staff is empty"
 msgstr "Название организации"
 
 #: b24project/b24online/Messages/forms.py:367
-#, fuzzy
 msgid "Add user to chat"
-msgstr "Реклама на портале"
+msgstr "Добавить в корзину"
 
 #: b24project/b24online/Messages/forms.py:389
 #: b24project/b24online/models.py:1497 b24project/b24online/models.py:1547
@@ -709,10 +716,8 @@ msgid "Agree with license conditions"
 msgstr ""
 
 #: b24project/b24online/Product/forms.py:270
-#, fuzzy
-#| msgid "About company"
 msgid "Customer (person or company)"
-msgstr "Описание товара"
+msgstr "Клиент (человек или компания)"
 
 #: b24project/b24online/Product/forms.py:274
 #: b24project/centerpokupok/models.py:213 templates/admin/show_stats.html:58
@@ -734,8 +739,6 @@ msgid "Already paid"
 msgstr ""
 
 #: b24project/b24online/Product/forms.py:361
-#, fuzzy
-#| msgid "Best deals"
 msgid "Reject deal"
 msgstr "Лучшие предложения"
 
@@ -756,9 +759,8 @@ msgstr "Корзина"
 
 #: b24project/b24online/Product/views.py:775
 #: b24project/b24online/models.py:3054 b24project/b24online/models.py:3066
-#, fuzzy
 msgid "Invalid parameter"
-msgstr "Страна"
+msgstr "неверный параметр"
 
 #: b24project/b24online/Product/views.py:855
 #: b24project/b24online/Product/views.py:861
@@ -769,8 +771,6 @@ msgstr "Страна"
 #: b24project/b24online/Product/views.py:1006
 #: b24project/b24online/Product/views.py:1012
 #: templates/b24online/Products/dealList.html:7
-#, fuzzy
-#| msgid "Order history"
 msgid "Deals history"
 msgstr "История заказов"
 
@@ -778,10 +778,8 @@ msgstr "История заказов"
 #: b24project/b24online/Product/views.py:1134
 #: b24project/b24online/Product/views.py:1164
 #: b24project/b24online/Product/views.py:1193
-#, fuzzy
-#| msgid "Product"
 msgid "Producers"
-msgstr "Товар"
+msgstr "Производитель"
 
 #: b24project/b24online/Project/urls.py:8
 #: templates/b24online/BusinessProposal/detailContent.html:58
@@ -876,7 +874,7 @@ msgstr "Добавить бизнес предложение"
 #: templates/usersites_templates/cineret_red/footer.html:50
 #: templates/usersites_templates/cineret_red/header.html:121
 #: templates/usersites_templates/cineret_red/site_sidebar.html:120
-#: templates/usersites_templates/cineret_red_no_footer/header.html:171
+#: templates/usersites_templates/cineret_red_no_footer/header.html:175
 #: templates/usersites_templates/cineret_red_no_footer/site_sidebar.html:120
 #: templates/usersites_templates/default_horizontal_banners/base.html:118
 #: templates/usersites_templates/default_horizontal_banners/site_sidebar.html:120
@@ -960,10 +958,8 @@ msgstr ""
 #: b24project/b24online/Questionnaires/forms.py:135
 #: b24project/usersites/Questionnaires/forms.py:30
 #: b24project/usersites/Questionnaires/forms.py:41
-#, fuzzy
-#| msgid "Basket"
 msgid "Your answer"
-msgstr "Корзина"
+msgstr "Ваш ответ"
 
 #: b24project/b24online/Questionnaires/views.py:164
 msgid "There is no such instance"
@@ -994,7 +990,7 @@ msgstr "Тендеры"
 msgid "International organization must have a flag"
 msgstr ""
 
-#: b24project/b24online/Tpp/views.py:39 b24project/b24online/Tpp/views.py:141
+#: b24project/b24online/Tpp/views.py:40 b24project/b24online/Tpp/views.py:142
 msgid "Tpp"
 msgstr "ТПП"
 
@@ -1024,10 +1020,8 @@ msgid "Logo exceeded dimension limit"
 msgstr ""
 
 #: b24project/b24online/UserSites/forms.py:118
-#, fuzzy
-#| msgid "Department name  is required"
 msgid "Domain is required"
-msgstr "Имя отдела обязательно"
+msgstr "Домен обезателен для заполнения"
 
 #: b24project/b24online/Users/views.py:13
 #: templates/b24online/AdminTpp/users.html:5
@@ -1060,6 +1054,8 @@ msgstr "Только зарегистрированные пользовател
 #: templates/usersites_templates/golan/Video/wall.html:11
 #: templates/usersites_templates/golan_purple/Video/list.html:14
 #: templates/usersites_templates/golan_purple/Video/wall.html:11
+#: templates/usersites_templates/golan_red/Video/list.html:11
+#: templates/usersites_templates/golan_red/Video/wall.html:9
 msgid "Video"
 msgstr ""
 
@@ -1073,32 +1069,24 @@ msgid "Unique amount"
 msgstr ""
 
 #: b24project/b24online/admin.py:116
-#, fuzzy
-#| msgid "Total pages"
 msgid "Total amount"
-msgstr "Всего страниц"
+msgstr "Всего"
 
 #: b24project/b24online/admin.py:195
-#, fuzzy
-#| msgid "Personal data"
 msgid "Personal info"
 msgstr "Личные данные"
 
 #: b24project/b24online/admin.py:196
-#, fuzzy
-#| msgid "Permission denied"
 msgid "Permissions"
-msgstr "Доступ запрещен"
+msgstr "Права доступа"
 
 #: b24project/b24online/admin.py:197
-#, fuzzy
-#| msgid "Start date"
 msgid "Important dates"
-msgstr "Дата начала"
+msgstr "Важные даты"
 
 #: b24project/b24online/forms.py:46
 msgid "Image file is too large"
-msgstr ""
+msgstr "Изображение слишком большое"
 
 #: b24project/b24online/models.py:48
 msgid "Israeli New Sheqel"
@@ -1121,16 +1109,12 @@ msgid "Russian Ruble"
 msgstr "Русский рубль"
 
 #: b24project/b24online/models.py:53
-#, fuzzy
-#| msgid "Bulgarian"
 msgid "Bulgarian Lev"
-msgstr "Болгарский"
+msgstr "Болгарский Лев"
 
 #: b24project/b24online/models.py:54
-#, fuzzy
-#| msgid "Russian Ruble"
 msgid "Belarusian Ruble"
-msgstr "Русский рубль"
+msgstr "Беларусский рубль"
 
 #: b24project/b24online/models.py:58
 msgid "Kilogram"
@@ -1145,25 +1129,20 @@ msgid "date joined"
 msgstr "Дата регистрации"
 
 #: b24project/b24online/models.py:187
-#, fuzzy
-#| msgid "Created"
 msgid "Creator"
-msgstr "Созданно"
+msgstr "Создатель"
 
 #: b24project/b24online/models.py:191
 msgid "Editor"
-msgstr ""
+msgstr "Редактор"
 
 #: b24project/b24online/models.py:194
-#, fuzzy
-#| msgid "Creation date"
 msgid "Creation time"
 msgstr "Дата созданния"
 
 #: b24project/b24online/models.py:196
-#, fuzzy
 msgid "Update time"
-msgstr "Специальная цена"
+msgstr "Время обновления"
 
 #: b24project/b24online/models.py:211
 #: templates/b24online/AdminTpp/adv_sett.html:20
@@ -1178,7 +1157,7 @@ msgstr "Реклама на портале"
 
 #: b24project/b24online/models.py:417
 msgid "parent"
-msgstr ""
+msgstr "родитель"
 
 #: b24project/b24online/models.py:470
 msgid "Invalid parameter. Must be a \"Model\" subclass"
@@ -1201,25 +1180,21 @@ msgid "Hide the vacancy user"
 msgstr ""
 
 #: b24project/b24online/models.py:1002 b24project/centerpokupok/models.py:63
-#, fuzzy
-#| msgid "Product"
 msgid "Producer"
-msgstr "Товар"
+msgstr "Производитель"
 
 #: b24project/b24online/models.py:1078 b24project/b24online/models.py:2441
 #: b24project/centerpokupok/models.py:175
-#, fuzzy
-#| msgid "Section name"
 msgid "Questionnaire"
-msgstr "ФИО руководителя"
+msgstr "Опросник"
 
 #: b24project/b24online/models.py:1289
 msgid "Male"
-msgstr ""
+msgstr "Мужчина"
 
 #: b24project/b24online/models.py:1289
 msgid "Female"
-msgstr ""
+msgstr "Женщина"
 
 #: b24project/b24online/models.py:1292
 msgid "Businessman"
@@ -1227,7 +1202,7 @@ msgstr "Бизнесмен"
 
 #: b24project/b24online/models.py:1292
 msgid "Individual"
-msgstr "Индивидуальный"
+msgstr "Индивидуал"
 
 #: b24project/b24online/models.py:1435 b24project/b24online/models.py:1656
 #: b24project/usersites/Api/views.py:292
@@ -1240,8 +1215,6 @@ msgid "B2C"
 msgstr "Продукты в розницу"
 
 #: b24project/b24online/models.py:1437 b24project/b24online/models.py:1658
-#, fuzzy
-#| msgid "Users"
 msgid "User sites"
 msgstr "Пользователи"
 
@@ -1250,33 +1223,25 @@ msgid "Opened"
 msgstr ""
 
 #: b24project/b24online/models.py:1495
-#, fuzzy
-#| msgid "Close"
 msgid "Closed"
 msgstr "Закрыть"
 
 #: b24project/b24online/models.py:1506
-#, fuzzy
-#| msgid "Marital status"
 msgid "Chart status"
-msgstr "Семейное положение"
+msgstr "Статус"
 
 #: b24project/b24online/models.py:1511
-#, fuzzy
-#| msgid "Messages"
 msgid "Messages chat"
-msgstr "Сообщения"
+msgstr "Чат"
 
 #: b24project/b24online/models.py:1512
-#, fuzzy
-#| msgid "Messages"
 msgid "Messages chats"
 msgstr "Сообщения"
 
 #: b24project/b24online/models.py:1531 b24project/b24online/models.py:1970
 #: b24project/b24online/models.py:2098 b24project/b24online/models.py:2651
 msgid "Draft"
-msgstr ""
+msgstr "Черновик"
 
 #: b24project/b24online/models.py:1532 b24project/b24online/models.py:1970
 #: b24project/b24online/models.py:2098 b24project/b24online/models.py:2652
@@ -1284,26 +1249,18 @@ msgid "Ready"
 msgstr ""
 
 #: b24project/b24online/models.py:1533
-#, fuzzy
-#| msgid "Read more"
 msgid "Read"
 msgstr "Подробнее"
 
 #: b24project/b24online/models.py:1550
-#, fuzzy
-#| msgid "Messages"
 msgid "Message status"
-msgstr "Сообщения"
+msgstr "Статус сообщения"
 
 #: b24project/b24online/models.py:1613
-#, fuzzy
-#| msgid "Middle name"
 msgid "File name"
 msgstr "Отчество"
 
 #: b24project/b24online/models.py:1615
-#, fuzzy
-#| msgid "Content"
 msgid "Content type"
 msgstr "Описание"
 
@@ -1379,7 +1336,7 @@ msgstr "Дата окончания события"
 #: b24project/b24online/models.py:1771
 #: templates/b24online/AdminTpp/adv_sett.html:27
 #: templates/b24online/AdminTpp/adv_sett.html:42
-#: templates/b24online/Profile/Public/contentPage.html:94
+#: templates/b24online/Profile/Public/contentPage.html:124
 #: templates/b24online/Profile/main.html:120
 #: templates/b24online/Tpp/tabCompanies.html:10
 msgid "Site"
@@ -1729,7 +1686,7 @@ msgstr "Страна"
 #: templates/b24online/Companies/detailContent.html:390
 #: templates/b24online/Exhibitions/detailContent.html:107
 #: templates/b24online/Innov/detailContent.html:117
-#: templates/b24online/Profile/Public/contentPage.html:106
+#: templates/b24online/Profile/Public/contentPage.html:136
 #: templates/b24online/Profile/main.html:132
 #: templates/b24online/Resume/addForm.html:33
 #: templates/b24online/Resume/detailContent.html:64
@@ -2049,27 +2006,27 @@ msgstr "Имя компании скрыто"
 msgid "Partners"
 msgstr "Партнеры"
 
-#: b24project/b24online/views.py:100
+#: b24project/b24online/views.py:99
 #, python-format
 msgid "%(name)s , was registered to your event %(event)s ,"
 msgstr "%(name)s , зарегистрировался на мероприятие %(event)s , "
 
-#: b24project/b24online/views.py:104
+#: b24project/b24online/views.py:103
 #, python-format
 msgid "working in the %(company)s "
 msgstr "работающий в %(company)s "
 
-#: b24project/b24online/views.py:107
+#: b24project/b24online/views.py:106
 #, python-format
 msgid "on the position of %(position)s . "
 msgstr "на должности %(position)s "
 
-#: b24project/b24online/views.py:109
+#: b24project/b24online/views.py:108
 #, python-format
 msgid "You can contact him at this email address %(email)s  "
 msgstr "Вы можете связаться с ним по электронной почте %(email)s  "
 
-#: b24project/b24online/views.py:113 b24project/b24online/views.py:116
+#: b24project/b24online/views.py:112 b24project/b24online/views.py:115
 msgid "Registartion to event"
 msgstr "Регистрация на мероприятие"
 
@@ -2245,46 +2202,46 @@ msgstr ""
 msgid "Extramural"
 msgstr ""
 
-#: b24project/tpp/settings.py:313 templates/b24online/job_index.html:105
+#: b24project/tpp/settings.py:294 templates/b24online/job_index.html:105
 #: templates/centerpokupok/header.html:34
 msgid "English"
 msgstr "Английский"
 
-#: b24project/tpp/settings.py:314 templates/b24online/job_index.html:107
+#: b24project/tpp/settings.py:295 templates/b24online/job_index.html:107
 #: templates/centerpokupok/header.html:36
 msgid "Russian"
 msgstr "Русский"
 
-#: b24project/tpp/settings.py:315 templates/b24online/job_index.html:103
+#: b24project/tpp/settings.py:296 templates/b24online/job_index.html:103
 #: templates/centerpokupok/header.html:32
 msgid "Armenian"
 msgstr "Армянский "
 
-#: b24project/tpp/settings.py:316
+#: b24project/tpp/settings.py:297
 msgid "Bulgarian"
 msgstr "Болгарский"
 
-#: b24project/tpp/settings.py:328 templates/b24online/job_index.html:109
+#: b24project/tpp/settings.py:309 templates/b24online/job_index.html:109
 #: templates/centerpokupok/header.html:38
 msgid "Ukrainian"
 msgstr "Украинский"
 
-#: b24project/tpp/settings.py:330 templates/b24online/job_index.html:106
+#: b24project/tpp/settings.py:311 templates/b24online/job_index.html:106
 #: templates/centerpokupok/header.html:35
 msgid "Hebrew"
 msgstr "Иврит"
 
-#: b24project/tpp/settings.py:331 templates/b24online/job_index.html:104
+#: b24project/tpp/settings.py:312 templates/b24online/job_index.html:104
 #: templates/centerpokupok/header.html:33
 msgid "Arabic"
 msgstr "Арабский"
 
-#: b24project/tpp/settings.py:332 templates/b24online/job_index.html:108
+#: b24project/tpp/settings.py:313 templates/b24online/job_index.html:108
 #: templates/centerpokupok/header.html:37
 msgid "Chinese"
 msgstr "Китайский"
 
-#: b24project/tpp/settings.py:333
+#: b24project/tpp/settings.py:314
 #, fuzzy
 #| msgid "Companies"
 msgid "Spanish"
@@ -2380,7 +2337,8 @@ msgstr "Домашняя страница"
 #: templates/usersites_templates/cineret_red/OrganizationPages/gallery.html:6
 #: templates/usersites_templates/cineret_red/site_sidebar.html:117
 #: templates/usersites_templates/cineret_red_no_footer/B2BProducts/detailContent.html:91
-#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/gallery.html:6
+#: templates/usersites_templates/cineret_red_no_footer/OrganizationPages/gallery.html:9
+#: templates/usersites_templates/cineret_red_no_footer/header.html:168
 #: templates/usersites_templates/cineret_red_no_footer/site_sidebar.html:117
 #: templates/usersites_templates/default_horizontal_banners/B2BProducts/detailContent.html:91
 #: templates/usersites_templates/default_horizontal_banners/B2CProducts/detailContent.html:111
@@ -2410,7 +2368,8 @@ msgstr "Домашняя страница"
 #: templates/usersites_templates/golan_purple/OrganizationPages/gallery.html:6
 #: templates/usersites_templates/golan_purple/site_sidebar.html:117
 #: templates/usersites_templates/golan_red/B2BProducts/detailContent.html:91
-#: templates/usersites_templates/golan_red/OrganizationPages/gallery.html:6
+#: templates/usersites_templates/golan_red/OrganizationPages/gallery.html:7
+#: templates/usersites_templates/golan_red/OrganizationPages/main_gallery.html:11
 #: templates/usersites_templates/golan_red/site_sidebar.html:117
 #: templates/usersites_templates/golan_with_cat/B2BProducts/detailContent.html:91
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/gallery.html:6
@@ -3186,13 +3145,13 @@ msgstr "Войти"
 msgid "Date joined"
 msgstr "Дата регистрации"
 
-#: templates/b24online/AdminTpp/activate.html:81
+#: templates/b24online/AdminTpp/activate.html:86
 #, fuzzy
 #| msgid "Activate"
 msgid "Activate User"
 msgstr "Активировано"
 
-#: templates/b24online/AdminTpp/activate.html:84
+#: templates/b24online/AdminTpp/activate.html:89
 #, fuzzy
 #| msgid "Delete"
 msgid "Delete User"
@@ -3303,7 +3262,7 @@ msgstr ""
 #: templates/usersites_templates/golan_purple/B2BProducts/detailContent.html:30
 #: templates/usersites_templates/golan_purple/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/golan_red/B2BProducts/detailContent.html:30
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:43
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/golan_with_cat/B2BProducts/detailContent.html:30
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:44
 #: templates/usersites_templates/ibonds/B2BProducts/detailContent.html:30
@@ -3446,11 +3405,8 @@ msgstr "Категории"
 #: templates/b24online/Video/addForm.html:94
 #: templates/centerpokupok/Cabinet/index.html:45
 #: templates/centerpokupok/Cabinet/shippingAddress.html:39
-#: templates/usersites/B2CProducts/detailContent.html:56
 #: templates/usersites/Questionnaires/questionsForm.html:60
 #: templates/usersites_templates/cineret_blue/profileForm.html:130
-#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:68
-#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:68
 #: templates/usersites_templates/ibonds/Questionnaires/questionsForm.html:91
 #: templates/usersites_templates/ibonds/profileForm.html:130
 msgid "Save"
@@ -3579,7 +3535,7 @@ msgstr "Кол-во дней"
 msgid "Summary"
 msgstr "Сумма"
 
-#: templates/b24online/AdminTpp/users.html:83
+#: templates/b24online/AdminTpp/users.html:86
 #: templates/usersites/B2CProducts/include/registrationBlock_golan.html:37
 #: templates/usersites_templates/cineret/header.html:88
 #: templates/usersites_templates/cineret_red/header.html:137
@@ -3684,6 +3640,9 @@ msgstr ""
 
 #: templates/b24online/AdvBanner/order.html:122
 #: templates/centerpokupok/Product/orderStepOne.html:158
+#: templates/usersites/B2CProducts/detailContent.html:56
+#: templates/usersites_templates/cineret_red/B2CProducts/detailContent.html:68
+#: templates/usersites_templates/cineret_red_no_footer/B2CProducts/detailContent.html:68
 msgid "Continue"
 msgstr "Продолжить"
 
@@ -3884,6 +3843,8 @@ msgstr "Добавить страницу"
 #: templates/usersites_templates/golan_blue/Proposals/wall.html:17
 #: templates/usersites_templates/golan_purple/Proposals/wall.html:17
 #: templates/usersites_templates/golan_red/Proposals/wall.html:17
+#: templates/usersites_templates/golan_red/Video/list.html:20
+#: templates/usersites_templates/golan_red/Video/wall.html:18
 #: templates/usersites_templates/golan_with_cat/Proposals/wall.html:17
 #: templates/usersites_templates/ibonds/Proposals/wall.html:17
 #: templates/usersites_templates/negev/contentPage.html:102
@@ -4363,10 +4324,8 @@ msgstr "Услуги"
 
 #: templates/b24online/Companies/detailContent.html:319
 #: templates/b24online/main/dashboard.html:53
-#, fuzzy
-#| msgid "Gallery"
 msgid "Video gallery"
-msgstr "Галерея"
+msgstr "Видео галерея"
 
 #: templates/b24online/Companies/detailContent.html:364
 #: templates/b24online/Tpp/detailContent.html:293
@@ -4441,9 +4400,10 @@ msgstr "Отправить сообщение"
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:65
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:66
 #: templates/usersites_templates/golan_purple/OrganizationPages/page.html:16
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:123
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:65
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:66
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:15
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:16
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:65
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:66
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:16
@@ -4492,8 +4452,9 @@ msgstr "Ваше имя"
 #: templates/usersites_templates/golan_blue/OrganizationPages/page.html:20
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:73
 #: templates/usersites_templates/golan_purple/OrganizationPages/page.html:20
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:127
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:73
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:19
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:20
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:73
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:20
 #: templates/usersites_templates/ibonds/OrganizationPages/contact.html:30
@@ -4560,9 +4521,10 @@ msgstr "Ваше имя"
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:78
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:79
 #: templates/usersites_templates/golan_purple/OrganizationPages/page.html:24
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:133
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:78
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:79
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:23
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:24
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:78
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:79
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/page.html:24
@@ -4780,10 +4742,10 @@ msgstr "Имя пользователя"
 
 #: templates/b24online/Leads/addForm.html:27
 #: templates/b24online/Leads/contentPage.html:46
-#: templates/b24online/Profile/Public/contentPage.html:99
+#: templates/b24online/Profile/Public/contentPage.html:129
 #: templates/b24online/Profile/main.html:125
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 #: templates/b24online/Leads/addForm.html:35
 #: templates/b24online/Messages/sendMessage.html:69
@@ -5031,9 +4993,10 @@ msgstr "Отправить сообщение"
 #: templates/usersites_templates/golan_purple/OrganizationPages/contact.html:89
 #: templates/usersites_templates/golan_purple/OrganizationPages/page.html:29
 #: templates/usersites_templates/golan_purple/OrganizationPages/structure.html:38
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:138
 #: templates/usersites_templates/golan_red/B2CProducts/orderByEmail.html:23
 #: templates/usersites_templates/golan_red/OrganizationPages/contact.html:89
-#: templates/usersites_templates/golan_red/OrganizationPages/page.html:28
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:29
 #: templates/usersites_templates/golan_red/OrganizationPages/structure.html:38
 #: templates/usersites_templates/golan_with_cat/B2CProducts/orderByEmail.html:23
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:89
@@ -5493,7 +5456,7 @@ msgstr "Скидка"
 #: templates/usersites_templates/golan/B2CProducts/main_coupons.html:73
 #: templates/usersites_templates/golan_blue/B2CProducts/list.html:60
 #: templates/usersites_templates/golan_blue/B2CProducts/main_coupons.html:39
-#: templates/usersites_templates/golan_red/B2CProducts/list.html:60
+#: templates/usersites_templates/golan_red/B2CProducts/list.html:65
 #: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:39
 #: templates/usersites_templates/golan_with_cat/B2CProducts/list.html:85
 #: templates/usersites_templates/golan_with_cat/B2CProducts/main_coupons.html:39
@@ -5816,7 +5779,7 @@ msgstr "Специальная цена"
 #: templates/usersites_templates/golan_purple/B2BProducts/detailContent.html:35
 #: templates/usersites_templates/golan_purple/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/golan_red/B2BProducts/detailContent.html:35
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:48
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/golan_with_cat/B2BProducts/detailContent.html:35
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:49
 #: templates/usersites_templates/ibonds/B2BProducts/detailContent.html:35
@@ -5872,7 +5835,7 @@ msgstr "Обзоры товаров"
 msgid "There are no producers"
 msgstr "Обзоры товаров"
 
-#: templates/b24online/Profile/Public/contentPage.html:103
+#: templates/b24online/Profile/Public/contentPage.html:133
 #: templates/b24online/Profile/main.html:129
 #, fuzzy
 #| msgid "Order details"
@@ -5892,10 +5855,16 @@ msgstr "Отчество"
 #: templates/b24online/Profile/addForm.html:61
 #: templates/usersites_templates/cineret_blue/profileForm.html:66
 #: templates/usersites_templates/ibonds/profileForm.html:66
-#, fuzzy
-#| msgid "Profile"
 msgid "Profile type"
-msgstr "Профиль"
+msgstr "Тип профиля"
+
+#: templates/b24online/Profile/addForm.html:70
+msgid "Don't have a site?"
+msgstr "Нет сайта?"
+
+#: templates/b24online/Profile/addForm.html:70
+msgid "Open right Now"
+msgstr "Открыть"
 
 #: templates/b24online/Profile/addForm.html:77
 msgid "Facebook"
@@ -5924,8 +5893,6 @@ msgstr ""
 #: templates/usersites_templates/golan_with_cat/OrganizationPages/contact.html:72
 #: templates/usersites_templates/ibonds/OrganizationPages/contact.html:29
 #: templates/usersites_templates/ibonds/profileForm.html:94
-#, fuzzy
-#| msgid "Telephone Number"
 msgid "Phone Number"
 msgstr "Номер телефона"
 
@@ -5952,26 +5919,20 @@ msgid "Adress"
 msgstr "Адрес"
 
 #: templates/b24online/Profile/addForm.html:147
-#, fuzzy
-#| msgid "Company main"
 msgid "Company Info"
-msgstr "Название компании"
+msgstr "Компания"
 
 #: templates/b24online/Profile/addForm.html:149
 msgid "Company name"
-msgstr "Название компании"
+msgstr "Название Компании"
 
 #: templates/b24online/Profile/addForm.html:155
-#, fuzzy
-#| msgid "Company main"
 msgid "Company slogan"
-msgstr "Название компании"
+msgstr "Слоган Компании"
 
 #: templates/b24online/Profile/addForm.html:161
-#, fuzzy
-#| msgid "Complete description"
 msgid "Company description"
-msgstr "Полное описание"
+msgstr "Краткое описание"
 
 #: templates/b24online/Profile/changePassword.html:30
 msgid "New password confirmation"
@@ -7118,7 +7079,7 @@ msgstr "Центр розничных продаж"
 #: templates/b24online/job_index.html:85
 #: templates/b24online/main/dashboard.html:90
 msgid "Innovation projects"
-msgstr "Банк инновационных проектов"
+msgstr "Инновационные проекты"
 
 #: templates/b24online/job_index.html:101 templates/usersites/base.html:74
 #: templates/usersites/site_sidebar.html:18
@@ -7331,10 +7292,8 @@ msgid "Add and manage your products and services"
 msgstr "представлять свою продукцию и услуги"
 
 #: templates/b24online/main/dashboard.html:25
-#, fuzzy
-#| msgid "Add B2B Product"
 msgid "Add new B2B product"
-msgstr "Добавить товар(оптовые)"
+msgstr "Добавить товар"
 
 #: templates/b24online/main/dashboard.html:29
 #, fuzzy
@@ -7343,51 +7302,44 @@ msgid "B2C products"
 msgstr "Продукты в розницу"
 
 #: templates/b24online/main/dashboard.html:31
-#, fuzzy
-#| msgid "Add B2C Product"
 msgid "Add new B2C product"
-msgstr "Добавить продукт в розницу"
+msgstr "Добавить продукт"
 
 #: templates/b24online/main/dashboard.html:35
-#, fuzzy
-#| msgid "Company"
 msgid "Company site"
-msgstr "Компания"
+msgstr "Сайт Компании"
 
 #: templates/b24online/main/dashboard.html:36
 msgid "Create and manage your external site"
-msgstr ""
+msgstr "Управляйте Вашим внешним сайтом"
 
 #: templates/b24online/main/dashboard.html:37
-#, fuzzy
 msgid "Manage company site"
-msgstr "новую компанию"
+msgstr "Управление сайтом"
 
 #: templates/b24online/main/dashboard.html:42
 msgid "Manage collected leads "
-msgstr ""
+msgstr "Сбор и управление лидами"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr ""
+msgstr "Управление лидами"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
-msgstr ""
+msgstr "Анансируйте Ваши события"
 
 #: templates/b24online/main/dashboard.html:49
-#, fuzzy
-#| msgid "Add new page"
 msgid "Add news"
-msgstr "Добавить страницу"
+msgstr "Добавить новость"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
-msgstr ""
+msgstr "Публикуйте видео в Вашем видео блоге"
 
 #: templates/b24online/main/dashboard.html:55
 msgid "Add video"
-msgstr ""
+msgstr "Добавить видео"
 
 #: templates/b24online/main/dashboard.html:59
 msgid "Analytic"
@@ -7395,87 +7347,71 @@ msgstr "Аналитика"
 
 #: templates/b24online/main/dashboard.html:60
 msgid "Check our items analytic"
-msgstr ""
+msgstr "Проверьте сбор данных анатилики"
 
 #: templates/b24online/main/dashboard.html:61
 msgid "Check company analytic"
-msgstr ""
+msgstr "Управление анатиликой"
 
 #: templates/b24online/main/dashboard.html:66
 msgid "Upload your banners and use advertisement to grow sales"
-msgstr ""
+msgstr "Используйте рекламные инструменты для увелечения продаж"
 
 #: templates/b24online/main/dashboard.html:67
 msgid "Upload banner"
-msgstr ""
+msgstr "Загрузить баннер"
 
 #: templates/b24online/main/dashboard.html:71
-#, fuzzy
-#| msgid "Vacancy"
 msgid "Vacancies"
-msgstr "Вакансия"
+msgstr "Вакансии"
 
 #: templates/b24online/main/dashboard.html:72
 msgid "Find employees in our system"
-msgstr ""
+msgstr "Найдите сотрудников в нашей экосистеме"
 
 #: templates/b24online/main/dashboard.html:73
-#, fuzzy
-#| msgid "Select vacancy"
 msgid "Publish new vacancy"
-msgstr "Выбрать Вакансию"
+msgstr "Разместить вакансию"
 
 #: templates/b24online/main/dashboard.html:78
-#, fuzzy
-#| msgid "Product reviews"
 msgid "Product producers"
-msgstr "Обзоры товаров"
+msgstr "Производители"
 
 #: templates/b24online/main/dashboard.html:79
-#, fuzzy
-#| msgid "Product reviews"
 msgid "Manage product producers"
-msgstr "Обзоры товаров"
+msgstr "Управляйте производителями товаров"
 
 #: templates/b24online/main/dashboard.html:80
-#, fuzzy
-#| msgid "Company products"
 msgid "Manage producers"
-msgstr "Похожие товары"
+msgstr "Упр. производителями"
 
 #: templates/b24online/main/dashboard.html:84
-#, fuzzy
-#| msgid "All deals"
 msgid "Active deals"
 msgstr "Все сделки"
 
 #: templates/b24online/main/dashboard.html:85
 msgid "Track and manage your deals"
-msgstr ""
+msgstr "Отслеживайте и управляйте Вашими сделками"
 
 #: templates/b24online/main/dashboard.html:86
-#, fuzzy
-#| msgid "Best deals"
 msgid "Manage deals"
-msgstr "Лучшие предложения"
+msgstr "Управление сделками"
 
 #: templates/b24online/main/dashboard.html:91
 msgid "Publish and contribute on innovation projects"
-msgstr ""
+msgstr "Поиск и размещение инновационных проектов"
 
 #: templates/b24online/main/dashboard.html:92
 msgid "Publish new project"
-msgstr ""
+msgstr "Разместить новый проект"
 
 #: templates/b24online/main/dashboard.html:98
 msgid "Publish business proposals and find partners"
-msgstr ""
+msgstr "Бизнес предложения и поиск партнёров"
 
 #: templates/b24online/main/dashboard.html:99
-#, fuzzy
-#| msgid "Busines proposals"
 msgid "Publish new proposal"
-msgstr "Бизнес предложения"
+msgstr "Разместить предложение"
 
 #: templates/b24online/main/dashboard.html:104
 #: templates/b24online/main_page.html:159
@@ -7483,47 +7419,36 @@ msgid "Exhibitions / Forums"
 msgstr "Выставки / Форумы"
 
 #: templates/b24online/main/dashboard.html:105
-#, fuzzy
-#| msgid "All exhibitions and forums"
 msgid "Announce exhibitions and meetups"
-msgstr "Все выставки и форумы"
+msgstr "Анонсы выставок и форумов"
 
 #: templates/b24online/main/dashboard.html:106
-#, fuzzy
-#| msgid "Post announcement event"
 msgid "Announce event"
 msgstr "Разместить анонс"
 
 #: templates/b24online/main/dashboard.html:116
-#, fuzzy
-#| msgid "Personal web sites for companies"
 msgid "Manage your companies"
-msgstr "Персональный сайт для компании"
+msgstr "Управление вашими компаниями"
 
 #: templates/b24online/main/dashboard.html:117
-#, fuzzy
 msgid "Register new company"
-msgstr "новую компанию"
+msgstr "Открыть компанию"
 
 #: templates/b24online/main/dashboard.html:122
 msgid "Want register your organization (Chamber of commerce, bank, etc..)"
-msgstr ""
+msgstr "Открыть организацию, торгово-промышленную палату, банк и т.п."
 
 #: templates/b24online/main/dashboard.html:123
-#, fuzzy
-#| msgid "Your organization"
 msgid "Register organization"
-msgstr "Ваша организация"
+msgstr "Открыть организацию"
 
 #: templates/b24online/main/dashboard.html:128
 msgid "Find joub on our site, add and manage your online resume"
-msgstr ""
+msgstr "Найти работу, добавить и управлять онайлн резюме"
 
 #: templates/b24online/main/dashboard.html:129
-#, fuzzy
-#| msgid "New resume"
 msgid "Publish new resume"
-msgstr "Новое резюме"
+msgstr "Разместить резюме"
 
 #: templates/b24online/main/denied.html:12
 msgid "Permission denied"
@@ -8736,7 +8661,6 @@ msgstr "Авторизация"
 #: templates/usersites_templates/golan_red/B2BProducts/detailContent.html:54
 #: templates/usersites_templates/golan_red/B2BProducts/list.html:32
 #: templates/usersites_templates/golan_red/B2BProducts/main_products.html:26
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:101
 #: templates/usersites_templates/golan_red/B2CProducts/list.html:54
 #: templates/usersites_templates/golan_red/B2CProducts/main_coupons.html:54
 #: templates/usersites_templates/golan_red/B2CProducts/main_products.html:64
@@ -8815,7 +8739,6 @@ msgstr "Связаться с нами"
 #: templates/usersites_templates/golan_blue/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/golan_purple/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/golan_red/B2BProducts/detailContent.html:89
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:104
 #: templates/usersites_templates/golan_with_cat/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/ibonds/B2BProducts/detailContent.html:89
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:102
@@ -9040,7 +8963,7 @@ msgstr "Ваш заказ"
 #: templates/usersites_templates/golan/B2CProducts/detailContent.html:97
 #: templates/usersites_templates/golan_blue/B2CProducts/detailContent.html:97
 #: templates/usersites_templates/golan_purple/B2CProducts/detailContent.html:97
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:92
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:98
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:97
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:92
 #: templates/usersites_templates/services/B2CProducts/detailContent.html:97
@@ -9587,7 +9510,7 @@ msgstr ""
 #: templates/usersites_templates/golan/B2CProducts/detailContent.html:58
 #: templates/usersites_templates/golan_blue/B2CProducts/detailContent.html:58
 #: templates/usersites_templates/golan_purple/B2CProducts/detailContent.html:58
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:56
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:59
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:58
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:56
 #: templates/usersites_templates/negev/B2CProducts/detailContent.html:45
@@ -9611,7 +9534,7 @@ msgstr "Специальная цена"
 #: templates/usersites_templates/golan/B2CProducts/detailContent.html:62
 #: templates/usersites_templates/golan_blue/B2CProducts/detailContent.html:62
 #: templates/usersites_templates/golan_purple/B2CProducts/detailContent.html:62
-#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:60
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:63
 #: templates/usersites_templates/golan_with_cat/B2CProducts/detailContent.html:62
 #: templates/usersites_templates/ibonds/B2CProducts/detailContent.html:60
 #: templates/usersites_templates/negev/B2CProducts/detailContent.html:49
@@ -9683,7 +9606,6 @@ msgstr ""
 #: templates/usersites_templates/cineret_green/header.html:97
 #: templates/usersites_templates/cineret_orange/header.html:97
 #: templates/usersites_templates/cineret_red/header.html:106
-#: templates/usersites_templates/cineret_red_no_footer/header.html:156
 #: templates/usersites_templates/galil/header.html:115
 #: templates/usersites_templates/galil_1/header.html:77
 #: templates/usersites_templates/galil_2/header.html:77
@@ -9796,6 +9718,8 @@ msgid "New message"
 msgstr "Новое сообщение от "
 
 #: templates/usersites_templates/cineret_blue/OrganizationPages/page.html:12
+#: templates/usersites_templates/golan_red/B2CProducts/detailContent.html:117
+#: templates/usersites_templates/golan_red/OrganizationPages/page.html:11
 #, fuzzy
 #| msgid "Contact us"
 msgid "Contact us:"

@@ -53,6 +53,11 @@
 
         <!-- AdminLTE App -->
 
+    {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div style="position:absolute;top:0;right:0;margin-top:12px;text-align:center;width:100%;z-index:9999;color:#fff;font-size:17px;font-weight:bold;"><p>{{ message }}</p></div>
+        {% endif %}
+    {% endfor %}
 
         <!-- page script -->
 

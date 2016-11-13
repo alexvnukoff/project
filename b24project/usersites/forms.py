@@ -72,6 +72,7 @@ class ExtraParamsForm(forms.Form):
             pre_text = item.get('pre_text')
             post_text = item.get('post_text')
             read_only = item.get('read_only')
+            initial_value = item.get('initial')
             if all((fieldtype, name)) and fieldtype in FIELD_TYPES:
                 field_cls, extra_params = FIELD_TYPES[fieldtype]
                 field = field_cls(**extra_params)
@@ -85,6 +86,9 @@ class ExtraParamsForm(forms.Form):
                 if post_text:
                     self.post_texts[name] = post_text
                 self.fields[name] = field
+                if initial_value:
+                    initial_value = initial_value.replace('\\n', "\n")
+                    self.initial[name] = str(initial_value)
                 self.valuable_fields.append(name)
                 if fieldtype == 'image':
                     self.image_fields.append(name)

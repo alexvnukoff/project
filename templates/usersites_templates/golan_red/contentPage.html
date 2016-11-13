@@ -154,6 +154,12 @@
 
     {% b2c_products 'B2CProducts/main_products.html' 4 %}
 
+{# adding a gallery #}
+{% include 'usersites_templates/golan_red/OrganizationPages/main_gallery.html' %}
+
+{% videos 'Video/wall.html' 2 %}
+
+
     {# Row for business proposals and news. If there are no bp the news will take a full line. #}
     {# The proposals will have the same design as the news, so i am using the news styles. #}
     <div class="container">

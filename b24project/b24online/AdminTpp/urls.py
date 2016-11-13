@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.conf.urls import url
 
 from b24online.AdminTpp.views import (Dashboard, Users, Adv, AdvTargets,
