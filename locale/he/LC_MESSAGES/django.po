@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-10 17:03+0000\n"
-"PO-Revision-Date: 2016-11-02 11:19+0200\n"
+"PO-Revision-Date: 2016-11-13 11:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: he\n"
@@ -160,16 +160,12 @@ msgid "Top"
 msgstr "עליון"
 
 #: b24project/b24online/AdminTpp/views.py:597
-#, fuzzy
-#| msgid "You password has been changed!"
 msgid "User has been activated!"
-msgstr "הסיסמא שלך שונתה! "
+msgstr "משתמש הופעל!"
 
 #: b24project/b24online/AdminTpp/views.py:601
-#, fuzzy
-#| msgid "Your password has been reset!"
 msgid "User has beeen deleted!"
-msgstr "הסיסמא שלך שונתה!"
+msgstr "משתמש נמחק!"
 
 #: b24project/b24online/AdvTop/forms.py:23
 #: b24project/b24online/Exhibitions/forms.py:37
@@ -6415,7 +6411,7 @@ msgstr "או"
 
 #: templates/b24online/index.html:148
 msgid "Products and services"
-msgstr "לכל המוצרים והשירותים הסיטונאיים"
+msgstr "מוצרים והשירותים סיטונאיים"
 
 #: templates/b24online/index.html:164
 msgid "B24Online for Customers"
@@ -6724,7 +6720,7 @@ msgstr "פרוייקטים חדשניים"
 #: templates/usersites_templates/services/site_sidebar.html:18
 #: templates/usersites_templates/top_business/site_sidebar.html:18
 msgid "Mother tongue"
-msgstr "שפת אם"
+msgstr "שפה"
 
 #: templates/b24online/job_index.html:173
 msgid "Community"
@@ -6895,7 +6891,7 @@ msgstr "בחרו את הפעולות לביצוע עבור העסק:"
 
 #: templates/b24online/main/dashboard.html:23
 msgid "B2B products"
-msgstr "כניסה לאזור מכירות סיטונאיות של העסק"
+msgstr "לחצו כאן לכניסה לאזור מכירות סיטונאיות של העסק"
 
 #: templates/b24online/main/dashboard.html:24
 #: templates/b24online/main/dashboard.html:30
@@ -6904,15 +6900,15 @@ msgstr "אזור המוצרים והשירותים הסיטונאיים שלך"
 
 #: templates/b24online/main/dashboard.html:25
 msgid "Add new B2B product"
-msgstr "לחצו כאן הוסף מוצר למכירה סיטונאית "
+msgstr "לחצו כאן להוספה!"
 
 #: templates/b24online/main/dashboard.html:29
 msgid "B2C products"
-msgstr "כניסה לאזור המוצרים למכירה שלי"
+msgstr "לחצו כאן לכניסה לאזור המוצרים למכירה"
 
 #: templates/b24online/main/dashboard.html:31
 msgid "Add new B2C product"
-msgstr "לחצו כאן להוספת מוצרים למכירה לעסק"
+msgstr "הוסף/י מוצר למכירה!"
 
 #: templates/b24online/main/dashboard.html:35
 msgid "Company site"
@@ -6924,7 +6920,7 @@ msgstr "מערכת ניהול אתר האינטרנט שלך"
 
 #: templates/b24online/main/dashboard.html:37
 msgid "Manage company site"
-msgstr "לחצו כאן על מנת להיכנס למערכת ניהול האתר"
+msgstr "כניסה למערכת!"
 
 #: templates/b24online/main/dashboard.html:42
 msgid "Manage collected leads "
@@ -6932,7 +6928,7 @@ msgstr "מערכת ניהול לידים ופניות לקוחות לעסק"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr "לחצו כאן על מנת להיכנס למערכת ניהול לידים של העסק"
+msgstr "כניסה למערכת!"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
@@ -6940,7 +6936,7 @@ msgstr "הודע על אירועים מתוכננים"
 
 #: templates/b24online/main/dashboard.html:49
 msgid "Add news"
-msgstr "לחצו כאן על מנת להוסיף חדשות לעסק שלך"
+msgstr "הוסיפו חדשות!"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
@@ -7020,7 +7016,7 @@ msgstr "מרכז הצעות עסקיות ושותפים עסקיים"
 
 #: templates/b24online/main/dashboard.html:99
 msgid "Publish new proposal"
-msgstr "לפרסום הצעה עסקית חדשה - לחצו כאן!"
+msgstr "הוסיפו הצעה עסקית!"
 
 #: templates/b24online/main/dashboard.html:104
 #: templates/b24online/main_page.html:159
