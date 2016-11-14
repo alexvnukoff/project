@@ -407,9 +407,12 @@ def _tab_delivery(request, company, page=1):
     if not is_managed_organization(request):
         ctx = {'is_permitted': False,}
     else:
+        organization = get_object_or_404(Company, pk=company)
         paginator = Paginator(
-            CompanyDeliveryLevel.get_active_objects().filter(company=company)\
-                .order_by('product_cost'), 10
+            CompanyDeliveryLevel.get_active_objects()\
+                .filter(company=company)\
+                .order_by('product_cost'), 
+            10
         )
         page = paginator.page(page)
         paginator_range = func.get_paginator_range(page)
@@ -419,7 +422,8 @@ def _tab_delivery(request, company, page=1):
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
-            'url_parameter': company
+            'url_parameter': company,
+            'organization': organization,            
         }
     return render(request, 'b24online/Companies/tabDelivery.html', ctx)
 
