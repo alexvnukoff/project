@@ -42,7 +42,7 @@ class UserSiteTemplate(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=255)
+    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=1000)
     folder_name = models.CharField(max_length=255)
     published = models.BooleanField(default=True)
 

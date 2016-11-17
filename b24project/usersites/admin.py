@@ -42,10 +42,6 @@ class UserSiteAdmin(admin.ModelAdmin):
             ]
 
 
-
-
-
 admin.site.register(ExternalSiteTemplate, ModelAdmin)
-admin.site.register(UserSiteSchemeColor, ModelAdmin)
 admin.site.register(UserSite, UserSiteAdmin)
 admin.site.register(UserSiteTemplate, UserSiteTemplateAdmin)

@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
@@ -342,15 +341,7 @@ class UserTemplateView(ListView):
     model = UserSiteTemplate
     template_name = 'b24online/UserSites/templateList.html'
 
-    #def get_context_data(self, **kwargs):
-    #    context = super(UserTemplateView, self).get_context_data(**kwargs)
-    #    context['parent_category'] = self.cat.parent
-    #    context['current_category'] = self.cat
-    #    return context
-
     def get_queryset(self):
-        #parent = self.kwargs['parent']
-        #category = self.kwargs['category']
         return self.model.objects.filter(published=True)
 
 
