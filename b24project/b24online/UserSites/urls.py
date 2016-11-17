@@ -1,6 +1,5 @@
 from django.conf.urls import url
-
-from b24online.UserSites.views import form_dispatch, TemplateUpdate
+from b24online.UserSites.views import form_dispatch, UserTemplateView, TemplateUpdate
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -10,7 +9,11 @@ urlpatterns = [
         name='main'),
 
     url(r'templates/$',
-        login_required(TemplateUpdate.as_view()),
+        login_required(UserTemplateView.as_view()),
         name='template'),
+
+    url(r'templates/(?P<pk>[0-9]+)/$',
+        login_required(TemplateUpdate.as_view()),
+        name='color'),
 
 ]

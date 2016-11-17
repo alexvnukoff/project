@@ -171,4 +171,5 @@ ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fiel
 class TemplateForm(forms.ModelForm):
     class Meta:
         model = UserSite
-        fields = ('user_template',)
+        fields = ('user_template', 'color_template',)
+
