@@ -31,11 +31,11 @@
 
                 <title>
                     {% block html_title %}
-                    {{ meta.title|truncatechars:80}}
+                    {{ meta.title|striptags|truncatewords:10}}
                     {% endblock %}
                 </title>
 
-                <meta name="description" content="{{ meta.description|safe|truncatewords_html:20|force_escape|linebreaks }}"/>
+                <meta name="description" content="{{ meta.description|striptags|truncatewords:20 }}"/>
                 <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
             {% else %}
 

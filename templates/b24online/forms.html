@@ -57,11 +57,12 @@
             function setTiny(selector)
             {
                 tinymce.PluginManager.load('uploadimage', '{% static "b24online/js/tinymce/plugins/uploadimage/plugin.js" %}');
+                tinymce.PluginManager.load('media_ext', '{% static "b24online/js/tinymce/plugins/media_ext/plugin.js" %}');
 
                 $(selector).tinymce({
                         mode:"textareas",
                         selector: selector,
-                        plugins : "textcolor paste link lists print table preview media -uploadimage",
+                        plugins : "textcolor paste link lists print table preview -media_ext -uploadimage",
                         toolbar1: 'insertfile undo redo | styleselect | uploadimage bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image',
                         paste_as_text: true,
                         media_live_embeds: true,

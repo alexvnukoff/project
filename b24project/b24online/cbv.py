@@ -213,6 +213,7 @@ class ItemsList(HybridListView):
             'scripts': self.scripts,
             'content': render_to_string(self.template_name, context, self.request),
             'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
+            'current_section': self.current_section
         }
 
     def get_context_data(self, **kwargs):
