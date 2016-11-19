@@ -11,6 +11,8 @@ EMAIL_HOST_USER = 'noreply@b24online.com'
 EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
 CELERY_SEND_TASK_ERROR_EMAILS = True
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = True
@@ -111,7 +113,8 @@ EXTERNAL_APPS = (
     'paypal.standard.ipn',
     'rest_framework',
     'compressor',
-    'django_celery_results'
+    'django_celery_results',
+    'djcelery_email'
 )
 
 # the order is important!
