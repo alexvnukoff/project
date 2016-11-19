@@ -3,50 +3,47 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 {% block content %}
-<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
-<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>
-<script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
-<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
 
+<style>
+.wrapper {width:840px;padding:0 10px;}
+ol.breadcrumb li {display:inline-block;margin:10px 0;font-size:13px;color:#848484;}
+ol.breadcrumb li:after {margin:0 10px 0 10px;content:"/";color:#dedede;}
+ol.breadcrumb li:last-child:after {content:none;}
+img.t-image {width:185px;margin:10px 0;border:1px solid #919191;display:block;}
+.form-select {width:200px;display:block;height:70px;}
+label {display:block;margin:3px 0;color:#949494;font-weight:bold;}
+{% if LANGUAGE_BIDI %}.form-select {margin-right:-10px;}.form-select label {padding:0 10px;}{% endif %}
+</style>
 
+<div class="wrapper">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li><a href="{% url 'site:template' %}">{% trans "Select template" %}</a></li><li class="active">{% trans "Color Shceme" %} - {{ template.name }}</li>
+    </ol>
 
-<div id="wrapper">
+    <h1>{% trans "Color Shceme" %} - {{ template.name }}</h1>
+    <p>{% trans "" %}</p>
 
-        <h1>{% trans "Select Template" %}</h1>
+    <div style="width:600px;font-size:14px;">
+        <img class="t-image" src="{{ template.thumbnail.small }}" >
 
-        <p>{% blocktrans %}Dear colleagues, select desired template and then click Save.{% endblocktrans %}</p>
+        <div style="margin:20px 0;">{% if template.description %}<label>{% trans "Theme description" %}:</label>{{ template.description|linebreaksbr }}{% endif %}</div>
 
-
-<form action="" method="POST">{% csrf_token %}
-
-<div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
-<label>
-<img class="t-image" src="{% static 'usersites/images' %}/default-template.png">
-<input type="radio" name="user_template" value="" {% if not object.user_template %}checked="checked"{% endif %}>
-</label>
-<p>{% trans 'Default (vertical banners)' %}</p>
-</div>
-
-
-{% for i in user_site_templates.all %}
-
-<div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
-<label>
-<img class="t-image" src="{{ i.thumbnail.small }}">
-<input type="radio" name="user_template" value="{{ i.pk }}" {% if i == object.user_template %}checked="checked"{% endif %}>
-</label>
-<p>{{ i }}</p>
-</div>
-
-{% endfor %}
-
-<hr>
-<input class="bigbuy" value="Save" type="submit">
-
-</form>
-
-
-
+        <form action="" method="POST">{% csrf_token %}
+            <hr>
+            <input type="hidden" name="user_template" value="{{ template.id }}">
+            {% if template_color %}
+                <div class="form-select">
+                    <label>{% trans "Color scheme" %}:</label>
+                    <select name="color_template">
+                        {% for i in template_color %}
+                        <option value="{{ i.id }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <input class="bigbuy" style="" value="{% trans "Choose" %}" type="submit">
+        </form>
+    </div>
 
 </div>
 {% endblock %}

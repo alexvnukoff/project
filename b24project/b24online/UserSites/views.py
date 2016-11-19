@@ -1,35 +1,28 @@
 from collections import OrderedDict
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 from b24online.models import Organization, Company, BannerBlock
-from b24online.UserSites.forms import (GalleryImageFormSet, SiteForm,
-                TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet)
-from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate
-
+from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet
+from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate, UserSiteSchemeColor
 
 @login_required()
 def form_dispatch(request):
     organization_id = request.session.get('current_company', None)
-
     if not organization_id:
         return HttpResponseRedirect(reverse('denied'))
-
     organization = Organization.objects.get(pk=organization_id)
-
     try:
         site = UserSite.objects.get(organization=organization)
         return SiteUpdate.as_view()(request, site=site, organization=organization)
     except ObjectDoesNotExist:
         return SiteCreate.as_view()(request, organization=organization)
-
 
 class SiteCreate(CreateView):
     model = UserSite
@@ -300,7 +293,6 @@ class SiteUpdate(UpdateView):
                 banner.instance.dates = (None, None)
 
             banners_form.save()
-
             domain = form.cleaned_data.get('domain', None)
 
             if not domain:
@@ -345,6 +337,12 @@ class SiteUpdate(UpdateView):
         return self.site
 
 
+class UserTemplateView(ListView):
+    model = UserSiteTemplate
+    template_name = 'b24online/UserSites/templateList.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(published=True)
 
 
 class TemplateUpdate(UpdateView):
@@ -354,25 +352,29 @@ class TemplateUpdate(UpdateView):
     success_url = reverse_lazy('site:main')
 
     def dispatch(self, request, *args, **kwargs):
-
         organization_id = request.session.get('current_company', None)
         if not organization_id:
             return HttpResponseRedirect(reverse('denied'))
-
         organization = Organization.objects.get(pk=organization_id)
         try:
             site = UserSite.objects.get(organization=organization)
             self.site = site
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('denied'))
-
-
         return super(TemplateUpdate, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['user_site_templates'] = UserSiteTemplate.objects.all()
-        return context_data
+        context = super().get_context_data(**kwargs)
+
+        try:
+            obj = UserSiteTemplate.objects.get(pk=self.template_id)
+        except UserSiteTemplate.DoesNotExist:
+            raise Http404("No found matching the template in UserSiteTemplate.")
+
+        context['template'] = obj
+        context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
+        return context
 
     def get_object(self, queryset=None):
+        self.template_id = self.kwargs.get(self.pk_url_kwarg)
         return self.site
