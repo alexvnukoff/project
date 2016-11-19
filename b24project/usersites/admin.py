@@ -14,7 +14,7 @@ class UserSiteTemplateAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = ('name', 'folder_name',)
 
-    inlines = [ UserSiteSchemeColorInline, ]
+    inlines = ( UserSiteSchemeColorInline, )
 
 
 class UserSiteAdminForm(forms.ModelForm):
@@ -25,8 +25,7 @@ class UserSiteAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserSiteAdminForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['color_template'].queryset = \
-            UserSiteSchemeColor.objects.filter(template=self.instance.user_template)
+            self.fields['color_template'].queryset = self.instance.user_template.colors.all()
 
 
 class UserSiteAdmin(admin.ModelAdmin):
