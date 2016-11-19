@@ -99,7 +99,6 @@ LOCAL_APPS = (
 
 EXTERNAL_APPS = (
     'debug_toolbar',
-    'djcelery',
     'loginas',
     'registration',
     'polymorphic_tree',
@@ -111,7 +110,8 @@ EXTERNAL_APPS = (
     'captcha',
     'paypal.standard.ipn',
     'rest_framework',
-    'compressor'
+    'compressor',
+    'django_celery_results'
 )
 
 # the order is important!
@@ -335,15 +335,11 @@ BUCKET = 'uploadstg'
 BUCKET_REGION = 'eu-west-1'
 
 ##################### Celery settings ####################################
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_REDIS = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
 
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
-
-import djcelery
-
-djcelery.setup_loader()
 
 ######################## DJANGO GUARDIAN SETTINGS #########################
 GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
