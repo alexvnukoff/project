@@ -19,7 +19,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from appl import func
 from b24online.Companies.forms import (AdditionalPageFormSet, CompanyForm, 
-        AdminCompanyForm, DeliveryLevelForm)
+        AdminCompanyForm, DeliveryLevelFormSet, DeliveryLevelForm)
 from b24online.Messages.forms import MessageForm
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate, 
         ItemDeactivate, GalleryImageList, DeleteGalleryImage, 
@@ -408,22 +408,17 @@ def _tab_delivery(request, company, page=1):
         ctx = {'is_permitted': False,}
     else:
         organization = get_object_or_404(Company, pk=company)
-        paginator = Paginator(
-            CompanyDeliveryLevel.get_active_objects()\
+        items = CompanyDeliveryLevel.get_active_objects()\
                 .filter(company=company)\
-                .order_by('product_cost'), 
-            10
+                .order_by('product_cost')
+        logger.debug(items)
+        delivery_formset = DeliveryLevelFormSet(
+            queryset=items
         )
-        page = paginator.page(page)
-        paginator_range = func.get_paginator_range(page)
-        url_paginator = "companies:tab_delivery_paged"
         ctx = {
             'is_permitted' : True,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': company,
-            'organization': organization,            
+            'organization': organization,
+            'delivery_formset': delivery_formset,
         }
     return render(request, 'b24online/Companies/tabDelivery.html', ctx)
 
