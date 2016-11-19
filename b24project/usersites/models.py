@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
 import os
 import logging
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -38,14 +36,18 @@ class ExternalSiteTemplate(models.Model):
 
 
 class UserSiteTemplate(models.Model):
+    class Meta:
+        verbose_name = "Tempate"
+        verbose_name_plural = "Tempates"
+
     name = models.CharField(max_length=255)
-    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'],
-                                 max_length=255)
+    description = models.TextField(null=True, blank=True)
+    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=1000)
     folder_name = models.CharField(max_length=255)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
-
 
 @receiver(post_save, sender=UserSiteTemplate)
 def uploadTemplateImage(sender, instance, **kwargs):
@@ -61,12 +63,26 @@ def uploadTemplateImage(sender, instance, **kwargs):
     tasks.upload_images.delay(*params)
 
 
+class UserSiteSchemeColor(models.Model):
+    class Meta:
+        verbose_name = "Scheme color"
+        verbose_name_plural = "Scheme colors"
+
+    template = models.ForeignKey(UserSiteTemplate, related_name='colors')
+    name = models.CharField(max_length=255)
+    folder_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class UserSite(ActiveModelMixing, models.Model):
 
     LANG_LIST = [('auto', 'Auto')] + list(settings.LANGUAGES)
 
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     user_template = models.ForeignKey(UserSiteTemplate, blank=True, null=True)
+    color_template = models.ForeignKey(UserSiteSchemeColor, blank=True, null=True)
     organization = models.OneToOneField(Organization, related_name='org_user_site', on_delete=models.CASCADE,)
     slogan = models.CharField(max_length=2048, blank=True, null=True)
     language = models.CharField(max_length=4, choices=LANG_LIST, default='auto')
@@ -175,6 +191,15 @@ class UserSite(ActiveModelMixing, models.Model):
         if self.metadata:
             return self.metadata.get('odnoklassniki', '')
         return None
+
+    @property
+    def color(self):
+        if self.color_template:
+            return {
+               'name': self.color_template,
+               'path': self.color_template.folder_name,
+               }
+        return False
 
     def __str__(self):
         return self.domain_part

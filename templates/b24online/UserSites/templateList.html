@@ -1,0 +1,41 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% block content %}
+
+<style>
+.wrapper {width:840px;padding:0 10px;}
+p.lead {font-size:14px;margin:3px 0;}
+.templates-box {display:inline-block;}
+.templates-box label {cursor:pointer;}
+.templates-box img.t-image {width:185px;border:1px solid #919191;display:block;}
+ol.breadcrumb li {display:inline-block;margin:10px 0;font-size:13px;color:#848484;}
+ol.breadcrumb li:after {margin:0 10px 0 10px;content:"/";color:#dedede;}
+ol.breadcrumb li:last-child:after {content:none;}
+.link img.t-image {opacity:1}
+.link:hover {color:#009eda;text-decoration:none;}
+.link:hover img.t-image {opacity:0.8;}
+</style>
+
+<div class="wrapper">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Select template" %}</li>
+    </ol>
+
+    <h1>{% trans "Select Template" %}</h1>
+    <p>{% blocktrans %}Dear colleagues, select desired template and then click Save.{% endblocktrans %}</p>
+
+    {% for template in object_list %}
+
+        <div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
+            <a class="link" href="{% url 'site:color' template.id %}">
+                <img class="t-image" src="{{ template.thumbnail.small }}" >
+                <p class="lead">{{ template }}</p>
+            </a>
+        </div>
+
+    {% endfor %}
+
+</div>
+{% endblock %}

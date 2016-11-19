@@ -1,12 +1,7 @@
 # -*- encoding: utf-8 -*-
 
-import os
-
-from PIL import Image
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from django.conf import settings
-from django.utils._os import abspathu
 
 from b24online import utils
 from b24online.models import B2BProduct, BusinessProposal, InnovationProject, News, Tender, Exhibition, \

@@ -4,20 +4,21 @@
 Celery task for 'b24online' application.
 """
 
-import logging
 import datetime
-from django.conf import settings
-from celery import task
-from celery.schedules import crontab, crontab_parser
-from celery.decorators import periodic_task
+import logging
+
+from celery.schedules import crontab
+
+from tpp.celery import app
+
 from b24online.models import RegisteredEventStats
-from b24online.stats.utils import get_redis_connection, glue
 from b24online.stats.helpers import RegisteredEventHelper
+from b24online.stats.utils import get_redis_connection, glue
 
 logger = logging.getLogger('b24online.tasks')
 
 
-@task(name='b24online.process_events_queue')
+@app.task
 def process_events_queue(request_uuid, extra_data):
     """
     Process registered events queue for HTTPRequest.
@@ -46,8 +47,7 @@ def process_events_queue(request_uuid, extra_data):
                 rconn.sadd(ready_to_process_key, event_unique_key)
 
 
-@periodic_task(name='b24online.process_events_stats',
-               run_every=crontab(**{'hour': '*/6'}))
+@app.task
 def process_events_stats():
     today = datetime.date.today()
     rconn = get_redis_connection()
@@ -117,8 +117,7 @@ def process_events_stats():
             stats.save()
 
 
-@periodic_task(name='b24online.flush_events_stats',
-               run_every=crontab(**{'hour': '4'}))
+@app.task
 def flush_events_stats():
     """
     Flush the events entries in Redis.
@@ -127,3 +126,15 @@ def flush_events_stats():
     if rconn:
         for item_key in rconn.keys('registered*'):
             rconn.delete(item_key)
+
+
+app.conf.beat_schedule.update({
+    'flush_events_stats': {
+        'task': 'flush_events_stats',
+        'schedule': crontab(hour=4)
+    },
+    'process_events_stats': {
+        'task': 'process_events_stats',
+        'schedule': crontab(hour='*/6')
+    },
+})

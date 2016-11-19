@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-10 17:03+0000\n"
-"PO-Revision-Date: 2016-11-13 11:44+0200\n"
+"PO-Revision-Date: 2016-11-15 14:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: he\n"
@@ -6437,7 +6437,7 @@ msgstr "קופונים ומבצעים"
 
 #: templates/b24online/index.html:194
 msgid "Employment Center"
-msgstr "B24Online מרכז תעסוקה ועבודה"
+msgstr "B24Online מרכז תעסוקה"
 
 #: templates/b24online/index.html:195
 msgid "Find the your ideal position or the perfect candidate for your company."
@@ -6887,11 +6887,11 @@ msgstr "לוח בקרה"
 #: templates/b24online/main/dashboard.html:20
 #: templates/b24online/main/dashboard.html:111
 msgid "Actions for:"
-msgstr "בחרו את הפעולות לביצוע עבור העסק:"
+msgstr "בחרו את הפעולות לביצוע עבור:"
 
 #: templates/b24online/main/dashboard.html:23
 msgid "B2B products"
-msgstr "לחצו כאן לכניסה לאזור מכירות סיטונאיות של העסק"
+msgstr "כניסה לאזור מכירות סיטונאיות של העסק"
 
 #: templates/b24online/main/dashboard.html:24
 #: templates/b24online/main/dashboard.html:30
@@ -6920,7 +6920,7 @@ msgstr "מערכת ניהול אתר האינטרנט שלך"
 
 #: templates/b24online/main/dashboard.html:37
 msgid "Manage company site"
-msgstr "כניסה למערכת!"
+msgstr "כניסה למערכת ניהול!"
 
 #: templates/b24online/main/dashboard.html:42
 msgid "Manage collected leads "
@@ -6928,7 +6928,7 @@ msgstr "מערכת ניהול לידים ופניות לקוחות לעסק"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr "כניסה למערכת!"
+msgstr "כניסה למערכת לידים!"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
@@ -6936,7 +6936,7 @@ msgstr "הודע על אירועים מתוכננים"
 
 #: templates/b24online/main/dashboard.html:49
 msgid "Add news"
-msgstr "הוסיפו חדשות!"
+msgstr "הוסיפו חדשות לעסק!"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
@@ -6956,7 +6956,7 @@ msgstr "מערכת ניתוח אתר החברה שלכם (אנאליטיקס)"
 
 #: templates/b24online/main/dashboard.html:61
 msgid "Check company analytic"
-msgstr "לחצו כאן על מנת לבדוק את נתוני האתר"
+msgstr "לחצו כאן לבדיקה!"
 
 #: templates/b24online/main/dashboard.html:66
 msgid "Upload your banners and use advertisement to grow sales"
@@ -6988,7 +6988,7 @@ msgstr "כניסה למערכת ניהול יצרנים"
 
 #: templates/b24online/main/dashboard.html:80
 msgid "Manage producers"
-msgstr "לחצו כאן לניהול יצרנים במוצרים למכירה"
+msgstr "לחצו כאן לניהול יצרנים"
 
 #: templates/b24online/main/dashboard.html:84
 msgid "Active deals"
@@ -7000,7 +7000,7 @@ msgstr "מערכת עסקאות של החברה"
 
 #: templates/b24online/main/dashboard.html:86
 msgid "Manage deals"
-msgstr "לחצו כאן לכניסה למערכת ניהול עסקאות"
+msgstr "לחצו כאן למערכת עסקאות"
 
 #: templates/b24online/main/dashboard.html:91
 msgid "Publish and contribute on innovation projects"
