@@ -1,7 +1,7 @@
 import logging
 import os
 from urllib.parse import urlparse
-
+import newrelic.agent
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -28,7 +28,18 @@ from core.cbv import HybridListView
 logger = logging.getLogger(__name__)
 
 
-class TabItemList(HybridListView):
+class NewRelicMixin:
+    newrelic_group = 'cbv.newrelic_mixin'
+
+    def dispatch(self, request, *args, **kwargs):
+        newrelic.agent.set_transaction_name(self.__class__.__name__, self.newrelic_group)
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class TabItemList(HybridListView, NewRelicMixin):
+    newrelic_group = 'cbv.list_view'
+
     paginate_by = 10
     allow_empty = True
 
@@ -36,7 +47,9 @@ class TabItemList(HybridListView):
     url_paginator = None
 
 
-class ItemUpdate(UpdateView):
+class ItemUpdate(UpdateView, NewRelicMixin):
+    newrelic_group = 'cbv.update_view'
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -47,7 +60,9 @@ class ItemUpdate(UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ItemDeactivate(DeleteView):
+class ItemDeactivate(DeleteView, NewRelicMixin):
+    newrelic_group = 'cbv.delete_view'
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -76,7 +91,9 @@ class ItemDeactivate(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class ItemCreate(CreateView):
+class ItemCreate(CreateView, NewRelicMixin):
+    newrelic_group = 'cbv.create_view'
+
     org_required = True
     org_model = Organization
 
@@ -243,7 +260,7 @@ class ItemsList(HybridListView):
         if isinstance(context['object_list'], SearchEngine):
             object_ids = [hit.django_id for hit in context['object_list']]
             context['object_list'] = \
-                self.optimize_queryset(self.model.objects.filter(pk__in=object_ids))\
+                self.optimize_queryset(self.model.objects.filter(pk__in=object_ids)) \
                     .order_by(*self._get_sorting_params())
 
         return context
@@ -322,7 +339,9 @@ class ItemsList(HybridListView):
         return self.optimize_queryset(queryset)
 
 
-class ItemDetail(DetailView):
+class ItemDetail(DetailView, NewRelicMixin):
+    newrelic_group = 'cbv.detail_view'
+
     context_object_name = 'item'
     item_id = None
 
@@ -387,7 +406,9 @@ class ItemDetail(DetailView):
         return context
 
 
-class GalleryImageList(ListView):
+class GalleryImageList(ListView, NewRelicMixin):
+    newrelic_group = 'cbv.gallery_list_view'
+
     model = GalleryImage
     owner_model = None
     context_object_name = 'gallery'
@@ -446,7 +467,9 @@ class GalleryImageList(ListView):
         return ['b24online/tabGallery.html']
 
 
-class UploadGalleryImage(CreateView):
+class UploadGalleryImage(CreateView, NewRelicMixin):
+    newrelic_group = 'cbv.gallery_create_view'
+
     form_class = GalleryImageForm
     template_name = None
 
@@ -487,6 +510,8 @@ class UploadGalleryImage(CreateView):
 
 
 class DeleteGalleryImage(ItemDeactivate):
+    newrelic_group = 'cbv.gallery_delete_view'
+
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -501,7 +526,9 @@ class DeleteGalleryImage(ItemDeactivate):
         return HttpResponse('')
 
 
-class DocumentList(ListView):
+class DocumentList(ListView, NewRelicMixin):
+    newrelic_group = 'cbv.documet_list_view'
+
     model = Document
     owner_model = None
     context_object_name = 'documents'
@@ -557,7 +584,9 @@ class DocumentList(ListView):
         return ['b24online/documents.html']
 
 
-class UploadDocument(CreateView):
+class UploadDocument(CreateView, NewRelicMixin):
+    newrelic_group = 'cbv.document_create_view'
+
     form_class = DocumentForm
     template_name = None
 
@@ -596,7 +625,9 @@ class UploadDocument(CreateView):
         return HttpResponseBadRequest()
 
 
-class DeleteDocument(ItemDeactivate):
+class DeleteDocument(ItemDeactivate, NewRelicMixin):
+    newrelic_group = 'cbv.document_delete_view'
+
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
