@@ -69,7 +69,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .deal-details h3{ font-size:16px; font-weight:bold; padding-bottom:10px; float:left; width:100%;}
 .deal-details .thumb-deal{ float:left; width:150px; background:url(/static/b24online/img/shadow-cpn.png) no-repeat left bottom; padding-bottom:4px; margin:0 10px 10px 0; color:#595959;}
 .deal-details .flag{ float:left; }
-.deal-details p{ padding-top:12px;}
+.deal-details p{ padding-top:12px; margin-bottom: 10px; line-height: 1.3em; word-break: keep-all;}
 .deals-info{ position:relative; float:left; width:100%; margin:20px 0 0 0;}
 .deals-info-left{ position:relative; float:left; width:40%;}
 .deals-info-left li{ float:left; width:100%; margin-bottom:10px; color:#9b9b9b}
