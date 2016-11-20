@@ -137,7 +137,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .tab1-cate li a{ display:block; padding:5px 0px 5px 10px;}
 .tab1-cate li a:hover, .tab1-cate li a.current{ background-color:#4a4a4a; color:#FFF; text-decoration:none;}
 .bannerleft{ float:left; width:100%; margin-top:15px;}
-.news-center{ float:left; width:660px; margin: 0 0 0 18px; display:inline;}
+.news-center{ float:left; width:660px; margin: 0 0 0 18px; display:inline; word-break: keep-all;}
 .keyword{ float:left; width:100%; padding:8px 0px; background-color:#4a4a4a; border-radius:3px; box-shadow:0px 0px 3px #000 inset;}
 .icon-key{ float:left; width:32px; height:32px; margin: 0 0 0 8px; display:inline; background-position:0px -25px;}
 .list-key{ position:relative; float:left; width:320px; margin-left:5px; display:inline;}
