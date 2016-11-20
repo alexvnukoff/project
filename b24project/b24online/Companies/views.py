@@ -14,6 +14,7 @@ from django.http import (HttpResponseRedirect, HttpResponse,
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
+from django.utils.functional import curry
 from django.contrib.auth.decorators import login_required
 from guardian.shortcuts import get_objects_for_user
 
@@ -408,17 +409,25 @@ def _tab_delivery(request, company, page=1):
         ctx = {'is_permitted': False,}
     else:
         organization = get_object_or_404(Company, pk=company)
-        items = CompanyDeliveryLevel.get_active_objects()\
-                .filter(company=company)\
-                .order_by('product_cost')
-        logger.debug(items)
-        delivery_formset = DeliveryLevelFormSet(
-            queryset=items
-        )
+
+        has_errors = False
+        if request.method == 'POST':
+            item_formset = DeliveryLevelFormSet(data=request.POST)
+            item_formset.form = curry(DeliveryLevelForm, company=organization)
+            if item_formset.is_valid():
+                instances = item_formset.save()
+            else:
+                has_errors = True
+
+        if not has_errors:
+            items = CompanyDeliveryLevel.get_active_objects()\
+                .filter(company=company).order_by('product_cost')
+            item_formset = DeliveryLevelFormSet(queryset=items)
+            item_formset.form = curry(DeliveryLevelForm, company=organization)
         ctx = {
             'is_permitted' : True,
             'organization': organization,
-            'delivery_formset': delivery_formset,
+            'item_formset': item_formset,
         }
     return render(request, 'b24online/Companies/tabDelivery.html', ctx)
 

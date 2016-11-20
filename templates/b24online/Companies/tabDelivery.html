@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
-<div class="tpp-dt-content">
+<div id="multileveled_delivery" class="tpp-dt-content">
     {% if is_permitted %}
         {# Delivery #}
         <h3 style="padding-top: 10px;">{% trans 'Products delivery' %}</h3>
@@ -14,43 +14,76 @@
                 {% trans 'No' %}
             {% endif %}
         </div>
-        <div class="form-group at-delivery">
-            <label>{% trans "Delivery currency" %}</label>
-            {{ organization.delivery_currency|getSymbol }}
-        </div>
         <div class="form-group">
             <label>{% trans "Delivery cost" %}</label>
             {{ organization.delivery_cost|default:"-" }}
+            {{ organization.delivery_currency|getSymbol }}
         </div>
-        {{ delivery_formset }}
+
+        <form id="deliveries_form" action="{% url 'companies:tab_delivery' organization.pk %}" method="post">
+        {% csrf_token %}
+        {{ item_formset.management_form }}
         <table class="table-deals" cellpadding="0" cellpadding="0">
             <tr class="top">
                 <td>№</td>
                 <td>{% trans 'Product cost' %}</td>
                 <td>{% trans 'Delivery cost' %}</td>
-                <td>&nbsp;</td>
+                <td>{% trans 'Delete' %}</td>
             </tr>
-            {% for item in page.object_list %}
+            {% for item_form in item_formset %}
+                {% for hidden in item_form.hidden_fields %}{{ hidden }}{% endfor %}
                 <tr>
-                    <td>{{ item.pk }}</td>
-                    <td>{{ item.product_cost }}</td>
-                    <td>{{ item.delivery_cost }}</td>
+                    <td>{{ forloop.counter }}</td>
                     <td>
-                        <a class="call-process-form" 
-                            href="" 
-                            data-title="{% trans 'Update delivery cost level' %}">{% trans 'Update' %}</a>
-                        &nbsp;
-                        <a class="delete_delivery_level"  
-                            href="" 
-                            title="{% trans 'Delete delivery cost level' %}">{% trans 'Delete' %}</a>
+                        {{ item_form.product_cost }}
+                        {% if item_form.is_bound and item_form.product_cost.errors %}
+                            <p class="errors">{{ item_form.product_cost.errors|striptags }}</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ item_form.delivery_cost }}
+                        {% if item_form.is_bound and item_form.delivery_cost.errors %}
+                            <p class="errors">{{ item_form.delivery_cost.errors|striptags }}</p>
+                        {% endif %}
+                    </td>
+                    <td align="center">
+                        {% if item_form.instance and item_form.instance.pk %}    
+                            {{ item_form.DELETE }}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    
                     </td>
                 </tr>
             {% empty %}
                 <tr class="no-results"><td colspan="3">{% trans "No results found" %}</td></tr>
             {% endfor %}
-            {% include "b24online/main/paginator.html" %}
+            <tr class="without-border">
+                <td colspan="2">&nbsp;</td>
+                <td align="right">
+                    <input type="submit" id="save_deliveries" name="update" value="{% trans 'Save changes' %}">
+                </td>
+            </tr>
         </table>
+        </form>
     {% else %}
         {% trans 'You have not permissions' %}
     {% endif %}
 </div>
+
+{% autoescape off %}
+<script type="text/javascript">
+    $('#save_deliveries').click(function(e) {
+        e.preventDefault(); 
+        $('#deliveries_form').ajaxSubmit({
+            url: this.href,
+            type: 'post',  
+            success: function(data) {
+                console.log('OK');
+                $('#multileveled_delivery').html(data);    
+            }
+        });
+        return false;    
+    });
+</script>
+{% endautoescape %}

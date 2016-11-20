@@ -1,11 +1,15 @@
 # -*- encoding: utf-8 -*-
 
+import logging
+
 from django import forms
 from django.forms import modelformset_factory
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 
 from b24online.models import (AdditionalPage, Company, Country, Chamber,
     CompanyDeliveryLevel)
+
+logger = logging.getLogger(__name__)
 
 
 class CompanyForm(forms.ModelForm):
@@ -74,10 +78,12 @@ class DeliveryLevelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.company = kwargs.pop('company') if 'company' in kwargs else None
         super(DeliveryLevelForm, self).__init__(*args, **kwargs)
+        self.fields['product_cost'].required = True
+        self.fields['delivery_cost'].required = True
                 
-    def save(self):
-        self.instance.company = self.conpany
-        return super(DeliveryLevelForm, self).save()
+    def save(self, **kwargs):
+        self.instance.company = self.company
+        return super(DeliveryLevelForm, self).save(**kwargs)
 
 
 DeliveryLevelFormSet = modelformset_factory(
@@ -88,5 +94,5 @@ DeliveryLevelFormSet = modelformset_factory(
         'product_cost': forms.NumberInput(attrs={'min': '1'}),
         'delivery_cost': forms.NumberInput(attrs={'min': '1'}),
     },
-    extra=1
+    extra=1,
 )
