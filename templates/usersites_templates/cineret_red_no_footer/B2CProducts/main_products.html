@@ -36,7 +36,7 @@
                         <div class="product__caption">
 
                             {# Product title - up 20 char to keep design #}
-                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
+                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:30 }}</a></h3>
 
                             {# KRN here i want the product category to be #}
                             {% comment %}
@@ -46,7 +46,7 @@
                             {% endcomment %}
 
                             {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
-                            <p class="product__desc">{{ product.short_description|truncatechars:130 }}</p>
+                            <p class="product__desc">{{ product.short_description|truncatechars:110 }}</p>
 
 
                             {# Displaying a price if there is one. Cheching if there is a discount too. #}

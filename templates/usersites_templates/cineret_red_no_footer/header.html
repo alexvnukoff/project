@@ -195,9 +195,9 @@
                     <li><a href="{% url 'news:main' %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i></a></li>
                 {% endif %}
 
-{#                    {% if site.user_site.organization.galleries.exists %}#}
-{#                        <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>#}
-{#                    {% endif %}#}
+                {% if site.user_site.organization.galleries.exists %}
+                    <li><a href="{% url 'pages:gallery' %}"><i class="fa fa-camera-retro" aria-hidden="true"></i></a></li>
+                {% endif %}
 
                 <li><a href="{% url 'pages:contacts' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></li>
 
