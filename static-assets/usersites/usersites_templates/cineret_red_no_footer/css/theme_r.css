@@ -345,3 +345,9 @@ h1, h2, h3, h4, h5, h6 {
 .slider-desc:hover{
     color: #fff;
 }
+
+@media (min-width: 992px) {
+    .product .product__caption .product__desc {
+        height: 60px;
+    }
+}
