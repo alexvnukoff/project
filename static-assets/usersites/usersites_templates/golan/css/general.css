@@ -1111,6 +1111,15 @@ footer .btn-default{
 	width: auto;
 }
 
+.about-main__text table{
+	margin: 5px auto;
+}
+
+.about-main__text table img{
+	width: 100%;
+}
+
+
 /*---------- Item Styling ----------*/
 .item-page, .item-price-table{
 	position: relative;

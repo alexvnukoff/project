@@ -22,7 +22,7 @@ del{text-decoration: line-through;}
 table{border-collapse: collapse; border-spacing: 0;}
 a {color:#0089bc; text-decoration: none;}
 a:hover{color:#0089bc; text-decoration:underline;}
-img{ border:0;}
+img{ border:0; max-width: 100%;}
 /* Until ================================================================================= */
 .clearfix:after{content: "."; display: block; height: 0; clear: both; visibility: hidden;}
 .clearfix{display: inline-block;}
