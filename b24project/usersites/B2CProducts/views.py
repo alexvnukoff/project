@@ -362,12 +362,12 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     paypal_dict['item_name_%d' % i] = item.product.name
                     i += 1
 
-                if current_user_site.delivery_cost \
-                    and current_user_site.delivery_currency:
-                    paypal_dict['amount_%d' % i] = current_user_site.delivery_cost
+                if current_user_site.organization.delivery_cost \
+                    and current_user_site.organization.delivery_currency:
+                    paypal_dict['amount_%d' % i] = \
+                        current_user_site.organization.delivery_cost
                     paypal_dict['item_name_%d' % i] = _('Delivery cost')
-                    total += current_user_site.delivery_cost
-                        
+                    total += current_user_site.organization.delivery_cost
                 paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
             else:
                 if basket.summary():
@@ -386,16 +386,18 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                         'currency_code': basket.currency
                     })
 
-                    if current_user_site.delivery_cost \
-                        and current_user_site.delivery_currency:
+                    if current_user_site.organization.delivery_cost \
+                        and current_user_site.organization.delivery_currency:
                         paypal_dict.update({
                             'amount_1': basket.summary,
                             'item_name_1': item_name,
                         })
-                        paypal_dict['amount_2'] = current_user_site.delivery_cost
+                        paypal_dict['amount_2'] = \
+                            current_user_site.organization.delivery_cost
                         paypal_dict['item_name_2'] = _('Delivery cost')
-                        paypal_form = PayPalBasketForm(basket, initial=paypal_dict)
-                        total += current_user_site.delivery_cost
+                        paypal_form = PayPalBasketForm(
+                            basket, initial=paypal_dict)
+                        total += current_user_site.organization.delivery_cost
                     else: 
                         paypal_dict.update({
                             'amount': basket.summary,
@@ -417,7 +419,8 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
             if product.currency and product.cost and quantity:
                 paypal_dict = {
                     "business": product.company.company_paypal_account or '',
-                    "notify_url": "%s://%s%s" % (self.request.scheme, domain, reverse('paypal-ipn')),
+                    "notify_url": "%s://%s%s" % (self.request.scheme, 
+                        domain, reverse('paypal-ipn')),
                     "return_url": self.request.build_absolute_uri(),
                     "cancel_return": self.request.build_absolute_uri(),
                     "item_number": product.pk,
@@ -425,13 +428,14 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
                     "quantity": 1,
                     "currency_code": product.currency
                 }
-                if current_user_site.delivery_cost \
-                    and current_user_site.delivery_currency:
+                if current_user_site.organization.delivery_cost \
+                    and current_user_site.organization.delivery_currency:
                     paypal_dict.update({
                         'amount_1': product.get_discount_price,
                         'item_name_1': product.name,
                     })
-                    paypal_dict['amount_2'] = current_user_site.delivery_cost
+                    paypal_dict['amount_2'] = \
+                        current_user_site.organization.delivery_cost
                     paypal_dict['item_name_2'] = _('Delivery cost')
                     paypal_form = PayPalBasketForm(None, initial=paypal_dict)
                     total += paypal_dict['amount_2']

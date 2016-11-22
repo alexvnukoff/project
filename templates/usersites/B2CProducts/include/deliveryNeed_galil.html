@@ -5,18 +5,18 @@
 {% load inclusionTags %}
 {% load humanize %}
 
-{% if site.user_site.is_delivery_available %}
+{% if site.user_site.organization.is_delivery_available %}
 <div style="margin-top: 10px;">
     <input type="checkbox" name="need_delivery" id="need_delivery">
     <span>{% trans 'Need a delivery' %}</span>
 </div>
 <div style="margin-bottom: 10px;">
-    {% if not site.user_site.delivery_cost %}
+    {% if not site.user_site.organization.delivery_cost %}
         {% trans 'Delivery is unpaid' %}
     {% else %}
         {% trans 'Delivery cost' %}: 
-        {{ site.user_site.delivery_currency|getSymbol }} 
-        {{ site.user_site.delivery_cost|formatPrice }}
+        {{ site.user_site.organization.delivery_currency|getSymbol }} 
+        {{ site.user_site.organization.delivery_cost|formatPrice }}
     {% endif %}
 </div>
 {% endif %}
