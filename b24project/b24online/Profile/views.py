@@ -12,6 +12,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from b24online.models import Profile
 from b24online.Profile.forms import ProfileForm, AvatarForm, ImageForm
 from b24online.cbv import ItemUpdate
+from django.http import JsonResponse, HttpResponse
 
 
 
@@ -41,12 +42,14 @@ class ProfileView(ItemUpdate):
 
         if 'form2' not in context:
             context['form2'] = self.third_form_class(initial={'image': self.get_object().image })
-
         return context
 
 
     def form_invalid(self, **kwargs):
-        return self.render_to_response(self.get_context_data(**kwargs))
+        if self.request.is_ajax():
+            return HttpResponse(status=403)
+        else:
+            return self.render_to_response(self.get_context_data(**kwargs))
 
 
     def get_object(self, queryset=None):
@@ -77,6 +80,7 @@ class ProfileView(ItemUpdate):
         if form.is_valid():
             cd = form.cleaned_data
 
+            print(cd)
             if 'form' in request.POST:
                 form.instance.birthday = cd.get('birthday', None)
                 form.instance.metadata['facebook'] = cd.get('facebook', None)
@@ -89,11 +93,15 @@ class ProfileView(ItemUpdate):
             if form.changed_data:
                 self.object.reindex()
 
-                if 'avatar' in form.changed_data:
+                if 'avatar' in cd:
                     self.object.upload_images('avatar')
+                    if request.is_ajax():
+                        return JsonResponse({ 'avatar': self.get_object().avatar.big })
 
-                if 'image' in form.changed_data:
+                if 'image' in cd:
                     self.object.upload_images('image')
+                    if request.is_ajax():
+                        return JsonResponse({ 'image': self.get_object().image.big })
 
             return result
         else:

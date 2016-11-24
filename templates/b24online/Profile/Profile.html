@@ -4,6 +4,49 @@
 {% load CustomFilters %}
 {% block content %}
 
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+
+<div class="uplavatarform">
+<div class="avatar" id="avatar-src">
+    <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+    <span class="input-error" style="display:none">{% trans "Error" %}</span>
+
+    {% if form1.initial.avatar %}
+    <img src="{{ form1.initial.avatar.big }}" style="max-width:150px;max-height:156px;" />
+    {% else %}
+    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
+    {% endif %}
+</div>
+
+<form id="avatar-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+    <input id="id_avatar" name="avatar" type="file" style="display:none">
+    <button id="aclick" class="mybut345">{% trans "Choose Image" %}</button>
+    <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form1" disabled />
+</form>
+</div>
+
+<div class="uplimageform">
+<div class="avatar" id="image-src">
+    <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+    <span class="input-error" style="display:none">{% trans "Error" %}</span>
+    {% if form2.initial.image %}
+    <img src="{{ form2.initial.image.big }}" style="max-width:150px;max-height:156px;" />
+    {% else %}
+    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
+    {% endif %}
+</div>
+
+<form id="image-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+    <input id="id_image" name="image" type="file" style="display:none">
+    <button id="bclick" class="mybut345">{% trans "Choose Image" %}</button>
+    <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form2" disabled />
+</form>
+</div>
+
+
+
+
+
 
 <form  method="post" action="">{% csrf_token %}
     <div class="user-profile">
@@ -145,7 +188,11 @@
 
         </div>
 
-            <input class="btntype2" type="submit" name="form" value="{% trans 'Save' %}"/>
+            <div class="profilebutton" style="display:block;width:100%;">
+                <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
+                <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+            </div>
+
     </div>
 </form>
 
@@ -153,37 +200,89 @@
 
 
 
-<div class="avatar">
-    {% if form1.initial.avatar %}
-        <img style="max-width: 150px;max-height: 156px;" src="{{ form1.initial.avatar.big }}" alt="" />
-    {% else %}
-        <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width: 150px;max-height: 156px;" />
-    {% endif %}
-</div>
+<script>
 
-<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
-    <input id="id_avatar" name="avatar" type="file">
-    <input type="submit" value="Upload" name="form1">
-</form>
+$(document).ready(function() { 
+    var a = $("#avatar-src").children("img");
+    var i = $("#image-src").children("img");
+    var sp1 = $("#avatar-src").children(".ava");
+    var sp2 = $("#image-src").children(".ava");
+    var ack = $("#aclick");
+    var bck = $("#bclick");
+    var avf = $("#avatar-form").children("input[type=submit]");
+    var ivf = $("#image-form").children("input[type=submit]");
 
+    ack.click(function(e) {
+        e.preventDefault();
+        $("#id_avatar").trigger('click');
+        avf.removeAttr("disabled");
+    });
 
+    bck.click(function(e) {
+        e.preventDefault();
+        $("#id_image").trigger('click');
+        ivf.removeAttr("disabled");
+    });
 
+    $('#avatar-form').ajaxForm({
+        beforeSend: function() {
+            a.hide();
+            a.removeAttr("src");
+            $("#id_avatar").val('');
+            ack.attr("disabled", true);
+            avf.attr("disabled", true);
+            sp1.show();
+            $("#avatar-src").children(".input-error").hide();
+            },
+        error: function(data) {
+            $("#avatar-src").children(".input-error").show();
+            sp1.hide();
+            },
+        success: function(data) {
+            console.log(data);
+            var d = data['avatar'];
+            setTimeout(function(){
+                a.attr("src", d).delay(300).fadeIn();
+                sp1.hide();
+            }, 4000);
+        },
+        complete: function(data) {
+            setTimeout(function(){
+            ack.attr("disabled", false);
+            }, 4300);
+        }
+    });
 
+    $('#image-form').ajaxForm({
+        beforeSend: function() {
+            i.hide();
+            i.removeAttr("src");
+            $("#id_image").val('');
+            bck.attr("disabled", true);
+            ivf.attr("disabled", true);
+            sp2.show();
+            $("#image-src").children(".input-error").hide();
+            },
+        error: function(data) {
+            $("#image-src").children(".input-error").show();
+            sp2.hide();
+            },
+        success: function(data) {
+            var d = data['image'];
+            setTimeout(function(){
+                i.attr("src", d).delay(300).fadeIn();
+                sp2.hide();
+            }, 4000);
+        },
+        complete: function(data) {
+            setTimeout(function(){
+            bck.attr("disabled", false);
+            }, 4200);
+        }
+    });
 
+}); 
 
-<div class="avatar">
-    {% if form2.initial.image %}
-        <img style="max-width: 150px;max-height: 156px;" src="{{ form2.initial.image.big }}" alt="" />
-    {% else %}
-        <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
-    {% endif %}
-</div>
-
-
-<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
-    <input id="id_image" name="image" type="file">
-    <input type="submit" value="Upload" name="form2">
-</form>
-
+</script>
 
 {% endblock %}
