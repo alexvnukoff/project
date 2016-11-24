@@ -4,30 +4,10 @@
 {% load CustomFilters %}
 {% block content %}
 
-<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-{% csrf_token %}
+
+<form  method="post" action="">{% csrf_token %}
     <div class="user-profile">
-        {% comment %}
-        <p class="change-passwd-link"><a href="{% url 'auth_password_change' %}">{% trans 'Change password' %}</a></p>
-        {% endcomment %}
         <p class="change-passwd-link"><a href="{% url 'profile:change_password' %}">{% trans 'Change password' %}</a></p>
-
-        <div class="profile-l">
-            <div class="avatar">
-                {% if form.initial.avatar %}
-                    <img style="max-width: 150px;max-height: 156px;" src="{{ form.initial.avatar.big }}" alt="" />
-                {% else %}
-                    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width: 150px;max-height: 156px;" />
-                {% endif %}
-            </div>
-            <div class="line"><b>{% trans 'Change avatar' %}</b></div>
-            {% if form.errors.avatar %}
-                <div class="error-handler"> <div class="formserror2">{{ form.errors.avatar.0 }}</div></div>
-            {% endif %}
-            <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
-            <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
-
-        </div>
 
       <div style="display:block;margin:0 158px 5px 158px;">
       <label style="font-weight:bold;display:block;margin:5px 0;">{% trans 'Email' %}</label>
@@ -165,12 +145,45 @@
 
         </div>
 
-        <div class="profilebutton" style="display:block;width:100%;">
-
-            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
-            <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
-        </div>
+            <input class="btntype2" type="submit" name="form" value="{% trans 'Save' %}"/>
     </div>
 </form>
+
+
+
+
+
+<div class="avatar">
+    {% if form1.initial.avatar %}
+        <img style="max-width: 150px;max-height: 156px;" src="{{ form1.initial.avatar.big }}" alt="" />
+    {% else %}
+        <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width: 150px;max-height: 156px;" />
+    {% endif %}
+</div>
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+    <input id="id_avatar" name="avatar" type="file">
+    <input type="submit" value="Upload" name="form1">
+</form>
+
+
+
+
+
+
+<div class="avatar">
+    {% if form2.initial.image %}
+        <img style="max-width: 150px;max-height: 156px;" src="{{ form2.initial.image.big }}" alt="" />
+    {% else %}
+        <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
+    {% endif %}
+</div>
+
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+    <input id="id_image" name="image" type="file">
+    <input type="submit" value="Upload" name="form2">
+</form>
+
 
 {% endblock %}

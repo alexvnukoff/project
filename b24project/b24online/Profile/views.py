@@ -10,8 +10,97 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from b24online.models import Profile
-from b24online.Profile.forms import ProfileForm
+from b24online.Profile.forms import ProfileForm, AvatarForm, ImageForm
 from b24online.cbv import ItemUpdate
+
+
+
+class ProfileView(ItemUpdate):
+    model = Profile
+    template_name = 'b24online/Profile/Profile.html'
+    success_url = reverse_lazy('profile:main')
+
+    form_class = ProfileForm
+    second_form_class = AvatarForm
+    third_form_class = ImageForm
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+
+        if 'form' not in context:
+            context['form'] = self.form_class(initial={
+                'facebook': self.get_object().facebook,
+                'linkedin': self.get_object().linkedin,
+                'co': self.get_object().co,
+                'co_slogan': self.get_object().co_slogan,
+                'co_description': self.get_object().co_description
+                })
+
+        if 'form1' not in context:
+            context['form1'] = self.second_form_class(initial={'avatar': self.get_object().avatar })
+
+        if 'form2' not in context:
+            context['form2'] = self.third_form_class(initial={'image': self.get_object().image })
+
+        return context
+
+
+    def form_invalid(self, **kwargs):
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+
+    def get_object(self, queryset=None):
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except ObjectDoesNotExist:
+            return Profile.objects.create(user=self.request.user)
+
+
+    def post(self, request, *args, **kwargs):
+        # get the user instance
+        self.object = self.get_object()
+
+        if 'form' in request.POST:
+            form_class = self.get_form_class()
+            form_name = 'form'
+
+        elif 'form1' in request.POST:
+            form_class = self.second_form_class
+            form_name = 'form1'
+
+        else:
+            form_class = self.third_form_class
+            form_name = 'form2'
+
+        form = self.get_form(form_class)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            if 'form' in request.POST:
+                form.instance.birthday = cd.get('birthday', None)
+                form.instance.metadata['facebook'] = cd.get('facebook', None)
+                form.instance.metadata['linkedin'] = cd.get('linkedin', None)
+                form.instance.metadata['co'] = cd.get('co', None)
+                form.instance.metadata['co_slogan'] = cd.get('co_slogan', None)
+                form.instance.metadata['co_description'] = cd.get('co_description', None)
+
+            result = super().form_valid(form)
+            if form.changed_data:
+                self.object.reindex()
+
+                if 'avatar' in form.changed_data:
+                    self.object.upload_images('avatar')
+
+                if 'image' in form.changed_data:
+                    self.object.upload_images('image')
+
+            return result
+        else:
+            return self.form_invalid(**{form_name: form})
+
+
+
 
 
 class ProfileUpdate(ItemUpdate):
