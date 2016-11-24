@@ -280,6 +280,7 @@
                 </li>
             </ul>
         </div>
+
         <div class="append-formin">
                    <div class="addpage-title">{% trans 'Additional pages' %}</div>
                    <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
@@ -293,6 +294,34 @@
                     {% endfor %}
         </div>
 
+        {# Extra fields #}
+        <div id="extra_fields">
+            <div class="addpage-title">{% trans 'Additional fields before sale form' %}</div>
+            <p style="padding-top: 20px;">
+                <table width="90%" cellspacing="2" cellpadding="2"
+                    border="0" class="table-data" style="margin-top: 20px;">
+                    <tr>
+                        <th>{% trans 'Field label' %}</th>
+                        <th>{% trans 'Field name' %}</th>
+                        <th>{% trans 'Field type' %}</th>
+                        <th>{% trans 'Is field required' %}</th>
+                        <th>{% trans 'Text before field' %}</th>
+                        <th>{% trans 'Text after field' %}</th>
+                        <th>{% trans 'Field initial' %}</th>
+                    </tr>
+                    {% for extra_field in extra_fields %}
+                    
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" align="center">
+                            {% trans 'There are no records' %}
+                        </td>    
+                    </tr>
+                    {% endfor %}
+                </table>            
+            </p>
+        </div>
+        
         <div id="imgs_fields">
         </div>
 
