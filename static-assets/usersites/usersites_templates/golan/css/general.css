@@ -1119,6 +1119,13 @@ footer .btn-default{
 	width: 100%;
 }
 
+.about-main__text img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
 
 /*---------- Item Styling ----------*/
 .item-page, .item-price-table{
