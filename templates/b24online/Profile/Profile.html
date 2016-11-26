@@ -4,59 +4,75 @@
 {% load CustomFilters %}
 {% block content %}
 
-<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script src="http://malsup.github.com/jquery.form.js"></script>
 
-<div class="uplavatarform">
-<div class="avatar" id="avatar-src">
-    <span class="icon-spin3 animate-spin ava" style="display:none"></span>
-    <span class="input-error" style="display:none">{% trans "Error" %}</span>
+<style>
+#avatar-form .mybut345, #image-form .mybut345 {display:inline-block;margin:10px 0;background-color:#e5e5e5;font-size:11px;padding:1px;border:1px solid #dedede;cursor:pointer}
+.avatar {display:inline-block;width:150px;height:auto;}
+.avatar .input-error {color:red;display:block;text-align:center;padding:20px 0;}
+.avatar .ava {display:block;text-align:center;padding:10px 0;font-size:33px;color:#999}
+.uplavatarform {width:150px;min-height:150px;}
+.uplimageform {width:150px;min-height:150px;}
 
-    {% if form1.initial.avatar %}
-    <img src="{{ form1.initial.avatar.big }}" style="max-width:150px;max-height:156px;" />
-    {% else %}
-    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
-    {% endif %}
+{% if LANGUAGE_BIDI %}
+.rtsidebox {width:150px;float:right;margin:0;}
+.ltsidebox {width:480px;float:right;margin-top:-10px;}
+{% else %}
+.rtsidebox {width:150px;float:left;margin:0;}
+.ltsidebox {width:480px;float:left;margin-top:-10px;}
+{% endif %}
+</style>
+
+<div class="user-profile">
+<p class="change-passwd-link"><a href="{% url 'profile:change_password' %}">{% trans 'Change password' %}</a></p>
+
+<div class="rtsidebox">
+    <div class="uplavatarform">
+        <div class="avatar" id="avatar-src">
+            <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+            <span class="input-error" style="display:none">{% trans "Error" %}</span>
+
+            {% if form1.initial.avatar %}
+            <img src="{{ form1.initial.avatar.big }}" style="max-width:130px;max-height:135px;" />
+            {% else %}
+            <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:130px;max-height:135px;" />
+            {% endif %}
+        </div>
+
+        <form id="avatar-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+            <input id="id_avatar" name="avatar" type="file" style="display:none">
+            <button id="aclick" class="mybut345">{% trans "Choose Image" %}</button>
+            <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form1" disabled />
+        </form>
+    </div>
+
+    <div class="uplimageform">
+        <div class="avatar" id="image-src">
+            <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+            <span class="input-error" style="display:none">{% trans "Error" %}</span>
+            {% if form2.initial.image %}
+            <img src="{{ form2.initial.image.big }}" style="max-width:130px;max-height:135px;" />
+            {% else %}
+            <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:130px;max-height:135px;" />
+            {% endif %}
+        </div>
+
+        <form id="image-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+            <input id="id_image" name="image" type="file" style="display:none">
+            <button id="bclick" class="mybut345">{% trans "Choose Image" %}</button>
+            <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form2" disabled />
+        </form>
+    </div>
 </div>
 
-<form id="avatar-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
-    <input id="id_avatar" name="avatar" type="file" style="display:none">
-    <button id="aclick" class="mybut345">{% trans "Choose Image" %}</button>
-    <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form1" disabled />
-</form>
-</div>
+<div class="ltsidebox">
 
-<div class="uplimageform">
-<div class="avatar" id="image-src">
-    <span class="icon-spin3 animate-spin ava" style="display:none"></span>
-    <span class="input-error" style="display:none">{% trans "Error" %}</span>
-    {% if form2.initial.image %}
-    <img src="{{ form2.initial.image.big }}" style="max-width:150px;max-height:156px;" />
-    {% else %}
-    <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:150px;max-height:156px;" />
-    {% endif %}
-</div>
-
-<form id="image-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
-    <input id="id_image" name="image" type="file" style="display:none">
-    <button id="bclick" class="mybut345">{% trans "Choose Image" %}</button>
-    <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form2" disabled />
-</form>
-</div>
-
-
-
-
-
-
-<form  method="post" action="">{% csrf_token %}
-    <div class="user-profile">
-        <p class="change-passwd-link"><a href="{% url 'profile:change_password' %}">{% trans 'Change password' %}</a></p>
-
-      <div style="display:block;margin:0 158px 5px 158px;">
+      <div style="display:block;margin:0 10px 10px 10px;">
       <label style="font-weight:bold;display:block;margin:5px 0;">{% trans 'Email' %}</label>
-      <div style="border:1px solid #c5c5c5;background:#f1f1f1;width:222px;padding:4px;"><strong>{{ request.user.email }}</strong></div>
+      <div style="border:1px solid #c5c5c5;background:#f1f1f1;width:100%;padding:4px;"><strong>{{ request.user.email }}</strong></div>
       </div>
 
+    <form  method="post" action="">{% csrf_token %}
         <ul class="profile-clumn">
             <li>
                 <label>{% trans 'Last name' %}</label>
@@ -152,6 +168,7 @@
                 {{ form.linkedin }}
             </li>
         </ul>
+    </div>
 
         <div style="clear:both"></div>
 
@@ -163,10 +180,10 @@
               {{ form.contacts }}
         </div>
 
-        <div style="clear:both;"></div>
-        <div class="profile-fieldsets">
+        <div style="clear:both"></div>
 
-              <h2 style="margin:20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
+        <div class="profile-fieldsets">
+              <h2 style="margin:10px 20px 20px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
 
                 <label>{% trans 'Company name' %}</label>
                 {% if form.errors.co %}
@@ -186,22 +203,17 @@
               {% endif %}
               {{ form.co_description }}
 
-        </div>
+            </div>
 
             <div class="profilebutton" style="display:block;width:100%;">
-                <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
+                <input class="btntype2" type="submit" name="form" value="{% trans 'Save' %}"/>
                 <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
             </div>
 
+    </form>
     </div>
-</form>
-
-
-
-
 
 <script>
-
 $(document).ready(function() { 
     var a = $("#avatar-src").children("img");
     var i = $("#image-src").children("img");
@@ -239,10 +251,11 @@ $(document).ready(function() {
             sp1.hide();
             },
         success: function(data) {
-            console.log(data);
             var d = data['avatar'];
             setTimeout(function(){
                 a.attr("src", d).delay(300).fadeIn();
+                $("#hava01").html('<img src="' + d +'" style="vertical-align:middle;margin-top:-4px;width:18px;height:18px;">');
+                $("#hava02").html('<img src="' + d +'" style="width:25px;margin-top:-17px;border:1px solid #dedede;">');
                 sp1.hide();
             }, 4000);
         },
@@ -271,18 +284,18 @@ $(document).ready(function() {
             var d = data['image'];
             setTimeout(function(){
                 i.attr("src", d).delay(300).fadeIn();
+                $("#hava03").html('<img src="' + d +'" style="width:20px;margin:2px 0;border:1px solid #dedede;">');
                 sp2.hide();
             }, 4000);
         },
         complete: function(data) {
             setTimeout(function(){
             bck.attr("disabled", false);
-            }, 4200);
+            }, 4300);
         }
     });
 
 }); 
 
 </script>
-
 {% endblock %}
