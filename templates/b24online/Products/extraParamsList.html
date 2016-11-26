@@ -1,0 +1,61 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}
+  {{ item }}
+{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <h1>{% trans 'Additional parameters' %}</h1>
+    <hr class="hr-divider-one">
+
+    <div id="deals">
+      <div class="deal-item" style="display: block">
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+          <th>{% trans 'Field name' %}</th>
+          <th>{% trans 'Field label' %}</th>
+          <th>{% trans 'Field type' %}</th>
+          <th>{% trans 'Is field required' %}?</th>
+          <th>{% trans 'Initial value' %}</th>
+          <th>{% trans 'Text before the field' %}</th>
+          <th>{% trans 'Text after the field' %}</th>
+        </tr>
+        {% for item in object.get_extra_params %}
+        <tr>
+          <td><a href="">{{ item.name }}</a></td>
+          <td>{{ item.label }}</td>
+          <td>{{ item.fieldtype }}</td>
+          <td>{% if item.required %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+          <td>{{ item.initial }}</td>
+          <td>{{ item.pre_text }}</td>
+          <td>{{ item.post_text }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" align="center">
+          <p>{% trans 'There are no additional parameters' %}</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>  
+      </div>
+    </div>
+</div>
+{% endblock %}

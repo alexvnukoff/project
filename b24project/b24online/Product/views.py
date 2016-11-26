@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import (DetailView, ListView)
+from django.views.generic import (DetailView, ListView, TemplateView)
 from guardian.mixins import LoginRequiredMixin
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -31,7 +31,6 @@ from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.models import UserSite
 
 logger = logging.getLogger(__name__)
-
 
 class B2BProductList(ItemsList):
     # Pagination url
@@ -1205,3 +1204,17 @@ class ProducerDelete(LoginRequiredMixin, DetailView):
             item.delete()
         next = reverse('products:producer_list')
         return HttpResponseRedirect(next)
+
+
+class ExtraParamsList(LoginRequiredMixin, DetailView):
+    """The view for B2C product additional parameters."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+    
+    def get_context_data(self, **kwargs):
+        ctx = super(ExtraParamsList, self).get_context_data(**kwargs)
+        logger.debug(ctx)
+        return ctx

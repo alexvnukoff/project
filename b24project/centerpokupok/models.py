@@ -169,10 +169,20 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         """
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id,
-                                   'item_id': self.id}),
-                   _('Questionnaire'))
+            yield (reverse(
+                'questionnaires:list',
+                kwargs={'content_type_id': model_type.id, 'item_id': self.id}),
+                _('Questionnaire')
+            )
+            yield (reverse(
+                'products:extra_params_list',
+                kwargs={'item_id': self.id}),
+                _('Additional parameters')
+            )
+
+    def get_extra_params(self):
+        """Return the additional parameters."""
+        return self.extra_params        
 
 
 class B2CProductComment(MPTTModel):
