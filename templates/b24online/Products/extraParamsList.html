@@ -22,13 +22,13 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 <div class="goods-details">
-    <h1>{% trans 'Additional parameters' %}</h1>
+    <h1>{% trans 'Additional parameters' %} {% trans 'for' %} {{ object }}</h1>
     <hr class="hr-divider-one">
 
     <div id="deals">
       <div class="deal-item" style="display: block">
       <p style="padding: 10px; float: right;">
-        <a href="">{% trans 'Add new' %}</a>
+        <a href="{% url 'products:extra_params_create' item_id=object.pk %}">{% trans 'Add new' %}</a>
       </p>        
       {% autoescape off %}
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
@@ -43,7 +43,8 @@
         </tr>
         {% for item in object.get_extra_params %}
         <tr>
-          <td align="center"><a href="">{{ item.name }}</a></td>
+          <td align="center"><a 
+            href="{% url 'products:extra_params_update' item_id=object.pk field_name=item.name %}">{{ item.name }}</a></td>
           <td>{{ item.label }}</td>
           <td align="center">{{ item.fieldtype }}</td>
           <td align="center">{% if item.required %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>

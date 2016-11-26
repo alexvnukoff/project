@@ -20,7 +20,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
-    ProducerForm)
+    ProducerForm, ExtraParamsForm)
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
@@ -1214,25 +1214,27 @@ class ExtraParamsList(LoginRequiredMixin, DetailView):
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
 
-    def get_context_data(self, **kwargs):
-        ctx = super(ExtraParamsList, self).get_context_data(**kwargs)
-        return ctx
-
 
 class ExtraParamsCreate(LoginRequiredMixin, DetailView):
     """The view to create new B2C product's additional parameter."""
 
     model = B2CProduct
-    template_name = 'b24online/Products/extraParamsList.html'
+    template_name = 'b24online/Products/extraParamsForm.html'
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ExtraParamsCreate, self).get_context_data(**kwargs)
+        form = ExtraParamsForm(self.object)
+        ctx.update({'form': form})
+        return ctx
 
 
 class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
     """The view to update B2C product's additional parameter."""
 
     model = B2CProduct
-    template_name = 'b24online/Products/extraParamsList.html'
+    template_name = 'b24online/Products/extraParamsForm.html'
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
 

@@ -127,7 +127,7 @@ urlpatterns = [
     url(r'^extraparams/(?P<item_id>[0-9]+)/add/$',
         ExtraParamsCreate.as_view(), name='extra_params_create'),
     url(r'^extraparams/(?P<item_id>[0-9]+)/update/(?P<field_name>\w+)/$',
-        ExtraParamsUpdate.as_view(), name='extra_params_create'),
+        ExtraParamsUpdate.as_view(), name='extra_params_update'),
     url(r'^extraparams/(?P<item_id>[0-9]+)/delete/(?P<field_name>\w+)/$',
         ExtraParamsDelete.as_view(), name='extra_params_delete'),
 ]

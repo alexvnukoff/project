@@ -427,3 +427,64 @@ class ProducerForm(forms.ModelForm):
                 kwargs={'b2_type': 'b2c'})})
         self.fields['b2b_categories'].required = False
         self.fields['b2c_categories'].required = False
+
+
+class ExtraParamsForm(forms.Form):
+    """The form for B2C Product's additional paramenter."""
+
+    LANGUAGES = ('en', 'ru', 'am', 'bg', 'uk', 'he', 'ar', 'zh', 'es')
+    
+    name = forms.RegexField(
+        label=_('Field name'),
+        regex='^\w+$',
+        required=True, 
+        max_length=100
+    )
+    label = forms.CharField(
+        label=_('Field label'),
+        required=False, 
+        widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
+    )
+    fieldtype = forms.ChoiceField(
+        label=_('Field type'),
+        required=True,
+        choices=((x, x) for x in ('char', 'textarea', 'image')),
+        widget=forms.Select(attrs={'style': 'width: 50%;'})
+    )
+    is_required = forms.BooleanField(
+        label=_('Is field required'),
+        required=False
+    )
+    pre_text = forms.CharField(
+        label=_('Text before the field'),
+        required=False, 
+        widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
+    )
+    post_text = forms.CharField(
+        label=_('Text after the field'),
+        required=False, 
+        widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
+    )
+
+    def __init__(self, product, field_name=None, *args, **kwargs):
+        self.product = product
+        super(ExtraParamsForm, self).__init__(*args, **kwargs)
+        for lang in self.LANGUAGES:
+            self.fields['initial_{0}' . format(lang)] = \
+                forms.CharField(
+                    label=_('Initial field value for lang') + ':' + lang,
+                    required=False, 
+                    widget=forms.Textarea(attrs={'rows': '7', 'cols': '50'}),
+                )
+        _data = self.product.get_extra_params()
+        if _data and field_name and field_name in _data:
+            _values = _data[field_name]
+            for f_name, f_value in _values.items():
+                if f_name == 'initial' and isinstance(f_value, (tuple, list)):
+                    for s_lang, s_value in f_value:
+                        if s_lang in self.LANGUAGES:
+                            self.initial['initial_{0}' . format(s_lang)] = \
+                                s_value
+                else:
+                    if f_name in self.fields:
+                        self.initial[f_name] = f_value
