@@ -1207,14 +1207,41 @@ class ProducerDelete(LoginRequiredMixin, DetailView):
 
 
 class ExtraParamsList(LoginRequiredMixin, DetailView):
-    """The view for B2C product additional parameters."""
+    """The view for B2C product's additional parameters."""
 
     model = B2CProduct
     template_name = 'b24online/Products/extraParamsList.html'
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(ExtraParamsList, self).get_context_data(**kwargs)
-        logger.debug(ctx)
         return ctx
+
+
+class ExtraParamsCreate(LoginRequiredMixin, DetailView):
+    """The view to create new B2C product's additional parameter."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+
+
+class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
+    """The view to update B2C product's additional parameter."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+
+
+class ExtraParamsDelete(LoginRequiredMixin, DetailView):
+    """The view to delete B2C product's additional parameter."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+

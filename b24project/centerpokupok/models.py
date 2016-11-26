@@ -190,7 +190,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
                     if isinstance(field_value, str):
                         row[field_name] = [('default', field_value)]
                     elif isinstance(field_value, (tuple, list)):
-                        row[field_name] = field_value            
+                        row[field_name] = field_value
                 else:
                     row[field_name] = field_value
             result.append(row)
