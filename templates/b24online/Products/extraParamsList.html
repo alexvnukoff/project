@@ -27,6 +27,10 @@
 
     <div id="deals">
       <div class="deal-item" style="display: block">
+      <p style="padding: 10px; float: right;">
+        <a href="">{% trans 'Add new' %}</a>
+      </p>        
+      {% autoescape off %}
       <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
         <tr>
           <th>{% trans 'Field name' %}</th>
@@ -39,11 +43,21 @@
         </tr>
         {% for item in object.get_extra_params %}
         <tr>
-          <td><a href="">{{ item.name }}</a></td>
+          <td align="center"><a href="">{{ item.name }}</a></td>
           <td>{{ item.label }}</td>
-          <td>{{ item.fieldtype }}</td>
-          <td>{% if item.required %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
-          <td>{{ item.initial }}</td>
+          <td align="center">{{ item.fieldtype }}</td>
+          <td align="center">{% if item.required %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+          <td width="30%">
+            {% if item.initial %}
+              {% for lang, value in item.initial %}
+                <span style="color: red; font-weight: bold;">{{ lang }}</span>:&nbsp;
+                <br/>
+                {{ value|replace_nl }}
+              {% endfor %}
+            {% else %}
+              &nbsp;
+            {% endif %}
+          </td>
           <td>{{ item.pre_text }}</td>
           <td>{{ item.post_text }}</td>
         </tr>
@@ -55,6 +69,7 @@
         </tr>
         {% endfor %}
       </table>  
+      {% endautoescape %}
       </div>
     </div>
 </div>

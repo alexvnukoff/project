@@ -399,6 +399,12 @@ def get_by_content_type(item):
 
 
 @register.filter
+def replace_nl(value):
+    return value.replace("\\n", "<br>\n")
+    return value
+
+
+@register.filter
 def thumbnail(img, param_str):
     """
     Make and return the path to image thumbnail.
@@ -595,7 +601,6 @@ def original(img):
     return urljoin(settings.MEDIA_URL, 'original/' + str(img)) \
         if not getattr(settings, 'STORE_FILES_LOCAL', False) else \
             urljoin(settings.MEDIA_URL, str(img))
-
 
 
 @register.simple_tag()

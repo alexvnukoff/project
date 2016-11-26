@@ -182,7 +182,19 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def get_extra_params(self):
         """Return the additional parameters."""
-        return self.extra_params        
+        result = []
+        for field_item in self.extra_params:
+            row = {}
+            for field_name, field_value in field_item.items():
+                if field_name == 'initial':
+                    if isinstance(field_value, str):
+                        row[field_name] = [('default', field_value)]
+                    elif isinstance(field_value, (tuple, list)):
+                        row[field_name] = field_value            
+                else:
+                    row[field_name] = field_value
+            result.append(row)
+        return result
 
 
 class B2CProductComment(MPTTModel):
