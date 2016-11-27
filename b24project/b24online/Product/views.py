@@ -1220,7 +1220,7 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
 
     model = B2CProduct
     template_name = 'b24online/Products/extraParamsForm.html'
-    current_section = _("Products B2C")
+    current_section = _('Products B2C')
     pk_url_kwarg = 'item_id'
 
     def get_context_data(self, **kwargs):
@@ -1230,9 +1230,8 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
         return context
 
 
-class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
+class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
     """The view to update B2C product's additional parameter."""
-
     model = B2CProduct
     template_name = 'b24online/Products/extraParamsForm.html'
     current_section = _("Products B2C")
@@ -1240,13 +1239,46 @@ class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
-        form = ExtraParamsForm(
-            self.object, 
-            field_name=self.kwargs.get('field_name')
+        form = kwargs.get(
+            'form', 
+            ExtraParamsForm(
+                self.object, 
+                field_name=self.kwargs.get('field_name'),
+            )
         )
         context.update({'form': form})
         return context
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object, 
+            field_name=self.kwargs.get('field_name'),
+        )
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list', 
+            kwargs={'item_id': self.object.pk}
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object, 
+            field_name=self.kwargs.get('field_name'),
+            data=self.request.POST
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+            
 
 class ExtraParamsDelete(LoginRequiredMixin, DetailView):
     """The view to delete B2C product's additional parameter."""

@@ -466,22 +466,26 @@ class ExtraParamsForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
     )
 
-    def __init__(self, product, field_name=None, *args, **kwargs):
-        self.object = product
+    def __init__(self, object, field_name=None, *args, **kwargs):
+        self.object = object
         super(ExtraParamsForm, self).__init__(*args, **kwargs)
+
+        self._data = dict((item.get('name'), item) for item in \
+            self.object.get_extra_params()) or {}
+        self.field_name = field_name if self.object.extra_params \
+            and field_name in self._data else None
+
         for lang in self.LANGUAGES:
             self.fields['initial_{0}' . format(lang)] = \
                 forms.CharField(
                     label=_('Initial field value for lang') \
-                        + '&laquo;<span style="color: red;">{0}</span>&raquo;' \
+                        + ' &laquo;<span style="color: red;">{0}</span>&raquo;' \
                         . format(lang),
                     required=False, 
                     widget=forms.Textarea(attrs={'rows': '7', 'cols': '50'}),
                 )
-        _data = dict((item.get('name'), item) for item in \
-            self.object.get_extra_params())
-        if _data and field_name and field_name in _data:
-            _values = _data[field_name]
+        if self._data and field_name and field_name in self._data:
+            _values = self._data[field_name]
             for f_name, f_value in _values.items():
                 if f_name == 'initial' and isinstance(f_value, (tuple, list)):
                     for s_lang, s_value in f_value:
@@ -493,3 +497,31 @@ class ExtraParamsForm(forms.Form):
                 else:
                     if f_name in self.fields:
                         self.initial[f_name] = f_value
+
+    def save(self, *args, **kwargs):
+        if not self.object.extra_params:
+            self.object.extra_params = []
+        data = {}
+        for f_name, f_value in self.cleaned_data.items():
+            if f_name.startswith('initial_'):
+                pass    
+            else:
+                data[f_name] = f_value
+        if data:
+            if self.object.extra_params and self.field_name:
+                has_found = False
+                result = []
+                for item in self.object.extra_params:
+                    f_name = item['name']
+                    if f_name == self.field_name:
+                        has_found = True
+                        result.append(data)
+                    else:
+                        result.append(item)
+                if not has_found:
+                    result.append(data)
+                self.object.extra_params = result
+            elif 'name' in self.cleaned_data:
+                f_name = self.cleaned_data['name']
+                self.object.extra_params.append(data)
+            self.object.save()

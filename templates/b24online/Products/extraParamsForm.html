@@ -31,7 +31,11 @@
               <legend>{% trans 'Enter additional parameter field' %}</legend>
               {% for field in form %}  
               <li style="overflow: auto;">
-                <label>{{ field.label }}:{% if field.field.required %}<span style="color: #a00;">*</span>{% endif %}</label>
+                {% autoescape off %}
+                <label>{{ field.label }}:
+                    {% if field.field.required %}<span style="color: #a00;">*</span>{% endif %}
+                </label>
+                {% endautoescape %}
                 <p>{{ field }}</p>
                 {% if form.is_bound and field.errors %}
                 <p class="errors">{{ field.errors|striptags }}</p>
