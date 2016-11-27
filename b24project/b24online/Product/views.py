@@ -1224,10 +1224,10 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'item_id'
 
     def get_context_data(self, **kwargs):
-        ctx = super(ExtraParamsCreate, self).get_context_data(**kwargs)
+        context = super(ExtraParamsCreate, self).get_context_data(**kwargs)
         form = ExtraParamsForm(self.object)
-        ctx.update({'form': form})
-        return ctx
+        context.update({'form': form})
+        return context
 
 
 class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
@@ -1237,6 +1237,15 @@ class ExtraParamsUpdate(LoginRequiredMixin, DetailView):
     template_name = 'b24online/Products/extraParamsForm.html'
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
+        form = ExtraParamsForm(
+            self.object, 
+            field_name=self.kwargs.get('field_name')
+        )
+        context.update({'form': form})
+        return context
 
 
 class ExtraParamsDelete(LoginRequiredMixin, DetailView):

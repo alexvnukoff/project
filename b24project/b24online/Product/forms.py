@@ -467,22 +467,27 @@ class ExtraParamsForm(forms.Form):
     )
 
     def __init__(self, product, field_name=None, *args, **kwargs):
-        self.product = product
+        self.object = product
         super(ExtraParamsForm, self).__init__(*args, **kwargs)
         for lang in self.LANGUAGES:
             self.fields['initial_{0}' . format(lang)] = \
                 forms.CharField(
-                    label=_('Initial field value for lang') + ':' + lang,
+                    label=_('Initial field value for lang') \
+                        + '&laquo;<span style="color: red;">{0}</span>&raquo;' \
+                        . format(lang),
                     required=False, 
                     widget=forms.Textarea(attrs={'rows': '7', 'cols': '50'}),
                 )
-        _data = self.product.get_extra_params()
+        _data = dict((item.get('name'), item) for item in \
+            self.object.get_extra_params())
         if _data and field_name and field_name in _data:
             _values = _data[field_name]
             for f_name, f_value in _values.items():
                 if f_name == 'initial' and isinstance(f_value, (tuple, list)):
                     for s_lang, s_value in f_value:
                         if s_lang in self.LANGUAGES:
+                            logger.debug(s_value)
+                            s_value = s_value.replace('\\n', '\n')
                             self.initial['initial_{0}' . format(s_lang)] = \
                                 s_value
                 else:

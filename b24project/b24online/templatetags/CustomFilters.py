@@ -400,8 +400,10 @@ def get_by_content_type(item):
 
 @register.filter
 def replace_nl(value):
-    return value.replace("\\n", "<br>\n")
-    return value
+    logger.debug('Step 1: %s', value)
+    result = value.replace("\\n", "<br>\n")
+    logger.debug('Step 2: %s', result)
+    return result
 
 
 @register.filter
