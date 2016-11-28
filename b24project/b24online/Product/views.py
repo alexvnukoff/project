@@ -1224,10 +1224,39 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'item_id'
 
     def get_context_data(self, **kwargs):
-        context = super(ExtraParamsCreate, self).get_context_data(**kwargs)
-        form = ExtraParamsForm(self.object)
+        context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
+        form = kwargs.get(
+            'form', 
+            ExtraParamsForm(self.object)
+        )
         context.update({'form': form})
         return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(self.object)
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list', 
+            kwargs={'item_id': self.object.pk}
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object, 
+            data=self.request.POST
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
 
 
 class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):

@@ -51,9 +51,12 @@
           <td width="30%">
             {% if item.initial %}
               {% for lang, value in item.initial %}
-                <span style="color: red; font-weight: bold;">{{ lang }}</span>:&nbsp;
-                <br/>
-                {{ value|replace_nl }}
+                {% if value %}
+                    <span style="color: red; font-weight: bold;">{{ lang }}</span>:&nbsp;
+                    <br/>
+                    {{ value|replace_nl }}
+                    <br/>
+                 {% endif %}
               {% endfor %}
             {% else %}
               &nbsp;

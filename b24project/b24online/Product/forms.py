@@ -504,7 +504,10 @@ class ExtraParamsForm(forms.Form):
         data = {}
         for f_name, f_value in self.cleaned_data.items():
             if f_name.startswith('initial_'):
-                pass    
+                data.setdefault('initial', [])
+                f_lang = f_name[len('initial_'):]
+                f_value = f_value.replace('\n', '\\n')
+                data['initial'].append((f_lang, f_value))
             else:
                 data[f_name] = f_value
         if data:
