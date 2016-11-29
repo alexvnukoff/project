@@ -1278,7 +1278,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                              sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     mobile_number = models.CharField(max_length=255, blank=True, null=True)
     site = models.CharField(max_length=255, blank=True, null=True)
     profession = models.CharField(max_length=255, blank=True, null=True)
@@ -1295,10 +1297,16 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     contacts = models.CharField(max_length=1000, blank=True, null=True)
     metadata = JSONField(default=dict())
 
-    def upload_images(self):
+    def upload_images(self, name):
         from core import tasks
+
+        if name == 'avatar':
+            f = self.avatar.path
+        else:
+            f = self.image.path
+
         params = {
-            'file': self.avatar.path,
+            'file': f,
             'sizes': {
                 'big': {'box': (150, 150), 'fit': False},
                 'small': {'box': (100, 100), 'fit': False},

@@ -98,11 +98,13 @@ opacity:0.8;
 
     <div style="border-top:1px solid #dedede;text-align:center;">
 
+          <div id="hava02">
           {% if profile.avatar %}
-          <img src="{{ profile.avatar.small }}" style="width:25px;margin-top:-20px;border:1px solid #dedede">
+          <img src="{{ profile.avatar.small }}" style="width:25px;margin-top:-17px;border:1px solid #dedede">
           {% else %}
           <img src="{% static 'b24online/img/avatar_blank.png' %}" style="width:25px;margin-top:-17px;border:1px solid #dedede">
           {% endif %}
+          </div>
 
           <h1 style="margin:5px 0 0 0;"><span id="id_last_name_mobile"></span><span id="id_middle_name_mobile"></span><span id="id_first_name_mobile"></span></h1>
           <h3 style="margin:0;color:#828282;font-weight:300;" id="id_profession_mobile">{{ profile.profession }}</h3>
@@ -110,7 +112,13 @@ opacity:0.8;
           {% if profile.facebook %}<span style="font-size:90%" class="ophover icon-facebook-official"></span>{% endif %}
           {% if profile.linkedin %}<span style="font-size:90%" class="ophover icon-linkedin-squared"></span>{% endif %}
 
-      <div style="margin:8px 0 8px 0;padding:5px;display:block;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
+      <div style="margin:4px 0 6px 0;padding:5px;display:block;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
+
+          <div id="hava03">
+          {% if profile.image %}
+          <img src="{{ profile.image.small }}" style="width:20px;margin:2px 0;border:1px solid #dedede">
+          {% endif %}
+          </div>
 
             <h3 style="text-align:center;margin:0;padding:0;" id="id_co_mobile">{{ profile.co }}</h3>
             <p style="margin:0;color:#828282;" id="id_co_slogan_mobile">{{ profile.co_slogan }}</p>
