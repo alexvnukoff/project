@@ -432,8 +432,6 @@ class ProducerForm(forms.ModelForm):
 class ExtraParamsForm(forms.Form):
     """The form for B2C Product's additional paramenter."""
 
-    LANGUAGES = ('en', 'ru', 'am', 'bg', 'uk', 'he', 'ar', 'zh', 'es')
-    
     name = forms.RegexField(
         label=_('Field name'),
         regex='^\w+$',
@@ -475,7 +473,7 @@ class ExtraParamsForm(forms.Form):
         self.field_name = field_name if self.object.extra_params \
             and field_name in self._data else None
 
-        for lang in self.LANGUAGES:
+        for lang in [l for l, _ in settings.LANGUAGES]:
             self.fields['initial_{0}' . format(lang)] = \
                 forms.CharField(
                     label=_('Initial field value for lang') \
@@ -489,8 +487,7 @@ class ExtraParamsForm(forms.Form):
             for f_name, f_value in _values.items():
                 if f_name == 'initial' and isinstance(f_value, (tuple, list)):
                     for s_lang, s_value in f_value:
-                        if s_lang in self.LANGUAGES:
-                            logger.debug(s_value)
+                        if s_lang in [l for l, _ in settings.LANGUAGES]:
                             s_value = s_value.replace('\\n', '\n')
                             self.initial['initial_{0}' . format(s_lang)] = \
                                 s_value
