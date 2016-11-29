@@ -5,7 +5,7 @@ import logging
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext as _
+from django.utils.translation import get_language, ugettext as _
 
 from b24online.models import Profile
 from usersites.models import UserSiteTemplate
@@ -86,9 +86,23 @@ class ExtraParamsForm(forms.Form):
                 if post_text:
                     self.post_texts[name] = post_text
                 self.fields[name] = field
+
                 if initial_value:
-                    initial_value = initial_value.replace('\\n', "\n")
-                    self.initial[name] = str(initial_value)
+                    if isinstance(initial_value, str):
+                        initial_value = initial_value.replace('\\n', "\n")
+                        self.initial[name] = str(initial_value)
+                    elif isinstance(initial_value, (list, tuple)):
+                        _data = dict(
+                            (f_lang, f_value) for (f_lang, f_value) in \
+                                initial_value
+                        )
+                        current_language = get_language()
+                        current_language = current_language[:2] \
+                            if current_language else 'en'
+                        if current_language in _data:
+                            _value = str(_data[current_language])
+                            self.initial[name] = _value.replace('\\n', '\n')
+
                 self.valuable_fields.append(name)
                 if fieldtype == 'image':
                     self.image_fields.append(name)

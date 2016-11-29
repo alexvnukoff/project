@@ -48,7 +48,7 @@
    </span>
     {% with n_start_date=form.next_week.start_date n_end_date=form.next_week.end_date %}
         {% if n_start_date %}
-        <span style="display: block; flow: right;">
+        <span style="display: block;">
         <a href="{{ request.path }}?start_date={{ n_start_date|date:'d/m/Y'|urlencode }}&end_date={{ n_end_date|date:'d/m/Y'|urlencode}}">{% trans 'Next week' %}&nbsp;&raquo;</a>&nbsp;&nbsp;&nbsp;
         </span>
         {% endif %}

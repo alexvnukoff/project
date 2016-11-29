@@ -1577,8 +1577,8 @@ class Message(models.Model):
 
     def __str__(self):
         return 'From "%s" to chat "%s" at %s' % (
-            self.sender, 
-            self.chat.subject, 
+            self.sender,
+            self.chat.subject,
             self.created_at.strftime('%d/%m/%Y %H:%I:%S')
         )
 
@@ -2104,8 +2104,8 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     DRAFT, READY, PAID, ORDERED, REJECTED, PAID_BY_PAYPAL = \
         'draft', 'ready', 'paid', 'ordered', 'rejected', 'paypal'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
-                (PAID_BY_PAYPAL, _('Paid by PayPal')), 
-                (PAID, _('Paid')), 
+                (PAID_BY_PAYPAL, _('Paid by PayPal')),
+                (PAID, _('Paid')),
                 (ORDERED, _('Ordered by Email')),
                 (REJECTED, _('Rejected')))
 
@@ -2127,7 +2127,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
                                      null=True, blank=True, db_index=True)
     models.ForeignKey(PayPalIPN, related_name='order_deals',
-                                      verbose_name=_('PayPal Transaction'), 
+                                      verbose_name=_('PayPal Transaction'),
                                       null=True, blank=True,
                                       editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,

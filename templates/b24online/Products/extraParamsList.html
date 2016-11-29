@@ -1,0 +1,82 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}
+  {{ item }}
+{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <h1>{% trans 'Additional parameters' %} {% trans 'for' %} {{ object }}</h1>
+    <hr class="hr-divider-one">
+
+    <div id="deals">
+      <div class="deal-item" style="display: block">
+      <p style="padding: 10px; float: right;">
+        <a href="{% url 'products:extra_params_create' item_id=object.pk %}">{% trans 'Add new' %}</a>
+      </p>        
+      {% autoescape off %}
+      <table width="100%" cellspacing="2" cellpadding="2" border="0" class="table-data">
+        <tr>
+          <th>{% trans 'Field name' %}</th>
+          <th>{% trans 'Field label' %}</th>
+          <th>{% trans 'Field type' %}</th>
+          <th>{% trans 'Is field required' %}?</th>
+          <th>{% trans 'Initial value' %}</th>
+          <th>{% trans 'Text before the field' %}</th>
+          <th>{% trans 'Text after the field' %}</th>
+          <th>&nbsp;</th>
+        </tr>
+        {% for item in object.get_extra_params %}
+        <tr>
+          <td align="center"><a 
+            href="{% url 'products:extra_params_update' item_id=object.pk field_name=item.name %}">{{ item.name }}</a></td>
+          <td>{{ item.label }}</td>
+          <td align="center">{{ item.fieldtype }}</td>
+          <td align="center">{% if item.required %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+          <td width="30%">
+            {% if item.initial %}
+              {% for lang, value in item.initial %}
+                {% if value %}
+                    <span style="color: red; font-weight: bold;">{{ lang }}</span>:&nbsp;
+                    <br/>
+                    {{ value|replace_nl }}
+                    <br/>
+                 {% endif %}
+              {% endfor %}
+            {% else %}
+              &nbsp;
+            {% endif %}
+          </td>
+          <td>{{ item.pre_text }}</td>
+          <td>{{ item.post_text }}</td>
+          <td><a href="{% url 'products:extra_params_delete' item_id=object.pk field_name=item.name %}">{% trans "Delete" %}</a></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" align="center">
+          <p>{% trans 'There are no additional parameters' %}</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>  
+      {% endautoescape %}
+      </div>
+    </div>
+</div>
+{% endblock %}

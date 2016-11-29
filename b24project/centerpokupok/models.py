@@ -169,10 +169,32 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         """
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id,
-                                   'item_id': self.id}),
-                   _('Questionnaire'))
+            yield (reverse(
+                'questionnaires:list',
+                kwargs={'content_type_id': model_type.id, 'item_id': self.id}),
+                _('Questionnaire')
+            )
+            yield (reverse(
+                'products:extra_params_list',
+                kwargs={'item_id': self.id}),
+                _('Additional_parameters')
+            )
+
+    def get_extra_params(self):
+        """Return the additional parameters."""
+        result = []
+        for field_item in self.extra_params:
+            row = {}
+            for field_name, field_value in field_item.items():
+                if field_name == 'initial':
+                    if isinstance(field_value, str):
+                        row[field_name] = [('en', field_value)]
+                    elif isinstance(field_value, (tuple, list)):
+                        row[field_name] = field_value
+                else:
+                    row[field_name] = field_value
+            result.append(row)
+        return result
 
 
 class B2CProductComment(MPTTModel):
