@@ -32,6 +32,7 @@ from usersites.models import UserSite
 
 logger = logging.getLogger(__name__)
 
+
 class B2BProductList(ItemsList):
     # Pagination url
     url_paginator = "products:paginator"
@@ -1224,9 +1225,9 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'item_id'
 
     def get_context_data(self, **kwargs):
-        context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
+        context = super(ExtraParamsCreate, self).get_context_data(**kwargs)
         form = kwargs.get(
-            'form', 
+            'form',
             ExtraParamsForm(self.object)
         )
         context.update({'form': form})
@@ -1241,14 +1242,14 @@ class ExtraParamsCreate(LoginRequiredMixin, DetailView):
 
     def get_success_url(self):
         return reverse(
-            'products:extra_params_list', 
+            'products:extra_params_list',
             kwargs={'item_id': self.object.pk}
         )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = ExtraParamsForm(
-            self.object, 
+            self.object,
             data=self.request.POST
         )
         if form.is_valid():
@@ -1269,9 +1270,9 @@ class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
     def get_context_data(self, **kwargs):
         context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
         form = kwargs.get(
-            'form', 
+            'form',
             ExtraParamsForm(
-                self.object, 
+                self.object,
                 field_name=self.kwargs.get('field_name'),
             )
         )
@@ -1281,7 +1282,7 @@ class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = ExtraParamsForm(
-            self.object, 
+            self.object,
             field_name=self.kwargs.get('field_name'),
         )
         return self.render_to_response(
@@ -1290,14 +1291,14 @@ class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
 
     def get_success_url(self):
         return reverse(
-            'products:extra_params_list', 
+            'products:extra_params_list',
             kwargs={'item_id': self.object.pk}
         )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = ExtraParamsForm(
-            self.object, 
+            self.object,
             field_name=self.kwargs.get('field_name'),
             data=self.request.POST
         )
@@ -1307,7 +1308,7 @@ class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
         return self.render_to_response(
             self.get_context_data(form=form, *args, **kwargs)
         )
-            
+
 
 class ExtraParamsDelete(LoginRequiredMixin, DetailView):
     """The view to delete B2C product's additional parameter."""
@@ -1316,4 +1317,25 @@ class ExtraParamsDelete(LoginRequiredMixin, DetailView):
     template_name = 'b24online/Products/extraParamsList.html'
     current_section = _("Products B2C")
     pk_url_kwarg = 'item_id'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        field_name = self.kwargs.get('field_name')
+        if self.object.extra_params and field_name:
+            result = []
+            for item in self.object.extra_params:
+                if item.get('name') == field_name:
+                    continue
+                result.append(item)
+            self.object.extra_params = result
+            self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list',
+            kwargs={'item_id': self.object.pk}
+        )
+
+
 

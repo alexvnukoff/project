@@ -5,7 +5,7 @@ import logging
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext as _
+from django.utils.translation import get_language, ugettext as _
 
 from b24online.models import Profile
 from usersites.models import UserSiteTemplate
@@ -96,8 +96,11 @@ class ExtraParamsForm(forms.Form):
                             (f_lang, f_value) for (f_lang, f_value) in \
                                 initial_value
                         )
-                        if 'en' in _data:
-                            _value = str(_data['en'])
+                        current_language = get_language()
+                        current_language = current_language[:2] \
+                            if current_language else 'en'
+                        if current_language in _data:
+                            _value = str(_data[current_language])
                             self.initial[name] = _value.replace('\\n', '\n')
 
                 self.valuable_fields.append(name)

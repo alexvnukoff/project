@@ -177,7 +177,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
             yield (reverse(
                 'products:extra_params_list',
                 kwargs={'item_id': self.id}),
-                _('Additional parameters')
+                _('Additional_parameters')
             )
 
     def get_extra_params(self):

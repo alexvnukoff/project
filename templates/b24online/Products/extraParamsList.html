@@ -40,6 +40,7 @@
           <th>{% trans 'Initial value' %}</th>
           <th>{% trans 'Text before the field' %}</th>
           <th>{% trans 'Text after the field' %}</th>
+          <th>&nbsp;</th>
         </tr>
         {% for item in object.get_extra_params %}
         <tr>
@@ -64,6 +65,7 @@
           </td>
           <td>{{ item.pre_text }}</td>
           <td>{{ item.post_text }}</td>
+          <td><a href="{% url 'products:extra_params_delete' item_id=object.pk field_name=item.name %}">{% trans "Delete" %}</a></td>
         </tr>
         {% empty %}
         <tr>
