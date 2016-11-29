@@ -183,7 +183,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def get_extra_params(self):
         """Return the additional parameters."""
         result = []
-        for field_item in self.extra_params:
+        for field_item in self.extra_params or []:
             row = {}
             for field_name, field_value in field_item.items():
                 if field_name == 'initial':
