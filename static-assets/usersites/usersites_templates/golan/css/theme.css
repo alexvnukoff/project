@@ -63,11 +63,15 @@ footer a,
 .job_offer__btn:focus,
 .job_offer__btn:active,
 .item-price-table,
-.membership-banner__member-text,
 .coupon-timer,
 .cust-nav__btn a{
 	color: #fff !important;
 }
+
+.membership-banner__member-text{
+    color: #fff;
+}
+
 
 /*---------- Text Styling - Black text ----------*/
 .side-bar a,

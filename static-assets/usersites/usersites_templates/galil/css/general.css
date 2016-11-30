@@ -16,6 +16,13 @@ body {
 	flex: 1;
 }
 
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
 .wazeLink{
     color: #000;
     text-align: center;
