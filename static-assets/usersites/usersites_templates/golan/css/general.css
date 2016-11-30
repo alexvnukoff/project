@@ -45,6 +45,13 @@ body:before {/* thanks to Maleika (Kohoutec)*/
     margin-top:-32767px;/* thank you Erik J - negate effect of float*/
 }
 
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
 /* IMPORTANT
 
 You also need to include this conditional style in the <head> of your HTML file to feed this style to IE 6 and lower and 8 and higher.

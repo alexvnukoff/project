@@ -54,6 +54,13 @@ body {
 
 html, body {height: 100%;}
 
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
 #wrap-main {min-height: 100%;}
 
 #main {
