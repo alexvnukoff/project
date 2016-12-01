@@ -37,14 +37,16 @@ class ChamberList(ItemsList):
         settings.STATIC_URL + 'b24online/css/tpp.reset.css'
     ]
 
-    current_section = _("Tpp")
-
     # allowed filter list
     # filter_list = ['country']
 
     filter_list = {
         'countries': Country
     }
+
+    @property
+    def current_section(self):
+        return _("Organizations")
 
     model = Chamber
 

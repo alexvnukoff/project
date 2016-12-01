@@ -26,11 +26,14 @@ class ExhibitionList(ItemsList):
         'name': 'title'
     }
 
-    current_section = _("Exhibitions")
     addUrl = 'exhibitions:add'
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Exhibitions")
 
     model = Exhibition
 

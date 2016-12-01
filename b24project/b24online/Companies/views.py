@@ -33,7 +33,6 @@ class CompanyList(ItemsList):
     url_paginator = "companies:paginator"
     url_my_paginator = "companies:my_main_paginator"
 
-    current_section = _("Companies")
     addUrl = 'companies:add'
 
     # Lists of required scripts and styles for ajax request
@@ -45,6 +44,10 @@ class CompanyList(ItemsList):
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Companies")
 
     model = Company
 

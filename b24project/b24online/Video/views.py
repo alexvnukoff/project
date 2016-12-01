@@ -19,7 +19,6 @@ class VideoList(ItemsList):
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
 
-    current_section = _("Video")
     project_news = False
 
     sortFields = {
@@ -29,6 +28,10 @@ class VideoList(ItemsList):
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company']
+
+    @property
+    def current_section(self):
+        return _("Video")
 
     model = Video
 

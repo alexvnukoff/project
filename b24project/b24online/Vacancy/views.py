@@ -23,11 +23,14 @@ class RequirementList(ItemsList):
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
 
-    current_section = _("Job requirements")
     addUrl = 'vacancy:add'
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Job requirements")
 
     model = Requirement
 

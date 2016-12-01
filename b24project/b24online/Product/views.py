@@ -44,11 +44,14 @@ class B2BProductList(ItemsList):
 
     paginate_by = 12
 
-    current_section = _("Products B2B")
     addUrl = 'products:add'
 
     # Allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Products B2B")
 
     model = B2BProduct
 
@@ -136,11 +139,14 @@ class B2CProductList(ItemsList):
 
     paginate_by = 12
 
-    current_section = _("Products B2C")
     addUrl = 'products:addB2C'
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Products B2C")
 
     model = B2CProduct
 
@@ -243,8 +249,12 @@ class B2CPCouponsList(ItemsList):
     scripts = []
     styles = []
 
-    current_section = _("Products B2C")
     addUrl = 'products:addB2C'
+
+    @property
+    def current_section(self):
+        return _("Online Coupons")
+
     model = B2CProduct
 
     # allowed filter list
