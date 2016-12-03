@@ -106,7 +106,7 @@ def remove_whitespaces(sentence):
 @register.filter(name='cleanHtml')
 def cleanHtml(value, remove_tags=''):
     if value is not None and len(value) > 0:
-        cleaner = Cleaner(host_whitelist=settings.ALLOWED_IFRAME_HOSTS, remove_tags=remove_tags.split(','))
+        cleaner = Cleaner(safe_attrs_only=False, safe_attrs=frozenset(['style']), host_whitelist=settings.ALLOWED_IFRAME_HOSTS, remove_tags=remove_tags.split(','))
 
         return cleaner.clean_html(value)
     else:
