@@ -1,0 +1,3 @@
+[submodule "static-assets/b24online/front"]
+	path = static-assets/b24online/front
+	url = git@github.com:migirov/b24_front.git
