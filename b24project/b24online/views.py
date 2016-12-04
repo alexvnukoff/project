@@ -134,6 +134,7 @@ def my_companies(request):
         current_company = request.session.get('current_company', None)
         paginate_by = 10
 
+
         organizations = get_objects_for_user(request.user, ['b24online.manage_organization'],
                                              Organization.get_active_objects().all(), with_superuser=False)
 
