@@ -249,9 +249,9 @@ collapse the menu on 991px. */
     padding-bottom: 15px;
 }
 
-.social-header a{
-	margin: 0 5px;
-}
+/*.social-header a{*/
+	/*margin: 0 5px;*/
+/*}*/
 
 .social-header i{
 	/*padding: 8px 20px 8px 12px;*/
