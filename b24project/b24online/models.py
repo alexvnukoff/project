@@ -424,11 +424,6 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        index_together = [
-            # ("tree_id", "lft", "rght"),
-            # ("tree_id", "rght"),
-        ]
 
     def __str__(self):
         return "{0}".format(self.pk)
