@@ -100,7 +100,7 @@ LOCAL_APPS = (
 )
 
 EXTERNAL_APPS = (
-    'debug_toolbar',
+    #'debug_toolbar',
     'loginas',
     'registration',
     'polymorphic_tree',
