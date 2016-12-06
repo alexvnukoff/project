@@ -202,7 +202,7 @@ class UserSite(ActiveModelMixing, models.Model):
         if self.color_template:
             return {
                'name': self.color_template,
-               'path': "{0}usersite/{1}/{2}".format(
+               'path': "{0}usersites/{1}/{2}".format(
                    settings.STATIC_URL,
                    self.user_template.folder_name,
                    self.color_template.filename),
