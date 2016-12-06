@@ -70,7 +70,7 @@ class UserSiteSchemeColor(models.Model):
 
     template = models.ForeignKey(UserSiteTemplate, related_name='colors')
     name = models.CharField(max_length=255)
-    folder_name = models.CharField(max_length=255)
+    filename = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -202,7 +202,10 @@ class UserSite(ActiveModelMixing, models.Model):
         if self.color_template:
             return {
                'name': self.color_template,
-               'path': self.color_template.folder_name,
+               'path': "{0}{1}/{2}".format(
+                   settings.STATIC_URL,
+                   self.user_template.folder_name,
+                   self.color_template.filename),
                }
         return False
 
