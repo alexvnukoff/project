@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+
+
+
+      <div class="container">
+      {# Slider starts here. the slider will take the content from the sliders. #}
+      {# need to add in the system the option for a header and text for the slider. keep the header 4 words and the text 20 words. #}
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+          <!-- Indicators -->
+          <div class="carousel-text hidden-xs">
+              <ul class="nav nav-justified ">
+                  {# removing the slider with text, maybe later we will have a text input #}
+{#                  <li data-target="#myCarousel" data-slide-to="0" class="active">01<small>Woman intensive training</small></li>#}
+{#                  <li data-target="#myCarousel" data-slide-to="1">02<small>body building courses</small></li>#}
+{#                  <li data-target="#myCarousel" data-slide-to="2">03<small>The best members club</small></li>#}
+{#                  <li data-target="#myCarousel" data-slide-to="3">04<small>build your power</small></li>#}
+
+                  <li data-target="#myCarousel" data-slide-to="0" class="active">01</li>
+                  <li data-target="#myCarousel" data-slide-to="1">02</li>
+                  <li data-target="#myCarousel" data-slide-to="2">03</li>
+                  <li data-target="#myCarousel" data-slide-to="3">04</li>
+              </ul>
+          </div>
+
+          <div class="carousel-inner">
+            {% if site.user_site.slider_images|length == 0 %}
+                <div data-slide-no="0" class="item carousel-item active">
+                  <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" />
+                </div>
+                <div data-slide-no="1" class="item carousel-item active">
+                  <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" />
+                </div>
+                <div data-slide-no="2" class="item carousel-item active">
+                  <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" />
+                </div>
+
+            {% else %}
+                {% for i in site.user_site.slider_images %}
+                    {% if forloop.first %}
+                        <div data-slide-no="{{ forloop.counter }}" class="item carousel-item active">
+                            <img src="{{ i.image.original }}" height="625px" width="1140px">
+                        </div>
+                    {% else %}
+                        <div data-slide-no="{{ forloop.counter }}" class="item carousel-item">
+                            <img src="{{ i.image.original }}" height="625px" width="1140px">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+          </div>
+
+{# On the slider in this page there is no need in controls, there are numbers on the bottom of the slider#}
+{#          <!-- Controls -->#}
+{#          <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">#}
+{#          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>#}
+{#          <span class="sr-only">Previous</span>#}
+{#          </a>#}
+{#          <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">#}
+{#          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>#}
+{#          <span class="sr-only">Next</span>#}
+{#          </a>#}
+
+        </div><!-- /Slider -->
+      </div><!-- /.container -->
+
+{# secondary menu - custom gages #}
+      <div class="container">
+        <div class="cust-nav">
+           {% for page in site.user_site.organization.additional_pages.all %}
+                <button type="button" class="btn cust-nav__btn"><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></button>
+            {% endfor %}
+        </div>{# /secondary menu #}
+      </div>

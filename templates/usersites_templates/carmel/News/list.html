@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# New page content #}
+<div class="container">
+    {% include 'usersites_templates/carmel/Paginator.html' %}
+
+    {# Page header #}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{% trans 'News' %}</h1>
+        </div>
+    </div>
+
+    {# The news content #}
+    {% for article in news %}
+        <div class="row news">
+
+            <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs news__img">
+                {% if article.image %}
+                    <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}">
+                {% else %}
+                    <img src="{% static 'b24online/img/item.jpg' %}" />
+                {% endif %}
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 news__text">
+                <h2 class="page-header section-header">{{ article.title }}</h2>
+                <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+
+                <p>
+                    {% if article.short_description %}
+                        {{ article.short_description|linebreaksbr }}
+                        <br/>
+                        <br/>
+                    {% endif %}
+                </p>
+
+                <p>{{ news.content|cleanHtml|safe }}</p>
+
+                <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
+            </div>
+
+
+        </div>
+    {% endfor %}
+
+    {% include 'usersites_templates/carmel/Paginator.html' %}
+</div><!-- /.container -->
+
+
+

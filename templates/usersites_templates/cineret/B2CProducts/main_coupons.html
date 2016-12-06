@@ -22,7 +22,7 @@
             {# Looping the coupons. #}
             {% for product in coupons %}
 
-                <div class="col-sm-12 col-md-12 col-xs-12 product coupon">
+                <div class="col-sm-6 col-md-6 col-xs-12 product coupon">
 
                         <div class="col-sm-3 col-md-3 hidden-xs coupon-div">
 
@@ -40,7 +40,7 @@
 
                             <div class="product__caption">
 
-                             <h3 class="product__title "><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:50 }}</a></h3>
+                             <h3 class="product__title "><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
 
                             {# KRN here i want the product category to be #}
                             {% comment %}

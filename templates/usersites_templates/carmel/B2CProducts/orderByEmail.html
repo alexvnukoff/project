@@ -1,0 +1,28 @@
+{% extends 'usersites_templates/carmel/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<section class="content__info cart">
+    <div class="container">
+        <h2 class="page-header">{% trans 'Your Order' %}</h2>
+        <p>&nbsp;</p>{{ test }}
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                {% include "usersites/B2CProducts/include/basketItemsTable_golan.html" %}            
+            </div>
+        </div>
+        <div class="col-md-8 contact-fields contact-fields-email">
+            <form method="post" action="" class="clearfix">
+                {% csrf_token %}
+                {% include "usersites/B2CProducts/include/orderByEmailForm_golan.html" %}
+                <button type="submit" class="btn special_offer__btn">{% trans 'Send' %}</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
