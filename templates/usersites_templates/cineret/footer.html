@@ -6,28 +6,34 @@
 {% is_chamber_site as is_chamber %}
 
 <div class="container">
-    <div class="row membership-banner clearfix">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        {% site_banner "footer" "SITES FOOTER" %}
+    </div>
+</div>
 
-          <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__member hidden-sm hidden-xs">
+<div class="row membership-banner clearfix">
+    <div class="container">
+
+
+        <div class="col-lg-12 col-md-12 col-xs-12 membership-banner__member hidden-sm hidden-xs">
             {% if site.user_site.logo %}
-              <img src="{{ site.user_site.logo.big }}" alt="" />
+                <img src="{{ site.user_site.logo.big }}" alt="" />
             {% else %}
-              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
             {% endif %}
 
-              {% if not is_chamber and site.user_site.organization.parent %}
+            {% if not is_chamber and site.user_site.organization.parent %}
                 <div class="membership-banner__member-text">
-                  <h4>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h4>
-                  <p>{% blocktrans %}Copyright © 2011 - 2016 Expert Center, All Rights Reserved.{% endblocktrans %}</p>
+                    <h4>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h4>
                 </div>
-              {% endif %}
-          </div>
+            {% endif %}
+        </div>
 
-          <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__ad hidden-xs">
-              {% site_banner "footer" "SITES FOOTER" %}
-          </div>
-        </div><!-- /container -->
-    </div><!-- banner modoul -->
+
+
+    </div><!-- /container -->
+</div><!-- banner modoul -->
+
 <footer>
 
 
@@ -68,10 +74,9 @@
             <iframe id="wazeFrameMobile" src="" width="200" height="100"></iframe>
                     <a class="wazeLink" href="#"><img src="{% static 'usersites/images/logowaze.png' %}">{% trans 'Open with Waze' %}</a>
         </div>
-<!-- /row -->
 
         </div><!-- /container -->
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >
             All rights reserved © <a href="http://www.b24online.com/">b24online.com</a> 2011-2016
         </div>
     </div>

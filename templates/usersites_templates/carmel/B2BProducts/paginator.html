@@ -1,0 +1,32 @@
+{% extends 'usersites_templates/carmel/Paginator.html' %}
+{% load CustomFilters %}
+{% load i18n %}
+{% load content_tags %}
+{% block after_paginator %}
+    {% b2c_categories as categories %}
+    <div class="view vertical">
+        <button class="display-list"></button>
+        <button class="display-square active"></button>
+    </div>
+
+    <div class="select category">
+        <select class="category-selector">
+            {% if 'b2c-products' in request.path %}
+                <option value="{% url 'b2c_products:main' %}">{% trans 'Select Category' %}</option>
+                    {% for pk, category in categories.items %}
+                        <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">
+                        {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                        </option>
+                    {% endfor %}
+            {% else %}
+              <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>
+                  {% for pk, category in categories.items %}
+                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                      {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                      </option>
+                  {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    {{ block.super }}
+{% endblock %}

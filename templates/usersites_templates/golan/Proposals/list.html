@@ -21,7 +21,7 @@
             {# Register the 'view' event for b2b product #}
             {{ proposal|register_event:"view"|process_event:request }}
             <div class="col-md-12">
-                <h2 class="page-header">{{ proposal.title }}</h2>
+                <a href="{{ proposal.get_absolute_url }}"><h2 class="page-header">{{ proposal.title }}</h2></a>
 
                 <p class="date">{{ proposal.created_at|date:'d M Y' }}</p>
                 <p>{{ proposal.description|cleanHtml|safe }}</p>

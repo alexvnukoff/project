@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load content_tags %}
+
+{% if site.user_site.organization.gallery_images %}
+
+  <div class="container gal-container">
+ 	 <div class="row">
+    	<h2 class="page-header"><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></h2>
+     </div>
+
+    <div class="gal-items">
+
+        {% for gallery_obj in site.user_site.organization.gallery_images|slice:":4" %}
+
+            <div class="col-md-3 col-sm-6 co-xs-12 gal-item">
+            <figure>
+                <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
+                    <img src="{{ gallery_obj.image.original }}">
+                </a>
+            </figure>
+
+{#                <div class="box">#}
+{#                    <a href="#" data-toggle="modal" data-target="#{{ forloop.counter }}">#}
+{#                      <img src="{{ gallery_obj.image.original }}">#}
+{#                    </a>#}
+{#                    <div class="modal fade" id="{{ forloop.counter }}" tabindex="-1" role="dialog">#}
+{#                      <div class="modal-dialog" role="document">#}
+{#                        <div class="modal-content">#}
+{#                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>#}
+{#                          <div class="modal-body">#}
+{#                            <img src="{{ gallery_obj.image.original }}">#}
+{#                          </div>#}
+    {#                            <div class="col-md-12 description">#}
+    {#                              <h4>This is the first one on my Gallery</h4>#}
+    {#                            </div>#}
+{#                        </div>#}
+{#                      </div>#}
+{#                    </div>#}
+{#                  </div>#}
+
+            </div>
+        {% endfor %}
+
+	</div>
+  </div>
+
+{% endif %}
