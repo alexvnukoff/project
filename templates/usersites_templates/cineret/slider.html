@@ -39,13 +39,13 @@
 
 		    {% if i.link %}
 			 <a href="{{ i.link }}" title="{{ i.description }}">
-			    <img src="{{ i.image.original }}" alt="{{ i.description }}" title="{{ i.description }}">
+			    <img src="{{ i.image.original }}"  >
 			    {% if i.description %}
 			       <div class="slider-desc">{{ i.description }}</div>
 			    {% endif %}
 			 </a>
 		    {% else %}
-			    <img src="{{ i.image.original }}" alt="{{ i.description }}" title="{{ i.description }}">
+			    <img src="{{ i.image.original }}" >
 			    {% if i.description %}
 			       <div class="slider-desc">{{ i.description }}</div>
 			    {% endif %}

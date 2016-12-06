@@ -131,7 +131,6 @@ h2.page-header.inner-page{
 }
 
 .header-cart{
-	color: #fff;
 	padding: 10px;
 }
 
@@ -414,6 +413,8 @@ collapse the menu on 991px. */
     border-radius: 3px;
     font-size: 14px;
     line-height: 22px;
+	margin-right: 2px;
+    margin-left: 2px;
 }
 
 .top-nav .language-navi {
@@ -631,6 +632,9 @@ collapse the menu on 991px. */
 	/*top: 190px;*/
 }
 
+.product__title a{
+	text-decoration: none;
+}
 .product__cat{
 	font-size: 12px;
 	text-transform: uppercase;
@@ -893,7 +897,6 @@ collapse the menu on 991px. */
 }
 /*---------- Footer Styling ----------*/
 footer{
-	margin-top: 20px;
 	margin-bottom: 0;
 }
 
@@ -944,8 +947,8 @@ footer .btn-default{
 
 .membership-banner__member img{
 	width: auto;
-	max-height: 80px;
-	margin: 10px;
+	max-height: 40px;
+	margin: 5px;
 	display: inline;
 	position: relative;
 }
@@ -959,8 +962,9 @@ footer .btn-default{
 }
 
 .membership-banner__member h4{
-	padding-top: 10px;
+	padding: 10px;
 	font-size: 1em;
+	margin: 5px;
 }
 
 .membership-banner__member p{
@@ -1720,14 +1724,6 @@ footer .btn-default{
 	width: 100%!important;
 }
 
-#leads-in-product .col-md-3{
-	float: left;
-}
-
-#leads-in-product .col-md-9{
-	float: right;
-}
-
 /* Pages leads styling */
 #leads-in-page{
     padding: 10px;
@@ -1786,6 +1782,19 @@ footer .btn-default{
 .video-wrap .date{
 	font-size: 9pt;
 	color: #bbb;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.video-wrap .news__content__cover {
+		padding: 0;
+		width: 100%;
+	}
+
+	.video-wrap .news__content__cover img{
+		margin: 0;
+		width: 100%;
+	}
 }
 
 

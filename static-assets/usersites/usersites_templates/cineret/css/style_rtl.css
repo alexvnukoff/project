@@ -48,6 +48,16 @@ body{
     right: 0;
 }
 
+.top-nav .social-header {
+    float: left;
+}
+
+.top-search-block {
+    float: left;
+}
+
+
+
 .social-header .button{
 	float: right;
 }
@@ -174,7 +184,7 @@ body{
 }
 
 .membership-banner__member-text {
-    float: right;
+    float: none;
 }
 
 .membership-banner__member img {

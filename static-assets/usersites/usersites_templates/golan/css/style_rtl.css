@@ -500,3 +500,11 @@ th, td{
 #main-page-coupons .main-coupon-wrap .info-coupon .timer-heading {
 	float: right;
 }
+
+#leads-in-product .col-md-3{
+	float: left;
+}
+
+#leads-in-product .col-md-9{
+	float: right;
+}
