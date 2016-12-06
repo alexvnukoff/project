@@ -27,12 +27,12 @@
 
 
     <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/' %}{{ site.user_site.color.path }}">
+    <link rel="stylesheet" href="{{ site.user_site.color.path }}">
 
     {% if LANGUAGE_BIDI %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
     {% else %}
-        <link rel="stylesheet" href="{{ site.user_site.color.path }}" />
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
     {% endif %}
     <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
     <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
