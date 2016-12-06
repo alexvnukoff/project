@@ -32,7 +32,7 @@
     {% if LANGUAGE_BIDI %}
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
     {% else %}
-        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
+        <link rel="stylesheet" href="{{ site.user_site.color.path }}" />
     {% endif %}
     <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
     <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
