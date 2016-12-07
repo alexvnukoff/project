@@ -1,7 +1,7 @@
 /*---------- General Styling ----------*/
 body {
-	background-color: #fff;
-    color: #000;
+	background-color: #000;
+    color: #fff;
     /* main color: color: #83ba3a */
 }
 
@@ -26,14 +26,8 @@ h2.page-header,
 .product__price a,
 .cust-nav__btn a,
 .product__title a{
-	color: #002061 !important;
+	color: #a40000 !important;
 }
-
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title,
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
-	color: #000;
-}
-
 
 /* navigation styling */
 
@@ -42,9 +36,9 @@ h2.page-header,
 .navbar-nav>li>a:focus,
 .navbar-nav>li>a:active{
 	color: #fff;
-	text-shadow:0px 0px 3px #67d0f9;
+	text-shadow:0px 0px 3px black;
 	/*font-weight: bold;*/
-	background-color: #002061;
+	background-color: #000;
 }
 
 .tel .fa,
@@ -55,21 +49,13 @@ h2.page-header,
 .header-cart{
 	color: #fff;
 }
-
-.header-cart:hover{
-    color: #67d0f9;
-}
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
-.about-main,
+
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active,
 .product .thumbnail,
-.product__desc,
-.go-to-full,
-footer a,
-#timer-detail-page,
-.smalltext,
+
 .special_offer__btn:hover,
 .special_offer__btn:focus,
 .special_offer__btn:active,
@@ -85,13 +71,40 @@ footer a,
 	color: #000 !important;
 }
 
+footer a,
+.product__desc,
+.news__title a,
+.item-page__coupon div,
+.item-price-table p,
+.go-to-full,
+#timer-detail-page,
+.smalltext{
+    color: #fff;
+}
+
+.about-main{
+    color: #fff;
+}
+
+.coupon-title a{
+    color: #fff;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__price{
+	color: #fff;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__deleted-price{
+	color: #888;
+}
+
 .cust-nav ul li a,
 .navbar-inverse .navbar-nav>li>a{
 	color: #fff;
 }
 
 .cust-nav__btn{
-	background-color: #fff;
+	background-color: #000;
 }
 
 .navbar-inverse .navbar-nav>.active>a{
@@ -99,7 +112,7 @@ footer a,
 	/*border-radius: 15px;*/
 	color: #fff;
 	font-weight: bold;
-	background-color: #002061;
+	background-color: #a40000;
 }
 
 .navbar-inverse .navbar-nav>li>a:hover,
@@ -107,13 +120,13 @@ footer a,
 .navbar-inverse .navbar-nav>li>a:active {
 	color: #fff;
 	/*font-weight:bold;*/
-	background-color: #002061;
+	background-color: #a40000;
 }
 
 .navbar-inverse .navbar-nav>.active a:hover,
 .navbar-inverse .navbar-nav>.active a:focus,
 .navbar-inverse .navbar-nav>.active a:active{
-	background-color: #002061;
+	background-color: #a40000;
 	color: #fff!important;
 	text-shadow: none;
 }
@@ -133,14 +146,14 @@ footer a,
 .navbar-inverse,
 #timer-detail-page > div,
 #timer-detail-page div > span{
-	background-color: #002061;
+	background-color: #000;
 }
 
 /*---------- More custome Styling ----------*/
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active{
-	background-color: #002061 !important;
+	background-color: #a40000 !important;
 }
 
 /*---------- carousel Styling ----------*/
@@ -152,7 +165,7 @@ footer a,
 
 /*---------- Product Styling ----------*/
 .product .thumbnail{
-	background-color: #f2f2f2;
+	background-color: #262626;
 }
 
 .product__title{
@@ -160,7 +173,7 @@ footer a,
 }
 
 .product__discount{
-	color: #005d89;
+	color: #5a0000;
 }
 
 .product__btn .btn,
@@ -169,14 +182,14 @@ a.product__btn,
 .special_offer__btn, .job_offer__btn,
 .news__btn,
 .special_offer__btn, .job_offer__btn{
-	border-color: #002061;
+	border-color: #a40000;
 	color: #fff;
-	background-color: #002061
+	background-color: #a40000
 }
 
 a.coupon__btn{
-	background-color: #005d89;
-	border-color: #002061;
+	background-color: #5a0000;
+	border-color: #a40000;
 }
 
 .coupon__btn:hover,
@@ -194,8 +207,8 @@ a.coupon__btn{
 .job_offer__btn:active,
 .news__btn:focus,
 .news__btn:active{
-	background-color: #005d89;
-	border-color: #002061;
+	background-color: #5a0000;
+	border-color: #a40000;
 	color: #fff!important;
 }
 /*---------- Jobs Styling ----------*/
@@ -210,11 +223,11 @@ a.coupon__btn{
 
 /*---------- Footer Styling ----------*/
 footer{
-	background-color: #f2f2f2;
+	background-color: #000;
 }
 
 .membership-banner{
-	background-color: #002061;
+	background-color: #a40000;
 	color: #fff;
 }
 
@@ -224,7 +237,7 @@ footer{
 
 footer a:hover,
 footer a:active{
-	color: #002061!important;
+	color: #a40000!important;
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{
@@ -253,11 +266,11 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #002061;
+    border: 1px solid #a40000;
 }
 
 .pagination>li>a, .pagination>li>span{
-	color: #002061;
+	color: #a40000;
 }
 
 .pagination>.active>a,
@@ -266,7 +279,7 @@ footer a:active{
 .pagination>.active>span,
 .pagination>.active>span:focus,
 .pagination>.active>span:hover{
-	background-color: #002061;
+	background-color: #a40000;
 	color: #fff;
 	border: 1px solid #ddd;
 }
@@ -283,7 +296,7 @@ footer a:active{
 /*--------New coupon design -------------*/
 
 .ver-coupon__title{
-	color: #002061;
+	color: #a40000;
 }
 
 .ver-coupon-discount .ver-coupon__discount{
@@ -295,13 +308,13 @@ footer a:active{
 }
 
 .ver-coupon-discount{
-	background-color: #002061;
+	background-color: #a40000;
 }
 
 .ver-coupon-price .ver-coupon__btn{
-	border-color: #002061;
+	border-color: #a40000;
     color: #fff;
-    background-color: #002061;
+    background-color: #a40000;
 }
 
 .ver-coupon-price .ver-coupon__deleted-price{
@@ -310,15 +323,15 @@ footer a:active{
 }
 
 #main-page-coupons .main-coupon-wrap {
-	border: 1px solid #002061;
+	border: 1px solid #a40000;
 }
 
 #main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
-	background-color: #002061;
+	background-color: #a40000;
 }
 
 #main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
-	background-color: #002061;
+	background-color: #a40000;
 	color: #fff!important;
 }
 
@@ -329,13 +342,13 @@ footer a:active{
 
 #leads-in-product .main-contact-btn,
 #leads-in-page .main-contact-btn{
-	background-color: #005d89;
+	background-color: #a00c0b;
 	color: #fff;
 }
 
 #leads-in-product .main-contact-btn:hover,
 #leads-in-page .main-contact-btn:hover{
-	background-color: #005d89;
+	background-color: #5a0000;
 	color: #fff;
 }
 

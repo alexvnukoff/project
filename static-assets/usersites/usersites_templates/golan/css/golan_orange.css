@@ -33,6 +33,11 @@ h2.page-header,
 	color: #aa3900 !important;
 }
 
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title,
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
+	color: #000;
+}
+
 /* navigation styling */
 
 .navbar-nav>li.active a,
