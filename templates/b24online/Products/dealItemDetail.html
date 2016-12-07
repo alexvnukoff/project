@@ -60,7 +60,7 @@
         <hr class="hr-divider-one">
         {% for param_descr, param_value in extra_params %}
           {% if param_descr.pre_text %}
-          <p class="data-info pre-text">{{ param_descr.pre_text }}</p>
+            <p class="data-info pre-text">{{ param_descr.pre_text }}</p>
           {% endif %}
           <p class="data-info">
             <label>{{ param_descr.label|default:param_descr.name }}:</label>
