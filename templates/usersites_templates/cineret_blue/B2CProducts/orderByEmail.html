@@ -5,13 +5,13 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{% trans "Order by Email" %}{% endblock %}
 
 {% block content %}
 <section class="content__info cart">
     <div class="container">
         <h2 class="page-header in-page">{% trans 'Your Order' %}</h2>
-        <p>&nbsp;</p>{{ test }}
+        <p>&nbsp;</p>
         <div class="panel panel-default">
             <div class="panel-body">
                 {% include "usersites/B2CProducts/include/basketItemsTable_cineret.html" %}            

@@ -65,7 +65,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     galleries = GenericRelation(Gallery)
     show_on_main = models.BooleanField(default=False, db_index=True)
     is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False, db_index=True)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
     discount_percent = models.FloatField(null=True, blank=True)
@@ -76,7 +76,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -169,10 +169,32 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         """
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
-            yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id,
-                                   'item_id': self.id}),
-                   _('Questionnaire'))
+            yield (reverse(
+                'questionnaires:list',
+                kwargs={'content_type_id': model_type.id, 'item_id': self.id}),
+                _('Questionnaire')
+            )
+            yield (reverse(
+                'products:extra_params_list',
+                kwargs={'item_id': self.id}),
+                _('Additional_parameters')
+            )
+
+    def get_extra_params(self):
+        """Return the additional parameters."""
+        result = []
+        for field_item in self.extra_params or []:
+            row = {}
+            for field_name, field_value in field_item.items():
+                if field_name == 'initial':
+                    if isinstance(field_value, str):
+                        row[field_name] = [('en', field_value)]
+                    elif isinstance(field_value, (tuple, list)):
+                        row[field_name] = field_value
+                else:
+                    row[field_name] = field_value
+            result.append(row)
+        return result
 
 
 class B2CProductComment(MPTTModel):

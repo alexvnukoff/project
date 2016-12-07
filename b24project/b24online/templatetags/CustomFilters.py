@@ -106,7 +106,7 @@ def remove_whitespaces(sentence):
 @register.filter(name='cleanHtml')
 def cleanHtml(value, remove_tags=''):
     if value is not None and len(value) > 0:
-        cleaner = Cleaner(host_whitelist=settings.ALLOWED_IFRAME_HOSTS, remove_tags=remove_tags.split(','))
+        cleaner = Cleaner(safe_attrs_only=False, safe_attrs=frozenset(['style']), host_whitelist=settings.ALLOWED_IFRAME_HOSTS, remove_tags=remove_tags.split(','))
 
         return cleaner.clean_html(value)
     else:
@@ -403,6 +403,14 @@ def get_by_content_type(item):
 
 
 @register.filter
+def replace_nl(value):
+    logger.debug('Step 1: %s', value)
+    result = value.replace("\\n", "<br>\n")
+    logger.debug('Step 2: %s', result)
+    return result
+
+
+@register.filter
 def thumbnail(img, param_str):
     """
     Make and return the path to image thumbnail.
@@ -598,4 +606,12 @@ def original(img):
     return urljoin(settings.MEDIA_URL, 'original/' + str(img)) \
         if not getattr(settings, 'STORE_FILES_LOCAL', False) else \
             urljoin(settings.MEDIA_URL, str(img))
+
+
+@register.simple_tag()
+def get_card_url(request):
+    lang = request.LANGUAGE_CODE
+    protocol = 'http' if not request.is_secure() else 'https'
+    site = get_current_site()
+    return "{0}://{1}.{2}/".format(protocol, lang, site.domain)
 

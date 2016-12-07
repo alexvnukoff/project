@@ -1,17 +1,14 @@
 # -*- encoding: utf-8 -*-
 
-import os
 import datetime
 import hashlib
-import uuid
 import logging
-
+import os
+import uuid
 from argparse import ArgumentError
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.utils.functional import curry
-from django.db.models import Max
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group, Permission
@@ -25,6 +22,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.db import models, transaction
+from django.db.models import Max
 from django.db.models import Q, F, Sum
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
@@ -36,12 +34,12 @@ from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, remove_perm, get_objects_for_user
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from paypal.standard.ipn.models import PayPalIPN
+from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
-from b24online.custom import (CustomImageField, S3ImageStorage, S3FileStorage,
-                              LocalFileStorage)
+
+from b24online.custom import (CustomImageField, S3ImageStorage, LocalFileStorage)
 from b24online.utils import (generate_upload_path, reindex_instance,
                              document_upload_path, get_current_organization)
 from tpp.celery import app
@@ -112,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def __str__(self):
-        return self.email
+        return "{0}".format(self.email)
 
     def has_module_perms(self, app_label):
         return True
@@ -251,7 +249,7 @@ class Advertisement(models.Model):
 
 
 class ContextAdvertisement(ActiveModelMixing, Advertisement):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=True)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
@@ -261,13 +259,16 @@ class ContextAdvertisement(ActiveModelMixing, Advertisement):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
     def has_perm(self, user):
         return self.item.has_perm(user)
 
 
 class AdvertisementTarget(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(db_index=True)
     item = GenericForeignKey('content_type', 'object_id')
     advertisement_item = models.ForeignKey(Advertisement, related_name='targets', on_delete=models.CASCADE)
 
@@ -275,6 +276,9 @@ class AdvertisementTarget(models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
 
     def has_perm(self, user):
         return self.advertisement_item.has_perm(user)
@@ -291,6 +295,9 @@ class Gallery(ActiveModelMixing, models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
 
     def has_perm(self, user):
         return self.item.has_perm(user)
@@ -341,6 +348,9 @@ class Document(models.Model):
     def has_perm(self, user):
         return self.item.has_perm(user)
 
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
 
 class AdditionalPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
@@ -355,8 +365,11 @@ class AdditionalPage(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
     def has_perm(self, user):
-        return self.item.haxs_perm(user)
+        return self.item.has_perm(user)
 
     def get_absolute_url(self):
         return reverse('pages:detail', args=[self.slug, self.pk])
@@ -410,6 +423,7 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return "{0}".format(self.pk)
@@ -1259,7 +1273,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                              sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     mobile_number = models.CharField(max_length=255, blank=True, null=True)
     site = models.CharField(max_length=255, blank=True, null=True)
     profession = models.CharField(max_length=255, blank=True, null=True)
@@ -1276,10 +1292,16 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     contacts = models.CharField(max_length=1000, blank=True, null=True)
     metadata = JSONField(default=dict())
 
-    def upload_images(self):
+    def upload_images(self, name):
         from core import tasks
+
+        if name == 'avatar':
+            f = self.avatar.path
+        else:
+            f = self.image.path
+
         params = {
-            'file': self.avatar.path,
+            'file': f,
             'sizes': {
                 'big': {'box': (150, 150), 'fit': False},
                 'small': {'box': (100, 100), 'fit': False},
@@ -1718,8 +1740,8 @@ class Message(models.Model):
 
     def __str__(self):
         return 'From "%s" to chat "%s" at %s' % (
-            self.sender, 
-            self.chat.subject, 
+            self.sender,
+            self.chat.subject,
             self.created_at.strftime('%d/%m/%Y %H:%I:%S')
         )
 
@@ -2246,8 +2268,8 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     DRAFT, READY, PAID, ORDERED, REJECTED, PAID_BY_PAYPAL = \
         'draft', 'ready', 'paid', 'ordered', 'rejected', 'paypal'
     STATUSES = ((DRAFT, _('Draft')), (READY, _('Ready')),
-                (PAID_BY_PAYPAL, _('Paid by PayPal')), 
-                (PAID, _('Paid')), 
+                (PAID_BY_PAYPAL, _('Paid by PayPal')),
+                (PAID, _('Paid')),
                 (ORDERED, _('Ordered by Email')),
                 (REJECTED, _('Rejected')))
 
@@ -2269,7 +2291,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
                                      null=True, blank=True, db_index=True)
     models.ForeignKey(PayPalIPN, related_name='order_deals',
-                                      verbose_name=_('PayPal Transaction'), 
+                                      verbose_name=_('PayPal Transaction'),
                                       null=True, blank=True,
                                       editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
@@ -2398,6 +2420,7 @@ class DealItem(models.Model):
     class Meta:
         verbose_name = _('Deal product')
         verbose_name_plural = _('Deal products')
+        index_together = ["content_type", "object_id"]
 
     @classmethod
     def get_active_objects(cls):
@@ -3089,7 +3112,7 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class LeadsStore(ActiveModelMixing, models.Model):
-    organization = models.ForeignKey(Company, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     username = models.ForeignKey(User, null=True, blank=True)
     realname = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=255, null=True, blank=True)

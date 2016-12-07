@@ -33,7 +33,6 @@ class CompanyList(ItemsList):
     url_paginator = "companies:paginator"
     url_my_paginator = "companies:my_main_paginator"
 
-    current_section = _("Companies")
     addUrl = 'companies:add'
 
     # Lists of required scripts and styles for ajax request
@@ -45,6 +44,10 @@ class CompanyList(ItemsList):
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Companies")
 
     model = Company
 
@@ -308,7 +311,7 @@ def _tab_staff(request, company, page=1):
             for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
-            return JsonResponse(departments)
+            return JsonResponse(departments, safe=False)
 
         elif action == "vacancy":
             department = int(request.GET.get("department", 0))
@@ -322,7 +325,7 @@ def _tab_staff(request, company, page=1):
                 for vacancy in department.vacancies.all().order_by('name'):
                     vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
-            return JsonResponse(vacancies)
+            return JsonResponse(vacancies, safe=False)
 
         elif action == "add":
             user = request.POST.get('user', "").strip()
@@ -526,8 +529,10 @@ class CompanyUpdate(ItemUpdate):
                 form.instance.metadata['site'] = form.cleaned_data['site']
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (
-                form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+                form.instance.metadata['location'] = "{0},{1}".format(
+                    form.cleaned_data['latitude'],
+                    form.cleaned_data['longitude']
+                )
 
         with transaction.atomic():
             self.object = form.save()
@@ -615,7 +620,7 @@ class CompanyCreate(ItemCreate):
             'fax': form.cleaned_data['fax'],
             'email': form.cleaned_data['email'],
             'site': form.cleaned_data['site'],
-            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude'])
+            'location': "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude'])
         }
 
         with transaction.atomic():

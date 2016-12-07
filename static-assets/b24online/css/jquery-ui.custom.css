@@ -242,15 +242,22 @@ button.ui-button::-moz-focus-inner {
 	width: 1.8em;
 	height: 1.8em;
 }
-.ui-datepicker .ui-datepicker-prev-hover,
-.ui-datepicker .ui-datepicker-next-hover {
-	top: 1px;
-}
 .ui-datepicker .ui-datepicker-prev {
+        opacity:1;
 	left: 2px;
 }
 .ui-datepicker .ui-datepicker-next {
-	right: 2px;
+        opacity:1;
+        right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+	opacity:0.8;
+}
+/*
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+	top: 1px;
 }
 .ui-datepicker .ui-datepicker-prev-hover {
 	left: 1px;
@@ -258,6 +265,7 @@ button.ui-button::-moz-focus-inner {
 .ui-datepicker .ui-datepicker-next-hover {
 	right: 1px;
 }
+*/
 .ui-datepicker .ui-datepicker-prev span,
 .ui-datepicker .ui-datepicker-next span {
 	display: block;
@@ -805,19 +813,23 @@ body .ui-tooltip {
 ##	color: #555555/*{fcDefault}*/;
 ##	text-decoration: none;
 ##}
+/*
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
 .ui-widget-header .ui-state-hover,
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-	border-top: 1px solid #999999;
-	border-left: 1px solid #999999;
-	border-right: 1px solid #999999;
-	background: #dadada url(/static/b24online/css/images/ui-bg_glass_75_dadada_1x400.png) 50% 50% repeat-x;
-	font-weight: normal/*{fwDefault}*/;
-	color: #212121/*{fcHover}*/;
+	border-top:1px solid #999999;
+	border-left:1px solid #999999;
+	border-right:1px solid #999999;
+	background:#dadada url(/static/b24online/css/images/ui-bg_glass_75_dadada_1x400.png) 50% 50% repeat-x;
+	font-weight:normal;
+	color:#212121;
 }
+*/
+
+
 .ui-state-hover a,
 .ui-state-hover a:hover,
 .ui-state-hover a:link,
@@ -1149,3 +1161,8 @@ body .ui-tooltip {
 	filter: Alpha(Opacity=30)/*{opacityFilterShadow}*/;
 	border-radius: 8px/*{cornerRadiusShadow}*/;
 }
+
+#ui-datepicker-div {width:250px}
+
+a.ui-datepicker-prev > .ui-icon {background-image:none !important;}
+a.ui-datepicker-next > .ui-icon {background-image:none !important;}

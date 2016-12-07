@@ -10,10 +10,6 @@ h2.page-header a,
 h1.page-header,
 h2.page-header,
 .section-header,
-.navbar-nav>li.active a,
-.navbar-nav>li>a:hover,
-.navbar-nav>li>a:focus,
-.navbar-nav>li>a:active,
 .cust-nav ul li a:hover,
 .carousel-text li:hover,
 .carousel-text li:active,
@@ -29,8 +25,18 @@ h2.page-header,
 .table h3 a,
 .product__price a,
 .cust-nav__btn a,
-.product__title{
+.product__title a{
 	color: #a40000 !important;
+}
+
+.navbar-nav>li.active a,
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus,
+.navbar-nav>li>a:active{
+	color: #fff;
+	text-shadow:0px 0px 3px black;
+	/*font-weight: bold;*/
+	background-color: #a40000;
 }
 
 .tel .fa,
@@ -55,9 +61,12 @@ footer a,
 .job_offer__btn:focus,
 .job_offer__btn:active,
 .item-price-table,
-.membership-banner__member-text,
 .coupon-timer{
 	color: #000 !important;
+}
+
+.membership-banner__member-text{
+    color: #000;
 }
 
 .cust-nav ul li a,
@@ -69,19 +78,38 @@ footer a,
 	background-color: #fff;
 }
 
-.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a{
+	/*background-color: #fff;*/
+	/*border-radius: 15px;*/
+	color: #fff;
+	font-weight: bold;
+	background-color: #a40000;
+}
+
 .navbar-inverse .navbar-nav>li>a:hover,
 .navbar-inverse .navbar-nav>li>a:focus,
-.navbar-inverse .navbar-nav>li>a:active{
-	background-color: #fff;
-	border-radius: 15px;
+.navbar-inverse .navbar-nav>li>a:active {
+	color: #fff;
+	/*font-weight:bold;*/
+	background-color: #a40000;
 }
+
+/*.navbar-inverse .navbar-nav>li>a::after {*/
+	/*display:block;*/
+	/*content:attr(title);*/
+	/*font-weight:bold;*/
+	/*height:1px;*/
+	/*color:transparent;*/
+	/*overflow:hidden;*/
+	/*!*visibility:hidden;*!*/
+/*}*/
 
 .navbar-inverse .navbar-nav>.active a:hover,
 .navbar-inverse .navbar-nav>.active a:focus,
 .navbar-inverse .navbar-nav>.active a:active{
 	background-color: #a40000;
 	color: #fff!important;
+	text-shadow: none;
 }
 
 .carousel-text {
@@ -202,9 +230,9 @@ footer a:active{
 
 .top_search input,
 .top_search input:focus{
-	background-color: #a40000;
-	border: 1px solid #fff;
-	color: #fff;
+	background-color: #fff;
+    border: 1px solid #aaa;
+    color: #000;
 }
 
 .top_search input:focus{
@@ -290,6 +318,24 @@ footer a:active{
 	background-color: #a40000;
 	color: #fff!important;
 }
+
+#leads-in-product,
+#leads-in-page{
+	background-color: #eee;
+}
+
+#leads-in-product .main-contact-btn,
+#leads-in-page .main-contact-btn{
+	background-color: #a00c0b;
+	color: #fff;
+}
+
+#leads-in-product .main-contact-btn:hover,
+#leads-in-page .main-contact-btn:hover{
+	background-color: #5a0000;
+	color: #fff;
+}
+
 
 
 

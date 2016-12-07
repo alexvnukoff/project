@@ -46,6 +46,7 @@ def currency_symbol(currency):
         'EUR': '€',
         'USD': '$',
         'ILS': '₪',
+        'NIS': '₪',
     }
 
     return symbols.get(currency.upper(), currency)

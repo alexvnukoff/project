@@ -2,8 +2,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template import loader
-from django.utils.translation import ugettext as _
-
+from django.utils.translation import ugettext_lazy as _
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
 from b24online.search_indexes import SearchEngine
 

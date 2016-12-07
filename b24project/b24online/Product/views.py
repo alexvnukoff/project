@@ -13,14 +13,14 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import (DetailView, ListView)
+from django.views.generic import (DetailView, ListView, TemplateView)
 from guardian.mixins import LoginRequiredMixin
 from paypal.standard.forms import PayPalPaymentsForm
 
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
-    ProducerForm)
+    ProducerForm, ExtraParamsForm)
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
                    ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
                    DeleteDocument, DocumentList
@@ -44,11 +44,14 @@ class B2BProductList(ItemsList):
 
     paginate_by = 12
 
-    current_section = _("Products B2B")
     addUrl = 'products:add'
 
     # Allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Products B2B")
 
     model = B2BProduct
 
@@ -136,11 +139,14 @@ class B2CProductList(ItemsList):
 
     paginate_by = 12
 
-    current_section = _("Products B2C")
     addUrl = 'products:addB2C'
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Products B2C")
 
     model = B2CProduct
 
@@ -243,8 +249,12 @@ class B2CPCouponsList(ItemsList):
     scripts = []
     styles = []
 
-    current_section = _("Products B2C")
     addUrl = 'products:addB2C'
+
+    @property
+    def current_section(self):
+        return _("Online Coupons")
+
     model = B2CProduct
 
     # allowed filter list
@@ -1065,7 +1075,7 @@ def category_tree_json(request, b2_type='b2b'):
         extract_data_fn=extract_data_fn,
     )
     data = tree_builder()
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
 
 
 @login_required
@@ -1205,3 +1215,137 @@ class ProducerDelete(LoginRequiredMixin, DetailView):
             item.delete()
         next = reverse('products:producer_list')
         return HttpResponseRedirect(next)
+
+
+class ExtraParamsList(LoginRequiredMixin, DetailView):
+    """The view for B2C product's additional parameters."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+
+
+class ExtraParamsCreate(LoginRequiredMixin, DetailView):
+    """The view to create new B2C product's additional parameter."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsForm.html'
+    current_section = _('Products B2C')
+    pk_url_kwarg = 'item_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtraParamsCreate, self).get_context_data(**kwargs)
+        form = kwargs.get(
+            'form',
+            ExtraParamsForm(self.object)
+        )
+        context.update({'form': form})
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(self.object)
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list',
+            kwargs={'item_id': self.object.pk}
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object,
+            data=self.request.POST
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+
+class ExtraParamsUpdate(LoginRequiredMixin, ItemUpdate):
+    """The view to update B2C product's additional parameter."""
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsForm.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtraParamsUpdate, self).get_context_data(**kwargs)
+        form = kwargs.get(
+            'form',
+            ExtraParamsForm(
+                self.object,
+                field_name=self.kwargs.get('field_name'),
+            )
+        )
+        context.update({'form': form})
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object,
+            field_name=self.kwargs.get('field_name'),
+        )
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list',
+            kwargs={'item_id': self.object.pk}
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ExtraParamsForm(
+            self.object,
+            field_name=self.kwargs.get('field_name'),
+            data=self.request.POST
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        return self.render_to_response(
+            self.get_context_data(form=form, *args, **kwargs)
+        )
+
+
+class ExtraParamsDelete(LoginRequiredMixin, DetailView):
+    """The view to delete B2C product's additional parameter."""
+
+    model = B2CProduct
+    template_name = 'b24online/Products/extraParamsList.html'
+    current_section = _("Products B2C")
+    pk_url_kwarg = 'item_id'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        field_name = self.kwargs.get('field_name')
+        if self.object.extra_params and field_name:
+            result = []
+            for item in self.object.extra_params:
+                if item.get('name') == field_name:
+                    continue
+                result.append(item)
+            self.object.extra_params = result
+            self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse(
+            'products:extra_params_list',
+            kwargs={'item_id': self.object.pk}
+        )
+
+
+

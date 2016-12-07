@@ -1,32 +1,40 @@
 <ul class="sidebar-menu">
-    <li class="active">
+    <li{% if request.path == '/admin-tpp/' %} class="active"{% endif %}>
         <a href="{% url "AdminTpp:dashboard" %}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
         </a>
     </li>
-    <li>
+    <li{% if request.path == '/admin-tpp/users/' %} class="active"{% endif %}>
         <a href="{% url "AdminTpp:users" %}">
             <i class="fa fa-dashboard"></i> <span>Users</span>
         </a>
     </li>
-    <li class="treeview">
+    {% if request.user.is_superuser or request.user.is_admin %}
+    <li{% if request.path == '/admin-tpp/activation/' %} class="active"{% endif %}>
+        <a href="{% url "AdminTpp:activation" %}">
+            <i class="fa fa-dashboard"></i> <span>Activation</span>
+        </a>
+    </li>
+    {% endif %}
+    <li class="treeview{% if '/adv/' in request.path %} active{% endif %}">
         <a href="#">
             <i class="fa fa-dashboard"></i> <span>Advertisement</span>
             <i class="fa pull-right fa-angle-left"></i>
         </a>
         <ul class="treeview-menu">
-                                <li><a href="{% url "AdminTpp:adv" %}"><i class="fa fa-angle-double-right"></i> Orders</a></li>
-                                <li><a href="{% url "AdminTpp:adv_price" %}"><i class="fa fa-angle-double-right"></i> Prices</a></li>
-                                <li><a href="{% url "AdminTpp:adv_sett" %}"><i class="fa fa-angle-double-right"></i> Settings</a></li>
+            <li><a href="{% url "AdminTpp:adv" %}"><i class="fa fa-angle-double-right"></i> Orders</a></li>
+            <li><a href="{% url "AdminTpp:adv_price" %}"><i class="fa fa-angle-double-right"></i> Prices</a></li>
+            <li><a href="{% url "AdminTpp:adv_sett" %}"><i class="fa fa-angle-double-right"></i> Settings</a></li>
         </ul>
     </li>
 
-    <li>
+    <li{% if request.path == '/admin-tpp/pages/' %} class="active"{% endif %}>
         <a href="{% url "AdminTpp:pages" %}">
             <i class="fa fa-dashboard"></i> <span>Static Pages</span>
         </a>
     </li>
-        <li>
+
+    <li{% if request.path == '/admin-tpp/greetings/' %} class="active"{% endif %}>
         <a href="{% url "AdminTpp:greetings" %}">
             <i class="fa fa-dashboard"></i> <span>Greetings</span>
         </a>

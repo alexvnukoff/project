@@ -56,9 +56,12 @@ footer a,
 .job_offer__btn:focus,
 .job_offer__btn:active,
 .item-price-table,
-.membership-banner__member-text,
 .coupon-timer{
 	color: #000 !important;
+}
+
+.membership-banner__member-text{
+    color: #000;
 }
 
 .cust-nav ul li a,

@@ -37,6 +37,10 @@ def get_main_c(obj):
         return country['Moldova']
     elif obj == 'ru':
         return country['Russia']
+    elif obj == 'us':
+        return country['USA']
+    elif obj == 'ua':
+        return country['Ukraine']
     else:
         return None
 

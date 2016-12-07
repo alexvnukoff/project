@@ -1,16 +1,7 @@
-"""
-Django settings for tpp project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# -*- encoding: utf-8 -*-
 import os, logging
-
+from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEFAULT_FROM_EMAIL = 'noreply@b24online.com'
@@ -20,6 +11,8 @@ EMAIL_HOST_USER = 'noreply@b24online.com'
 EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
 CELERY_SEND_TASK_ERROR_EMAILS = True
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = True
@@ -34,20 +27,11 @@ ADMINS = (
 ANONYMOUS_USER_ID = -1
 
 MANAGERS = ADMINS
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 INTERNAL_IPS = ['80.179.7.34']
-
 ALLOWED_HOSTS = ['*']
-
 USER_SITES_DOMAIN = "b24online.com"
 
 LOGGING = {
@@ -116,8 +100,7 @@ LOCAL_APPS = (
 )
 
 EXTERNAL_APPS = (
-    'debug_toolbar',
-    'djcelery',
+    #'debug_toolbar',
     'loginas',
     'registration',
     'polymorphic_tree',
@@ -129,7 +112,9 @@ EXTERNAL_APPS = (
     'captcha',
     'paypal.standard.ipn',
     'rest_framework',
-    'compressor'
+    'compressor',
+    'django_celery_results',
+    'djcelery_email'
 )
 
 # the order is important!
@@ -141,6 +126,7 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + EXTERNAL_APPS
 PAYPAL_TEST = False
 PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
+LOGOUT_URL = reverse_lazy('loginas-logout')
 CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
 REST_FRAMEWORK = {
@@ -159,8 +145,8 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = 'profile:main'
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.gzip.GZipMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'django.middleware.gzip.GZipMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
@@ -222,8 +208,8 @@ CACHES = {
 #     }
 # }
 
-# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-# SESSION_COOKIE_DOMAIN=".stackoverflow.com"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 SESSION_SAVE_EVERY_REQUEST = True
 
 DATABASES = {
@@ -239,13 +225,9 @@ DATABASES = {
 }
 
 USE_X_FORWARDED_HOST = True
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = False
-
 USE_TZ = True
 
 LOCALE_PATHS = (
@@ -308,36 +290,37 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details'
 )
 
-gettext = lambda s: s
-LANGUAGES = (
-    ('en', gettext('English')),
-    ('ru', gettext('Russian')),
-    ('am', gettext('Armenian')),
-    ('bg', gettext('Bulgarian')),
-    # ('az', gettext('Azerbaijan')),
-    # ('be', gettext('Belarus')),
-    # ('et', gettext('Estonia')),
-    # ('ka', gettext('Georgia')),
-    # ('kk', gettext('Kazakhstan')),
-    # ('kg', gettext('Kyrgyzstan')),
-    # ('lt', gettext('Lithuania')),
-    # ('lv', gettext('Latvia')),
-    # ('mo', gettext('Moldova')),
-    # ('tg', gettext('Tajikistan')),
-    # ('tm', gettext('Turkmenistan')),
-    ('uk', gettext('Ukrainian')),
-    # ('uz', gettext('Uzbekistan')),
-    ('he', gettext('Hebrew')),
-    ('ar', gettext('Arabic')),
-    ('zh', gettext('Chinese')),
-    ('es', gettext('Spanish')),
-)
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('ru', _('Russian')),
+    ('am', _('Armenian')),
+    ('bg', _('Bulgarian')),
+    # ('az', _('Azerbaijan')),
+    # ('be', _('Belarus')),
+    # ('et', _('Estonia')),
+    # ('ka', _('Georgia')),
+    # ('kk', _('Kazakhstan')),
+    # ('kg', _('Kyrgyzstan')),
+    # ('lt', _('Lithuania')),
+    # ('lv', _('Latvia')),
+    # ('mo', _('Moldova')),
+    # ('tg', _('Tajikistan')),
+    # ('tm', _('Turkmenistan')),
+    ('uk', _('Ukrainian')),
+    # ('uz', _('Uzbekistan')),
+    ('he', _('Hebrew')),
+    ('ar', _('Arabic')),
+    ('zh', _('Chinese')),
+    ('es', _('Spanish')),
+]
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk', 'es')
+    'default': ('en', 'ru', 'he')
 }
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
@@ -355,15 +338,11 @@ BUCKET = 'uploadstg'
 BUCKET_REGION = 'eu-west-1'
 
 ##################### Celery settings ####################################
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_REDIS = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
 
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
-
-import djcelery
-
-djcelery.setup_loader()
 
 ######################## DJANGO GUARDIAN SETTINGS #########################
 GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
@@ -409,5 +388,7 @@ GEO_COUNTRY_DB = {
     'Lithuania': '9',
     'Moldova': '10',
     'Russia': '11',
+    'USA': '142479',
+    'Ukraine': '15',
 }
 

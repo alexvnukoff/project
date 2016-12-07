@@ -2,29 +2,24 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from loginas.views import user_login
 from django.views.generic import TemplateView
-import b24online.AdminTpp
+from loginas.views import user_login, user_logout
+
 import b24online.AdminTpp.urls
-import b24online.AdvBanner
 import b24online.AdvBanner.urls
-import b24online.AdvTop
 import b24online.AdvTop.urls
-import b24online.Analytic
 import b24online.Analytic.urls
 import b24online.BusinessProposal.urls
 import b24online.Companies.urls
 import b24online.Exhibitions.urls
-import b24online.Greetings
 import b24online.Greetings.urls
 import b24online.Innov.urls
-import b24online.Messages
+import b24online.Leads.urls
 import b24online.Messages.urls
 import b24online.News.urls
 import b24online.Payments.urls
 import b24online.Product.urls
 import b24online.Profile.urls
-import b24online.Project
 import b24online.Project.urls
 import b24online.Questionnaires.urls
 import b24online.Resume.urls
@@ -34,17 +29,19 @@ import b24online.TppTV.urls
 import b24online.UserSites.urls
 import b24online.Users.urls
 import b24online.Vacancy.urls
-import b24online.Wall.urls
 import b24online.Video.urls
-import b24online.Leads.urls
+import b24online.Wall.urls
+import b24online.api.urls
 import b24online.views
 
 admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', b24online.views.home, name="main"),
+    url(r'^api/', include(b24online.api.urls), name='api'),
     url(r'^dashboard.html$', TemplateView.as_view(template_name="b24online/main/dashboard.html"), name="dashboard"),
-    url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
+    url(r'^login/user/(?P<user_id>.+)/$', user_login, name="loginas-user-login"),
+    url(r'^logout/$', user_logout, name="loginas-user-logout"),
     url(r'^news/', include(b24online.News.urls, namespace='news')),
     url(r'^products/', include(b24online.Product.urls, namespace='products')),
     url(r'^innovation/', include(b24online.Innov.urls, namespace='innov')),

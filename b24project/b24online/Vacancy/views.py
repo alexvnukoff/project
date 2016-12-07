@@ -23,11 +23,14 @@ class RequirementList(ItemsList):
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
 
-    current_section = _("Job requirements")
     addUrl = 'vacancy:add'
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
+
+    @property
+    def current_section(self):
+        return _("Job requirements")
 
     model = Requirement
 
@@ -163,4 +166,4 @@ def get_staffgroup_options(request, *args, **kwargs):
     options = [{'name': '------', 'id': ''}]
     for item in StaffGroup.objects.order_by('group__name'):
         options.append({'name': item.group.name, 'id': item.pk})
-    return JsonResponse(options)
+    return JsonResponse(options, safe=False)

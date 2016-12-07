@@ -36,7 +36,7 @@
     {% if request.user.is_authenticated %}
     <div style="display:inline-block;width:auto;margin-top:2px;">
 
-    <a href="{% url "profile:main" %}" style="text-decoration:none">
+    <a href="{% url "profile:main" %}" style="text-decoration:none" id="hava01">
     {% if request.user.profile.avatar %}
     <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:-4px;width:18px;">
     {% else %}
@@ -48,7 +48,7 @@
     {% endif %}
 
         {% if user.is_authenticated %}
-        <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
+        <a style="margin-left: 20px;" href="{% url 'loginas-user-logout' %}" title=""> {% trans 'Sign out'  %}</a>
     {% else %}
         <a class="#" class="social-but" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span class="icon-facebook-official"></span></a>
         <a class="#" class="social-but" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span class="icon-gplus-squared"></span></a>

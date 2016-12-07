@@ -389,7 +389,7 @@ init:function(mainmenuid, dir){
 			}, "touchstart")
 			this.addEvent(shelldiv, function(e){  // 3.03 code
 				ddlevelsmenu.hidemenu(this)
-			}, "click")			
+			}, "click")
 			var arrowclass=(dir=="sidebar")? "rightarrowpointer" : "downarrowpointer"
 			var arrowpointer=(dir=="sidebar")? this.arrowpointers.rightarrow : this.arrowpointers.downarrow
 			if (this.arrowpointers.showarrow.toplevel)

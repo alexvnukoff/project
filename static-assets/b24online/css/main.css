@@ -19,7 +19,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-l{ float:left; width:60%; line-height:34px; color:#9b9b9b;}
 .tophead-l a{ color:#9b9b9b; padding:0 5px;}
 .tophead-l a:hover{ color:#0089bc; text-decoration:none;}
-.tophead-r{ float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}
+.tophead-r{float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}
 .tophead-r a{ color:#0089bc; padding:0 5px;}
 .tophead-center { float: left;}
 .i-lock{ display:inline-block; width:16px; height:18px; background-position:0px 1px; margin:0 5px 0 0; vertical-align:middle;}
@@ -241,8 +241,8 @@ ul li.big-coupon .bot .context .current-price small{color:#c8f2ff;font-size:12px
 ul li.big-coupon .bot .context .but{display:inline-block;text-align:right;width:80px}
 ul li.big-coupon .bot .context .but a span.buyout{background:#dd201c;color:#fff;font-weight:700;padding:8px 18px;font-size:16px;text-align:center}
 ul li.big-coupon .bot .context .but a{text-decoration:none}
-li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url(/s/font//coupon_btnbuy.gif) repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
-li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
+li a.coupon_btnbuy{float:left;width:100%;margin:10px 0 0;font-size:12px;background:transparent url('/static/b24online/img/coupon_btnbuy.gif') repeat-x scroll 0 0;line-height:21px;text-align:center;color:#FFF;text-shadow:0 0 1px #555;border-radius:3px;text-decoration:none;box-shadow:0 1px 2px #DDD;opacity:1}
+li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .universal-sale{position:absolute;margin-left:20px;margin-right:20px;background:#dd201c;color:#fff;font-size:12px;font-weight:600;text-align:center;padding:4px 6px;z-index:1}
 .universal-sale::after{content:" ";border-width:3px 3px 4px 4px;border-style:solid;border-color:transparent #dd201c #dd201c transparent;position:absolute;top:0;right:100%}
 .coupon-big{width:620px!important;background:#fff;margin:35px 0;padding:10px;border:10px solid #e9f7fc}
@@ -265,7 +265,7 @@ li a.coupon_btnbuy:hover,li a.coupon_btnbuy:active{opacity:.9}
 .add-new {float:right;margin:0 5px 0 0;}
 .my-filter-button {margin:10px 0 5px 0;padding:0;display:block;float:left;}
 .geolocation-navi {float:left;width:40px;font-size:20px;}
-.content-goods-tab .content-news th, td {padding: 5px !important;}
+.content-goods-tab > th, .content-goods-tab > td, .content-news > th, .content-news > td {padding: 5px !important;}
 .content-video {height:370px;padding:10px 0;background:transparent;}
 .content-video-text {background:#fafbfa;padding:10px;font-size:15px;line-height:1.3;}
 .desctable input {width:520px;}

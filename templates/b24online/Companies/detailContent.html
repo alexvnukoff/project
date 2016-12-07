@@ -148,8 +148,8 @@
 .my-feedback > label {display:block;font-size:15px;padding:5px 3px 0 3px;margin:5px 3px 0 3px;}
 .my-feedback > input {width:600px;border:1px solid #dedede;padding:3px;margin:3px;}
 .my-feedback > textarea {width:600px;height:110px;resize:none;border:1px solid #dedede;padding:3px;margin:3px;}
-
 #validateTips {color:#cd0a0a;}
+#cpn-tabs-about img, .content-goods-tab img {width:625px;height:auto;}
 
 </style>
 
@@ -429,22 +429,22 @@
       <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
 
       <div class="my-feedback">
-      <label>Your name</label>
+      <label>{% trans "Your name" %}</label>
       <input type="text" name="realname" id="fback-name" maxlength="40">
       </div>
 
       <div class="my-feedback">
-      <label>Your phone</label>
+      <label>{% trans "Your phone" %}</label>
       <input type="text" name="phone" id="fback-phone" maxlength="40">
       </div>
 
       <div class="my-feedback">
-      <label>Your email</label>
+      <label>{% trans "Your email" %}</label>
       <input type="text" name="email" id="fback-email" maxlength="80">
       </div>
 
       <div class="my-feedback">
-      <label>Your message</label>
+      <label>{% trans "Your message" %}</label>
       <textarea name="message" id="fback-message" maxlength="1000"></textarea>
       </div>
 

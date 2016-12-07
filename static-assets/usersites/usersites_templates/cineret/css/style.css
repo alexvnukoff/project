@@ -25,13 +25,21 @@
     left: 0;
 }
 
-.social-header .button{
-	float: left;
+.top-search-block{
+    float: right;
 }
 
-.social-header{
-    float: right!important;
+.top-nav .social-header{
+    float: right;
 }
+
+/*.social-header .button{*/
+	/*float: left;*/
+/*}*/
+
+/*.social-header{*/
+    /*float: right!important;*/
+/*}*/
 
 .tel{
     float: left;

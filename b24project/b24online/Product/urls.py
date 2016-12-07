@@ -11,7 +11,9 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     DealList, DealDetail, DealPayment, DealItemDelete, DealItemDetail,
     B2BProductUpdateList, B2CProductUpdateList,
     category_tree_json, category_tree_demo,
-    ProducerList, ProducerCreate, ProducerUpdate, ProducerDelete)
+    ProducerList, ProducerCreate, ProducerUpdate, ProducerDelete,
+    ExtraParamsList, ExtraParamsCreate, ExtraParamsUpdate,
+    ExtraParamsDelete)
 
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
@@ -36,8 +38,8 @@ urlpatterns = [
     url(r'^my_b2c/update/page(?P<page>[0-9]+)?/$',
         B2CProductUpdateList.as_view(my=True),
         name="b2c_product_update_paginator"),
-    url(r'^сoupons/$', B2CPCouponsList.as_view(), name='main_coupons'),
-    url(r'^сoupons/page(?P<page>[0-9]+)?/$', B2CPCouponsList.as_view(), name="coupons_paginator"),
+    url(r'^coupons/$', B2CPCouponsList.as_view(), name='main_coupons'),
+    url(r'^coupons/page(?P<page>[0-9]+)?/$', B2CPCouponsList.as_view(), name="coupons_paginator"),
     url(r'^add/$', B2BProductCreate.as_view(), name="add"),
     url(r'^add-b2c/$', B2CProductCreate.as_view(), name="addB2C"),
     url(r'^update/(?P<pk>[0-9]+)/$', B2BProductUpdate.as_view(), name="update"),
@@ -120,5 +122,12 @@ urlpatterns = [
     url(r'^producers/delete/(?P<pk>[0-9]+)/$',
         ProducerDelete.as_view(),
         name='producer_delete'),
-
+    url(r'^extraparams/(?P<item_id>[0-9]+)/$',
+        ExtraParamsList.as_view(), name='extra_params_list'),
+    url(r'^extraparams/(?P<item_id>[0-9]+)/add/$',
+        ExtraParamsCreate.as_view(), name='extra_params_create'),
+    url(r'^extraparams/(?P<item_id>[0-9]+)/update/(?P<field_name>\w+)/$',
+        ExtraParamsUpdate.as_view(), name='extra_params_update'),
+    url(r'^extraparams/(?P<item_id>[0-9]+)/delete/(?P<field_name>\w+)/$',
+        ExtraParamsDelete.as_view(), name='extra_params_delete'),
 ]

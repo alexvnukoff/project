@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('/static/b24online/fonts/fontello.eot?35005111');
-  src: url('/static/b24online/fonts/fontello.eot?35005111#iefix') format('embedded-opentype'),
-       url('/static/b24online/fonts/fontello.woff2?35005111') format('woff2'),
-       url('/static/b24online/fonts/fontello.woff?35005111') format('woff'),
-       url('/static/b24online/fonts/fontello.ttf?35005111') format('truetype'),
-       url('/static/b24online/fonts/fontello.svg?35005111#fontello') format('svg');
+  src: url('/static/b24online/fonts/fontello.eot?45954517');
+  src: url('/static/b24online/fonts/fontello.eot?45954517#iefix') format('embedded-opentype'),
+       url('/static/b24online/fonts/fontello.woff2?45954517') format('woff2'),
+       url('/static/b24online/fonts/fontello.woff?45954517') format('woff'),
+       url('/static/b24online/fonts/fontello.ttf?45954517') format('truetype'),
+       url('/static/b24online/fonts/fontello.svg?45954517#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,11 +16,11 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?38706391#fontello') format('svg');
+    src: url('/static/b24online/fonts/fontello.svg?38706391#fontello') format('svg');
   }
 }
 */
- 
+
  [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "fontello";
   font-style: normal;
@@ -77,6 +77,7 @@ i.icon-vkontakte {color:#55779e;font-size:33px;display:inline-block;margin:0;ver
 i.icon-vkontakte:hover {text-decoration:none !important;}
 i.icon-odnoklassniki {color:#f47200;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 i.icon-odnoklassniki:hover {text-decoration:none !important;}
+
 
 .icon-user:before { content: '\e800'; } /* '' */
 .icon-user-plus:before { content: '\e801'; } /* '' */
@@ -172,6 +173,8 @@ i.icon-odnoklassniki:hover {text-decoration:none !important;}
 .icon-google:before { content: '\e85b'; } /* '' */
 .icon-facebook:before { content: '\e85c'; } /* '' */
 .icon-star-half:before { content: '\e85d'; } /* '' */
+.icon-spin5:before { content: '\e85e'; } /* '' */
+.icon-spin3:before { content: '\e85f'; } /* '' */
 .icon-gplus:before { content: '\f0d5'; } /* '' */
 .icon-linkedin:before { content: '\f0e1'; } /* '' */
 .icon-star-half-alt:before { content: '\f123'; } /* '' */
@@ -188,3 +191,87 @@ i.icon-odnoklassniki:hover {text-decoration:none !important;}
 .icon-commenting:before { content: '\f27a'; } /* '' */
 .icon-commenting-o:before { content: '\f27b'; } /* '' */
 .icon-linkedin-squared:before { content: '\f30c'; } /* '' */
+
+.animate-spin {
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+

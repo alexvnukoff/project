@@ -74,6 +74,7 @@ class CompanyAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = ('id', 'name', 'slug', 'director', 'company_paypal_account',)
     search_fields = ['name', 'slug', 'director', 'company_paypal_account', ]
+    raw_id_fields = ('countries', 'parent', 'created_by', 'updated_by', 'branches',)
 
 
 class RegisteredEventStatsAdmin(admin.ModelAdmin):
@@ -192,7 +193,7 @@ class B24UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('email',)}),
-        (_('Permissions'), {'fields': ('is_active', 'is_admin', 'user_permissions')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_admin', 'is_manager', 'is_commando', 'user_permissions')}),
         (_('Important dates'), {'fields': ('date_joined',)}),
     )
     add_fieldsets = (
@@ -242,8 +243,8 @@ admin.site.register(User, B24UserAdmin)
 admin.site.register(B2BProductCategory, MPTTModelAdmin)
 admin.site.register(Country, ModelAdmin)
 admin.site.register(Branch, MPTTModelAdmin)
-admin.site.register(Organization, TreeNodeParentAdmin)
 admin.site.register(Company, CompanyAdmin)
+admin.site.register(Organization, TreeNodeParentAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
 admin.site.register(B2BProduct, ModelAdmin)

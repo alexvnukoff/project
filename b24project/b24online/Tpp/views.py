@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -36,14 +37,16 @@ class ChamberList(ItemsList):
         settings.STATIC_URL + 'b24online/css/tpp.reset.css'
     ]
 
-    current_section = _("Tpp")
-
     # allowed filter list
     # filter_list = ['country']
 
     filter_list = {
         'countries': Country
     }
+
+    @property
+    def current_section(self):
+        return _("Organizations")
 
     model = Chamber
 
@@ -330,7 +333,7 @@ def _tab_staff(request, tpp, page=1):
             for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
-            return JsonResponse(departments)
+            return JsonResponse(departments, safe=False)
 
         elif action == "vacancy":
             department = int(request.GET.get("department", 0))
@@ -344,7 +347,7 @@ def _tab_staff(request, tpp, page=1):
                 for vacancy in department.vacancies.all().order_by('name'):
                     vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
-            return JsonResponse(vacancies)
+            return JsonResponse(vacancies, safe=False)
 
         elif action == "add":
             user = request.POST.get('user', "").strip()
@@ -482,7 +485,7 @@ class ChamberUpdate(ItemUpdate):
                 form.instance.metadata['site'] = form.cleaned_data['site']
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+                form.instance.metadata['location'] = "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude'])
 
             if 'flag' in form.changed_data:
                 flag = form.cleaned_data.get('flag')
@@ -573,7 +576,7 @@ class ChamberCreate(ItemCreate):
             'fax': form.cleaned_data['fax'],
             'email': form.cleaned_data['email'],
             'site': form.cleaned_data['site'],
-            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+            'location': "{0},{1}".format(form.cleaned_data['latitude'], form.cleaned_data['longitude']),
             'flag': handle_uploaded_file(flag) if flag else None
         }
 

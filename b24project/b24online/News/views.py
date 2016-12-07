@@ -24,8 +24,7 @@ class NewsList(ItemsList):
         settings.STATIC_URL + 'b24online/css/news.css',
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
-
-    current_section = _("News")
+    
     project_news = False
 
     sortFields = {
@@ -35,6 +34,10 @@ class NewsList(ItemsList):
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company']
+
+    @property
+    def current_section(self):
+        return _("News")
 
     model = News
 

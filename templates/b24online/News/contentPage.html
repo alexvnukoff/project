@@ -40,9 +40,9 @@
                     {{ news.created_at|date:'d M Y' }}, <a href="{{ news.organization.get_absolute_url }}" title="{{ news.organization.name }}">{{ news.organization.name }}</a></p>
                     <p>
                         {% if news.short_description %}
-                            {{ news.short_description|cleanHtml:"p"|linebreaks|safe }}
+                            {{ news.short_description|linebreaks|safe }}
                         {% else %}
-                            {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
+                            {{ news.content|safe|truncatewords_html:"30" }}
                         {% endif %}
                     </p>
                     <!--noindex--><a href="{{ news.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->

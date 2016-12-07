@@ -25,11 +25,14 @@ class ResumeList(ItemsList):
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
 
-    current_section = _('Resume')
     addUrl = 'resume:add'
 
     # allowed filter list
     # filter_list = []
+
+    @property
+    def current_section(self):
+        return _("Resume")
 
     model = Resume
 

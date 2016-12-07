@@ -11,7 +11,7 @@ DATABASES = {
     }
 }
 
-CELERY_REDIS = 'django://'
+CELERY_BROKER_URL = 'django://'
 ORDERS_REDIS_HOST = '52.48.158.37'
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))

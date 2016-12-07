@@ -47,6 +47,7 @@
 /*}*/
 
 body {
+    overflow-x: hidden;
     /*padding-top: 50px; !* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. *!*/
 }
 
@@ -54,10 +55,17 @@ body {
 
 html, body {height: 100%;}
 
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
 #wrap-main {min-height: 100%;}
 
 #main {
-    overflow:auto;
+    overflow-y:auto;
 	padding-bottom: 300px;
 }  /* must be same height as the footer */
 
@@ -166,11 +174,11 @@ h3 a:focus{
 
 /* ----------- Navigation Styling -------------------- */
 /* Social links */
-.social-header{
-	padding-top: 45px;
-    padding-bottom: 15px;
-    position: relative;
-}
+/*.social-header{*/
+	/*padding-top: 45px;*/
+    /*padding-bottom: 15px;*/
+    /*position: relative;*/
+/*}*/
 
 .social-footer{
     padding: 20px;
@@ -181,30 +189,18 @@ h3 a:focus{
     padding: 0 15px;
 }
 
-@media (max-width: 1199px) {
-    .social-header{
-        padding-top: 15px;
-    }
-}
+/*@media (max-width: 1199px) {*/
+    /*.social-header{*/
+        /*padding-top: 15px;*/
+    /*}*/
+/*}*/
 
-.social-header a{
-	margin: 0 5px;
-}
+/*.social-header a{*/
+	/*margin: 0 5px;*/
+/*}*/
 
 .social-header i{
-	/*padding: 8px 20px 8px 12px;*/
-}
-
-.social-header .button{
-	display:block;
-	width:36px;
-	height:36px;
-	border-radius:18px;
-	font-size: 15px;
-	/*color:#000;*/
-	line-height:36px;
-	text-align:center;
-	background:#fff;
+	padding: 3px;
 }
 
 .top-search-nav{
@@ -219,6 +215,13 @@ h3 a:focus{
 .navbar-default{
     padding: 0;
     border-color: transparent;
+    z-index: 10;
+    margin: 0;
+    height: 80px;
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    right: 30px;
 }
 
 .navbar-default .navbar-nav > .active > a {
@@ -245,12 +248,98 @@ h3 a:focus{
 }
 
 .navbar-brand>img {
-    max-height: 85px;
+    max-height: 70px;
     height: auto;
     display: table-cell;
     vertical-align: middle;
     max-width: 200px;
     padding: 0;
+}
+
+.large-navbar{
+    margin: 10px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.top-nav{
+	background-color: #000;
+	color: #fff;
+	height: 30px;
+    z-index: 12;
+}
+
+.top-nav .top_search{
+	margin: 0;
+}
+
+.top-nav input{
+	height: 20px;
+	margin: 5px;
+	background-color: #fff;
+    border: 1px solid #aaa;
+    color: #000;
+}
+
+.top-nav .social-header{
+	padding: 0;
+	margin: 3px;
+}
+
+.top-nav .social-header a.lang-toggle img {
+    margin-top: 5px;
+}
+
+.top-nav .header-cart{
+	padding: 0;
+	margin: 5px;
+}
+
+.user-reg ul{
+    list-style: none;
+    padding: 2px;
+}
+
+.user-reg ul li{
+    display: inline;
+    padding-right: 5px;
+}
+
+.user-reg img{
+    display: inline;
+}
+
+.top-nav .social-header .button {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 22px;
+	margin-right: 2px;
+    margin-left: 2px;
+    text-align: center;
+    background-color: #fff;
+    padding: 3px;
+}
+
+.top-nav .language-navi {
+	position:relative;
+	display:inline-block;
+	cursor:pointer;
+	float:left;
+	margin:3px;
+	z-index: 9999;
+}
+
+.top-nav ul.dropdown-menu>li>a>img.flag-icon {
+    border: 1px solid #e7e7e7;
+    margin: -3px 5px 0 5px;
+    width: 24px;
+}
+
+.top-nav ul.dropdown-menu>li>a{
+	padding: 3px 5px;
+	margin: 0;
 }
 
 
@@ -675,13 +764,17 @@ h3 a:focus{
 }
 
 .news__img img{
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 100px;
+    max-height: 100px;
 }
 
 .news__text{
     /*position: relative;*/
     /*float: right;*/
+}
+
+.news__btn-main{
+    padding: 2px 3px;
 }
 
 .news-details img{
@@ -692,10 +785,10 @@ h3 a:focus{
 
 /* ----------- Coupons Styling -------------------- */
 .coupon {
-    width: 100%;
+    /*width: 100%;*/
     display: block;
     padding: 4px;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
     line-height: 1.42857143;
     border-radius: 4px;
     -webkit-transition: border .2s ease-in-out;
@@ -949,7 +1042,7 @@ h3 a:focus{
 
 /*---------- Footer Styling ----------*/
 footer{
-	margin-top: 20px;
+	margin-top: 0;
 	margin-bottom: 0;
 }
 
@@ -1001,8 +1094,8 @@ footer .btn-default{
 
 .membership-banner__member img{
 	width: auto;
-	max-height: 80px;
-	margin: 10px;
+	max-height: 50px;
+	margin: 5px;
 	display: inline;
 	position: relative;
 }
@@ -1287,6 +1380,10 @@ header.carousel {
     /*max-height: 700px;*/
     width: auto;
     max-width: 100%;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*top: 30px;*/
+    z-index: 0;
 }
 
 header.carousel .item,
@@ -1311,18 +1408,18 @@ header.carousel .carousel-inner {
         padding-top: 80px;
     }
 
-    .social-header{
-        padding-top: 7px;
+    /*.social-header{*/
+        /*padding-top: 7px;*/
 
-    }
+    /*}*/
 
-    .social-header .button {
-        width: 24px;
-        height: 24px;
-        border-radius: 12px;
-        font-size: 12px;
-        line-height: 24px;
-    }
+    /*.social-header .button {*/
+        /*width: 24px;*/
+        /*height: 24px;*/
+        /*border-radius: 12px;*/
+        /*font-size: 12px;*/
+        /*line-height: 24px;*/
+    /*}*/
 
     .small-navbar .fa{
         font-size: 20px;
@@ -1387,12 +1484,6 @@ header.carousel .fill {
 .period {
     display: block;
     font-style: italic;
-}
-
-/* Footer Styles */
-
-footer {
-    margin: 20px 0 0 0;
 }
 
 /* Responsive Styles */
@@ -1648,4 +1739,155 @@ footer {
     #leads-in-page input{
         width: 120px;
     }
+}
+
+/* Galery design */
+/** Gallery Styling ***************/
+/*********************************/
+.gal-items{
+	margin-right: -15px;
+    margin-left: -15px;
+}
+
+.gal-item{
+	overflow: hidden;
+	padding: 3px;
+}
+
+.gal-item .box{
+	height: 350px;
+	overflow: hidden;
+}
+
+.box img{
+	height: 100%;
+	width: 100%;
+	object-fit:cover;
+	-o-object-fit:cover;
+}
+
+.gal-item a:focus{
+	outline: none;
+}
+
+.gal-item a:after{
+	content:"\e003";
+	font-family: 'Glyphicons Halflings';
+	opacity: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	position: absolute;
+	right: 3px;
+	left: 3px;
+	top: 3px;
+	bottom: 3px;
+	text-align: center;
+    line-height: 350px;
+    font-size: 30px;
+    color: #fff;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+    transition: all 0.5s ease-in-out 0s;
+}
+
+.gal-item a:hover:after{
+	opacity: 1;
+}
+
+.modal-open .gal-container .modal{
+	background-color: rgba(0,0,0,0.4);
+}
+
+.modal-open .gal-item .modal-body{
+	padding: 0px;
+}
+
+.modal-open .gal-item button.close{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: #000;
+    opacity: 1;
+    color: #fff;
+    z-index: 999;
+    right: -12px;
+    top: -12px;
+    border-radius: 50%;
+    font-size: 15px;
+    border: 2px solid #fff;
+    line-height: 25px;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0,0,0,0.35);
+	box-shadow: 0 0 1px 1px rgba(0,0,0,0.35);
+}
+
+.modal-open .gal-item button.close:focus{
+	outline: none;
+}
+
+.modal-open .gal-item button.close span{
+	position: relative;
+	top: -3px;
+	font-weight: lighter;
+	text-shadow:none;
+}
+
+.gal-container .modal-dialogue{
+	width: 80%;
+}
+
+.gal-container .description{
+	position: relative;
+	height: 40px;
+	top: -40px;
+	padding: 10px 25px;
+	background-color: rgba(0,0,0,0.5);
+	color: #fff;
+	text-align: left;
+}
+
+.gal-container .description h4{
+	margin:0px;
+	font-size: 15px;
+	font-weight: 300;
+	line-height: 20px;
+}
+
+.gal-container .modal.fade .modal-dialog {
+    -webkit-transform: scale(0.1);
+    -moz-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1);
+    top: 100px;
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.gal-container .modal.fade.in .modal-dialog {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform: translate3d(0, -100px, 0);
+    transform: translate3d(0, -100px, 0);
+    opacity: 1;
+}
+@media (min-width: 768px) {
+.gal-container .modal-dialog {
+    width: 55%;
+    margin: 50 auto;
+}
+}
+@media (max-width: 768px) {
+    .gal-container .modal-content{
+        height:250px;
+    }
+}
+/* Footer Style */
+i.red{
+    color:#BC0213;
+}
+.gal-container{
+    /*padding-top :25px;*/
+    padding-bottom:40px;
 }

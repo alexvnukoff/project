@@ -5,12 +5,13 @@
 {% load inclusionTags %}
 {% load humanize %}
 
+{% if site.user_site.is_delivery_available %}
 <tr valign="top">
     <td style="text-align: right">
         <input type="checkbox" name="need_delivery" id="need_delivery" style="width: 25%;">
     </td>
     <td colspan="2">
-        <div>{% trans 'Need a delivery' %}?</div>
+        <div>{% trans 'Need a delivery' %}</div>
         <div>
             {% if not site.user_site.delivery_cost %}
                 {% trans 'Delivery is unpaid' %}
@@ -22,3 +23,4 @@
         </div>
     </td>
 </tr>
+{% endif %}

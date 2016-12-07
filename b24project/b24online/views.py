@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 import json
 import logging
 from urllib.parse import urljoin
@@ -134,6 +133,7 @@ def my_companies(request):
     if request.is_ajax():
         current_company = request.session.get('current_company', None)
         paginate_by = 10
+
 
         organizations = get_objects_for_user(request.user, ['b24online.manage_organization'],
                                              Organization.get_active_objects().all(), with_superuser=False)

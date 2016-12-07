@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     function socket_connect() {
         return;
-        socket = new SockJS('http://' + window.location.hostname + ':9999/orders');  
+        socket = new SockJS('http://' + window.location.hostname + ':9999/orders');
         socket.onmessage = function(msg){
             var data = msg['data'];
             var data = JSON.parse(data);

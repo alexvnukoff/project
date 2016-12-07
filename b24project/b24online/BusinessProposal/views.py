@@ -22,7 +22,6 @@ class BusinessProposalList(ItemsList):
         settings.STATIC_URL + 'b24online/css/company.css'
     ]
 
-    current_section = _("Business Proposal")
     addUrl = 'proposal:add'
 
     #allowed filter list
@@ -36,6 +35,10 @@ class BusinessProposalList(ItemsList):
         'date': 'created_at',
         'name': 'title'
     }
+
+    @property
+    def current_section(self):
+        return _("Business Proposal")
 
     model = BusinessProposal
 

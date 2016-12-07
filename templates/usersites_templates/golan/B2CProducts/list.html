@@ -10,13 +10,13 @@
 
         {# Page title #}
         <div class="col-lg-12">
-            <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
+            <h2 class="page-header in-page"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
         </div>
 
         <div class="row main-products-thumb">
             {% for product in products %}
 
-                <div class="col-sm-6 col-xs-12 col-md-3 product ">
+                <div class="col-xs-12 col-sm-6 col-md-3 product ">
                     <div class="thumbnail ">
                         {% if product.image %}
                             <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
@@ -33,7 +33,7 @@
                         {% endif %}
 
                         <div class="caption">
-                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
+                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
                             <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
 
                             {# If the product is a coupon, the color of the button will be diff #}
@@ -56,10 +56,31 @@
 
                             {# If the product is a coupon, display the timer #}
                             {% if product.coupon_discount_percent %}
-                                <div class="coupon-timer">
-                                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                                </div>
+                                    <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                                {% else %}
+                                    <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
+                                {% endif %}
+
+                            {% if product.coupon_discount_percent%}
+                                    <div class="coupon-timer">
+
+                                        {% now "Y-m-d" as todays_date %}
+                                        {% if product.end_coupon_date|date:"Y-m-d" > todays_date %}
+                    {#                        <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>#}
+{#                                            <input type="hidden" id="timerVar" name="variable" value="{{ product.end_coupon_date|date:"Y-m-d" }}">#}
+                                            <p class="timer-heading">{% trans "Promotion ends" %} in {{ product.end_coupon_date|date:"d.m.Y" }}</p>
+{#                                            <div class="clock-container">#}
+{##}
+{#                                                <div id="clockdiv">#}
+{#                                                  <div>#}
+{#                                                    <span class="days">days </span><span class="hours">h </span><span class="minutes">m </span><span class="seconds">s </span>#}
+{#                                                  </div>#}
+{#                                                </div>#}
+{##}
+{#                                            </div>#}
+                                        {% endif %}
+                                    </div>
+
                             {% endif %}
                         </div>
 
@@ -69,7 +90,16 @@
             {% endfor %}
         </div><!-- /Products modoul --><!-- /row -->
 
-        {% include 'usersites_templates/golan/B2CProducts/paginator.html' %}
+        {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
     </div>
+
+    <script>
+        $(document).ready( function() {
+        //getting the end time of the coupon
+            var deadline = $("#timerVar").val();
+
+            //initializeClock('clockdiv', deadline);
+        });
+    </script>
 
 </section>
