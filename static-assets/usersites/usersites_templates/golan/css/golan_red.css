@@ -228,6 +228,11 @@ footer a:active{
     color: #000;
 }
 
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title,
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
+	color: #000;
+}
+
 .top_search input:focus{
 	box-shadow: 0 0 5px 1px #969696;
 }

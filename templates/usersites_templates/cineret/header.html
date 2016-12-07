@@ -64,7 +64,7 @@
         <div class="user-reg">
         {# Registration. login and logout #}
             {% if user.is_authenticated %}
-                <ul>
+                <ul class="hidden-xs">
                     {% get_messages_number as messages_number %}
                     <li>
                         <a href="{% url 'my_profile' %}">
@@ -167,69 +167,41 @@
                 </ul>
 
                 <ul class="nav navbar-nav small-navbar visible-xs">
-                    <li><a href="{% url 'main' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-                    <li><a href="{% url 'pages:about' %}"><i class="fa fa-users" aria-hidden="true"></i></a></li>
+                        <li><a href="{% url 'main' %}"><i class="fa fa-home" aria-hidden="true"></i><span>{% trans 'Home' %}</span></a></li>
+                        <li><a href="{% url 'pages:about' %}"><i class="fa fa-users" aria-hidden="true"></i><span>{% trans 'About us' %}</span></a></a></li>
 
-                    {% if not is_chamber %}
-                        {% if site.user_site.organization.b2c_products.exists %}
-                            <li><a href="{% url 'b2c_products:main' %}"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></li>
+                        {% if not is_chamber %}
+                            {% if site.user_site.organization.b2c_products.exists %}
+                                <li><a href="{% url 'b2c_products:main' %}"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>{% trans 'B2C Products' %}</span></a></a></li>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
 
-                    {% if site.user_site.organization.proposals.exists %}
-                        <li><a href="{% url 'proposal:main' %}"><i class="fa fa-briefcase" aria-hidden="true"></i></a></li>
-                    {% endif %}
+                        {% if site.user_site.organization.proposals.exists %}
+                            <li><a href="{% url 'proposal:main' %}"><i class="fa fa-briefcase" aria-hidden="true"></i><span>{% trans 'Business proposals' %}</span></a></a></li>
+                        {% endif %}
 
-                    {% if site.user_site.organization.news.exists %}
-                        <li><a href="{% url 'news:main' %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i></a></li>
-                    {% endif %}
+                        {% if site.user_site.organization.news.exists %}
+                            <li><a href="{% url 'news:main' %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i><span>{% trans 'Company news' %}</span></a></a></li>
+                        {% endif %}
 
-    {#                    {% if site.user_site.organization.galleries.exists %}#}
-    {#                        <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>#}
-    {#                    {% endif %}#}
+                        {% if site.user_site.organization.video.exists %}
+                            <li><a href="{% url 'video:main' %}"><i class="fa fa-film" aria-hidden="true"></i><span>{% trans 'Videos' %}</span></a></a></li>
+                        {% endif %}
 
-                    <li><a href="{% url 'pages:contacts' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></li>
+        {#                    {% if site.user_site.organization.galleries.exists %}#}
+        {#                        <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>#}
+        {#                    {% endif %}#}
+
+                        <li><a href="{% url 'pages:contacts' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>{% trans 'Contact us' %}</span></a></a></li>
 
 
-                </ul>
+
+                    </ul>
             </div>
         </div>
         <!-- /.navbar-collapse -->
 
-    <div class="tel vertical visible-xs">
-                <i class="fa fa-phone-square" aria-hidden="true"></i>
-                <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
-            </div>
 
-    <div class="social-header visible-xs">
-              <div style="text-align:center;margin:0 auto;">
-
-                {% if site.user_site.facebook %}
-                <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
-                {% endif %}
-
-                {% if site.user_site.youtube %}
-                <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
-                {% endif %}
-
-                {% if site.user_site.twitter %}
-                <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
-                {% endif %}
-
-                {% if site.user_site.instagram %}
-                <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
-                {% endif %}
-
-                {% if site.user_site.vkontakte %}
-                <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
-                {% endif %}
-
-                {% if site.user_site.odnoklassniki %}
-                <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
-                {% endif %}
-
-              </div>
-        </div>
     </div>
     <!-- /.container -->
 </nav>
