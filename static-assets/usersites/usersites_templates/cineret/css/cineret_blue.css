@@ -28,8 +28,21 @@ h3 a:focus,
     color: #fff;
 }
 
+.tel .fa,
+.tel a{
+    color: #fff;
+}
+
+.user-reg a{
+    color: #fff;
+}
+
+.large-navbar{
+    background-color: rgba(0 ,0 ,0 ,0.5);
+}
+
 .navbar-default{
-    background-color: #222222;
+    background-color: transparent;
 }
 
 .navbar-default .navbar-toggle {
@@ -60,9 +73,12 @@ h3 a:focus,
   background-color: #002151;
 }
 
-.tel .fa,
-.tel a{
-    color: #fff;
+.top-nav .header-cart{
+	color: #fff;
+}
+
+.top-nav .header-cart:hover{
+	color: #002151;
 }
 
 .overlay {
@@ -83,7 +99,7 @@ h3 a:focus,
 
 @media (min-width: 768px) {
     .navbar-default {
-        background-color: rgba(0,0,0,.7); // Tint color
+        /*background-color: rgba(0,0,0,.7); // Tint color*/
     }
 }
 
@@ -108,9 +124,8 @@ h3 a:focus,
     border: 1px solid #ddd;
 }
 
-.pin p .product__discount{
+.product__discount{
     background-color: #0047AF;
-    color: #fff;
 }
 
 .product__title{
@@ -124,11 +139,11 @@ h3 a:focus,
 .contact-fields .main-contact-btn{
     color: #ffffff;
     background-color: #0047AF;
-    border-color: #002151;
+    border-color: #0047AF;
 }
 
 .main-contact{
-    background: #002151;
+    background: #000;
     color: #fff;
 }
 
@@ -162,9 +177,9 @@ h3 a:focus,
 footer a,
 #timer-detail-page,
 .smalltext,
-.special_offer__btn:hover,
-.special_offer__btn:focus,
-.special_offer__btn:active,
+/*.special_offer__btn:hover,*/
+/*.special_offer__btn:focus,*/
+/*.special_offer__btn:active,*/
 .job_offer__btn:hover,
 .job_offer__btn:focus,
 .job_offer__btn:active,
@@ -316,3 +331,4 @@ footer a:active{
     font-size: 80%;
     color: red;
 }
+
