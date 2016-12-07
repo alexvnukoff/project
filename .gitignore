@@ -52,3 +52,4 @@ uploads/
 static/
 media/
 b24project/celerybeat-schedule
+migrations/
