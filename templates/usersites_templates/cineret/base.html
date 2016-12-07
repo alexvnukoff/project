@@ -92,9 +92,7 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
         {% block adviser %}
-            {% if user.is_authenticated %}
             <script src="{% static 'usersites/js/adviser.js' %}"></script>
-            {% endif %}
         {% endblock %}
         <script src="{% static 'usersites/usersites_templates/cineret/js/script.js' %}"></script>
         <!-- Latest compiled and minified JavaScript -->
