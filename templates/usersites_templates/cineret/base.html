@@ -51,7 +51,7 @@
             {# Include the header file, the header will put the main menu on top of every page #}
         <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
         <form action="#">
-            <input type="hidden" id="colorAccess"  value="#fed136" />
+            <input type="hidden" id="colorAccess"  value="#009ccc" />
             <input type="hidden" id="topPosAccess"  value="60px" />
         </form>
     </div>
@@ -92,9 +92,7 @@
         <script src="{% static 'usersites/js/basket.js' %}"></script>
         <script src="{% static 'usersites/js/main.js' %}"></script>
         {% block adviser %}
-            {% if user.is_authenticated %}
             <script src="{% static 'usersites/js/adviser.js' %}"></script>
-            {% endif %}
         {% endblock %}
         <script src="{% static 'usersites/usersites_templates/cineret/js/script.js' %}"></script>
         <!-- Latest compiled and minified JavaScript -->

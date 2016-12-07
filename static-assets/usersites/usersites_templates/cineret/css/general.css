@@ -1401,7 +1401,7 @@ header.carousel .carousel-inner {
 
 @media(max-width:767px) {
     header.carousel .carousel-inner {
-        padding-top: 120px;
+        padding-top:  50px;
     }
 
     header.carousel .carousel-inner.red-carousel {
@@ -1890,4 +1890,44 @@ i.red{
 .gal-container{
     /*padding-top :25px;*/
     padding-bottom:40px;
+}
+
+.small-navbar{
+    background-color: #fff;
+    padding: 5px;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 3px;
+}
+
+.small-navbar a span{
+	font-size: 8pt;
+    color: #000;
+}
+
+.small-navbar a i{
+    color: #000;
+}
+
+@media(max-width:767px) {
+
+
+    .small-navbar .fa{
+        font-size: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
+        clear: both;
+        text-align: center;
+        max-width: 70px;
+        line-height: 21px;
+    }
+
+    .small-navbar .fa span{
+        clear: both;
+        font-size: 10px;
+        text-align: center;
+        line-height: 9px;
+    }
+
+
 }

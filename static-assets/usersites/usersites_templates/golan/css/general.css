@@ -1388,19 +1388,18 @@ footer .btn-default{
 	font-size: 20pt;
 	text-align: center;
 	padding-bottom: 10px;
-	color: #000;
 	height: 80px;
 	margin-bottom: 5px;
-}
-
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
-	color: #000;
 }
 
 #main-page-coupons .main-coupon-wrap .info-coupon .timer-heading{
 	position: relative;
 	padding-left: 25px;
 	padding-right: 5px;
+}
+
+.coupon-title a{
+    text-decoration: none;
 }
 
 #main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer{
