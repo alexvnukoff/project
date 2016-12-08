@@ -122,10 +122,18 @@
         {% if form.errors.slogan %}<small class="error">{{ form.errors.slogan.0 }}</small>{% endif %}
          </div>
 
-        <div class="form-group">
+        <h3>{% trans 'Site languages' %}</h3>
+        <div class="form-group" style="height:50px">
         <label>{% trans "Site default language" %}</label>
             {{ form.language }}
-        </div><br />
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Site available languages" %}</label>
+            <div style="margin:10px 0;color:#858585">
+                {{ form.languages }}
+            </div>
+        </div>
 
         <h3>{% trans 'Products delivery' %}</h3>
         <div class="form-group">

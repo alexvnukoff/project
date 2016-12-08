@@ -72,9 +72,8 @@
                     <div class="select -lang hideitplease">
                         <select name="lang" id="lang_select">
                             <option>{% trans 'Mother tongue' %}</option>
-                            {% get_available_languages as LANGUAGES %}
-                            {% for code, lang in LANGUAGES %}
-                                <option value="{{ code }}">{{ lang }}</option>
+                            {% for code, lang in get_site_languages %}
+                            <option value="{{ code }}">{{ lang }}</option>
                             {% endfor %}
                         </select>
                     </div>
