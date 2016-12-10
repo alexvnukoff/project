@@ -6,6 +6,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
+from django.forms.fields import MultipleChoiceField
 from b24online.models import GalleryImage, Gallery, Banner
 
 from usersites.models import UserSite
@@ -20,6 +21,8 @@ class SiteForm(forms.ModelForm):
     instagram = forms.CharField(required=False)
     vkontakte = forms.CharField(required=False)
     odnoklassniki = forms.CharField(required=False)
+
+    languages = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, choices=settings.LANGUAGES)
 
     def __init__(self, *args, **kwargs):
         self.gallery_images_form = kwargs.pop('gallery_images_form')
@@ -120,7 +123,7 @@ class SiteForm(forms.ModelForm):
     class Meta:
         model = UserSite
         fields = ('slogan', 'template', 'footer_text', 'logo', 'language',
-            'is_delivery_available', 'delivery_currency', 'delivery_cost')
+            'is_delivery_available', 'delivery_currency', 'delivery_cost', 'languages')
 
 
 class GalleryForm(forms.ModelForm):

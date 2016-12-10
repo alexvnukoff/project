@@ -19,7 +19,7 @@ from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +86,7 @@ class UserSite(ActiveModelMixing, models.Model):
     organization = models.OneToOneField(Organization, related_name='org_user_site', on_delete=models.CASCADE,)
     slogan = models.CharField(max_length=2048, blank=True, null=True)
     language = models.CharField(max_length=4, choices=LANG_LIST, default='auto')
+    languages = ArrayField(models.CharField('Languages', max_length=100), blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)

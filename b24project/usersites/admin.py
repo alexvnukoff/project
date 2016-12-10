@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from usersites.models import ExternalSiteTemplate, UserSite, UserSiteTemplate, UserSiteSchemeColor
 from django import forms
+from django.forms.fields import MultipleChoiceField
+from django.conf import settings
 
 
 class UserSiteSchemeColorInline(admin.StackedInline):
@@ -26,6 +28,8 @@ class UserSiteAdminForm(forms.ModelForm):
         super(UserSiteAdminForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['color_template'].queryset = self.instance.user_template.colors.all()
+
+    languages = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, choices=settings.LANGUAGES)
 
 
 class UserSiteAdmin(admin.ModelAdmin):
