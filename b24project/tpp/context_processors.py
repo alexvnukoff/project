@@ -14,8 +14,6 @@ def current_organization_processor(request):
 
 
 def site_languages_processor(request):
-    LANGUAGES = settings.LANGUAGES
-
     try:
         site_languages = get_current_site().user_site.languages
     except:
@@ -23,12 +21,12 @@ def site_languages_processor(request):
 
     if site_languages:
         obj = []
-        for code, lang in LANGUAGES:
+        for code, lang in settings.LANGUAGES:
             if code in site_languages:
                 obj.append((code, lang))
     else:
-        obj =  LANGUAGES
+        obj =  settings.LANGUAGES
 
     return {
-        'get_site_languages': obj
+        'site_languages': obj
     }
