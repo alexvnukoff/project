@@ -1,5 +1,10 @@
 {% extends 'usersites_templates/golan_purple/index.html' %}
 {% load CustomFilters %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "About us" %}{% endblock %}
+
 {% block content %}
     {{ block.super }}
 

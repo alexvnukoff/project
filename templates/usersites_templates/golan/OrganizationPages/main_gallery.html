@@ -4,6 +4,8 @@
 {% load humanize %}
 {% load content_tags %}
 
+{% block title %}{% trans "Gallery" %}{% endblock %}
+
 {% if site.user_site.organization.gallery_images %}
 
   <div class="container gal-container">

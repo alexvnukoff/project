@@ -4,6 +4,8 @@
 {% load staticfiles %}
 {% load content_tags %}
 
+{% block title %}{% trans "video" %}{% endblock %}
+
 {% block content %}
     {{ block.super }}
     {% videos 'Video/list.html' 10 page %}
