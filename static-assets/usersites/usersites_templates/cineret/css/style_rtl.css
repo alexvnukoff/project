@@ -129,6 +129,32 @@ body{
 .product{
     float: right;
 }
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-toggle {
+		float: left;
+	}
+
+	.navbar-default .navbar-toggle {
+		float: right;
+	}
+
+	.top-nav .pull-right{
+		float: left!important;
+	}
+
+	.coupon-timer p{
+        float: right;
+    }
+
+	.coupon .product__title{
+		float: right;
+	}
+
+	.coupon .product__discount{
+		float: left;
+	}
+}
 /* ----------- Contact Styling -------------------- */
 
 .main-contact .control-group{

@@ -445,6 +445,20 @@ h3 a:focus{
     .navbar-default .navbar-brand {
         font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
     }
+
+
+
+}
+
+@media (max-width: 767px) {
+    .navbar-default .container{
+		padding: 0;
+	}
+
+    .coupon-timer p{
+        padding-right: 5px;
+        padding-left: 5px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -939,6 +953,43 @@ h3 a:focus{
     }
 }
 
+@media (max-width: 767px){
+    .main-products .product img{
+        width: 30%;
+        float: left;
+        margin: 0 5px 5px 0;
+    }
+
+    .main-products .product .product__caption{
+        padding: 5px;
+    }
+
+    .main-products .product {
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 767px) {
+    .coupon .product__discount{
+        font-size: 1.5em;
+    }
+
+    .coupon .product__price{
+        margin-top: 10px;
+        text-align: left;
+        float: left;
+    }
+
+    .coupon .product__price, .coupon .product__deleted-price{
+
+    }
+
+    .coupon-div .coupon__btn{
+        float: right;
+        margin: 5px;
+    }
+}
+
 .item-page,
 .item-price-table{
     position: relative;
@@ -989,6 +1040,7 @@ h3 a:focus{
     background-image: url('../static-assets/usersites/usersites_templates/cineret/css/images/World_Mapbg.png');
     background-position: center;
     background-repeat: no-repeat;
+    margin-bottom: 10px;
 }
 
 .contact-info,

@@ -22,9 +22,9 @@
             {# Looping the coupons. #}
             {% for product in coupons %}
 
-                <div class="col-sm-6 col-md-6 col-xs-12 product coupon">
+                <div class="col-sm-12 col-md-6 col-xs-12 product coupon">
 
-                        <div class="col-sm-3 col-md-3 hidden-xs coupon-div">
+                        <div class="col-sm-3 col-md-3 col-xs-3 coupon-div">
 
                             {% if product.image %}
                                 <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
@@ -36,34 +36,36 @@
 
                         </div>
 
-                        <div class="col-sm-6 col-md-6 col-xs-6 coupon-div">
+                        <div class="col-sm-9 col-md-6 col-xs-9 coupon-div">
 
                             <div class="product__caption">
 
-                             <h3 class="product__title "><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
+                                 <h3 class="product__title "><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
+                                 <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
 
-                            {# KRN here i want the product category to be #}
-                            {% comment %}
-                            {% for category in product.categories %}
-                                <p class="product__cat">{{ category|truncatechars:20 }}</p>
-                            {% endfor %}
-                            {% endcomment %}
+                                {# KRN here i want the product category to be #}
+                                {% comment %}
+                                {% for category in product.categories %}
+                                    <p class="product__cat">{{ category|truncatechars:20 }}</p>
+                                {% endfor %}
+                                {% endcomment %}
 
-                            {# Description of the coupon product #}
-                            <p class="product__desc">{{ product.short_description|truncatechars:105 }}</p>
+                                {# Description of the coupon product #}
+                                <p class="product__desc hidden-sm hidden-xs">{{ product.short_description|truncatechars:105 }}</p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-sm-12 col-md-3 col-xs-12 coupon-div">
 
                             <div class="coupon-timer">
                                 <p class="timer-heading">{% trans "Promotion ends" %}</p>
                                 <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
                             </div>
 
-                            </div>
 
-                        </div>
-
-                        <div class="col-sm-3 col-md-3 col-xs-6 coupon-div">
-
-                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
 
                             {% if product.cost %}
                                 <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
