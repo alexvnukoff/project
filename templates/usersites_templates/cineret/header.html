@@ -43,28 +43,27 @@
 
             <a href="{% url 'b2c_products:basket' %}" class="header-cart"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a>
 
-            <div class="language-navi">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
+            {% if site_languages > 1 %}
+                <div class="language-navi">
+                    <ul class="dropdown-menu">
 
-                <ul class="dropdown-menu">
+                        {{ site_languages }}
+                      {% for code, lang in LANGUAGES %}
+                            {% if not code == LANGUAGE_CODE %}
++                                  <li><a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"><span class="hidden-xs">{{ lang }}</span></a></li>
++                              {% endif %}
+                      {% endfor %}
 
-                    {% get_available_languages as LANGUAGES %}
-                    {% for code, lang in LANGUAGES %}
-                    {% if not code == LANGUAGE_CODE %}
-                    <li><a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"><span class="hidden-xs">{{ lang }}</span></a></li>
-                    {% endif %}
-                    {% endfor %}
-
-                </ul>
-            </div>
-
+                    </ul>
+                </div>
+            {% endif %}
           </div>
     </div>
 
-        <div class="user-reg">
+        <div class="user-reg hidden-xs hidden-sm">
         {# Registration. login and logout #}
             {% if user.is_authenticated %}
-                <ul class="hidden-xs">
+                <ul class="">
                     {% get_messages_number as messages_number %}
                     <li>
                         <a href="{% url 'my_profile' %}">
@@ -101,12 +100,10 @@
            {% endif %}
     </div>
 
-        <div class="pull-right">
         <div class="tel vertical visible-xs">
             <i class="fa fa-phone-square" aria-hidden="true"></i>
             <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
         </div>
-    </div>
    </div>
 </div>
 {# -------------------------------------- #}
@@ -165,7 +162,7 @@
 
                 </ul>
 
-                <ul class="nav navbar-nav small-navbar visible-xs">
+                <ul class="nav navbar-nav small-navbar visible-xs visible-sm">
                         <li><a href="{% url 'main' %}"><i class="fa fa-home" aria-hidden="true"></i><span>{% trans 'Home' %}</span></a></li>
                         <li><a href="{% url 'pages:about' %}"><i class="fa fa-users" aria-hidden="true"></i><span>{% trans 'About us' %}</span></a></a></li>
 
@@ -193,7 +190,46 @@
 
                         <li><a href="{% url 'pages:contacts' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>{% trans 'Contact us' %}</span></a></a></li>
 
+                        <div class="user-reg">
+                                {# Registration. login and logout #}
+                                    {% if user.is_authenticated %}
+                                        <ul class="">
+                                            {% get_messages_number as messages_number %}
+                                            <li>
+                                                <a href="{% url 'my_profile' %}">
+                                                    {% if request.user.profile.avatar %}
+                                                        <img src="{{ request.user.profile.avatar.th }}"
+                                                            style="vertical-align:middle;margin-top:-4px;width:18px;">
+                                                    {% else %}
+                                                        <img src="/static/b24online/img/profile_24x24.jpg">
+                                                    {% endif %}
+                                                    &nbsp;
+                                                    {% if request.user.profile %}
+                                                        {{ request.user.profile.full_name }}
+                                                    {% else %}
+                                                        {{ request.user }}
+                                                    {% endif %}
+                                                </a>
+                                            </li>
+                                            <li><a href="{% url 'auth_logout' %}">{% trans 'Sign out' %}</a></li>
+                                            <li><a href="{% url 'messages:main' %}">
+                                                <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}</a>
+                                            </li>
+                                        </ul>
+                                    {% else %}
+                                        <ul>
+                                            <li>
+                                                <a href="{% url 'registration_register' %}" class="dialog-open"
+                                                    data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'auth_login' %}" class="dialog-open"
+                                                    data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a>
+                                            </li>
+                                        </ul>
+                                   {% endif %}
 
+                            </div>
 
                     </ul>
             </div>

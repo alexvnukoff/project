@@ -362,7 +362,8 @@ collapse the menu on 991px. */
 	}
 
 	.navbar-brand{
-		margin-right: 30px;
+		/*margin-right: 5px;*/
+		/*margin-left: 5px;*/
 	}
 }
 
@@ -540,7 +541,25 @@ collapse the menu on 991px. */
 	font-size: 16px;
 }
 
+.user-reg ul{
+    list-style: none;
+    padding: 2px;
+}
 
+.user-reg ul li{
+    display: inline;
+    padding-right: 5px;
+}
+
+.user-reg img{
+    display: inline;
+}
+
+@media (max-width: 767px) {
+	.user-reg{
+        padding: 10px;
+    }
+}
 
 /*---------- carousel Styling ----------*/
 #myCarousel{

@@ -2,11 +2,11 @@
 {% load static %}
 {% load i18n %}
 {% block content %}
-     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
 
-     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-     <script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+    <script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
     <script type="text/javascript">
+
         $(function() {
             $( ".date" ).datepicker();
             setTiny('textarea[class="tiny"]');

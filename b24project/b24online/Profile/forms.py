@@ -1,5 +1,7 @@
+# -*- encoding: utf-8 -*-
 from django import forms
 from b24online.models import Profile
+from urllib.parse import urlparse
 
 
 class ProfileForm(forms.ModelForm):
@@ -45,6 +47,19 @@ class ProfileForm(forms.ModelForm):
         self.fields['co'].widget.attrs.update({'class': 'text'})
         self.fields['co_slogan'].widget.attrs.update({'class': 'text'})
         self.fields['co_description'].widget.attrs.update({'class': 'textarea'})
+
+    def clean_site(self):
+        url = self.cleaned_data.get('site', False)
+
+        if url:
+            p = urlparse(url, 'http')
+            netloc = p.netloc or p.path
+            path = p.path if p.netloc else ''
+
+            if not netloc.startswith('www.'):
+                netloc = 'www.' + netloc
+
+            return(p.geturl().replace('///', '//'))
 
 
 class AvatarForm(forms.ModelForm):

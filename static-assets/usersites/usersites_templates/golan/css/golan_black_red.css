@@ -46,6 +46,12 @@ h2.page-header,
     color: #fff;
 }
 
+@media (max-width: 767px){
+    .user-reg a{  color: #000;  }
+}
+
+
+
 .header-cart{
 	color: #fff;
 }

@@ -13,11 +13,11 @@ h3 a:active,
 h3 a:focus,
 .navbar-default .nav li a:hover,
 .navbar-default .nav li a:focus{
-    color: #a40000;
+    color: #019e7d;
 }
 
 .btn-default{
-    background-color: #a40000;
+    background-color: #019e7d;
     color: #fff;
 }
 
@@ -25,7 +25,7 @@ h3 a:focus,
 .btn-default:active,
 .btn-default:focus{
     background-color: #fff;
-    color: #a40000;
+    color: #019e7d;
 }
 
 .tel .fa,
@@ -46,8 +46,8 @@ h3 a:focus,
 }
 
 .navbar-default .navbar-toggle {
-    /*background-color: #fff;*/
-    border-color: #a40000;
+    background-color: #019e7d;
+    border-color: #00d2a6;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
@@ -60,7 +60,7 @@ h3 a:focus,
 
 .navbar-default .navbar-nav > .active > a {
     color: white;
-    background-color: #a40000;
+    background-color: #019e7d;
 }
 
 .navbar-default .nav li a {
@@ -70,7 +70,7 @@ h3 a:focus,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: white;
-  background-color: #a40000;
+  background-color: #019e7d;
 }
 
 .top-nav .header-cart{
@@ -94,7 +94,7 @@ h3 a:focus,
 }
 
 .cust-nav__btn a:hover{
-    color: #a40000;
+    color: #019e7d;
 }
 
 @media (min-width: 768px) {
@@ -105,7 +105,7 @@ h3 a:focus,
 
 @media (min-width: 768px) {
     .navbar-default .navbar-brand {
-        color: #a40000;
+        color: #019e7d;
     }
 }
 
@@ -120,12 +120,12 @@ h3 a:focus,
 }
 
 .coupon {
-    background-color: #262626;
+    background-color: #404040;
     border: 1px solid #ddd;
 }
 
 .product__discount{
-    background-color: #a40000;
+    background-color: #019e7d;
 }
 
 .product__title{
@@ -138,8 +138,8 @@ h3 a:focus,
 
 .contact-fields .main-contact-btn{
     color: #ffffff;
-    background-color: #a40000;
-    border-color: #a40000;
+    background-color: #019e7d;
+    border-color: #019e7d;
 }
 
 .main-contact{
@@ -155,7 +155,7 @@ h3 a:focus,
 	background: #404040;
 	border: 2px solid #FAFAFA;
 	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-	background: -webkit-linear-gradient(45deg, #404040, #212121);
+	background: -webkit-linear-gradient(45deg, #656565, #404040);
 }
 
 .pin img {
@@ -212,7 +212,7 @@ footer a,
 /*.navbar-inverse .navbar-nav>.active a:hover,*/
 /*.navbar-inverse .navbar-nav>.active a:focus,*/
 /*.navbar-inverse .navbar-nav>.active a:active{*/
-	/*background-color: #a40000;*/
+	/*background-color: #019e7d;*/
 	/*color: #fff!important;*/
 /*}*/
 
@@ -245,19 +245,24 @@ footer a,
 
 /*---------- Product Styling ----------*/
 .product .thumbnail{
-	background-color: #262626;
+	background-color: #404040;
 }
 
 .product__title{
 	border-bottom: 1px solid #fff;
 }
+
 .product__title a{
 	color: #fff;
 }
+
 .product__title a:hover{
-	color: #a40000;
+	color: #019e7d;
 }
 
+.item-page__price{
+    color: #fff;
+}
 
 /*---------- Jobs Styling ----------*/
 .job_offer{
@@ -281,7 +286,7 @@ footer,
 
 footer a:hover,
 footer a:active{
-	/*color: #a40000!important;*/
+	/*color: #019e7d!important;*/
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{
@@ -290,7 +295,7 @@ footer a:active{
 
 .top_search input,
 .top_search input:focus{
-	/*background-color: #a40000;*/
+	/*background-color: #019e7d;*/
 	border: 1px solid #fff;
 	color: #000;
 }
@@ -310,11 +315,11 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #a40000;
+    border: 1px solid #019e7d;
 }
 
 .pagination>li>a, .pagination>li>span{
-	/*color: #a40000;*/
+	/*color: #019e7d;*/
 }
 
 .pagination>.active>a,
@@ -323,7 +328,7 @@ footer a:active{
 .pagination>.active>span,
 .pagination>.active>span:focus,
 .pagination>.active>span:hover{
-	/*background-color: #a40000;*/
+	/*background-color: #019e7d;*/
 	color: #fff;
 	border: 1px solid #ddd;
 }

@@ -15,6 +15,7 @@ function initialize(enableSearch) {
   var mapOptions = {
     zoom: 8,
     center: myLatlng,
+    streetViewControl: false,
       mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
