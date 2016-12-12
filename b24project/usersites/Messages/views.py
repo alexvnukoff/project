@@ -19,8 +19,7 @@ from usersites.mixins import UserTemplateMixin
 logger = logging.getLogger(__name__)
 
 
-class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
-                             ItemsList):
+class UsersitesChatsListView(UserTemplateMixin, ItemsList):
     """The user's chats list"""
     template_name = '{template_path}/Messages/chats.html'
     paginate_by = 10

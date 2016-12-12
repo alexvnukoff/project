@@ -1589,9 +1589,7 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
             return 'User <%s>' % str(user_uuid)
 
     def get_title(self, direction='me'):
-        """
-        Return the MessageChatParticipant title
-        """
+        """Return the MessageChatParticipant title."""
         result = None
         if self.user:
             if self.user and getattr(self.user, 'profile', None) \
@@ -1607,6 +1605,14 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
             else:
                 result = _('Other side user')
         return result        
+
+    def get_avatar(self):
+        """Return the MessageChatParticipant user profile avatar."""
+        if self.user:
+            if self.user and getattr(self.user, 'profile', None) \
+                    and self.user.profile.avatar:
+                return self.user.profile.avatar
+        return None
                 
 
 class MessageChat(models.Model):
