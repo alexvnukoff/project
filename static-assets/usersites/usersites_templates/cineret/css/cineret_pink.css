@@ -1,7 +1,7 @@
 /*---------- General Styling ----------*/
 body {
-	background-color: #000;
-    color: #fff;
+	background-color: #fff;
+    color: #000;
     /* main color: color: #83ba3a */
 }
 
@@ -13,19 +13,19 @@ h3 a:active,
 h3 a:focus,
 .navbar-default .nav li a:hover,
 .navbar-default .nav li a:focus{
-    color: #a40000;
+    color: #f90064;
 }
 
 .btn-default{
-    background-color: #a40000;
+    background-color: #f90064;
     color: #fff;
 }
 
 .btn-default:hover,
 .btn-default:active,
 .btn-default:focus{
-    background-color: #fff;
-    color: #a40000;
+    background-color: #8a0039;
+    color: #fff;
 }
 
 .tel .fa,
@@ -46,8 +46,8 @@ h3 a:focus,
 }
 
 .navbar-default .navbar-toggle {
-    /*background-color: #fff;*/
-    border-color: #a40000;
+    background-color: #f90064;
+    border-color: #8a0039;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
@@ -60,17 +60,17 @@ h3 a:focus,
 
 .navbar-default .navbar-nav > .active > a {
     color: white;
-    background-color: #a40000;
+    background-color: #f90064;
 }
 
 .navbar-default .nav li a {
-    color: #000;
+    color: white;
 }
 
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: white;
-  background-color: #a40000;
+  background-color: #8a0039;
 }
 
 .top-nav .header-cart{
@@ -78,7 +78,7 @@ h3 a:focus,
 }
 
 .top-nav .header-cart:hover{
-	color: #fff;
+	color: #8a0039;
 }
 
 .overlay {
@@ -90,11 +90,11 @@ h3 a:focus,
 }
 
 .cust-nav__btn a{
-    color: #fff;
+    color: #f90064;
 }
 
 .cust-nav__btn a:hover{
-    color: #a40000;
+    color: #000;
 }
 
 @media (min-width: 768px) {
@@ -105,31 +105,31 @@ h3 a:focus,
 
 @media (min-width: 768px) {
     .navbar-default .navbar-brand {
-        color: #a40000;
+        color: #f90064;
     }
 }
 
 @media (min-width: 768px) {
     .navbar-default.navbar-shrink {
-        background-color: #fff;
+        background-color: #222222;
     }
 }
 
 .proposal-link{
-    color: #fff;
+    color: #000;
 }
 
 .coupon {
-    background-color: #262626;
+    background-color: #fff;
     border: 1px solid #ddd;
 }
 
 .product__discount{
-    background-color: #a40000;
+    background-color: #f90064;
 }
 
 .product__title{
-    color: #fff;
+    color: #f90064;
 }
 
 .product__deleted-price{
@@ -138,12 +138,12 @@ h3 a:focus,
 
 .contact-fields .main-contact-btn{
     color: #ffffff;
-    background-color: #a40000;
-    border-color: #a40000;
+    background-color: #f90064;
+    border-color: #f90064;
 }
 
 .main-contact{
-    background: #000;
+    background: #8a0039;
     color: #fff;
 }
 
@@ -152,10 +152,10 @@ h3 a:focus,
 }
 
 .pin {
-	background: #404040;
+	background: #FEFEFE;
 	border: 2px solid #FAFAFA;
 	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-	background: -webkit-linear-gradient(45deg, #404040, #212121);
+	background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
 }
 
 .pin img {
@@ -163,7 +163,7 @@ h3 a:focus,
 }
 
 .pin p {
-	color: #fff;
+	color: #333;
 }
 
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
@@ -172,6 +172,7 @@ h3 a:focus,
 .side-bar a:focus,
 .side-bar a:active,
 .product .thumbnail,
+.product__desc,
 .go-to-full,
 footer a,
 #timer-detail-page,
@@ -184,12 +185,11 @@ footer a,
 .job_offer__btn:active,
 .item-price-table,
 .coupon-timer{
-	color: #fff !important;
+	color: #000 !important;
 }
 
-.membership-banner__member-text,
-.product__desc{
-    color: #fff;
+.membership-banner__member-text{
+    color: #000;
 }
 
 .cust-nav ul li a,
@@ -198,7 +198,7 @@ footer a,
 }
 
 .cust-nav__btn{
-	background-color: #000;
+	background-color: #fff;
 }
 
 .navbar-inverse .navbar-nav>.active>a,
@@ -245,17 +245,11 @@ footer a,
 
 /*---------- Product Styling ----------*/
 .product .thumbnail{
-	background-color: #262626;
+	background-color: #fff;
 }
 
 .product__title{
 	border-bottom: 1px solid #fff;
-}
-.product__title a{
-	color: #fff;
-}
-.product__title a:hover{
-	color: #a40000;
 }
 
 
@@ -272,7 +266,7 @@ footer a,
 /*---------- Footer Styling ----------*/
 footer,
 .membership-banner{
-	background-color: #000;
+	background-color: #f2f2f2;
 }
 
 .rights{
@@ -310,7 +304,7 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #a40000;
+    border: 1px solid #f90064;
 }
 
 .pagination>li>a, .pagination>li>span{
@@ -329,16 +323,12 @@ footer a:active{
 }
 
 .category{
-	/*background-color: #fff;*/
+	background-color: #fff;
 	color: #000;
 }
 
 .field_error {
     font-size: 80%;
     color: red;
-}
-
-.panel-default {
-    color: #000;
 }
 

@@ -246,6 +246,10 @@ body{
 .banner-ad-main-collection{
 	float: left;
 }
+
+@media (max-width: 767px){
+    .user-reg{  float: right;  }
+}
 /*---------- Coupons Styling ----------*/
 
 .coupon-panel{

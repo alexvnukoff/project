@@ -138,9 +138,19 @@
 	float: right;
 }
 
+@media (max-width: 767px){
+    .main-products .product img{
+        float: left;
+        margin: 0 5px 5px 0;
+    }
+
+	.coupon-timer p{  float: left;  }
+	.coupon .product__title{  float: left;  }
+	.coupon .product__discount{  float: right;  }
+    .user-reg{  float: left;  }
+}
+
 
 /*---------- table Styling ----------*/
 /* The bable is used in the cart page to display the shoppings table */
-.pay{
-    float: right;
-}
+.pay{  float: right;  }
