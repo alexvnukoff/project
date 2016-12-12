@@ -130,7 +130,7 @@ h3 a:focus{
 
 @media (max-width: 480px) {
 	.in-page {
-		margin-top: 160px;
+		margin-top: 70px;
 	}
 }
 
@@ -142,7 +142,7 @@ h3 a:focus{
 
 @media (min-width: 768px) and (max-width: 991px) {
     .in-page {
-		margin-top: 180px;
+		margin-top: 70px;
 	}
 }
 
@@ -988,6 +988,10 @@ h3 a:focus{
         float: right;
         margin: 5px;
     }
+
+    .user-reg{
+        padding: 10px;
+    }
 }
 
 .item-page,
@@ -1343,6 +1347,10 @@ footer .btn-default{
 
 .table h3{
 	margin-top: 0px;
+}
+
+.about-main__text table{
+    margin: 0 auto;
 }
 
 

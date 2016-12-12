@@ -64,7 +64,7 @@ h3 a:focus,
 }
 
 .navbar-default .nav li a {
-    color: white;
+    color: #000;
 }
 
 .navbar-default .navbar-nav > .active > a:hover,

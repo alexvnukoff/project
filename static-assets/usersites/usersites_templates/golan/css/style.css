@@ -73,6 +73,9 @@
 	float: right;
 }
 
+@media (max-width: 767px){
+    .user-reg{  float: left;  }
+}
 
 /*---------- about-banner Styling ----------*/
 .about-main__movie{

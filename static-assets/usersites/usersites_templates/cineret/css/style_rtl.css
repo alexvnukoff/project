@@ -154,6 +154,10 @@ body{
 	.coupon .product__discount{
 		float: left;
 	}
+
+    .user-reg{
+        float: right;
+    }
 }
 /* ----------- Contact Styling -------------------- */
 
