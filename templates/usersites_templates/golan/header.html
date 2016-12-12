@@ -43,12 +43,12 @@
 
                 <a href="{% url 'b2c_products:basket' %}" class="header-cart"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a>
 
-                % if site_languages > 1 %}
+                  {% if site_languages > 1 %}
                 <div class="language-navi">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
 
                     <ul class="dropdown-menu">
-                    
+
                         {% for code, lang in site_languages %}
                                   <option value="{{ code }}">{{ lang }}</option>
                         {% endfor %}
