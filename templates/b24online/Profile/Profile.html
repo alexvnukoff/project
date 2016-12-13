@@ -191,6 +191,12 @@
                 {% endif %}
                 {{ form.co }}
 
+                <label>{% trans 'Company phone' %}</label>
+                {% if form.errors.co_phone %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_phone.0 }}</div></div>
+                {% endif %}
+                {{ form.co_phone }}
+
                 <label>{% trans 'Company slogan' %}</label>
                 {% if form.errors.co_slogan %}
                     <div class="error-handler"> <div class="formserror2">{{ form.errors.co_slogan.0 }}</div></div>

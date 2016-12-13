@@ -122,6 +122,12 @@ opacity:0.8;
 
             <h3 style="text-align:center;margin:0;padding:0;" id="id_co_mobile">{{ profile.co }}</h3>
             <p style="margin:0;color:#828282;" id="id_co_slogan_mobile">{{ profile.co_slogan }}</p>
+
+            <div id="company-header" style="margin:5px 0">
+            <h4 style="text-align:center;margin:0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Company' %}</h4>
+            <p style="margin:0;"><a href="#" id="id_co_phone_mobile">{{ profile.co_phone }}</a></p>
+            </div>
+
             <div style="margin:0;" id="id_co_description_mobile">{{ profile.co_description|linebreaks }}</div>
 
             <div id="site-header">
@@ -173,6 +179,7 @@ opacity:0.8;
     var co = $("#id_co");
     var co_slogan = $("#id_co_slogan");
     var co_description = $("#id_co_description");
+    var co_phone = $("#id_co_phone");
 
     var lastname_mobile = $("#id_last_name_mobile");
     var firstname_mobile = $("#id_first_name_mobile");
@@ -184,6 +191,7 @@ opacity:0.8;
     var co_mobile = $("#id_co_mobile");
     var co_slogan_mobile = $("#id_co_slogan_mobile");
     var co_description_mobile = $("#id_co_description_mobile");
+    var co_phone_mobile = $("#id_co_phone_mobile");
 
     $("#sticky-block").stick_in_parent();
 
@@ -196,6 +204,7 @@ opacity:0.8;
     co_mobile.text("{{ profile.co }}");
     co_slogan_mobile.text("{{ profile.co_slogan }}");
     co_description_mobile.text("{{ profile.co_description }}");
+    co_phone_mobile.text("{{ profile.co_phone }}");
 
     if(middlename.val() != '') {
         middlename_mobile.text("{{ profile.middle_name }}");
@@ -221,6 +230,12 @@ opacity:0.8;
         $("#site-header").hide();
     } else {
         $("#site-header").show();
+    }
+
+    if(co_phone.val() == '') {
+        $("#company-header").hide();
+    } else {
+        $("#company-header").show();
     }
 
     lastname.on("change paste keyup", function() {
@@ -279,6 +294,16 @@ opacity:0.8;
 
     co_description.on("change paste keyup", function() {
         co_description_mobile.text($(this).val());
+    });
+
+    co_phone.on("change paste keyup", function() {
+        co_phone_mobile.text($(this).val());
+
+        if(co_phone.val() == '') {
+            $("#company-header").hide();
+        } else {
+            $("#company-header").show();
+        }
     });
 
 </script>
