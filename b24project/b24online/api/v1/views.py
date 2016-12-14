@@ -40,15 +40,6 @@ def wall(request):
     }})
 
 
-class ListUsers(APIView):
-    def get(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        usernames = [user.username for user in User.objects.all()]
-        return Response(usernames)
-
-
 @api_view(['GET'])
 def news(request):
     news_queryset = News.get_active_objects() \
