@@ -1,8 +1,7 @@
 from django.core.paginator import Paginator
 from django.utils.functional import cached_property
-from rest_framework.views import APIView
 
-from b24online.models import Country, Chamber, Branch, InnovationProject, B2BProduct, BusinessProposal, Exhibition, News
+from b24online.models import Country
 from b24online.search_indexes import SearchEngine
 
 
@@ -19,7 +18,7 @@ class ContentHelper:
         page = 1
 
         try:
-            page = int(self.request.data.get('page', 1))
+            page = int(self.request.query_params.get('page', 1))
         except ValueError:
             pass
 
@@ -36,7 +35,7 @@ class ContentHelper:
                 applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
         # Apply geo_country by our internal code
-        if self.request.session.get('geo_country') and not self.request.data.get('order1'):
+        if self.request.session.get('geo_country') and not self.request.query_params.get('order1'):
             geo_country = self.request.session['geo_country']
             applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
 
@@ -44,14 +43,14 @@ class ContentHelper:
 
     @cached_property
     def search_query(self):
-        return self.request.data.get('q', '').strip()
+        return self.request.query_params.get('q', '').strip()
 
     def is_filtered(self):
         return self.applied_filters or self.search_query
 
     def get_filtered_queryset(self):
         if self.is_filtered():
-            hits = self._apply_filters(InnovationProject).sort(*self.sorting).execute().hits
+            hits = self._apply_filters(self.queryset.model).sort(*self.sorting).execute().hits
 
             if hits.total > 0:
                 return hits
@@ -70,7 +69,7 @@ class ContentHelper:
         page = self.paginator.page(self.page)
 
         if self.is_filtered():
-            return self.queryset.filter(pk=[hit.django_id for hit in page.object_list])
+            return self.queryset.filter(pk__in=[hit.django_id for hit in page.object_list])
 
         return page.object_list
 
@@ -88,7 +87,7 @@ class ContentHelper:
                 s = s.filter('terms', **{filter_key: values})
 
         # Apply geo_country by our internal code
-        if self.request.session.get('geo_country') and not self.request.data.get('order1'):
+        if self.request.session.get('geo_country') and not self.request.query_params.get('order1'):
             s = s.filter('terms', **{'country': [self.request.session['geo_country']]})
 
         if self.search_query:
@@ -99,7 +98,7 @@ class ContentHelper:
     def _filter_values(self, filter_name):
         key = "filter[%s][]" % filter_name
 
-        return self.request.data.getlist(key)
+        return self.request.query_params.getlist(key)
 
 # class WallContentHelper(ContentHelper):
 #     valid_filters = {
