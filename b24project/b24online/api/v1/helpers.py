@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.utils.functional import cached_property
+from rest_framework.views import APIView
 
 from b24online.models import Country, Chamber, Branch, InnovationProject, B2BProduct, BusinessProposal, Exhibition, News
 from b24online.search_indexes import SearchEngine
@@ -99,7 +100,6 @@ class ContentHelper:
         key = "filter[%s][]" % filter_name
 
         return self.request.data.getlist(key)
-
 
 # class WallContentHelper(ContentHelper):
 #     valid_filters = {

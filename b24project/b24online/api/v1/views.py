@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from b24online.api.v1.helpers import ContentHelper
 from b24online.api.v1.serializers import B2BProductSerializer, ProjectsSerializer, ProposalsSerializer, \
@@ -16,7 +17,7 @@ def wall(request):
 
     projects = ContentHelper(queryset=projects_queryset, request=request, page_size=1)
 
-    products_queryset = B2BProduct.get_active_objects()
+    products_queryset = B2BProduct.get_active_objects().prefetch_related('company__countries')
     products = ContentHelper(queryset=products_queryset, request=request, page_size=4)
 
     proposals_queryset = BusinessProposal.get_active_objects() \
@@ -39,10 +40,53 @@ def wall(request):
     }})
 
 
+class ListUsers(APIView):
+    def get(self, request, format=None):
+        """
+        Return a list of all users.
+        """
+        usernames = [user.username for user in User.objects.all()]
+        return Response(usernames)
+
+
 @api_view(['GET'])
 def news(request):
     news_queryset = News.get_active_objects() \
         .select_related('country').prefetch_related('organization', 'organization__countries')
-    news = ContentHelper(queryset=news_queryset, request=request, page_size=10)
+    serialized_news = ContentHelper(queryset=news_queryset, request=request, page_size=10)
 
-    return Response({'content': NewsSerializer(news.content, many=True).data})
+    return Response({'content': NewsSerializer(serialized_news.content, many=True).data})
+
+
+@api_view(['GET'])
+def products(request):
+    products_queryset = B2BProduct.get_active_objects().prefetch_related('company__countries')
+    serialized_products = ContentHelper(queryset=products_queryset, request=request, page_size=10)
+
+    return Response({'content': B2BProductSerializer(serialized_products.content, many=True).data})
+
+
+@api_view(['GET'])
+def projects(request):
+    projects_queryset = InnovationProject.get_active_objects().prefetch_related('organization', 'organization__countries')
+    serialized_projects = ContentHelper(queryset=projects_queryset, request=request, page_size=10)
+
+    return Response({'content': ProjectsSerializer(serialized_projects.content, many=True).data})
+
+
+@api_view(['GET'])
+def proposals(request):
+    proposals_queryset = BusinessProposal.get_active_objects()\
+        .prefetch_related('branches', 'organization', 'organization__countries')
+    serialized_proposals = ContentHelper(queryset=proposals_queryset, request=request, page_size=10)
+
+    return Response({'content': ProposalsSerializer(serialized_proposals.content, many=True).data})
+
+
+@api_view(['GET'])
+def exhibitions(request):
+    exhibitions_queryset = Exhibition.get_active_objects()\
+        .select_related('country').prefetch_related('organization')
+    serialized_exhibitions = ContentHelper(queryset=exhibitions_queryset, request=request, page_size=10)
+
+    return Response({'content': ExhibitionsSerializer(serialized_exhibitions.content, many=True).data})
