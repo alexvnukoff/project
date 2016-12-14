@@ -45,16 +45,12 @@
 
             {% if site_languages > 1 %}
                 <div class="language-navi">
-                    <ul class="dropdown-menu">
-
-                        {{ site_languages }}
-                      {% for code, lang in LANGUAGES %}
-                            {% if not code == LANGUAGE_CODE %}
-+                                  <li><a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"><span class="hidden-xs">{{ lang }}</span></a></li>
-+                              {% endif %}
-                      {% endfor %}
-
-                    </ul>
+                    <select name="lang" id="lang_select">
+                            <option>{% trans 'Mother tongue' %}</option>
+                            {% for code, lang in get_site_languages %}
+                            <option value="{{ code }}">{{ lang }}</option>
+                            {% endfor %}
+                        </select>
                 </div>
             {% endif %}
           </div>
