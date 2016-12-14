@@ -64,6 +64,10 @@ h3 a:focus,
 }
 
 .navbar-default .nav li a {
+    color: #fff;
+}
+
+.small-navbar li a {
     color: #000;
 }
 
