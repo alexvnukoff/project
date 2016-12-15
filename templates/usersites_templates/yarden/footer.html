@@ -16,7 +16,7 @@
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                 {% endfor %}
 
-                {% for doc_obj in site.user_site.organization.document_files %}
+                {% for doc_obj in site.user_site.organization.document_files.all %}
                     <li><a href="{{ doc_obj.item }}">doc_obj.name</a></li>
                 {% endfor %}
 
