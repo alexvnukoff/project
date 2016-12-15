@@ -1,0 +1,13 @@
+{% extends 'usersites_templates/yarden/index.html' %}
+{% load i18n %}
+{% load content_tags %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+
+{% block title %}{% trans "B2C Products" %}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% b2c_products 'B2CProducts/list.html' 16 page category %}
+{% endblock %}

@@ -25,26 +25,12 @@ h2.page-header,
 .table h3 a,
 .product__price a,
 .cust-nav__btn a,
-.product__title a{
-	color: #002061 !important;
+.product__title{
+	color: #821212  !important;
 }
 
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title,
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title a{
-	color: #000;
-}
-
-
-/* navigation styling */
-
-.navbar-nav>li.active a,
-.navbar-nav>li>a:hover,
-.navbar-nav>li>a:focus,
-.navbar-nav>li>a:active{
-	color: #fff;
-	text-shadow:0px 0px 3px #67d0f9;
-	/*font-weight: bold;*/
-	background-color: #002061;
+.header-cart{
+    color: #fff;
 }
 
 .tel .fa,
@@ -52,20 +38,10 @@ h2.page-header,
     color: #fff;
 }
 
-.user-reg a{  color: #fff;  }
-
-.main-nav-btn .navbar-toggle{
-	background-color: #002061;
-	border-color: #fff;
-}
-
-.header-cart{
+.top-nav .user-reg a{
 	color: #fff;
 }
 
-.header-cart:hover{
-    color: #67d0f9;
-}
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
 .about-main,
 .side-bar a:hover,
@@ -84,49 +60,70 @@ footer a,
 .job_offer__btn:focus,
 .job_offer__btn:active,
 .item-price-table,
-.coupon-timer,
-.side-bar a,
-.select-lang,
-.item-page__qty-box,
-.cart{
+.coupon-timer{
 	color: #000 !important;
+}
+
+.membership-banner__member-text{
+    color: #000;
 }
 
 .cust-nav ul li a,
 .navbar-inverse .navbar-nav>li>a{
-	color: #fff;
+	color: #999;
 }
 
 .cust-nav__btn{
 	background-color: #fff;
 }
 
-.navbar-inverse .navbar-nav>.active>a{
-	/*background-color: #fff;*/
-	/*border-radius: 15px;*/
-	color: #fff;
-	font-weight: bold;
-	background-color: #002061;
-}
-
+.navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav>li>a:hover,
 .navbar-inverse .navbar-nav>li>a:focus,
-.navbar-inverse .navbar-nav>li>a:active {
-	color: #fff;
-	/*font-weight:bold;*/
-	background-color: #002061;
+.navbar-inverse .navbar-nav>li>a:active{
+	/*background-color: #fff;*/
+	/*border-radius: 20px;*/
+	color: #000;
 }
 
 .navbar-inverse .navbar-nav>.active a:hover,
 .navbar-inverse .navbar-nav>.active a:focus,
 .navbar-inverse .navbar-nav>.active a:active{
-	background-color: #002061;
-	color: #fff!important;
-	text-shadow: none;
+	/*background-color: #002061;*/
+	/*color: #000!important;*/
 }
 
 .carousel-text {
     background: rgba(255,255,255,0.75);
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:focus,
+.navbar-inverse .navbar-nav>.active>a:hover{
+	color: #000;
+	background: #fff;
+}
+
+.navbar-nav>li.active a,
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus,
+.navbar-nav>li>a:active{
+	color: #000;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: #000;
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #ddd;
+}
+/*---------- Text Styling - Black text ----------*/
+.side-bar a,
+.select-lang,
+.item-page__qty-box,
+.cart{
+	color: #000;
 }
 
 /*---------- Text Styling - Dimming with gray ----------*/
@@ -137,17 +134,24 @@ footer a,
 }
 
 /*---------- Background color Styling ----------*/
-.navbar-inverse,
+
 #timer-detail-page > div,
 #timer-detail-page div > span{
-	background-color: #002061;
+	background-color: #821212 ;
 }
+
+.navbar-inverse{
+	background: #fff;
+	border: none;
+}
+
+
 
 /*---------- More custome Styling ----------*/
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active{
-	background-color: #002061 !important;
+	background-color: #821212  !important;
 }
 
 /*---------- carousel Styling ----------*/
@@ -159,15 +163,33 @@ footer a,
 
 /*---------- Product Styling ----------*/
 .product .thumbnail{
-	background-color: #f2f2f2;
+	background-color: #f8f8f8;
 }
 
 .product__title{
 	border-bottom: 1px solid #fff;
 }
 
+.product__title{
+	text-align: center;
+}
+
+.product__title a{
+	color: #821212 ;
+	text-decoration: none;
+}
+
+.product__desc{
+	text-align: center;
+	height: 60px;
+}
+
+.product .thumbnail{
+	height: inherit;
+}
+
 .product__discount{
-	color: #005d89;
+	color: #821212 ;
 }
 
 .product__btn .btn,
@@ -176,14 +198,14 @@ a.product__btn,
 .special_offer__btn, .job_offer__btn,
 .news__btn,
 .special_offer__btn, .job_offer__btn{
-	border-color: #002061;
+	border-color: #821212 ;
 	color: #fff;
-	background-color: #002061
+	background-color: #821212
 }
 
 a.coupon__btn{
-	background-color: #005d89;
-	border-color: #002061;
+	background-color: #c60000;
+	border-color: #821212 ;
 }
 
 .coupon__btn:hover,
@@ -201,8 +223,8 @@ a.coupon__btn{
 .job_offer__btn:active,
 .news__btn:focus,
 .news__btn:active{
-	background-color: #005d89;
-	border-color: #002061;
+	background-color: #c60000 ;
+	border-color: #821212;
 	color: #fff!important;
 }
 /*---------- Jobs Styling ----------*/
@@ -216,13 +238,9 @@ a.coupon__btn{
 }
 
 /*---------- Footer Styling ----------*/
-footer{
-	background-color: #f2f2f2;
-}
-
+footer,
 .membership-banner{
-	background-color: #002061;
-	color: #fff;
+	background-color: #f2f2f2;
 }
 
 .rights{
@@ -231,7 +249,7 @@ footer{
 
 footer a:hover,
 footer a:active{
-	color: #002061!important;
+	color: #c60000!important;
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{
@@ -241,8 +259,8 @@ footer a:active{
 .top_search input,
 .top_search input:focus{
 	background-color: #fff;
-    border: 1px solid #aaa;
-    color: #000;
+	border: 1px solid #ddd;
+	color: #aaa;
 }
 
 .top_search input:focus{
@@ -260,11 +278,11 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #002061;
+    border: 1px solid #3f1832;
 }
 
 .pagination>li>a, .pagination>li>span{
-	color: #002061;
+	color: #821212;
 }
 
 .pagination>.active>a,
@@ -273,7 +291,7 @@ footer a:active{
 .pagination>.active>span,
 .pagination>.active>span:focus,
 .pagination>.active>span:hover{
-	background-color: #002061;
+	background-color: #821212;
 	color: #fff;
 	border: 1px solid #ddd;
 }
@@ -283,6 +301,7 @@ footer a:active{
 	color: #000;
 }
 
+
 #myCarousel{
 	margin-top: 20px;
 }
@@ -290,7 +309,7 @@ footer a:active{
 /*--------New coupon design -------------*/
 
 .ver-coupon__title{
-	color: #002061;
+	color: #821212;
 }
 
 .ver-coupon-discount .ver-coupon__discount{
@@ -302,13 +321,13 @@ footer a:active{
 }
 
 .ver-coupon-discount{
-	background-color: #002061;
+	background-color: #821212;
 }
 
 .ver-coupon-price .ver-coupon__btn{
-	border-color: #002061;
+	border-color: #3f1832;
     color: #fff;
-    background-color: #002061;
+    background-color: #821212;
 }
 
 .ver-coupon-price .ver-coupon__deleted-price{
@@ -316,36 +335,8 @@ footer a:active{
 
 }
 
-#main-page-coupons .main-coupon-wrap {
-	border: 1px solid #002061;
+.addition-pages{
+	color: #821212;
 }
-
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
-	background-color: #002061;
-}
-
-#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
-	background-color: #002061;
-	color: #fff!important;
-}
-
-#leads-in-product,
-#leads-in-page{
-	background-color: #eee;
-}
-
-#leads-in-product .main-contact-btn,
-#leads-in-page .main-contact-btn{
-	background-color: #005d89;
-	color: #fff;
-}
-
-#leads-in-product .main-contact-btn:hover,
-#leads-in-page .main-contact-btn:hover{
-	background-color: #005d89;
-	color: #fff;
-}
-
-
 
 

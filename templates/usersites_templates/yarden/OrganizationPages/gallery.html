@@ -1,0 +1,25 @@
+{% extends 'usersites_templates/yarden/index.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Gallery" %}{% endblock %}
+
+{% block content %}
+
+    <div class="container galllery-page-wrapper">
+
+        <h1 class="page-header">{% trans 'Gallery' %}</h1>
+
+                <ul class="gallery">
+                    {% for gallery_obj in site.user_site.organization.gallery_images %}
+                        <div class="col-md-3 col-sm-6 co-xs-12 gal-item">
+                            <figure>
+                                <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
+                                    <img src="{{ gallery_obj.image.original }}">
+                                </a>
+                            </figure>
+                        </div>
+                {% endfor %}
+                </ul>
+
+    </div>
+{% endblock %}

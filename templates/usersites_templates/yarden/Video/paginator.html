@@ -1,0 +1,15 @@
+{% extends 'usersites_templates/yarden/Paginator.html' %}
+{% load CustomFilters %}
+{% load i18n %}
+{% load content_tags %}
+{% block before_paginator %}
+    {% if is_paginated %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+{% block after_paginator %}
+    {% if is_paginated %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+

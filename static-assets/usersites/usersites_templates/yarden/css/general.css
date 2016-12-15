@@ -26,13 +26,13 @@ html, body {height: 100%;}
 
 #main {
     overflow:auto;
-	padding-bottom: 300px;
+	padding-bottom: 230px;
 }  /* must be same height as the footer */
 
 #main-footer {
     position: relative;
-	margin-top: -300px; /* negative value of footer height */
-	height: 300px;
+	margin-top: -230px; /* negative value of footer height */
+	height: 230px;
 	clear:both;
 }
 
@@ -677,7 +677,7 @@ collapse the menu on 991px. */
 .thumbnail .product__price__coupon{
 	position: absolute;
 	top: -1px;
-	width: 70%;
+	width: 50%;
 	height: auto;
 	z-index: 145;
 }
@@ -730,8 +730,64 @@ collapse the menu on 991px. */
 	position: relative;
 }
 
+.main-video .media{
+	margin-top: 0;
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-bottom: 5px;
+}
+
+.main-video .news__img {
+	padding-right: 0;
+}
+
+.main-video .main-video-img {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.main-video .news-wrapper {
+    padding-left: 0;
+}
+
+.main-video a.news__btn{
+	margin: 0 auto;
+	display: block;
+	width: 100px;
+	float: none;
+}
+
 .main-video img{
 	padding-bottom: 10px;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.product__caption {
+		padding-bottom: 5px!important;
+	}
+
+	.product__discount {
+		font-size: 20px !important;
+	}
+
+	.thumbnail .product__price__coupon{
+		margin: 0!important;
+	}
+
+	.main-proposal .news__text{
+		display: none;
+	}
+
+	.main-proposal .news__title{
+		font-size: 16px;
+		width: 70%;
+		float: left;
+	}
+
+	.page-header {
+		margin-top: 10px;
+	}
 }
 
 .categories-side{
@@ -1883,6 +1939,93 @@ footer .btn-default{
 	}
 }
 
+/* Gallery ****/
+/* gallery style */
+.gal-item img{
+	width: 100%;
+}
+
+.gal-item {
+	padding: 5px;
+}
+
+.galllery-page-wrapper .gallery img{
+	float: right;
+	padding: 0;
+}
+
+.galllery-page-wrapper{
+	margin-bottom: 20px;
+}
+
+/* additional styling */
+/**********************/
+.addition-pages{
+	text-decoration: none;
+	padding-right: 10px;
+}
+
+.thumbnail img{
+	width: 100%;
+}
+
+.thumbnail img {
+    /* max-width: 276px; */
+    max-height: 250px;
+}
+
+@media (max-width: 767px) {
+	.thumbnail img {
+		/* max-width: 276px; */
+		max-height: 450px;
+	}
+}
+
+.coupon-timer{
+	bottom: 25px;
+	text-align: center;
+}
+
+.product__caption{
+	padding-bottom: 30px;
+}
+
+.main-products-thumb .product,
+.main-products .product{
+    margin-left : 0;
+    margin-right : 0;
+	padding: 0 2px;
+}
+
+.product .thumbnail{
+    padding: 0;
+    border: none;
+}
+
+/* fix the col fluid */
+.container-flex > div[class*='col-'] div, .row-flex > div[class*='col-'] div {
+    width: 100%;
+}
+
+.row-flex-wrap {
+    -webkit-flex-flow: row wrap;
+    align-content: flex-start;
+    flex: 0;
+}
+
+.row-flex > div[class*='col-'], .container-flex > div[class*='col-'] {
+    margin: -.2px;
+}
+
+.row-flex, .row-flex > div[class*='col-'] {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex: 1 1 auto;
+}
+/* end of the fix */
 
 
 
