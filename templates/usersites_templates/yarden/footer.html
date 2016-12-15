@@ -17,7 +17,7 @@
                 {% endfor %}
 
                 {% for doc_obj in site.user_site.organization.document_files.all %}
-                    <li><a href="{{ doc_obj.item }}">doc_obj.name</a></li>
+                    <li><a href="{{ doc_obj.document }}">{{ doc_obj.name }}</a></li>
                 {% endfor %}
 
             </ul>
