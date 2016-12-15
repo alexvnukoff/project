@@ -19,6 +19,7 @@ class ContentHelper:
 
         try:
             page = int(self.request.query_params.get('page', 1))
+            page = self.paginator.num_pages if self.paginator.num_pages < page else page
         except ValueError:
             pass
 
