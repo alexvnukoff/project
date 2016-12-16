@@ -754,6 +754,11 @@ class Company(Organization, IndexedModelMixin):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
+    @property
+    def document_files(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return Document.objects.filter(content_type=model_type, object_id=self.pk)
+
     def __str__(self):
         return self.name
 
@@ -1362,6 +1367,12 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     def co_description(self):
         if self.metadata:
             return self.metadata.get('co_description', '')
+        return None
+
+    @property
+    def co_phone(self):
+        if self.metadata:
+            return self.metadata.get('co_phone', '')
         return None
 
 

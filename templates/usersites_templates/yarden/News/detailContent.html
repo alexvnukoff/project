@@ -1,0 +1,62 @@
+{% extends 'usersites_templates/yarden/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <div class="container news-detail-page-container">
+
+        <section class="content__info">
+            <article>
+
+            <div class="col-md-12">
+
+                <h2 class="page-header">{{ object.title }}</h2>
+
+            </div>
+
+            <div class="col-md-12">
+                {% if article.short_description %}
+                     <p class="text">{{ article.short_description|force_escape|linebreaks }}</p>
+                {% endif %}
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4 col-xs-12 news-page-img">
+                    {% if object.image %}
+                        <img src="{{ object.image.big }}" alt="{{ object.title }}" title="{{ object.title }}" />
+                    {% endif %}
+                </div>
+
+                <div class="col-md-8 col-xs-12 news-page-content">
+
+                    {{ object.content|cleanHtml|safe }}
+
+                    {% if object.gallery_images %}
+                        <ul class="gallery">
+                        {% for gallery_obj in object.gallery_images %}
+                                <figure>
+                                    <a href="{{ gallery_obj.image }}" rel="gallery" fancybox class="fancybox">
+                                        <img src="{{ gallery_obj.image.big }}" alt="" />
+                                    </a>
+                                </figure>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if object.video_code %}
+                        <iframe width="540" height="322" src="//www.youtube.com/embed/{{ object.video_code }}" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            </article>
+        </section>
+    </div>
+{% endblock %}

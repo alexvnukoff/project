@@ -1,0 +1,14 @@
+{% extends 'usersites_templates/yarden/index.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load content_tags %}
+
+{% block title %}{% trans "Business proposals" %}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    {% proposal 'Proposals/list.html' 10 page %}
+
+{% endblock %}

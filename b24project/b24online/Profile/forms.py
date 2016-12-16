@@ -21,6 +21,7 @@ class ProfileForm(forms.ModelForm):
     co = forms.CharField(required=False)
     co_slogan = forms.CharField(required=False)
     co_description = forms.CharField(required=False, widget=forms.Textarea)
+    co_phone = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,6 +34,7 @@ class ProfileForm(forms.ModelForm):
         self.initial['co'] = self.instance.co
         self.initial['co_slogan'] = self.instance.co_slogan
         self.initial['co_description'] = self.instance.co_description
+        self.initial['co_phone'] = self.instance.co_phone
 
         self.fields['first_name'].widget.attrs.update({'class': 'text'})
         self.fields['middle_name'].widget.attrs.update({'class': 'text'})
@@ -47,6 +49,7 @@ class ProfileForm(forms.ModelForm):
         self.fields['co'].widget.attrs.update({'class': 'text'})
         self.fields['co_slogan'].widget.attrs.update({'class': 'text'})
         self.fields['co_description'].widget.attrs.update({'class': 'textarea'})
+        self.fields['co_phone'].widget.attrs.update({'class': 'text'})
 
     def clean_site(self):
         url = self.cleaned_data.get('site', False)

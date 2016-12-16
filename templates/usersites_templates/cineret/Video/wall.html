@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if videos %}
+
+    <div class="container clearfix main-products main-video">
+        <div class="col-md-12 main-news">
+
+            <h2 class="page-header"><a href="{% url 'video:main' %}">{% trans "Video" %}</a></h2>
+
+            <div class="col-12-md news-wrapper">
+                <ul class="media-list">
+
+                    {# News feed wil contain a photo, header, date, short text and a burron to the main news page. #}
+                    {% for entry in videos %}
+
+                        <li class="col-4-md col-sm-4 col-xs-12 media">
+                            <div class="col-12-md col-sm-12 col-xs-12 main-video-img">
+                                <a href="#" class="">
+                                    {% if entry.image %}
+                                        <img src="{{ entry.image.big }}" alt="{{ entry.name }}" title="{{ entry.name }}">
+                                    {% else %}
+                                        <img src="{% static 'b24online/img/item.jpg' %}" />
+                                    {% endif %}
+                                </a>
+                            </div>
+
+                            <div class="col-12-md col-sm-12 col-xs-12 main-video-caption">
+                                <div class="news__text">
+                                    <h3 class="product__title"><a href="{% url 'video:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h3>
+
+{#                                    {% if entry.short_description %}#}
+{#                                     <p class="product__desc">{{ entry.short_description|force_escape|linebreaks }}</p>#}
+{#                                {% else %}#}
+{#                                     <p class="product__desc">{{ entry.content|cleanHtml|safe|truncatewords_html:"30" }}</p>#}
+{#                                {% endif %}#}
+
+                                    <a type="button" class="btn btn-default news__btn" href="{% url 'video:detail' entry.slug entry.pk %}">{% trans "More" %}</a>
+
+                                </div>
+                            </div>
+
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+{% endif %}
