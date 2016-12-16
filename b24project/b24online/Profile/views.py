@@ -33,7 +33,8 @@ class ProfileView(ItemUpdate):
                 'linkedin': self.get_object().linkedin,
                 'co': self.get_object().co,
                 'co_slogan': self.get_object().co_slogan,
-                'co_description': self.get_object().co_description
+                'co_description': self.get_object().co_description,
+                'co_phone': self.get_object().co_phone
                 })
 
         if 'form1' not in context:
@@ -83,6 +84,7 @@ class ProfileView(ItemUpdate):
                 form.instance.metadata['co'] = cd.get('co', None)
                 form.instance.metadata['co_slogan'] = cd.get('co_slogan', None)
                 form.instance.metadata['co_description'] = cd.get('co_description', None)
+                form.instance.metadata['co_phone'] = cd.get('co_phone', None)
 
             result = super().form_valid(form)
             if form.changed_data:

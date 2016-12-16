@@ -1,0 +1,48 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{#<section class="content__info">#}
+
+    {# Products page content #}
+    <div class="container">
+        {% include 'usersites_templates/yarden/B2CProducts/paginator.html' %}
+
+        {# Page title #}
+        <div class="col-lg-12">
+            <h2 class="page-header"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
+        </div>
+
+        <div class="row products-list-page">
+            {% for product in products %}
+
+                <div class="col-sm-6 col-xs-12 col-md-3 product ">
+                    <div class="thumbnail ">
+                        {% if product.image %}
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}"><img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}"></a>
+                        {% else %}
+                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                        {% endif %}
+
+                        {% if product.coupon_discount_percent %}
+                            <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                            {# img for the corner of the coupon discount % display. #}
+                            <img src="{% static 'usersites/usersites_templates/golan/css/images/coupon_corner.png' %}" class="product__price__coupon" alt="">
+                        {% endif %}
+
+                        <div class="caption">
+                            <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h3>
+                            <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div><!-- /Products modoul --><!-- /row -->
+
+{#        {% include 'usersites_templates/golan_purple/B2CProducts/paginator.html' %}#}
+    </div>
+
+{#</section>#}

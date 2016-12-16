@@ -1,0 +1,2061 @@
+/*---------- General Styling ----------*/
+
+/*html {*/
+  /*height: 100%;*/
+  /*box-sizing: border-box;*/
+/*}*/
+
+/*body {*/
+	/*display: flex;*/
+	/*min-height: 100vh;*/
+	/*flex-direction: column;*/
+	/*max-width: 100%;*/
+	/*height: 100%;*/
+	/*!*overflow-x: hidden;*!*/
+/*}*/
+
+/*.content{*/
+	/*flex: 1;*/
+/*}*/
+
+* {margin:0;padding:0;}
+
+html, body {height: 100%;}
+
+#wrap-main {min-height: 100%;}
+
+#main {
+    overflow:auto;
+	padding-bottom: 230px;
+}  /* must be same height as the footer */
+
+#main-footer {
+    position: relative;
+	margin-top: -230px; /* negative value of footer height */
+	height: 230px;
+	clear:both;
+}
+
+/*Opera Fix*/
+body:before {/* thanks to Maleika (Kohoutec)*/
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;/* thank you Erik J - negate effect of float*/
+}
+
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
+/* IMPORTANT
+
+You also need to include this conditional style in the <head> of your HTML file to feed this style to IE 6 and lower and 8 and higher.
+
+<!--[if !IE 7]>
+	<style type="text/css">
+		#wrap {display:table;height:100%}
+	</style>
+<![endif]-->
+
+*/
+/* ----------------- End of sticky fooer ---------------------*/
+
+.icon-ok:before {
+	font-family: "Glyphicons Halflings";
+    content:"\e013";
+}
+/***/
+.center-wrap {
+  line-height: 120px;
+  text-align: center;
+}
+
+.clearfix:after { 
+   content: "."; 
+   visibility: hidden;
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+/***/
+.vertical-center-child {
+  display: table-cell;
+	vertical-align: middle;
+	float: none;
+}
+
+/***/
+.vertical-center-parent{
+	table-layout: fixed;
+    display: table;
+}
+
+/***/
+.v-align {
+    display: inline-block;
+    vertical-align: middle !important;
+    float: none;
+}
+
+.page-header{
+	margin-top: 30px;
+}
+
+h2.page-header a,
+h1.page-header, h2{
+	text-decoration: none;
+	font-weight: bold;
+}
+
+h2.page-header.inner-page{
+	padding-top: 0;
+	margin-top: 10px;
+}
+
+.section-header{
+	border: none;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-top: 0;
+	padding-top: 5px;
+}
+
+.glyphicon{
+	font-size: 16px;
+}
+
+.header-cart{
+	padding: 10px;
+}
+
+
+/*---------- logo Styling ----------*/
+.tel{
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.tel a{
+    text-decoration: none;
+}
+
+.top-nav .tel{
+	padding: 5px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (min-width: 480px) and (max-width: 768px) {
+    .tel{
+        padding-top: 15px;
+    }
+}
+
+.navbar{
+	padding-top: 15px;
+}
+
+.navbar-brand{
+	padding: 0;
+	height: auto;
+	max-height: 100px;
+	/*margin-top: -60px;*/
+}
+
+.navbar-brand img{
+	max-height: 100px;
+}
+
+
+/* Landscape tablets and medium desktops
+collapse the menu on 991px. */
+@media (max-width: 991px) {
+	.navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar-text {
+        float: none;
+        margin: 15px 0;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+
+	.navbar-brand img{
+		max-height: 50px;
+	}
+
+}
+
+@media (max-width: 767px) {
+	.navbar{
+		padding-top: 5px;
+	}
+
+	.navbar-toggle{
+		margin: 0;
+	}
+}
+
+
+
+.header-top {
+    display: block;
+    overflow: hidden;
+    /*padding: 25px;*/
+}
+
+.main-nav-btn{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+/* Social links */
+.social-header{
+	padding-top: 7px;
+    padding-bottom: 15px;
+}
+
+/*.social-header a{*/
+	/*margin: 0 5px;*/
+/*}*/
+
+.social-header i{
+	/*padding: 8px 20px 8px 12px;*/
+}
+
+.social-header .circle {
+   display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background-color: #fff;
+	float: left;
+	margin-top: -10px;
+}
+
+.social-header .button{
+	display:block;
+	width:36px;
+	height:36px;
+	border-radius:18px;
+	font-size: 15px;
+	/*color:#000;*/
+	line-height:36px;
+	text-align:center;
+	background:#fff;
+}
+
+#lang-dropdown a{
+	padding: 0;
+	margin: 0;
+}
+
+/*lang styling*/
+#lang-dropdown{
+	width: 260px;
+	padding: 8px;
+	background: #f5f5f5;
+	position: relative;
+}
+
+.navbar-nav li:hover #lang-dropdown{
+	/*display: block;*/
+	float: left;
+}
+
+.navbar-nav li:hover #lang-dropdown a{
+	float: left;
+	padding: 0 5px;
+}
+
+.navbar-nav li:hover #lang-dropdown img{
+	width: 24px;
+}
+
+.social-header a.lang-toggle img{
+	margin-top: 10px;
+}
+
+.small-navbar a span{
+	font-size: 8pt;
+}
+
+@media(max-width:767px) {
+    .social-header{
+        padding-top: 7px;
+
+    }
+
+    .social-header .button {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        font-size: 12px;
+        line-height: 24px;
+    }
+
+    .small-navbar .fa{
+        font-size: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
+        clear: both;
+        text-align: center;
+        max-width: 70px;
+        line-height: 21px;
+    }
+
+    .small-navbar .fa span{
+        clear: both;
+        font-size: 10px;
+        text-align: center;
+        line-height: 9px;
+    }
+
+	.nav>li>a{
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.header-cart{
+		padding: 5px;
+	}
+
+	.social-header a.lang-toggle img{
+		margin-top: 0;
+	}
+
+	.navbar-brand{
+		margin-top: 0;
+	}
+
+	.navbar-brand{
+		/*margin-right: 5px;*/
+		/*margin-left: 5px;*/
+	}
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+	.social-header {
+        /*margin-top: -50px;*/
+    }
+}
+
+
+/*---------- Navigation Styling ----------*/
+.top-nav{
+	background-color: #000;
+	color: #fff;
+	height: 30px;
+}
+
+.top-nav .top_search{
+	margin: 0;
+}
+
+.top-nav input{
+	height: 20px;
+	margin: 5px;
+	background-color: #fff;
+    border: 1px solid #aaa;
+    color: #000;
+}
+
+.top-nav .social-header{
+	padding: 0;
+	margin: 3px;
+}
+
+.top-nav .social-header a.lang-toggle img {
+    margin-top: 5px;
+}
+
+.top-nav .header-cart{
+	padding: 0;
+	margin: 5px;
+}
+
+.top-nav .social-header .button {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 22px;
+	margin-right: 2px;
+    margin-left: 2px;
+}
+
+.top-nav .language-navi {
+	position:relative;
+	display:inline-block;
+	cursor:pointer;
+	float:left;
+	margin:3px;
+	z-index: 9999;
+}
+
+.top-nav ul.dropdown-menu>li>a>img.flag-icon {
+    border: 1px solid #e7e7e7;
+    margin: -3px 5px 0 5px;
+    width: 24px;
+}
+
+.top-nav ul.dropdown-menu>li>a{
+	padding: 3px 5px;
+	margin: 0;
+}
+
+.main-white{
+	height: 130px;
+	padding: 0;
+
+}
+
+.main-white .navbar-brand img {
+    max-width: 150px;
+}
+
+.main-white .navbar{
+	padding-top: 0;
+}
+
+.main-white .navbar-nav {
+    margin-top: 2%;
+}
+
+.main-white .main-nav-btn {
+    margin-top: 5px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.main-white{
+		height: 50px;
+		padding: 0;
+
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	h2{
+		font-size: 16pt;
+	}
+
+	h3{
+		font-size: 14pt;
+		margin-top: 10px;
+    	margin-bottom: 5px;
+	}
+
+	p{
+		font-size: 10pt;
+	}
+
+	.about-main {
+		padding-top: 0!important;
+	}
+
+	.about-main__text{
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.banner-ad-main-collection{
+		padding: 0!important;
+	}
+
+	.product .thumbnail {
+		height: auto!important;
+	}
+
+	.product__price {
+		position: relative!important;
+		bottom: auto!important;
+	}
+}
+
+/* -----------------------*/
+.side-bar a{
+	text-decoration: none;
+}
+
+.banner{
+	margin-bottom: 10px;
+}
+
+.banner img{
+	width: 100%;
+	height: auto;
+	padding: 0;
+}
+
+.cust-nav ul{
+	list-style: none;
+	background-color: transparent;
+}
+
+.lang_list.hidden{
+	display: none;
+}
+
+.cust-nav ul li a{
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.cust-nav__btn a{
+	font-size: 16px;
+}
+
+.user-reg ul{
+    list-style: none;
+    padding: 2px;
+}
+
+.user-reg ul li{
+    display: inline;
+    padding-right: 5px;
+}
+
+.user-reg img{
+    display: inline;
+}
+
+@media (max-width: 767px) {
+	.user-reg{
+        padding: 10px;
+    }
+}
+
+/*---------- carousel Styling ----------*/
+#myCarousel{
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+.carousel-text{
+	position: absolute;
+	bottom: 0;
+	z-index: 15;
+	background: rgba(0,0,0,0.75);
+}
+
+.carousel-text ul li {
+	padding: 0 10px;
+	text-align: center;
+}
+
+.carousel-text li {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1em;
+	cursor: pointer;
+}
+
+.carousel-text li small{
+    display: block;
+    font-size: 0.5em;
+}
+
+.carousel-text .nav{
+	line-height: 0;
+}
+
+/*---------- About main page Styling ----------*/
+/* The about section is in: main page */
+.about-main{
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.about-main__movie{
+	padding: 20px;
+	position: relative;
+}
+
+.about-main__movie img{
+	width: 90%;
+	height: auto;
+	text-align: middle;
+}
+
+.about-main__text{
+	position: relative;
+}
+
+/*---------- Product Styling ----------*/
+.main-coupons{
+	position: relative;
+}
+
+.product{
+	padding: 0 5px;
+	position: relative;
+
+}
+
+.product .thumbnail{
+    border: none;
+    padding: 0;
+	height: 450px;
+}
+
+.product .video-main-thumb{
+	height: 360px;
+}
+
+.thumbnail img{
+	/*max-width: 276px;*/
+	max-height: 184px;
+}
+
+.product__title{
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	/*position: absolute;*/
+	/*top: 190px;*/
+}
+
+.product__title a{
+	text-decoration: none;
+}
+.product__cat{
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.product__price{
+	font-size: 18px!important;
+	font-weight: bold;
+	margin-bottom: 15px;
+	position: absolute;
+	bottom: 90px;
+}
+
+
+.product__desc{
+	font-size: 16px;
+	/*position: absolute;*/
+	/*top: 250px;*/
+}
+
+.thumbnail .product__price__coupon{
+	position: absolute;
+	top: -1px;
+	width: 50%;
+	height: auto;
+	z-index: 145;
+}
+
+.product__valid__coupon{
+	font-size: 12px;
+}
+
+.product__deleted-price{
+	text-decoration: line-through;
+}
+
+.product__discount{
+	padding: 0 5%;
+	font-size: 30px!important;
+	position: absolute;
+	z-index: 150;
+	top: 0;
+	font-weight: bold;
+}
+
+.product__img{
+	height: 210px;
+	width: auto;
+}
+
+.product__btn{
+	margin-top: 3px;
+	position: absolute;
+	bottom: 30px;
+}
+
+.product__caption{
+    padding: 10px;
+}
+
+.coupon-timer{
+	position: absolute;
+	bottom: 60px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.coupon-timer{
+		bottom: 30px;
+	}
+}
+
+.go-to-full{
+	position: relative;
+}
+
+.main-video .media{
+	margin-top: 0;
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-bottom: 5px;
+}
+
+.main-video .news__img {
+	padding-right: 0;
+}
+
+.main-video .main-video-img {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.main-video .news-wrapper {
+    padding-left: 0;
+}
+
+.main-video a.news__btn{
+	margin: 0 auto;
+	display: block;
+	width: 100px;
+	float: none;
+}
+
+.main-video img{
+	padding-bottom: 10px;
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.product__caption {
+		padding-bottom: 5px!important;
+	}
+
+	.product__discount {
+		font-size: 20px !important;
+	}
+
+	.thumbnail .product__price__coupon{
+		margin: 0!important;
+	}
+
+	.main-proposal .news__text{
+		display: none;
+	}
+
+	.main-proposal .news__title{
+		font-size: 16px;
+		width: 70%;
+		float: left;
+	}
+
+	.page-header {
+		margin-top: 10px;
+	}
+}
+
+.categories-side{
+	position: relative;
+	float: right;
+}
+
+.products-side{
+	position: relative;
+	float: left;
+}
+
+.categories-side{
+	font-size: 1.5em;
+
+}
+
+/*------------------------------*/
+.products-list-page{
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+}
+/*---------- News Styling ----------*/
+.news{
+    margin-bottom: 20px;
+}
+.main-news{
+	position: relative;
+}
+
+.main-news .thumbnail{
+	border: none;
+}
+
+.news_page h2{
+	margin-top: 0;
+}
+
+.news__title,
+.news__title a{
+	font-size: 25px;
+	margin: 0 0 10px 0;
+	text-decoration: none;
+}
+
+.news__img img,
+.news-page-img img{
+	max-width:100% !important;
+    height:auto;
+    display:block;
+	padding: 0;
+}
+
+/*.news__img img{*/
+	/*max-width: 150px;*/
+/*}*/
+
+.news__text{
+	position: relative;
+}
+
+.news__btn{
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.news__text h4{
+	font-size: 25px;
+    margin: 0;
+}
+
+.news_page .btn-align{
+	text-align: center;
+}
+
+.news-detail-page-container{
+	margin-bottom: 20px;
+}
+
+/*---------- Proposal Styling ----------*/
+.main-proposal{
+	position: relative;
+}
+
+.proposal{
+	position: relative;
+}
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.job_offer__header{
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.job_offer__p{
+	font-size: 1em !important;
+	padding-top: 20px;
+}
+
+.job_offer__span{
+	font-weight: bold;
+}
+
+.jobs-content{
+	position: relative;
+}
+
+.jobs-btn{
+	position: relative;
+}
+
+/*---------- Banners Styling ----------*/
+/* The custom banners on the main page */
+.banner-ad-main-collection{
+	position: relative;
+}
+
+@media (min-width: 992px) {
+	.banner-ad-main-collection{
+		margin-top: 20px;
+		padding: 20px;
+	}
+}
+
+/* Landscape tablets and medium desktops */
+@media (max-width: 991px) {
+	.banner-ad-main-collection{
+		margin-top: 10px;
+		padding: 20px;
+	}
+}
+
+.banner-main-page{
+    padding: 0;
+	position: relative;
+}
+
+.banner-main-page img{
+    width: 100%;
+}
+
+/*--------- contact form --------------*/
+.contact-info, .contact-fields{
+	position: relative;
+}
+
+.contact-fields{
+	margin-top: 80px;
+}
+
+.contact-fields-email{
+	margin: 20px 0;
+}
+
+.contact-fields-email .controls input,
+.contact-fields-email .controls textarea{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.contact-fields-email .controls textarea{
+	height: auto;
+}
+/*---------- Footer Styling ----------*/
+footer{
+	margin-bottom: 0;
+}
+
+footer .row{
+	padding-bottom: 10px;
+}
+
+footer a{
+	text-decoration: none;
+}
+
+footer a:hover,
+footer a:active{
+	text-decoration: none;
+}
+
+footer ul{
+	list-style: none;
+	padding: 0;
+}
+
+footer img{
+	width: 100%;
+}
+
+footer .btn-default{
+	margin-top: 10px;
+}
+
+.footer-col{
+	position: relative;
+	margin-top: 10px;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+.membership-banner{
+	padding: 0;
+	text-align: center;
+}
+
+.membership-banner__member{
+	height: 100%;
+	padding: 0;
+	display: table;
+	position: relative;
+}
+
+.membership-banner__member img{
+	width: auto;
+	max-height: 40px;
+	margin: 5px;
+	display: inline;
+	position: relative;
+}
+
+.membership-banner__member-text{
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+	padding: 0 10px;
+	position: relative;
+}
+
+.membership-banner__member h4{
+	padding: 10px;
+	font-size: 1em;
+	margin: 5px;
+}
+
+.membership-banner__member p{
+	font-size: 0.7em;
+}
+
+.membership-banner__ad{
+	padding: 0;
+	margin: 0;
+	height: 80px;
+	position: relative;
+}
+
+.membership-banner__ad img{
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+    margin: auto;
+	padding: 10px;
+}
+
+@media \0screen {
+  img { 
+  	width: auto; /* for ie 8 */
+  }
+}
+
+/*---------- Pagination Styling ----------*/
+.pagination{
+	text-align: center;
+	position: relative;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	text-decoration: none;
+}
+
+.top_search{
+	position: relative;
+	clear: both;
+	margin-top: 10px;
+}
+
+.category{
+	/*position: relative;*/
+}
+
+.category select{
+	/*margin: 0 10px;*/
+	display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+.pay{
+	position: relative;
+}
+
+.empty-basket{
+	font-size: 3em;
+	text-align: center;
+}
+
+.empty-basket span{
+	font-size: 100px;
+	text-align: center;
+}
+
+.cart{
+	margin-top: 50px;
+}
+.table{
+	margin-bottom: 0;
+}
+
+.tb-pic{
+	width: 8em;
+}
+
+.tb-item{
+	width: 25em;
+}
+
+.tb-qty{
+	width: 3em;
+}
+
+.tb-price{
+	width: 10em;
+}
+
+.tb-total{
+	width: 10em;
+}
+
+.tb-remove{
+	width: 5em;
+}
+
+.tb-img{
+	width: 125px;
+	height: auto;
+}
+
+.tb-hr{
+	margin-top: 5px;
+}
+
+.tb-in-qty{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+@media (min-width: 600px) {
+  	.tb-in-qty{
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+}
+
+.table h3{
+	margin-top: 0px;
+}
+
+.wazeLink{
+    color: #000;
+    text-align: center;
+}
+
+.wazeLink:active{
+    color: #000;
+}
+
+.wazeLink img{
+	width: auto;
+}
+
+.about-main__text table{
+	margin: 5px auto;
+}
+
+.about-main__text table img{
+	width: 100%;
+}
+
+.about-main__text img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
+
+/*---------- Item Styling ----------*/
+.item-page, .item-price-table{
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.item-price-table img {
+    width: 100%!important;
+    height: auto;
+}
+
+.item-page img{
+	/*max-height: 365px;*/
+	max-width: 100%;
+	margin: auto;
+}
+
+.item-page__price{
+	font-size: 2em!important;
+	color: green;
+	font-weight: bold;
+}
+
+.item-page__coupon{
+	font-size: 1em;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+	padding-top: 10px;
+}
+
+.item-page__coupon div{
+	position: relative;
+}
+
+.item-page__qty{
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.item-page__qty-box{
+	width: 50px;
+	height: 35px;
+	text-align: center;
+}
+
+.item-price-table .coupon-panel__btn{
+	font-weight: bold;
+	font-size: 1.8em;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+.item-price-table .coupon-panel__btn span{
+	padding: 0 20px;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.coupon-panel__btn{
+	width: 100%;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.cust-page p img{
+	max-width: 100%;
+    float: none;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+
+/*--------New coupon design -------------*/
+.ver-coupon{
+	/*background-color: #eee;*/
+	padding: 15px;
+}
+
+.ver-coupon-wrap [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.ver-coupon-wrap{
+    overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.ver-coupon-img img{
+	width: 100%;
+}
+
+.ver-coupon__title{
+	font-size: 2em;
+	/*text-align: center;*/
+	margin: 0;
+	padding: 0 10px 10px;
+}
+
+.ver-coupon-discount div{
+	text-align: center;
+}
+
+.ver-coupon-discount .ver-coupon__discount{
+	font-size: 5vw;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 10px;
+	margin: 0;
+}
+
+.ver-coupon-timer-wrap{
+	display: table;
+}
+
+.ver-coupon-discount .ver-coupon-timer{
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+	/*padding-top: 10px;*/
+    margin: 0 auto;
+	float: none;
+
+	display:table-cell;
+	vertical-align:middle;
+	padding-top: 3vw;
+	padding-bottom: 3vw;
+	line-height: 1.3vw;
+}
+
+.ver-coupon-discount .timer-mini{
+	float: none;
+}
+
+
+.ver-coupon .product__price__coupon{
+	position: absolute;
+	top: -1px;
+	width: 100%;
+}
+
+.ver-coupon-discount{
+	height: 100%;
+	margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.ver-coupon-price .ver-coupon__btn{
+	width: 80%;
+	/*margin: 1vw;*/
+	text-align: center;
+	font-weight: bold;
+	vertical-align:middle;
+	margin: 0 auto;
+    display:block;
+	padding-bottom: 10px;
+	margin-top: 20px;
+}
+
+.ver-coupon-price .ver-coupon__price{
+	padding-top: 10px;
+	text-align: center;
+	font-size: 25px;
+}
+
+.ver-coupon-price .ver-coupon__deleted-price{
+	text-decoration: line-through;
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	.ver-coupon-price .ver-coupon__price{
+		padding-top: 10px;
+		text-align: center;
+		/*font-size: 12px;*/
+	}
+
+	.ver-coupon__title{
+		font-size: 18px;
+	}
+}
+
+
+.ver-coupon-price{
+	/*background-color: #fff;*/
+	height: 100%;
+}
+
+.ver-coupon .product__title{
+	padding-bottom: 5px;
+}
+
+/* New coupon style design*/
+#main-page-coupons{
+	/*padding: 0;*/
+}
+
+#main-page-coupons .main-coupon-wrap{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	padding: 0;
+}
+
+#main-page-coupons .main-coupon-wrap .img-coupon{
+	position: relative;
+	padding: 0;
+	overflow: hidden;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon{
+	position: relative;
+	padding: 0 10px;
+}
+
+#main-page-coupons .main-coupon-wrap .img-coupon img{
+	width: 100%;
+	padding: 0;
+	height:auto;
+	object-fit: cover;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per{
+	position: absolute;
+	top: 30%;
+	color: #fff;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	height: 100px;
+	width: 100px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per p{
+	padding: 30% 25%;
+	font-weight: bold;
+	font-size: 20pt!important;
+
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title{
+	text-transform: capitalize;
+	font-size: 20pt;
+	text-align: center;
+	padding-bottom: 10px;
+	height: 80px;
+	margin-bottom: 5px;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .timer-heading{
+	position: relative;
+	padding-left: 25px;
+	padding-right: 5px;
+}
+
+.coupon-title a{
+    text-decoration: none;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer{
+	position: relative;
+	bottom: inherit;
+	right: inherit;
+	height: 50px;
+	width: 50%;
+	text-align: center;
+	margin: 0 auto;
+	padding: 10px 20px;
+	font-size: 14pt;
+	font-weight: bold;
+
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__price,
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__deleted-price{
+	text-align: center;
+	font-size: 14pt!important;
+	font-weight: bold;
+	color: #000;
+	padding: 15px;
+	margin: 0;
+}
+
+#main-page-coupons .main-coupon-wrap .info-coupon .ver-coupon__deleted-price{
+	color: #888;
+	text-decoration: line-through;
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon {
+		max-height: 200px;
+	}
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon {
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+	}
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon img{
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 10pt;
+	}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	#main-page-coupons .main-coupon-wrap .img-coupon img{
+		max-height: 200px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 12pt;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		padding: 6px 10px;
+	}
+
+	.cust-nav__btn a {
+		font-size: 14px;
+	}
+
+	.product__desc {
+		font-size: 12px;
+	}
+
+	.product__title {
+		font-size: 14px;
+	}
+
+	.product__price {
+		margin-bottom: 20px;
+
+	}
+
+	.coupon-timer{
+		position: static;
+	}
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+	/* products list main page */
+	.product .thumbnail{
+		height: auto;
+	}
+
+	.product .thumbnail img{
+		width: 20%;
+		float: left;
+		margin: 10px;
+		overflow: hidden;
+	}
+
+	.product__price{
+		position: static;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+		right: auto;
+	}
+
+	.about-main {
+		padding-top: 0!important;
+	}
+}
+
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	#main-page-coupons .main-coupon-wrap{
+		width: 90%;
+		margin: 5%;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-title h3{
+		font-size: 16px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per{
+		bottom: 25px;
+		left: 25px!important;
+		-webkit-border-radius: 25px;
+		-moz-border-radius: 25px;
+		border-radius: 25px;
+		height: 50px;
+		width: 50px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per p{
+		padding: 30% 25%;
+		font-weight: bold;
+		font-size: 10pt!important;
+
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		width: 70%;
+		font-size: 10pt!important;
+		height: 60px;
+	}
+
+	#main-page-coupons .main-coupon-wrap .img-coupon img {
+		visibility: hidden;
+	}
+
+	/* products list main page */
+	.product .thumbnail img{
+		width: 30%;
+		float: left;
+		margin: 10px;
+	}
+
+	.product .thumbnail{
+		height: auto;
+	}
+
+	.product__price {
+		margin-bottom: 10px;
+		clear: both;
+	}
+}
+
+/*---------- Counter Styling ----------*/
+#timer-detail-page{
+    font-family: sans-serif;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    border-radius: 3px;
+	padding: 10px;
+}
+
+#timer-detail-page > div{
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+}
+
+#timer-detail-page div > span{
+    padding: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.map {
+    height: 250px;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ccc;
+}
+
+/* table responsive for pages */
+
+@media only screen and (max-width: 800px) {
+
+    /* Force table to not be like tables anymore */
+	#no-more-tables table,
+	#no-more-tables thead,
+	#no-more-tables tbody,
+	#no-more-tables th,
+	#no-more-tables td,
+	#no-more-tables tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	/*#no-more-tables tr { border: 1px solid #ccc; }*/
+
+	#no-more-tables td {
+		/* Behave  like a "row" */
+		border: none;
+		/*border-bottom: 1px solid #eee;*/
+		position: relative;
+		/*padding-left: 50%;*/
+		white-space: normal;
+		/*text-align:left;*/
+	}
+
+	#no-more-tables td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+	}
+
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+.about-page-content table{
+	overflow-x: auto;
+}
+
+.about-page-content td,
+.about-page-content th{
+	padding: 20px;
+}
+
+.about-page-content img{
+	max-width:100% !important;
+    height:auto;
+    display:block;
+	padding: 0;
+	font-family: "Monotype Corsiva", "Apple Chancery", "URW Chancery L", cursive;
+}
+
+/* Profile page design */
+#profile-usersite-page .avatar img{
+	margin: 10px;
+}
+
+#profile-usersite-page .avatar-btn{
+	width: 150px;
+	margin: 10px;
+	height: 30px;
+}
+
+#profile-usersite-page .change-passwd-link a{
+	color: #000;
+	text-decoration: underline;
+	margin: 10px;
+}
+
+ #profile-usersite-page .profile-clumn{
+	color: #000;
+	margin: 10px;
+	list-style-type: none;
+}
+
+#profile-usersite-page .profile-clumn li{
+	margin: 10px 0;
+}
+
+#profile-usersite-page .profile-clumn input.text,
+#profile-usersite-page .profile-clumn select ,
+#profile-usersite-page .profile-clumn input.date{
+	height: 30px;
+}
+
+#profile-usersite-page .profile-clumn fieldset {
+	border:1px solid #aaa;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
+#profile-usersite-page .profile-clumn legend {
+    padding: 0.2em 0.5em;
+    border:1px solid #aaa;
+    color:#aaa;
+    font-size:90%;
+	width: 150px;
+	text-align: center;
+}
+
+#profile-usersite-page .profile-clumn .name-lbl {
+  width: 150px;
+}
+
+#profile-usersite-page .radio+.radio,
+#profile-usersite-page .radio{
+     margin-top: 0;
+}
+
+#profile-usersite-page .profilebutton{
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+/* Products page with categories sidebar */
+.categories-side .categories-menu{
+	list-style-type: none;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item{
+	border-bottom: 1px solid #ddd;
+	padding: 5px;
+	width: 100%;
+}
+
+.categories-side .categories-menu .categorie-item:last-child{
+	border-bottom: none;
+}
+
+.categories-side .categories-menu a{
+	color: #888;
+	text-decoration: none;
+}
+
+.categories-side .categories-menu a:hover,
+.categories-side .categories-menu a:active {
+	color: #666;
+}
+
+/* leads in page form */
+#leads-in-product{
+	padding: 10px 5px 5px 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+}
+
+#leads-in-product .row{
+	padding: 5px;
+}
+
+#leads-in-product input{
+	width: 100%!important;
+}
+
+/* Pages leads styling */
+#leads-in-page{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+#leads-in-page .leads-form-lbl{
+    font-size: 1.2em;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #leads-in-page input{
+        width: 120px;
+    }
+}
+
+/* gallery style */
+.gal-item img{
+	width: 100%;
+}
+
+.gal-item {
+	padding: 5px;
+}
+
+.galllery-page-wrapper .gallery img{
+	float: right;
+	padding: 0;
+}
+
+.galllery-page-wrapper{
+	margin-bottom: 20px;
+}
+
+/* video styling */
+.video-wrap{
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.video-wrap .news{
+	margin: 0;
+}
+
+.video-wrap .text{
+	margin: 0;
+}
+
+.video-wrap .news__content__cover{
+	float: right;
+	padding: 0 0 10px 10px;
+}
+
+.video-wrap .date{
+	font-size: 9pt;
+	color: #bbb;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.video-wrap .news__content__cover {
+		padding: 0;
+		width: 100%;
+	}
+
+	.video-wrap .news__content__cover img{
+		margin: 0;
+		width: 100%;
+	}
+}
+
+/* Gallery ****/
+/* gallery style */
+.gal-item img{
+	width: 100%;
+}
+
+.gal-item {
+	padding: 5px;
+}
+
+.galllery-page-wrapper .gallery img{
+	float: right;
+	padding: 0;
+}
+
+.galllery-page-wrapper{
+	margin-bottom: 20px;
+}
+
+/* additional styling */
+/**********************/
+.addition-pages{
+	text-decoration: none;
+	padding-right: 10px;
+}
+
+.thumbnail img{
+	width: 100%;
+}
+
+.thumbnail img {
+    /* max-width: 276px; */
+    max-height: 250px;
+}
+
+@media (max-width: 767px) {
+	.thumbnail img {
+		/* max-width: 276px; */
+		max-height: 450px;
+	}
+}
+
+.coupon-timer{
+	bottom: 25px;
+	text-align: center;
+}
+
+.product__caption{
+	padding-bottom: 30px;
+}
+
+.main-products-thumb .product,
+.main-products .product{
+    margin-left : 0;
+    margin-right : 0;
+	padding: 0 2px;
+}
+
+.product .thumbnail{
+    padding: 0;
+    border: none;
+}
+
+/* fix the col fluid */
+.container-flex > div[class*='col-'] div, .row-flex > div[class*='col-'] div {
+    width: 100%;
+}
+
+.row-flex-wrap {
+    -webkit-flex-flow: row wrap;
+    align-content: flex-start;
+    flex: 0;
+}
+
+.row-flex > div[class*='col-'], .container-flex > div[class*='col-'] {
+    margin: -.2px;
+}
+
+.row-flex, .row-flex > div[class*='col-'] {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex: 1 1 auto;
+}
+/* end of the fix */
+
+
+
+
+
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+
+

@@ -6,7 +6,6 @@ from b24online.api.fields import DateTimeToDateField
 from b24online.models import B2BProduct, InnovationProject, Branch, Exhibition, BusinessProposal, News, Organization
 
 
-
 class B2BProductSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
     detail_url = serializers.CharField(source='get_absolute_url')

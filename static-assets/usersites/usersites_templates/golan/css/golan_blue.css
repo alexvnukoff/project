@@ -52,9 +52,7 @@ h2.page-header,
     color: #fff;
 }
 
-@media (max-width: 767px){
-    .user-reg a{  color: #fff;  }
-}
+.user-reg a{  color: #fff;  }
 
 .main-nav-btn .navbar-toggle{
 	background-color: #002061;

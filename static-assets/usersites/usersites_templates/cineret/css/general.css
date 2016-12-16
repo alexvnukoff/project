@@ -136,7 +136,7 @@ h3 a:focus{
 
 @media (min-width: 481px) and (max-width: 768px) {
 	.in-page {
-		margin-top: 180px;
+		margin-top: 70px;
 	}
 }
 
@@ -1943,6 +1943,80 @@ header.carousel .fill {
         height:250px;
     }
 }
+
+.main-video .media{
+	margin-top: 0;
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-bottom: 5px;
+}
+
+.main-video .news__img {
+	padding-right: 0;
+}
+
+.main-video .main-video-img {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.main-video .news-wrapper {
+    padding-left: 0;
+}
+
+.main-video a.news__btn{
+	margin: 0 auto;
+	display: block;
+	width: 100px;
+	float: none;
+}
+
+.main-video img{
+	padding-bottom: 10px;
+    width: 100%;
+}
+
+.main-video .product__title{
+    text-align: center;
+}
+
+/* video styling */
+.video-wrap{
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.video-wrap .news{
+	margin: 0;
+}
+
+.video-wrap .text{
+	margin: 0;
+}
+
+.video-wrap .news__content__cover{
+	float: right;
+	padding: 0 0 10px 10px;
+}
+
+.video-wrap .date{
+	font-size: 9pt;
+	color: #bbb;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.video-wrap .news__content__cover {
+		padding: 0;
+		width: 100%;
+	}
+
+	.video-wrap .news__content__cover img{
+		margin: 0;
+		width: 100%;
+	}
+}
+
 /* Footer Style */
 i.red{
     color:#BC0213;

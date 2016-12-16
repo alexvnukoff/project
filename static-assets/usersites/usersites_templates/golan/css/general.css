@@ -499,7 +499,7 @@ collapse the menu on 991px. */
 	}
 
 	.product .thumbnail {
-		height: 350px!important;
+		height: auto!important;
 	}
 
 	.product__price {
@@ -1490,7 +1490,59 @@ footer .btn-default{
 		width: 70%;
 		font-size: 12pt;
 	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-timer {
+		padding: 6px 10px;
 	}
+
+	.cust-nav__btn a {
+		font-size: 14px;
+	}
+
+	.product__desc {
+		font-size: 12px;
+	}
+
+	.product__title {
+		font-size: 14px;
+	}
+
+	.product__price {
+		margin-bottom: 20px;
+
+	}
+
+	.coupon-timer{
+		position: static;
+	}
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+	/* products list main page */
+	.product .thumbnail{
+		height: auto;
+	}
+
+	.product .thumbnail img{
+		width: 20%;
+		float: left;
+		margin: 10px;
+		overflow: hidden;
+	}
+
+	.product__price{
+		position: static;
+	}
+
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+		right: auto;
+	}
+
+	.about-main {
+		padding-top: 0!important;
+	}
+}
+
 
 /* Portrait phones and smaller */
 @media (max-width: 480px) {
@@ -1528,6 +1580,22 @@ footer .btn-default{
 
 	#main-page-coupons .main-coupon-wrap .img-coupon img {
 		visibility: hidden;
+	}
+
+	/* products list main page */
+	.product .thumbnail img{
+		width: 30%;
+		float: left;
+		margin: 10px;
+	}
+
+	.product .thumbnail{
+		height: auto;
+	}
+
+	.product__price {
+		margin-bottom: 10px;
+		clear: both;
 	}
 }
 
