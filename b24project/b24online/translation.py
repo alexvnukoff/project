@@ -2,10 +2,10 @@ from modeltranslation.decorators import register
 from modeltranslation.translator import TranslationOptions
 
 from b24online.models import (Country, Branch, Chamber, Company, Department, Vacancy,
-        BusinessProposalCategory, InnovationProject, B2BProductCategory, B2BProduct,
-        NewsCategory, Greeting, News, Tender, Profile, Exhibition, StaticPage,
-        BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner,
-        Producer, Questionnaire, Question, Recommendation, Video, GalleryImage)
+                              BusinessProposalCategory, InnovationProject, B2BProductCategory, B2BProduct,
+                              NewsCategory, Greeting, News, Tender, Profile, Exhibition, StaticPage,
+                              BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner,
+                              Producer, Questionnaire, Question, Recommendation, Video, GalleryImage, VideoChannel)
 
 
 @register(Gallery)
@@ -88,7 +88,7 @@ class GreetingTranslationOptions(TranslationOptions):
     fields = ('name', 'slug', 'content', 'position_name', 'organization_name')
 
 
-@register(News)
+@register((News, VideoChannel))
 class NewsTranslationOptions(TranslationOptions):
     fields = ('title', 'slug', 'content', 'keywords', 'short_description')
 

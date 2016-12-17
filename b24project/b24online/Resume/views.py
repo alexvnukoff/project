@@ -56,7 +56,7 @@ class ResumeList(ItemsList):
             else:
                 queryset = self.model.get_active_objects().filter(user=self.request.user)
 
-        return queryset
+        return queryset.order_by(*self._get_sorting_params())
 
 
 class ResumeDetail(ItemDetail):

@@ -70,6 +70,8 @@ class NewsList(ItemsList):
         return super().filter_search_object(s).query('match', is_tv=False)
 
     def get_queryset(self):
+        queryset = super().get_queryset()
+
         if self.is_my():
             current_org = self._current_organization
 
@@ -77,16 +79,14 @@ class NewsList(ItemsList):
                 queryset = self.model.get_active_objects().filter(organization_id=current_org)
             else:
                 queryset = self.model.get_active_objects().filter(created_by=self.request.user, organization__isnull=True)
-        elif self.is_filtered():
-            return super().get_queryset()
-        else:
+        elif not self.is_filtered():
             queryset = super().get_queryset().filter(is_tv=False)
 
             if self.project_news:
                 #TODO
                 pass
 
-        return queryset
+        return queryset.order_by(*self._get_sorting_params())
 
 
 class NewsDetail(ItemDetail):
