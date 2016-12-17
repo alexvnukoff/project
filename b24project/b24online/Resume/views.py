@@ -56,7 +56,10 @@ class ResumeList(ItemsList):
             else:
                 queryset = self.model.get_active_objects().filter(user=self.request.user)
 
-        return queryset.order_by(*self._get_sorting_params())
+        # https://sentry.ssilaev.com/sentry/b24onlinecom/issues/894/
+        # 'SearchEngine' object has no attribute 'order_by'
+        #return queryset.order_by(*self._get_sorting_params())
+        return queryset
 
 
 class ResumeDetail(ItemDetail):

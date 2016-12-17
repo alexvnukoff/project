@@ -54,7 +54,10 @@ class RequirementList(ItemsList):
             else:
                 queryset = queryset.none()
 
-        return self.optimize_queryset(queryset.order_by(*self._get_sorting_params()))
+        # https://sentry.ssilaev.com/sentry/b24onlinecom/issues/893/
+        # AttributeError: 'SearchEngine' object has no attribute 'order_by'
+        #return self.optimize_queryset(queryset.order_by(*self._get_sorting_params()))
+        return self.optimize_queryset(queryset)
 
 
 class RequirementDetail(ItemDetail):
