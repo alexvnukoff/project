@@ -54,7 +54,7 @@ class RequirementList(ItemsList):
             else:
                 queryset = queryset.none()
 
-        return queryset
+        return self.optimize_queryset(queryset.order_by(*self._get_sorting_params()))
 
 
 class RequirementDetail(ItemDetail):

@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 
 from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate
-from b24online.models import News, Organization
+from b24online.models import News, Organization, VideoChannel
 
 
 class TVNewsLIst(ItemsList):
@@ -23,7 +23,7 @@ class TVNewsLIst(ItemsList):
     #allowed filter list
     # filter_list = ['tpp', 'country', 'company']
 
-    model = News
+    model = VideoChannel
 
     sortFields = {
         'date': 'created_at',
@@ -73,7 +73,7 @@ class TVNewsLIst(ItemsList):
         if self.is_filtered():
             return queryset
 
-        return queryset.filter(is_tv=True)
+        return queryset.order_by(*self._get_sorting_params())
 
 
 class TVNewsDetail(ItemDetail):
