@@ -40,8 +40,10 @@ class RequirementList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Vacancy/index.html'
 
-    def optimize_queryset(self, queryset):
-        return queryset.select_related('country')
+    # https://sentry.ssilaev.com/sentry/b24onlinecom/issues/895/
+    # 'SearchEngine' object has no attribute 'select_related'
+    #def optimize_queryset(self, queryset):
+    #    return queryset.select_related('country')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -57,7 +59,7 @@ class RequirementList(ItemsList):
         # https://sentry.ssilaev.com/sentry/b24onlinecom/issues/893/
         # AttributeError: 'SearchEngine' object has no attribute 'order_by'
         #return self.optimize_queryset(queryset.order_by(*self._get_sorting_params()))
-        return self.optimize_queryset(queryset)
+        return queryset
 
 
 class RequirementDetail(ItemDetail):
