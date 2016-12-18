@@ -208,10 +208,10 @@ opacity:0.8;
 
     if(middlename.val() != '') {
         middlename_mobile.text("{{ profile.middle_name }}");
-        middlename_mobile.append("&nbsp;");
-        middlename_mobile.prepend("&nbsp;");
+        middlename_mobile.append(" ");
+        middlename_mobile.prepend(" ");
     } else {
-        middlename_mobile.append("&nbsp;");
+        middlename_mobile.append(" ");
     }
 
     if(contacts.val() == '') {
