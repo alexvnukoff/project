@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField,
-                                                    JSONField, ArrayField)
+                                            JSONField, ArrayField)
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -160,9 +160,6 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def get_profit(self):
         return self.cost - self.get_discount_price()
 
-    def has_discount(self):
-        return self.is_coupon or self.discount_percent
-
     def get_contextmenu_options(self, context):
         """
         Return extra options for context menu.
@@ -172,12 +169,12 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
             yield (reverse(
                 'questionnaires:list',
                 kwargs={'content_type_id': model_type.id, 'item_id': self.id}),
-                _('Questionnaire')
+                   _('Questionnaire')
             )
             yield (reverse(
                 'products:extra_params_list',
                 kwargs={'item_id': self.id}),
-                _('Additional_parameters')
+                   _('Additional_parameters')
             )
 
     def get_extra_params(self):
@@ -195,6 +192,26 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
                     row[field_name] = field_value
             result.append(row)
         return result
+
+
+class CouponManager(models.Manager):
+    def get_queryset(self):
+        return super(CouponManager, self).get_queryset().filter(
+            coupon_dates__contains=now().date(),
+            coupon_discount_percent__gt=0
+        )
+
+
+class Coupon(B2CProduct):
+    objects = CouponManager()
+
+    class Meta:
+        proxy = True
+
+    @staticmethod
+    def get_index_model(**kwargs):
+        from b24online.search_indexes import B2cProductIndex
+        return B2cProductIndex
 
 
 class B2CProductComment(MPTTModel):

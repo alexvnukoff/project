@@ -15,7 +15,7 @@ from django.contrib.auth.models import PermissionsMixin, Group, Permission
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField,
-    DateTimeRangeField, JSONField)
+                                            DateTimeRangeField, JSONField)
 from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.mail import send_mail
@@ -61,10 +61,10 @@ MEASUREMENT_UNITS = [
 
 image_storage = S3ImageStorage() \
     if not getattr(settings, 'STORE_FILES_LOCAL', False) \
-        else LocalFileStorage()
+    else LocalFileStorage()
 file_storage = S3ImageStorage() \
     if not getattr(settings, 'STORE_FILES_LOCAL', False) \
-        else LocalFileStorage()
+    else LocalFileStorage()
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +138,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if organization_ids is None:
             organization_ids = [org.pk for org in
-                                get_objects_for_user(self, 'b24online.manage_organization', Organization, with_superuser=False).only('pk')]
+                                get_objects_for_user(self, 'b24online.manage_organization', Organization,
+                                                     with_superuser=False).only('pk')]
             cache.set(key, organization_ids, 60 * 10)
 
         return organization_ids or []
@@ -184,17 +185,17 @@ class AbstractRegisterInfoModel(models.Model):
     The abstract model-container of registration info fields.
     """
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        verbose_name=_('Creator'),
-        related_name='%(class)s_create_user',
-        null=True, blank=True)
+                                   verbose_name=_('Creator'),
+                                   related_name='%(class)s_create_user',
+                                   null=True, blank=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        verbose_name=_('Editor'),
-        related_name='%(class)s_update_user',
-        null=True, blank=True)
+                                   verbose_name=_('Editor'),
+                                   related_name='%(class)s_update_user',
+                                   null=True, blank=True)
     created_at = models.DateTimeField(_('Creation time'),
-        default=timezone.now, db_index=True)
+                                      default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(_('Update time'),
-        auto_now=True, null=True)
+                                      auto_now=True, null=True)
 
     class Meta:
         abstract = True
@@ -423,7 +424,6 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return "{0}".format(self.pk)
@@ -797,11 +797,11 @@ class Vacancy(models.Model):
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
     is_hidden_user = models.BooleanField(_('Hide the vacancy user'),
-                                        default=False, db_index=True)
+                                         default=False, db_index=True)
     staffgroup = models.ManyToManyField('StaffGroup',
                                         related_name='group_vacancies')
     permission_extra_group = models.ManyToManyField('PermissionsExtraGroup',
-                                        related_name='extra_group_vacancies')
+                                                    related_name='extra_group_vacancies')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1155,9 +1155,6 @@ class Greeting(models.Model, IndexedModelMixin):
 
 
 class News(ActiveModelMixing, models.Model, IndexedModelMixin):
-    class Meta:
-        ordering = ["-id"]
-
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255, blank=True)
@@ -1222,6 +1219,18 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
         return reverse('news:detail', args=[self.slug, self.pk])
 
 
+class VideoChannelManager(models.Manager):
+    def get_queryset(self):
+        return super(VideoChannelManager, self).get_queryset().filter(is_tv=True)
+
+
+class VideoChannel(News):
+    objects = VideoChannelManager()
+
+    class Meta:
+        proxy = True
+
+
 class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=2048, blank=False, null=False)
     slug = models.SlugField(max_length=2048)
@@ -1278,9 +1287,9 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+                              sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                          sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
+                             sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     mobile_number = models.CharField(max_length=255, blank=True, null=True)
     site = models.CharField(max_length=255, blank=True, null=True)
     profession = models.CharField(max_length=255, blank=True, null=True)
@@ -1321,7 +1330,7 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     @property
     def full_name(self):
-        return ' ' . join(
+        return ' '.join(
             filter(None, [self.first_name, self.middle_name, self.last_name])
         )
 
@@ -1771,7 +1780,7 @@ class Message(models.Model):
                 images.append({
                     'file': os.path.join(
                         abspathu(settings.MEDIA_ROOT),
-                                 str(attachment.file)),
+                        str(attachment.file)),
                     'sizes': {
                         'th': {'box': (50, 50), 'fit': False},
                     },
@@ -1789,7 +1798,6 @@ class Message(models.Model):
 
 
 class MessageAttachment(models.Model):
-
     ICONS = {
         'application/vnd.ms-excel': 'xls.png',
         'application/msword': 'doc.png',
@@ -1829,7 +1837,7 @@ class MessageAttachment(models.Model):
 
     def get_icon(self):
         return 'b24online/img/' + \
-            type(self).ICONS.get(self.content_type, 'unknown.png')
+               type(self).ICONS.get(self.content_type, 'unknown.png')
 
 
 class BannerBlock(models.Model):
@@ -2163,12 +2171,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
                                      choices=CUSTOMER_TYPES,
                                      null=False, blank=False)
     deal_place = models.CharField(_('Deal place'), max_length=15,
-                                     choices=DEAL_PLACES,
-                                     default=ON_PORTAL,
-                                     null=False, blank=False)
+                                  choices=DEAL_PLACES,
+                                  default=ON_PORTAL,
+                                  null=False, blank=False)
     customer_organization = models.ForeignKey('Organization',
-        related_name='deal_orders', verbose_name=_('Customer organization'),
-        null=True, blank=True)
+                                              related_name='deal_orders', verbose_name=_('Customer organization'),
+                                              null=True, blank=True)
     order_no = models.CharField(_('Order No.'), max_length=50,
                                 blank=True, null=True, db_index=True)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
@@ -2195,15 +2203,15 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
             return cls.objects.filter(status=status).filter(
                 (Q(customer_type=cls.AS_PERSON) & Q(created_by=user)) | \
                 (Q(customer_type=cls.AS_ORGANIZATION) & \
-                    Q(customer_organization__in=org_ids)))
+                 Q(customer_organization__in=org_ids)))
         else:
             return cls.objects.none()
 
     def __str__(self):
-        _data = [_('Order from %s') % self.created,]
+        _data = [_('Order from %s') % self.created, ]
         if self.order_no:
             _data.append('%s %s' % (_('order No.') % self.order_no))
-        return ', ' . join(_data)
+        return ', '.join(_data)
 
     def can_pay(self):
         return self.status == self.DRAFT
@@ -2223,12 +2231,12 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
             if self.created_by:
                 if self.created_by.profile:
                     return self.created_by.profile.full_name \
-                        or self.created_by.email
+                           or self.created_by.email
                 else:
                     return self.created_by
             else:
                 try:
-                    return Deal.objects.filter(deal_order=self)\
+                    return Deal.objects.filter(deal_order=self) \
                         .first().person_last_name
                 except Deal.DoesNotExist:
                     return None
@@ -2255,7 +2263,7 @@ class DealOrder(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         return dict(type(self).STATUSES).get(self.status)
 
-    #def get_total_cost(self):
+    # def get_total_cost(self):
     #    """
     #    Return deal cost in different currencies.
     #    """
@@ -2291,15 +2299,15 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
                 (REJECTED, _('Rejected')))
 
     deal_order = models.ForeignKey(DealOrder, related_name='order_deals',
-                              verbose_name=_('Order'), null=False, blank=False,
-                              editable=False)
+                                   verbose_name=_('Order'), null=False, blank=False,
+                                   editable=False)
     supplier_company = models.ForeignKey('Company',
                                          related_name='company_deals',
                                          verbose_name=_('Supplier company'),
                                          null=False, blank=False,
                                          editable=False)
     deal_no = models.CharField(_('Deal No.'), max_length=50,
-                                blank=True, null=True, db_index=True)
+                               blank=True, null=True, db_index=True)
     total_cost = models.DecimalField(_('Total deal cost'),
                                      max_digits=15, decimal_places=2,
                                      null=True, blank=False, editable=False)
@@ -2308,20 +2316,20 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
     paypal_txn_id = models.CharField(_('Transaction ID'), max_length=255,
                                      null=True, blank=True, db_index=True)
     models.ForeignKey(PayPalIPN, related_name='order_deals',
-                                      verbose_name=_('PayPal Transaction'),
-                                      null=True, blank=True,
-                                      editable=False)
+                      verbose_name=_('PayPal Transaction'),
+                      null=True, blank=True,
+                      editable=False)
     paid_at = models.DateTimeField(_('Payment datetime'), editable=False,
                                    null=True, blank=True, db_index=True)
     status = models.CharField(_('Deal status'), max_length=10,
                               choices=STATUSES, default=DRAFT, editable=False,
                               null=False, blank=False)
     person_first_name = models.CharField(_('First name'), max_length=255,
-                                            blank=True, null=True)
+                                         blank=True, null=True)
     person_last_name = models.CharField(_('Last name'), max_length=255,
-                                 blank=True, null=True)
+                                        blank=True, null=True)
     person_phone_number = models.CharField(_('Phone number'), max_length=255,
-                                    blank=True, null=True)
+                                           blank=True, null=True)
     person_country = models.ForeignKey(Country, verbose_name=_('Country'),
                                        blank=True, null=True)
     person_address = models.CharField(_('Address'), max_length=2048,
@@ -2344,7 +2352,7 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         current_organization = get_current_organization(request)
         if request.user.is_authenticated() and \
-            isinstance(current_organization, Company):
+                isinstance(current_organization, Company):
             qs = cls.objects.filter(
                 supplier_company=current_organization,
             )
@@ -2370,17 +2378,17 @@ class Deal(ActiveModelMixing, AbstractRegisterInfoModel):
         return totals
 
     def __str__(self):
-        _data = [_('Deal from %s') % self.created,]
+        _data = [_('Deal from %s') % self.created, ]
         if self.deal_no:
             _data.append(_('deal No. %s') % self.deal_no)
-        return ', ' . join(_data)
+        return ', '.join(_data)
 
     @property
     def description(self):
         _data = [_("Deal from {0} for order {0}").format(self.created, self.deal_order)]
         if self.deal_no:
             _data.append(_('deal No. %s') % self.deal_no)
-        return ', ' . join(_data)
+        return ', '.join(_data)
 
     def get_status(self):
         """
@@ -2416,11 +2424,11 @@ class DealItem(models.Model):
     Add the cost (price) because need to remember the price on deal datetime.
     """
     CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') | \
-        models.Q(app_label='centerpokupok', model='b2cproduct')
+                         models.Q(app_label='centerpokupok', model='b2cproduct')
 
     deal = models.ForeignKey(Deal, related_name='deal_products',
-                              verbose_name=_('Deal'), null=False, blank=False,
-                              editable=False)
+                             verbose_name=_('Deal'), null=False, blank=False,
+                             editable=False)
     content_type = models.ForeignKey(ContentType,
                                      limit_choices_to=CONTENT_TYPE_LIMIT,
                                      on_delete=models.CASCADE)
@@ -2459,7 +2467,7 @@ class DealItem(models.Model):
         """
         data = []
         if self.item and hasattr(self.item, 'extra_params') \
-            and hasattr(self, 'extra_params'):
+                and hasattr(self, 'extra_params'):
             param_fields = self.item.extra_params
             param_values = self.extra_params
             for param_descr in param_fields:
@@ -2469,6 +2477,7 @@ class DealItem(models.Model):
                     if param_value:
                         data.append((param_descr, param_value))
         return data
+
 
 class StaffGroup(models.Model):
     """
@@ -2484,8 +2493,8 @@ class StaffGroup(models.Model):
     @classmethod
     def get_options(cls):
         return ((item.id, item.group.name) \
-            for item in cls.objects.select_related('group')\
-                .order_by('group__name'))
+                for item in cls.objects.select_related('group') \
+                    .order_by('group__name'))
 
 
 class PermissionsExtraGroup(models.Model):
@@ -2506,7 +2515,7 @@ class PermissionsExtraGroup(models.Model):
     @classmethod
     def get_options(cls):
         return ((item.id, item.name) \
-            for item in cls.objects.order_by('name'))
+                for item in cls.objects.order_by('name'))
 
 
 class Producer(ActiveModelMixing, models.Model):
@@ -2570,8 +2579,8 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
     The main model class for Questionnaire sub-app.
     """
     # The content types are limited by set (B2BProduct, B2CProduct)
-    CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') |\
-        models.Q(app_label='centerpokupok', model='b2cproduct')
+    CONTENT_TYPE_LIMIT = models.Q(app_label='b24online', model='b2bproduct') | \
+                         models.Q(app_label='centerpokupok', model='b2cproduct')
 
     name = models.CharField(_('Questionnaire title'), max_length=255,
                             blank=False, null=False)
@@ -2618,9 +2627,9 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
         if model_type and getattr(instance, 'id', False):
             try:
                 qs = cls.get_active_objects().filter(
-                        content_type=model_type,
-                        object_id=instance.id
-                    )
+                    content_type=model_type,
+                    object_id=instance.id
+                )
                 return qs[0]
             except IndexError:
                 pass
@@ -2654,21 +2663,20 @@ class Questionnaire(ActiveModelMixing, AbstractRegisterInfoModel):
         return True
 
     def actual_questions(self):
-        return Question.get_active_objects()\
-            .filter(questionnaire=self)\
+        return Question.get_active_objects() \
+            .filter(questionnaire=self) \
             .order_by('position')
 
     def actual_recommendations(self):
-        return Recommendation.get_active_objects()\
+        return Recommendation.get_active_objects() \
             .filter(questionnaire=self)
 
     def get_extra_questions(self):
-        return Question.get_active_objects()\
+        return Question.get_active_objects() \
             .filter(questionnaire=self,
                     who_created=Question.BY_MEMBER,
-                    is_approved=False)\
+                    is_approved=False) \
             .order_by('position')
-
 
 
 class Question(ActiveModelMixing, AbstractRegisterInfoModel):
@@ -2733,8 +2741,8 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
         """
         Save th instance.
         """
-        max_position = type(self).objects.aggregate(Max('position'))\
-            .get('position_max') or 0
+        max_position = type(self).objects.aggregate(Max('position')) \
+                           .get('position_max') or 0
         self.position = max_position + 1
         super(Question, self).save(*args, **kwargs)
 
@@ -2747,9 +2755,9 @@ class Question(ActiveModelMixing, AbstractRegisterInfoModel):
     def author(self):
         cls = type(self)
         if self.who_created == cls.BY_AUTHOR:
-            return  self.created_by
+            return self.created_by
         elif self.who_created == cls.BY_MEMBER:
-            return  self.created_by_participant
+            return self.created_by_participant
         else:
             return None
 
@@ -2811,7 +2819,7 @@ class Recommendation(ActiveModelMixing, AbstractRegisterInfoModel):
         return True
 
     def recommendations(self):
-        return Recommendation.objects.filter(question__questionnaire=self)\
+        return Recommendation.objects.filter(question__questionnaire=self) \
             .order_by('question__position')
 
 
@@ -2877,8 +2885,8 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         return True
 
     def get_participants(self):
-        participants = list(self.participants\
-            .order_by('is_invited'))
+        participants = list(self.participants \
+                            .order_by('is_invited'))
         is_correct = True
         if len(participants) == 2:
             inviter, invited = participants
@@ -2919,7 +2927,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         shows = {}
         _questions = []
         for answer in Answer.objects.filter(
-            questionnaire_case=self):
+                questionnaire_case=self):
             if not answer.question:
                 continue
 
@@ -2927,16 +2935,16 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
 
             answers.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
-                    answer.answer
+                answer.answer
             shows.setdefault(
                 answer.question.id, {})[answer.participant.pk] = \
-                    answer.show_answer
+                answer.show_answer
         _questions = set(_questions)
 
         inviter, invited = self.get_participants()
         if all((inviter, invited)):
-            for question in self.questionnaire.questions\
-                .filter(id__in=_questions).order_by('position'):
+            for question in self.questionnaire.questions \
+                    .filter(id__in=_questions).order_by('position'):
                 data = {
                     'question': question,
                     'inviter': answers.get(question.id, {}).get(inviter.id),
@@ -2947,7 +2955,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
                 data.update({
                     'is_coincedence': data.get('inviter') and data.get('invited'),
                     'need_show': (data.get('inviter') and data.get('invited')) or \
-                        (data.get('inviter_show') or data.get('invited_show')),
+                                 (data.get('inviter_show') or data.get('invited_show')),
                 })
                 yield data
 
@@ -2956,7 +2964,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         Return how many coincedences
         """
         _coincedences = [item for item in self.get_coincedences() \
-            if item.get('is_coincedence')]
+                         if item.get('is_coincedence')]
         return len(_coincedences)
 
     def get_answers(self, participant_type):
@@ -2975,15 +2983,15 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
             shows = {}
             _questions = []
             for answer in Answer.objects.filter(
-                questionnaire_case=self, participant=responsive):
+                    questionnaire_case=self, participant=responsive):
                 if not answer.question:
                     continue
                 _questions.append(answer.question.pk)
                 answers[answer.question.id] = answer
             _questions = set(_questions)
 
-            for question in self.questionnaire.questions\
-                .filter(id__in=_questions).order_by('position'):
+            for question in self.questionnaire.questions \
+                    .filter(id__in=_questions).order_by('position'):
                 answer = answers.get(question.id)
                 is_true = answer.answer
                 yield {
@@ -2998,7 +3006,7 @@ class QuestionnaireCase(ActiveModelMixing, AbstractRegisterInfoModel):
         Return how many positive answers.
         """
         _answers = [item for item in self.get_answers(participant_type) \
-            if item.get('is_true') ]
+                    if item.get('is_true')]
         return len(_answers)
 
     def get_inviter_answers(self):
@@ -3072,9 +3080,6 @@ class Answer(ActiveModelMixing, AbstractRegisterInfoModel):
 
 
 class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
-    class Meta:
-        ordering = ["-id"]
-
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255, blank=True)
@@ -3125,7 +3130,6 @@ class Video(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def get_absolute_url(self):
         return reverse('video:detail', args=[self.slug, self.pk])
-
 
 
 class LeadsStore(ActiveModelMixing, models.Model):
@@ -3253,9 +3257,9 @@ def recalculate_deal_cost(deal):
     Recalculate total cost of deal
     """
     assert isinstance(deal, Deal), _('Invalid parameter')
-    deal.total_cost = deal.deal_products\
+    deal.total_cost = deal.deal_products \
         .aggregate(total_cost=Sum(F('cost') * F('quantity'),
-            output_field=models.FloatField())).get('total_cost', 0.0)
+                                  output_field=models.FloatField())).get('total_cost', 0.0)
     deal.save()
 
 

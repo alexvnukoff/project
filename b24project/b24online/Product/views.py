@@ -27,7 +27,7 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
 from b24online.models import (B2BProduct, Company, B2BProductCategory, DealOrder, Deal, DealItem, Producer)
 from b24online.utils import (get_current_organization, get_permitted_orgs,
                              MTTPTreeBuilder)
-from centerpokupok.models import B2CProduct, B2CProductCategory
+from centerpokupok.models import B2CProduct, B2CProductCategory, Coupon
 from usersites.models import UserSite
 
 logger = logging.getLogger(__name__)
@@ -255,7 +255,7 @@ class B2CPCouponsList(ItemsList):
     def current_section(self):
         return _("Online Coupons")
 
-    model = B2CProduct
+    model = Coupon
 
     # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
@@ -275,15 +275,14 @@ class B2CPCouponsList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/index_b2c_coupons.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.prefetch_related('company__countries')
+
     def get_queryset(self):
         if self.is_filtered():
             return self.get_filtered_items().sort(*self._get_sorting_params())
 
-        queryset = self.model.get_active_objects().filter(
-                is_active=True,
-                coupon_dates__contains=now().date(),
-                coupon_discount_percent__gt=0
-                ).order_by(*self._get_sorting_params())
+        queryset = self.model.get_active_objects().order_by(*self._get_sorting_params())
 
         return self.optimize_queryset(queryset)
 
