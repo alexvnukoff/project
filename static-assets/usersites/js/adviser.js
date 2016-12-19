@@ -27,8 +27,8 @@ function initAdviser() {
     $(adviserMainDialogDiv).dialog({
         autoOpen: false,
         height: 450,
-        width: launcherWidth + 200,
-        minWidth: launcherWidth + 150,
+        width: launcherWidth + 250,
+        minWidth: launcherWidth + 250,
         position: { my: 'center center-250', of: '#' + ADVISER_ID},
     });
     $(adviserMainDiv).click(function(event) {

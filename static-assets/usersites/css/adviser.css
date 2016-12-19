@@ -1,7 +1,7 @@
 .online_adviser {
     position: fixed;
-    bottom: 5%;
-    right: 5%;
+    bottom: 1%;
+    right: 1%;
     padding: 10px 50px;
     border-radius: 2px 15px 15px 2px;
     background: #00af53;
@@ -17,5 +17,3 @@
 .online_adviser span {
     cursor: default;
 }
-
-.
