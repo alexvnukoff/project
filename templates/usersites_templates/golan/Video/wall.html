@@ -3,14 +3,14 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{% if news %}
+{% if videos %}
 
-<div class="container">
+<div class="container main-video">
         <h2 class="page-header"><a href="{% url 'video:main' %}">{% trans "Video" %}</a></h2>
 
         {% for entry in videos %}
 
-            <div class="col-md-6">
+            <div class="col-md-6 media-list">
                 <div class="video-wrap">
 
                     <article class="news">
