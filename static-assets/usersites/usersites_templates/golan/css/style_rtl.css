@@ -247,6 +247,11 @@ body{
 	float: left;
 }
 
+.main-video .media-list,
+.gal-item{
+    float: right;
+}
+
 @media (max-width: 767px){
     .user-reg{  float: right;  }
 }
