@@ -55,6 +55,8 @@ h2.page-header,
     color: #fff;
 }
 
+.user-reg ul li a{  color: #fff;  }
+
 @media (max-width: 767px){
     .user-reg a{  color: #000;  }
 }
