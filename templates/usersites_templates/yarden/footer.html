@@ -16,10 +16,9 @@
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                 {% endfor %}
 
-{#                {% for doc_obj in site.user_site.organization.document_files.all %}#}
-{#                    <li><a href="{{ doc_obj.document }}">{{ doc_obj.name }}</a></li>#}
-{#                    <li><a href="https://static.b24online.com/{{ doc_obj.name }}">{{ doc_obj.name }}</a></li>#}
-{#                {% endfor %}#}
+                {% for doc_obj in site.user_site.organization.document_files.all %}
+                    <li><a href="{{ doc_obj.document.url }}">{{ doc_obj.name }}</a></li>
+                {% endfor %}
 
             </ul>
           </div>
