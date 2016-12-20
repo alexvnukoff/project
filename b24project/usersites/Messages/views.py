@@ -4,10 +4,10 @@ import logging
 
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from django.http import (HttpResponseBadRequest)
-from django.http import JsonResponse
+from django.http import (HttpResponseBadRequest, JsonResponse)
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
+from django.views.generic.base import TemplateView
 from guardian.mixins import LoginRequiredMixin
 
 from b24online.cbv import (ItemDetail, ItemsList)
@@ -67,7 +67,6 @@ class UsersitesChatsListView(UserTemplateMixin, ItemsList):
         return chats
 
 
-## @login_required - refs #1065
 def add_to_chat(request):
     response_code, response_text = 'error', 'Error'
     data = {}
@@ -128,12 +127,12 @@ class UsersitesChatMessagesView(UserTemplateMixin,
         return context
 
 
-def online_adviser(request, *args, **kwargs):
-    template_name = 'usersites/Messages/onlineAdviser.html'
-    form = MessageForm(request, compact=True)
-    context = {'new_message_form': form}
+class OnlineAdviserView(TemplateView):
 
-    return JsonResponse({
-        'title': _(u'Your question'),
-        'msg': render_to_string(template_name, context, request)
-    })
+    template_name = 'usersites/Messages/onlineAdviser.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OnlineAdviserView, self).get_context_data(**kwargs)
+        context['new_message_form'] = MessageForm(self.request, compact=True)
+        return context
+

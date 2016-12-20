@@ -2,52 +2,55 @@
  * Online adviser
  */
 
-var START_TIMEOUT = 2000;
-var ADVISER_ID = 'online_adviser';
-var ADVISER_DIALOG_ID = 'online_adviser_dialog';
-var ADVISER_URL = '/messages/adviser/';
+var START_TIMEOUT = 2000,
+    ADVISER_ID = 'online_adviser',
+    ADVISER_PANEL_ID = 'online_adviser_panel',
+    ADVISER_URL = '/messages/adviser/';
+
+function formatState(opt) {
+    /**
+     * Format the select2 option text (name + avatar)
+     */
+    var optimage = $(opt.element).data('image'); 
+    if (!optimage) {
+        return opt.text;
+    } else {                    
+        var $opt = $('<span><img src="' + optimage + '" width="23px" /> ' + opt.text + '</span>');
+        return $opt;
+    }
+};
+
 
 function initAdviser() {
-    // Слой для вызова 
+    /**
+     * Initialize the online adviser
+     */
     var isLoaded = false;
-    var adviserMainDiv =  $('<div/>').addClass('online_adviser').attr('id', ADVISER_ID);
+
+    // Add the neccessary layers
+    var adviserPanel = $('<div/>')
+        .addClass('panel').
+        .addClass('panel_default')
+        .attr('id', ADVISER_PANEL_ID).hide();
+    $('body').append(adviserPanel);
+
+    var adviserMainDiv = $('<div/>')
+        .addClass('online_adviser')
+        .attr('id', ADVISER_ID);
     $(adviserMainDiv).html('<span>Online-adviser</span>').hide();
     $('body').append(adviserMainDiv);
     
-    // Слой для диалога
-    var adviserMainDialogDiv = $('#' + ADVISER_DIALOG_ID); 
-    if (adviserMainDialogDiv.length == 0) {
-        adviserMainDialogDiv = $('<div/>').attr('id', ADVISER_DIALOG_ID);
-        $(adviserMainDialogDiv).hide();
-        $('body').append(adviserMainDialogDiv);
-    }
-    var launcherPosition = $(adviserMainDiv).position(),
-        launcherWidth = $(adviserMainDiv).width();
-    
-    $(adviserMainDialogDiv).dialog({
-        autoOpen: false,
-        height: 450,
-        width: launcherWidth + 250,
-        minWidth: launcherWidth + 250,
-        position: { my: 'center center-250', of: '#' + ADVISER_ID},
-    });
     $(adviserMainDiv).click(function(event) {
         event.preventDefault();
+        var self = this;
         if (!isLoaded) {
-            $.getJSON(ADVISER_URL, function(data) {
-                if ('title' in data) {
-                    $(adviserMainDialogDiv).dialog('option', 'title', data.title);
+            $.get(ADVISER_URL, function(data) {
+                if (data) {
+                    $(self).hide();
+                    $(adviserPanel).html(data).show('slow');
+                    isLoaded = true;
                 }
-                if ('msg' in data) {
-                    $(adviserMainDialogDiv).html(data.msg);
-                }
-                var action = ($(adviserMainDialogDiv).dialog('isOpen')) ? 'close' : 'open';
-                $(adviserMainDialogDiv).dialog(action);
-                isLoaded = true;
             });
-        } else {
-            var action = ($(adviserMainDialogDiv).dialog('isOpen')) ? 'close' : 'open';
-            $(adviserMainDialogDiv).dialog(action);
         }
         return false;                          
     });
@@ -55,9 +58,6 @@ function initAdviser() {
 }
 
 $(function() {
-    // Время запуска после загрузки страницы
-    
-    // Запуск
+    // Call the Adviser initializer
     setTimeout(initAdviser, START_TIMEOUT);
-
 });
