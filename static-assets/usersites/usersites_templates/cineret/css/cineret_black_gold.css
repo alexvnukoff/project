@@ -1,0 +1,347 @@
+/*---------- General Styling ----------*/
+body {
+	background-color: #000;
+    color: #fff;
+    /* main color: color: #83ba3a */
+}
+
+.page-header,
+.page-header a,
+h3 a,
+h3 a:hover,
+h3 a:active,
+h3 a:focus,
+.navbar-default .nav li a:hover,
+.navbar-default .nav li a:focus{
+    color: #b19339;
+}
+
+.btn-default{
+    background-color: #b19339;
+    color: #fff;
+}
+
+.btn-default:hover,
+.btn-default:active,
+.btn-default:focus{
+    background-color: #fff;
+    color: #b19339;
+}
+
+.tel .fa,
+.tel a{
+    color: #fff;
+}
+
+.user-reg a{
+    color: #fff;
+}
+
+.large-navbar{
+    background-color: rgba(0 ,0 ,0 ,0.5);
+}
+
+.navbar-default{
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle {
+    background-color: #b19339;
+    border-color: #916a0a;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.navbar-default .navbar-collapse {
+    border-color: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-default .navbar-nav > .active > a {
+    color: white;
+    background-color: #b19339;
+}
+
+.navbar-default .nav li a {
+    color: #fff;
+}
+
+.small-navbar li a {
+    color: #000;
+}
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: #b19339;
+}
+
+.top-nav .header-cart{
+	color: #fff;
+}
+
+.top-nav .header-cart:hover{
+	color: #fff;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+}
+
+.cust-nav__btn{
+    background-color: #fff;
+}
+
+.cust-nav__btn a{
+    color: #fff;
+}
+
+.cust-nav__btn a:hover{
+    color: #b19339;
+}
+
+@media (min-width: 768px) {
+    .navbar-default {
+        /*background-color: rgba(0,0,0,.7); // Tint color*/
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default .navbar-brand {
+        color: #b19339;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-default.navbar-shrink {
+        background-color: #fff;
+    }
+}
+
+.proposal-link{
+    color: #fff;
+}
+
+.coupon {
+    background-color: #262626;
+    border: 1px solid #ddd;
+}
+
+.product__discount{
+    background-color: #b19339;
+}
+
+.product__title{
+    color: #fff;
+}
+
+.product__deleted-price{
+    color: #aaa;
+}
+
+.contact-fields .main-contact-btn{
+    color: #ffffff;
+    background-color: #b19339;
+    border-color: #916a0a;
+}
+
+.main-contact{
+    background: #000;
+    color: #fff;
+}
+
+.map {
+    background-color: #ccc;
+}
+
+.pin {
+	background: #404040;
+	border: 2px solid #FAFAFA;
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+	background: -webkit-linear-gradient(45deg, #404040, #212121);
+}
+
+.pin img {
+	border-bottom: 1px solid #ccc;
+}
+
+.pin p {
+	color: #fff;
+}
+
+/*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
+.about-main,
+.side-bar a:hover,
+.side-bar a:focus,
+.side-bar a:active,
+.product .thumbnail,
+.go-to-full,
+footer a,
+#timer-detail-page,
+.smalltext,
+/*.special_offer__btn:hover,*/
+/*.special_offer__btn:focus,*/
+/*.special_offer__btn:active,*/
+.job_offer__btn:hover,
+.job_offer__btn:focus,
+.job_offer__btn:active,
+.item-price-table,
+.coupon-timer{
+	color: #fff !important;
+}
+
+.membership-banner__member-text,
+.product__desc{
+    color: #fff;
+}
+
+.cust-nav ul li a,
+.navbar-inverse .navbar-nav>li>a{
+	color: #fff;
+}
+
+.cust-nav__btn{
+	background-color: #000;
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>li>a:active{
+	background-color: #fff;
+	border-radius: 15px;
+}
+
+/*.navbar-inverse .navbar-nav>.active a:hover,*/
+/*.navbar-inverse .navbar-nav>.active a:focus,*/
+/*.navbar-inverse .navbar-nav>.active a:active{*/
+	/*background-color: #b19339;*/
+	/*color: #fff!important;*/
+/*}*/
+
+.carousel-text {
+    background: rgba(255,255,255,0.75);
+}
+/*---------- Text Styling - Black text ----------*/
+.side-bar a,
+.select-lang,
+.item-page__qty-box,
+.cart{
+	color: #000;
+}
+
+/*---------- Text Styling - Dimming with gray ----------*/
+.product__cat,
+.product__valid__coupon,
+.product__deleted-price{
+	color: #979797;
+}
+
+
+
+/*---------- carousel Styling ----------*/
+.carousel-text li:hover,
+.carousel-text li:active,
+.carousel-text li:focus {
+    background: rgba(0,0,0,0);
+}
+
+/*---------- Product Styling ----------*/
+.product .thumbnail{
+	background-color: #262626;
+}
+
+.product__title{
+	border-bottom: 1px solid #fff;
+}
+.product__title a{
+	color: #fff;
+}
+.product__title a:hover{
+	color: #b19339;
+}
+
+
+/*---------- Jobs Styling ----------*/
+.job_offer{
+	background-color: #fff;
+	border: 1px solid #979797;
+}
+
+.job_offer__p{
+	color: #262626;
+}
+
+/*---------- Footer Styling ----------*/
+footer,
+.membership-banner{
+	background-color: #000;
+}
+
+.rights{
+	border-top: 1px solid #fff;
+}
+
+footer a:hover,
+footer a:active{
+	color: #916a0a!important;
+}
+/*---------- Search Item Styling ----------*/
+.tmp_search{
+	color: #000;
+}
+
+.top_search input,
+.top_search input:focus{
+	/*background-color: #b19339;*/
+	border: 1px solid #fff;
+	color: #000;
+}
+
+.top_search input:focus{
+	box-shadow: 0 0 5px 1px #969696;
+}
+
+.top_search input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+    -webkit-text-fill-color: #333;
+}
+.top_search input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px white inset;
+    -webkit-text-fill-color: #333;
+}
+/*---------- Page Item Styling ----------*/
+
+#timer-detail-page{
+    border: 1px solid #b19339;
+}
+
+.pagination>li>a, .pagination>li>span{
+	/*color: #b19339;*/
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+	/*background-color: #b19339;*/
+	color: #fff;
+	border: 1px solid #ddd;
+}
+
+.category{
+	/*background-color: #fff;*/
+	color: #000;
+}
+
+.field_error {
+    font-size: 80%;
+    color: red;
+}
+
+.panel-default {
+    color: #000;
+}
+
