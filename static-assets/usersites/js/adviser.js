@@ -29,8 +29,6 @@ function initAdviser() {
 
     // Add the neccessary layers
     var adviserPanel = $('<div/>')
-        .addClass('panel').
-        .addClass('panel_default')
         .attr('id', ADVISER_PANEL_ID).hide();
     $('body').append(adviserPanel);
 

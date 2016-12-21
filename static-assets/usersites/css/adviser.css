@@ -1,6 +1,6 @@
 .online_adviser {
     position: fixed;
-    bottom: 1%;
+    bottom: 0;
     right: 1%;
     padding: 10px 50px;
     border-radius: 2px 15px 15px 2px;
@@ -16,4 +16,14 @@
 
 .online_adviser span {
     cursor: default;
+}
+
+#online_adviser_panel {
+    display: none;
+    z-index: 102; 
+    position: fixed;
+    bottom: 0;
+    right: 1%;
+    width: 20%;
+    margin-bottom: 0;
 }
