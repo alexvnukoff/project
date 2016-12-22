@@ -314,7 +314,7 @@ class Gallery(ActiveModelMixing, models.Model):
         return GalleryImage.objects.create(image=image, gallery=self, created_by=user, updated_by=user)
 
     def __str__(self):
-        return self.title
+        return "{0}".format(self.title)
 
 
 class GalleryImage(models.Model):
