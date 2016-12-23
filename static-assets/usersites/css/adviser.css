@@ -9,7 +9,7 @@
     color: #ffffff;
     z-index: 101;
 }
-
+-
 .online_adviser:hover {
     background-color: #008c42;
 }
@@ -27,3 +27,17 @@
     width: 20%;
     margin-bottom: 0;
 }
+
+textarea.adviser_message {
+    width: 200px;
+    height: 50px !important;
+}
+
+.panel-adviser > .panel-heading {
+    background-color: #00af53 !important;    
+}
+
+.panel-adviser > .panel-footer {
+    background-color: #008c42;    
+}
+

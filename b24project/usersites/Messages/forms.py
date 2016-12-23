@@ -55,9 +55,14 @@ class MessageForm(forms.ModelForm):
             .update({'class': 'file-attachment'})
         if self.chat:
             self.fields['recipient'] = False
-        for field_name in ('subject', 'content', 'recipient'):
+        for field_name in ('subject', 'recipient'):
             self.fields[field_name].widget.attrs\
                 .update({'class': 'form-control'})
+        self.fields['content'].widget.attrs\
+            .update({
+                'class': 'adviser_message form-control',
+                'placeholder': _('Enter Your message here'),
+            })
         if compact:
             self.fields['content'].widget.attrs\
                 .update({'rows': 3, 'cols': 30})
