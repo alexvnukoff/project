@@ -68,6 +68,9 @@ class UsersitesChatsListView(UserTemplateMixin, ItemsList):
 
 
 def add_to_chat(request):
+    """
+    
+    """
     response_code, response_text = 'error', 'Error'
     data = {}
     if request.method == 'POST':
@@ -85,6 +88,7 @@ def add_to_chat(request):
                 data.update({
                     'code': 'success',
                     'msg': _('You have successfully updated chat'),
+                    'message_text': form.instance.content,                    
                 })
         else:
             data.update({

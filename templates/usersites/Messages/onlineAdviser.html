@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n staticfiles %}
 
 <form id="new_message_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
 <div class="panel panel-default panel-adviser">
@@ -13,8 +13,9 @@
             {{ new_message_form.content }}
         </div>
         <div style="width: 25%; float: right;">
-            <button><img src="/static/usersites/images/attach.png" width="24px"></button>&nbsp;
-            <button><img src="/static/usersites/images/enter.png" width="24px"></button>
+            <button id="adviser_save_message"><img src="{% static 'usersites/images/enter.png' %}" width="24px"></button>
+            <button id="attach_file_button"><img src="{% static 'usersites/images/attach.png' %}" width="24px"></button>&nbsp;
+            <input id="attach_file_field" type="file" style="display: none;">
         </div>
         <div style="clear:both;"></div>
     </div>
@@ -40,11 +41,12 @@
         return opt.text;
     }
 
-    var recipientId = '#id_recipient';
-    //$(recipientId).select2({
-    //    formatResult: formatOption,
-    //    formatSelection: formatOption,
-    //});
+    // Select2 with avatar images in options
+    // var recipientId = '#id_recipient';
+    // $(recipientId).select2({
+    //     formatResult: formatOption,
+    //     formatSelection: formatOption,
+    // });
 
     $(document).on('click', '#adviser_save_message', function(e) {
         e.preventDefault(); 
@@ -60,10 +62,19 @@
 
                 } else if (data.code == 'success') {
                     $(processed_form).clearForm();
+                    if ('message_text' in data) {
+                        console.log(data.message_text);
+                    }
                 }
                 $(this).prop('disabled', false);
             }
         });
+        return false;
+	});
+
+    $(document).on('click', '#attach_file_button', function(e) {
+        e.preventDefault(); 
+        $('#attach_file_field').click();
         return false;
 	});
     
