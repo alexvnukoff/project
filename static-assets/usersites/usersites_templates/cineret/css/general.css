@@ -1942,6 +1942,11 @@ header.carousel .fill {
     .gal-container .modal-content{
         height:250px;
     }
+
+    iframe{
+        width: 100%;
+        height: auto;
+    }
 }
 
 .main-video .media{
