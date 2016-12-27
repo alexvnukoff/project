@@ -137,9 +137,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         organization_ids = cache.get(key)
 
         if organization_ids is None:
-            organization_ids = [org.pk for org in
-                                get_objects_for_user(self, 'b24online.manage_organization', Organization,
-                                                     with_superuser=False).only('pk')]
+            organization_ids = list(get_objects_for_user(self, 'b24online.manage_organization', Organization,
+                                                     with_superuser=False).values_list('pk', flat=True))
             cache.set(key, organization_ids, 60 * 10)
 
         return organization_ids or []
