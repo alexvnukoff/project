@@ -28,6 +28,7 @@ def get_wall_list(request):
         return render(request, "b24online/Wall/index.html", context=templateParams)
     else:
         serialize = {
+            'current_section': current_section,
             'styles': styles,
             'scripts': scripts,
             'content': wallPage,
