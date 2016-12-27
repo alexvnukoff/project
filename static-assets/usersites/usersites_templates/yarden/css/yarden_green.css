@@ -25,7 +25,8 @@ h2.page-header,
 .table h3 a,
 .product__price a,
 .cust-nav__btn a,
-.product__title{
+.product__title,
+.news__text h4 a{
 	color: #243e10  !important;
 }
 
