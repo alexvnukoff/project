@@ -11,11 +11,11 @@
 
         {% for proposal in proposals %}
             {# Each proposal will have a title, description, date and a button which will take to the main page of proposals. #}
-            <div class="col-sm-12 col-md-12 col-xs-12 proposal">
-                <h2 class="news__title">{{ proposal.title }}</h2>
-                <p class="news__text hidden-xs">{{ proposal.description|striptags|safe|truncatewords_html:"90" }}</p>
-                <p class="news__text hidden-xs">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
-                <a type="button" class="btn btn-default news__btn" href="{{ proposal.get_absolute_url }}" role="button">{% trans 'More' %}</a>
+            <div class="col-sm-12 col-md-12 col-xs-12 proposal news__text">
+                <h4><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h4>
+                <p class="date">{{ proposal.created_at|date:'d M Y' }}</p>
+               <p class="hidden-xs">{{ proposal.description|striptags|safe|truncatewords_html:"25" }}</p>
+{#                <a type="button" class="btn btn-default news__btn" href="{{ proposal.get_absolute_url }}" role="button">{% trans 'More' %}</a>#}
             </div>
         {% endfor %}
 

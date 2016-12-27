@@ -228,6 +228,11 @@ collapse the menu on 991px. */
 	.navbar-toggle{
 		margin: 0;
 	}
+
+	iframe{
+        width: 100%!important;
+        height: auto!important;
+    }
 }
 
 

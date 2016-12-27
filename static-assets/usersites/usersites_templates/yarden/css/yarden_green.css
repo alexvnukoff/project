@@ -27,7 +27,7 @@ h2.page-header,
 .cust-nav__btn a,
 .product__title,
 .news__text h4 a{
-	color: #821212  !important;
+	color: #243e10  !important;
 }
 
 .header-cart{
@@ -138,7 +138,7 @@ footer a,
 
 #timer-detail-page > div,
 #timer-detail-page div > span{
-	background-color: #821212 ;
+	background-color: #243e10 ;
 }
 
 .navbar-inverse{
@@ -152,7 +152,7 @@ footer a,
 .side-bar a:hover,
 .side-bar a:focus,
 .side-bar a:active{
-	background-color: #821212  !important;
+	background-color: #243e10  !important;
 }
 
 /*---------- carousel Styling ----------*/
@@ -176,7 +176,7 @@ footer a,
 }
 
 .product__title a{
-	color: #821212 ;
+	color: #243e10 ;
 	text-decoration: none;
 }
 
@@ -190,7 +190,7 @@ footer a,
 }
 
 .product__discount{
-	color: #821212 ;
+	color: #243e10 ;
 }
 
 .product__btn .btn,
@@ -199,14 +199,14 @@ a.product__btn,
 .special_offer__btn, .job_offer__btn,
 .news__btn,
 .special_offer__btn, .job_offer__btn{
-	border-color: #821212 ;
+	border-color: #243e10 ;
 	color: #fff;
-	background-color: #821212
+	background-color: #243e10
 }
 
 a.coupon__btn{
-	background-color: #c60000;
-	border-color: #821212 ;
+	background-color: #487922;
+	border-color: #243e10 ;
 }
 
 .coupon__btn:hover,
@@ -224,8 +224,8 @@ a.coupon__btn{
 .job_offer__btn:active,
 .news__btn:focus,
 .news__btn:active{
-	background-color: #c60000 ;
-	border-color: #821212;
+	background-color: #487922 ;
+	border-color: #243e10;
 	color: #fff!important;
 }
 /*---------- Jobs Styling ----------*/
@@ -250,7 +250,7 @@ footer,
 
 footer a:hover,
 footer a:active{
-	color: #c60000!important;
+	color: #487922!important;
 }
 /*---------- Search Item Styling ----------*/
 .tmp_search{
@@ -279,11 +279,11 @@ footer a:active{
 /*---------- Page Item Styling ----------*/
 
 #timer-detail-page{
-    border: 1px solid #3f1832;
+    border: 1px solid #0a1600;
 }
 
 .pagination>li>a, .pagination>li>span{
-	color: #821212;
+	color: #243e10;
 }
 
 .pagination>.active>a,
@@ -292,7 +292,7 @@ footer a:active{
 .pagination>.active>span,
 .pagination>.active>span:focus,
 .pagination>.active>span:hover{
-	background-color: #821212;
+	background-color: #243e10;
 	color: #fff;
 	border: 1px solid #ddd;
 }
@@ -310,7 +310,7 @@ footer a:active{
 /*--------New coupon design -------------*/
 
 .ver-coupon__title{
-	color: #821212;
+	color: #243e10;
 }
 
 .ver-coupon-discount .ver-coupon__discount{
@@ -322,13 +322,13 @@ footer a:active{
 }
 
 .ver-coupon-discount{
-	background-color: #821212;
+	background-color: #243e10;
 }
 
 .ver-coupon-price .ver-coupon__btn{
-	border-color: #3f1832;
+	border-color: #0a1600;
     color: #fff;
-    background-color: #821212;
+    background-color: #243e10;
 }
 
 .ver-coupon-price .ver-coupon__deleted-price{
@@ -337,7 +337,7 @@ footer a:active{
 }
 
 .addition-pages{
-	color: #821212;
+	color: #243e10;
 }
 
 
