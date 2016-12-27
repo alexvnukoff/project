@@ -22,7 +22,7 @@
                         </a>
 
                         <div class="news__text">
-                            <h4>{{ article.title }}</h4>
+                            <h4><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h4>
                             <p class="date">{{ article.created_at|date:'d M Y' }}</p>
 
                             {% if article.short_description %}
@@ -31,8 +31,8 @@
                                 <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"25" }}</p>
                             {% endif %}
 
-                            <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
-
+{#                            <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>#}
+{#                            <a class="read-more-link" href="{% url 'news:detail' article.slug article.pk %}">{% trans 'More' %}</a>#}
                         </div>
 
                     </li>
