@@ -55,13 +55,11 @@ class UiSearchFilter(BaseFilterBackend):
 
 
 class FilteredPaginator(BasePagination):
-    page_size = 10
-
     def get_paginated_response(self, data):
         return Response({
             'content': data,
             'count': self.page.paginator.count,
-            'page_size': 10,
+            'page_size': self.view.page_size,
             'filters': self.view.applied_filters
         })
 
@@ -71,7 +69,7 @@ class FilteredPaginator(BasePagination):
         if is_elastic_query:
             queryset = queryset.execute().hits
 
-        paginator = Paginator(queryset, self.page_size)
+        paginator = Paginator(queryset, view.page_size)
 
         page_number = 1
 
@@ -145,6 +143,7 @@ class FilterableViewMixin:
 class BaseListApi(ListAPIView, FilterableViewMixin):
     pagination_class = FilteredPaginator
     sorting = '-created_at',
+    page_size = 10
 
     def filter_queryset(self, queryset):
         for backend in self.filters:
