@@ -134,10 +134,10 @@ class FilterableViewMixin:
                 values = self.request.query_params.get(f, '').strip()
 
                 if values:
-                    applied_filters[f] = list(model.objects.filter(pk__in=values.split(',')).values('pk', 'name'))
+                    applied_filters[f] = list(model.objects.filter(pk__in=values.split(',')).values('id', 'name'))
         elif self.request.session.get('geo_country', None):
             geo_country = self.request.session['geo_country']
-            applied_filters['country'] = list(Country.objects.filter(pk=geo_country).values('pk', 'name'))
+            applied_filters['country'] = list(Country.objects.filter(pk=geo_country).values('id', 'name'))
 
         return applied_filters
 
