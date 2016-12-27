@@ -1,193 +1,159 @@
 from django.core.paginator import Paginator
 from django.utils.functional import cached_property
+from rest_framework.filters import BaseFilterBackend
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import BasePagination
+from rest_framework.response import Response
 
-from b24online.models import Country
+from b24online.models import Country, Chamber, B2BProductCategory, Branch, BusinessProposalCategory
 from b24online.search_indexes import SearchEngine
+from centerpokupok.models import B2CProductCategory
 
 
-class ContentHelper:
-    valid_filters = {}
+class ActiveObjectFilter(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view=None, **kwargs):
+        return queryset.query('match', is_active=True).query('match', is_deleted=False)
 
-    def __init__(self, request, page_size, queryset, page=1):
-        self.request = request
-        self.page_size = page_size
-        self.queryset = queryset
 
-    @property
-    def page(self):
-        page = 1
+class UiFilter(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view=None, **kwargs):
+
+        for filter_key in view.valid_filters.keys():
+            values = request.query_params.get(filter_key, '').strip()
+
+            if values:
+                queryset = queryset.filter('terms', **{filter_key: list(map(int, values.split(',')))})
+
+        return queryset
+
+
+class DefaultCountryFilter(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view=None, **kwargs):
+        # Apply geo_country by our internal code
+        if request.session.get('geo_country', None):
+            geo_country = request.session['geo_country']
+
+            return queryset.filter('terms', country=[geo_country])
+
+        return queryset
+
+
+class UiSearchFilter(BaseFilterBackend):
+    query_param = 'q'
+
+    @classmethod
+    def get_search_query(cls, request):
+        return request.query_params.get(cls.query_param, '').strip()
+
+    def filter_queryset(self, request, queryset, view=None, **kwargs):
+        search_query = self.get_search_query(request)
+
+        if search_query:
+            return queryset.query("multi_match", query=search_query, fields=['title', 'name', 'description', 'content'])
+
+        return queryset
+
+
+class FilteredPaginator(BasePagination):
+    page_size = 10
+
+    def get_paginated_response(self, data):
+        return Response({
+            'content': data,
+            'count': self.page.paginator.count,
+            'page_size': 10,
+            'filters': self.view.applied_filters
+        })
+
+    def paginate_queryset(self, queryset, request, view=None):
+        is_elastic_query = isinstance(queryset, SearchEngine)
+
+        if is_elastic_query:
+            queryset = queryset.execute().hits
+
+        paginator = Paginator(queryset, self.page_size)
+
+        page_number = 1
 
         try:
-            page = int(self.request.query_params.get('page', 1))
-            page = self.paginator.num_pages if self.paginator.num_pages < page else page
+            page_number = int(request.query_params.get('page', 1))
+            page_number = paginator.num_pages if paginator.num_pages < page_number else page_number
         except ValueError:
             pass
 
-        return page
+        page = paginator.page(page_number)
 
-    @property
+        self.page = page
+        self.request = request
+        self.view = view
+
+        if is_elastic_query:
+            return list(view.queryset.filter(pk__in=[hit.django_id for hit in page.object_list]).all())
+
+        return list(self.page)
+
+
+class FilterableViewMixin:
+    valid_filters = {
+        'organization': Chamber,
+        'chamber': Chamber,
+        'country': Country,
+        'countries': Country,
+        'b2b_categories': B2BProductCategory,
+        'b2c_categories': B2CProductCategory,
+        'branches': Branch,
+        'bp_categories': BusinessProposalCategory,
+    }
+
+    is_filterable = True
+
+    @cached_property
+    def is_filtered(self):
+        return not set(self.valid_filters.keys()).isdisjoint(self.request.query_params.keys())
+
+    @cached_property
+    def filters(self):
+        filter_backends = []
+
+        if self.is_filterable:
+            filter_backends += [UiSearchFilter, ActiveObjectFilter]
+
+            if self.is_filtered:
+                filter_backends += [UiFilter]
+            else:
+                filter_backends += [DefaultCountryFilter]
+
+        return filter_backends
+
+    @cached_property
     def applied_filters(self):
         applied_filters = {}
 
-        for f, model in self.valid_filters.items():
-            values = self._filter_values(f)
+        if self.is_filtered:
+            for f, model in self.valid_filters.items():
+                values = self.request.query_params.get(f, '').strip()
 
-            if values:
-                applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
-
-        # Apply geo_country by our internal code
-        if self.request.session.get('geo_country') and not self.request.query_params.get('order1'):
+                if values:
+                    applied_filters[f] = list(model.objects.filter(pk__in=values.split(',')).values('pk', 'name'))
+        elif self.request.session.get('geo_country', None):
             geo_country = self.request.session['geo_country']
-            applied_filters['country'] = Country.objects.filter(pk=geo_country).only('pk', 'name')
+            applied_filters['country'] = list(Country.objects.filter(pk=geo_country).values('pk', 'name'))
 
         return applied_filters
 
-    @cached_property
-    def search_query(self):
-        return self.request.query_params.get('q', '').strip()
 
-    def is_filtered(self):
-        return self.applied_filters or self.search_query
+class BaseListApi(ListAPIView, FilterableViewMixin):
+    pagination_class = FilteredPaginator
+    sorting = '-created_at',
 
-    def get_filtered_queryset(self):
-        if self.is_filtered():
-            hits = self._apply_filters(self.queryset.model).sort(*self.sorting).execute().hits
+    def filter_queryset(self, queryset):
+        for backend in self.filters:
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
 
-            if hits.total > 0:
-                return hits
-            else:
-                return self.queryset.none()
+        return queryset
+
+    def get_queryset(self):
+        if self.is_filterable:
+            return SearchEngine(doc_type=self.queryset.model.get_index_model()).sort(*self.sorting)
 
         return self.queryset.order_by(*self.sorting)
-
-    @cached_property
-    def paginator(self):
-        return Paginator(self.get_filtered_queryset(), self.page_size)
-
-
-    @property
-    def content(self):
-        page = self.paginator.page(self.page)
-
-        if self.is_filtered():
-            return self.queryset.filter(pk__in=[hit.django_id for hit in page.object_list])
-
-        return page.object_list
-
-    @property
-    def sorting(self):
-        return ('-created_at',)
-
-    def _apply_filters(self, model):
-        s = SearchEngine(doc_type=model.get_index_model())
-
-        for filter_key in self.valid_filters:
-            values = self._filter_values(filter_key)
-
-            if values:
-                s = s.filter('terms', **{filter_key: values})
-
-        # Apply geo_country by our internal code
-        if self.request.session.get('geo_country') and not self.request.query_params.get('order1'):
-            s = s.filter('terms', **{'country': [self.request.session['geo_country']]})
-
-        if self.search_query:
-            s = s.query("multi_match", query=self.search_query, fields=['title', 'name', 'description', 'content'])
-
-        return s.query('match', is_active=True).query('match', is_deleted=False)
-
-    def _filter_values(self, filter_name):
-        key = "filter[%s][]" % filter_name
-
-        return self.request.query_params.getlist(key)
-
-# class WallContentHelper(ContentHelper):
-#     valid_filters = {
-#         'country': Country,
-#         'chamber': Chamber,
-#         'branches': Branch
-#     }
-#
-#     @property
-#     def projects_queryset(self):
-#         return InnovationProject.get_active_objects() \
-#             .prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def products_queryset(self):
-#         return B2BProduct.get_active_objects().select_related('country')
-#
-#     @property
-#     def proposals_queryset(self):
-#         return BusinessProposal.get_active_objects() \
-#             .prefetch_related('branches', 'organization', 'organization__countries')
-#
-#     @property
-#     def exhibitions_queryset(self):
-#         return Exhibition.get_active_objects().select_related('country').prefetch_related('organization')
-#
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return {
-#             'projects': self._content(self.projects_queryset, 1),
-#             'products': self._content(self.products_queryset, 4),
-#             'proposals': self._content(self.proposals_queryset, 1),
-#             'exhibitions': self._content(self.exhibitions_queryset, 1),
-#             'news': self._content(self.news_queryset, 1),
-#         }
-
-#
-# class NewsContentHelper(ContentHelper):
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return self._content(self.news_queryset, 10)
-#
-# class NewsContentHelper(ContentHelper):
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return self._content(self.news_queryset, 10)
-#
-# class NewsContentHelper(ContentHelper):
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return self._content(self.news_queryset, 10)
-#
-# class NewsContentHelper(ContentHelper):
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return self._content(self.news_queryset, 10)
-#
-# class NewsContentHelper(ContentHelper):
-#     @property
-#     def news_queryset(self):
-#         return News.get_active_objects() \
-#             .select_related('country').prefetch_related('organization', 'organization__countries')
-#
-#     @property
-#     def data(self):
-#         return self._content(self.news_queryset, 10)
