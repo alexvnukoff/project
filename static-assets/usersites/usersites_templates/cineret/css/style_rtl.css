@@ -141,7 +141,7 @@ body{
 	}
 
 	.navbar-default .navbar-toggle {
-		float: right;
+		float: left;
 	}
 
 	.top-nav .pull-right{
@@ -232,7 +232,7 @@ body{
     }
 
     .navbar-brand {
-        float: left;
+        float: right;
     }
 
     .small-navbar{

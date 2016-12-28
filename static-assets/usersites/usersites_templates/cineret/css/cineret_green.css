@@ -81,6 +81,10 @@ h3 a:focus,
 	color: #296800;
 }
 
+.small-navbar li a{
+    color: #000!important;
+}
+
 .overlay {
     background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
 }

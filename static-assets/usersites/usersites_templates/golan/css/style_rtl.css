@@ -295,7 +295,8 @@ body{
 }
 
 .main-news .img-pos,
-.news__img{
+.news__img,
+.news-page-img img{
 	float: right;
 	padding-left: 10px;
 }
@@ -504,6 +505,21 @@ th, td{
 
 #main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
 	left: -50px;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+		left: 10px;
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	#main-page-coupons .main-coupon-wrap .info-coupon .coupon-per {
+		left: 10px;
+	}
+
 }
 
 #main-page-coupons .main-coupon-wrap .info-coupon .timer-heading {
