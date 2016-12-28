@@ -4,6 +4,7 @@ from rest_framework.filters import BaseFilterBackend
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import BasePagination
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from b24online.models import Country, Chamber, B2BProductCategory, Branch, BusinessProposalCategory
 from b24online.search_indexes import SearchEngine
@@ -39,14 +40,8 @@ class DefaultCountryFilter(BaseFilterBackend):
 
 
 class UiSearchFilter(BaseFilterBackend):
-    query_param = 'q'
-
-    @classmethod
-    def get_search_query(cls, request):
-        return request.query_params.get(cls.query_param, '').strip()
-
     def filter_queryset(self, request, queryset, view=None, **kwargs):
-        search_query = self.get_search_query(request)
+        search_query = view.search_query
 
         if search_query:
             return queryset.query("multi_match", query=search_query, fields=['title', 'name', 'description', 'content'])
@@ -57,11 +52,10 @@ class UiSearchFilter(BaseFilterBackend):
 class FilteredPaginator(BasePagination):
     def get_paginated_response(self, data):
         return Response({
-            'content': data,
-            'count': self.page.paginator.count,
-            'page_size': self.view.page_size,
-            'filters': self.view.applied_filters
-        })
+                            'content': data,
+                            'count': self.page.paginator.count,
+                            'page_size': self.view.page_size
+                        }.update(self.view.get_filter_data()))
 
     def paginate_queryset(self, queryset, request, view=None):
         is_elastic_query = isinstance(queryset, SearchEngine)
@@ -104,6 +98,7 @@ class FilterableViewMixin:
     }
 
     is_filterable = True
+    search_query_param = 'q'
 
     @cached_property
     def is_filtered(self):
@@ -139,6 +134,16 @@ class FilterableViewMixin:
 
         return applied_filters
 
+    @cached_property
+    def search_query(self):
+        return self.request.query_params.get(self.search_query_param, '').strip()
+
+    def get_filter_data(self):
+        return {
+            'filters': self.applied_filters,
+            'search_query': self.search_query
+        }
+
 
 class BaseListApi(ListAPIView, FilterableViewMixin):
     pagination_class = FilteredPaginator
@@ -156,3 +161,36 @@ class BaseListApi(ListAPIView, FilterableViewMixin):
             return SearchEngine(doc_type=self.queryset.model.get_index_model()).sort(*self.sorting)
 
         return self.queryset.order_by(*self.sorting)
+
+
+class BaseAdvertisementView(APIView, FilterableViewMixin):
+    @cached_property
+    def list_adv_filter(self):
+        list_filter = {}
+
+        if not self.is_filtered and self.request.session.get('geo_country', None) is None:
+            return list_filter
+
+        if self.is_filtered:
+            filerable_models = [Chamber, Country, Branch]
+
+            for filter_key, model in self.valid_filters.items():
+                if model not in filerable_models:
+                    continue
+
+                values = self.request.query_params.get(filter_key, '').strip()
+
+                if values:
+                    key = model.__name__
+                    list_filter[key] = list_filter.get(key, []) + values.split(',')
+
+                    if model is Chamber:
+                        countries = list(
+                            Country.objects.filter(organizations__pk__in=values).values_list('pk', flat=True))
+                        key = Country.__name__
+                        list_filter[key] = list_filter.get(key, []) + countries
+        else:
+            geo_country = self.request.session['geo_country']
+            list_filter[Country.__name__] = [geo_country]
+
+        return list_filter

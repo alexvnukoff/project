@@ -4,7 +4,7 @@ from rest_framework import serializers
 from appl.func import currency_symbol
 from b24online.api.fields import DateTimeToDateField
 from b24online.models import B2BProduct, InnovationProject, Branch, Exhibition, BusinessProposal, News, Organization, \
-    Company, Chamber, VideoChannel
+    Company, Chamber, VideoChannel, Banner
 from centerpokupok.models import Coupon
 from jobs.models import Requirement, Resume
 
@@ -221,8 +221,6 @@ class VacancySerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'city', 'description', 'publication_date', 'country_name', 'detail_url', 'flag')
 
 
-
-
 class ResumeSerializer(serializers.ModelSerializer):
     publication_date = DateTimeToDateField(source='created_at')
     full_name = serializers.CharField(source='user.profile.full_name')
@@ -231,3 +229,44 @@ class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume
         fields = ('id', 'title', 'publication_date', 'flag', 'full_name')
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    image = serializers.CharField(source='image.big')
+    block = serializers.CharField(source='block.name')
+
+    class Meta:
+        model = Banner
+        fields = ('id', 'title', 'link', 'image', 'block')
+
+
+class ContextAdvertisementSerializer(serializers.Serializer):
+    title = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+
+    def get_title(self, instance):
+        return getattr(instance, 'title', '') or getattr(instance, 'name', '')
+
+    def get_image(self, instance):
+        image = getattr(instance, 'image', None) or getattr(instance, 'logo', None)
+
+        return image.small if image else None
+
+    def get_description(self, instance):
+        return getattr(instance, 'description', '') or getattr(instance, 'content', '')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        if getattr(instance, 'flag_url', None):
+            data['flag_url'] = instance.flag_url
+        elif getattr(instance, 'country', None):
+            data['flag'] = instance.country.flag
+        elif getattr(instance, 'organization', None) and getattr(instance.organization, 'flag', None):
+            data['flag_url'] = instance.organization.flag_url
+
+        return data
+
+    class Meta:
+        fields = ('title', 'id', 'image', 'description')

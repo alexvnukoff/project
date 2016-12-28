@@ -90,7 +90,8 @@ def get_banner(block, site_id, filter_adv=None):
         is_active=True,
         site=site_id,
         dates__contains=now().date()
-    )
+    ).select_related('block')
+
     targeting_filter = None
 
     for target_model, target_items in filter_adv.items():
@@ -121,13 +122,15 @@ def get_tops(filterAdv=None):
 
     models = {
         Chamber: {
+            'key': 'chambers',
             'count': 1,  # Limit of this type to fetch
             'text': _('Organizations'),  # Title
             'detailUrl': 'tpp:detail',  # URL namespace to detail page of this type of item
             'select_related': None,
-            'prefetch_related': ['countries']
+            'prefetch_related': ['countries'],
         },
         News: {
+            'key': 'news',
             'count': 1,  # Limit of this type to fetch
             'text': _('News'),  # Title
             'detailUrl': 'news:detail',  # URL namespace to detail page of this type of item
@@ -135,6 +138,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['organization', 'organization__countries']
         },
         B2BProduct: {
+            'key': 'products',
             'count': 1,  # Limit of this type to fetch
             'text': _('Products'),  # Title
             'detailUrl': 'products:detail',  # URL namespace to detail page of this type of item
@@ -142,6 +146,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['company', 'company__countries']
         },
         InnovationProject: {
+            'key': 'projects',
             'count': 1,
             'text': _('Innovation Projects'),
             'detailUrl': 'innov:detail',  # URL namespace to detail page of this type of item
@@ -149,6 +154,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['organization', 'organization__countries']
         },
         Company: {
+            'key': 'companies',
             'count': 1,
             'text': _('Companies'),
             'detailUrl': 'companies:detail',  # URL namespace to detail page of this type of item
@@ -156,6 +162,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['countries']
         },
         BusinessProposal: {
+            'key': 'proposals',
             'count': 1,
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail',  # URL namespace to detail page of this type of item
@@ -163,6 +170,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['organization', 'organization__countries']
         },
         Requirement: {
+            'key': 'vacancies',
             'count': 3,
             'text': _('Job requirements'),
             'detailUrl': 'vacancy:detail',  # URL namespace to detail page of this type of item
@@ -170,6 +178,7 @@ def get_tops(filterAdv=None):
             'prefetch_related': ['vacancy__department__organization', 'vacancy__department__organization__countries']
         },
         Exhibition: {
+            'key': 'exhibitions',
             'count': 1,
             'text': _('Exhibitions'),
             'detailUrl': 'exhibitions:detail',  # URL namespace to detail page of this type of item
