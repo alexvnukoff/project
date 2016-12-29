@@ -34,10 +34,17 @@ class IndexLeadsList(LoginRequiredMixin, ItemsList):
         queryset = super(IndexLeadsList, self).get_queryset()
 
         if self.is_my():
-            current_org = self._current_organization
-            queryset = self.model.get_active_objects().filter(
-                organization=current_org
-                ).order_by('-id')
+            if self.request.user.is_admin:
+                queryset = self.model.get_active_objects().filter(
+                    is_active=True
+                    ).order_by('-id')
+            else:
+                current_org = self._current_organization
+                queryset = self.model.get_active_objects().filter(
+                    organization=current_org,
+                    is_active=True
+                    ).order_by('-id')
+
         return queryset
 
     def get_context_data(self, **kwargs):
