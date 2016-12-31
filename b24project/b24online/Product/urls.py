@@ -6,19 +6,18 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     B2CProductDelete, categories_list, B2BProductDetail,
     B2CProductDetail, B2BProductGalleryImageList,
     DeleteB2BProductGalleryImage, B2BProductDocumentList,
-    DeleteB2BProductDocument, B2BProductBuy, B2CProductBuy,
-    DealOrderList, DealOrderDetail, DealOrderPayment, DealPayPal,
-    DealList, DealDetail, DealPayment, DealItemDelete, DealItemDetail,
-    B2BProductUpdateList, B2CProductUpdateList,
-    category_tree_json, category_tree_demo,
-    ProducerList, ProducerCreate, ProducerUpdate, ProducerDelete,
-    ExtraParamsList, ExtraParamsCreate, ExtraParamsUpdate,
-    ExtraParamsDelete)
+    DeleteB2BProductDocument, DealOrderList, DealOrderDetail,
+    DealOrderPayment, DealPayPal, DealList, DealDetail, DealPayment,
+    DealItemDelete, DealItemDetail, B2BProductUpdateList, B2CProductUpdateList,
+    category_tree_json, category_tree_demo, ProducerList, ProducerCreate,
+    ProducerUpdate, ProducerDelete, ExtraParamsList, ExtraParamsCreate,
+    ExtraParamsUpdate, ExtraParamsDelete)
 
 from b24online.models import B2BProductCategory
 from centerpokupok.models import B2CProductCategory
 
 urlpatterns = [
+
     url(r'^b2b/$', B2BProductList.as_view(), name='main'),
     url(r'^page(?P<page>[0-9]+)?/$', B2BProductList.as_view(), name="paginator"),
     url(r'^my/$', B2BProductList.as_view(my=True), name='my_main'),
@@ -49,10 +48,12 @@ urlpatterns = [
     url(r'^category-list$', categories_list, {'model': B2BProductCategory}, name="B2BCategoryList"),
     url(r'^category-list-b2c$', categories_list, {'model': B2CProductCategory}, name="B2CCategoryList"),
 
-    url(r'^b2b/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$',
-        B2BProductBuy.as_view(), name="buyB2B"),
-    url(r'^b2c/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$',
-        B2CProductBuy.as_view(), name="buyB2C"),
+    #url(r'^b2b/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$',
+    #    B2BProductBuy.as_view(), name="buyB2B"),
+
+    #url(r'^b2c/buy/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$',
+    #    B2CProductBuy.as_view(), name="buyB2C"),
+
     url(r'^b2b/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', B2BProductDetail.as_view(), name="detail"),
     url(r'^b2c/(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', B2CProductDetail.as_view(), name="B2CDetail"),
 

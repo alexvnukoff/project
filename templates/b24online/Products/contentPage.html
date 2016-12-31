@@ -51,7 +51,7 @@
                     {% trans 'Contact to price' %}
                 {% endif %}
             </div>
-            <a href="{% url 'products:buyB2B' product.slug product.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
+            <a href="{{ product.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
         </li>
     {% empty %}
         <div class="no-results">{% trans "No results found" %}</div>

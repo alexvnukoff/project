@@ -289,20 +289,46 @@ class B2CPCouponsList(ItemsList):
 
 class B2BProductDetail(ItemDetail):
     model = B2BProduct
-    template_name = 'b24online/Products/detailContent.html'
-
+    form_class = B2_ProductBuyForm
     current_section = _("Products B2B")
     addUrl = 'products:add'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            self.template_name = 'b24online/Products/buyB2BProduct.html'
+        else:
+            self.template_name = 'b24online/Products/detailContent.html'
+
+        return super(B2BProductDetail, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('company', \
                                             'company__countries')
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object)
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(request, **kwargs) or {}
+        form = self.form_class(request, self.object, data=request.POST)
+        if form.is_valid():
+            item = form.save()
+            return HttpResponseRedirect(
+                reverse('products:deal_order_basket'))
+        context.update({'form': form})
+        return self.render_to_response(context)
+
+    def get_context_data(self, request, **kwargs):
+        self.object = self.get_object()
+        return super(B2BProductDetail, self).get_context_data(**kwargs)
+
 
 class B2CProductDetail(ItemDetail):
     model = B2CProduct
     template_name = 'b24online/Products/detailContentB2C.html'
-
     current_section = _("Products B2C")
     addUrl = 'products:addB2C'
 
@@ -724,47 +750,47 @@ class DeleteB2BProductDocument(DeleteDocument):
     owner_model = B2BProduct
 
 
-class B2_ProductBuy(ItemDetail):
-    model = None
-    template_name = None
-    current_section = None
-    form_class = B2_ProductBuyForm
-
-    def get_queryset(self):
-        return super().get_queryset()\
-            .prefetch_related('company', 'company__countries')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object)
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(request, **kwargs) or {}
-        form = self.form_class(request, self.object, data=request.POST)
-        if form.is_valid():
-            item = form.save()
-            return HttpResponseRedirect(
-                reverse('products:deal_order_basket'))
-        context.update({'form': form})
-        return self.render_to_response(context)
-
-    def get_context_data(self, request, **kwargs):
-        self.object = self.get_object()
-        return super(B2_ProductBuy, self).get_context_data(**kwargs)
-
-
-class B2BProductBuy(B2_ProductBuy):
-    model = B2BProduct
-    template_name = 'b24online/Products/buyB2BProduct.html'
-    current_section = _('Products B2B')
+#class B2_ProductBuy(ItemDetail):
+#    model = None
+#    template_name = None
+#    current_section = None
+#    form_class = B2_ProductBuyForm
+#
+#    def get_queryset(self):
+#        return super().get_queryset()\
+#            .prefetch_related('company', 'company__countries')
+#
+#    def get(self, request, *args, **kwargs):
+#        context = self.get_context_data(request, **kwargs) or {}
+#        form = self.form_class(request, self.object)
+#        context.update({'form': form})
+#        return self.render_to_response(context)
+#
+#    def post(self, request, *args, **kwargs):
+#        context = self.get_context_data(request, **kwargs) or {}
+#        form = self.form_class(request, self.object, data=request.POST)
+#        if form.is_valid():
+#            item = form.save()
+#            return HttpResponseRedirect(
+#                reverse('products:deal_order_basket'))
+#        context.update({'form': form})
+#        return self.render_to_response(context)
+#
+#    def get_context_data(self, request, **kwargs):
+#        self.object = self.get_object()
+#        return super(B2_ProductBuy, self).get_context_data(**kwargs)
 
 
-class B2CProductBuy(B2_ProductBuy):
-    model = B2CProduct
-    template_name = 'b24online/Products/buyB2CProduct.html'
-    current_section = _('Products B2C')
+#class B2BProductBuy(B2_ProductBuy):
+#    model = B2BProduct
+#    template_name = 'b24online/Products/buyB2BProduct.html'
+#    current_section = _('Products B2B')
+
+
+#class B2CProductBuy(B2_ProductBuy):
+#    model = B2CProduct
+#    template_name = 'b24online/Products/buyB2CProduct.html'
+#   current_section = _('Products B2C')
 
 
 class DealOrderList(LoginRequiredMixin, ListView):
