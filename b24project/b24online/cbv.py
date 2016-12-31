@@ -18,7 +18,8 @@ from django.views.generic import UpdateView, DetailView, CreateView, DeleteView,
 from appl import func
 from b24online.forms import GalleryImageForm, DocumentForm
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
-    GalleryImage, Document, Chamber, IndexedModelMixin
+    GalleryImage, Document, Chamber, IndexedModelMixin, B2BProduct
+from centerpokupok.models import B2CProduct
 from b24online.search_indexes import SearchEngine
 from centerpokupok.models import B2CProductCategory
 from core import tasks
@@ -389,16 +390,23 @@ class ItemDetail(DetailView):
 
 
 class GalleryImageList(ListView):
-
     model = GalleryImage
     owner_model = None
     context_object_name = 'gallery'
-    paginate_by = 10
+    paginate_by = 1
     is_structure = False
     page = 1
+    t = None
     namespace = None
 
     def dispatch(self, request, *args, **kwargs):
+        self.t = kwargs['type']
+
+        if self.t == "b2b":
+            self.owner_model = B2BProduct
+        else:
+            self.owner_model = B2CProduct
+
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
 
@@ -409,16 +417,16 @@ class GalleryImageList(ListView):
         return self.model.objects.none()
 
     def get_uploader_url(self):
-        return reverse("%s:tabs_gallery" % self.namespace, args=[self.owner.pk])
+        return reverse("%s:tabs_gallery" % self.namespace, args=[self.t, self.owner.pk])
 
     def get_structure_url(self):
-        return reverse("%s:gallery_structure" % self.namespace, args=[self.owner.pk, self.page])
+        return reverse("%s:gallery_structure" % self.namespace, args=[self.t, self.owner.pk, self.page])
 
     def get_remove_url(self):
         return "%s:gallery_remove_item" % self.namespace
 
     def get_paginator_url(self):
-        return "%s:tabs_gallery_paged" % self.namespace
+        return "%s:tabs_gallery_paged" % self.namespace 
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -429,8 +437,9 @@ class GalleryImageList(ListView):
             'url_paginator': self.get_paginator_url(),
             'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
             'item_id': self.owner.pk,
+            'item_type': self.t,
             'pageNum': self.page,
-            'url_parameter': self.owner.pk,
+            'url_parameter': [self.owner.pk, self.t],
             'uploaderURL': self.get_uploader_url(),
             'structureURL': self.get_structure_url(),
             'removeURL': self.get_remove_url()
@@ -492,6 +501,13 @@ class DeleteGalleryImage(ItemDeactivate):
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
+        self.t = kwargs['type']
+
+        if self.t == "b2b":
+            self.owner_model = B2BProduct
+        else:
+            self.owner_model = B2CProduct
+
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
 

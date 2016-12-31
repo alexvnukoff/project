@@ -167,12 +167,12 @@
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
                 <li>
-                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
+                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" "b2b" item.pk %}">
                         {% trans "Gallery" %}
                     </a>
                 </li>
                 <li>
-                    <a data-id="document-tabs" href="{% url "products:tabs_documents" item.pk %}">
+                    <a data-id="document-tabs" href="{% url "products:tabs_documents"  item.pk %}">
                         {% trans "Documents" %}
                     </a>
                 </li>
