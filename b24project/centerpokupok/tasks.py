@@ -14,7 +14,7 @@ def basket_clean():
 
 app.conf.beat_schedule.update({
     'basket_clean': {
-        'task': 'basket_clean',
+        'task': 'centerpokupok.tasks.basket_clean',
         'schedule': crontab(hour=1, minute=30)
     }
 })
