@@ -16,9 +16,9 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'b24online/js/jquery.uploadify.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
-    <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script src="{% static "usersites/js/jquery.plugin.min.js" %}"></script>
+    <script src="{% static "usersites/js/jquery.countdown.min.js" %}"></script>
 
     <script>
     $(function() {
@@ -45,7 +45,6 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 
-
 {% if item.is_coupon %}
     <div class="goods-details coupon-big">
     <span class="universal-sale">-{{ item.coupon_discount_percent|intword }}%</span>
@@ -58,9 +57,7 @@
             <img id="coupon-big-image" src="{% static 'b24online/img/item.jpg' %}" alt="" />
         {% endif %}
 
-
         <div style="margin:10px 0;text-align:center;">
-
             <p><strong><a href="{{ item.company.get_absolute_url }}">{{ item.company.name }}</a></strong></p>
             <p><a href="{{ item.company.site }}">{{ item.company.site }}</a></p>
             <p><a data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a></p>
@@ -107,11 +104,13 @@
                       <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
                     {% endif %}
                 </div>
+                {% comment %}
                 <div id="thumbs">
                     {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
-                        <img src="{{ gallery_item.image.big }}" alt="" />
+                    <img src="{{ gallery_item.image.big }}" alt="" />
                     {% endfor %}
                 </div>
+                {% endcomment %}
             </div>
             {% b2b_social_buttons item.image item.name item.name %}
 
@@ -214,18 +213,19 @@
 {% endif %}
 
     <div class="goods-details-tab cpn-details-tab">
-
         <div class="tab-cate">
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
-                {% comment %}
                 <li>
-                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
+                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" "b2c" item.pk %}">
                         {% trans "Gallery" %}
                     </a>
                 </li>
-                {% endcomment %}
-                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                <li>
+                    <a data-id="document-tabs" href="{% url "products:tabs_documents" "b2c" item.pk %}">
+                        {% trans "Documents" %}
+                    </a>
+                </li>
                 {% comment %}
                 <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
                 {% endcomment %}
@@ -234,17 +234,8 @@
                 {% endfor %}
             </ul>
         </div>
-
         <div id="goods-tabs-1">
             <div class="content-goods-tab">{{ item.description|cleanHtml|safe }}</div>
-        </div>
-
-        <div id="goods-tabs-2">
-            <div class="content-goods-tab">
-                {% for document in item.documents.all %}
-                    <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
-                {% endfor %}
-            </div>
         </div>
         {% comment %}
         <div id="goods-tabs-3">
