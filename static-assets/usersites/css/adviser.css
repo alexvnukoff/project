@@ -50,3 +50,7 @@ textarea.adviser_message {
 #id_content {
     border: 1px solid #00af53;
 }
+
+#id_recipient {
+    background-color: #e6ffe6;
+}

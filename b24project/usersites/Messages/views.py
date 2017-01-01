@@ -69,7 +69,7 @@ class UsersitesChatsListView(UserTemplateMixin, ItemsList):
 
 def add_to_chat(request):
     """
-    
+    Save the new chat and message for it.    
     """
     response_code, response_text = 'error', 'Error'
     data = {}
