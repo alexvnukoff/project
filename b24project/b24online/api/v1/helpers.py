@@ -51,11 +51,14 @@ class UiSearchFilter(BaseFilterBackend):
 
 class FilteredPaginator(BasePagination):
     def get_paginated_response(self, data):
-        return Response({
-                            'content': data,
-                            'count': self.page.paginator.count,
-                            'page_size': self.view.page_size
-                        }.update(self.view.get_filter_data()))
+        result = {
+            'content': data,
+            'count': self.page.paginator.count,
+            'page_size': self.view.page_size
+        }
+        result.update(self.view.get_filter_data())
+
+        return Response(result)
 
     def paginate_queryset(self, queryset, request, view=None):
         is_elastic_query = isinstance(queryset, SearchEngine)
