@@ -732,19 +732,19 @@ class B2CProductUpdate(ItemUpdate):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class B2XProductGalleryImageList(GalleryImageList):
+class ProductGalleryImageList(GalleryImageList):
     namespace = 'products'
 
 
-class DeleteB2XProductGalleryImage(DeleteGalleryImage):
+class DeleteProductGalleryImage(DeleteGalleryImage):
     pass
 
 
-class B2XProductDocumentList(DocumentList):
+class ProductDocumentList(DocumentList):
     namespace = 'products'
 
 
-class DeleteB2XProductDocument(DeleteDocument):
+class DeleteProductDocument(DeleteDocument):
     pass
 
 

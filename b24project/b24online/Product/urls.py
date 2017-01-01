@@ -4,14 +4,8 @@ from b24online.Product.views import (B2BProductList, B2CProductList,
     B2CPCouponsList, B2BProductCreate, B2BProductUpdate,
     B2CProductCreate, B2CProductUpdate, B2BProductDelete,
     B2CProductDelete, categories_list, B2BProductDetail,
-    B2CProductDetail,
-    
-    B2XProductGalleryImageList,
-    DeleteB2XProductGalleryImage, 
-    B2XProductDocumentList,
-    DeleteB2XProductDocument,
-
-    DealOrderList, DealOrderDetail,
+    B2CProductDetail, ProductGalleryImageList, DeleteProductGalleryImage,
+    ProductDocumentList, DeleteProductDocument, DealOrderList, DealOrderDetail,
     DealOrderPayment, DealPayPal, DealList, DealDetail, DealPayment,
     DealItemDelete, DealItemDetail, B2BProductUpdateList, B2CProductUpdateList,
     category_tree_json, category_tree_demo, ProducerList, ProducerCreate,
@@ -61,23 +55,23 @@ urlpatterns = [
 
     # B2B & B2C Gallery urls
     url(r'^tabs/gallery/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/$',
-        B2XProductGalleryImageList.as_view(), name="tabs_gallery"),
+        ProductGalleryImageList.as_view(), name="tabs_gallery"),
     url(r'^tabs/gallery/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$',
-        B2XProductGalleryImageList.as_view(), name="tabs_gallery_paged"),
+        ProductGalleryImageList.as_view(), name="tabs_gallery_paged"),
     url(r'^tabs/gallery_structure/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$',
-        B2XProductGalleryImageList.as_view(is_structure=True), name="gallery_structure"),
+        ProductGalleryImageList.as_view(is_structure=True), name="gallery_structure"),
     url(r'^tabs/gallery/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$',
-        DeleteB2XProductGalleryImage.as_view(), name="gallery_remove_item"),
+        DeleteProductGalleryImage.as_view(), name="gallery_remove_item"),
 
     # B2B & B2C Document urls
     url(r'^tabs/documents/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/$',
-        B2XProductDocumentList.as_view(), name="tabs_documents"),
+        ProductDocumentList.as_view(), name="tabs_documents"),
     url(r'^tabs/documents/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$',
-        B2XProductDocumentList.as_view(), name="tabs_documents_paged"),
+        ProductDocumentList.as_view(), name="tabs_documents_paged"),
     url(r'^tabs/documents_structure/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$',
-        B2XProductDocumentList.as_view(is_structure=True), name="documents_structure"),
+        ProductDocumentList.as_view(is_structure=True), name="documents_structure"),
     url(r'^tabs/documents/(?P<type>[b(2b|2c)]{3,})/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$',
-        DeleteB2XProductDocument.as_view(), name="documents_remove_item"),
+        DeleteProductDocument.as_view(), name="documents_remove_item"),
 
     # Urls for orders and deals
     url(r'^orders/(?P<item_id>[0-9]+)/$',
