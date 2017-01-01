@@ -8,7 +8,7 @@
 
                 {% if has_perm %}
                 <div class="deleteimge">
-                    <a class="removePhoto" href="{% url removeURL url_parameter item.pk %}">
+                    <a class="removePhoto" href="{% url removeURL item_type url_parameter item.pk %}">
                         <i class="imgnews delete"></i>
                         <span class="deletext">{% trans "Remove" %}</span>
                     </a>
@@ -25,4 +25,22 @@
         </li>
     {% endfor %}
 </ul>
-{% include "b24online/main/paginator.html" %}
+
+{% if is_paginated %}
+<div class="panging">
+    <span style="float: left;">{% trans "Total pages" %} : {{ page.paginator.num_pages }} </span>
+    {%  if page.has_previous %}
+    &larr; <a href="{% url 'products:tabs_documents_paged' item_type item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+    {% endif %}
+    {% for i in paginator_range %}
+    {% ifequal i page.number %}
+    <span style="font-weight: bolder" class="current">{{ page.number }}</span>
+    {% else %}
+    <a href="{% url 'products:tabs_documents_paged' item_type item_id i %}">{{ i }}</a>
+    {% endifequal %}
+    {% endfor %}
+    {%  if page.has_next %}
+    <a href="{% url 'products:tabs_documents_paged' item_type item_id page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+    {% endif %}
+</div>
+{% endif %}

@@ -393,7 +393,7 @@ class GalleryImageList(ListView):
     model = GalleryImage
     owner_model = None
     context_object_name = 'gallery'
-    paginate_by = 1
+    paginate_by = 10
     is_structure = False
     page = 1
     t = None
@@ -413,7 +413,6 @@ class GalleryImageList(ListView):
     def get_queryset(self):
         if self.owner.galleries.exists():
             return self.owner.galleries.first().gallery_items.all()
-
         return self.model.objects.none()
 
     def get_uploader_url(self):
@@ -439,7 +438,7 @@ class GalleryImageList(ListView):
             'item_id': self.owner.pk,
             'item_type': self.t,
             'pageNum': self.page,
-            'url_parameter': [self.owner.pk, self.t],
+            'url_parameter': self.owner.pk,
             'uploaderURL': self.get_uploader_url(),
             'structureURL': self.get_structure_url(),
             'removeURL': self.get_remove_url()
@@ -529,17 +528,26 @@ class DocumentList(ListView):
     namespace = None
 
     def dispatch(self, request, *args, **kwargs):
+        self.t = kwargs['type']
+
+        if self.t == "b2b":
+            self.owner_model = B2BProduct
+        else:
+            self.owner_model = B2CProduct
+
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.owner.documents.all()
+        if self.owner.documents.exists():
+            return self.owner.documents.all()
+        return self.model.objects.none()
 
     def get_uploader_url(self):
-        return reverse("%s:tabs_documents" % self.namespace, args=[self.owner.pk])
+        return reverse("%s:tabs_documents" % self.namespace, args=[self.t, self.owner.pk])
 
     def get_structure_url(self):
-        return reverse("%s:documents_structure" % self.namespace, args=[self.owner.pk, self.page])
+        return reverse("%s:documents_structure" % self.namespace, args=[self.t, self.owner.pk, self.page])
 
     def get_remove_url(self):
         return "%s:documents_remove_item" % self.namespace
@@ -556,6 +564,7 @@ class DocumentList(ListView):
             'url_paginator': self.get_paginator_url(),
             'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
             'item_id': self.owner.pk,
+            'item_type': self.t,
             'pageNum': self.page,
             'url_parameter': self.owner.pk,
             'uploaderURL': self.get_uploader_url(),
@@ -618,6 +627,13 @@ class DeleteDocument(ItemDeactivate):
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
+        self.t = kwargs['type']
+
+        if self.t == "b2b":
+            self.owner_model = B2BProduct
+        else:
+            self.owner_model = B2CProduct
+
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
 
@@ -627,3 +643,4 @@ class DeleteDocument(ItemDeactivate):
     def delete(self, request, *args, **kwargs):
         self.get_object().delete()
         return HttpResponse('')
+

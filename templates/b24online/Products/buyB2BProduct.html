@@ -44,7 +44,7 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 <div class="goods-details">
-    <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+    <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
     <div class="goods-details-left">
         <div class="gallery">
             <div id="panel">
@@ -54,11 +54,13 @@
                   <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
                 {% endif %}
             </div>
+            {% comment %}
             <div id="thumbs">
                 {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
-                    <img src="{{ gallery_item.image.big }}" alt="" />
+                <img src="{{ gallery_item.image.big }}" alt="" />
                 {% endfor %}
             </div>
+            {% endcomment %}
         </div>
         {% b2b_social_buttons item.image item.name item.description %}
 
@@ -172,7 +174,7 @@
                     </a>
                 </li>
                 <li>
-                    <a data-id="document-tabs" href="{% url "products:tabs_documents"  item.pk %}">
+                    <a data-id="document-tabs" href="{% url "products:tabs_documents" "b2b" item.pk %}">
                         {% trans "Documents" %}
                     </a>
                 </li>
