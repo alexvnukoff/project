@@ -131,10 +131,10 @@ def flush_events_stats():
 app.conf.beat_schedule.update({
     'flush_events_stats': {
         'task': 'b24online.tasks.flush_events_stats',
-        'schedule': 10
+        'schedule': crontab(hour=4)
     },
     'process_events_stats': {
         'task': 'b24online.tasks.process_events_stats',
-        'schedule': 10
+        'schedule': crontab(hour='*/6')
     },
 })
