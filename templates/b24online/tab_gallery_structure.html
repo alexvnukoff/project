@@ -8,7 +8,11 @@
 
                 {% if has_perm %}
                 <div class="deleteimge">
-                    <a class="removePhoto" href="{% url removeURL item_type url_parameter item.pk %}">
+                    {% if item_type %}
+                            <a class="removePhoto" href="{% url removeURL item_type url_parameter item.pk %}">
+                        {% else %}
+                            <a class="removePhoto" href="{% url removeURL url_parameter item.pk %}">
+                        {% endif %}
                         <i class="imgnews delete"></i>
                         <span class="deletext">{% trans "remove" %}</span>
                     </a>
@@ -29,7 +33,11 @@
 <div class="panging">
     <span style="float: left;">{% trans "Total pages" %} : {{ page.paginator.num_pages }} </span>
     {%  if page.has_previous %}
-    &larr; <a href="{% url 'products:tabs_gallery_paged' item_type item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+        {% if item_type %}
+            &larr; <a href="{% url 'products:tabs_gallery_paged' item_type item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+        {% else %}
+            &larr; <a href="{% url 'products:tabs_gallery_paged' item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+        {% endif %}
     {% endif %}
     {% for i in paginator_range %}
     {% ifequal i page.number %}

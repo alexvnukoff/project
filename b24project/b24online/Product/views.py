@@ -21,10 +21,12 @@ from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
     ProducerForm, ExtraParamsForm)
-from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, \
-                   ItemDeactivate, GalleryImageList, DeleteGalleryImage, \
-                   DeleteDocument, DocumentList
-from b24online.models import (B2BProduct, Company, B2BProductCategory, DealOrder, Deal, DealItem, Producer)
+from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
+                    ItemDeactivate, GalleryImageList, ProductGalleryImageList,
+                    DeleteGalleryImage, DeleteDocument, DocumentList,
+                    ProductDocumentList)
+from b24online.models import (B2BProduct, Company, B2BProductCategory,
+                    DealOrder, Deal, DealItem, Producer)
 from b24online.utils import (get_current_organization, get_permitted_orgs,
                              MTTPTreeBuilder)
 from centerpokupok.models import B2CProduct, B2CProductCategory, Coupon
@@ -732,7 +734,7 @@ class B2CProductUpdate(ItemUpdate):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class ProductGalleryImageList(GalleryImageList):
+class ProductGalleryImageList(ProductGalleryImageList):
     namespace = 'products'
 
 
@@ -740,7 +742,7 @@ class DeleteProductGalleryImage(DeleteGalleryImage):
     pass
 
 
-class ProductDocumentList(DocumentList):
+class ProductDocumentList(ProductDocumentList):
     namespace = 'products'
 
 

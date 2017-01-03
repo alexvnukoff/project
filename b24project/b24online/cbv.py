@@ -390,6 +390,65 @@ class ItemDetail(DetailView):
 
 
 class GalleryImageList(ListView):
+
+    model = GalleryImage
+    owner_model = None
+    context_object_name = 'gallery'
+    paginate_by = 10
+    is_structure = False
+    page = 1
+    namespace = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if self.owner.galleries.exists():
+            return self.owner.galleries.first().gallery_items.all()
+
+        return self.model.objects.none()
+
+    def get_uploader_url(self):
+        return reverse("%s:tabs_gallery" % self.namespace, args=[self.owner.pk])
+
+    def get_structure_url(self):
+        return reverse("%s:gallery_structure" % self.namespace, args=[self.owner.pk, self.page])
+
+    def get_remove_url(self):
+        return "%s:gallery_remove_item" % self.namespace
+
+    def get_paginator_url(self):
+        return "%s:tabs_gallery_paged" % self.namespace
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data.update({
+            'page': context_data['page_obj'],
+            'paginator_range': func.get_paginator_range(context_data['page_obj']),
+            'url_paginator': self.get_paginator_url(),
+            'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
+            'item_id': self.owner.pk,
+            'pageNum': self.page,
+            'url_parameter': self.owner.pk,
+            'uploaderURL': self.get_uploader_url(),
+            'structureURL': self.get_structure_url(),
+            'removeURL': self.get_remove_url()
+        })
+
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        return UploadGalleryImage.as_view()(request, self.owner)
+
+    def get_template_names(self):
+        if self.is_structure:
+            return ['b24online/tab_gallery_structure.html']
+        return ['b24online/tabGallery.html']
+
+
+class ProductGalleryImageList(ListView):
     model = GalleryImage
     owner_model = None
     context_object_name = 'gallery'
@@ -452,7 +511,6 @@ class GalleryImageList(ListView):
     def get_template_names(self):
         if self.is_structure:
             return ['b24online/tab_gallery_structure.html']
-
         return ['b24online/tabGallery.html']
 
 
@@ -500,12 +558,18 @@ class DeleteGalleryImage(ItemDeactivate):
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
-        self.t = kwargs['type']
+
+        try:
+            self.t = kwargs['type']
+        except:
+            self.t = None
 
         if self.t == "b2b":
             self.owner_model = B2BProduct
-        else:
+        elif self.t == "b2c":
             self.owner_model = B2CProduct
+        else:
+            pass
 
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
@@ -519,6 +583,61 @@ class DeleteGalleryImage(ItemDeactivate):
 
 
 class DocumentList(ListView):
+    model = Document
+    owner_model = None
+    context_object_name = 'documents'
+    paginate_by = 10
+    is_structure = False
+    page = 1
+    namespace = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.owner.documents.all()
+
+    def get_uploader_url(self):
+        return reverse("%s:tabs_documents" % self.namespace, args=[self.owner.pk])
+
+    def get_structure_url(self):
+        return reverse("%s:documents_structure" % self.namespace, args=[self.owner.pk, self.page])
+
+    def get_remove_url(self):
+        return "%s:documents_remove_item" % self.namespace
+
+    def get_paginator_url(self):
+        return "%s:tabs_documents_paged" % self.namespace
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data.update({
+            'page': context_data['page_obj'],
+            'paginator_range': func.get_paginator_range(context_data['page_obj']),
+            'url_paginator': self.get_paginator_url(),
+            'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
+            'item_id': self.owner.pk,
+            'pageNum': self.page,
+            'url_parameter': self.owner.pk,
+            'uploaderURL': self.get_uploader_url(),
+            'structureURL': self.get_structure_url(),
+            'removeURL': self.get_remove_url()
+        })
+
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        return UploadDocument.as_view()(request, self.owner)
+
+    def get_template_names(self):
+        if self.is_structure:
+            return ['b24online/tab_documents_structure.html']
+        return ['b24online/documents.html']
+
+
+class ProductDocumentList(ListView):
     model = Document
     owner_model = None
     context_object_name = 'documents'
@@ -580,7 +699,6 @@ class DocumentList(ListView):
     def get_template_names(self):
         if self.is_structure:
             return ['b24online/tab_documents_structure.html']
-
         return ['b24online/documents.html']
 
 
@@ -627,12 +745,18 @@ class DeleteDocument(ItemDeactivate):
     owner_model = None
 
     def dispatch(self, request, *args, **kwargs):
-        self.t = kwargs['type']
+
+        try:
+            self.t = kwargs['type']
+        except:
+            self.t = None
 
         if self.t == "b2b":
             self.owner_model = B2BProduct
-        else:
+        elif self.t == "b2c":
             self.owner_model = B2CProduct
+        else:
+            pass
 
         self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
         return super().dispatch(request, *args, **kwargs)
