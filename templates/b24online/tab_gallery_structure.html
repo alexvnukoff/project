@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load CustomFilters %}
 
 <ul class="tpp-gallery">
     {% for item in gallery %}
@@ -36,18 +37,26 @@
         {% if item_type %}
             &larr; <a href="{% url 'products:tabs_gallery_paged' item_type item_id page.previous_page_number %}" >{% trans "Back" %}</a>
         {% else %}
-            &larr; <a href="{% url 'products:tabs_gallery_paged' item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+            &larr; <a href="{% dynurl url_paginator url_parameter page.previous_page_number %}" >{% trans "Back" %}</a>
         {% endif %}
     {% endif %}
     {% for i in paginator_range %}
     {% ifequal i page.number %}
     <span style="font-weight: bolder" class="current">{{ page.number }}</span>
     {% else %}
-    <a href="{% url 'products:tabs_gallery_paged' item_type item_id i %}">{{ i }}</a>
+        {% if item_type %}
+            <a href="{% url 'products:tabs_gallery_paged' item_type item_id i %}">{{ i }}</a>
+        {% else %}
+            <a href="{% dynurl url_paginator url_parameter i %}">{{ i }}</a>
+        {% endif %}
     {% endifequal %}
     {% endfor %}
     {%  if page.has_next %}
-    <a href="{% url 'products:tabs_gallery_paged' item_type item_id page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+        {% if item_type %}
+            <a href="{% url 'products:tabs_gallery_paged' item_type item_id page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+        {% else %}
+            <a href="{% dynurl url_paginator url_parameter page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+        {% endif %}
     {% endif %}
 </div>
 {% endif %}
