@@ -762,6 +762,15 @@ collapse the menu on 991px. */
 
 }
 
+#product-page-slider .thumbnails{
+	list-style: none;
+	padding: 5px;
+}
+
+#product-page-slider #slider-thumbs .thumbnails .thumbnail{
+	padding: 1px;
+}
+
 /*------------------------------*/
 .products-list-page{
     /*display: flex;*/
