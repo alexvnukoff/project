@@ -176,9 +176,9 @@
                     {% for document_obj in object.documents.all %}
                     <li>
                         <div class="">
-                            <a target="_blank" href="{{ document_obj.document.url }}">
-                                <img src="{% static "b24online/img/file_icon.png" %}" />
-                            </a>
+{#                            <a target="_blank" href="{{ document_obj.document.url }}">#}
+{#                                <img src="{% static "b24online/img/file_icon.png" %}" />#}
+{#                            </a>#}
                             <div class="viewimge">
                                 {{ document_obj.name }}
                                 <a target="_blank" href="{{ document_obj.document.url }}">
