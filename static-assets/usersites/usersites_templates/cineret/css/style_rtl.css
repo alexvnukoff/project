@@ -135,6 +135,10 @@ body{
     float: right;
 }
 
+#product-page-slider #slider-thumbs .thumbnails li{
+	float: right!important;
+}
+
 @media (max-width: 767px) {
 	.navbar-default .navbar-toggle {
 		float: left;

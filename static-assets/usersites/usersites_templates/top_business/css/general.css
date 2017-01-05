@@ -259,6 +259,15 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	width: 100%;
 }
 
+#product-page-slider .thumbnails{
+	list-style: none;
+	padding: 5px;
+}
+
+#product-page-slider #slider-thumbs .thumbnails .thumbnail{
+	padding: 1px;
+}
+
 /* A thumb to fit all screens */
 .main-products__row .main-products__col .thumbnail img{
 	height: 200px;
