@@ -21,14 +21,69 @@
 
         <div class="row">
 
-            {# If there is, the image of the product #}
-            <div class="col-md-6 item-page">
-                {% if object.image %}
-                    <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
-                {% else %}
-                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </div>
+                        {% if not object.gallery_images %}
+                {# If there is, the image of the product #}
+                <div class="col-md-6 item-page">
+                    {% if object.image %}
+                        <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                    {% endif %}
+                </div>
+
+            {% else %}
+
+            <!-- Slider -->
+                <div class="col-md-6 item-page" id="product-page-slider">
+                    <!-- Top part of the slider -->
+                        <div class="row">
+                            <div class="col-md-12" id="carousel-bounding-box">
+                                <div class="carousel slide" id="prodSlider">
+                                    <!-- Carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="active item" data-slide-number="0">
+                                        <img src="{{ object.image.original }}"></div>
+
+                                        {% for gallery_obj in object.gallery_images %}
+
+                                            <div class="item" data-slide-number="{{ forloop.counter }}">
+                                            <img src="{{ gallery_obj.image.original }}"></div>
+
+                                        {% endfor %}
+
+                                    </div><!-- Carousel nav -->
+                                    <a class="carousel-control left" data-slide="prev" href="#prodSlider">‹</a> <a class="carousel-control right" data-slide="next" href="#myCarousel">›</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    <div class="row hidden-phone" id="slider-thumbs">
+{#                        <div class="col-md-6">#}
+                            <!-- Bottom switcher of slider -->
+
+                            <ul class="thumbnails">
+                                <li class="col-md-3">
+                                    <a class="thumbnail" id="carousel-selector-0"><img src="{{ object.image.original }}"></a>
+                                </li>
+
+                                {% for gallery_obj in object.gallery_images %}
+
+                                    <li class="col-md-3">
+                                        <a class="thumbnail" id="carousel-selector-{{ forloop.counter }}"><img src="{{ gallery_obj.image.original m, }}"></a>
+                                    </li>
+
+                                 {% endfor %}
+
+                            </ul>
+{#                        </div>#}
+                    </div>
+
+                    </div>
+
+
+
+            {% endif %}
 
             {# product details - price, quantity, decription and add to cart. If its a coupon, there will be a timer. #}
             <div class="col-md-6 item-price-table">
@@ -109,6 +164,28 @@
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
 
+            <div id="product-docs">
+                <ul class="">
+                    {% for document_obj in object.documents.all %}
+                    <li>
+                        <div class="">
+{#                            <a target="_blank" href="{{ document_obj.document.url }}">#}
+{#                                <img src="{% static "b24online/img/file_icon.png" %}" />#}
+{#                            </a>#}
+                            <div class="viewimge">
+                                {{ document_obj.name }}
+                                <a target="_blank" href="{{ document_obj.document.url }}">
+                                    <i class="imgnews"></i><span class="zoomtext"> {% trans 'Download' %}</span>
+                                </a>
+                            </div>
+                            <div class="gray-img"></div>
+                        </div>
+{#                        <div>{{ document_obj.name }}</div>#}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
             </div>{# end of details table #}
 
         </div>{# end of row #}
@@ -145,5 +222,22 @@
           document.getElementById('product-qty').value = newVal;
 
         });
+
+    jQuery(document).ready(function($) {
+
+        $('#prodSlider').carousel({
+                interval: 5000
+        });
+
+{#        $('#carousel-text').html($('#slide-content-0').html());#}
+
+        //Handles the carousel thumbnails
+        $('[id^=carousel-selector-]').click( function(){
+                var id_selector = $(this).attr("id");
+                var id = id_selector.substr(id_selector.length -1);
+                id = parseInt(id);
+                $('#prodSlider').carousel(id);
+        });
+    });
     </script>
 {% endblock %}

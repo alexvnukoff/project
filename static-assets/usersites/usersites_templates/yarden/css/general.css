@@ -728,6 +728,15 @@ collapse the menu on 991px. */
 	bottom: 60px;
 }
 
+#product-page-slider .thumbnails{
+	list-style: none;
+	padding: 5px;
+}
+
+#product-page-slider #slider-thumbs .thumbnails .thumbnail{
+	padding: 1px;
+}
+
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	.coupon-timer{

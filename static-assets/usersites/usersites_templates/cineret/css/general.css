@@ -1812,6 +1812,15 @@ header.carousel .fill {
     }
 }
 
+#product-page-slider .thumbnails{
+	list-style: none;
+	padding: 5px;
+}
+
+#product-page-slider #slider-thumbs .thumbnails .thumbnail{
+	padding: 1px;
+}
+
 /* Galery design */
 /** Gallery Styling ***************/
 /*********************************/

@@ -219,6 +219,10 @@ body{
 	right: 15px;
 }
 
+#product-page-slider #slider-thumbs .thumbnails li{
+	float: right!important;
+}
+
 .coupon-timer{
 	right: 15px;
 }
