@@ -1,11 +1,9 @@
 {% load i18n staticfiles %}
 
 <form id="new_message_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
 <div class="panel panel-default panel-adviser">
-    <div class="panel-heading">
-    {% csrf_token %}
-    {{ new_message_form.recipient }}
-    </div>
+    <div id="message_recipient" class="panel-heading">{{ new_message_form.recipient }}</div>
     <div class="panel-body" 
         style="max-height: 300px; min-height:300px; overflow-y: scroll;"></div>
     <div class="panel-footer">
@@ -31,9 +29,9 @@
 
     function formatOption(opt) {
         if (opt.id) { 
-            var opt_id = opt.id.toString();
-            if (opt_id in userAvatars) {
-                return '<img src="' + userAvatars[opt_id] + '">&nbsp;' + opt.text;
+            var optId = opt.id.toString();
+            if (optId in userAvatars) {
+                return '<img src="' + userAvatars[optId] + '">&nbsp;' + opt.text;
             } else {
                 return '<img src="static/b24online/img/profile_24x24.jpg">&nbsp;' + opt.text;
             }
@@ -50,10 +48,10 @@
 
     $(document).on('click', '#adviser_save_message', function(e) {
         e.preventDefault(); 
-        var processed_form = $(this).parents('form:first');
-        $(processed_form).find('.field-error').empty().addClass('error-hidden');
-        $(processed_form).find('.form-group .has-error').removeClass('has-error');
-        $(processed_form).ajaxSubmit({
+        var processedForm = $(this).parents('form:first');
+        $(processedForm).find('.field-error').empty().addClass('error-hidden');
+        $(processedForm).find('.form-group .has-error').removeClass('has-error');
+        $(processedForm).ajaxSubmit({
             url: this.href,
             type: 'post',
             success: function(data) {
@@ -61,7 +59,7 @@
                 if (data.code == 'error') {
 
                 } else if (data.code == 'success') {
-                    $(processed_form).clearForm();
+                    $(processedForm).clearForm();
                     if ('message_text' in data) {
                         console.log(data.message_text);
                     }
