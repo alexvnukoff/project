@@ -46,7 +46,7 @@
 {% block content %}
 
     <div class="goods-details">
-        <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+        <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
         <div class="goods-details-left">
             <div class="gallery">
                 <div id="panel">
@@ -149,15 +149,19 @@
         <div class="tab-cate">
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
-                {% comment %}
                 <li>
-                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
+                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" "b2b" item.pk %}">
                         {% trans "Gallery" %}
                     </a>
                 </li>
-                {% endcomment %}
-                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                <li>
+                    <a data-id="document-tabs" href="{% url "products:tabs_documents" "b2b" item.pk %}">
+                        {% trans "Documents" %}
+                    </a>
+                </li>
+                {% comment %}
                 <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
+                {% endcomment %}
                 {% for page in item.additional_pages.all %}
                      <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                 {% endfor %}

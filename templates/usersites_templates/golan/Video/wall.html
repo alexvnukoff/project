@@ -15,7 +15,7 @@
 
                     <article class="news">
                         <h2 class="news__title"><a href="{% url 'video:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h2>
-                        <p class="date">{% trans 'Date' %}: {{ entry.created_at|date:'d M Y' }}</p>
+                        <p class="date">{{ entry.created_at|date:'d M Y' }}</p>
 
                         <div class="news__content clearfix">
                             <div class="news__content__cover">
@@ -24,7 +24,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="news__content__desc clearfix">
+                            <div class="news__content__desc clearfix hidden-xs">
                                 {% if entry.short_description %}
                                      <p class="text">{{ entry.short_description|force_escape|linebreaks }}</p>
                                 {% else %}

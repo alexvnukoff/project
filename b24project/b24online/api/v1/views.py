@@ -1,12 +1,14 @@
+from django.utils.functional import cached_property
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from b24online.api.v1.helpers import BaseListApi, FilterableViewMixin
+from appl import func
+from b24online.api.v1.helpers import BaseListApi, FilterableViewMixin, BaseAdvertisementView
 from b24online.api.v1.serializers import B2BProductSerializer, ProjectsSerializer, ProposalsSerializer, \
     ExhibitionsSerializer, NewsSerializer, CompanySerializer, ChamberSerializer, B2CProductSerializer, CouponSerializer, \
-    VideoSerializer, VacancySerializer, ResumeSerializer
+    VideoSerializer, VacancySerializer, ResumeSerializer, BannerSerializer, ContextAdvertisementSerializer
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Company, Chamber, \
-    VideoChannel
+    VideoChannel, Country, Branch
 from b24online.search_indexes import SearchEngine
 from centerpokupok.models import B2CProduct, Coupon
 from jobs.models import Requirement, Resume
@@ -28,17 +30,20 @@ class Wall(APIView, FilterableViewMixin):
     news_queryset = News.get_active_objects() \
         .select_related('country').prefetch_related('organization', 'organization__countries')
 
-    def get(self, request, *args, **kwargs):
-        return Response({
+    def get(self, *args, **kwargs):
+        result = {
             'content': {
                 'products': B2BProductSerializer(self.get_content(self.products_queryset, 4), many=True).data,
                 'projects': ProjectsSerializer(self.get_content(self.projects_queryset, 1), many=True).data,
                 'exhibitions': ExhibitionsSerializer(self.get_content(self.exhibitions_queryset, 1), many=True).data,
                 'proposals': ProposalsSerializer(self.get_content(self.proposals_queryset, 1), many=True).data,
                 'news': NewsSerializer(self.get_content(self.news_queryset, 1), many=True).data
-            },
-            'filters': self.applied_filters
-        })
+            }
+        }
+
+        result.update(self.get_filter_data())
+
+        return Response(result)
 
     def get_content(self, queryset, count):
         s = SearchEngine(doc_type=queryset.model.get_index_model())
@@ -65,6 +70,7 @@ class B2BProductList(BaseListApi):
 class B2CProductList(BaseListApi):
     serializer_class = B2CProductSerializer
     queryset = B2CProduct.get_active_objects().prefetch_related('company__countries')
+
 
 class CouponList(BaseListApi):
     serializer_class = CouponSerializer
@@ -113,3 +119,39 @@ class VacancyList(BaseListApi):
 class ResumeList(BaseListApi):
     serializer_class = ResumeSerializer
     queryset = Resume.get_active_objects().select_related('user', 'user__profile', 'user__profile__country')
+
+
+class Banners(BaseAdvertisementView):
+    def get(self, *args, **kwargs):
+        data = {}
+        blocks = self.request.query_params.get('blocks', None)
+
+        if not blocks:
+            return Response(status=400)
+
+        for block in blocks.split(','):
+            banner = func.get_banner(block, None, self.list_adv_filter)
+
+            if not banner:
+                continue
+
+            data[block] = BannerSerializer(instance=banner).data
+
+        return Response(data)
+
+
+class ContextAdvertisements(BaseAdvertisementView):
+    def get(self, *args, **kwargs):
+        result = {}
+
+        tops = func.get_tops(self.list_adv_filter) or {}
+
+        for data in tops.values():
+            items = data['queryset'].all()
+
+            if len(items) == 0:
+                continue
+
+            result[data['key']] = ContextAdvertisementSerializer(data['queryset'].all(), many=True).data
+
+        return Response(result)

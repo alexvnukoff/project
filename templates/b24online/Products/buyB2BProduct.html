@@ -44,7 +44,7 @@
 {% block keywords %}{% endblock %}
 {% block content %}
 <div class="goods-details">
-    <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+    <h1>{{ item.name }} {{ item.sku|default_if_none:"" }}</h1>
     <div class="goods-details-left">
         <div class="gallery">
             <div id="panel">
@@ -54,17 +54,19 @@
                   <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
                 {% endif %}
             </div>
+            {% comment %}
             <div id="thumbs">
                 {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
-                    <img src="{{ gallery_item.image.big }}" alt="" />
+                <img src="{{ gallery_item.image.big }}" alt="" />
                 {% endfor %}
             </div>
+            {% endcomment %}
         </div>
         {% b2b_social_buttons item.image item.name item.description %}
 
     </div>
     <div class="goods-details-center">
-        {# Register the 'view' event for b2c product #}
+        {# Register the 'view' event for b2b product #}
         {{ item|register_event:"click"|process_event:request }}
         
         {% if form %}
@@ -167,16 +169,18 @@
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
                 <li>
-                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
+                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" "b2b" item.pk %}">
                         {% trans "Gallery" %}
                     </a>
                 </li>
                 <li>
-                    <a data-id="document-tabs" href="{% url "products:tabs_documents" item.pk %}">
+                    <a data-id="document-tabs" href="{% url "products:tabs_documents" "b2b" item.pk %}">
                         {% trans "Documents" %}
                     </a>
                 </li>
+                {% comment %}
                 <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
+                {% endcomment %}
                 {% for page in item.additional_pages.all %}
                      <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                 {% endfor %}
@@ -185,11 +189,13 @@
         <div id="goods-tabs-1">
             <div class="content-goods-tab">{{ item.description|cleanHtml|safe }}</div>
         </div>
+        {% comment %}
         <div id="goods-tabs-3">
             <div class="content-goods-tab">
 
             </div>
         </div>
+        {% endcomment %}
         {% for page in item.additional_pages.all %}
             <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
@@ -197,4 +203,6 @@
          {% endfor %}
     </div>
 </div>
+<div style="clear:both;"></div>
+<div class="fb-comments" data-href="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
 {% endblock %}

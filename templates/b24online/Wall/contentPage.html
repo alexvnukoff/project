@@ -29,7 +29,7 @@
                             {% trans 'Get the price' %}
                         {% endif %}
                     </div>
-                    <a href="{% url 'products:buyB2B' prod.slug prod.pk %}" class="btnbuy">{% trans 'Buy' %}</a>
+                    <a href="{{ prod.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
                 </li>
             {% endfor %}
         </ul>

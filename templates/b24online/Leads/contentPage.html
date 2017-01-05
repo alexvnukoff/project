@@ -2,31 +2,21 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
+{% block js %}
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+{% endblock %}
+
 <style>
-
-table.leads {
-      width:100%;
-      border-collapse: collapse;
-  }
-
-table.leads, th,  td {
-      border: 1px solid #dedede;
-      color:#555;
-  }
-
-table.leads tr.head {
-      background:#e6e6e6;
-      color:#000;
-      font-weight:bold;
-  }
-  .ui-tooltip {
-      max-width:500px;
-    }
-    </>
+table.leads {width:100%;border-collapse: collapse;}
+table.leads, th,  td {border: 1px solid #dedede;color:#555;}
+table.leads tr.head {background:#e6e6e6;color:#000;font-weight:bold;}
+.ui-tooltip {max-width:800px !important;}
 </style>
+
 <script>
 $(function() {
-  $(document).tooltip({items: ".llds",});
+$(document).tooltip({items: ".llds",});
 });
 </script>
 

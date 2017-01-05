@@ -20,12 +20,16 @@
 
 * {margin:0;padding:0;}
 
-html, body {height: 100%;}
+html, body {height: 100%;  }
 
 #wrap-main {min-height: 100%;}
 
+#main-body {
+    /*overflow-y:auto;*/
+	/*overflow-x: hidden;*/
+}
+
 #main {
-    overflow:auto;
 	padding-bottom: 300px;
 }  /* must be same height as the footer */
 
@@ -198,7 +202,7 @@ collapse the menu on 991px. */
         float: none;
     }
     .navbar-nav>li>a {
-        padding-top: 10px;
+        padding-top: 0x;
         padding-bottom: 10px;
     }
     .navbar-text {
@@ -309,7 +313,8 @@ collapse the menu on 991px. */
 	margin-top: 10px;
 }
 
-.small-navbar a span{
+.small-navbar a span,
+.small-navbar .user-reg a{
 	font-size: 8pt;
 }
 
@@ -364,6 +369,10 @@ collapse the menu on 991px. */
 	.navbar-brand{
 		/*margin-right: 5px;*/
 		/*margin-left: 5px;*/
+	}
+
+	#leads-in-page{
+		margin-top: 10px;
 	}
 }
 
@@ -439,7 +448,7 @@ collapse the menu on 991px. */
 }
 
 .main-white{
-	height: 130px;
+	/*height: 130px;*/
 	padding: 0;
 
 }
@@ -482,7 +491,7 @@ collapse the menu on 991px. */
 	}
 
 	p{
-		font-size: 10pt;
+		font-size: 10pt!important;
 	}
 
 	.about-main {
@@ -505,6 +514,10 @@ collapse the menu on 991px. */
 	.product__price {
 		position: relative!important;
 		bottom: auto!important;
+	}
+
+	.contact-fields {
+		margin-top: 0;
 	}
 }
 
@@ -610,7 +623,7 @@ collapse the menu on 991px. */
 .about-main__movie img{
 	width: 90%;
 	height: auto;
-	text-align: middle;
+	text-align: center;
 }
 
 .about-main__text{
@@ -749,6 +762,15 @@ collapse the menu on 991px. */
 
 }
 
+#product-page-slider .thumbnails{
+	list-style: none;
+	padding: 5px;
+}
+
+#product-page-slider #slider-thumbs .thumbnails .thumbnail{
+	padding: 1px;
+}
+
 /*------------------------------*/
 .products-list-page{
     /*display: flex;*/
@@ -783,6 +805,10 @@ collapse the menu on 991px. */
     height:auto;
     display:block;
 	padding: 0;
+}
+
+.news__img img{
+	max-width:100px !important;
 }
 
 /*.news__img img{*/
@@ -954,6 +980,8 @@ footer .btn-default{
 /* The banner above the footer */
 .membership-banner{
 	padding: 0;
+	margin-right: 0;
+	margin-left: 0;
 	text-align: center;
 }
 
@@ -1124,7 +1152,7 @@ footer .btn-default{
 }
 
 .table h3{
-	margin-top: 0px;
+	margin-top: 0;
 }
 
 .wazeLink{
@@ -1693,9 +1721,9 @@ footer .btn-default{
 	#no-more-tables td:before { content: attr(data-title); }
 }
 
-.about-page-content table{
-	overflow-x: auto;
-}
+/*.about-page-content table{*/
+	/*overflow-x: auto;*/
+/*}*/
 
 .about-page-content td,
 .about-page-content th{
@@ -1870,7 +1898,9 @@ footer .btn-default{
 	padding: 0 0 10px 10px;
 }
 
-.video-wrap .date{
+.video-wrap .date,
+.proposal .date,
+.news__text .date{
 	font-size: 9pt;
 	color: #bbb;
 }

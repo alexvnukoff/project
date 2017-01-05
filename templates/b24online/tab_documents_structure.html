@@ -1,5 +1,7 @@
 {% load i18n %}
+{% load CustomFilters %}
 {% load staticfiles %}
+
 <ul class="tpp-gallery">
     {% for item in documents %}
         <li>
@@ -8,7 +10,11 @@
 
                 {% if has_perm %}
                 <div class="deleteimge">
-                    <a class="removePhoto" href="{% url removeURL url_parameter item.pk %}">
+                    {% if item_type %}
+                        <a class="removePhoto" href="{% url removeURL item_type url_parameter item.pk %}">
+                    {% else %}
+                        <a class="removePhoto" href="{% url removeURL url_parameter item.pk %}">
+                    {% endif %}
                         <i class="imgnews delete"></i>
                         <span class="deletext">{% trans "Remove" %}</span>
                     </a>
@@ -25,4 +31,34 @@
         </li>
     {% endfor %}
 </ul>
-{% include "b24online/main/paginator.html" %}
+
+{% if is_paginated %}
+<div class="panging">
+    <span style="float: left;">{% trans "Total pages" %} : {{ page.paginator.num_pages }} </span>
+    {%  if page.has_previous %}
+        {% if item_type %}
+            &larr; <a href="{% url 'products:tabs_documents_paged' item_type item_id page.previous_page_number %}" >{% trans "Back" %}</a>
+        {% else %}
+            &larr; <a href="{% dynurl url_paginator url_parameter page.previous_page_number %}" >{% trans "Back" %}</a>
+        {% endif %}
+    {% endif %}
+    {% for i in paginator_range %}
+    {% ifequal i page.number %}
+    <span style="font-weight: bolder" class="current">{{ page.number }}</span>
+    {% else %}
+        {% if item_type %}
+            <a href="{% url 'products:tabs_documents_paged' item_type item_id i %}">{{ i }}</a>
+        {% else %}
+            <a href="{% dynurl url_paginator url_parameter i %}">{{ i }}</a>
+        {% endif %}
+    {% endifequal %}
+    {% endfor %}
+    {%  if page.has_next %}
+        {% if item_type %}
+            <a href="{% url 'products:tabs_documents_paged' item_type item_id page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+        {% else %}
+            <a href="{% dynurl url_paginator url_parameter page.next_page_number %}" >{% trans "Forward" %}</a>&rarr;
+        {% endif %}
+    {% endif %}
+</div>
+{% endif %}
