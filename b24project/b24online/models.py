@@ -1601,11 +1601,11 @@ class MessageChatParticipant(ActiveModelMixing, models.Model):
         if self.user:
             return str(self.user) 
         elif self.email:
-            return self.email
+            return '{0}: {1}' . format(_('User'), self.email)
         elif self.nickname:
-            return self.nickname
+            return '{0}: {1}' . format(_('User'), self.nickname)
         elif self.user_uuid:
-            return 'User <%s>' % str(user_uuid)
+            return _('User')
 
     def get_title(self, direction='me'):
         """Return the MessageChatParticipant title."""

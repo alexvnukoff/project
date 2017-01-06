@@ -165,6 +165,7 @@ class MessageForm(forms.ModelForm):
             raise
         else:
             new_message.upload_files()
+        return new_message
 
     def get_errors_msg(self):
         """

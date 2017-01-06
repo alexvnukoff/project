@@ -78,7 +78,7 @@ def add_to_chat(request):
                            files=request.FILES)
         if form.is_valid():
             try:
-                form.send()
+                new_message = form.send()
             except IntegrityError as exc:
                 data.update({
                     'code': 'error',
@@ -88,8 +88,22 @@ def add_to_chat(request):
                 data.update({
                     'code': 'success',
                     'msg': _('You have successfully updated chat'),
-                    'message_text': form.instance.content,                    
+                    'message_text': new_message.content,                    
                 })
+                recipient_id = form.cleaned_data.get('recipient')
+                if recipient_id:
+                    recipient = new_message.recipient
+                    logger.debug('Recipient: %s' % recipient)
+                    if recipient:
+                        user_name = str(recipient)
+                        logger.debug(user_name)
+                        if False and recipient.user:
+                            # Если получатель - сотрудник организации
+                            staff_data = dict(form.get_organization_staff())
+                            if recipient.user.id in staff_data:
+                                user_name = staff_data[recipient.user.id]
+                        data['recipient_name'] = user_name
+                    
         else:
             data.update({
                 'code': 'error',

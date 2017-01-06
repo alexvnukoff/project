@@ -3,7 +3,9 @@
 <form id="new_message_form" action="{% url 'messages:add_to_chat' %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="panel panel-default panel-adviser">
-    <div id="message_recipient" class="panel-heading">{{ new_message_form.recipient }}</div>
+    <div id="message_recipient" class="panel-heading">
+        {{ new_message_form.recipient }}
+    </div>
     <div class="panel-body" 
         style="max-height: 300px; min-height:300px; overflow-y: scroll;"></div>
     <div class="panel-footer">
@@ -60,10 +62,14 @@
 
                 } else if (data.code == 'success') {
                     $(processedForm).clearForm();
+                    // Если был выбран получатель
+                    if ('recipient_name' in data) {
+                        $('#message_recipient').html(data['recipient_name']);
+                    }
+                    
                     if ('message_text' in data) {
                         console.log(data.message_text);
                     }
-                    $('#id_recipient').hide();
                 }
                 $(this).prop('disabled', false);
             }

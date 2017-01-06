@@ -247,8 +247,6 @@ def get_messages_number(context, for_current_organization=False):
     participant = MessageChatParticipant.get_instance(request=request)
     if not participant:
         return 0
-    logger.debug(participant)
-    logger.debug(participant.id)
     filters = {
         'chat__participants__id__exact': participant.id,
         'chat__status': MessageChat.OPENED,
@@ -404,9 +402,7 @@ def get_by_content_type(item):
 
 @register.filter
 def replace_nl(value):
-    logger.debug('Step 1: %s', value)
     result = value.replace("\\n", "<br>\n")
-    logger.debug('Step 2: %s', result)
     return result
 
 
