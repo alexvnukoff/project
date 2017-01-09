@@ -4,12 +4,12 @@
 {% load humanize %}
 
 {% if products %}
-    <div class="container  main-products">
+    <div class=" main-products">
 
         {# Products header #}
-        <div class="col-lg-12">
-            <h2 class="page-header section-header"><a href="{% url 'b2c_products:main' %}">{% trans "B2C Products" %}</a></h2>
-        </div>
+{#        <div class="col-lg-12">#}
+{#            <h2 class="page-header section-header"><a href="{% url 'b2c_products:main' %}">{% trans "B2C Products" %}</a></h2>#}
+{#        </div>#}
 
         {# Row of products in main page. Template holds 4 products in main page #}
         <div class="row ">
@@ -19,7 +19,7 @@
 
                 {# Order of elements in the product thumbnail: #}
                 {# img, title, category, short description, price, deleted price, button group #}
-                <div class="col-sm-6 col-xs-18 col-md-3  product">
+                <div class="col-sm-6 col-xs-12 col-md-4  product">
                     <div class="thumbnail main-products-thumb">
                         {% if product.image %}
                             <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
@@ -43,7 +43,7 @@
                             {% endcomment %}
 
                             {# Product Short description, up to 85 chars to keep up to 2 lines for design #}
-                            <p class="main-prod-thumb-p">{{ product.short_description|truncatechars:150 }}</p>
+{#                            <p class="main-prod-thumb-p">{{ product.short_description|truncatechars:150 }}</p>#}
 
 
                             {# Displaying a price if there is one. Cheching if there is a discount too. #}
@@ -61,9 +61,9 @@
                             {% endif %}
 
                         {# Button to go the details - attached to the bottom of the thumbnail #}
-                            <p>
-                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                            </p>
+{#                            <p>#}
+{#                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>#}
+{#                            </p>#}
 
                         </div>
 

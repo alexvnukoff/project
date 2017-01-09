@@ -83,12 +83,21 @@
 {#                    {% endif %}#}
                 {# If the category is not lvl0#}
                 {% else %}
-                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>
+                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}"> {{ category.name }}</a></li>
                 {% endif %}
             {% endif %}
         {% endfor %}
     </ul>
 </div>
+
+
+<div class="banners-pack">
+          <div class="col-md-12 col-sm-12 col-xs-12 banner banner_cat">
+            {% site_banner "top" "SITES RIGHT 1" %}
+            {% site_banner "top" "SITES RIGHT 2" %}
+            {% site_banner "top" "SITES RIGHT 3" %}
+          </div>
+    </div>
 
 
 {#                    {% if category.get_next_sibling == None or category.get_next_sibling.get_previous_sibling.level == 0%}#}
