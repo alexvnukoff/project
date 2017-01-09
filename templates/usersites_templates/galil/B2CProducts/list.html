@@ -2,6 +2,9 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
 <section class="content__info">
 
     {# Products page content #}
@@ -37,8 +40,20 @@
                         {% endif %}
 
                         <div class="caption">
-                            <h3 class="product__title">{{ product.name|truncatechars:20 }}</h3>
-                            <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
+                        {# If the product is a coupon, display the timer #}
+                        {% now "Y-m-d" as todays_date %}
+                        {% if object.end_coupon_date|date:"Y-m-d" > todays_date and object.cost %}
+                            {% if product.coupon_discount_percent %}
+{#                                <p>#}
+                                <div class="coupon-timer">
+                                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
+                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                </div>
+{#                                </p>#}
+                            {% endif %}
+                        {% endif %}
+                            <a href="{% url 'b2c_products:detail' product.slug product.pk %}" ><h3 class="product__title">{{ product.name|truncatechars:20 }}</h3></a>
+{#                            <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>#}
 
                             {# If the product is a coupon, the color of the button will be diff #}
 {#                            {% if product.coupon_discount_percent %}#}
@@ -63,19 +78,8 @@
                                     <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
-                            {# If the product is a coupon, display the timer #}
-                            {% if product.coupon_discount_percent %}
-                                <p>
-                                <div class="coupon-timer">
-                                    <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                                </div>
-                                </p>
-                            {% endif %}
 
-                        <p>
-                                <a type="button" class="btn btn-default btn-md product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                            </p>
+
                         </div>
 
                     </div>
