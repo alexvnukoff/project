@@ -143,17 +143,19 @@
 
             {# lanuage dropdown list. open in hover. #}
             <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
+                {% if site_languages|length > 1 %}
+                    <div class="language-navi">
+                        <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
+                        <div class="language-navi-dropdown">
+                            {% for code, lang in site_languages %}
+                                {% if not code == LANGUAGE_CODE %}
+                                    <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-                {% get_available_languages as LANGUAGES %}
-
-                <div id="lang-dropdown" role="menu" class="dropdown-menu">
-                    {% for code, lang in LANGUAGES %}
-                      {% if not code == LANGUAGE_CODE %}
-                          <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
-                      {% endif %}
-                  {% endfor %}
-                </div>
+                {% endif %}
             </li>
 
         </ul>

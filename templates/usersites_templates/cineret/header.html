@@ -43,16 +43,19 @@
 
             <a href="{% url 'b2c_products:basket' %}" class="header-cart"><span class="glyphicon glyphicon-shopping-cart"></span>{{ request|basket_quantity }}</a>
 
-            {% if site_languages > 1 %}
-                <div class="language-navi">
-                    <select name="lang" id="lang_select">
-                            <option>{% trans 'Mother tongue' %}</option>
+            {% if site_languages|length > 1 %}
+                    <div class="language-navi">
+                        <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
+                        <div class="language-navi-dropdown">
                             {% for code, lang in site_languages %}
-                                <option value="{{ code }}">{{ lang }}</option>
+                                {% if not code == LANGUAGE_CODE %}
+                                    <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                                {% endif %}
                             {% endfor %}
-                        </select>
-                </div>
-            {% endif %}
+                        </div>
+                    </div>
+
+                {% endif %}
           </div>
     </div>
 
