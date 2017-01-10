@@ -75,6 +75,26 @@ body{
 .navbar-right{
 	float: left!important;
 }
+
+.social-header .button{
+	float: right;
+}
+
+.social-header{
+    float: left!important;
+}
+
+.top-search-block {
+    float: left;
+}
+
+.user-reg{
+	float: right;
+}
+
+@media (max-width: 767px){
+    .user-reg{  float: right;  }
+}
 /*---------- Slider Styling ----------*/
 
 .carousel-caption{
@@ -96,7 +116,7 @@ body{
 }
 
 .coupons{
-	float: left;
+	float: right;
 }
 
 .banner{
@@ -104,11 +124,11 @@ body{
 }
 
 .banner_cat{
-	padding-left: 5px;
+	/*padding-left: 5px;*/
 }
 
 .banner_cat:last-child{
-	padding-left: 0;
+	/*padding-left: 0;*/
 }
 
 
@@ -168,7 +188,7 @@ body{
 }
 
 .coupon-timer{
-	right: 15px;
+	/*right: 15px;*/
 }
 
 .item h4 span,
@@ -415,4 +435,36 @@ th, td{
 
 .banner-main-page{
 	float: right;
+}
+
+p.timer-heading{
+	float: right;
+}
+
+.user-reg ul li{
+    padding-right: 5px;
+}
+
+.coupons .thumbnail .coupon-main-img{
+	float: right;
+	margin-left: 10px;
+}
+
+.product__badge>.coupon-badge {
+	right: 10px;
+}
+
+.product__badge .coupon_persent {
+	right: -8px;
+}
+
+.product__valid__coupon{
+	float: right;
+	margin-left: 10px;
+}
+
+@media (max-width: 767px) {
+	.banner>div {
+		float: right;
+	}
 }

@@ -2,6 +2,8 @@
 {% load inclusionTags %}
 {% load staticfiles %}
 {% load i18n %}
+{% load humanize %}
+{% load content_tags %}
 
 {% is_chamber_site as is_chamber %}
 
@@ -23,23 +25,27 @@
               {% endif %}
           </div>
 
-          <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__ad hidden-xs">
-              {% site_banner "footer" "SITES FOOTER" %}
-          </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 membership-banner__ad hidden-xs">
+          {% site_banner "footer" "SITES FOOTER" %}
+        </div>
 
-    <div class="col-lg-12 col-md-12 col-xs-12 membership-banner__ad visible-xs">
-              {% site_banner "footer" "SITES FOOTER" %}
-          </div>
-        </div><!-- /container -->
-    </div><!-- banner modoul -->
+        <div class="col-lg-12 col-md-12 col-xs-12 membership-banner__ad visible-xs">
+           {% site_banner "footer" "SITES FOOTER" %}
+        </div>
+    </div><!--  -->
+</div><!-- /container -->
+
 <footer>
-
 
     <div class="container clearfix">
 
         <div class="row footer-cols clearfix">
 
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+        {% if news %}
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
+        {% else %}
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix footer-col">
+        {% endif %}
             <ul class="footer-menu">
               <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
               <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
@@ -47,21 +53,45 @@
                     <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
                 {% endfor %}
 
+                {% for doc_obj in site.user_site.organization.document_files.all %}
+                    <li><a href="{{ doc_obj.document.url }}">{{ doc_obj.name }}</a></li>
+                {% endfor %}
             </ul>
+
+            <div class="tmp_search clearfix">
+                <form action="{% url 'b2c_products:search' %}">
+                    <input type="text" placeholder="Search" name="s">
+                </form>
+            </div>
           </div>
 
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col">
+        {% if news %}
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
+              <div class="news">
+                {% news 'News/wall.html' 2 %}
+              </div>
+          </div>
+        {% endif %}
+
+        {% if proposals %}
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
+              <div class="news">
+                {% proposal 'Proposals/wall.html' 2 %}
+              </div>
+          </div>
+        {% endif %}
+
+          {% if proposals %}
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col hidden-xs">
+          {% else %}
+             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix footer-col hidden-xs">
+          {% endif %}
             <h4>{% trans 'Contact us' %}:</h4>
             <span class="glyphicon glyphicon-home"></span>{{ site.user_site.organization.address }}<br/>
             <span class="glyphicon glyphicon-phone-alt"></span>{{ site.user_site.organization.phone }}<br/>
             <span class="glyphicon glyphicon-envelope"></span>{{ site.user_site.organization.email }}<br/>
 
             <br/>
-            <div class="tmp_search clearfix">
-                <form action="{% url 'b2c_products:search' %}">
-                    <input type="text" placeholder="Search" name="s">
-                </form>
-            </div>
 
            <div>
                 <!-- Social links  -->
@@ -96,20 +126,18 @@
                 </div>
 
            </div>
+            <iframe id="wazeFrame" src="" width="300" height="150"></iframe>
           </div>
 
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 clearfix footer-col hidden-xs">
-            <iframe id="wazeFrame" src="" width="300" height="150"></iframe>
-        </div>
-
-        <div class="col-xs-12 clearfix footer-col visible-xs">
+          <div class="col-xs-12 clearfix footer-col visible-xs">
             <iframe id="wazeFrameMobile" src="" width="200" height="100"></iframe>
-                    <a class="wazeLink" href="#"><img src="{% static 'usersites/images/logowaze.png' %}">{% trans 'Open with Waze' %}</a>
-        </div>
+            <a class="wazeLink" href="#"><img src="{% static 'usersites/images/logowaze.png' %}">{% trans 'Open with Waze' %}</a>
+          </div>
 
         </div><!-- /container -->
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >
             All rights reserved © <a href="http://www.b24online.com/">b24online.com</a> 2011-2016
         </div>
     </div>
-      </footer>
+</footer>

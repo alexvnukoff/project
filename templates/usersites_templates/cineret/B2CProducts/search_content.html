@@ -2,6 +2,9 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
+
+{% block title %}{% trans "B2C Products" %}{% endblock %}
+
 <section class="content__info">
 
 {# Page title #}
@@ -18,7 +21,9 @@
 
                         <div class="pin">
                             {% if product.image %}
-                                <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                </a>
                             {% else %}
                                 <img src="{% static 'b24online/img/item.jpg' %}" />
                             {% endif %}
