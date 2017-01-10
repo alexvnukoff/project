@@ -53,8 +53,6 @@ class MessageForm(forms.ModelForm):
         self.fields['content'].required = True
         self.fields['attachment'].widget.attrs\
             .update({'class': 'file-attachment'})
-        if self.chat:
-            self.fields['recipient'] = False
         for field_name in ('subject', 'recipient'):
             self.fields[field_name].widget.attrs\
                 .update({'class': 'form-control'})
@@ -66,13 +64,18 @@ class MessageForm(forms.ModelForm):
         if compact:
             self.fields['content'].widget.attrs\
                 .update({'rows': 3, 'cols': 30})
-            
+        if self.chat:
+            del self.fields['recipient']
+            self.recipient = self.chat.recipient
 
     def clean(self):
-        chat = self.cleaned_data.get('chat')
-        recipient = self.cleaned_data.get('recipient')
-        if not chat and not recipient:
-            raise forms.ValidationError(_('The recipient or chat must be defined'))
+        if not self.chat:
+            chat = self.cleaned_data.get('chat')
+            recipient = self.cleaned_data.get('recipient')
+            if not chat and not recipient:
+                raise forms.ValidationError(
+                    _('The recipient or chat must be defined')
+                )
         return self.cleaned_data
 
     def get_organization_staff(self):

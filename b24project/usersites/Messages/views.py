@@ -67,15 +67,21 @@ class UsersitesChatsListView(UserTemplateMixin, ItemsList):
         return chats
 
 
-def add_to_chat(request):
+def add_to_chat(request, item_id=None):
     """
     Save the new chat and message for it.    
     """
     response_code, response_text = 'error', 'Error'
     data = {}
+    chat = None 
+    if item_id:
+        try:
+            chat = MessageChat.objects.get(pk=item_id) 
+        except MessageChat.DoesNotExist:
+            pass
     if request.method == 'POST':
         form = MessageForm(request, data=request.POST,
-                           files=request.FILES)
+                           files=request.FILES, chat=chat)
         if form.is_valid():
             try:
                 new_message = form.send()
@@ -87,17 +93,16 @@ def add_to_chat(request):
             else:
                 data.update({
                     'code': 'success',
+                    'chat_id': new_message.chat.id,
                     'msg': _('You have successfully updated chat'),
                     'message_text': new_message.content,                    
                 })
                 recipient_id = form.cleaned_data.get('recipient')
                 if recipient_id:
                     recipient = new_message.recipient
-                    logger.debug('Recipient: %s' % recipient)
                     if recipient:
                         user_name = str(recipient)
-                        logger.debug(user_name)
-                        if False and recipient.user:
+                        if recipient.user:
                             # Если получатель - сотрудник организации
                             staff_data = dict(form.get_organization_staff())
                             if recipient.user.id in staff_data:
