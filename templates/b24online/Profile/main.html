@@ -125,7 +125,7 @@ opacity:0.8;
 
             <div id="company-header" style="margin:5px 0">
             <h4 style="text-align:center;margin:0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Company' %}</h4>
-            <p style="margin:0;"><a href="#" id="id_co_phone_mobile">{{ profile.co_phone }}</a></p>
+            <p style="margin:0;"><a href="#" id="id_co_phone_mobile">{{ profile.co_phone }}</a> <span id="co-ph-sep">, </span><a href="#" id="id_co_fax_mobile">{{ profile.co_fax }}</a></p>
             </div>
 
             <div style="margin:0;" id="id_co_description_mobile">{{ profile.co_description|linebreaks }}</div>
@@ -180,6 +180,7 @@ opacity:0.8;
     var co_slogan = $("#id_co_slogan");
     var co_description = $("#id_co_description");
     var co_phone = $("#id_co_phone");
+    var co_fax = $("#id_co_fax");
 
     var lastname_mobile = $("#id_last_name_mobile");
     var firstname_mobile = $("#id_first_name_mobile");
@@ -192,6 +193,7 @@ opacity:0.8;
     var co_slogan_mobile = $("#id_co_slogan_mobile");
     var co_description_mobile = $("#id_co_description_mobile");
     var co_phone_mobile = $("#id_co_phone_mobile");
+    var co_fax_mobile = $("#id_co_fax_mobile");
 
     $("#sticky-block").stick_in_parent();
 
@@ -205,6 +207,7 @@ opacity:0.8;
     co_slogan_mobile.text("{{ profile.co_slogan }}");
     co_description_mobile.text("{{ profile.co_description }}");
     co_phone_mobile.text("{{ profile.co_phone }}");
+    co_fax_mobile.text("{{ profile.co_fax }}");
 
     if(middlename.val() != '') {
         middlename_mobile.text("{{ profile.middle_name }}");
@@ -236,6 +239,10 @@ opacity:0.8;
         $("#company-header").hide();
     } else {
         $("#company-header").show();
+    }
+
+    if(co_fax.val() == '') {
+        $("#co-ph-sep").hide();
     }
 
     lastname.on("change paste keyup", function() {
@@ -303,6 +310,16 @@ opacity:0.8;
             $("#company-header").hide();
         } else {
             $("#company-header").show();
+        }
+    });
+
+    co_fax.on("change paste keyup", function() {
+        co_fax_mobile.text($(this).val());
+
+        if(co_fax.val() == '') {
+            $("#co-ph-sep").hide();
+        } else {
+            $("#co-ph-sep").show();
         }
     });
 

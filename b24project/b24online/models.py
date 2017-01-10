@@ -1383,6 +1383,11 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
             return self.metadata.get('co_phone', '')
         return None
 
+    @property
+    def co_fax(self):
+        if self.metadata:
+            return self.metadata.get('co_fax', '')
+        return None
 
 class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
