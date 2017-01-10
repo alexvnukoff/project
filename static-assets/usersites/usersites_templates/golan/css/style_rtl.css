@@ -537,3 +537,8 @@ th, td{
 #leads-in-product .col-md-9{
 	float: right;
 }
+
+.language-navi-dropdown {
+    margin: -10px -101px 0 0;
+    z-index: 99;
+}

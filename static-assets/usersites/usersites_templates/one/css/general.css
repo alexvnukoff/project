@@ -622,6 +622,46 @@ footer .footer-below {
     width: 100%;
 }
 
+/****************************************
+** language navigation design ***********
+***************************************/
+.language-navi {
+	position:relative;
+	display:inline-block;
+	width:24px;
+	cursor:pointer;
+	float:left;
+	margin:6px 15px 0 0;
+}
+
+.language-navi-dropdown {
+    display: none;
+	top: 28px;
+    left: 0;
+    padding: 4px 4px 4px 8px;
+	position: absolute;
+    /*border-left: 1px solid #dedede;*/
+    /*border-right: 1px solid #dedede;*/
+    /*border-bottom: 1px solid #dedede;*/
+	border: 1px solid #000;
+    background: #d7d5d5;
+    margin: -10px -101px 0 0;
+    z-index: 99;
+}
+
+.language-navi:hover .language-navi-dropdown {display:block;}
+
+.language-navi-dropdown a{
+	padding: 0 5px;
+}
+
+.language-navi-dropdown img {
+    width: 24px;
+	display: inline;
+}
+
+/*********************************************/
+
 /* Portrait phones and smaller */
 @media (max-width: 480px) {
 

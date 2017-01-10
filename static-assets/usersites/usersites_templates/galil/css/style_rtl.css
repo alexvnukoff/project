@@ -463,6 +463,11 @@ p.timer-heading{
 	margin-left: 10px;
 }
 
+.language-navi-dropdown {
+    margin: -10px -101px 0 0;
+    z-index: 99;
+}
+
 @media (max-width: 767px) {
 	.banner>div {
 		float: right;
