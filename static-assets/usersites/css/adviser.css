@@ -55,16 +55,9 @@ textarea.adviser_message {
     background-color: #e6ffe6;
 }
 
-.panel-heading span {
-    margin-top: -26px;
+.panel-close {
     font-size: 15px;
-    margin-right: -12px;
-}
-
-.clickable {
-    background: rgba(0, 0, 0, 0.15);
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 4px;
     cursor: pointer;
+    # margin: auto;
+    color: white;
 }

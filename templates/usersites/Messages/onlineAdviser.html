@@ -4,11 +4,14 @@
 {% csrf_token %}
 <div class="panel panel-default panel-adviser">
     <div class="panel-heading">
-        <h3 class="panel-title">{% trans 'Online adviser' %}</h3>
-        <span class="pull-right clickable" data-effect="fadeOut"><i class="fa fa-times"></i></span>
+        <div class="row">
+            <div id="message_recipient" class="col-md-10">
+                {{ new_message_form.recipient }}
+            </div>
+            <div class="pull-right panel-close col-md-2" data-effect="fadeOut"><i class="fa fa-2x fa-times-circle"></i></div>
+        </div>
     </div>
     <div class="panel-body" style="padding: 2px;">
-        <div id="message_recipient">{{ new_message_form.recipient }}</div>
         <div id="chat_content" style="margin-top: 10px; max-height: 300px; min-height:300px; overflow-y: scroll;"></div>
     </div>
     <div class="panel-footer">
