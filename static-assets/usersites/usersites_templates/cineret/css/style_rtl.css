@@ -261,7 +261,10 @@ body{
 	vertical-align: middle;
 }
 
-
+.language-navi-dropdown {
+    margin: -10px -101px 0 0;
+    z-index: 99;
+}
 
 
 /*!*---------- Navigation Styling ----------*!*/
