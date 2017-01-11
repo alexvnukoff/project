@@ -66,6 +66,16 @@
         </div>
     </div>
 
+    <div class="container">
+        {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+
+        {% if right_banner_1 %}
+            <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 1" %}
+            </div>
+        {% endif %}
+    </div>
+
     {% if site.user_site.organization.gallery_images %}
 
     <div class="container sec-container" id="portfolio">

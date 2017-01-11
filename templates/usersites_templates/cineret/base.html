@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
     <meta name="description" content="{{ site.user_site.organization.short_description|striptags|truncatewords:20 }}"/>
+    <meta name="keywords" content="{{ site.user_site.organization.keywords|striptags|truncatewords:20 }}" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
     <meta http-equiv="ImageResize" content="no">
     <meta http-equiv="ImageToolbar" content="no">
