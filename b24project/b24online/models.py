@@ -1295,15 +1295,11 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     country = models.ForeignKey(Country)
     birthday = models.DateField(null=True, blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="profile", on_delete=models.CASCADE)
-
     GENDERS = [('male', _('Male')), ('female', _('Female'))]
     sex = models.CharField(max_length=255, default='male', choices=GENDERS)
-
     TYPES = [('businessman', _('Businessman')), ('individual', _('Individual'))]
     user_type = models.CharField(max_length=255, default='individual', choices=TYPES)
-
     contacts = models.CharField(max_length=1000, blank=True, null=True)
-    # Company fields
     co_name = models.CharField(max_length=225, blank=True, null=True)
     co_slogan = models.CharField(max_length=225, blank=True, null=True)
     co_description = models.CharField(max_length=1000, blank=True, null=True)
@@ -1363,24 +1359,6 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
         if self.metadata:
             return self.metadata.get('linkedin', '')
         return None
-
-    #@property
-    #def co(self):
-    #    if self.metadata:
-    #        return self.metadata.get('co', '')
-    #    return None
-
-    #@property
-    #def co_slogan(self):
-    #    if self.metadata:
-    #        return self.metadata.get('co_slogan', '')
-    #    return None
-
-    #@property
-    #def co_description(self):
-    #    if self.metadata:
-    #        return self.metadata.get('co_description', '')
-    #    return None
 
     @property
     def co_phone(self):
