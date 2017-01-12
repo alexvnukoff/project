@@ -100,7 +100,8 @@ class TenderTranslationOptions(TranslationOptions):
 
 @register(Profile)
 class ProfileTranslationOptions(TranslationOptions):
-    fields = ('first_name', 'middle_name', 'last_name', 'profession',)
+    fields = ('first_name', 'middle_name', 'last_name', 'profession',  
+                'contacts', 'co_name', 'co_slogan', 'co_description')
 
 
 @register(Exhibition)

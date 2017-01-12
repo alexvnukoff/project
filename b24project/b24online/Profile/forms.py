@@ -8,19 +8,18 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('country', 'first_name', 'middle_name', 'last_name',
-        'mobile_number', 'site', 'profession', 'sex', 'user_type', 'contacts')
+        'mobile_number', 'site', 'profession', 'sex', 'user_type', 'contacts',
+        'co_name', 'co_slogan', 'co_description')
         widgets = {
             'sex': forms.RadioSelect,
             'user_type': forms.RadioSelect,
-            'contacts': forms.Textarea
+            'contacts': forms.Textarea,
+            'co_description': forms.Textarea
         }
 
     birthday = forms.DateField(input_formats=["%d/%m/%Y"])
     facebook = forms.CharField(required=False)
     linkedin = forms.CharField(required=False)
-    co = forms.CharField(required=False)
-    co_slogan = forms.CharField(required=False)
-    co_description = forms.CharField(required=False, widget=forms.Textarea)
     co_phone = forms.CharField(required=False)
     co_fax = forms.CharField(required=False)
 
@@ -32,9 +31,6 @@ class ProfileForm(forms.ModelForm):
 
         self.initial['facebook'] = self.instance.facebook
         self.initial['linkedin'] = self.instance.linkedin
-        self.initial['co'] = self.instance.co
-        self.initial['co_slogan'] = self.instance.co_slogan
-        self.initial['co_description'] = self.instance.co_description
         self.initial['co_phone'] = self.instance.co_phone
         self.initial['co_fax'] = self.instance.co_fax
 
@@ -48,11 +44,12 @@ class ProfileForm(forms.ModelForm):
         self.fields['contacts'].widget.attrs.update({'class': 'textarea'})
         self.fields['facebook'].widget.attrs.update({'class': 'text'})
         self.fields['linkedin'].widget.attrs.update({'class': 'text'})
-        self.fields['co'].widget.attrs.update({'class': 'text'})
-        self.fields['co_slogan'].widget.attrs.update({'class': 'text'})
-        self.fields['co_description'].widget.attrs.update({'class': 'textarea'})
         self.fields['co_phone'].widget.attrs.update({'class': 'text'})
         self.fields['co_fax'].widget.attrs.update({'class': 'text'})
+
+        self.fields['co_name'].widget.attrs.update({'class': 'text'})
+        self.fields['co_slogan'].widget.attrs.update({'class': 'text'})
+        self.fields['co_description'].widget.attrs.update({'class': 'textarea'})
 
     def clean_site(self):
         url = self.cleaned_data.get('site', False)

@@ -185,35 +185,35 @@
         <div class="profile-fieldsets">
               <h2 style="margin:10px 20px 20px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
 
-                <label>{% trans 'Company name' %}</label>
-                {% if form.errors.co %}
-                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co.0 }}</div></div>
-                {% endif %}
-                {{ form.co }}
+                    <label>{% trans 'Company name' %}</label>
+                    {% if form.errors.co_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_name.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_name }}
 
-                <label>{% trans 'Company phone' %}</label>
-                {% if form.errors.co_phone %}
-                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_phone.0 }}</div></div>
-                {% endif %}
-                {{ form.co_phone }}
-
-                <label>{% trans 'Company fax' %}</label>
-                {% if form.errors.co_fax %}
-                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_fax.0 }}</div></div>
-                {% endif %}
-                {{ form.co_fax }}
-
-                <label>{% trans 'Company slogan' %}</label>
-                {% if form.errors.co_slogan %}
+                    <label>{% trans 'Company slogan' %}</label>
+                    {% if form.errors.co_slogan %}
                     <div class="error-handler"> <div class="formserror2">{{ form.errors.co_slogan.0 }}</div></div>
-                {% endif %}
-                {{ form.co_slogan }}
+                    {% endif %}
+                    {{ form.co_slogan }}
 
-              <label>{% trans 'Company description' %}</label>
-              {% if form.errors.co_description %}
-                  <div class="error-handler"> <div class="formserror2">{{ form.errors.co_description.0 }}</div></div>
-              {% endif %}
-              {{ form.co_description }}
+                    <label>{% trans 'Company phone' %}</label>
+                    {% if form.errors.co_phone %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_phone.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_phone }}
+
+                    <label>{% trans 'Company fax' %}</label>
+                    {% if form.errors.co_fax %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_fax.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_fax }}
+
+                    <label>{% trans 'Company description' %}</label>
+                    {% if form.errors.co_description %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_description.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_description }}
 
             </div>
 

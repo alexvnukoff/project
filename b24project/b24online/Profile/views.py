@@ -31,7 +31,7 @@ class ProfileView(ItemUpdate):
             context['form'] = self.form_class(initial={
                 'facebook': self.get_object().facebook,
                 'linkedin': self.get_object().linkedin,
-                'co': self.get_object().co,
+                'co_name': self.get_object().co_name,
                 'co_slogan': self.get_object().co_slogan,
                 'co_description': self.get_object().co_description,
                 'co_phone': self.get_object().co_phone,
@@ -82,9 +82,6 @@ class ProfileView(ItemUpdate):
                 form.instance.birthday = cd.get('birthday', None)
                 form.instance.metadata['facebook'] = cd.get('facebook', None)
                 form.instance.metadata['linkedin'] = cd.get('linkedin', None)
-                form.instance.metadata['co'] = cd.get('co', None)
-                form.instance.metadata['co_slogan'] = cd.get('co_slogan', None)
-                form.instance.metadata['co_description'] = cd.get('co_description', None)
                 form.instance.metadata['co_phone'] = cd.get('co_phone', None)
                 form.instance.metadata['co_fax'] = cd.get('co_fax', None)
 
