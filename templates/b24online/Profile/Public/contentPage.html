@@ -113,18 +113,23 @@ opacity:0.8;
   <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:10px;padding-bottom:10px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
     <div class="col-lg-12" style="margin-top:15px;text-align:center;">
 
-        {% if object.profile.co %}
+        {% if object.profile.co_name %}
 
             {% if object.profile.image %}
                 <img src="{{ object.profile.image.small }}" style="width:100px;margin-bottom:4px;border:1px solid #dedede">
             {% endif %}
 
-            <h3 style="text-align:center;margin:0;padding:0;">{{ object.profile.co }}</h3>
+            <h3 style="text-align:center;margin:0;padding:0;">{{ object.profile.co_name }}</h3>
             {% if object.profile.co_slogan %}<p style="margin:0;color:#828282">{{ object.profile.co_slogan }}</p>{% endif %}
 
-            {% if object.profile.co_phone or object.profile.co_fax %}
+            {% if object.profile.co_phone %}
             <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Company' %}</h4>
-            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_phone }}">{{ object.profile.co_phone }}</a>{% if object.profile.co_phone and object.profile.co_fax %},{% endif %} <a href="tel:{{ object.profile.co_fax }}">{{ object.profile.co_fax }} ({% trans "Fax" %})</a></p>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_phone }}">{{ object.profile.co_phone }}</a></a></p>
+            {% endif %}
+
+            {% if object.profile.co_fax %}
+            <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Fax' %}</h4>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_fax }}">{{ object.profile.co_fax }}</a></a></p>
             {% endif %}
 
             {% if object.profile.co_description %}<p style="margin:0;">{{ object.profile.co_description|linebreaks }}</p>{% endif %}
