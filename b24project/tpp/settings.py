@@ -355,7 +355,7 @@ ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'
 ###################### Custom settings ###################################
 
 RAVEN_CONFIG = {
-    'dsn': 'https://c01d9a4420f94559be74d1b30f18e7e8:9d976cb46171495cbeb33892ae0ad102@sentry.ssilaev.com/3',
+    'dsn': 'https://f694fe38d6a74dbd8f1f6b15ce840756:0345d977c5cb4c0185d12619141fbe3c@sentry.msk.tech/3',
 }
 
 ###################### Statistics settings ###################################
