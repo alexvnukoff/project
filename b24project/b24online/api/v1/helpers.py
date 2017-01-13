@@ -63,9 +63,6 @@ class FilteredPaginator(BasePagination):
     def paginate_queryset(self, queryset, request, view=None):
         is_elastic_query = isinstance(queryset, SearchEngine)
 
-        if is_elastic_query:
-            queryset = queryset.execute().hits
-
         paginator = Paginator(queryset, view.page_size)
 
         page_number = 1
