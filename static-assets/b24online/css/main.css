@@ -271,6 +271,6 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .profile-fieldsets label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
 .profile-fieldsets textarea.textarea {width:94%;height:80px;resize:vertical;background:#fff;font-size:13px;}
 .profile-fieldsets input.text {width:94%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
-.profile-socials {width:305px;margin:0 5px 0 0;float:left;}
+.profile-socials {width:48%;margin:0;float:left;}
 .profile-socials label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
-.profile-socials input.text {width:94%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
+.profile-socials input.text {width:93%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
