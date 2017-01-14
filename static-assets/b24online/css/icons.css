@@ -62,12 +62,24 @@ span.icon-facebook-official {color:#445D9A;font-size:18px;display:inline-block;m
 span.icon-facebook-official:hover {text-decoration:none !important;}
 span.icon-gplus-squared {color:#EA4335;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
 span.icon-gplus-squared:hover {text-decoration:none !important;}
-span.icon-youtube-play {color:#e62117;font-size:16px;margin:0;vertical-align:middle;}
+span.icon-youtube-play {color:#c10010;font-size:16px;margin:0;vertical-align:middle;}
 span.icon-linkedin-squared {color:#0182bd;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-twitter {color:#50aaf1;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-twitter:hover {text-decoration:none !important;}
+span.icon-instagram {color:#305c87;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-instagram:hover {text-decoration:none !important;}
+span.icon-vkontakte {color:#55779e;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-vkontakte:hover {text-decoration:none !important;}
+span.icon-odnoklassniki {color:#f47200;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-odnoklassniki:hover {text-decoration:none !important;}
+span.icon-linkedin-squared {color:#0060a9;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
 span.icon-linkedin-squared:hover {text-decoration:none !important;}
+span.icon-gplus {color:#d32d25;font-size:18px;display:inline-block;margin:0;vertical-align:middle;}
+span.icon-gplus:hover {text-decoration:none !important;}
+
 i.icon-facebook-official {color:#445D9A;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 i.icon-facebook-official:hover {text-decoration:none !important;}
-i.icon-youtube {color:#c91c13;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
+i.icon-youtube {color:#c10010;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 i.icon-youtube:hover {text-decoration:none !important;}
 i.icon-twitter {color:#50aaf1;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 i.icon-twitter:hover {text-decoration:none !important;}
@@ -77,7 +89,8 @@ i.icon-vkontakte {color:#55779e;font-size:33px;display:inline-block;margin:0;ver
 i.icon-vkontakte:hover {text-decoration:none !important;}
 i.icon-odnoklassniki {color:#f47200;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 i.icon-odnoklassniki:hover {text-decoration:none !important;}
-
+i.icon-linkedin-squared {color:#0060a9;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
+i.icon-gplus {color:#d32d25;font-size:33px;display:inline-block;margin:0;vertical-align:middle;}
 
 .icon-user:before { content: '\e800'; } /* '' */
 .icon-user-plus:before { content: '\e801'; } /* '' */

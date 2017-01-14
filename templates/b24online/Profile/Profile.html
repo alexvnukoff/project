@@ -111,13 +111,6 @@
                 {% endif %}
                 {{ form.site }}
             </li>
-            <li>
-                <label>{% trans 'Facebook' %}</label>
-                {% if form.errors.facebook %}
-                    <div class="error-handler"> <div class="formserror2">{{ form.errors.facebook.0 }}</div></div>
-                {% endif %}
-                {{ form.facebook }}
-            </li>
         </ul>
         <ul class="profile-clumn">
             <li>
@@ -160,27 +153,76 @@
                 {{ form.profession }}
             </li>
 
-            <li>
-                <label>{% trans 'Linkedin' %}</label>
+        </ul>
+    </div><div style="clear:both"></div>
+
+          <h2 style="margin:10px 20px 10px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Social links' %}</h2>
+            
+            <div class="profile-socials">
+                <label><i class="icon-facebook-official" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Facebook' %}</label>
+                {% if form.errors.facebook %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.facebook.0 }}</div></div>
+                {% endif %}
+                {{ form.facebook }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-linkedin-squared" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Linkedin' %}</label>
                 {% if form.errors.linkedin %}
                     <div class="error-handler"> <div class="formserror2">{{ form.errors.linkedin.0 }}</div></div>
                 {% endif %}
                 {{ form.linkedin }}
-            </li>
-        </ul>
-    </div>
+            </div>
 
-        <div style="clear:both"></div>
+            <div class="profile-socials">
+                <label><i class="icon-twitter" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Twitter' %}</label>
+                {% if form.errors.twitter %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.twitter.0 }}</div></div>
+                {% endif %}
+                {{ form.twitter }}
+            </div>
 
-        <div class="profile-fieldsets">
-              <label>{% trans 'Adress' %}</label>
-              {% if form.errors.contacts %}
-                  <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
-              {% endif %}
-              {{ form.contacts }}
-        </div>
+            <div class="profile-socials">
+                <label><i class="icon-instagram" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Instagram' %}</label>
+                {% if form.errors.instagram %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.instagram.0 }}</div></div>
+                {% endif %}
+                {{ form.instagram }}
+            </div>
 
-        <div style="clear:both"></div>
+            <div class="profile-socials">
+                <label><i class="icon-gplus" style="font-size:14px;vertical-align:bottom"></i>&nbsp;{% trans 'Google Plus' %}</label>
+                {% if form.errors.gplus %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.gplus.0 }}</div></div>
+                {% endif %}
+                {{ form.gplus }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-vkontakte" style="font-size:14px;vertical-align:bottom"></i>&nbsp;{% trans 'Vkontakte' %}</label>
+                {% if form.errors.vkontakte %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.vkontakte.0 }}</div></div>
+                {% endif %}
+                {{ form.vkontakte }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-odnoklassniki" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Odnoklassniki' %}</label>
+                {% if form.errors.odnoklassniki %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.odnoklassniki.0 }}</div></div>
+                {% endif %}
+                {{ form.odnoklassniki }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-youtube" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Youtube' %}</label>
+                {% if form.errors.youtube %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.youtube.0 }}</div></div>
+                {% endif %}
+                {{ form.youtube }}
+            </div>
+
+        <div style="margin-bottom:15px;clear:both"></div>
 
         <div class="profile-fieldsets">
               <h2 style="margin:10px 20px 20px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
@@ -209,12 +251,22 @@
                     {% endif %}
                     {{ form.co_fax }}
 
+            </div>
+
+            <div class="profile-fieldsets" style="margin-top:5px;">
+                    <label>{% trans 'Adress' %}</label>
+                    {% if form.errors.contacts %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
+                    {% endif %}
+                    {{ form.contacts }}
+            </div>
+
+            <div class="profile-fieldsets" style="margin-top:110px;">
                     <label>{% trans 'Company description' %}</label>
                     {% if form.errors.co_description %}
                     <div class="error-handler"> <div class="formserror2">{{ form.errors.co_description.0 }}</div></div>
                     {% endif %}
                     {{ form.co_description }}
-
             </div>
 
             <div class="profilebutton" style="display:block;width:100%;">
