@@ -145,12 +145,12 @@ if ($('.fancybox').length > 0) {
   $(function(){
     var date = $('.timer').attr('date');
     $('.timer').countdown({until: new Date(date), format: 'dHM'});
-  })
+  });
 
   $(function(){
     var date = $('.timer-mini').attr('date');
     $('.timer-mini').countdown({until: new Date(date), compact: true});
-  })
+  });
 
   $('.display-list').on('click', function() {
     $(this).addClass('active');
