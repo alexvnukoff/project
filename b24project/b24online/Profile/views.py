@@ -31,6 +31,12 @@ class ProfileView(ItemUpdate):
             context['form'] = self.form_class(initial={
                 'facebook': self.get_object().facebook,
                 'linkedin': self.get_object().linkedin,
+                'twitter': self.get_object().twitter,
+                'instagram': self.get_object().instagram,
+                'youtube': self.get_object().youtube,
+                'gplus': self.get_object().gplus,
+                'vkontakte': self.get_object().vkontakte,
+                'odnoklassniki': self.get_object().odnoklassniki,
                 'co_name': self.get_object().co_name,
                 'co_slogan': self.get_object().co_slogan,
                 'co_description': self.get_object().co_description,
@@ -82,6 +88,12 @@ class ProfileView(ItemUpdate):
                 form.instance.birthday = cd.get('birthday', None)
                 form.instance.metadata['facebook'] = cd.get('facebook', None)
                 form.instance.metadata['linkedin'] = cd.get('linkedin', None)
+                form.instance.metadata['twitter'] = cd.get('twitter', None)
+                form.instance.metadata['instagram'] = cd.get('instagram', None)
+                form.instance.metadata['youtube'] = cd.get('youtube', None)
+                form.instance.metadata['gplus'] = cd.get('gplus', None)
+                form.instance.metadata['vkontakte'] = cd.get('vkontakte', None)
+                form.instance.metadata['odnoklassniki'] = cd.get('odnoklassniki', None)
                 form.instance.metadata['co_phone'] = cd.get('co_phone', None)
                 form.instance.metadata['co_fax'] = cd.get('co_fax', None)
 

@@ -20,6 +20,12 @@ class ProfileForm(forms.ModelForm):
     birthday = forms.DateField(input_formats=["%d/%m/%Y"])
     facebook = forms.CharField(required=False)
     linkedin = forms.CharField(required=False)
+    twitter = forms.CharField(required=False)
+    instagram = forms.CharField(required=False)
+    youtube = forms.CharField(required=False)
+    gplus = forms.CharField(required=False)
+    vkontakte = forms.CharField(required=False)
+    odnoklassniki = forms.CharField(required=False)
     co_phone = forms.CharField(required=False)
     co_fax = forms.CharField(required=False)
 
@@ -31,6 +37,12 @@ class ProfileForm(forms.ModelForm):
 
         self.initial['facebook'] = self.instance.facebook
         self.initial['linkedin'] = self.instance.linkedin
+        self.initial['twitter'] = self.instance.twitter
+        self.initial['instagram'] = self.instance.instagram
+        self.initial['youtube'] = self.instance.youtube
+        self.initial['gplus'] = self.instance.gplus
+        self.initial['vkontakte'] = self.instance.vkontakte
+        self.initial['odnoklassniki'] = self.instance.odnoklassniki
         self.initial['co_phone'] = self.instance.co_phone
         self.initial['co_fax'] = self.instance.co_fax
 
@@ -44,6 +56,12 @@ class ProfileForm(forms.ModelForm):
         self.fields['contacts'].widget.attrs.update({'class': 'textarea'})
         self.fields['facebook'].widget.attrs.update({'class': 'text'})
         self.fields['linkedin'].widget.attrs.update({'class': 'text'})
+        self.fields['twitter'].widget.attrs.update({'class': 'text'})
+        self.fields['instagram'].widget.attrs.update({'class': 'text'})
+        self.fields['youtube'].widget.attrs.update({'class': 'text'})
+        self.fields['gplus'].widget.attrs.update({'class': 'text'})
+        self.fields['vkontakte'].widget.attrs.update({'class': 'text'})
+        self.fields['odnoklassniki'].widget.attrs.update({'class': 'text'})
         self.fields['co_phone'].widget.attrs.update({'class': 'text'})
         self.fields['co_fax'].widget.attrs.update({'class': 'text'})
 

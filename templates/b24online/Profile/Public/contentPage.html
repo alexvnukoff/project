@@ -103,10 +103,16 @@ opacity:0.8;
       {% endif %}
       <h1 style="margin:15px 0 0 0;">{{ object.profile }}</h1>
       {% comment %}<p style="margin:0;color:#848484;">{{ object.profile.country }}</p>{% endcomment %}
-      <h3 style="margin:0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h3>
+      <h3 style="margin:0 0 3px 0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h3>
 
-      {% if object.profile.facebook %}<a href="{{ object.profile.facebook }}"><span class="ophover icon-facebook-official"></span></a>{% endif %}
-      {% if object.profile.linkedin %}<a href="{{ object.profile.linkedin }}"><span class="ophover icon-linkedin-squared"></span></a>{% endif %}
+      {% if object.profile.facebook %}<a href="{{ object.profile.facebook }}" rel="nofollow" target="_blank"><span class="ophover icon-facebook-official"></span></a>{% endif %}
+      {% if object.profile.linkedin %}<a href="{{ object.profile.linkedin }}" rel="nofollow" target="_blank"><span class="ophover icon-linkedin-squared"></span></a>{% endif %}
+          {% if object.profile.twitter %}<a href="{{ object.profile.twitter }}" rel="nofollow" target="_blank"><span class="ophover icon-twitter"></span></a>{% endif %}
+          {% if object.profile.instagram %}<a href="{{ object.profile.instagram }}" rel="nofollow" target="_blank"><span class="ophover icon-instagram"></span></a>{% endif %}
+          {% if object.profile.gplus %}<a href="{{ object.profile.gplus }}" rel="nofollow" target="_blank"><span class="ophover icon-gplus"></span></a>{% endif %}
+          {% if object.profile.vkontakte %}<a href="{{ object.profile.vkontakte }}" rel="nofollow" target="_blank"><span class="ophover icon-vkontakte"></span></a>{% endif %}
+          {% if object.profile.odnoklassniki %}<a href="{{ object.profile.odnoklassniki }}" rel="nofollow" target="_blank"><span class="ophover icon-odnoklassniki"></span></a>{% endif %}
+          {% if object.profile.youtube %}<a href="{{ object.profile.youtube }}" rel="nofollow" target="_blank"><span class="ophover icon-youtube-play"></span></a>{% endif %}
 
     </div>
 

@@ -257,7 +257,6 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .coupon-big .timer {width:250px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;padding:10px;}
 .coupon-big .social {margin:10px 0;}
 .change-passwd-link {text-align:right;}
-
 .language-navi {position:relative;display:inline-block;width:24px;cursor:pointer;float:left;margin:6px 15px 0 0;}
 .language-navi-dropdown {display:none;width:303px;position:absolute;padding:8px 8px 0 4px;border-left:1px solid #dedede;border-right:1px solid #dedede;border-bottom:1px solid #dedede;background:#f8f8f8;margin:-10px 0 0 -53px;z-index:99;}
 .language-navi-dropdown img {width:24px;}
@@ -272,3 +271,6 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .profile-fieldsets label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
 .profile-fieldsets textarea.textarea {width:94%;height:80px;resize:vertical;background:#fff;font-size:13px;}
 .profile-fieldsets input.text {width:94%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
+.profile-socials {width:48%;margin:0;float:left;}
+.profile-socials label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
+.profile-socials input.text {width:93%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}

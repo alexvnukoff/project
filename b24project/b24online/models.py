@@ -1361,6 +1361,42 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
         return None
 
     @property
+    def twitter(self):
+        if self.metadata:
+            return self.metadata.get('twitter', '')
+        return None
+
+    @property
+    def instagram(self):
+        if self.metadata:
+            return self.metadata.get('instagram', '')
+        return None
+
+    @property
+    def youtube(self):
+        if self.metadata:
+            return self.metadata.get('youtube', '')
+        return None
+
+    @property
+    def gplus(self):
+        if self.metadata:
+            return self.metadata.get('gplus', '')
+        return None
+
+    @property
+    def vkontakte(self):
+        if self.metadata:
+            return self.metadata.get('vkontakte', '')
+        return None
+
+    @property
+    def odnoklassniki(self):
+        if self.metadata:
+            return self.metadata.get('odnoklassniki', '')
+        return None
+
+    @property
     def co_phone(self):
         if self.metadata:
             return self.metadata.get('co_phone', '')

@@ -1,4 +1,3 @@
-from django.utils.functional import cached_property
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,7 +7,7 @@ from b24online.api.v1.serializers import B2BProductSerializer, ProjectsSerialize
     ExhibitionsSerializer, NewsSerializer, CompanySerializer, ChamberSerializer, B2CProductSerializer, CouponSerializer, \
     VideoSerializer, VacancySerializer, ResumeSerializer, BannerSerializer, ContextAdvertisementSerializer
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Company, Chamber, \
-    VideoChannel, Country, Branch
+    VideoChannel
 from b24online.search_indexes import SearchEngine
 from centerpokupok.models import B2CProduct, Coupon
 from jobs.models import Requirement, Resume
