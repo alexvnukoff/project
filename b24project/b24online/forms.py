@@ -42,11 +42,11 @@ class EditorImageUploadForm(forms.Form):
         cleaned_data = super().clean()
         image_file = cleaned_data.get("file")
 
-        if image_file.size > 500 * 1024:
+        if image_file.size > 750 * 1024:
             self.add_error('file', _("Image file is too large"))
 
-        if image_file and (image_file.image.width > 800 or image_file.image.height > 800):
-            self.add_error('file', "The maximum size of the image is 800 x 800")
+        if image_file and (image_file.image.width > 1024 or image_file.image.height > 1024):
+            self.add_error('file', "The maximum size of the image is 1024 x 1024")
 
         return cleaned_data
 
