@@ -3,6 +3,9 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
 {% block content %}
     {{ block.super }}
 <div class="container">
