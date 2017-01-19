@@ -3,6 +3,7 @@
 import datetime
 import logging
 import os
+import re
 from collections import OrderedDict, Iterable, namedtuple
 from copy import copy
 from decimal import Decimal
@@ -612,3 +613,26 @@ def get_card_url(request):
     site = get_current_site()
     return "{0}://{1}.{2}/".format(protocol, lang, site.domain)
 
+
+class SetVarNode(template.Node):
+    def __init__(self, new_val, var_name):
+        self.new_val = new_val
+        self.var_name = var_name
+    def render(self, context):
+        context[self.var_name] = self.new_val
+        return ''
+
+
+@register.tag
+def set_var(parser, token):
+    try:
+        tag_name, arg = token.contents.split(None, 1)
+    except ValueError:
+        raise template.TemplateSyntaxError("{0} tag requires arguments".format(token.contents.split()[0]))
+    m = re.search(r'(.*?) as (\w+)', arg)
+    if not m:
+        raise template.TemplateSyntaxError("{0} tag had invalid arguments".format(tag_name))
+    new_val, var_name = m.groups()
+    if not (new_val[0] == new_val[-1] and new_val[0] in ('"', "'")):
+        raise template.TemplateSyntaxError("{0} tag's argument should be in quotes".format(tag_name))
+    return SetVarNode(new_val[1:-1], var_name)
