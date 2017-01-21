@@ -11,7 +11,7 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
-from b24online.Leads.utils import GetLead
+from b24online.Leads.utils import GetLead, SpamCheck
 
 
 class PageDetail(UserTemplateMixin, ItemDetail):
@@ -32,45 +32,49 @@ class Contacts(UserTemplateMixin, DetailView):
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            cd = form.cleaned_data
-            if not self.object.email:
-                email = 'admin@tppcenter.com'
-                subject = _('This message was sent to company:')
-            else:
-                email = self.object.email
-                subject = "B24online.com: New Lead from {0}".format(cd['name'])
+            # SPAM CHECK
+            scheck = SpamCheck(request)
+            if scheck.get_spam_check():
 
-            # Collecting lead
-            getlead = GetLead(request)
-            getlead.collect(
-                url=cd['url_path'],
-                realname=cd['name'],
-                email=cd['email'],
-                message=cd['message'],
-                phone=cd['phone'],
-                company_id=cd['co_id']
-                )
+                cd = form.cleaned_data
+                if not self.object.email:
+                    email = 'admin@tppcenter.com'
+                    subject = _('This message was sent to company:')
+                else:
+                    email = self.object.email
+                    subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
-            mail = EmailMessage(subject,
-                    """
-                    From: {0}
-                    URL: {1}
-                    Email: {2}
-                    Phone: {3}
+                # Collecting lead
+                getlead = GetLead(request)
+                getlead.collect(
+                    url=cd['url_path'],
+                    realname=cd['name'],
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=cd['phone'],
+                    company_id=cd['co_id']
+                    )
 
-                    Message: {4}
-                    """.format(
-                        cd['name'],
-                        cd['url_path'],
+                mail = EmailMessage(subject,
+                        """
+                        From: {0}
+                        URL: {1}
+                        Email: {2}
+                        Phone: {3}
+
+                        Message: {4}
+                        """.format(
+                            cd['name'],
+                            cd['url_path'],
+                            cd['email'],
+                            cd['phone'],
+                            cd['message']
+                            ),
                         cd['email'],
-                        cd['phone'],
-                        cd['message']
-                        ),
-                    cd['email'],
-                    [email]
-                )
-            mail.send()
-            return HttpResponseRedirect(reverse_lazy('message_sent'))
+                        [email]
+                    )
+                mail.send()
+                return HttpResponseRedirect(reverse_lazy('message_sent'))
 
         context_data['form'] = form
         return self.render_to_response(context_data)

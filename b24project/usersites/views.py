@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView
 from registration.backends.default.views import RegistrationView
 
-from b24online.Leads.utils import GetLead
+from b24online.Leads.utils import GetLead, SpamCheck
 from b24online.cbv import ItemUpdate
 from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile
 from b24online.utils import get_template_with_base_path
@@ -112,49 +112,51 @@ class sendmessage(View):
 
         form = ContactForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
+            # SPAM CHECK
+            scheck = SpamCheck(request)
+            if scheck.get_spam_check():
 
-            if not self.object.email:
-                email = 'admin@tppcenter.com'
-                subject = _('This message was sent to company:')
-            else:
-                email = self.object.email
-                subject = "B24online.com: New Lead from {0}".format(cd['name'])
+                cd = form.cleaned_data
+                if not self.object.email:
+                    email = 'admin@tppcenter.com'
+                    subject = _('This message was sent to company:')
+                else:
+                    email = self.object.email
+                    subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
-            # Collecting lead
-            getlead = GetLead(request)
+                # Collecting lead
+                getlead = GetLead(request)
 
-            getlead.collect(
-                url=cd['url_path'],
-                realname=cd['name'],
-                email=cd['email'],
-                message=cd['message'],
-                phone=cd['phone'],
-                company_id=cd['co_id']
-                )
+                getlead.collect(
+                    url=cd['url_path'],
+                    realname=cd['name'],
+                    email=cd['email'],
+                    message=cd['message'],
+                    phone=cd['phone'],
+                    company_id=cd['co_id']
+                    )
 
-            mail = EmailMessage(subject,
-                    """
-                    From: {0}
-                    URL: {1}
-                    Email: {2}
-                    Phone: {3}
+                mail = EmailMessage(subject,
+                        """
+                        From: {0}
+                        URL: {1}
+                        Email: {2}
+                        Phone: {3}
 
-                    Message: {4}
-                    """.format(
-                        cd['name'],
-                        cd['url_path'],
+                        Message: {4}
+                        """.format(
+                            cd['name'],
+                            cd['url_path'],
+                            cd['email'],
+                            cd['phone'],
+                            cd['message']
+                            ),
                         cd['email'],
-                        cd['phone'],
-                        cd['message']
-                        ),
-                    cd['email'],
-                    [email]
-                )
-            mail.send()
-            return HttpResponseRedirect(reverse_lazy('message_sent'))
-        else:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                        [email]
+                    )
+                mail.send()
+                return HttpResponseRedirect(reverse_lazy('message_sent'))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     def get(self, request):
         raise Http404
