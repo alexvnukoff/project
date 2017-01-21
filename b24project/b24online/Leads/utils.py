@@ -64,7 +64,7 @@ class SpamCheck:
 
         self.params = {
             'obj_ip': self.ip,
-            'obj_path': request.get_host()
+            'obj_path': "{0}{1}".format(request.get_host(), request.get_full_path())
         }
 
     def get_spam_check(self):
