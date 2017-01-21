@@ -81,10 +81,10 @@ class SpamCheck:
             if obj < 3:
                 cache.incr('oi:%(obj_ip)s:%(obj_path)s' % self.params)
             else:
-                cache.set('oi:%(obj_ip)s:bad' % {'obj_ip': self.ip}, 1, 3600)
+                cache.set('oi:%(obj_ip)s:bad' % {'obj_ip': self.ip}, 1, 604800)
                 return False
         else:
-            cache.set('oi:%(obj_ip)s:%(obj_path)s' % self.params, 1, 604800)
+            cache.set('oi:%(obj_ip)s:%(obj_path)s' % self.params, 1, 3600)
 
         return True
 
