@@ -1,0 +1,10 @@
+{% extends 'usersites/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load content_tags %}
+
+{% block content %}
+    {{ block.super }}
+    {% exhibitions 'Exhibitions/list.html' 10 page %}
+{% endblock %}

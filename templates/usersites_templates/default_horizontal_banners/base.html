@@ -103,6 +103,9 @@
                         <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
                     {% endif %}
                 {% endif %}
+                {% comment %}
+                <li><a href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions' %}</a></li>
+                {% endcomment %}
                         <li><a href="{% url 'video:main' %}">{% trans 'Videos' %}</a></li>
                 {% comment %}
                     {% for page in site.user_site.organization.additional_pages %}

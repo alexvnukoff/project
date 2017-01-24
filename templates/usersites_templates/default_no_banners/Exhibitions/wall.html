@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if exhibitions %}
+        <h2>{% trans "Exhibitions" %}</h2>
+
+        {% for entry in exhibitions %}
+            <article class="news">
+                <h3><a href="{% url 'exhibitions:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h3>
+                <div class="news__content clearfix">
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{% trans 'Date' %}: {{ entry.created_at|date:'d M Y' }}</p>
+
+                         <p class="text">{{ entry.description|cleanHtml|safe|truncatewords_html:"30" }}</p>
+
+                    </div>
+                    <a href="{% url 'exhibitions:detail' entry.slug entry.pk %}" class="more vertical"><span>{% trans 'More' %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+{% endif %}

@@ -1,0 +1,16 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <section class="content__info">
+        <article>
+            <h3>{{ object.title }}</h3>
+            {{ object.description|cleanHtml|safe }}
+        </article>
+    </section>
+{% endblock %}
