@@ -3,8 +3,6 @@ from django.conf import settings
 from django.contrib.auth import get_user
 from b24online.models import Branch, Organization, LeadsStore
 from tpp.DynamicSiteMiddleware import get_current_site
-from django.core.cache import cache
-from django.http import Http404
 
 
 class GetLead:
@@ -52,39 +50,4 @@ class GetLead:
                 lead.username = self.user
 
             lead.save()
-
-
-class SpamCheck:
-    def __init__(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            self.ip = x_forwarded_for.split(',')[0]
-        else:
-            self.ip = request.META.get('REMOTE_ADDR')
-
-        self.params = {
-            'obj_ip': self.ip,
-            'obj_path': "{0}{1}".format(request.get_host(), request.get_full_path())
-        }
-
-    def get_spam_check(self):
-        if cache.get('oi:%(obj_ip)s:bad' % {'obj_ip': self.ip}):
-            cache.incr('oi:%(obj_ip)s:bad' % {'obj_ip': self.ip})
-            raise Http404
-
-        try:
-            obj = int(cache.get('oi:%(obj_ip)s:%(obj_path)s' % self.params))
-        except:
-            obj = None
-
-        if obj:
-            if obj < 3:
-                cache.incr('oi:%(obj_ip)s:%(obj_path)s' % self.params)
-            else:
-                cache.set('oi:%(obj_ip)s:bad' % {'obj_ip': self.ip}, 1, None)
-                return False
-        else:
-            cache.set('oi:%(obj_ip)s:%(obj_path)s' % self.params, 1, 86400)
-
-        return True
 
