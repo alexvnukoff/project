@@ -124,7 +124,7 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 contact-form">
 
-                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm" novalidate>
+                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm" novalidate>{% csrf_token %}
 
                         <input type="hidden" name="co_id" value="{{ site.pk }}">
                         <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
@@ -144,7 +144,10 @@
                         <div class="contact-form-elem">
                             <textarea name="message" id="message" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
                         </div>
-                        {% csrf_token %}
+
+                        <div class="contact-form-elem">
+                            <p>{{ form.captcha }}</p>
+                        </div>
 
                         <button type="submit">{% trans 'Send' %}</button>
 
@@ -160,6 +163,10 @@
 
                     {% if form.errors.message %}
                         <p style="color:red;">{{ form.errors.message.0 }}</p>
+                    {% endif %}
+
+                    {% if form.errors.captcha %}
+                        <p style="color:red;">{{ form.errors.captcha.0 }}</p>
                     {% endif %}
 
                 </div>

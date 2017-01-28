@@ -64,7 +64,7 @@
         <div class="row">
             <div class="col-md-8">
                 <h3>Send us a Message</h3>
-                <form name="sentMessage" id="contactForm" novalidate>
+                <form name="sentMessage" id="contactForm" novalidate>{% csrf_token %}
                     <div class="control-group form-group">
                         <div class="controls">
                             <label>{% trans 'Full Name' %}:</label>
@@ -90,7 +90,13 @@
                             <textarea name="message" rows="10" cols="100" class="form-control" id="message" maxlength="999" style="resize:none" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
                         </div>
                     </div>
-                    {% csrf_token %}
+
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>{% trans 'Captcha' %}:</label>
+                            <p>{{ form.captcha }}</p>
+                        </div>
+                    </div>
                     <button type="submit" class="btn special_offer__btn">{% trans 'Send' %}</button>
                 </form>
 
@@ -104,6 +110,10 @@
 
                 {% if form.errors.message %}
                     <p style="color:red;">{{ form.errors.message.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.captcha %}
+                    <p style="color:red;">{{ form.errors.captcha.0 }}</p>
                 {% endif %}
 
             </div>
