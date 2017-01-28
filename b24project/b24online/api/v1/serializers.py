@@ -7,11 +7,12 @@ from b24online.models import B2BProduct, InnovationProject, Branch, Exhibition, 
     Company, Chamber, VideoChannel, Banner
 from centerpokupok.models import Coupon
 from jobs.models import Requirement, Resume
+from django.core.urlresolvers import reverse
 
 
 class B2BProductSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
 
@@ -23,7 +24,7 @@ class B2BProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2BProduct
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detail_url', 'image')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image')
 
 
 class BranchSerializer(serializers.ModelSerializer):
@@ -34,7 +35,7 @@ class BranchSerializer(serializers.ModelSerializer):
 
 class OrganizationSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -48,19 +49,19 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ('name', 'detail_url')
+        fields = ('id', 'name', 'detailUrl')
 
 
 class ProjectsSerializer(serializers.ModelSerializer):
     branches = BranchSerializer(required=False, many=True)
     organization = OrganizationSerializer()
-    publication_date = DateTimeToDateField(source='created_at')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    publicationDate = DateTimeToDateField(source='created_at')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     class Meta:
         model = InnovationProject
-        fields = ('id', 'name', 'cost', 'currency', 'branches', 'organization', 'detail_url',
-                  'cost', 'currency', 'branches', 'publication_date')
+        fields = ('id', 'name', 'cost', 'currency', 'branches', 'organization', 'detailUrl',
+                  'cost', 'currency', 'branches', 'publicationDate')
 
 
 class ExhibitionsSerializer(serializers.ModelSerializer):
@@ -69,25 +70,25 @@ class ExhibitionsSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField()
     date = DateTimeToDateField(source='created_at')
     flag = serializers.CharField(source='country.flag')
-    country_name = serializers.CharField(source='country.name')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    countryName = serializers.CharField(source='country.name')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     class Meta:
         model = Exhibition
         fields = ('id', 'city', 'start_date', 'end_date', 'title', 'organization',
-                  'date', 'flag', 'country_name', 'detail_url')
+                  'date', 'flag', 'countryName', 'detailUrl')
 
 
 class ProposalsSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer()
     date = DateTimeToDateField(source='created_at')
     flag = serializers.CharField(source='country.flag')
-    country_name = serializers.CharField(source='country.name')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    countryName = serializers.CharField(source='country.name')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     class Meta:
         model = BusinessProposal
-        fields = ('id', 'title', 'organization', 'date', 'flag', 'country_name', 'detail_url')
+        fields = ('id', 'title', 'organization', 'date', 'flag', 'countryName', 'detailUrl')
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -95,21 +96,21 @@ class NewsSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     flag = serializers.CharField(source='country.flag')
     date = DateTimeToDateField(source='created_at')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     def get_image(self, instance):
         return instance.image.big if instance.image else static('b24online/img/news.jpg')
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detail_url')
+        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detailUrl')
 
 
 class CompanySerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     flag = serializers.CharField(source='country.flag')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     site = serializers.CharField()
     fax = serializers.CharField()
     phone = serializers.CharField()
@@ -124,24 +125,29 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ('id', 'name', 'description', 'image', 'flag', 'detail_url',
+        fields = ('id', 'name', 'description', 'image', 'flag', 'detailUrl',
                   'site', 'fax', 'phone', 'address', 'logo', 'email', 'organization')
 
 
 class ChamberSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     site = serializers.CharField()
     fax = serializers.CharField()
     phone = serializers.CharField()
     email = serializers.CharField()
+    contactLink = serializers.SerializerMethodField(method_name='get_contact_link')
 
     def get_image(self, instance):
         return instance.logo.big if instance.logo else static('b24online/img/company.jpg')
 
     def get_description(self, instance):
         return instance.short_description or instance.description
+
+    def get_contact_link(self, instance):
+        return reverse('messages:send_message_to_recipient', args=['organization', instance.pk])
+
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -155,13 +161,13 @@ class ChamberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chamber
-        fields = ('id', 'name', 'description', 'image', 'detail_url',
+        fields = ('id', 'name', 'description', 'image', 'detailUrl', 'contactLink',
                   'site', 'fax', 'phone', 'address', 'logo', 'email')
 
 
 class B2CProductSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
 
@@ -173,12 +179,12 @@ class B2CProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2BProduct
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detail_url', 'image')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image')
 
 
 class CouponSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
     discount_percent = serializers.FloatField(source='coupon_discount_percent')
@@ -192,7 +198,7 @@ class CouponSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Coupon
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detail_url', 'image', 'discount_percent', 'end_date')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image', 'discount_percent', 'end_date')
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -200,35 +206,37 @@ class VideoSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     flag = serializers.CharField(source='country.flag')
     date = DateTimeToDateField(source='created_at')
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
+    videoCode = serializers.CharField(source='video_code')
 
     def get_image(self, instance):
         return instance.image.big if instance.image else '//img.youtube.com/vi/%s/0.jpg' % instance.video_code
 
     class Meta:
         model = VideoChannel
-        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detail_url')
+        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detailUrl')
 
 
 class VacancySerializer(serializers.ModelSerializer):
-    detail_url = serializers.CharField(source='get_absolute_url')
+    detailUrl = serializers.CharField(source='get_absolute_url')
     flag = serializers.CharField(source='country.flag')
-    country_name = serializers.CharField(source='country.name')
-    publication_date = DateTimeToDateField(source='created_at')
+    countryName = serializers.CharField(source='country.name')
+    date = DateTimeToDateField(source='created_at')
 
     class Meta:
         model = Requirement
-        fields = ('id', 'title', 'city', 'description', 'publication_date', 'country_name', 'detail_url', 'flag')
+        fields = ('id', 'title', 'city', 'description', 'date', 'countryName', 'detailUrl', 'flag')
 
 
 class ResumeSerializer(serializers.ModelSerializer):
-    publication_date = DateTimeToDateField(source='created_at')
-    full_name = serializers.CharField(source='user.profile.full_name')
+    fullName = serializers.CharField(source='user.profile.full_name')
     flag = serializers.CharField(source='user.profile.country.flag')
+    date = DateTimeToDateField(source='created_at')
+    detailUrl = serializers.CharField(source='get_absolute_url')
 
     class Meta:
         model = Resume
-        fields = ('id', 'title', 'publication_date', 'flag', 'full_name')
+        fields = ('id', 'title', 'date', 'flag', 'fullName', 'detailUrl')
 
 
 class BannerSerializer(serializers.ModelSerializer):
