@@ -1,3 +1,7 @@
+from time import sleep
+
+from django.http import HttpResponseBadRequest
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -154,3 +158,22 @@ class ContextAdvertisements(BaseAdvertisementView):
             result[data['key']] = ContextAdvertisementSerializer(data['queryset'].all(), many=True).data
 
         return Response(result)
+
+
+@api_view(['GET'])
+def filter_autocomplete(request):
+    filter_key = request.query_params.get('type', None)
+
+    if filter_key is None:
+        return HttpResponseBadRequest()
+
+    q = request.query_params.get('q', '').strip()
+
+    result = func.autocomplete_filter(filter_key, q, 1)
+
+    if result is not None:
+        object_list, total = result
+
+        return Response(list(object_list.values('id', 'name')))
+
+    return Response([])

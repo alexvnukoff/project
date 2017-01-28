@@ -4,6 +4,7 @@ from b24online.Video.views import VideoList
 from b24online.api.v1.views import CompanyList, ResumeList, VacancyList, ChamberList, \
     ExhibitionList, ProposalList, ProjectList, CouponList, B2CProductList, B2BProductList, NewsList, Wall, Banners, \
     ContextAdvertisements
+from b24online.api.v1.views import filter_autocomplete
 
 urlpatterns = [
     url(r'^wall/$', Wall.as_view(), name='wall'),
@@ -21,4 +22,5 @@ urlpatterns = [
     url(r'^resumes/$', ResumeList.as_view(), name='resumes'),
     url(r'^banners/$', Banners.as_view(), name='banners'),
     url(r'^advertisements/$', ContextAdvertisements.as_view(), name='advertisements'),
+    url(r'^filter_autocomplete/$', filter_autocomplete, name='filter_autocomplete'),
 ]
