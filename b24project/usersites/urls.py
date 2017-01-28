@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
     url(r'^sendmessage/$', usersites.views.sendmessage.as_view(), name='sendmessage'),
     url(r'^message_sent/$', usersites.views.MessageSent.as_view(), name='message_sent'),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
 if settings.DEBUG:

@@ -21,6 +21,10 @@ class PageDetail(UserTemplateMixin, ItemDetail):
     def get_queryset(self):
         return get_current_site().user_site.organization.additional_pages.all()
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['form'] = ContactForm()
+        return context_data
 
 class Contacts(UserTemplateMixin, DetailView):
     template_name = '{template_path}/OrganizationPages/contact.html'
