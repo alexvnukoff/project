@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+<section class="content__info">
+
+   {% include 'usersites_templates/default_no_banners/Exhibitions/paginator.html' %}
+       <section class="content__info__news news-page">
+        <h2>{% trans 'Exhibitions' %}</h2>
+
+        {% for entry in exhibitions %}
+            <article class="news">
+                <h3><a href="{% url 'exhibitions:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h3>
+                <div class="news__content clearfix">
+                        <p class="date" style="font-size:13px;color:#0090bc">{{ entry.created_at|date:'d M Y' }}</p>
+                        <p class="text">
+                                 {{ entry.description|cleanHtml:"p"|safe|truncatewords_html:"30" }}
+                        </p>
+                    <a href="{% url 'exhibitions:detail' entry.slug entry.pk %}" class="more vertical"><span>{% trans "More" %}</span></a>
+                </div>
+            </article>
+        {% endfor %}
+        </section>
+   {% include 'usersites_templates/default_no_banners/Exhibitions/paginator.html' %}
+    </section>

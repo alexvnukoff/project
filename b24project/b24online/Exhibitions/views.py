@@ -120,8 +120,10 @@ class ExhibitionUpdate(ItemUpdate):
                 form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (
-                form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+                form.instance.metadata['location'] = "{0},{1}".format(
+                    form.cleaned_data['latitude'],
+                    form.cleaned_data['longitude']
+                )
 
         with transaction.atomic():
             self.object = form.save()

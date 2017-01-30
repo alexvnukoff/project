@@ -20,7 +20,7 @@ from b24online.Analytic.forms import SelectPeriodForm
 from b24online.models import (B2BProductCategory, Country, Branch, Company,
                               Organization, Chamber, BannerBlock, B2BProduct,
                               RegisteredEventStats, RegisteredEventType, User,
-                              Profile, BusinessProposal,
+                              Profile, BusinessProposal, Exhibition,
                               BusinessProposalCategory, DealOrder, Deal,
                               DealItem, StaffGroup, PermissionsExtraGroup,
                               MessageChat, Message, Producer,
@@ -266,3 +266,4 @@ admin.site.register(Recommendation, ModelAdmin)
 admin.site.register(AdditionalPage, ModelAdmin)
 admin.site.register(LeadsStore, LeadsAdmin)
 admin.site.register(Banner, BannerAdmin)
+admin.site.register(Exhibition, ModelAdmin)

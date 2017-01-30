@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*-
-
 import logging
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
@@ -11,10 +9,9 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView
 from registration.backends.default.views import RegistrationView
-
 from b24online.Leads.utils import GetLead
 from b24online.cbv import ItemUpdate
-from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile
+from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile, Exhibition
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
 from tpp.DynamicSiteMiddleware import get_current_site
@@ -34,6 +31,7 @@ def wall(request):
     organization = get_current_site().user_site.organization
     proposals = BusinessProposal.get_active_objects().filter(organization=organization)
     news = News.get_active_objects().filter(organization=organization)
+    exhibitions = Exhibition.get_active_objects().filter(organization=organization)
 
     if isinstance(organization, Company):
         b2c_products = B2CProduct.get_active_objects()\
@@ -54,6 +52,7 @@ def wall(request):
         'title': get_current_site().user_site.organization.name,
         'proposals': proposals,
         'news': news,
+        'exhibitions': exhibitions,
         'b2c_coupons': b2c_coupons,
         'b2c_products': b2c_products,
         'b2b_products': b2b_products
@@ -112,8 +111,8 @@ class sendmessage(View):
 
         form = ContactForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
 
+            cd = form.cleaned_data
             if not self.object.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
@@ -153,8 +152,7 @@ class sendmessage(View):
                 )
             mail.send()
             return HttpResponseRedirect(reverse_lazy('message_sent'))
-        else:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     def get(self, request):
         raise Http404

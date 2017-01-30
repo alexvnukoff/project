@@ -3183,7 +3183,7 @@ class LeadsStore(ActiveModelMixing, models.Model):
         verbose_name_plural = "Leads"
 
     def __str__(self):
-        return self.organization.name
+        return "{0}".format(self.organization)
 
 
 def user_extended_profile(backend, user, response, *args, **kwargs):
