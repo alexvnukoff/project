@@ -5838,7 +5838,7 @@ msgstr "Обзоры товаров"
 #: templates/b24online/Profile/Public/contentPage.html:133
 #: templates/b24online/Profile/main.html:129
 msgid "Send Email"
-msgstr "Наипсать письмо"
+msgstr "Написать письмо"
 
 #: templates/b24online/Profile/addForm.html:24
 msgid "Change avatar"
