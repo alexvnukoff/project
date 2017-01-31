@@ -1,7 +1,7 @@
-from time import sleep
-
 from django.http import HttpResponseBadRequest
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,6 +13,7 @@ from b24online.api.v1.serializers import B2BProductSerializer, ProjectsSerialize
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Company, Chamber, \
     VideoChannel
 from b24online.search_indexes import SearchEngine
+from b24online.utils import get_permitted_orgs, get_current_organization
 from centerpokupok.models import B2CProduct, Coupon
 from jobs.models import Requirement, Resume
 
@@ -177,3 +178,19 @@ def filter_autocomplete(request):
         return Response(list(object_list.values('id', 'name')))
 
     return Response([])
+
+
+@api_view(['GET'])
+@authentication_classes((SessionAuthentication,))
+@permission_classes((IsAuthenticated,))
+def my_companies(request):
+    current_company = request.session.get('current_company', None)
+
+    organizations = get_permitted_orgs(request.user)
+    organizations = list(organizations.values('name', 'id'))
+
+    if current_company is not None:
+        current_company = get_current_organization(request)
+        organizations = [{'id': current_company.id, 'name': current_company.name}] + organizations
+
+    return Response(organizations)
