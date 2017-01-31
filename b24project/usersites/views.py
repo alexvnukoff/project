@@ -55,7 +55,8 @@ def wall(request):
         'exhibitions': exhibitions,
         'b2c_coupons': b2c_coupons,
         'b2c_products': b2c_products,
-        'b2b_products': b2b_products
+        'b2b_products': b2b_products,
+        'form': ContactForm()
     }
     template_name = "{template_path}/contentPage.html"
     site = get_current_site()
