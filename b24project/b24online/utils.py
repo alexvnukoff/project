@@ -19,6 +19,7 @@ from django.utils._os import abspathu
 from django.utils.lru_cache import lru_cache
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django_s3_storage.storage import S3Storage, S3File
 from mptt.models import MPTTModel
 from mptt.utils import get_cached_trees
 from unidecode import unidecode
@@ -26,6 +27,17 @@ from django.utils.translation import activate, deactivate
 from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
+
+class ExtendedS3File(S3File):
+    def url(self):
+        return self._storage.url(str(self))
+
+class ExtendedS3Storage(S3Storage):
+    def _open(self, name, mode="rb"):
+        file = super()._open(name, mode)
+        file.__class__ = ExtendedS3File
+
+        return file
 
 
 def get_index_name(lang=None, index_prefix='b24-'):

@@ -1,0 +1,87 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load compress %}
+
+{% block content %}
+{% compress css %}
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>{% endcompress %}
+{% compress js %}
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>{% endcompress %}
+
+
+<style>
+.error-handler {float:none;}
+.b-img.banner {width:150px;height:150px;}
+.b-img.banner img {width:auto;height:auto;max-width:150px;max-height:150px;display:block;margin-left:auto;margin-right:auto;}
+.b-img {float:none;}
+.templates-box img.t-image {width:185px;border:1px solid #919191;display:block;}
+</style>
+
+<div id="wrapper">
+
+    <h1>{% trans "My own site" %}</h1>
+    <p>{% blocktrans %}Dear colleagues, we are pleased to inform you that for the convenience of providing your interests,
+            we have developed an easy website builder that will help you create your own  external website in
+            just a couple of minutes.{% endblocktrans %}
+        {% trans "support" %}:
+        <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.
+    </p>
+
+
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+
+        <h3>{% trans 'Social links' %}</h3>
+        <div class="form-group">
+        <label>{% trans "Facebook Link" %}</label>
+        <input type="text" name="{{form.facebook.html_name}}" placeholder="{% trans 'Link to your facebook page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.facebook.value|default_if_none:"" }}">
+        {% if form.errors.facebook %}<small class="error">{{ form.errors.facebook.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "YouTube Link" %}</label>
+        <input type="text" name="{{form.youtube.html_name}}" placeholder="{% trans 'Link to your youtube channel' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.youtube.value|default_if_none:"" }}">
+        {% if form.errors.youtube %}<small class="error">{{ form.errors.youtube.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Twitter Link" %}</label>
+        <input type="text" name="{{form.twitter.html_name}}" placeholder="{% trans 'Link to your twitter account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.twitter.value|default_if_none:"" }}">
+        {% if form.errors.twitter %}<small class="error">{{ form.errors.twitter.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Instagram Link" %}</label>
+        <input type="text" name="{{form.instagram.html_name}}" placeholder="{% trans 'Link to your Instagram account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.instagram.value|default_if_none:"" }}">
+        {% if form.errors.instagram %}<small class="error">{{ form.errors.instagram.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Vkontakte Link" %}</label>
+        <input type="text" name="{{form.vkontakte.html_name}}" placeholder="{% trans 'Link to your vk page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.vkontakte.value|default_if_none:"" }}">
+        {% if form.errors.vkontakte %}<small class="error">{{ form.errors.vkontakte.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Odnoklassniki Link" %}</label>
+        <input type="text" name="{{form.odnoklassniki.html_name}}" placeholder="{% trans 'Link to your Ok account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.odnoklassniki.value|default_if_none:"" }}">
+        {% if form.errors.odnoklassniki %}<small class="error">{{ form.errors.odnoklassniki.0 }}</small>{% endif %}
+        </div>
+
+
+        <div class="form-group">
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+            {% endif %}
+            <input type="submit" class="bigbuy" value="{% trans 'Next step' %}">
+        </div>
+
+    </form>
+</div>
+{% endblock %}
