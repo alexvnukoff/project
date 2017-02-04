@@ -87,7 +87,10 @@
                         </tr>
 
                         <tr>
-                          <td>{{ gallery_form.description }}</td>
+                          <td>
+                              {{ gallery_form.description }}
+                          {% if gallery_form.errors.description %}<small class="error">{{ gallery_form.errors.description.0 }}</small>{% endif %}
+                          </td>
                         </tr>
 
                         <tr>
@@ -95,7 +98,9 @@
                         </tr>
 
                         <tr>
-                          <td>{{ gallery_form.link }}</td>
+                          <td>{{ gallery_form.link }}
+                          {% if gallery_form.errors.link %}<small class="error">{{ gallery_form.errors.link.0 }}</small>{% endif %}
+                          </td>
                         </tr>
 
                       </table>
