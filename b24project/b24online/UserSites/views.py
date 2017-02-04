@@ -1,20 +1,35 @@
 from collections import OrderedDict
+from copy import copy
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from formtools_addons import SessionMultipleFormWizardView
 
 from b24online.UserSites.forms import GalleryImageFormSet, CompanyBannerFormSet, ChamberBannerFormSet, \
     SiteDomainForm, SiteGeneralForm, SiteDeliveryForm, SiteSocialForm, SiteCategoryForm, \
-    GALLERT_MAX_NUM, SiteTemplateForm, SiteTemplateColorForm
+    SiteTemplateForm, SiteTemplateColorForm, GALLERT_MAX_NUM
 from b24online.models import Organization, Company, BannerBlock
 from b24online.utils import ExtendedS3Storage
 from usersites.models import UserSite, UserSiteTemplate, ExternalSiteTemplate
 
+
+def show_color_step(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('template') or {}
+    user_template = cleaned_data.get('user_template', None)
+
+    return user_template and user_template.colors.exists()
+
+
+class PatchedS3Storage(ExtendedS3Storage):
+    def delete(self, name):
+        # We will handle deletion of temporary files by ourselves
+        pass
 
 @login_required()
 def form_dispatch(request):
@@ -37,10 +52,17 @@ def form_dispatch(request):
              ]
 
     try:
-        site = UserSite.objects.get(organization=organization)
-        # return SiteUpdate.as_view()(request, site=site, organization=organization)
+        instance = UserSite.objects.get(organization=organization)
+        instance_dict = {
+            'banners': instance.site,
+            'category': {
+                'gallery': instance.get_gallery(request.user),
+            }
+        }
+        view = SiteNewCreate.as_view(form_list=forms, instance_dict=instance_dict)
+        return view(request, organization=organization, object=instance)
     except ObjectDoesNotExist:
-        return SiteNewCreate.as_view(form_list=forms)(request, organization=organization, instance=None)
+        return SiteNewCreate.as_view(form_list=forms)(request, organization=organization, object=None)
 
 
 TEMPLATES = {
@@ -51,24 +73,66 @@ TEMPLATES = {
     "category": "b24online/UserSites/addCategory.html",
     "template": "b24online/UserSites/addTemplate.html",
     "color": "b24online/UserSites/addTemplateColor.html",
-    "banners": "b24online/UserSites/addForm.html",
+    "banners": "b24online/UserSites/addBanners.html",
 }
 
 
 class SiteNewCreate(SessionMultipleFormWizardView):
-    file_storage = ExtendedS3Storage()
+    success_url = reverse_lazy('site:main')
+    file_storage = PatchedS3Storage()
+    condition_dict = {
+        'color': show_color_step,
+    }
 
     @method_decorator(login_required)
-    def dispatch(self, request, organization, instance, *args, **kwargs):
+    def dispatch(self, request, organization, object, *args, **kwargs):
         self.organization = organization
-        self.instace = instance
+        self.object = object
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
 
     def get_form_initial(self, step):
         initial = super().get_form_initial(step)
+
+        if 'banners' == step:
+            return []
+
+        if self.object:
+            if 'domain' == step:
+                if self.object.domain_part == self.object.site.domain:
+                    initial['domain'] = self.object.domain_part
+                else:
+                    initial['sub_domain'] = self.object.domain_part
+            elif 'general' == step:
+                initial.update(
+                    logo=self.object.logo,
+                    slogan=self.object.slogan,
+                    footer_text=self.object.footer_text,
+                    language=self.object.language,
+                    languages=self.object.languages
+                )
+            elif 'delivery' == step:
+                initial.update(
+                    is_delivery_available=self.object.is_delivery_available,
+                    delivery_currency=self.object.delivery_currency,
+                    delivery_cost=self.object.delivery_cost
+                )
+            elif 'social' == step:
+                initial.update(**self.object.metadata)
+            elif 'category' == step:
+                initial['site_category'] = {
+                    'template': self.object.template
+                }
+            elif 'template' == step:
+                initial['user_template'] = self.object.user_template
+            elif 'color' == step:
+                initial['color_template'] = self.object.color_template
+
         files = self.storage.get_step_files(step)
 
-        if files:
+        if not self.object and files:
             initial_files = {}
 
             if step == 'category':
@@ -114,7 +178,9 @@ class SiteNewCreate(SessionMultipleFormWizardView):
 
     def get_form_kwargs(self, step=None):
         kwargs = super().get_form_kwargs(step)
-        kwargs.update(instance=self.instace)
+
+        if 'domain' == step:
+            kwargs.update(instance=self.object)
 
         if 'color' == step:
             kwargs.update(template_id=self.storage.get_step_data('template')['template-user_template'])
@@ -146,361 +212,119 @@ class SiteNewCreate(SessionMultipleFormWizardView):
             code__in=valid_blocks
         ).order_by('id').values_list('pk', 'name'))
 
-    def done(self, form_list, **kwargs):
-        pass
+    def done(self, form_dict, form_list, **kwargs):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
 
-#
-# class SiteCreate(CreateView):
-#     model = UserSite
-#     form_class = SiteForm
-#     template_name = 'b24online/UserSites/addForm.html'
-#     success_url = reverse_lazy('site:main')
-#
-#     @method_decorator(login_required)
-#     def dispatch(self, request, organization, *args, **kwargs):
-#         self.organization = organization
-#         return super().dispatch(request, *args, **kwargs)
-#
-#     def get_valid_blocks(self):
-#         valid_blocks = [
-#                 "SITES LEFT 1",
-#                 "SITES LEFT 2",
-#                 "SITES FOOTER",
-#                 "SITES RIGHT 1",
-#                 "SITES RIGHT 2",
-#                 "SITES RIGHT 3",
-#                 "SITES RIGHT 4",
-#                 "SITES RIGHT 5"
-#             ]
-#
-#         additional = []
-#         for i in range(1,18):
-#             additional.append("SITES CAT {0}".format(i))
-#         valid_blocks += additional
-#
-#         return OrderedDict(BannerBlock.objects.filter(
-#             block_type='user_site',
-#             code__in=valid_blocks
-#             ).order_by('id').values_list('pk', 'name'))
-#
-#     def get(self, request, *args, **kwargs):
-#         """
-#         Handles GET requests and instantiates blank versions of the form
-#         and its inline formsets.
-#         """
-#         self.object = None
-#         form_class = self.get_form_class()
-#         self.gallery_images_form = GalleryImageFormSet()
-#         banners_form = self.get_banners_form()
-#         form = self.get_form(form_class)
-#
-#         return self.render_to_response(self.get_context_data(form=form,
-#                                                              gallery_images_form=self.gallery_images_form,
-#                                                              banners_form=banners_form))
-#
-#     def post(self, request, *args, **kwargs):
-#         """
-#             Handles POST requests, instantiating a form instance and its inline
-#             formsets with the passed POST variables and then checking them for
-#             validity.
-#             """
-#         self.object = None
-#         form_class = self.get_form_class()
-#         self.gallery_images_form = GalleryImageFormSet(self.request.POST, self.request.FILES)
-#         banners_form = self.get_banners_form(self.request.POST, self.request.FILES)
-#         form = self.get_form(form_class)
-#
-#         if form.is_valid() and self.gallery_images_form.is_valid() and banners_form.is_valid():
-#             return self.form_valid(form, gallery_images_form=self.gallery_images_form, banners_form=banners_form)
-#         else:
-#             return self.form_invalid(form, gallery_images_form=self.gallery_images_form, banners_form=banners_form)
-#
-#     def get_banners_form(self, *args, **kwargs):
-#         if isinstance(self.organization, Company):
-#             form = CompanyBannerFormSet(*args, **kwargs)
-#         else:
-#             form = ChamberBannerFormSet(*args, **kwargs)
-#
-#         return form
-#
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         kwargs['gallery_images_form'] = self.gallery_images_form
-#
-#         return kwargs
-#
-#     def form_valid(self, form, gallery_images_form, banners_form):
-#         """
-#         Called if all forms are valid. Creates a Recipe instance along with
-#         associated Ingredients and Instructions and then redirects to a
-#         success page.
-#         """
-#         form.instance.created_by = self.request.user
-#         form.instance.updated_by = self.request.user
-#         form.instance.organization = self.organization
-#         form.instance.domain_part = form.cleaned_data.get('domain', None) or form.cleaned_data.get('sub_domain')
-#
-#         with transaction.atomic():
-#             domain = form.cleaned_data.get('domain', None)
-#
-#             if not domain:
-#                 domain = "%s.%s" % (form.cleaned_data.get('sub_domain'), settings.USER_SITES_DOMAIN)
-#
-#             form.instance.site = Site.objects.create(name='usersites', domain=domain)
-#             self.object = form.save()
-#             gallery_images_form.instance = self.object.get_gallery(self.request.user)
-#             banners_form.instance = self.object.site
-#
-#             for gallery in gallery_images_form:
-#                 gallery.instance.created_by = self.request.user
-#                 gallery.instance.updated_by = self.request.user
-#
-#             gallery_images_form.save()
-#
-#             for banner in banners_form:
-#                 banner.instance.created_by = self.request.user
-#                 banner.instance.updated_by = self.request.user
-#                 banner.instance.dates = (None, None)
-#
-#             banners_form.save()
-#
-#             changed_galleries = [obj.instance.image.path for obj in gallery_images_form if obj.has_changed()]
-#             changed_banners = [obj.instance.image.path for obj in banners_form if obj.has_changed()]
-#
-#         is_logo_changed = 'logo' in form.changed_data
-#         self.object.upload_images(is_logo_changed, changed_galleries, changed_banners)
-#
-#         return HttpResponseRedirect(self.get_success_url())
-#
-#     def form_invalid(self, form, gallery_images_form, banners_form):
-#         """
-#         Called if a form is invalid. Re-renders the context data with the
-#         data-filled forms and errors.
-#         """
-#         context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form,
-#                                              banners_form=banners_form)
-#         return self.render_to_response(context_data)
-#
-#     def get_context_data(self, **kwargs):
-#         context_data = super().get_context_data(**kwargs)
-#         context_data['domain'] = settings.USER_SITES_DOMAIN
-#         context_data['valid_blocks'] = self.get_valid_blocks()
-#         context_data['user_site_templates'] = UserSiteTemplate.objects.all()
-#         template_id = context_data.get('form')['template'].value()
-#         if template_id:
-#             context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
-#
-#         return context_data
-#
+        for form in form_list:
+            if isinstance(form, dict):
+                continue
 
-# class SiteUpdate(UpdateView):
-#     model = UserSite
-#     form_class = SiteForm
-#     template_name = 'b24online/UserSites/addForm.html'
-#     success_url = reverse_lazy('site:main')
-#
-#     @method_decorator(login_required)
-#     def dispatch(self, request, site, organization, *args, **kwargs):
-#         self.site = site
-#         self.organization = organization
-#
-#         return super().dispatch(request, *args, **kwargs)
-#
-#     def get_valid_blocks(self):
-#         valid_blocks = [
-#                 "SITES LEFT 1",
-#                 "SITES LEFT 2",
-#                 "SITES FOOTER",
-#                 "SITES RIGHT 1",
-#                 "SITES RIGHT 2",
-#                 "SITES RIGHT 3",
-#                 "SITES RIGHT 4",
-#                 "SITES RIGHT 5"
-#             ]
-#
-#         additional = []
-#         for i in range(1,18):
-#             additional.append("SITES CAT {0}".format(i))
-#         valid_blocks += additional
-#
-#         return OrderedDict(BannerBlock.objects.filter(
-#             block_type='user_site',
-#             code__in=valid_blocks
-#             ).order_by('id').values_list('pk', 'name'))
-#
-#     def get_banners_form(self, *args, **kwargs):
-#         if isinstance(self.organization, Company):
-#             return CompanyBannerFormSet(*args, **kwargs)
-#
-#         return ChamberBannerFormSet(*args, **kwargs)
-#
-#     def get(self, request, *args, **kwargs):
-#         """
-#         Handles GET requests and instantiates blank versions of the form
-#         and its inline formsets.
-#         """
-#         self.object = self.get_object()
-#         self.gallery_images_form = GalleryImageFormSet(instance=self.object.get_gallery(self.request.user))
-#         banners_form = self.get_banners_form(instance=self.object.site)
-#         form_class = self.get_form_class()
-#         form = self.get_form(form_class)
-#
-#         return self.render_to_response(self.get_context_data(form=form,
-#                                                              gallery_images_form=self.gallery_images_form,
-#                                                              banners_form=banners_form))
-#
-#     def post(self, request, *args, **kwargs):
-#         """
-#             Handles POST requests, instantiating a form instance and its inline
-#             formsets with the passed POST variables and then checking them for
-#             validity.
-#             """
-#         self.object = self.get_object()
-#         self.gallery_images_form = GalleryImageFormSet(self.request.POST, self.request.FILES,
-#                                                        instance=self.object.get_gallery(self.request.user))
-#         banners_form = self.get_banners_form(self.request.POST, self.request.FILES, instance=self.object.site)
-#         form_class = self.get_form_class()
-#         form = self.get_form(form_class)
-#
-#         if form.is_valid() and self.gallery_images_form.is_valid() and banners_form.is_valid():
-#             return self.form_valid(form, self.gallery_images_form, banners_form=banners_form)
-#         else:
-#             return self.form_invalid(form, self.gallery_images_form, banners_form=banners_form)
-#
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         kwargs['gallery_images_form'] = self.gallery_images_form
-#
-#         return kwargs
-#
-#     def form_valid(self, form, gallery_images_form, banners_form):
-#         """
-#         Called if all forms are valid. Creates a Recipe instance along with
-#         associated Ingredients and Instructions and then redirects to a
-#         success page.
-#         """
-#         form.instance.updated_by = self.request.user
-#         root_domain = self.object.root_domain or settings.USER_SITES_DOMAIN
-#
-#         if form.has_changed() and ('sub_domain' in form.changed_data or 'domain' in form.changed_data):
-#             form.instance.domain_part = form.cleaned_data.get('domain', None) or form.cleaned_data.get('sub_domain')
-#
-#         if 'facebook' in form.changed_data:
-#             form.instance.metadata['facebook'] = form.cleaned_data['facebook']
-#
-#         if 'youtube' in form.changed_data:
-#             form.instance.metadata['youtube'] = form.cleaned_data['youtube']
-#
-#         if 'twitter' in form.changed_data:
-#             form.instance.metadata['twitter'] = form.cleaned_data['twitter']
-#
-#         if 'instagram' in form.changed_data:
-#             form.instance.metadata['instagram'] = form.cleaned_data['instagram']
-#
-#         if 'vkontakte' in form.changed_data:
-#             form.instance.metadata['vkontakte'] = form.cleaned_data['vkontakte']
-#
-#         if 'odnoklassniki' in form.changed_data:
-#             form.instance.metadata['odnoklassniki'] = form.cleaned_data['odnoklassniki']
-#
-#         with transaction.atomic():
-#             self.object = form.save()
-#             gallery_images_form.instance = self.object.get_gallery(self.request.user)
-#
-#             for gallery in gallery_images_form:
-#                 gallery.instance.created_by = self.request.user
-#                 gallery.instance.updated_by = self.request.user
-#
-#             gallery_images_form.save()
-#
-#             for banner in banners_form:
-#                 banner.instance.created_by = self.request.user
-#                 banner.instance.updated_by = self.request.user
-#                 banner.instance.dates = (None, None)
-#
-#             banners_form.save()
-#             domain = form.cleaned_data.get('domain', None)
-#
-#             if not domain:
-#                 domain = "%s.%s" % (form.cleaned_data.get('sub_domain'), root_domain)
-#
-#             site = self.object.site
-#             site.domain = domain
-#             site.save()
-#
-#         changed_galleries = [obj.instance.image.path for obj in gallery_images_form if obj.has_changed()]
-#         changed_banners = [obj.instance.image.path for obj in banners_form if obj.has_changed()]
-#         is_logo_changed = 'logo' in form.changed_data
-#         self.object.upload_images(is_logo_changed, changed_galleries, changed_banners)
-#
-#         return HttpResponseRedirect(self.get_success_url())
-#
-#     def form_invalid(self, form, gallery_images_form, banners_form):
-#         """
-#         Called if a form is invalid. Re-renders the context data with the
-#         data-filled forms and errors.
-#         """
-#         context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form, banners_form=banners_form)
-#         return self.render_to_response(context_data)
-#
-#     def get_context_data(self, **kwargs):
-#         context_data = super().get_context_data(**kwargs)
-#         context_data['valid_blocks'] = self.get_valid_blocks()
-#         template_id = context_data.get('form')['template'].value()
-#         context_data['user_site_templates'] = UserSiteTemplate.objects.all()
-#
-#         if template_id:
-#             context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
-#
-#         if self.object.domain_part == self.object.site.domain:
-#             context_data['domain'] = settings.USER_SITES_DOMAIN
-#         else:
-#             context_data['domain'] = self.object.root_domain
-#
-#         return context_data
-#
-#     def get_object(self, queryset=None):
-#         return self.site
-#
-#
-# class UserTemplateView(ListView):
-#     model = UserSiteTemplate
-#     template_name = 'b24online/UserSites/templateList.html'
-#
-#     def get_queryset(self):
-#         return self.model.objects.filter(published=True)
-#
-#
-# class TemplateUpdate(UpdateView):
-#     model = UserSite
-#     form_class = TemplateForm
-#     template_name = 'b24online/UserSites/templateForm.html'
-#     success_url = reverse_lazy('site:main')
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         organization_id = request.session.get('current_company', None)
-#         if not organization_id:
-#             return HttpResponseRedirect(reverse('denied'))
-#         organization = Organization.objects.get(pk=organization_id)
-#         try:
-#             site = UserSite.objects.get(organization=organization)
-#             self.site = site
-#         except ObjectDoesNotExist:
-#             return HttpResponseRedirect(reverse('denied'))
-#         return super(TemplateUpdate, self).dispatch(request, *args, **kwargs)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#
-#         try:
-#             obj = UserSiteTemplate.objects.get(pk=self.template_id)
-#         except UserSiteTemplate.DoesNotExist:
-#             raise Http404("No found matching the template in UserSiteTemplate.")
-#
-#         context['template'] = obj
-#         context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
-#         return context
-#
-#     def get_object(self, queryset=None):
-#         self.template_id = self.kwargs.get(self.pk_url_kwarg)
-#         return self.site
+            for name, form_class in self.form_list.items():
+                if not isinstance(form_class, dict) and isinstance(form, form_class):
+                    form_dict[name] = form
+
+        instance = self.object or UserSite()
+
+        instance.updated_by = self.request.user
+        instance.user_template = form_dict['template'].cleaned_data.get('user_template')
+
+        if not instance.pk:
+            instance.created_by = self.request.user
+            instance.organization = self.organization
+
+        form = form_dict['domain']
+        domain = form.cleaned_data.get('domain', None)
+        sub_domain = form.cleaned_data.get('sub_domain')
+        instance.domain_part = domain or sub_domain
+
+        if not domain:
+            domain = "%s.%s" % (form.cleaned_data.get('sub_domain'), settings.USER_SITES_DOMAIN)
+
+        site_kwargs = {'name': 'usersites', 'domain': domain}
+
+        form = form_dict['category']['site_category']
+        gallery_images_form = form_dict['category']['gallery']
+        instance.template = form.cleaned_data.get('template', None)
+        instance.metadata.update(**form_dict['social'].cleaned_data)
+
+        if not instance.template:
+            is_image_uploaded = False
+
+            for gallery_form in gallery_images_form:
+                if gallery_form.cleaned_data.get('image', None):
+                    is_image_uploaded = True
+                    break
+
+            if not is_image_uploaded:
+                instance.template = ExternalSiteTemplate.objects.first()
+
+        attrs = copy(form_dict['general'].cleaned_data)
+        attrs.update(**form_dict['delivery'].cleaned_data)
+
+        for attr, value in attrs.items():
+            setattr(instance, attr, value)
+
+        form = form_dict.get('color', None)
+        instance.color_template = form and form.cleaned_data.get('color_template')
+        banners_form = form_dict['banners']
+
+        with transaction.atomic():
+            if instance.pk:
+                instance.site.domain = site_kwargs['domain']
+                instance.site.save()
+            else:
+                instance.site = Site.objects.create(**site_kwargs)
+
+            instance.save()
+
+            gallery_images_form.instance = instance.get_gallery(self.request.user)
+            banners_form.instance = instance.site
+
+            for gallery in gallery_images_form:
+                gallery.instance.created_by = self.request.user
+                gallery.instance.updated_by = self.request.user
+
+            gallery_images_form.save()
+
+            for banner in banners_form:
+                banner.instance.created_by = self.request.user
+                banner.instance.updated_by = self.request.user
+                banner.instance.dates = (None, None)
+
+            banners_form.save()
+            params = {'gallery': [], 'banners': []}
+
+            for form in gallery_images_form:
+                if 'image' not in form.changed_data:
+                    continue
+
+                params['gallery'].append({
+                    'path': form.cleaned_data['image'].file.key_name,
+                    'file': form.instance.image.path,
+                    's3file': True
+                })
+
+            for form in banners_form:
+                if 'image' not in form.changed_data:
+                    continue
+
+                params['banners'].append({
+                    'path': form.cleaned_data['image'].file.key_name,
+                    'file': form.instance.image.path,
+                    's3file': True
+                })
+
+            if 'logo' in form_dict['general'].changed_data:
+                params['logo'] = {
+                    'path': form_dict['general'].cleaned_data['logo'].file.key_name,
+                    'file': instance.logo.path,
+                    's3file': True
+                }
+
+        instance.upload_images(**params)
+
+        return HttpResponseRedirect(self.success_url)

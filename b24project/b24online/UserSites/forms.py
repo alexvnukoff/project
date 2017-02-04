@@ -6,7 +6,6 @@ from django.contrib.sites.models import Site
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory
-from django.forms.utils import ErrorList
 from django.utils.translation import gettext as _
 
 from b24online.models import GalleryImage, Gallery, Banner, CURRENCY
@@ -16,9 +15,7 @@ GALLERT_MAX_NUM = 5
 
 
 class SiteForm(forms.Form):
-    def __init__(self, instance, *args, **kwargs):
-        self.instance = instance
-        super().__init__(*args, **kwargs)
+    pass
 
 
 class SiteSocialForm(SiteForm):
@@ -29,30 +26,14 @@ class SiteSocialForm(SiteForm):
     vkontakte = forms.CharField(required=False)
     odnoklassniki = forms.CharField(required=False)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.instance:
-            self.initial['facebook'] = self.instance.facebook
-            self.initial['youtube'] = self.instance.youtube
-            self.initial['twitter'] = self.instance.twitter
-            self.initial['instagram'] = self.instance.instagram
-            self.initial['vkontakte'] = self.instance.vkontakte
-            self.initial['odnoklassniki'] = self.instance.odnoklassniki
-
 
 class SiteDomainForm(SiteForm):
     domain = forms.URLField(required=False)
     sub_domain = forms.CharField(required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, instance, *args, **kwargs):
+        self.instance = instance
         super().__init__(*args, **kwargs)
-
-        if self.instance:
-            if self.instance.domain_part == self.instance.site.domain:
-                self.initial['domain'] = self.instance.domain_part
-            else:
-                self.initial['sub_domain'] = self.instance.domain_part
 
     def clean_sub_domain(self):
         sub_domain = self.cleaned_data.get('sub_domain', None)
@@ -175,6 +156,10 @@ class SiteTemplateColorForm(SiteForm):
 
 
 class SiteGalleryForm(forms.ModelForm):
+    image = forms.ImageField(required=True)
+    description = forms.CharField(required=True)
+    link = forms.URLField(required=True)
+
     # def clean_image(self):
     #     image_obj = self.cleaned_data.get('image', None)
     #
@@ -215,7 +200,7 @@ GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
                                             fields=('image', 'description', 'link'))
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=SiteBannerForm,
                                              fields=('image', 'block', 'advertisement_ptr', 'link'),
-                                             validate_max=True, max_num=24, extra=24)
+                                             validate_max=True, max_num=8, extra=8)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=SiteBannerForm,
                                              fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)

@@ -50,7 +50,9 @@
         {% if form.errors.logo %}<small class="error">{{ form.errors.logo.0 }}</small>{% endif %}
             <div class="viewimg">
             {% if form.initial.logo %}
-                <img src="{{ form.initial.logo.file.url }}">
+                <img src='{% if form.initial.logo.original %}{{ form.initial.logo.original }}{% else %}{{ form.initial.logo.file.url }}{% endif %}'>
+            {% elif form.logo.data %}
+                <img src='{{ form.logo.data.file.url }}'>
             {% endif %}
             </div>
         </div>

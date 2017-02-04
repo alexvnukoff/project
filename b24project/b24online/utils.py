@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import errno
+import hashlib
 import importlib
 import logging
 import os
@@ -19,11 +20,12 @@ from django.utils._os import abspathu
 from django.utils.lru_cache import lru_cache
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django.utils.translation import activate, deactivate
 from django_s3_storage.storage import S3Storage, S3File
 from mptt.models import MPTTModel
 from mptt.utils import get_cached_trees
 from unidecode import unidecode
-from django.utils.translation import activate, deactivate
+
 from tpp.DynamicSiteMiddleware import get_current_site
 
 logger = logging.getLogger(__name__)
@@ -32,12 +34,30 @@ class ExtendedS3File(S3File):
     def url(self):
         return self._storage.url(str(self))
 
+    @property
+    def key_name(self):
+        return self._storage._get_key_name(self.name)
+
+    @property
+    def key(self):
+        return self._storage._get_key(self.name)
+
+
 class ExtendedS3Storage(S3Storage):
     def _open(self, name, mode="rb"):
         file = super()._open(name, mode)
         file.__class__ = ExtendedS3File
 
         return file
+
+    def get_available_name(self, name, max_length=None):
+        filename = super().get_available_name(name, max_length)
+
+        ext = os.path.splitext(filename)[1]
+        m = hashlib.md5()
+        m.update(filename.encode('utf-8'))
+
+        return "%s%s" % (m.hexdigest(), ext)
 
 
 def get_index_name(lang=None, index_prefix='b24-'):
@@ -420,10 +440,16 @@ def upload_images(*args, base_bucket_path=""):
 
         filename = os.path.basename(image['file'])
         filepath = os.path.dirname(image['file'])
+
         try:
-            image_descriptor = Image.open(image['file'])
+            if image.get('s3file', False):
+                fp = S3Storage()._open(os.path.basename(image['path']))
+                image_descriptor = Image.open(fp)
+            else:
+                image_descriptor = Image.open(image['file'])
         except IOError:
-            continue
+            raise
+
         content_type = Image.MIME.get(image_descriptor.format) or 'image/png'
 
         del image_descriptor

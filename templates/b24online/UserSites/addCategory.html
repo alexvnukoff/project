@@ -106,23 +106,23 @@
                 {{ gallery_images_form.management_form }}
                 {{ gallery_images_form.non_form_errors }}
                 {% for gallery_form in gallery_images_form %}
+                <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
                     {{ gallery_form.id }}
                     {% if gallery_form.initial.image %}
+                        <li><img src='{% if gallery_form.initial.image.original %}{{gallery_form.initial.image.original}}{% else %}{{ gallery_form.initial.image.file.url }}{% endif %}'></li>
+                    {% elif gallery_form.image.data %}
+                        <li><img src='{{gallery_form.image.data.file.url}}'></li>
+                    {% endif %}
 
-                    <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
-                    <li><img src='{{ gallery_form.initial.image.file.url }}'></li>
                     {% if form.instance.pk and gallery_form.DELETE %}
                         <div class="remove_image">{% trans 'Remove' %}{{ gallery_form.DELETE }}</div>
-                    {% endif %}
-                    {% else %}
-                    <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
                     {% endif %}
                     <li>
                         {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
                         <div class="fileinputs" style="margin-bottom:10px;">
 
                         <div style="background:#efefef;width:600px;margin-bottom:20px;">
-                            <input type="file" name="{{ gallery_form.image.html_name }}">
+                            {{gallery_form.image}}
                         </div>
 
                       <table class="desctable">
