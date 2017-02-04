@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.views.generic import TemplateView
 from paypal.standard.ipn.views import ipn
-
 import usersites.Api.urls
 import usersites.B2BProducts.urls
 import usersites.B2CProducts.urls
@@ -13,18 +13,44 @@ import usersites.Proposals.urls
 import usersites.Questionnaires.urls
 import usersites.Video.urls
 import usersites.Exhibitions.urls
-
 import usersites.views
-
 from appl import func
+from usersites.redisHash import UsersiteHash
+
+
+def wrapper(view):
+    def handler(request, *args, **kwargs):
+        cls = UsersiteHash()
+        usersite, template, organization = cls.check()
+        return view(
+                request,
+                usersite=usersite,
+                template=template,
+                organization=organization,
+                *args,
+                **kwargs
+            )
+    return handler
+
+
 
 urlpatterns = [
-    url(r'^$', usersites.views.wall, name='main'),
+    url(r'^$', usersites.views.WallView.as_view(), name='main'),
+    #url(r'^$', wrapper(usersites.views.wall), name='main'),
+
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
     url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     url(r'^api/', include(usersites.Api.urls, namespace='api')),
+
+
     url(r'^news/', include(usersites.News.urls, namespace='news')),
+
+    #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),
+    #url(r'^page(?P<page>[0-9]+)?/$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name="paginator"),
+    #url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', NewsDetail.as_view(), name='detail'),
+
+
     url(r'^proposal/', include(usersites.Proposals.urls, namespace='proposal')),
     url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
     url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),

@@ -18,61 +18,110 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
 from usersites.mixins import UserTemplateMixin
-
+from usersites.redisHash import UsersiteHash
 
 logger = logging.getLogger(__name__)
-
 
 def render_page(request, template, **kwargs):
     return render(request, get_template_with_base_path(template), kwargs)
 
 
-def wall(request):
-    organization = get_current_site().user_site.organization
-    proposals = BusinessProposal.get_active_objects().filter(organization=organization)
-    news = News.get_active_objects().filter(organization=organization)
-    exhibitions = Exhibition.get_active_objects().filter(organization=organization)
-
-    if isinstance(organization, Company):
-        b2c_products = B2CProduct.get_active_objects()\
-            .filter(company=organization).order_by('-show_on_main')
-        b2c_coupons = B2CProduct.get_active_objects().filter(company=organization,
-                                                             coupon_dates__contains=now().date(),
-                                                             coupon_discount_percent__gt=0).order_by("-created_at")
-        b2b_products = B2BProduct.get_active_objects().filter(company=organization)
-    else:
-        b2b_products = None
-        b2c_products = None
-        b2c_coupons = None
-
-    current_section = ''
-
-    template_params = {
-        'current_section': current_section,
-        'title': get_current_site().user_site.organization.name,
-        'proposals': proposals,
-        'news': news,
-        'exhibitions': exhibitions,
-        'b2c_coupons': b2c_coupons,
-        'b2c_products': b2c_products,
-        'b2b_products': b2b_products,
-        'form': ContactForm()
-    }
+class WallView(TemplateView):
     template_name = "{template_path}/contentPage.html"
-    site = get_current_site()
-    try:
-        user_site = site.user_site
-        user_site.refresh_from_db()
+    current_section = ""
 
-        if user_site.user_template is not None:
-            folder_template = user_site.user_template.folder_name
-            template_name = template_name.format(template_path=folder_template)
+    def __init__(self, **kwargs):
+        cls = UsersiteHash()
+        self.usersite, self.template, self.organization = cls.check()
+        self.get_company_content()
+
+    def get_template_names(self):
+        if self.template is not None:
+            folder_template = self.template.folder_name
+            self.template_name = self.template_name.format(template_path=folder_template)
         else:
-            template_name = template_name.format(template_path='usersites')
-    except ObjectDoesNotExist:
-        template_name = template_name.format(template_path='usersites')
+            self.template_name = self.template_name.format(template_path='usersites')
+        return self.template_name
 
-    return render(request, template_name, template_params)
+    def get_company_content(self):
+        self.proposals = BusinessProposal.get_active_objects().filter(
+                organization=self.organization)
+
+        self.news = News.get_active_objects().filter(
+                organization=self.organization)
+
+        self.exhibitions = Exhibition.get_active_objects().filter(
+                organization=self.organization)
+
+        if isinstance(self.organization, Company):
+            self.b2c_products = B2CProduct.get_active_objects().filter(
+                    company=self.organization).order_by('-show_on_main')
+
+            self.b2c_coupons = B2CProduct.get_active_objects().filter(
+                    company=self.organization,
+                    coupon_dates__contains=now().date(),
+                    coupon_discount_percent__gt=0).order_by("-created_at")
+
+            self.b2b_products = B2BProduct.get_active_objects().filter(
+                    company=self.organization)
+        else:
+            self.b2b_products = None
+            self.b2c_products = None
+            self.b2c_coupons = None
+
+    def get_context_data(self, **kwargs):
+        context = super(WallView, self).get_context_data(**kwargs)
+
+        context = {
+            'current_section': self.current_section,
+            'title': self.organization.name,
+            'proposals': self.proposals,
+            'news': self.news,
+            'exhibitions': self.exhibitions,
+            'b2c_coupons': self.b2c_coupons,
+            'b2c_products': self.b2c_products,
+            'b2b_products': self.b2b_products,
+            'form': ContactForm()
+        }
+
+        return context
+
+
+#def wall(request, usersite, template, organization):
+    #proposals = BusinessProposal.get_active_objects().filter(organization=organization)
+    #news = News.get_active_objects().filter(organization=organization)
+    #exhibitions = Exhibition.get_active_objects().filter(organization=organization)
+
+    #if isinstance(organization, Company):
+    #    b2c_products = B2CProduct.get_active_objects().filter(company=organization).order_by('-show_on_main')
+    #    b2c_coupons = B2CProduct.get_active_objects().filter(company=organization, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0).order_by("-created_at")
+    #    b2b_products = B2BProduct.get_active_objects().filter(company=organization)
+    #else:
+    #    b2b_products = None
+    #    b2c_products = None
+    #    b2c_coupons = None
+
+    #current_section = ''
+
+    #template_params = {
+    #    'current_section': current_section,
+    #    'title': organization.name,
+        #'proposals': proposals,
+        #'news': news,
+        #'exhibitions': exhibitions,
+        #'b2c_coupons': b2c_coupons,
+        #'b2c_products': b2c_products,
+        #'b2b_products': b2b_products,
+    #    'form': ContactForm()
+    #}
+    #template_name = "{template_path}/contentPage.html"
+
+    #if template is not None:
+    #    folder_template = template.folder_name
+    #    template_name = template_name.format(template_path=folder_template)
+    #else:
+    #    template_name = template_name.format(template_path='usersites')
+    #return render(request, template_name, template_params)
 
 
 class ProductJsonData(View):
