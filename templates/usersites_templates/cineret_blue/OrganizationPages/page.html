@@ -25,6 +25,9 @@
                 <input type="email" class="form-control" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
               </div>
 
+              <div class="control-group form-group">
+                  <p>{{ form.captcha }}</p>
+              </div>
 
               <div class="control-group form-group">
                 <input type="submit" class="btn btn-default main-contact-btn" value="{% trans 'Send' %}"></input>

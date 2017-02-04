@@ -60,7 +60,7 @@
         <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
             <div class="col-md-8 contact-fields">
 
-                <form method="post" action="" name="sentMessage">
+                <form method="post" action="" name="sentMessage">{% csrf_token %}
                 <input type="hidden" name="co_id" value="{{ object.pk }}">
                 <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
                     <div class="control-group form-group">
@@ -88,7 +88,13 @@
                             <textarea name="message" rows="10" cols="100" class="form-control" id="message" maxlength="999" style="resize:none" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
                         </div>
                     </div>
-                    {% csrf_token %}
+
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>{% trans 'Captcha' %}:</label>
+                            <p>{{ form.captcha }}</p>
+                        </div>
+                    </div>
                     <button type="submit" class="btn special_offer__btn">{% trans 'Send' %}</button>
                 </form>
 
@@ -102,6 +108,10 @@
 
                 {% if form.errors.message %}
                     <p style="color:red;">{{ form.errors.message.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.captcha %}
+                    <p style="color:red;">{{ form.errors.captcha.0 }}</p>
                 {% endif %}
 
             </div>
