@@ -72,8 +72,8 @@ TEMPLATES = [
                 "tpp.context_processors.site_processor",
                 "tpp.context_processors.site_languages_processor",
                 "tpp.context_processors.current_organization_processor",
-                "social_core.apps.django_app.context_processors.backends",
-                "social_core.apps.django_app.context_processors.login_redirect"
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect"
             )
         }
     },
