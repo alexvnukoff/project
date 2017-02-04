@@ -1,0 +1,48 @@
+{% extends 'b24online/UserSites/baseSiteForm.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block form %}
+
+
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+
+        <h3>{% trans 'Products delivery' %}</h3>
+        <div class="form-group">
+            <label>{% trans "Is delivery available on site?" %}</label>
+            {{ form.is_delivery_available }}
+            {% if form.errors.is_delivery_available %}
+            <small class="error">{{ form.is_delivery_available.errors|striptags }}</small>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>{% trans "Delivery currency" %}</label>
+            <div>{{ form.delivery_currency }}</div>
+            {% if form.delivery_currency.errors %}
+                <small class="error">{{ form.delivery_currency.errors|striptags }}</small>
+            {% endif %}
+        </div>
+        <br>
+        <div class="form-group">
+            <label>{% trans "Delivery cost" %}</label>
+            <input type="text" name="{{form.delivery_cost.html_name}}"
+                placeholder="{% trans 'Delivery cost' %}" maxlength="225"
+                class="text" style="width:60%;" value="{{ form.delivery_cost.value|default_if_none:'' }}">
+            {% if form.delivery_cost.errors %}
+                <small class="error">{{ form.delivery_cost.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+            {% endif %}
+            <input type="submit" class="bigbuy" value="{% trans 'Next step' %}">
+        </div>
+
+    </form>
+{% endblock %}

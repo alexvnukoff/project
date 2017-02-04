@@ -1,0 +1,137 @@
+{% extends 'b24online/UserSites/baseSiteForm.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block form %}
+<script type="text/javascript">
+    $(document).ready(function(e) {
+       $(".showtype").click(function(){
+            $(".external-type, #fade-profile").show();
+        });
+
+        $(".close-regform").click(function(){
+            $(".external-type, #fade-profile").hide();
+        });
+
+        $('.listtype').slimScroll({
+            height: '250px',
+            railVisible: true,
+            alwaysVisible: false
+        });
+
+        $(".selectTemplate").click(function(event) {
+            var folder = $(this).data('folder');
+            var id = $(this).data('id');
+            var src_1 = "{% static "usersites/templates" %}" + "/" + folder + "/1.jpg";
+            var src_2 = "{% static "usersites/templates" %}" + "/" + folder + "/2.jpg";
+            $('.template1').attr('src',src_1);
+            $('.template2').attr('src',src_2);
+            $('#input-template').val(id);
+            $(".external-type, #fade-profile").hide();
+      });
+    });
+</script>
+
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+
+        <div class="form-group">
+        <label>{% trans "Site category" %}</label>
+        <input id="input-template" type="hidden" name="{{form.template.html_name}}" value="{{ form.template.value|default_if_none:"" }}">
+        <div class="template">
+            {% if template  %}
+                <div class="ex-img"><img class="template1" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/1.jpg"></div>
+                <div class="ex-img"><img class="template2" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/2.jpg"></div>
+            {% else %}
+                <div class="ex-img"><img class="template1" src="{% static "b24online/img/ex-img.jpg" %}"></div>
+                <div class="ex-img"><img class="template2" src="{% static "b24online/img/ex-img.jpg" %}"></div>
+            {% endif %}
+            </div>
+            <div class="clear"></div>
+        <center><button onclick='return false;' class="btn-link showtype">{% trans "Select" %}</a></center>
+        {% if form.errors.template %}<small class="error">{{ form.errors.template.0 }}</small>{% endif %}
+         </div>
+
+        <div class="form-group">
+        <label>{% trans "Or use custom images" %} ({% trans "Dimensions" %} 700Х183)</label>
+
+            <ul class="custom_images">
+                {{ gallery_images_form.management_form }}
+                {{ gallery_images_form.non_form_errors }}
+                {% for gallery_form in gallery_images_form %}
+                <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
+                    {{ gallery_form.id }}
+                    {% if gallery_form.initial.image %}
+                        <li><img src='{% if gallery_form.initial.image.original %}{{gallery_form.initial.image.original}}{% else %}{{ gallery_form.initial.image.file.url }}{% endif %}'></li>
+                    {% elif gallery_form.image.data %}
+                        <li><img src='{{gallery_form.image.data.file.url}}'></li>
+                    {% endif %}
+
+                    {% if form.instance.pk and gallery_form.DELETE %}
+                        <div class="remove_image">{% trans 'Remove' %}{{ gallery_form.DELETE }}</div>
+                    {% endif %}
+                    <li>
+                        {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
+                        <div class="fileinputs" style="margin-bottom:10px;">
+
+                        <div style="background:#efefef;width:600px;margin-bottom:20px;">
+                            {{gallery_form.image}}
+                        </div>
+
+                      <table class="desctable">
+
+                        <tr>
+                          <th>{% trans "Image description:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.description }}</td>
+                        </tr>
+
+                        <tr>
+                          <th>{% trans "Image link:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.link }}</td>
+                        </tr>
+
+                      </table>
+
+                        </div>
+
+                    </li>
+                    <div class="clear"></div>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="form-group">
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+            {% endif %}
+            <input type="submit" class="bigbuy" value="{% trans 'Next step' %}">
+        </div>
+
+    </form>
+
+<div class="external-type">
+    <i class="close-regform imgnews"></i>
+    <div class="title">{% trans "Select a category" %}</div>
+    <div class="listtype">
+        {% for template in form.template.field.choices.queryset.all %}
+             {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
+                  <ul>
+             {% endif %}
+                  <li><a class="selectTemplate" data-id="{{ template.pk }}" data-folder="{{ template.theme_folder }}" href="#">{{ template.name }}</a></li>
+            {% if forloop.counter|divisibleby:"16" or forloop.last %}
+                  </ul>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

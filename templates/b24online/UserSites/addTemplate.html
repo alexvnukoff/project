@@ -1,0 +1,45 @@
+{% extends 'b24online/UserSites/baseSiteForm.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block form %}
+
+    <h1>{% trans "Select Template" %}</h1>
+
+    {% if form.errors.user_template %}
+        <small class="error">{{ form.user_template.errors|striptags }}</small>
+    {% endif %}
+
+    <form method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        <input type="hidden" name="{{form.user_template.html_name}}" id="template-id" value="{{ form.user_template.value|default_if_none:"" }}"/>
+        {% for template in form.user_template.field.choices.queryset.all %}
+
+            <div class="templates-box" style="text-align:center;margin:10px 20px 10px 0;">
+                <img class="t-image" src="{{ template.thumbnail.small }}" >
+
+                    <p class="lead"><a href="#" class="select_template" data-template_id="{{template.id}}">{{ template }}</a></p>
+            </div>
+
+        {% endfor %}
+
+        <div class="form-group">
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+            {% endif %}
+        </div>
+
+    </form>
+    <script>
+        $('.select_template').on('click', function(el) {
+            var template_id = $(this).data('template_id');
+            $('#template-id').val(template_id);
+            $(this).parents('form').submit();
+
+            el.preventDefault();
+        });
+    </script>
+{% endblock %}

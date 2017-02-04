@@ -1,0 +1,29 @@
+{% extends 'b24online/UserSites/baseSiteForm.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block form %}
+
+    <form method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+
+         <div class="form-select">
+                <label>{% trans "Color scheme" %}:</label>
+                <select name="{{form.color_template.html_name}}">
+                    {% for i in form.color_template.field.choices.queryset.all %}
+                    <option value="{{ i.id }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        <div class="form-group">
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+            {% endif %}
+            <input type="submit" class="bigbuy" value="{% trans 'Next step' %}">
+        </div>
+
+    </form>
+{% endblock %}

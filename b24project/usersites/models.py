@@ -96,7 +96,7 @@ class UserSite(ActiveModelMixing, models.Model):
     galleries = GenericRelation(Gallery, related_query_name='sites')
     metadata = JSONField(default=dict())
     is_delivery_available = models.BooleanField(default=True)
-    delivery_currency = models.CharField(max_length=20, blank=False, 
+    delivery_currency = models.CharField(max_length=20, blank=False,
                                          null=True, choices=CURRENCY)
     delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, 
                                         null=True, blank=False)
@@ -105,35 +105,31 @@ class UserSite(ActiveModelMixing, models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
+    def upload_images(self, logo=None, gallery=None, banners=None):
         from core import tasks
         params = []
 
-        if is_new_logo:
-            params.append({
-                'file': self.logo.path,
-                'sizes': {
-                    'big': {'box': (220, 120), 'fit': True}
-                }
+        if logo:
+            logo.update(sizes= {
+                'big': {'box': (220, 120), 'fit': True}
             })
 
-        if changed_galleries is not None:
-            for image_path in changed_galleries:
-                params.append({
-                    'file': image_path,
-                    'sizes': {
-                        'big': {'box': (400, 105), 'fit': True},
-                    }
+            params.append(logo)
+
+        if gallery is not None:
+            for image in gallery:
+                image.update(sizes= {
+                    'big': {'box': (400, 105), 'fit': True},
                 })
 
-        if changed_banners is not None:
-            for image_path in changed_banners:
-                params.append({
-                    'file': image_path,
-                    'sizes': {
-                        'big': {'box': (150, 150), 'fit': False},
-                    }
+                params.append(image)
+
+        if banners is not None:
+            for image in banners:
+                image.update(sizes={
+                    'big': {'box': (150, 150), 'fit': False},
                 })
+                params.append(image)
 
         tasks.upload_images.delay(*params)
 
