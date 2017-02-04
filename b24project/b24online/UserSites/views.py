@@ -6,11 +6,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django_s3_storage.storage import S3Storage
-from formtools.wizard.views import SessionWizardView
+from formtools_addons import SessionMultipleFormWizardView
 
 from b24online.UserSites.forms import GalleryImageFormSet, CompanyBannerFormSet, ChamberBannerFormSet, \
-    SiteDomainForm, SiteGeneralForm, SiteDeliveryForm, SiteTemplateForm, SiteSocialForm
+    SiteDomainForm, SiteGeneralForm, SiteDeliveryForm, SiteSocialForm, SiteCategoryForm, \
+    GALLERT_MAX_NUM, SiteTemplateForm, SiteTemplateColorForm
 from b24online.models import Organization, Company, BannerBlock
 from b24online.utils import ExtendedS3Storage
 from usersites.models import UserSite, UserSiteTemplate, ExternalSiteTemplate
@@ -30,9 +30,11 @@ def form_dispatch(request):
              ("general", SiteGeneralForm),
              ("delivery", SiteDeliveryForm),
              ("social", SiteSocialForm),
+             ("category", (('site_category', SiteCategoryForm), ('gallery', GalleryImageFormSet))),
              ("template", SiteTemplateForm),
-             ("banners", CompanyBannerFormSet if is_company else ChamberBannerFormSet),
-             ("gallery", GalleryImageFormSet), ]
+             ("color", SiteTemplateColorForm),
+             ("banners", CompanyBannerFormSet if is_company else ChamberBannerFormSet)
+             ]
 
     try:
         site = UserSite.objects.get(organization=organization)
@@ -46,13 +48,14 @@ TEMPLATES = {
     "general": "b24online/UserSites/addForm.html",
     "delivery": "b24online/UserSites/addDelivery.html",
     "social": "b24online/UserSites/addSocial.html",
-    "template": "b24online/UserSites/addForm.html",
+    "category": "b24online/UserSites/addCategory.html",
+    "template": "b24online/UserSites/addTemplate.html",
+    "color": "b24online/UserSites/addTemplateColor.html",
     "banners": "b24online/UserSites/addForm.html",
-    "gallery": "b24online/UserSites/addForm.html",
 }
 
 
-class SiteNewCreate(SessionWizardView):
+class SiteNewCreate(SessionMultipleFormWizardView):
     file_storage = ExtendedS3Storage()
 
     @method_decorator(login_required)
@@ -63,41 +66,58 @@ class SiteNewCreate(SessionWizardView):
 
     def get_form_initial(self, step):
         initial = super().get_form_initial(step)
+        files = self.storage.get_step_files(step)
 
-        if self.storage.current_step_files:
+        if files:
             initial_files = {}
 
-            for field_name, file in self.storage.current_step_files.items():
-                initial_files[field_name.replace("%s-" % step, "", 1)] = file
+            if step == 'category':
+                initial_files = {'gallery': []}
+
+                for i in range(0, GALLERT_MAX_NUM):
+                    data = {}
+                    file = files.get("category-%s-image" % i, None)
+
+                    if file:
+                        data['image'] = file
+
+                    initial_files['gallery'].append(data)
+            else:
+                for field_name, file in files.items():
+                    initial_files[field_name.replace("%s-" % step, "", 1)] = file
 
             initial.update(**initial_files)
 
         return initial
 
-    def get_context_data(self, form, **kwargs):
-        context_data = super().get_context_data(form, **kwargs)
+    def get_context_data(self, forms, **kwargs):
+        context_data = super().get_context_data(forms, **kwargs)
+        prefixes = [form.prefix for form in forms]
 
-        if form.prefix == 'domain':
+        if 'domain' in prefixes:
             context_data['domain'] = settings.USER_SITES_DOMAIN
 
-        if form.prefix == 'banners':
+        if 'banners' in prefixes:
             context_data['valid_blocks'] = self.get_valid_blocks()
 
-        if form.prefix == 'template':
+        if 'category' in prefixes:
             context_data['user_site_templates'] = UserSiteTemplate.objects.all()
-            template_id = context_data.get('form')['template'].value()
+            context_data['gallery_images_form'] = forms[1]
+            template_id = forms[0]['template'].value()
+
             if template_id:
                 context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
+
+        context_data['form'] = forms[0]
 
         return context_data
 
     def get_form_kwargs(self, step=None):
-        kwargs = {
-            'instance': self.instace,
-        }
+        kwargs = super().get_form_kwargs(step)
+        kwargs.update(instance=self.instace)
 
-        if step == 'template':
-            kwargs['gallery_images_form'] = GalleryImageFormSet(self.request.POST, self.request.FILES)
+        if 'color' == step:
+            kwargs.update(template_id=self.storage.get_step_data('template')['template-user_template'])
 
         return kwargs
 

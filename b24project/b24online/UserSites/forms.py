@@ -6,10 +6,13 @@ from django.contrib.sites.models import Site
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory
+from django.forms.utils import ErrorList
 from django.utils.translation import gettext as _
 
 from b24online.models import GalleryImage, Gallery, Banner, CURRENCY
 from usersites.models import UserSite, UserSiteTemplate, ExternalSiteTemplate, UserSiteSchemeColor
+
+GALLERT_MAX_NUM = 5
 
 
 class SiteForm(forms.Form):
@@ -111,7 +114,7 @@ class SiteGeneralForm(SiteForm):
     logo = forms.ImageField(required=True)
     language = forms.ChoiceField(required=False, choices=UserSite.LANG_LIST)
     languages = forms.MultipleChoiceField(required=False,
-                                           choices=settings.LANGUAGES, widget=forms.CheckboxSelectMultiple)
+                                          choices=settings.LANGUAGES, widget=forms.CheckboxSelectMultiple)
 
     def clean_logo(self):
         logo = self.cleaned_data.get('logo', None)
@@ -154,46 +157,41 @@ class SiteDeliveryForm(SiteForm):
         return cleaned_data
 
 
-class SiteTemplateForm(SiteForm):
-    template = forms.ModelChoiceField(required=True, queryset=ExternalSiteTemplate.objects.all())
-    user_template = forms.ModelChoiceField(required=True, queryset=UserSiteTemplate.objects.all())
-    color_template = forms.ModelChoiceField(required=True, queryset=UserSiteSchemeColor.objects.all())
+class SiteCategoryForm(SiteForm):
+    template = forms.ModelChoiceField(required=False, queryset=ExternalSiteTemplate.objects.all())
 
-    # def __init__(self, *args, **kwargs):
-    #     self.gallery_images_form = kwargs.pop('gallery_images_form')
-    #     super().__init__(*args, **kwargs)
-    #
-    # def clean_template(self):
-    #     template = self.cleaned_data.get('template', None)
-    #
-    #     if not template:
-    #         for gallery_form in self.gallery_images_form:
-    #             if gallery_form['image'].value():
-    #                 return template
-    #
-    #         raise ValidationError(_('You need to choose a site template'))
-    #
-    #     return template
+
+class SiteTemplateForm(SiteForm):
+    user_template = forms.ModelChoiceField(required=True, queryset=UserSiteTemplate.objects.all())
+
+
+class SiteTemplateColorForm(SiteForm):
+    def __init__(self, template_id, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['color_template'] = forms.ModelChoiceField(required=True,
+                                                               queryset=UserSiteSchemeColor.objects.filter(
+                                                                   template_id=template_id)
+                                                               )
 
 
 class SiteGalleryForm(forms.ModelForm):
+    # def clean_image(self):
+    #     image_obj = self.cleaned_data.get('image', None)
+    #
+    #     if 'image' not in self.changed_data:
+    #         return image_obj
+    #
+    #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
+    #         raise ValidationError(_('Image dimensions not equals required dimension'))
+    #
+    #     return image_obj
+
     class Meta:
         model = GalleryImage
         fields = ('image', 'description', 'link')
 
-        # def clean_image(self):
-        #     image_obj = self.cleaned_data.get('image', None)
 
-        #     if 'image' not in self.changed_data:
-        #         return image_obj
-
-        #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
-        #         raise ValidationError(_('Image dimensions not equals required dimension'))
-
-        #     return image_obj
-
-
-class SiteBannerForm(forms.Form):
+class SiteBannerForm(forms.ModelForm):
     class Meta:
         model = Banner
         fields = ('image', 'block', 'advertisement_ptr', 'link',)
@@ -213,7 +211,7 @@ class SiteBannerForm(forms.Form):
 
 
 GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
-                                            form=SiteGalleryForm, max_num=5, validate_max=True, extra=5,
+                                            form=SiteGalleryForm, max_num=GALLERT_MAX_NUM, validate_max=True, extra=5,
                                             fields=('image', 'description', 'link'))
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=SiteBannerForm,
                                              fields=('image', 'block', 'advertisement_ptr', 'link'),
