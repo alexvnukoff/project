@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-import os, logging
+import os
+import logging
+import redis
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -93,6 +95,7 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     'raven.contrib.django.raven_compat',
+    'captcha',
     'b24online',
     'jobs',
     'centerpokupok',
@@ -100,7 +103,7 @@ LOCAL_APPS = (
 )
 
 EXTERNAL_APPS = (
-    #'debug_toolbar',
+    'debug_toolbar',
     'django_s3_storage',
     'social_django',
     'loginas',
@@ -111,7 +114,6 @@ EXTERNAL_APPS = (
     'modeltranslation',
     'django.contrib.admin',
     'guardian',
-    'captcha',
     'paypal.standard.ipn',
     'rest_framework',
     'compressor',
@@ -148,7 +150,7 @@ LOGIN_REDIRECT_URL = 'profile:main'
 
 MIDDLEWARE_CLASSES = (
     # 'django.middleware.gzip.GZipMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -390,6 +392,17 @@ GEO_COUNTRY_DB = {
     'Ukraine': '15',
 }
 
+REDIS_USERSITE = redis.Redis(
+        host='tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com',
+        port=6379,
+        db=2
+    )
+
+TYPEOF_TEMPLATE = (
+    (0, 'Simple'),
+    (1, 'Extend'),
+)
+
 ############################# Django S3 Storage settings ################################
 AWS_REGION = BUCKET_REGION
 AWS_ACCESS_KEY_ID = AWS_SID
@@ -403,3 +416,4 @@ try:
     from local_settings import *
 except ImportError as e:
     logging.info(e)
+

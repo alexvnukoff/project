@@ -44,6 +44,7 @@ from b24online.utils import (generate_upload_path, reindex_instance,
                              document_upload_path, get_current_organization)
 from tpp.celery import app
 
+
 CURRENCY = [
     ('ILS', _('Israeli New Sheqel')),
     ('EUR', _('Euro')),
@@ -3129,3 +3130,16 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
         recalculate_deal_cost(instance.deal)
     elif instance.deal.status in (Deal.DRAFT, Deal.READY):
         instance.deal.delete()
+
+
+@receiver(post_save)
+def flush_redis_usersite_info(sender, instance, *args, **kwargs):
+    """
+    Remove all the instance cache form redis.
+    """
+    list_of_models = ('UserSite', 'UserSiteTemplate', 'Organization', 'Company')
+    if sender.__name__ in list_of_models:
+        from usersites.redisHash import UsersiteHash
+        cls = UsersiteHash()
+        cls.flush(instance)
+

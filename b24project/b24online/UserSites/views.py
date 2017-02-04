@@ -31,6 +31,7 @@ class PatchedS3Storage(ExtendedS3Storage):
         # We will handle deletion of temporary files by ourselves
         pass
 
+
 @login_required()
 def form_dispatch(request):
     organization_id = request.session.get('current_company', None)

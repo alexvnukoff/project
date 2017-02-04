@@ -44,6 +44,7 @@ class UserSiteTemplate(models.Model):
     description = models.TextField(null=True, blank=True)
     thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=1000)
     folder_name = models.CharField(max_length=255)
+    typeof = models.IntegerField(choices=settings.TYPEOF_TEMPLATE, default=0)
     published = models.BooleanField(default=True)
 
     def __str__(self):
@@ -273,3 +274,4 @@ def add_deal_for_product(sender, instance, created, **kwargs):
                     )
             except IntegrityError:
                 raise
+

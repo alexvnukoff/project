@@ -1,0 +1,27 @@
+{% load staticfiles %}{% load i18n %}{% load cache %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+
+<body{% if LANGUAGE_BIDI %} class="hebrew{% endif %}">
+
+    {{ b2c_coupons }}
+    <hr>
+    {{ b2c_products }}
+    <hr>
+    {{ b2b_products }}
+    <hr>
+    {{ news }}
+    <hr>
+    {{ proposals }}
+    <hr>
+    {{ exhibitions }}
+
+
+{% block content %}{% endblock %}
+{% block js %}{% endblock %}
+</body>
+
