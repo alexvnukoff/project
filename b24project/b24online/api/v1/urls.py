@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from b24online.api.v1.views import CompanyList, ResumeList, VacancyList, ChamberList, \
     ExhibitionList, ProposalList, ProjectList, CouponList, B2CProductList, B2BProductList, NewsList, Wall, Banners, \
-    ContextAdvertisements, VideosList
+    ContextAdvertisements, VideosList, my_companies
 from b24online.api.v1.views import filter_autocomplete
 
 urlpatterns = [
@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^banners/$', Banners.as_view(), name='banners'),
     url(r'^advertisements/$', ContextAdvertisements.as_view(), name='advertisements'),
     url(r'^filter_autocomplete/$', filter_autocomplete, name='filter_autocomplete'),
+    url(r'^my_companies/$', my_companies, name='my_companies'),
 ]
