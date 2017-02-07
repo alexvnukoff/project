@@ -89,7 +89,8 @@ urlpatterns = [
     url(r'^company-manage/', b24online.views.my_companies),
     url(r'^set/(?P<item_id>[0-9]+)/$', b24online.views.set_current, name="setCurrent"),
     url(r'^branch-list$', b24online.views.branch_list, name="branch_list"),
-    url('', include('social.apps.django_app.urls', namespace='social')),
+    url('', include('social_django.urls', namespace='social')),
+    
     url(r'^tos/$', TemplateView.as_view(template_name="b24online/tos.html"), name="tos"),
     url(r'^upload/$', b24online.views.editor_upload, name="upload_editor_image"),
     url(r'^feedback/send/email/$', b24online.views.feedback_form),
