@@ -74,6 +74,7 @@ class WallView(TemplateView):
 
         context = {
             'current_section': self.current_section,
+            'organization': self.organization,
             'title': self.organization.name,
             'proposals': self.proposals,
             'news': self.news,
@@ -85,43 +86,6 @@ class WallView(TemplateView):
         }
 
         return context
-
-
-#def wall(request, usersite, template, organization):
-    #proposals = BusinessProposal.get_active_objects().filter(organization=organization)
-    #news = News.get_active_objects().filter(organization=organization)
-    #exhibitions = Exhibition.get_active_objects().filter(organization=organization)
-
-    #if isinstance(organization, Company):
-    #    b2c_products = B2CProduct.get_active_objects().filter(company=organization).order_by('-show_on_main')
-    #    b2c_coupons = B2CProduct.get_active_objects().filter(company=organization, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0).order_by("-created_at")
-    #    b2b_products = B2BProduct.get_active_objects().filter(company=organization)
-    #else:
-    #    b2b_products = None
-    #    b2c_products = None
-    #    b2c_coupons = None
-
-    #current_section = ''
-
-    #template_params = {
-    #    'current_section': current_section,
-    #    'title': organization.name,
-        #'proposals': proposals,
-        #'news': news,
-        #'exhibitions': exhibitions,
-        #'b2c_coupons': b2c_coupons,
-        #'b2c_products': b2c_products,
-        #'b2b_products': b2b_products,
-    #    'form': ContactForm()
-    #}
-    #template_name = "{template_path}/contentPage.html"
-
-    #if template is not None:
-    #    folder_template = template.folder_name
-    #    template_name = template_name.format(template_path=folder_template)
-    #else:
-    #    template_name = template_name.format(template_path='usersites')
-    #return render(request, template_name, template_params)
 
 
 class ProductJsonData(View):
