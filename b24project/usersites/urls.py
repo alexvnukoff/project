@@ -15,58 +15,33 @@ import usersites.Video.urls
 import usersites.Exhibitions.urls
 import usersites.views
 from appl import func
-from usersites.redisHash import UsersiteHash
-
-
-def wrapper(view):
-    def handler(request, *args, **kwargs):
-        cls = UsersiteHash()
-        usersite, template, organization = cls.check()
-        return view(
-                request,
-                usersite=usersite,
-                template=template,
-                organization=organization,
-                *args,
-                **kwargs
-            )
-    return handler
-
 
 
 urlpatterns = [
     url(r'^$', usersites.views.WallView.as_view(), name='main'),
-    #url(r'^$', wrapper(usersites.views.wall), name='main'),
-
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
-    url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     url(r'^api/', include(usersites.Api.urls, namespace='api')),
-
-
     url(r'^news/', include(usersites.News.urls, namespace='news')),
-
-    #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),
-    #url(r'^page(?P<page>[0-9]+)?/$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name="paginator"),
-    #url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', NewsDetail.as_view(), name='detail'),
-
-
     url(r'^proposal/', include(usersites.Proposals.urls, namespace='proposal')),
     url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
     url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
     url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
-    url(r'^questionnaires/',
-        include(usersites.Questionnaires.urls, namespace='questionnaires')),
-    url(r'^denied/$',
-        TemplateView.as_view(template_name="usersites/denied.html"),
-        name='denied'),
     url(r'^video/', include(usersites.Video.urls, namespace='video')),
     url(r'^exhibitions/', include(usersites.Exhibitions.urls, namespace='exhibitions')),
-    url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
     url(r'^sendmessage/$', usersites.views.sendmessage.as_view(), name='sendmessage'),
     url(r'^message_sent/$', usersites.views.MessageSent.as_view(), name='message_sent'),
     url(r'^captcha/', include('captcha.urls')),
+    url(r'^denied/$', TemplateView.as_view(template_name="usersites/denied.html"), name='denied'),
+
+    # url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
+    #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),
+    #url(r'^page(?P<page>[0-9]+)?/$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name="paginator"),
+    #url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', NewsDetail.as_view(), name='detail'),
+
+    url(r'^questionnaires/', include(usersites.Questionnaires.urls, namespace='questionnaires')),
+    url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
 ]
 
 if settings.DEBUG:
