@@ -5,6 +5,15 @@ from usersites.models import UserSite
 from tpp.DynamicSiteMiddleware import get_current_site
 from django.core.exceptions import ImproperlyConfigured
 
+def get_usersite_objects(typeof=None):
+    obj = UsersiteHash().check()
+
+    if not typeof:
+        return obj
+    else:
+        u, t, o = obj
+        return { 'usersite': u, 'template': t, 'organization': o}
+
 
 class UsersiteHash:
     """A siple usersite hash class"""

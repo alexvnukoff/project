@@ -18,7 +18,6 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
 from usersites.mixins import UserTemplateMixin
-from usersites.redisHash import UsersiteHash
 
 logger = logging.getLogger(__name__)
 
@@ -26,22 +25,9 @@ def render_page(request, template, **kwargs):
     return render(request, get_template_with_base_path(template), kwargs)
 
 
-class WallView(TemplateView):
+class WallView(UserTemplateMixin, TemplateView):
     template_name = "{template_path}/contentPage.html"
     current_section = ""
-
-    def __init__(self, **kwargs):
-        cls = UsersiteHash()
-        self.usersite, self.template, self.organization = cls.check()
-        self.get_company_content()
-
-    def get_template_names(self):
-        if self.template is not None:
-            folder_template = self.template.folder_name
-            self.template_name = self.template_name.format(template_path=folder_template)
-        else:
-            self.template_name = self.template_name.format(template_path='usersites')
-        return self.template_name
 
     def get_company_content(self):
         self.proposals = BusinessProposal.get_active_objects().filter(
@@ -72,6 +58,7 @@ class WallView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(WallView, self).get_context_data(**kwargs)
 
+        self.get_company_content()
         context = {
             'current_section': self.current_section,
             'organization': self.organization,
@@ -88,27 +75,6 @@ class WallView(TemplateView):
         return context
 
 
-class ProductJsonData(View):
-    model_class = None
-    search_index_model = None
-
-    def get(self, request):
-        cls = type(self)
-        term = request.GET.get('term')
-        organization = get_current_site().user_site.organization
-        if term and len(term) > 2:
-            qs = cls.model_class.objects.filter(
-                name__icontains=term,
-                is_active=True,
-                company=organization,
-            ).order_by('name')
-        else:
-            qs = cls.model_class.objects.none()
-        data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
-            for item in qs]
-        return JsonResponse(data, safe=False)
-
-
 class UsersitesRegistrationView(RegistrationView):
     """
     The custom RegistrationView for 'usersites'.
@@ -116,22 +82,17 @@ class UsersitesRegistrationView(RegistrationView):
     template_name = 'registration/registration_form.html'
 
 
-class sendmessage(View):
-    def get_object(self, queryset=None):
-        return get_current_site().user_site.organization
-
+class sendmessage(UserTemplateMixin, View):
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         form = ContactForm(request.POST)
-        if form.is_valid():
 
+        if form.is_valid():
             cd = form.cleaned_data
-            if not self.object.email:
+            if not self.organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
             else:
-                email = self.object.email
+                email = self.organization.email
                 subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
             # Collecting lead
@@ -172,10 +133,10 @@ class sendmessage(View):
         raise Http404
 
 
-class ProfileUpdate(ItemUpdate, UserTemplateMixin):
+class ProfileUpdate(UserTemplateMixin, ItemUpdate):
     model = Profile
     form_class = ProfileForm
-    # template_name = '{template_path}/profileForm.html'
+    #template_name = '{template_path}/profileForm.html'
     template_name = 'usersites_templates/ibonds/profileForm.html'
     success_url = reverse_lazy('main')
 
