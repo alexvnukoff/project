@@ -367,11 +367,6 @@ GEOIP_DB_PATH = '/usr/share/GeoIP/'
 EVENT_STORE_REDIS_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com/2'
 ANALYTIC = True
 
-try:
-    from local_settings import *
-except ImportError as e:
-    logging.info(e)
-
 # The text template for notification about ordered product
 ORDER_NOTIFICATION_TEMPLATE = 'b24online/Products/notification.txt'
 ORDER_NOTIFICATION_DISABLE = False
@@ -403,3 +398,8 @@ AWS_S3_BUCKET_NAME = BUCKET
 AWS_S3_KEY_PREFIX = 'tmp/uploads'
 AWS_S3_PUBLIC_URL = MEDIA_URL
 AWS_S3_BUCKET_AUTH = False
+
+try:
+    from local_settings import *
+except ImportError as e:
+    logging.info(e)
