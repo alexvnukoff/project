@@ -125,11 +125,13 @@
     {% include 'usersites/footer.html' %}
 
 <!-- //////////////////////////////////////////////////////////////////////// -->
-    {% block before_js %}
-        <script  type="text/javascript">
-            var SEARCH_Q_URL = '{% url "b2c_products:b2c_product_json" %}';
-        </script>
-    {% endblock %}
+{% comment %}
+{% block before_js %}
+<script  type="text/javascript">
+var SEARCH_Q_URL = '{% url "b2c_products:b2c_product_json" %}';
+</script>
+{% endblock %}
+{% endcomment %}
 
     <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
     <script src="{% static 'usersites/js/angular.min.js' %}"></script>

@@ -28,7 +28,6 @@ from usersites.B2CProducts.forms import PayPalBasketForm
 from usersites.cbv import ItemDetail
 from usersites.forms import create_extra_form
 from usersites.mixins import UserTemplateMixin
-from usersites.views import ProductJsonData
 
 logger = logging.getLogger(__name__)
 
@@ -436,11 +435,6 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
             'total': total,
         })
         return context
-
-
-class B2CProductJsonData(ProductJsonData):
-    model_class = B2CProduct
-    search_index_class = B2cProductIndex
 
 
 def delivery_info_json(request, **kwargs):
