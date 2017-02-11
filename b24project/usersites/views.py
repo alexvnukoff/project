@@ -166,22 +166,20 @@ class MessageSent(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/message_sent.html'
 
 
-class ProductJsonData(View):
+class ProductJsonData(UserTemplateMixin, View):
     model_class = None
     search_index_model = None
 
     def get(self, request):
         cls = type(self)
         term = request.GET.get('term')
-        organization = get_current_site().user_site.organization
         if term and len(term) > 2:
             qs = cls.model_class.objects.filter(
                 name__icontains=term,
                 is_active=True,
-                company=organization,
+                company=self.organization,
             ).order_by('name')
         else:
             qs = cls.model_class.objects.none()
-        data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
-            for item in qs]
+        data = [{'id': item.id, 'value': item.name, 'img': item.image.small} for item in qs]
         return JsonResponse(data, safe=False)
