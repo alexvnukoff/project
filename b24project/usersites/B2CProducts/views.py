@@ -438,30 +438,36 @@ class B2CProductDelivery(UserTemplateMixin, FormView):
         return context
 
 
-#def delivery_info_json(request, **kwargs):
-#    """
-#    Checks and saves the DeliveryForm data.
-#    """
-#    if request.is_ajax():
-#        data = {}
-#        if request.method == 'POST':
-#            form = DeliveryForm(
-#                request=request,
-#                data=request.POST,
-#                files=request.FILES
-#            )
-#            if form.is_valid():
-#                form.save()
-#                data.update({
-#                    'code': 'success',
-#                    'msg': _('You have successfully add new participant'),
-#                })
-#            else:
-#                data.update({
-#                    'code': 'error',
-#                    'errors': form.get_errors(),
-#                    'msg': _('There are some errors'),
-#                })
-#            return JsonResponse(data)
-#
-#    return HttpResponseBadRequest()
+class B2CProductJsonData(ProductJsonData):
+    model_class = B2CProduct
+    search_index_class = B2cProductIndex
+
+
+def delivery_info_json(request, **kwargs):
+    """
+    Checks and saves the DeliveryForm data.
+    """
+    if request.is_ajax():
+        data = {}
+        if request.method == 'POST':
+            form = DeliveryForm(
+                request=request,
+                data=request.POST,
+                files=request.FILES
+            )
+            if form.is_valid():
+                form.save()
+                data.update({
+                    'code': 'success',
+                    'msg': _('You have successfully add new participant'),
+                })
+            else:
+                data.update({
+                    'code': 'error',
+                    'errors': form.get_errors(),
+                    'msg': _('There are some errors'),
+                })
+            return JsonResponse(data)
+
+    return HttpResponseBadRequest()
+

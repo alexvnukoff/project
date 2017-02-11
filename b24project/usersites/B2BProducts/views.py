@@ -18,3 +18,7 @@ class B2BProductListDetail(UserTemplateMixin, ItemDetail):
     filter_key = 'company'
     template_name = '{template_path}/B2BProducts/detailContent.html'
 
+
+class B2BProductJsonData(ProductJsonData):
+    model_class = B2BProduct
+    search_index_class = B2BProductIndex
