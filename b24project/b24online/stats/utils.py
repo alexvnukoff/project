@@ -26,24 +26,24 @@ def flatten(x):
     Return the flattened complex list.
     """
     return [y for l in x for y in flatten(l)] if type(x) is list else [x]
-                    
-                           
+
+
 def glue(*components):
     """
     Return the key builded from components.
     """
     # Cast to 'list' type
-    components = list(components) 
+    components = list(components)
     return KEY_COMPONENTS_SEPARATOR . join(
         map(lambda x: str(x).strip(), flatten(components)))
 
 
-def get_redis_connection(connection_url=None): 
-    """ 
-    Return the Redis connection by the connection URL.  
-    """ 
+def get_redis_connection(connection_url=None):
+    """
+    Return the Redis connection by the connection URL.
+    """
     url = connection_url if connection_url else \
-        getattr(settings, 'EVENT_STORE_REDIS_URL', None) 
+        getattr(settings, 'EVENT_STORE_REDIS_URL', None)
     if not url:
         raise InvalidParameterError('Store connection URL is not defined')
     url_info = urlparse(url)
@@ -103,7 +103,7 @@ def process_stats_data(data, date_range):
                             add_3 = [item_id, str(item), idates]
                             items.append(add_3)
                             for xdate, _ in date_range:
-                                idates.append({'date': xdate, 
+                                idates.append({'date': xdate,
                                     'unique': data_3.get(xdate, {})\
                                         .get('unique', 0),
                                     'total': data_3.get(xdate, {})\

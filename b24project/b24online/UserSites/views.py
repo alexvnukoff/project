@@ -12,6 +12,7 @@ from b24online.models import Organization, Company, BannerBlock
 from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet
 from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate, UserSiteSchemeColor
 
+
 @login_required()
 def form_dispatch(request):
     organization_id = request.session.get('current_company', None)
@@ -378,3 +379,4 @@ class TemplateUpdate(UpdateView):
     def get_object(self, queryset=None):
         self.template_id = self.kwargs.get(self.pk_url_kwarg)
         return self.site
+

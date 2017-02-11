@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-import os, logging
+import os
+import logging
+import redis
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -93,6 +95,7 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     'raven.contrib.django.raven_compat',
+    'captcha',
     'b24online',
     'jobs',
     'centerpokupok',
@@ -110,7 +113,6 @@ EXTERNAL_APPS = (
     'modeltranslation',
     'django.contrib.admin',
     'guardian',
-    'captcha',
     'paypal.standard.ipn',
     'rest_framework',
     'compressor',
@@ -393,3 +395,20 @@ GEO_COUNTRY_DB = {
     'USA': '142479',
     'Ukraine': '15',
 }
+
+REDIS_USERSITE = redis.Redis(
+        host='tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com',
+        port=6379,
+        db=2
+    )
+
+TYPEOF_TEMPLATE = (
+    (0, 'Simple'),
+    (1, 'Extend'),
+)
+
+try:
+    from local_settings import *
+except ImportError as e:
+    logging.info(e)
+

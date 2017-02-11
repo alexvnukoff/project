@@ -19,81 +19,60 @@ from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
 from usersites.mixins import UserTemplateMixin
 
-
 logger = logging.getLogger(__name__)
-
 
 def render_page(request, template, **kwargs):
     return render(request, get_template_with_base_path(template), kwargs)
 
 
-def wall(request):
-    organization = get_current_site().user_site.organization
-    proposals = BusinessProposal.get_active_objects().filter(organization=organization)
-    news = News.get_active_objects().filter(organization=organization)
-    exhibitions = Exhibition.get_active_objects().filter(organization=organization)
-
-    if isinstance(organization, Company):
-        b2c_products = B2CProduct.get_active_objects()\
-            .filter(company=organization).order_by('-show_on_main')
-        b2c_coupons = B2CProduct.get_active_objects().filter(company=organization,
-                                                             coupon_dates__contains=now().date(),
-                                                             coupon_discount_percent__gt=0).order_by("-created_at")
-        b2b_products = B2BProduct.get_active_objects().filter(company=organization)
-    else:
-        b2b_products = None
-        b2c_products = None
-        b2c_coupons = None
-
-    current_section = ''
-
-    template_params = {
-        'current_section': current_section,
-        'title': get_current_site().user_site.organization.name,
-        'proposals': proposals,
-        'news': news,
-        'exhibitions': exhibitions,
-        'b2c_coupons': b2c_coupons,
-        'b2c_products': b2c_products,
-        'b2b_products': b2b_products,
-        'form': ContactForm()
-    }
+class WallView(UserTemplateMixin, TemplateView):
     template_name = "{template_path}/contentPage.html"
-    site = get_current_site()
-    try:
-        user_site = site.user_site
-        user_site.refresh_from_db()
+    current_section = ""
 
-        if user_site.user_template is not None:
-            folder_template = user_site.user_template.folder_name
-            template_name = template_name.format(template_path=folder_template)
+    def get_company_content(self):
+        self.proposals = BusinessProposal.get_active_objects().filter(
+                organization=self.organization)
+
+        self.news = News.get_active_objects().filter(
+                organization=self.organization)
+
+        self.exhibitions = Exhibition.get_active_objects().filter(
+                organization=self.organization)
+
+        if isinstance(self.organization, Company):
+            self.b2c_products = B2CProduct.get_active_objects().filter(
+                    company=self.organization).order_by('-show_on_main')
+
+            self.b2c_coupons = B2CProduct.get_active_objects().filter(
+                    company=self.organization,
+                    coupon_dates__contains=now().date(),
+                    coupon_discount_percent__gt=0).order_by("-created_at")
+
+            self.b2b_products = B2BProduct.get_active_objects().filter(
+                    company=self.organization)
         else:
-            template_name = template_name.format(template_path='usersites')
-    except ObjectDoesNotExist:
-        template_name = template_name.format(template_path='usersites')
+            self.b2b_products = None
+            self.b2c_products = None
+            self.b2c_coupons = None
 
-    return render(request, template_name, template_params)
+    def get_context_data(self, **kwargs):
+        context = super(WallView, self).get_context_data(**kwargs)
 
+        self.get_company_content()
+        context = {
+            'current_section': self.current_section,
+            'organization': self.organization,
+            'title': self.organization.name,
+            'proposals': self.proposals,
+            'news': self.news,
+            'exhibitions': self.exhibitions,
+            'b2c_coupons': self.b2c_coupons,
+            'b2c_products': self.b2c_products,
+            'b2b_products': self.b2b_products,
+            'form': ContactForm()
+        }
 
-class ProductJsonData(View):
-    model_class = None
-    search_index_model = None
-
-    def get(self, request):
-        cls = type(self)
-        term = request.GET.get('term')
-        organization = get_current_site().user_site.organization
-        if term and len(term) > 2:
-            qs = cls.model_class.objects.filter(
-                name__icontains=term,
-                is_active=True,
-                company=organization,
-            ).order_by('name')
-        else:
-            qs = cls.model_class.objects.none()
-        data = [{'id': item.id, 'value': item.name, 'img': item.image.small} \
-            for item in qs]
-        return JsonResponse(data, safe=False)
+        return context
 
 
 class UsersitesRegistrationView(RegistrationView):
@@ -103,22 +82,17 @@ class UsersitesRegistrationView(RegistrationView):
     template_name = 'registration/registration_form.html'
 
 
-class sendmessage(View):
-    def get_object(self, queryset=None):
-        return get_current_site().user_site.organization
-
+class sendmessage(UserTemplateMixin, View):
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         form = ContactForm(request.POST)
-        if form.is_valid():
 
+        if form.is_valid():
             cd = form.cleaned_data
-            if not self.object.email:
+            if not self.organization.email:
                 email = 'admin@tppcenter.com'
                 subject = _('This message was sent to company:')
             else:
-                email = self.object.email
+                email = self.organization.email
                 subject = "B24online.com: New Lead from {0}".format(cd['name'])
 
             # Collecting lead
@@ -159,10 +133,10 @@ class sendmessage(View):
         raise Http404
 
 
-class ProfileUpdate(ItemUpdate, UserTemplateMixin):
+class ProfileUpdate(UserTemplateMixin, ItemUpdate):
     model = Profile
     form_class = ProfileForm
-    # template_name = '{template_path}/profileForm.html'
+    #template_name = '{template_path}/profileForm.html'
     template_name = 'usersites_templates/ibonds/profileForm.html'
     success_url = reverse_lazy('main')
 
