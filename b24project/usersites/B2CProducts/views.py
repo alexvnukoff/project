@@ -28,7 +28,7 @@ from usersites.B2CProducts.forms import PayPalBasketForm
 from usersites.cbv import ItemDetail
 from usersites.forms import create_extra_form
 from usersites.mixins import UserTemplateMixin
-#from usersites.views import ProductJsonData
+from usersites.views import ProductJsonData
 
 logger = logging.getLogger(__name__)
 

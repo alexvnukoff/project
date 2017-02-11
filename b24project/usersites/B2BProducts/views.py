@@ -9,6 +9,7 @@ from b24online.search_indexes import B2BProductIndex
 from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.cbv import ItemDetail, ItemList
 from usersites.mixins import UserTemplateMixin
+from usersites.views import ProductJsonData
 
 logger = logging.getLogger(__name__)
 
