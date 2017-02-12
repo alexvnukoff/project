@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import pickle
+import logging
 from django.conf import settings
 from usersites.models import UserSite
 from tpp.DynamicSiteMiddleware import get_current_site
 from django.core.exceptions import ImproperlyConfigured
+
+logger = logging.getLogger(__name__)
+
 
 def get_usersite_objects(typeof=None):
     obj = UsersiteHash().check()
@@ -54,12 +58,12 @@ class UsersiteHash:
         return(usersite, template, organization)
 
     def flush(self, instance):
-        site = instance.site.domain
         try:
-            self.r.delete(site)
-        except ImproperlyConfigured as e:
-            raise(e)
-
-
-
-
+            site = instance.site.domain
+        except AttributeError as e:
+            logging.info(e)
+        else:
+            try:
+                self.r.delete(site)
+            except ImproperlyConfigured as e:
+                raise(e)
