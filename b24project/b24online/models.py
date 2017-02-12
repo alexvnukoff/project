@@ -3133,13 +3133,14 @@ def recalculate_for_delete(sender, instance, *args, **kwargs):
 
 
 @receiver(post_save)
-def flush_redis_usersite_info(sender, instance, *args, **kwargs):
+def flush_redis_usersite_info(sender, instance, created, *args, **kwargs):
     """
     Remove all the instance cache form redis.
     """
     list_of_models = ('UserSite', 'Organization', 'Company')
-    if sender.__name__ in list_of_models:
-        from usersites.redisHash import UsersiteHash
-        cls = UsersiteHash()
-        cls.flush(instance)
+    if created is None:
+        if sender.__name__ in list_of_models:
+            from usersites.redisHash import UsersiteHash
+            cls = UsersiteHash()
+            cls.flush(instance)
 
