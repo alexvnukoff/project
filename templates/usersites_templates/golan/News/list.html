@@ -18,7 +18,7 @@
     {% for article in news %}
         <div class="row news">
 
-        <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs .news-page-img">
+        <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs news-page-img">
             {% if article.image %}
                 <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}">
             {% else %}
