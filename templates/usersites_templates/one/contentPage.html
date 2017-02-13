@@ -7,7 +7,7 @@
 {% load content_tags %}
 
 {# including the slider. The slider will apear only on the main page. #}
-{% if site.user_site.slider_images %}
+{% if site.user_site.slider_images|length != 0 %}
     {% block slider %}
            {% include 'usersites_templates/one/slider.html' %}
     {% endblock %}
