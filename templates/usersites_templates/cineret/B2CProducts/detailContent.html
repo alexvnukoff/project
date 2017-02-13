@@ -133,7 +133,7 @@
 {#                      <form class="form-inline">#}
                         <div class="form-group">
                           <button class="btn btn-default dec" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                            <input type="text" id="id_quantity_src" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
+                            <input type="text" id="product-qty" value="1" class="item-page__qty-box" name="quantity" autocomplete="off" list="quantity">
                           <button class="btn btn-default inc" type="button"><span class="glyphicon glyphicon-plus"></span></button>
                         </div>
                           {% b2b_social_buttons object.image object.name object.description %}
@@ -225,22 +225,23 @@
 {% endblock %}
 
 {% block js %}
+    {{ block.super }}
     <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
     <script>
         $(".inc").on("click", function() {
 
           var $button = $(this);
-          var oldValue = document.getElementById('product-qty').value;
+          var oldValue = $('#product-qty').val();
 
           var newVal = parseFloat(oldValue) + 1;
 
-          document.getElementById('product-qty').value = newVal;
+          $('#product-qty').val(newVal);
         });
 
         $(".dec").on("click", function() {
 
           var $button = $(this);
-          var oldValue = document.getElementById('product-qty').value;
+          var oldValue = $('#product-qty').val();
 
            // Don't allow decrementing below zero
            if (oldValue > 1) {
@@ -249,7 +250,7 @@
               newVal = 1;
            }
 
-          document.getElementById('product-qty').value = newVal;
+          $('#product-qty').val(newVal);
 
         });
 
@@ -268,6 +269,13 @@
                 id = parseInt(id);
                 $('#prodSlider').carousel(id);
         });
-    });
+
+
+        // When the carousel slides, auto update the text
+{#        $('#prodSlider').on('slid', function (e) {#}
+{#                var id = $('.item.active').data('slide-number');#}
+{#                $('#carousel-text').html($('#slide-content-'+id).html());#}
+{#        });#}
+});
     </script>
 {% endblock %}
