@@ -8,7 +8,8 @@ from django.core.exceptions import ImproperlyConfigured
 
 logger = logging.getLogger(__name__)
 
-
+# usersite, template, organization = get_usersite_objects()
+# get_usersite_objects(typeof=True)['usersite|template|organization']
 def get_usersite_objects(typeof=None):
     obj = UsersiteHash().check()
 
@@ -40,7 +41,6 @@ class UsersiteHash:
             except UserSite.DoesNotExist as e:
                 raise(e)
             else:
-
                 u = pickle.dumps(usersite)
                 t = pickle.dumps(usersite.user_template)
                 o = pickle.dumps(usersite.organization)

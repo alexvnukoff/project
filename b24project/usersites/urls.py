@@ -16,6 +16,9 @@ import usersites.Exhibitions.urls
 import usersites.views
 from appl import func
 
+from rest_framework import routers, serializers, viewsets
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^$', usersites.views.WallView.as_view(), name='main'),
@@ -30,7 +33,7 @@ urlpatterns = [
     url(r'^message_sent/$', usersites.views.MessageSent.as_view(), name='message_sent'),
 
     # Additionals
-    url(r'^api/', include(usersites.Api.urls, namespace='api')),
+    url(r'^api/', include(usersites.Api.urls)),
     url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
