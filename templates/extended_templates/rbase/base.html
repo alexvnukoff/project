@@ -1,0 +1,404 @@
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block after_meta %}{% endblock %}
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'ext/rbase/css/reset.css' %}" rel="stylesheet">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link href="{% static 'ext/rbase/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'ext/rbase/css/general.css' %}" rel="stylesheet">
+    <link href="{% static 'ext/rbase/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'ext/rbase/css/mi-slider-style.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Important Owl stylesheet -->
+    <link rel="stylesheet" href="{% static 'ext/rbase/owl-carousel/owl.carousel.css' %}">
+
+    <!-- Default Theme -->
+    <link rel="stylesheet" href="{% static 'ext/rbase/owl-carousel/owl.theme.css' %}">
+    {% block after_css %}{% endblock %}
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
+
+  <!-- Navigation -->
+    <!-- top page navigation, will apear on all pages -->
+    <div class="top-navigation">
+        <div class="container">
+
+          <ul class="top-navigation__menu">
+            <li class="hidden-xs"><a href="b_index.html">Business Index</a></li>
+            <li class="hidden-xs"><a href="#" data-toggle="modal" data-target="#myModal">Login</a> / <a href="register.html">Join for FREE</a></li>
+            <li class="visible-xs"><a href="#" data-toggle="modal" data-target="#myModal">Login</a> / <a href="register.html">Join</a></li>
+            <li class="hidden-xs">Help &amp; Contact</li>
+            <li class="visible-xs">Contact</li>
+            <li class="lang-nav">
+                <!-- <select name="countries" id="countries">
+                    <option value='il' data-title="Hebrew" style="background-image:url({% static 'ext/rbase/images/flags/Israel.png' %}); padding-left:15px;">Hebrew</option>
+                    <option value='ae' data-image="{% static 'ext/rbase/images/flags/Saudi-Arabia.png' %}" data-imagecss="flag ae" data-title="United Arab Emirates">United Arab Emirates</option>
+                    <option value='af' data-image="{% static 'ext/rbase/images/flags/Armenia.png' %}" data-imagecss="flag af" data-title="Afghanistan">Afghanistan</option>
+                    <option value='ag' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}' %}" data-imagecss="flag ag" data-title="Antigua and Barbuda">Antigua and Barbuda</option>
+                    <option value='ai' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag ai" data-title="Anguilla">Anguilla</option>
+                    <option value='al' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag al" data-title="Albania">Albania</option>
+                    <option value='am' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag am" data-title="Armenia">Armenia</option>
+                    <option value='an' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag an" data-title="Netherlands Antilles">Netherlands Antilles</option>
+                </select>  -->
+                <a href="#"><img src="{% static 'ext/rbase/images/flags/Israel.png' %}" /></a>
+            </li>
+          </ul>
+
+        </div><!-- end of top navigation container -->
+    </div><!-- end of top navigtion -->
+
+  <div class="container">
+    <nav class="navbar navbar-default main-navbar">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="index.html" class="navbar-brand"><img src="{% static 'ext/rbase/images/b24_logo.png' %}"></a>
+      </div>
+
+    <!-- Modal Login-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Login to B24Online</h4>
+          </div>
+
+          <div class="modal-body">
+            <form role="form">
+              <div class="alert alert-danger">
+                <a class="close" data-dismiss="alert" href="#">×</a>Incorrect Username or Password!
+              </div>
+
+              <div style="margin-bottom: 12px" class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+              </div>
+
+              <div style="margin-bottom: 12px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+              </div>
+
+              <div class="input-group">
+                <div class="checkbox" style="margin-top: 0px;">
+                  <label>
+                  <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                  </label>
+                </div>
+              </div>
+
+              <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+              <center><h4>OR</h4></center>
+              <input class="btn btn-lg btn-facebook btn-block" type="submit" value="Login via facebook">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div style="font-size:85%">
+                <a href="#" class="forgot-pass">Forgot password?</a><br/>
+                Don't have an account!
+                <a href="register.html" class="login-signup">
+                    Sign Up Here
+                </a>
+            </div>
+          </div>
+
+        </div><!-- end of modal-content -->
+      </div>
+    </div><!-- end of dialog -->
+
+
+
+      <div class="collapse navbar-collapse js-navbar-collapse cat-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown mega-dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+
+            <ul class="dropdown-menu mega-dropdown-menu row">
+              <li class="col-sm-3">
+                <ul>
+                  <li class="dropdown-header">B24Online Coupons</li>
+                  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="item active">
+                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-1.jpg' %}" class="img-responsive" alt="product 1"></a>
+                        <h4><small>Summer dress floral prints</small></h4>
+                        <button class="btn btn-primary" type="button">49,99 $</button>
+                      </div>
+                      <!-- End Item -->
+                      <div class="item">
+                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-2.jpg' %}" class="img-responsive" alt="product 2"></a>
+                        <h4><small>Gold sandals with shiny touch</small></h4>
+                        <button class="btn btn-primary" type="button">9,99 $</button>
+                      </div>
+                      <!-- End Item -->
+                      <div class="item">
+                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-3.jpg' %}" class="img-responsive" alt="product 3"></a>
+                        <h4><small>Denin jacket stamped</small></h4>
+                        <button class="btn btn-primary" type="button">49,99 $</button>
+                      </div>
+                      <!-- End Item -->
+                    </div>
+                    <!-- End Carousel Inner -->
+                  </div>
+                  <!-- /.carousel -->
+                  <li class="divider"></li>
+                  <li><a href="#">View all Coupons <span class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
+                </ul>
+              </li>
+              <li class="col-sm-3">
+                <ul>
+                  <li class="dropdown-header">Electronics</li>
+                  <li><a href="category_page.html">Computers &amp; Tablets</a></li>
+                  <li><a href="#">Cell Phones &amp; Accessories</a></li>
+                  <li><a href="#">Cameras &amp; Photo</a></li>
+                  <li><a href="#">Full Electronics Category...</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Fashion</li>
+                  <li><a href="#">Woman</a></li>
+                  <li><a href="#">Man</a></li>
+                  <li><a href="#">Jewelry</a></li>
+                  <li><a href="#">Full Fashion Category...</a></li>
+                </ul>
+              </li>
+              <li class="col-sm-3">
+                <ul>
+                  <li class="dropdown-header">Home &amp; Garden</li>
+                  <li><a href="#">Furnitures</a></li>
+                  <li><a href="#">Bath</a></li>
+                  <li><a href="#">Home Improvement</a></li>
+                  <li><a href="#">Full Home &amp; Garden Category...</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Sports &amp; Outdoor</li>
+                  <li><a href="#">Cycling</a></li>
+                  <li><a href="#">Fitness &amp; Running</a></li>
+                  <li><a href="#">Outdoor Sports</a></li>
+                  <li><a href="#">Full Sports Category...</a></li>
+                </ul>
+              </li>
+              <li class="col-sm-3">
+                <ul>
+                  <li class="dropdown-header">Toys &amp; Hobbies</li>
+                  <li><a href="#">Educational</a></li>
+                  <li><a href="#">Models &amp; Kits</a></li>
+                  <li><a href="#">Puzzles</a></li>
+                  <li><a href="#">Full Toys Category...</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Newsletter</li>
+                  <form class="form" role="form">
+                    <div class="form-group">
+                      <label class="sr-only" for="email">Email address</label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter email">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                  </form>
+                   <li class="divider"></li>
+                   <li><a href="category_all.html">Full Categories Page ></a></li>
+                </ul>
+              </li>
+            </ul>
+
+          </li>
+        </ul>
+
+        <form id="custom-search-form" class="form hidden-xs">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+                <button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
+            </div>
+        </form>
+      </div>
+      <!-- /.nav-collapse -->
+    </nav>
+
+    <form id="custom-search-form" class="form visible-xs">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+            <button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </form>
+  </div><!--end of navbar -->
+
+
+    <!-- ******************************************************* -->
+    <!-- slider -->
+    <!-- ******************************************************* -->
+
+    <div class="container">
+      <div class="main-slider">
+
+        <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
+          <!-- Overlay -->
+          <div class="overlay"></div>
+
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#bs-carousel" data-slide-to="1"></li>
+            <li data-target="#bs-carousel" data-slide-to="2"></li>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="item slides active">
+              <div class="slide-1"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Only Girls</h1>
+                    <h3>Special discounts for mother day!</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">Go check</button>
+              </div>
+            </div>
+            <div class="item slides">
+              <div class="slide-2"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Big Discounts</h1>
+                    <h3>On all watches</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">To the watches</button>
+              </div>
+            </div>
+            <div class="item slides">
+              <div class="slide-3"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Chanuka</h1>
+                    <h3>With the best prices!</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">Check out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ******************************************************* -->
+    <!-- end of slider -->
+    <!-- ******************************************************* -->
+
+
+    <!-- ******************************************************* -->
+    <!-- commercial banners -->
+    <!-- ******************************************************* -->
+    <!-- <div class="container">
+      <div class="main-banners">
+        <div class="row">
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+        </div>
+      </div>
+    </div> -->
+
+    <!-- banners under slider -->
+    <div class="container">
+      <div class="row main-banners">
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner1-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Mobiles &amp; Tablets</h2>
+                <p class="p-desc">All the best phones and computing deals in one place.</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner2-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Furnitures</h2>
+                <p class="p-desc">It's the time to make your home shine. Best deals and quality furnitures</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner3-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Fitness &amp; Outdoor</h2>
+                <p class="p-desc">All your equepment for traveling and doing sports. it's time to get up from the sofa.</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+    <!-- end of banners under slider -->
+
+{% block content %}{% endblock %}
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static 'ext/rbase/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'ext/rbase/owl-carousel/owl.carousel.js' %}"></script>
+    <script src="{% static 'ext/rbase/js/script.js' %}"></script>
+    <script src="{% static 'ext/rbase/js/modernizr.custom.63321.js' %}"></script>
+    <script src="{% static 'ext/rbase/js/jquery.catslider.js' %}"></script>
+    {% comment %}
+    <script>
+      $(function() {
+
+        $( '#mi-slider' ).catslider();
+
+      });
+    </script>{% endcomment %}
+
+{% block js %}{% endblock %}
+</body>
+

@@ -1,12 +1,9 @@
-{% load staticfiles %}{% load i18n %}{% load cache %}<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="utf-8">
-    <title>{% block title %}{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-</head>
+{% extends 'extended_templates/rbase/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
 
-<body{% if LANGUAGE_BIDI %} class="hebrew{% endif %}">
+{% block content %}
 
     {{ b2c_coupons }}
     <hr>
@@ -20,8 +17,6 @@
     <hr>
     {{ exhibitions }}
 
-
-{% block content %}{% endblock %}
+{% endblock %}
 {% block js %}{% endblock %}
-</body>
 
