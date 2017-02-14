@@ -10,7 +10,7 @@ from b24online.models import (B2BProduct, B2BProductCategory, News,
 from b24online.search_indexes import SearchEngine
 from b24online.utils import get_template_with_base_path, load_category_hierarchy
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from usersites.redisHash import UsersiteHash
+from usersites.redisHash import get_usersite_objects
 
 logger = logging.getLogger(__name__)
 
@@ -67,8 +67,7 @@ class ProductsTag(ItemsTag):
         self.selected_category = self.category
         self.search_query = search_query.strip() if search_query else None
         self.producer = self.context['request'].GET.get('pr', False)
-        cls = UsersiteHash()
-        self.usersite, self.template, self.organization = cls.check()
+        self.usersite, self.template, self.organization = get_usersite_objects()
 
     def get_category_model(self):
         for field in self.queryset.model._meta.get_fields():
@@ -135,8 +134,7 @@ class ProductsTag(ItemsTag):
 def b2b_products(context, template_name, on_page, page=1, selected_category=None, search_query=None,
                  order_by='-created_at'):
 
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
 
     if search_query is None:
         url_paginator = "b2b_products:category_paged" if selected_category else "b2b_products:paginator"
@@ -165,8 +163,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
 def b2c_products(context, template_name, on_page, page=1, selected_category=None, search_query=None,
                  order_by=('-show_on_main', '-created_at')):
 
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
 
     if search_query is None:
         url_paginator = "b2c_products:category_paged" if selected_category else "b2c_products:paginator"
@@ -196,8 +193,7 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def coupons(context, template_name, on_page, page=1, selected_category=None, order_by='-created_at'):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     # TODO
     url_paginator = None if selected_category else None
 
@@ -224,8 +220,7 @@ def coupons(context, template_name, on_page, page=1, selected_category=None, ord
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def news(context, template_name, on_page, page=1, order_by='-created_at'):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     queryset = News.get_active_objects().filter(organization=organization)
 
     return ItemsTag(
@@ -241,8 +236,7 @@ def news(context, template_name, on_page, page=1, order_by='-created_at'):
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def proposal(context, template_name, on_page, page=1, order_by='-created_at'):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     queryset = BusinessProposal.get_active_objects().filter(organization=organization)
 
     return ItemsTag(
@@ -274,8 +268,7 @@ def questionnaires_history(context, template_name, on_page, page=1, email=None, 
 
 @register.simple_tag
 def b2b_categories():
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     categories = B2BProductCategory.objects.filter(
             products__company_id=organization.pk,
             products__is_deleted=False,
@@ -291,8 +284,7 @@ def b2b_categories():
 
 @register.assignment_tag
 def b2c_categories(show_as_list=False):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
 
     categories = B2CProductCategory.objects.filter(
             products__company_id=organization.pk,
@@ -311,8 +303,7 @@ def b2c_categories(show_as_list=False):
 
 @register.assignment_tag
 def b2b_producers(selected_category=None):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     producers = B2BProduct.objects\
         .filter(company_id=organization.pk)\
         .filter(producer__isnull=False)
@@ -326,8 +317,7 @@ def b2b_producers(selected_category=None):
 
 @register.assignment_tag
 def b2c_producers(selected_category=None):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     producers = B2CProduct.objects\
         .filter(company_id=organization.pk)\
         .filter(producer__isnull=False)
@@ -347,8 +337,7 @@ def check_pr_contain(producer_pk, uri):
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def videos(context, template_name, on_page, page=1, order_by='-created_at'):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     queryset = Video.get_active_objects().filter(organization=organization)
 
     return ItemsTag(
@@ -364,8 +353,7 @@ def videos(context, template_name, on_page, page=1, order_by='-created_at'):
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def exhibitions(context, template_name, on_page, page=1, order_by='-created_at'):
-    cls = UsersiteHash()
-    usersite, template, organization = cls.check()
+    usersite, template, organization = get_usersite_objects()
     queryset = Exhibition.get_active_objects().filter(organization=organization)
 
     return ItemsTag(
