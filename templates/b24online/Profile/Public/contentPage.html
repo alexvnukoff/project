@@ -130,15 +130,15 @@ opacity:0.8;
 
             {% if object.profile.co_phone %}
             <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Company' %}</h4>
-            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_phone }}">{{ object.profile.co_phone }}</a></a></p>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_phone }}">{{ object.profile.co_phone }}</a></p>
             {% endif %}
 
             {% if object.profile.co_fax %}
             <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Fax' %}</h4>
-            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_fax }}">{{ object.profile.co_fax }}</a></a></p>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_fax }}">{{ object.profile.co_fax }}</a></p>
             {% endif %}
 
-            {% if object.profile.co_description %}<p style="margin:0;">{{ object.profile.co_description|linebreaks }}</p>{% endif %}
+            {% if object.profile.co_description %}{{ object.profile.co_description|linebreaks }}{% endif %}
         {% endif %}
 
         {% if object.profile.site %}

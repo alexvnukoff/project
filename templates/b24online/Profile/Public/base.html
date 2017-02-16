@@ -1,5 +1,4 @@
-{% load staticfiles %}{% load i18n %}{% load compress %}<!doctype html>
-{% load CustomFilters %}
+{% load staticfiles %}{% load i18n %}{% load compress %}{% load CustomFilters %}{% getLang as language_code %}<!doctype html>
 <html lang="{% getLang %}">
 <head>
 <meta charset="utf-8">
@@ -21,7 +20,7 @@
     <div class="container-fluid" style="background:#efefef;border-bottom:1px solid #dedede">&nbsp;</div>
     {% endcomment %}
 <div class="container-fluid" style="background:#fff;">
-  <p style="margin-top:20px;text-align:center;height:100px;">
+    <p style="margin-top:20px;text-align:center;height:100px;">
     <a href="/"><img src="{% static 'b24online/img/b24_small.png' %}"></a>
   </p>
 </div>
@@ -31,8 +30,8 @@
 <div class="container">
 <p style="text-align:center;color:#999">© 2010–{% now 'Y' %} B24Online.com</p>
 </div>
-
 <br><br>
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57e022d670e3f980"></script>
+{% if language_code == 'he' %}<script type="text/javascript">var addthis_config = addthis_config||{};addthis_config.lang = 'en'</script>{% endif %}
 </body>
 </html>
