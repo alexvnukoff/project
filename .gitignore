@@ -47,7 +47,6 @@ crashlytics-build.properties
 local_settings.py
 logs/
 *.sqlite3
-*migrations*
 uploads/
 static/
 media/
