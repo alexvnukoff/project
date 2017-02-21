@@ -17,7 +17,7 @@
 
 /* change the rtl here on the rtl file */
 #sidebar-wrapper {
-    z-index: 1000;
+    z-index: 9999;
     right: 220px;
     left: inherit;
     top: 80px;
@@ -27,10 +27,12 @@
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
-    border: #1a1a1a;
+    border-left: 1px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    border-top: 1px solid #1a1a1a;
     /*rtl*/
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
