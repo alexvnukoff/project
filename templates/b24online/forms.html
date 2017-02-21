@@ -64,7 +64,8 @@
                         mode:"textareas",
                         selector: selector,
                         {% if LANGUAGE_BIDI %}language : 'he_IL',
-                        language_url: '/static/b24online/js/tinymce/langs/he_IL.js',{% endif %}
+                        language_url: '/static/b24online/js/tinymce/langs/he_IL.js',
+                        directionality :"rtl",{% endif %}
                         plugins : "textcolor paste link lists print table preview -media_ext -uploadimage",
                         toolbar1: 'insertfile undo redo | styleselect | uploadimage bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image',
                         paste_as_text: true,
