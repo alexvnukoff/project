@@ -33,7 +33,7 @@
         <link rel="stylesheet" href="{% static 'usersites/usersites_templates/cineret/css/style.css' %}" />
     {% endif %}
 
-<link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
     <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
 
     <!-- Custom Fonts -->
@@ -52,12 +52,17 @@
     <div id="wrap-main">
         <div id="main">
             {# Include the header file, the header will put the main menu on top of every page #}
-        <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
-        <form action="#">
-            <input type="hidden" id="colorAccess"  value="#009ccc" />
-            <input type="hidden" id="topPosAccess"  value="60px" />
-        </form>
-    </div>
+
+{#    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >#}
+{#        <form action="#">#}
+{#            <input type="hidden" id="colorAccess"  value="#009ccc" />#}
+{#            <input type="hidden" id="topPosAccess"  value="60px" />#}
+{#        </form>#}
+{#    </div>#}
+
+        <div id="accessDialog" class="accessibility hidden-xs" >
+        </div>
+
             {% include 'usersites_templates/cineret/header.html' %}
 
             {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}

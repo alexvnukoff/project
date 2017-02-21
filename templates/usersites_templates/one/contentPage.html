@@ -30,7 +30,7 @@
                         {# Organization description #}
                             {{ site.user_site.organization.description|safe }}
                         {% else %}
-                            {{ site.user_site.organization.short_description|safe }}
+                            {{ site.user_site.organization.short_description|cleanHtml|safe }}
                         {% endif %}
                     </p>
 
@@ -42,8 +42,13 @@
                     <hr class="star-primary">
 
                     <p>
+                        {% if site.user_site.organization.short_description %}
                         {# Organization description #}
                             {{ site.user_site.organization.short_description|cleanHtml|safe }}
+                        {% else %}
+                            {{ site.user_site.organization.description|safe }}
+                        {% endif %}
+                        {# Organization description #}
                     </p>
                 </div>
 
