@@ -1,65 +1,24 @@
 /**
- * Created by EC on 12/09/2016.
- */
-/*
-Accessiblility plu gun for n24online.com websites.
-
-The requerments:
-Text size - change the text size to a bigger or smaller one.
-Contrast - Change the contrast in the document.
-Links - make all links with underline.
-Clear - clear all changes.
-
-
-All changes will be saved on the user computer in a cookie file.
-Every change will be save after confirmation.
-
-Using the plugin:
-Add in the script tag on the page where you want it:
-$(function(){
-    $('div.accessibility').accessMySite();
-})();
-
-Add after the body tag:
-<div class="accessibility"></div>
-
-Options in the plugin:
-color - change the color of the background. (default: blue).
-width - change the width. (default: 50px).
-height - change the height. (default: 50px).
-position - change the position. (default: right 0, top 10px).
-
-Building a plugin:
-http://brolik.com/blog/how-to-create-a-jquery-plugin/#Getting_Started
-
-source for accessibilty code:
-https://plugins.jquery.com/tag/accessibility/
-
+ * Created by keren on 19/02/2017.
  */
 
-//init the cookies items if not done before
-var initCookies = function () {
-    if($.cookie("firstTime") == undefined ){
-        $.cookie("firstTime", "False", { expires: 2000, path: '/' });
-        $.cookie("fontSize", "", { expires: 2000, path: '/' });
-        $.cookie("color", "", { expires: 2000, path: '/' });
-        $.cookie("links", "false", { expires: 2000, path: '/' });
-    }
-};
-
-/*
-http://stackoverflow.com/questions/34656142/effective-way-of-increasing-decreasing-font-size-of-all-elements-on-page
-http://richardflick.com/2013/07/28/adjusting-font-size-with-jquery/
- */
-
-var $sizeAffectedElements = $("div, p"); // Can be extended, ex. $("div, p, span.someClass")
-var $colorAffectedElements = $("div, p");
+var $sizeAffectedElements = $("div, p, a");
 var $LinksElements = $("a");
+var $colorAffectedElements = $("div, p, a, h1, h2, h3, h4, span");
+var darkon = false;
+var ydarkon = false;
+var lighton = false;
 
 // Storing the original size in a data attribute so size can be reset
 $sizeAffectedElements.each( function(){
   var $this = $(this);
   $this.data("orig-size", $this.css("font-size") );
+});
+
+$colorAffectedElements.each( function(){
+  var $this = $(this);
+  $this.data("orig-bg", $this.css("background-color") );
+  $this.data("orig-color", $this.css("color") );
 });
 
 function setOrigSize(){
@@ -78,121 +37,220 @@ function changeFontSize(direction){
     });
 }
 
-function changeBgColor(colorBg, textColor){
-    $('body').css("background-color", colorBg);
-    var colorStr = colorBg + "!important";
-    $colorAffectedElements.each( function(){
-        var $this = $(this);
-        $this.css( "background-color" , colorStr );
-    });
-
-    //$.cookie("color", null);
-    if($.cookie("color")) {
-        $.cookie("color", colorBg, {expires: 2000, path: '/'});
-    }
-}
-
 function changeLinks(){
     $LinksElements.each( function(){
         var $this = $(this);
         //var newFontSize = parseInt($this.css("font-size"))+direction;
-        $this.css( "text-decoration" , "underline" );
+        $this.toggleClass('underlined-link');
+        // $this.css( "text-decoration" , "underline" );
         $.cookie("links", "true", { expires: 2000, path: '/' });
     });
 }
 
-function clearAllStyling(){
-    //clearing the font size and saving the orig in the cookie
-    var initFontSize = $("p").css("font-size");
-    $.cookie("fontSize", initFontSize, { expires: 2000, path: '/' });
-    setOrigSize();
+function setDarkBg(){
+    //if the light bg is on, first remove it.
+    if(lighton){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('lightBg');
+        });
+        lighton = false;
+    }
 
-    //clearing the color
-    $.cookie("color", "none", { expires: 2000, path: '/' });
-    $('body').css("background-color", "inherit");
+    if(ydarkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('ydarkBg');
+        });
+        ydarkon = false;
+    }
+
+    //set the dark color.
     $colorAffectedElements.each( function(){
         var $this = $(this);
-        $this.css( "background-color" , inherit );
+        //var newFontSize = parseInt($this.css("font-size"))+direction;
+        $this.toggleClass('darkBg');
     });
 
-    $.cookie("links", "false", { expires: 2000, path: '/' });
-    $LinksElements.each( function(){
-        var $this = $(this);
-        $this.css( "text-decoration" , "none" );
-    });
+    if (darkon){
+        darkon = false;
+    } else {
+        darkon = true;
+    }
 }
 
-var createModelBox = function(){
-    initCookies();
+function setYDarkBg(){
+    //if the light bg is on, first remove it.
+    if(lighton){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('lightBg');
+        });
+        lighton = false;
+    }
 
-    var modelCode = $('<div class="krn dialog" title="Accessibilty">\
-        <p>Choose the option you want and click the confirm button.</p>\
-        <h3>Change font size</h3>\
-        <button id="btn-decrease" onclick="changeFontSize(-1);">A-</button>\
-        <button id="btn-orig" onclick="setOrigSize();">A</button>\
-        <button id="btn-increase" onclick="changeFontSize(1);">A+</button><br/><hr/>\
-        <h3>Change color</h3>\
-        <ul class="accessColor">\
-        <li class="redBg" onclick="changeBgColor(\'#9a2617\', \'#fff!important\')"></li>\
-        <li class="whiteBg" onclick="changeBgColor(\'white\')"></li>\
-        <li class="blackBg" onclick="changeBgColor(\'black\')"></li>\
-        <li class="orangeBg" onclick="changeBgColor(\'#c2571a\')"></li>\
-        <li class="greenBg" onclick="changeBgColor(\'#829356\')"></li>\
-        <li class="yellowBg" onclick="changeBgColor(\'#bca136\')"></li>\
-        <li class="purpleBg" onclick="changeBgColor(\'purple\')"></li>\
-        <li class="aquaBg" onclick="changeBgColor(\'#093146\')"></li></ul><br/><br/><br/><br/><hr/>\
-        <button id="link-underline" onclick="changeLinks();">Underline Links</button>\
+    if(darkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('darkBg');
+        });
+        darkon = false;
+    }
+
+    //set the dark color.
+    $colorAffectedElements.each( function(){
+        var $this = $(this);
+        //var newFontSize = parseInt($this.css("font-size"))+direction;
+        $this.toggleClass('ydarkBg');
+    });
+
+    if (ydarkon){
+        ydarkon = false;
+    } else {
+        ydarkon = true;
+    }
+}
+
+function setLightBg(){
+    //if the light bg is on, first remove it.
+    if(darkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('darkBg');
+        });
+        darkon = false;
+    }
+
+    if(ydarkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('ydarkBg');
+        });
+        ydarkon = false;
+    }
+
+    //set the light color
+    $colorAffectedElements.each( function(){
+        var $this = $(this);
+        //var newFontSize = parseInt($this.css("font-size"))+direction;
+        $this.toggleClass('lightBg');
+    });
+
+    if (lighton){
+        lighton = false;
+    } else {
+        lighton = true;
+    }
+
+}
+
+function setOrigBg(){
+  if(darkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('darkBg');
+        });
+        darkon = false;
+    }
+
+    if(lighton){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('lightBg');
+        });
+        lighton = false;
+    }
+
+    if(ydarkon){
+        $colorAffectedElements.each( function(){
+            var $this = $(this);
+            //var newFontSize = parseInt($this.css("font-size"))+direction;
+            $this.toggleClass('ydarkBg');
+        });
+        ydarkon = false;
+    }
+}
+
+$( document ).ready(function() {
+
+    var appToAccess = $('<div class="krn" id="navwrapper">\
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">\
+        <ul class="nav sidebar-nav">\
+        <li class="sidebar-brand">\
+        נגישות\
+        </li>\
+        <li>\
+           <button class="wide-btn" id="btn-decrease" onclick="changeFontSize(-1);">A-</button>\
+           <button class="wide-btn" id="btn-orig" onclick="setOrigSize();">A</button>\
+           <button class="wide-btn" id="btn-increase" onclick="changeFontSize(1);">A+</button>\
+        </li>\
+        <li>\
+           <button class="wide-btn" id="link-underline" onclick="changeLinks();">Underline Links</button>\
+        </li>\
+        <li>\
+           <button class="wide-btn dark-bg-btn" id="dark-background" onclick="setDarkBg();"></button>\
+        </li>\
+        <li>\
+           <button class="wide-btn ydark-bg-btn" id="ydark-background" onclick="setYDarkBg();"></button>\
+        </li>\
+        <li>\
+           <button class="wide-btn light-bg-btn" id="light-background" onclick="setLightBg();"></button>\
+        </li>\
+        <li>\
+           <button class="wide-btn" id="orig-background" onclick="setOrigBg();">Delete Changes</button>\
+        </li>\
+        </ul>\
+        </nav>\
+        \
+        <div>\
+        <button type="button" class="hamburger is-closed" data-toggle="offcanvas">\
+        <span class="access-btn fa fa-wheelchair"></span>\
+        </button>\
+        </div>\
         </div>');
 
-     modelCode.dialog({
-        resizable: false,
-        height:550,
-        modal: true,
-        buttons: {
-            "Confirm": function() {
-                $( this ).dialog( "close" );
-            },
-            "Clear All": function() {
-               clearAllStyling();
-            }
-        }
+    $('#accessDialog').append(appToAccess);
+
+    var trigger = $('.hamburger'),
+      overlay = $('.overlay'),
+     isClosed = false;
+
+    trigger.click(function () {
+      hamburger_cross();
     });
-};
 
+    function hamburger_cross() {
 
-//changing the color of the accessibility button
-function setInitApearance(mainColor, topElem){
-    $('#accessDialog').css("background-color", mainColor);
-    $('#accessDialog').css("top", topElem);
-}
-
-(function() {
-    //loading the cookies value when loading the page
-    //if you have a fontsize cookie, get the font size
-
-    if($.cookie("firstTime") != undefined && $.cookie("fontSize")) {
-        var cookieFontsize = $.cookie('fontSize');
-
-        $sizeAffectedElements.each(function () {
-            var $this = $(this);
-            $this.css("font-size", cookieFontsize);
-        });
+      if (isClosed == true) {
+        overlay.hide();
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+        $('#sidebar-wrapper').width("0");
+      } else {
+        overlay.show();
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+        $('#sidebar-wrapper').width("220px");
+      }
     }
 
-    //if you have the color cookie, get the color
-    if($.cookie("firstTime") != undefined && $.cookie("color")) {
-        var cookieBgColor = $.cookie("color");
-        $('body').css("background-color", cookieBgColor);
-    }
+      // $('[data-toggle="offcanvas"]').click(function () {
+      //       $('#sidebar-wrapper').toggleClass('.toggled-sidbar-width');
+      // });
+});
 
-    if($.cookie("firstTime") != undefined && $.cookie("links")) {
-        var linksUnderline = $.cookie("links");
-        if(linksUnderline == "true"){
-            changeLinks();
-        }
-    }
 
-    setInitApearance(document.getElementById("colorAccess").value,
-            document.getElementById("topPosAccess").value);
 
-})();
+
+
+

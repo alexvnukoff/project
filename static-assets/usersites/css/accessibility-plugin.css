@@ -1,26 +1,170 @@
-.accessibility{
-    width: 50px;
-    height: 50px;
+.nav .open > a,
+/*.nav .open > a:hover,*/
+.nav .open > a:focus {background-color: transparent;}
+
+/*-------------------------------*/
+/*           Wrappers            */
+/*-------------------------------*/
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+
+/* change the rtl here on the rtl file */
+#sidebar-wrapper {
+    z-index: 1000;
+    right: 220px;
+    left: inherit;
+    top: 80px;
+    width: 0;
+    height: 400px;
+    margin-right: -220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    border: #1a1a1a;
+    /*rtl*/
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.toggled-sidbar-width {
+    width: 220px;
+}
+
+#sidebar-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 220px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    padding-top: 70px;
+}
+
+#wrapper.toggled #page-content-wrapper {
     position: absolute;
+    margin-right: -220px;
+}
+
+/*-------------------------------*/
+/*     Sidebar nav styles        */
+/*-------------------------------*/
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 220px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    position: relative;
+    /*line-height: 20px;*/
+    display: inline-block;
+    width: 100%;
+}
+
+.sidebar-nav li:before {
+    content: '';
+    position: absolute;
+    top: 0;
     right: 0;
-    top: 60px;
-    z-index: 9999;
+    z-index: -1;
+    height: 100%;
+    width: 3px;
+    background-color: #1c1c1c;
+    -webkit-transition: width .2s ease-in;
+      -moz-transition:  width .2s ease-in;
+       -ms-transition:  width .2s ease-in;
+            transition: width .2s ease-in;
+
+}
+.sidebar-nav li:first-child  {
     color: #fff;
-    font-size: 24pt!important;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 50px;
+    background-color: #1a1a1a;
+}
+.sidebar-nav li:nth-child(2):before {
+    background-color: #002642;
+}
+.sidebar-nav li:nth-child(3):before {
+    background-color: #003963;
+}
+.sidebar-nav li:nth-child(4):before {
+    background-color: #02518c;
+}
+.sidebar-nav li:nth-child(5):before {
+    background-color: #0573c4;
+}
+.sidebar-nav li:nth-child(6):before {
+    background-color: #038df4;
+}
+.sidebar-nav li:nth-child(7):before {
+    background-color: #40adff;
+}
+.sidebar-nav li:nth-child(8):before {
+    background-color: #81c8fc;
+}
+.sidebar-nav li:nth-child(9):before {
+    background-color: #c0e4ff;
+}
+
+
+.sidebar-nav li a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px 15px 10px 30px;
+    /*rtl*/
+    text-align: right;
+}
+
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 20px;
+    line-height: 44px;
+    background-color: #222;
+    /*rtl*/
+    text-align: right;
+    padding: 10px 10px;
+}
+.sidebar-nav .dropdown-menu {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background-color: #222;
+    box-shadow: none;
+}
+
+.sidebar-nav li{
     margin: 0 auto;
-    background-color: #aaa;
-    cursor: pointer;
+    padding: 10px;
+    border: none;
 }
 
-.accessibility:before {
-   font-family: FontAwesome;
-   content: "\f29a";
-}
+/*-------------------------------*/
+/*       Size buttons            */
+/*-------------------------------*/
 
-.krn #btn-decrease, .krn #btn-orig, .krn #btn-increase, .krn #link-underline{
+.krn #btn-decrease, .krn #btn-orig, .krn #btn-increase, .krn .wide-btn{
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid #000;
@@ -31,59 +175,206 @@
     color: #000;
 }
 
+.krn .wide-btn:hover {
+    background-color: #000;
+    color: #fff;
+}
+
 .krn #btn-decrease, .krn #btn-orig, .krn #btn-increase{
-    width: 30%;
+    width: 31%;
     padding: 1%;
 }
 
-.krn #link-underline{
+.krn .wide-btn{
     width: 100%;
-    height: 40px;
+    padding: 1%;
 }
 
-.krn .accessColor li{
+.krn .dark-bg-btn{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+72,000000+72,ffffff+72,ffffff+73,ffffff+100 */
+    background: #000000; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #000000 0%, #000000 72%, #000000 72%, #ffffff 72%, #ffffff 73%, #ffffff 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  #000000 0%,#000000 72%,#000000 72%,#ffffff 72%,#ffffff 73%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  #000000 0%,#000000 72%,#000000 72%,#ffffff 72%,#ffffff 73%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     height: 30px;
-    width: 30px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
-    background-color: #000;
-    list-style: none;
-    position: relative;
-    float: right;
-    padding: 5px;
-    margin: 5px;
-    border: 1px solid #000;
 }
 
-.krn .accessColor li.redBg{
-    background-color: red;
+.krn .ydark-bg-btn{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+72,000000+72,ffffff+72,ffff00+73,ffff00+100 */
+    background: #000000; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #000000 0%, #000000 72%, #000000 72%, #ffffff 72%, #ffff00 73%, #ffff00 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  #000000 0%,#000000 72%,#000000 72%,#ffffff 72%,#ffff00 73%,#ffff00 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  #000000 0%,#000000 72%,#000000 72%,#ffffff 72%,#ffff00 73%,#ffff00 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffff00',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    height: 30px;
 }
 
-.krn .accessColor li.whiteBg{
-    background-color: white;
+.krn .light-bg-btn{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+72,ffffff+72,000000+74,000000+100 */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #ffffff 0%, #ffffff 72%, #ffffff 72%, #000000 74%, #000000 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  #ffffff 0%,#ffffff 72%,#ffffff 72%,#000000 74%,#000000 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  #ffffff 0%,#ffffff 72%,#ffffff 72%,#000000 74%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    height: 30px;
 }
 
-.krn .accessColor li.blackBg{
-    background-color: black;
+.underlined-link{
+    text-decoration: underline!important;
 }
 
-.krn .accessColor li.orangeBg{
-    background-color: orange;
+.darkBg{
+    background-color: #000!important;
+    color: #fff!important;
 }
 
-.krn .accessColor li.greenBg{
-    background-color: green;
+.ydarkBg{
+    background-color: #000!important;
+    color: #FFFF00!important;
 }
 
-.krn .accessColor li.yellowBg{
-    background-color: yellow;
+.lightBg{
+    background-color: #fff!important;
+    color: #000!important;
 }
 
-.krn .accessColor li.purpleBg{
-    background-color: purple;
+
+
+/*-------------------------------*/
+/*       Hamburger-Cross         */
+/*-------------------------------*/
+
+.hamburger {
+  position: fixed;
+  top: 40px;
+  right: 10px;
+  z-index: 999;
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin-left: 15px;
+  background: transparent;
+  border: none;
+}
+.hamburger:hover,
+.hamburger:focus,
+.hamburger:active {
+  outline: none;
+}
+.hamburger.is-closed:before {
+  content: '';
+  display: block;
+  width: 100px;
+  font-size: 14px;
+  color: #fff;
+  line-height: 32px;
+  text-align: center;
+  opacity: 0;
+  -webkit-transform: translate3d(0,0,0);
+  -webkit-transition: all .35s ease-in-out;
+}
+.hamburger.is-closed:hover:before {
+  opacity: 1;
+  display: block;
+  -webkit-transform: translate3d(-100px,0,0);
+  -webkit-transition: all .35s ease-in-out;
 }
 
-.krn .accessColor li.aquaBg{
-    background-color: aqua;
+/*.hamburger.is-closed .hamb-top,*/
+/*.hamburger.is-closed .hamb-middle,*/
+/*.hamburger.is-closed .hamb-bottom,*/
+/*.hamburger.is-open .hamb-top,*/
+/*.hamburger.is-open .hamb-middle,*/
+/*.hamburger.is-open .hamb-bottom {*/
+  /*position: absolute;*/
+  /*left: 0;*/
+  /*height: 4px;*/
+  /*width: 100%;*/
+/*}*/
+/*.hamburger.is-closed .hamb-top,*/
+/*.hamburger.is-closed .hamb-middle,*/
+/*.hamburger.is-closed .hamb-bottom {*/
+  /*background-color: #00af53;*/
+/*}*/
+/*.hamburger.is-closed .hamb-top {*/
+  /*top: 5px;*/
+  /*-webkit-transition: all .35s ease-in-out;*/
+/*}*/
+/*.hamburger.is-closed .hamb-middle {*/
+  /*top: 50%;*/
+  /*margin-top: -2px;*/
+/*}*/
+/*.hamburger.is-closed .hamb-bottom {*/
+  /*bottom: 5px;*/
+  /*-webkit-transition: all .35s ease-in-out;*/
+/*}*/
+
+/*.hamburger.is-closed:hover .hamb-top {*/
+  /*top: 0;*/
+  /*-webkit-transition: all .35s ease-in-out;*/
+/*}*/
+/*.hamburger.is-closed:hover .hamb-bottom {*/
+  /*bottom: 0;*/
+  /*-webkit-transition: all .35s ease-in-out;*/
+/*}*/
+/*.hamburger.is-open .hamb-top,*/
+/*.hamburger.is-open .hamb-middle,*/
+/*.hamburger.is-open .hamb-bottom {*/
+  /*background-color: #00af53;*/
+/*}*/
+/*.hamburger.is-open .hamb-top,*/
+/*.hamburger.is-open .hamb-bottom {*/
+  /*top: 50%;*/
+  /*margin-top: -2px;*/
+/*}*/
+/*.hamburger.is-open .hamb-top {*/
+  /*-webkit-transform: rotate(45deg);*/
+  /*-webkit-transition: -webkit-transform .2s cubic-bezier(.73,1,.28,.08);*/
+/*}*/
+/*.hamburger.is-open .hamb-middle { display: none; }*/
+/*.hamburger.is-open .hamb-bottom {*/
+  /*-webkit-transform: rotate(-45deg);*/
+  /*-webkit-transition: -webkit-transform .2s cubic-bezier(.73,1,.28,.08);*/
+/*}*/
+.hamburger.is-open:before {
+  content: '';
+  display: block;
+  width: 100px;
+  font-size: 14px;
+  color: #fff;
+  line-height: 32px;
+  text-align: center;
+  opacity: 0;
+  -webkit-transform: translate3d(0,0,0);
+  -webkit-transition: all .35s ease-in-out;
+}
+.hamburger.is-open:hover:before {
+  opacity: 1;
+  display: block;
+  -webkit-transform: translate3d(-100px,0,0);
+  -webkit-transition: all .35s ease-in-out;
+}
+
+/* using the accessibilty icon */
+.access-btn{
+    font-size: 35px!important;
+    color: #1793e2;
+}
+
+/*-------------------------------*/
+/*            Overlay            */
+/*-------------------------------*/
+
+.overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(250,250,250,.8);
+    z-index: 1;
 }

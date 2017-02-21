@@ -41,12 +41,8 @@
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     {# Include the header file, the header will put the main menu on top of every page #}
-    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
-        <form action="#">
-            <input type="hidden" id="colorAccess"  value="#aaa" />
-            <input type="hidden" id="topPosAccess"  value="60px" />
-        </form>
-    </div>
+    <div id="accessDialog" class="accessibility hidden-xs" >
+        </div>
 
     {% include 'usersites_templates/top_business/header.html' %}
 
