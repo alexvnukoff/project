@@ -191,6 +191,11 @@
                                 <input type="email" class="form-control" id="email" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
                             </div>
                         </div>
+                        <div class="control-group form-group">
+                            <div class="controls">
+                            <p>{{ form.captcha }}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
