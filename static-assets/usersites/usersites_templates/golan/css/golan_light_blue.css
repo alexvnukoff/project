@@ -5,7 +5,7 @@ body {
     /* main color: color: #83ba3a */
 }
 
-/*---------- Text Styling - The theme main color ---------- dcc7ae  7ca7c9*/
+/*---------- Text Styling - The theme main color ---------- e9e9e9  7ca7c9*/
 h2.page-header a,
 h1.page-header,
 h2.page-header,
@@ -26,7 +26,7 @@ h2.page-header,
 .product__price a,
 .cust-nav__btn a,
 .product__title a{
-	color: #7ca7c9 !important;
+	color: #7ca7c9;
 }
 
 .product__title a:hover{
@@ -70,7 +70,7 @@ h2.page-header,
 }
 
 .navbar-inverse{
-    border-color: #dcc7ae;
+    border-color: #e9e9e9;
 }
 /*---------- Text Styling - Text will be in the main color defined in the body tag ----------*/
 .about-main,
@@ -112,7 +112,7 @@ footer a,
 	/*border-radius: 15px;*/
 	color: #fff;
 	font-weight: bold;
-	background-color: #dcc7ae;
+	background-color: #e9e9e9;
 }
 
 .navbar-inverse .navbar-nav>li>a:hover,
@@ -120,13 +120,13 @@ footer a,
 .navbar-inverse .navbar-nav>li>a:active {
 	color: #fff;
 	/*font-weight:bold;*/
-	background-color: #dcc7ae;
+	background-color: #e9e9e9;
 }
 
 .navbar-inverse .navbar-nav>.active a:hover,
 .navbar-inverse .navbar-nav>.active a:focus,
 .navbar-inverse .navbar-nav>.active a:active{
-	background-color: #dcc7ae;
+	background-color: #e9e9e9;
 	color: #fff!important;
 	text-shadow: none;
 }
@@ -146,7 +146,7 @@ footer a,
 .navbar-inverse,
 #timer-detail-page > div,
 #timer-detail-page div > span{
-	background-color: #dcc7ae;
+	background-color: #e9e9e9;
 }
 
 /*---------- More custome Styling ----------*/
@@ -232,7 +232,7 @@ footer{
 }
 
 .membership-banner{
-	background-color: #dcc7ae;
+	background-color: #e9e9e9;
 	color: #fff;
 }
 
