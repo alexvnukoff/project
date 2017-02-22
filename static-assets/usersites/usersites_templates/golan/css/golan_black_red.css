@@ -26,7 +26,7 @@ h2.page-header,
 .product__price a,
 .cust-nav__btn a,
 .product__title a{
-	color: #a40000 !important;
+	color: #a40000;
 }
 
 /* navigation styling */

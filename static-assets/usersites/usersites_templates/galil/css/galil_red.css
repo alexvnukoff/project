@@ -23,7 +23,7 @@ h2.page-header{
 }
 
 .main-nav>ul>li>a{
-	color: #fff !important;
+	color: #fff;
 }
 
 .main-nav>ul>li>a:hover,

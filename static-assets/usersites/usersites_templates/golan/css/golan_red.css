@@ -27,7 +27,7 @@ h2.page-header,
 .cust-nav__btn a,
 .product__title a,
 h2.news__title a:hover{
-	color: #a40000 !important;
+	color: #a40000;
 }
 
 /* navigation styling */
