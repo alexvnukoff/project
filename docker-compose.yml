@@ -4,10 +4,10 @@ services:
     image: nginx:latest
     container_name: nx01
     command: nginx
-    ports:
-      - "8000:80"
-      - "443:443"
-      - "9999:9999"
+    expose:
+      - "80"
+      - "443"
+      - "9999"
     volumes:
       - ./static-assets:/src/static-assets
       - ./static:/src/static
@@ -35,7 +35,6 @@ services:
       - ./newrelic.ini:/src/newrelic.ini
     expose:
       - "8001"
-      - "443:443"
     restart: always
 
   celery:
@@ -76,6 +75,6 @@ services:
       - ./b24project:/src/b24project
       - ./settings_docker.py:/src/b24project/local_settings.py
       - ./newrelic_tornado.ini:/src/newrelic.ini
-    ports:
-      - "9999:9999"
+    expose:
+      - "9998"
     restart: always
