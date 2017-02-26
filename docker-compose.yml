@@ -4,10 +4,9 @@ services:
     image: nginx:latest
     container_name: nx01
     command: nginx
-    expose:
-      - "80"
-      - "443"
-      - "9999"
+    ports:
+      - "80:80"
+      - "9999:9999"
     volumes:
       - ./static-assets:/src/static-assets
       - ./static:/src/static
@@ -17,6 +16,7 @@ services:
       - ./letsencrypt:/src/letsencrypt
     depends_on:
       - web
+      - tornado
   web:
     environment:
       - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
