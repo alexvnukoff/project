@@ -166,7 +166,7 @@
         <h3>{% trans 'Social links' %}</h3>
         <div class="form-group">
         <label>{% trans "Facebook Link" %}</label>
-        <input type="text" name="facebook" placeholder="{% trans 'Link to your facebook page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.facebook.value|default_if_none:"" }}">
+        <input type="text" name="facebook" placeholder="{% trans 'Link to your facebook page or group' %}" maxlength="1000" class="text" style="width:60%;" value="{{ form.facebook.value|default_if_none:"" }}">
         {% if form.errors.facebook %}<small class="error">{{ form.errors.facebook.0 }}</small>{% endif %}
         </div>
 
