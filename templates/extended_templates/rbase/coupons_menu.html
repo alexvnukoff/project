@@ -6,7 +6,7 @@
         <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
             <img src="{% if product.image %}{{ product.image.big }}{% else %}{% static 'b24online/img/item.jpg' %}{% endif %}" class="img-responsive" alt="{{ product.name }}"></a>
         <h4><small>{{ product.name }}</small></h4>
-    <button class="btn btn-primary" type="button">49,99 $</button>
+        <button class="btn btn-primary" type="button">{{ product.currency }} {{ product.cost }}</button>
     </div>
     <!-- End Item -->
 {% endfor %}
