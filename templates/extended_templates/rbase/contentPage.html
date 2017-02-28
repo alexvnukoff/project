@@ -1,7 +1,7 @@
 {% extends 'extended_templates/rbase/index.html' %}
 {% load staticfiles %}{% load i18n %}{% load cache %}{% load CustomFilters %}{% load content_tags %}
 
-{% block content %}{% endblock %}
+{% block content %}
     <!-- ******************************************************* -->
     <!-- slider -->
     <!-- ******************************************************* -->
@@ -22,36 +22,43 @@
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
-            <div class="item slides active">
-              <div class="slide-1"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Only Girls</h1>
-                    <h3>Special discounts for mother day!</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">Go check</button>
-              </div>
+                {% if site.user_site.slider_images|length == 0 %}
+
+                  <div class="item slides active">
+                  <div class="slide-1" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg)"></div>
+                  </div>
+
+                  <div class="item slides">
+                  <div class="slide-2" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg)"></div>
+                  </div>
+
+                  <div class="item slides">
+                  <div class="slide-3" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg)"></div>
+                  </div>
+
+                {% else %}
+
+                {% for i in site.user_site.slider_images %}
+
+                  <div class="item slides{% if forloop.first %} active{% endif %}">
+                  <div class="slide-{{ forloop.counter }}" style="background-image: url({{ i.image.big }})"></div>
+                  <div class="hero">
+                  {% if i.description %}
+                    <hgroup>
+                        <h1>{{ i.description }}</h1>
+                        {% comment %}
+                        <h3>Special discounts for mother day!</h3>
+                        {% endcomment %}
+                    </hgroup>
+                    {% endif %}
+                    <button class="btn btn-hero btn-lg btn-responsive" role="button">{% trans "Go check" %}</button>
+                  </div>
+
             </div>
-            <div class="item slides">
-              <div class="slide-2"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Big Discounts</h1>
-                    <h3>On all watches</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">To the watches</button>
-              </div>
-            </div>
-            <div class="item slides">
-              <div class="slide-3"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Chanuka</h1>
-                    <h3>With the best prices!</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">Check out</button>
-              </div>
-            </div>
+
+                {% endfor %}
+                {% endif %}
+
           </div>
         </div>
 
@@ -139,6 +146,6 @@
       </div>
     </div>
     <!-- end of banners under slider -->
-
+{% endblock %}
 {% block js %}{% endblock %}
 

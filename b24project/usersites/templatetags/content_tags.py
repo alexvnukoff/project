@@ -391,5 +391,35 @@ def b2b_categories_ex():
             products__is_active=True
         ).order_by('level').distinct()
 
-    return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': c.level})\
-        for c in categories)}
+    return {'items': ((c.id, {
+            'slug': c.slug,
+            'name': c.name,
+            'level': c.level
+        }) for c in categories)}
+
+
+@register.inclusion_tag(
+        'usersites_templates/dummy_extends_template.html',
+        takes_context=True)
+def coupons_ex(context, template_name, on_page, page=1,
+        selected_category=None, order_by='-created_at'):
+    usersite, template, organization = get_usersite_objects()
+    url_paginator = None if selected_category else None
+    children = organization.children.all()
+    queryset = B2CProduct.get_active_objects().filter(
+            company__in=children,
+            coupon_dates__contains=now().date(),
+            coupon_discount_percent__gt=0
+        )
+
+    return ProductsTag(
+        order_by=order_by,
+        selected_category=selected_category,
+        context=context,
+        queryset=queryset,
+        template_path=template_name,
+        on_page=on_page,
+        current_page=page,
+        url_paginator=url_paginator,
+        queryset_key='coupons').result_data
+

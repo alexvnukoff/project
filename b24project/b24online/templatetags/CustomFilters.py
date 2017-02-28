@@ -636,9 +636,3 @@ def set_var(parser, token):
     if not (new_val[0] == new_val[-1] and new_val[0] in ('"', "'")):
         raise template.TemplateSyntaxError("{0} tag's argument should be in quotes".format(tag_name))
     return SetVarNode(new_val[1:-1], var_name)
-
-
-@register.filter
-def dev1(obj):
-    print(obj.__dict__)
-    return True

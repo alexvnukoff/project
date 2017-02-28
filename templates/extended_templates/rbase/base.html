@@ -73,7 +73,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href="index.html" class="navbar-brand"><img src="{% static 'ext/rbase/images/b24_logo.png' %}"></a>
+        <a href="/" class="navbar-brand" rel="first"><img src="{% static 'ext/rbase/images/b24_logo.png' %}"></a>
       </div>
 
     <!-- Modal Login-->
@@ -134,32 +134,19 @@
       <div class="collapse navbar-collapse js-navbar-collapse cat-menu">
         <ul class="nav navbar-nav">
           <li class="dropdown mega-dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Categories" %} <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
 
             <ul class="dropdown-menu mega-dropdown-menu row">
               <li class="col-sm-3">
                 <ul>
-                  <li class="dropdown-header">B24Online Coupons</li>
+                <li class="dropdown-header">{% trans "B24Online Coupons" %}</li>
                   <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
                     <div class="carousel-inner">
-                      <div class="item active">
-                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-1.jpg' %}" class="img-responsive" alt="product 1"></a>
-                        <h4><small>Summer dress floral prints</small></h4>
-                        <button class="btn btn-primary" type="button">49,99 $</button>
-                      </div>
-                      <!-- End Item -->
-                      <div class="item">
-                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-2.jpg' %}" class="img-responsive" alt="product 2"></a>
-                        <h4><small>Gold sandals with shiny touch</small></h4>
-                        <button class="btn btn-primary" type="button">9,99 $</button>
-                      </div>
-                      <!-- End Item -->
-                      <div class="item">
-                        <a href="#"><img src="{% static 'ext/rbase/images/car-img-3.jpg' %}" class="img-responsive" alt="product 3"></a>
-                        <h4><small>Denin jacket stamped</small></h4>
-                        <button class="btn btn-primary" type="button">49,99 $</button>
-                      </div>
-                      <!-- End Item -->
+
+                    <!-- Coupons form ./coupons_menu.html -->
+                    {% coupons_ex 'coupons_menu.html' 3 %}
+
                     </div>
                     <!-- End Carousel Inner -->
                   </div>
@@ -221,7 +208,6 @@
         </div>
     </form>
   </div><!--end of navbar -->
-
 
 
 {% block content %}{% endblock %}
