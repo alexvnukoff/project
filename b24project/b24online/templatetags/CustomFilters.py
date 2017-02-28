@@ -639,6 +639,6 @@ def set_var(parser, token):
 
 
 @register.filter
-def get_at_index(list, index):
-    return list[index]
-
+def dev1(obj):
+    print(obj.__dict__)
+    return True

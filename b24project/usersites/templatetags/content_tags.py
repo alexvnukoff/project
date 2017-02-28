@@ -282,7 +282,7 @@ def b2b_categories():
         ).items(), key=lambda x: [x[1].tree_id, x[1].lft]))
 
 
-@register.assignment_tag
+@register.simple_tag
 def b2c_categories(show_as_list=False):
     usersite, template, organization = get_usersite_objects()
 
@@ -297,11 +297,11 @@ def b2c_categories(show_as_list=False):
             load_category_hierarchy(B2CProductCategory, categories)\
                 .items(), key=lambda x: [x[1].tree_id, x[1].lft]))
     else:
-        return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': 0})\
+        return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': c.level})\
             for c in categories)}
 
 
-@register.assignment_tag
+@register.simple_tag
 def b2b_producers(selected_category=None):
     usersite, template, organization = get_usersite_objects()
     producers = B2BProduct.objects\
@@ -315,7 +315,7 @@ def b2b_producers(selected_category=None):
     return producers.values_list('producer__pk', 'producer__name').distinct()
 
 
-@register.assignment_tag
+@register.simple_tag
 def b2c_producers(selected_category=None):
     usersite, template, organization = get_usersite_objects()
     producers = B2CProduct.objects\
@@ -366,3 +366,30 @@ def exhibitions(context, template_name, on_page, page=1, order_by='-created_at')
         url_paginator='exhibition:paginator',
         queryset_key='exhibitions').result_data
 
+
+@register.simple_tag
+def b2c_categories_ex():
+    usersite, template, organization = get_usersite_objects()
+    ch = [x for x in organization.children.all().values_list('id', flat=True)]
+
+    categories = B2CProductCategory.objects.filter(
+            products__company_id__in=ch,
+            products__is_active=True
+        ).order_by('level').distinct()
+
+    return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': c.level})\
+        for c in categories)}
+
+
+@register.simple_tag
+def b2b_categories_ex():
+    usersite, template, organization = get_usersite_objects()
+    ch = [x for x in organization.children.all().values_list('id', flat=True)]
+
+    categories = B2BProductCategory.objects.filter(
+            products__company_id__in=ch,
+            products__is_active=True
+        ).order_by('level').distinct()
+
+    return {'items': ((c.id, {'slug': c.slug, 'name': c.name, 'level': c.level})\
+        for c in categories)}

@@ -1,24 +1,144 @@
 {% extends 'extended_templates/rbase/index.html' %}
-{% load i18n %}
-{% load CustomFilters %}
-{% load staticfiles %}
+{% load staticfiles %}{% load i18n %}{% load cache %}{% load CustomFilters %}{% load content_tags %}
 
-{% block content %}
+{% block content %}{% endblock %}
+    <!-- ******************************************************* -->
+    <!-- slider -->
+    <!-- ******************************************************* -->
 
-{% comment %}
-    {{ b2c_coupons }}
-    <hr>
-    {{ b2c_products }}
-    <hr>
-    {{ b2b_products }}
-    <hr>
-    {{ news }}
-    <hr>
-    {{ proposals }}
-    <hr>
-    {{ exhibitions }}
-{% endcomment %}
+    <div class="container">
+      <div class="main-slider">
 
-{% endblock %}
+        <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
+          <!-- Overlay -->
+          <div class="overlay"></div>
+
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#bs-carousel" data-slide-to="1"></li>
+            <li data-target="#bs-carousel" data-slide-to="2"></li>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="item slides active">
+              <div class="slide-1"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Only Girls</h1>
+                    <h3>Special discounts for mother day!</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">Go check</button>
+              </div>
+            </div>
+            <div class="item slides">
+              <div class="slide-2"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Big Discounts</h1>
+                    <h3>On all watches</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">To the watches</button>
+              </div>
+            </div>
+            <div class="item slides">
+              <div class="slide-3"></div>
+              <div class="hero">
+                <hgroup>
+                    <h1>Chanuka</h1>
+                    <h3>With the best prices!</h3>
+                </hgroup>
+                <button class="btn btn-hero btn-lg btn-responsive" role="button">Check out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ******************************************************* -->
+    <!-- end of slider -->
+    <!-- ******************************************************* -->
+
+
+    <!-- ******************************************************* -->
+    <!-- commercial banners -->
+    <!-- ******************************************************* -->
+    <!-- <div class="container">
+      <div class="main-banners">
+        <div class="row">
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
+            <img class="main-banners__img" src="images/ban1.jpg">
+            <h1>Mobile Phones</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
+            <button class="btn btn-md" role="button">Shop Now!</button>
+          </div>
+
+        </div>
+      </div>
+    </div> -->
+
+    <!-- banners under slider -->
+    <div class="container">
+      <div class="row main-banners">
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner1-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Mobiles &amp; Tablets</h2>
+                <p class="p-desc">All the best phones and computing deals in one place.</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner2-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Furnitures</h2>
+                <p class="p-desc">It's the time to make your home shine. Best deals and quality furnitures</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="col-sm-4 col-xs-4 banner-1">
+            <div class="banner-box">
+              <a class="clearfix" href="category_page.html">
+              <img src="{% static 'ext/rbase/images/banner3-420-213.png' %}" alt="banner-1" class="img-responsive">
+              <div class="s-desc"><h2>Fitness &amp; Outdoor</h2>
+                <p class="p-desc">All your equepment for traveling and doing sports. it's time to get up from the sofa.</p>
+                <p class="link">Shop now!</p>
+              </div>
+              </a>
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+    <!-- end of banners under slider -->
+
 {% block js %}{% endblock %}
 

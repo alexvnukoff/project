@@ -1,4 +1,4 @@
-{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}{% load content_tags %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
@@ -131,7 +131,6 @@
     </div><!-- end of dialog -->
 
 
-
       <div class="collapse navbar-collapse js-navbar-collapse cat-menu">
         <ul class="nav navbar-nav">
           <li class="dropdown mega-dropdown">
@@ -171,42 +170,24 @@
               </li>
               <li class="col-sm-3">
                 <ul>
-                  <li class="dropdown-header">Electronics</li>
-                  <li><a href="category_page.html">Computers &amp; Tablets</a></li>
-                  <li><a href="#">Cell Phones &amp; Accessories</a></li>
-                  <li><a href="#">Cameras &amp; Photo</a></li>
-                  <li><a href="#">Full Electronics Category...</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Fashion</li>
-                  <li><a href="#">Woman</a></li>
-                  <li><a href="#">Man</a></li>
-                  <li><a href="#">Jewelry</a></li>
-                  <li><a href="#">Full Fashion Category...</a></li>
+                    <li class="dropdown-header">{% trans "B2C Categories" %}</li>
+                    {% b2c_categories_ex as categories %}
+                    {% for k,v in categories.items %}
+                    <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                    {% endfor %}
                 </ul>
               </li>
               <li class="col-sm-3">
                 <ul>
-                  <li class="dropdown-header">Home &amp; Garden</li>
-                  <li><a href="#">Furnitures</a></li>
-                  <li><a href="#">Bath</a></li>
-                  <li><a href="#">Home Improvement</a></li>
-                  <li><a href="#">Full Home &amp; Garden Category...</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Sports &amp; Outdoor</li>
-                  <li><a href="#">Cycling</a></li>
-                  <li><a href="#">Fitness &amp; Running</a></li>
-                  <li><a href="#">Outdoor Sports</a></li>
-                  <li><a href="#">Full Sports Category...</a></li>
+                    <li class="dropdown-header">{% trans "B2B Categories" %}</li>
+                    {% b2b_categories_ex as categories %}
+                    {% for k,v in categories.items %}
+                    <li><a href="{% url 'b2b_products:category' v.slug k %}">{{ v.name }}</a></li>
+                    {% endfor %}
                 </ul>
               </li>
               <li class="col-sm-3">
                 <ul>
-                  <li class="dropdown-header">Toys &amp; Hobbies</li>
-                  <li><a href="#">Educational</a></li>
-                  <li><a href="#">Models &amp; Kits</a></li>
-                  <li><a href="#">Puzzles</a></li>
-                  <li><a href="#">Full Toys Category...</a></li>
-                  <li class="divider"></li>
                   <li class="dropdown-header">Newsletter</li>
                   <form class="form" role="form">
                     <div class="form-group">
@@ -220,7 +201,6 @@
                 </ul>
               </li>
             </ul>
-
           </li>
         </ul>
 
@@ -243,143 +223,6 @@
   </div><!--end of navbar -->
 
 
-    <!-- ******************************************************* -->
-    <!-- slider -->
-    <!-- ******************************************************* -->
-
-    <div class="container">
-      <div class="main-slider">
-
-        <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
-          <!-- Overlay -->
-          <div class="overlay"></div>
-
-          <!-- Indicators -->
-          <ol class="carousel-indicators">
-            <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#bs-carousel" data-slide-to="1"></li>
-            <li data-target="#bs-carousel" data-slide-to="2"></li>
-          </ol>
-
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner">
-            <div class="item slides active">
-              <div class="slide-1"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Only Girls</h1>
-                    <h3>Special discounts for mother day!</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">Go check</button>
-              </div>
-            </div>
-            <div class="item slides">
-              <div class="slide-2"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Big Discounts</h1>
-                    <h3>On all watches</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">To the watches</button>
-              </div>
-            </div>
-            <div class="item slides">
-              <div class="slide-3"></div>
-              <div class="hero">
-                <hgroup>
-                    <h1>Chanuka</h1>
-                    <h3>With the best prices!</h3>
-                </hgroup>
-                <button class="btn btn-hero btn-lg btn-responsive" role="button">Check out</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <!-- ******************************************************* -->
-    <!-- end of slider -->
-    <!-- ******************************************************* -->
-
-
-    <!-- ******************************************************* -->
-    <!-- commercial banners -->
-    <!-- ******************************************************* -->
-    <!-- <div class="container">
-      <div class="main-banners">
-        <div class="row">
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-        </div>
-      </div>
-    </div> -->
-
-    <!-- banners under slider -->
-    <div class="container">
-      <div class="row main-banners">
-
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner1-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Mobiles &amp; Tablets</h2>
-                <p class="p-desc">All the best phones and computing deals in one place.</p>
-                <p class="link">Shop now!</p>
-              </div>
-              </a>
-            </div>
-          </div>
-
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner2-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Furnitures</h2>
-                <p class="p-desc">It's the time to make your home shine. Best deals and quality furnitures</p>
-                <p class="link">Shop now!</p>
-              </div>
-              </a>
-            </div>
-          </div>
-
-
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner3-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Fitness &amp; Outdoor</h2>
-                <p class="p-desc">All your equepment for traveling and doing sports. it's time to get up from the sofa.</p>
-                <p class="link">Shop now!</p>
-              </div>
-              </a>
-            </div>
-          </div>
-
-
-      </div>
-    </div>
-    <!-- end of banners under slider -->
 
 {% block content %}{% endblock %}
 
