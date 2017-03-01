@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load staticfiles %}
+{% load static %}
 
 {% for product in coupons %}
     <div class="item{% if forloop.first %} active{% endif %}">
@@ -10,5 +10,3 @@
     </div>
     <!-- End Item -->
 {% endfor %}
-
-

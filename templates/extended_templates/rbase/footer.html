@@ -1,0 +1,24 @@
+{% load CustomFilters %}{% load inclusionTags %}{% load static %}{% load i18n %}
+
+{% comment %}
+{% is_chamber_site as is_chamber %}
+
+{% site_banner "footer" "SITES FOOTER" %}
+
+{% if site.user_site.logo %}
+<img src="{{ site.user_site.logo.big }}" alt="" />
+{% else %}
+<img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+{% endif %}
+
+{% if not is_chamber and site.user_site.organization.parent %}
+<h4>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h4>
+{% endif %}
+{% endcomment %}
+
+
+
+<footer>
+
+
+</footer>

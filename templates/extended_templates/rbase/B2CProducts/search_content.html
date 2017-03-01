@@ -2,13 +2,14 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
-{#<section class="content__info">#}
 
-    {# Products page content #}
-    <div class="container">
+{% block title %}{% trans "B2C Products" %}{% endblock %}
 
-        {# Page title #}
-            <h2 class="page-header in-page"><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></h2>
+<section class="content__info">
+
+{# Page title #}
+ <div class="container">
+            <h2 class="page-header in-page">{% trans 'Search B2C Products' %}</h2>
             {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
 
 {#        <div class="row main-products-thumb">#}
@@ -32,7 +33,7 @@
                             {% endif %}
 
                             <div class="caption">
-                                <h5 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:20 }}</a></h5>
+                                <h5 class="product__title">{{ product.name|truncatechars:20 }}</h5>
                                 <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
 
                                 {# If there is one, display the cost. If there is a discount, display it too. #}
@@ -54,15 +55,12 @@
                                 {% endif %}
 
                                 {# If the product is a coupon, display the timer #}
-                            {% now "Y-m-d" as todays_date %}
-                            {% if object.end_coupon_date|date:"Y-m-d" > todays_date and object.cost %}
                                 {% if product.coupon_discount_percent %}
                                     <div class="coupon-timer">
                                         <p class="timer-heading">{% trans "Promotion ends" %}</p>
                                         <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
                                     </div>
                                 {% endif %}
-                            {% endif %}
                             </div>
 
                         </div>
@@ -74,9 +72,6 @@
 
         </div>
 
+ {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
+ </div>
 
-
-        {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
-    </div>
-
-{#</section>#}

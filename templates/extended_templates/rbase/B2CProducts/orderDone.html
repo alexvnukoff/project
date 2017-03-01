@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/default_horizontal_banners/index.html' %}
+{% extends 'usersites_templates/cineret/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -8,11 +8,12 @@
 {% block content %}
 
      <section class="content__info">
+    <div class="container">
+        <h2 class="page-header in-page">{% trans 'Your Order' %}</h2>
 
-    <h2>{% trans 'Your Order' %}</h2>
-
-    <p>&nbsp;</p>
-    <p>{% trans 'Your order has been submitted.' %}</p>
+        <p>&nbsp;</p>
+        <p>{% trans 'Your order has been submitted.' %}</p>
+    </div>
     </section>
 
 {% endblock %}

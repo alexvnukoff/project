@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+<div class="container">
+
+   {% include 'usersites_templates/cineret/Video/paginator.html' %}
+
+       <section class="content__info__news news-page">
+       {# Page header #}
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header in-page">{% trans 'Video' %}</h1>
+            </div>
+        </div>
+
+        {% for entry in videos %}
+
+            <div class="row news">
+
+                <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs news__img">
+                    {% if entry.image %}
+                        <img src="{{ entry.image.small }} " alt="{{ entry.title }}" title="{{ entry.title }}"/>
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" />
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 news__text">
+                    <h2 class="page-header section-header"><a href="{% url 'video:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h2>
+                    <p class="date">{{ entry.created_at|date:'d M Y' }}</p>
+
+                    <p>
+                        {% if entry.short_description %}
+                             {{ entry.short_description|linebreaksbr }}
+                        {% else %}
+                             {{ entry.content|cleanHtml:"p"|safe|truncatewords_html:"30" }}
+                        {% endif %}
+                    </p>
+
+                    <p>{{ news.content|cleanHtml|safe }}</p>
+
+                <a type="button" class="btn btn-default news__btn" href="{% url 'video:detail' entry.slug entry.pk %}" role="button">{% trans 'More' %}</a>
+                </div>
+
+
+            </div>
+
+        {% endfor %}
+        </section>
+
+   {% include 'usersites_templates/cineret/Video/paginator.html' %}
+    </div>

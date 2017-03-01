@@ -2,223 +2,43 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load humanize %}
-
-{% comment %}
 <section class="content__info">
-    {% include 'extended_tempates/rbase/B2CProducts/paginator.html' %}
+   {% include 'usersites/B2BProducts/paginator.html' %}
 
-    <section class="content__info__products">
-        <h2>{% trans 'B2C Products' %}</h2>
-        <ul class="products-list">
+                <section class="content__info__products">
+                    <h2>{% trans 'B2B Products' %}</h2>
+                    <ul class="products-list">
 
-            {% for product in products %}
+                        {% for product in products %}
 
-            <li class="product">
-                <div class="product__cover vertical">
-                    <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                        {% if product.image %}
-                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
-                        {% else %}
-                        <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                        {% endif %}
-                    </a>
-                </div>
-                <div class="product__about">
-                    {# Register the 'view' event for b2c product #}
-                    {{ product|register_event:"view"|process_event:request }}
-                    <p class="desc">
-                    <strong>{{ product.name|truncatechars:80 }}</strong></p>
-                    {% if product.cost %}
-                    <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
-                    {% else %}
-                    <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
-                    {% endif %}
+                        <li class="product">
+                            <div class="product__cover vertical">
+                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
+                            {% if product.image %}
+                              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                            {% else %}
+                              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </a>
+                            </div>
+                            <div class="product__about">
+                                {# Register the 'view' event for b2b product #}
+                                {{ product|register_event:"view"|process_event:request }}
+                                <p class="desc">
+                                <strong>{{ product.name|truncatechars:80 }}</strong></p>
+                                {% if product.cost %}
+                                <p class="price"><span class="value">{{ product.cost|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+                                {% else %}
+                                <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                        </li>
 
-                </div>
-                <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
-            </li>
+                        {% endfor %}
 
-            {% endfor %}
+                    </ul>
+                </section>
 
-        </ul>
+   {% include 'usersites/B2BProducts/paginator.html' %}
     </section>
-
-    {% include 'extended_tempates/rbase/B2CProducts/paginator.html' %}
-</section>
-{% endcomment %}
-
-
-<!-- **************************************** -->
-    <!-- main sidebar + products                  -->
-    <!-- **************************************** -->
-    <div class="container">
-    <div class="row front-heading">
-        <h3 class="section-header">{{ selected_category }}</h3>
-        </div>
-      <div class="hidden-sm hidden-xs main-sidebar">
-
-      <div id="inner-sidebar">
-
-         <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" class="sidebar-list-item">Computers &amp; Tablets</a>
-                </h4>
-              </div>
-
-              <div id="collapse1" class="panel-collapse collapse in">
-                <div class="list-group">
-                  <a href="subcategory_page.html" class="list-group-item">iPads, Tablets &amp; eBook Readers</a>
-                  <a href="#" class="list-group-item">Laptops &amp; Netbooks</a>
-                  <a href="#" class="list-group-item">Desktops &amp; All-In-Ones</a>
-                  <a href="#" class="list-group-item">Cables &amp; Connectors</a>
-                  <a href="#" class="list-group-item">Drives, Storage &amp; Blank Media</a>
-                  <a href="#" class="list-group-item">Keyboards, Mice &amp; Pointing</a>
-                  <a href="#" class="list-group-item">Monitors, Projectors &amp; Accs</a>
-
-                  <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                  </a>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Cell Phones &amp; Accessories</a>
-                </h4>
-              </div>
-
-              <div id="collapse2" class="panel-collapse collapse">
-                <div class="list-group">
-                  <a href="#" class="list-group-item">iPads, Tablets &amp; eBook Readers</a>
-                  <a href="#" class="list-group-item">Laptops &amp; Netbooks</a>
-                  <a href="#" class="list-group-item">Desktops &amp; All-In-Ones</a>
-                  <a href="#" class="list-group-item">Cables &amp; Connectors</a>
-                  <a href="#" class="list-group-item">Drives, Storage &amp; Blank Media</a>
-                  <a href="#" class="list-group-item">Keyboards, Mice &amp; Pointing</a>
-                  <a href="#" class="list-group-item">Monitors, Projectors &amp; Accs</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">Cameras &amp; Photo</a>
-                </h4>
-              </div>
-              <div id="collapseFive" class="panel-collapse collapse">
-                <div class="list-group">
-                  <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                  </a>
-                </div>
-                <div class="list-group">
-                  <a href="#" class="list-group-item active">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                  </a>
-                </div>
-                <div class="list-group">
-                  <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-        <div class="side-banners-wrap">
-          <div class="side-banner">
-            <img src="images/low-ban1.jpg" class="img-responsive">
-          </div>
-
-          <div class="side-banner">
-            <img src="images/low-ban2.jpg" class="img-responsive">
-          </div>
-        </div>
-        </div>
-
-    </div>
-    
-              <!--end of the sidebar menu -->
-
-      <!-- *********************************** -->
-
-    <!-- **************************************** -->
-    <!-- products front page grid -->
-    <!-- **************************************** -->
-      <div class="col-md-9 col-sm-12 col-xs-12 main-prod-wrapper">
-
-      <div class="container-fluid">
-    <div id="product_carousel" class="carousel slide" data-ride="carousel" data-interval="2500">
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-7"><img src="images/ps1.jpg" class="img-responsive"></div>
-                        <div class="col-md-5">
-                            <h2>Apple Macbook Pro 13 A1278 2.3GHz i5-2415M 320GB HDD 4GB Ram MC700LL Early-2011</h2>
-                            <p class="hidden-xs">OS X El Capitan; USB-C Port Only. PEASE NOTE: This MacBook has a single USB-C port (a new version of USB) which handles power and connectivity to all peripherals. </p>
-                        </div>
-                    </div>
-                </div>            
-            </div> 
-            <div class="item">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-7"><img src="images/ps2.jpg" class="img-responsive"></div>
-                        <div class="col-md-5">
-                            <h2>Apple MacBook MLHF2LL/A 12-Inch Laptop with Retina Display</h2>
-                            <p class="hidden-xs">OS X El Capitan; USB-C Port Only. PEASE NOTE: This MacBook has a single USB-C port (a new version of USB) which handles power and connectivity to all peripherals. </p>
-                        </div>
-                    </div>
-                </div>            
-            </div> 
-            <div class="item">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-7"><img src="images/ps3.jpg" class="img-responsive"></div>
-                        <div class="col-md-5">
-                            <h2>Samsung Galaxy S7 Edge G935F 4G 32GB Octa-Core 5.5" Factory Unlocked Silver</h2>
-                            <p class="hidden-xs">The new Samsung Galaxy S7 edge boasts the first Dual Pixel camera on a smartphone, delivering brighter and sharper images, even in low light.</p>
-                        </div>
-                    </div>
-                </div>           
-            </div> 
-            <div class="item">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-7"><img src="images/ps4.jpg" class="img-responsive"></div>
-                        <div class="col-md-5">
-                            <h2>Nikon D5300 24.2 MP CMOS Digital SLR Camera</h2>
-                            <p class="hidden-xs">Capture and instantly share the most vibrant, lifelike images of your life. Meet the first in an exciting new generation of Wi-Fi enabled, ultra-high-resolution Nikon HD-SLRs: the D5300.</p>
-                        </div>
-                    </div>
-                </div>           
-            </div> 
-        <!-- End Item -->
-        </div>
-        <!-- End Carousel Inner -->
-        <div class="controls">
-            <ul class="nav">
-                <li data-target="#product_carousel" data-slide-to="0" class="active"><a href="#"><div class="slide-img-wrap"><img src="images/ps1.jpg"></div><small class="hidden-xs">Apple Macbook Pro 13 A1278 2.3GHz i5-2415M 320GB HDD 4GB Ram MC700LL</small></a></li>
-                <li data-target="#product_carousel" data-slide-to="1"><a href="#"><div class="slide-img-wrap"><img src="images/ps2.jpg"></div><small class="hidden-xs">Apple MacBook MLHF2LL/A 12-Inch Laptop with Retina Display</small></a></li>
-                <li data-target="#product_carousel" data-slide-to="2"><a href="#"><div class="slide-img-wrap"><img src="images/ps3.jpg"></div><small class="hidden-xs">Samsung Galaxy S7 Edge G935F 4G 32GB Octa-Core 5.5"</small></a></li>
-                <li data-target="#product_carousel" data-slide-to="3"><a href="#"><div class="slide-img-wrap"><img src="images/ps4.jpg"></div><small class="hidden-xs">Nikon D5300 24.2 MP CMOS Digital SLR Camera</small></a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- End Carousel -->
-</div>
-
-

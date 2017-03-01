@@ -1,147 +1,98 @@
-{% extends 'extended_templates/rbase/index.html' %}
-{% load staticfiles %}{% load i18n %}{% load cache %}{% load CustomFilters %}{% load content_tags %}
+{% extends 'extended_templates/rbase/index.html' %}{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}{% load inclusionTags %}{% load content_tags %}
+{% block slider %}
+       {% include 'extended_templates/rbase/slider.html' %}
+{% endblock %}
 
 {% block content %}
-    <!-- ******************************************************* -->
-    <!-- slider -->
-    <!-- ******************************************************* -->
-
-    <div class="container">
-      <div class="main-slider">
-
-        <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
-          <!-- Overlay -->
-          <div class="overlay"></div>
-
-          <!-- Indicators -->
-          <ol class="carousel-indicators">
-            <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#bs-carousel" data-slide-to="1"></li>
-            <li data-target="#bs-carousel" data-slide-to="2"></li>
-          </ol>
-
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner">
-                {% if site.user_site.slider_images|length == 0 %}
-
-                  <div class="item slides active">
-                  <div class="slide-1" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg)"></div>
-                  </div>
-
-                  <div class="item slides">
-                  <div class="slide-2" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg)"></div>
-                  </div>
-
-                  <div class="item slides">
-                  <div class="slide-3" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg)"></div>
-                  </div>
-
-                {% else %}
-
-                {% for i in site.user_site.slider_images %}
-
-                  <div class="item slides{% if forloop.first %} active{% endif %}">
-                  <div class="slide-{{ forloop.counter }}" style="background-image: url({{ i.image.big }})"></div>
-                  <div class="hero">
-                  {% if i.description %}
-                    <hgroup>
-                        <h1>{{ i.description }}</h1>
-                        {% comment %}
-                        <h3>Special discounts for mother day!</h3>
-                        {% endcomment %}
-                    </hgroup>
-                    {% endif %}
-                    <button class="btn btn-hero btn-lg btn-responsive" role="button">{% trans "Go check" %}</button>
-                  </div>
-
-            </div>
-
-                {% endfor %}
-                {% endif %}
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <!-- ******************************************************* -->
-    <!-- end of slider -->
-    <!-- ******************************************************* -->
-
-
-    <!-- ******************************************************* -->
-    <!-- commercial banners -->
-    <!-- ******************************************************* -->
-    <!-- <div class="container">
-      <div class="main-banners">
-        <div class="row">
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-          <div class="col-md-4 col-sm-4 col-xs-12 main-banners__item">
-            <img class="main-banners__img" src="images/ban1.jpg">
-            <h1>Mobile Phones</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris suscipit.</p>
-            <button class="btn btn-md" role="button">Shop Now!</button>
-          </div>
-
-        </div>
-      </div>
-    </div> -->
 
     <!-- banners under slider -->
     <div class="container">
       <div class="row main-banners">
 
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner1-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Mobiles &amp; Tablets</h2>
-                <p class="p-desc">All the best phones and computing deals in one place.</p>
-                <p class="link">Shop now!</p>
+                      {# 4 banners, will lead to categories or products #}
+            {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
+            {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
+                {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
+
+            {% if right_banner_1 %}
+                    <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
+
+
+        {% if right_banner_4 %}
+
+              <div class="col-sm-3 col-xs-3 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
               </div>
-              </a>
-            </div>
-          </div>
 
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner2-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Furnitures</h2>
-                <p class="p-desc">It's the time to make your home shine. Best deals and quality furnitures</p>
-                <p class="link">Shop now!</p>
+              <div class="col-sm-3 col-xs-3 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
               </div>
-              </a>
-            </div>
-          </div>
 
-
-          <div class="col-sm-4 col-xs-4 banner-1">
-            <div class="banner-box">
-              <a class="clearfix" href="category_page.html">
-              <img src="{% static 'ext/rbase/images/banner3-420-213.png' %}" alt="banner-1" class="img-responsive">
-              <div class="s-desc"><h2>Fitness &amp; Outdoor</h2>
-                <p class="p-desc">All your equepment for traveling and doing sports. it's time to get up from the sofa.</p>
-                <p class="link">Shop now!</p>
+              <div class="col-sm-3 col-xs-3 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 3" %}
+                </div>
               </div>
-              </a>
-            </div>
-          </div>
 
+              <div class="col-sm-3 col-xs-3 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 4" %}
+                </div>
+              </div>
+
+        {% elif right_banner_3 %}
+
+              <div class="col-sm-4 col-xs-4 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+              </div>
+
+              <div class="col-sm-4 col-xs-4 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+              </div>
+
+              <div class="col-sm-4 col-xs-4 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 3" %}
+                </div>
+              </div>
+
+         {% elif right_banner_2 %}
+
+              <div class="col-sm-6 col-xs-6 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-xs-6 banner-1">
+                <div class="banner-box">
+                        {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+              </div>
+
+         {% elif right_banner_1 %}
+
+              <div class="col-sm-12 col-xs-12 banner-1">
+                <div class="banner-box">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+              </div>
+
+        {% endif %}
+            </div>
+
+{% endif %}
 
       </div>
     </div>

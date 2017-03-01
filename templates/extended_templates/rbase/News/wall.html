@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if news %}
+    <div class="col-md-12 main-news">
+
+        <h2 class="page-header"><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h2>
+
+        <div class="col-12-md news-wrapper">
+            <ul class="media-list">
+
+                {# News feed wil contain a photo, header, date, short text and a burron to the main news page. #}
+                {% for article in news %}
+                    <li class="media">
+
+                        <a href="#" class="news__img">
+                        {% if article.image %}
+                            <img src="{{ article.image.small }}" alt="" class="img-responsive">
+                        {% endif %}
+                        </a>
+
+                        <div class="news__text">
+                            <h4>{{ article.title }}</h4>
+                            <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+
+                            {% if article.short_description %}
+                                <p class="text">{{ article.short_description|force_escape|linebreaks|truncatewords_html:"25" }}</p>
+                            {% else %}
+                                <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"25" }}</p>
+                            {% endif %}
+
+                            <a type="button" class="btn btn-default news__btn-main" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
+
+                        </div>
+
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+    </div>
+{% endif %}
