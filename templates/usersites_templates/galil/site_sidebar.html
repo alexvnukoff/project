@@ -6,151 +6,103 @@
 {% load mptt_tags %}
 
 
-<h2 class="page-header section-header"><a href="#">Categories</a></h2>
-
-{% b2c_categories as categories %}
-
-{#<div class="panel-group sidebar side-bar" id="accordion">#}
+{#<h2 class="page-header section-header"><a href="#">Categories</a></h2>#}
+{##}
+{#{% b2c_categories as categories %}#}
+{##}
+{#    <div class="panel-group" id="accordion"> {# open the wrap panel div #}
 {##}
 {#        {% for pk, category in categories.items %}#}
+{#            {% with forloop.counter|add:1 as nextcounter %}#}
+{#            {% with categories.items|get_at_index:"nextcounter" as nextitem %}#}
+{##}
+{#              counter =  {{ forloop.counter }} next = {{ nextcounter }} level {{ category.level }} nextitem {{ nextitem.name }}#}
 {#            {% if category.name != 'b2c-category' %}#}
-{#                {% if  category.level == 0 %}#}
-{#                    <div class="panel panel-default">#}
 {##}
-{#                        <div class="panel-heading">#}
+                {# starting with the first list item - starting the next list group #}
+{#                {% if forloop.counter == 2 %}#}
+{#                        <div class="panel panel-default">#}
+{##}
+{#                          <div class="panel-heading">#}
 {#                            <h4 class="panel-title">#}
-{#                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ pk }}">#}
-{#                                    {% if not category.is_leaf_node  %}#}
-{#                                        <span class="glyphicon glyphicon-plus-sign"></span>#}
-{#                                    {% endif %}#}
-{#                                    {{ category.name }}{{ category.get_previous_sibling.level }}#}
-{#                                </a>#}
+{#                              <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}" class="sidebar-list-item">{{ category.name }}</a>#}
 {#                            </h4>#}
-{#                        </div>#}
+{#                          </div>#}
 {##}
-{#                        {% if not category.is_leaf_node  %}#}
-{#                            <div id="collapse{{ pk }}" class="panel-collapse collapse ">#}
-{#                                <ul class="list-group">#}
-{#                                    {% for next_cat in category.get_descendants %}#}
-{#                                        <li class="list-group-item">#}
-{#                                            {{ "-"|multiply:next_cat.level|multiply:2 }}#}
-{#                                                {{ next_cat.name }}#}
-{#                                        </li>#}
-{#                                    {% endfor %}#}
-{#                                </ul>#}
-{#                            </div>#}
+{#                        {% if categories.items.nextcounter.level == 1 %}#}
+{#                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">#}
+{#                                <div class="list-group">#}
 {#                        {% endif %}#}
 {##}
-{#                     </div>#}
-{#                {% endif %}#}
-{#            {% endif %}#}
-{#        {% endfor %}#}
-{#</div>#}
-
-{# Working!!!#}
-
-{#<div class="panel-group sidebar side-bar" id="accordion">#}
-{#    <ul class="sidebar-list">#}
-{#        {% for pk, category in categories.items %}#}
-{#            {% if category.name != 'b2c-category' %}#}
-{#                {% if  category.level == 0 %}#}
-{#                    {% if category.is_leaf_node  %}#}
-{#                        <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>#}
-{#                    {% else %}#}
-{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
-{#                    {% endif %}#}
-                {# If the category is not lvl0#}
+                {# if pk!=1 this is not the first cat. #}
+                {# if level 2 create a link. if level 1 close the prev list and open a new one #}
 {#                {% else %}#}
-{#                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ " "|multiply:category.level|multiply:2 }} {{ category.name }}</a></li>#}
-{#                {% endif %}#}
-{#            {% endif %}#}
-{#        {% endfor %}#}
-{#    </ul>#}
-{#</div>#}
+{##}
+{#                            {% if category.level == 1 %}#}
+{#                                <a href="{% url 'b2c_products:category' category.slug pk %}" class="list-group-item">{{ category.name }}</a>#}
+{#                            {% elif category.level == 0 %}#}
+{#                                {% if categories.items.prev.level == 1 %}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    {% else %}#}
+{#                                    </div>#}
+{#                                        <div class="panel panel-default">#}
+{##}
+{#                                          <div class="panel-heading">#}
+{#                                            <h4 class="panel-title">#}
+{#                                              <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}" class="sidebar-list-item">{{ category.name }}</a>#}
+{#                                            </h4>#}
+{#                                          </div>#}
+{##}
+{#                                        {% if categories.items.next.level == 1 %}#}
+{#                                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">#}
+{#                                                <div class="list-group">#}
+{#                                        {% endif %}#}
+{#                                 {% endif %}#}
+{#                            {% endif %}#}
+{##}
+{#                {% endif %}{# end if pk == 1 and else #}
+{##}
+{#            {% endif %}{# end if not b2c category #}
+{#            {% endwith %}#}
+{#            {% endwith %}#}
+{#        {% endfor %}{# end the main for #}
+{##}
+{#     close the last div #}
+{#        </div> {# close collapse list #}
+{#      </div> {# close collapse menu #}
+{#    </div> {# close a panel element #}
+{##}
+{#</div> {# open the wrap panel div #}
 
-{# end of Working!!!#}
+<h2 class="page-header section-header"><a href="#">Categories</a></h2>
 
 
-<div class="panel-group sidebar side-bar" id="accordion">
-    <ul class="sidebar-list">
-        {% for pk, category in categories.items %}
-            {% if category.name != 'b2c-category' %}
-                {% if  category.level == 0 %}
-{#                    {% if category.get_children  %}#}
-{#                        <li class="lvl0-sidebar"><span class="glyphicon glyphicon-plus-sign"></span>{{ category.name }}</li>#}
-{#                    {% else %}#}
-                        <li class="lvl0-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ category.name }}</a></li>
-{#                    {% endif %}#}
-                {# If the category is not lvl0#}
-                {% else %}
-                    <li class="lvl1-sidebar"><a href="{% url 'b2c_products:category' category.slug pk %}"> {{ category.name }}</a></li>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    </ul>
-</div>
+{% b2c_categories show_as_list=1 as categories %}
 
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="list-group">
+                {% for pk, category in categories.items %}
 
-<div class="banners-pack">
-          <div class="col-md-12 col-sm-12 col-xs-12 banner banner_cat">
-            {% site_banner "top" "SITES RIGHT 1" %}
-            {% site_banner "top" "SITES RIGHT 2" %}
-            {% site_banner "top" "SITES RIGHT 3" %}
-          </div>
+                    {% if category.name != 'b2c-category' %}
+                        <a href="{% url 'b2c_products:category' category.slug pk %}" class="list-group-item">{{ category.name }}</a>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
 
-{#                    {% if category.get_next_sibling == None or category.get_next_sibling.get_previous_sibling.level == 0%}#}
-{#                                </ul>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    {% endif %}#}
 
+<div class="banners-pack">
+      <div class="col-md-12 col-sm-12 col-xs-12 banner banner_cat">
+        {% site_banner "top" "SITES RIGHT 1" %}
+        {% site_banner "top" "SITES RIGHT 2" %}
+        {% site_banner "top" "SITES RIGHT 3" %}
+      </div>
+</div>
 
-
-
-    {#                {% if not category.is_leaf_node  %}#}
-    {#                    <div id="collapseOne" class="panel-collapse collapse ">#}
-    {#                        <ul class="list-group">#}
-    {#                            {% for lvl1_category in category.get_children %}#}
-    {#                                <li class="list-group-item"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ lvl1_category.name }}</a></li>#}
-    {#    #}
-    {#                                {% if not lvl1_category.is_leaf_node  %}#}
-    {#                                    <ul class="list-group">#}
-    {#                                        {% for lvl2_category in lvl1_category.get_children %}#}
-    {#                                            <li class="list-group-item"><a href="{% url 'b2c_products:category' category.slug pk %}">{{ lvl2_category.name }}</a></li>#}
-    {#                                        {% endfor %}#}
-    {#                                    </ul>#}
-    {#                                {% endif %}#}
-    {#    #}
-    {#                            {% endfor %}#}
-    {#                        </ul>#}
-    {#                    </div>#}
-    {#                {% endif %}#}
-
-
-
-{#<div class="select pagination category">#}
-{#        <select class="category-selector">#}
-{#            {% if 'b2c-products' in request.path %}#}
-{#                <option value="{% url 'b2c_products:main' %}">{% trans 'Select Category' %}</option>#}
-{#                    {% for pk, category in categories.items %}#}
-{#                        <a href="{% url 'b2c_products:category' category.slug pk %}">#}
-{#                        <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">#}
-{#                        {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}#}
-{#                        </option>#}
-{#                        </a>#}
-{#                    {% endfor %}#}
-{#            {% else %}#}
-{#              <option value="{% url 'b2b_products:main' %}">{% trans 'Select Category' %}</option>#}
-{#                  {% for pk, category in categories.items %}#}
-{#                      <a href="{% url 'b2c_products:category' category.slug pk %}">#}
-{#                      <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">#}
-{#                      {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}#}
-{#                      </option>#}
-{#                      </a>#}
-{#                  {% endfor %}#}
-{#            {% endif %}#}
-{#        </select>#}
-{#    </div>#}
 
