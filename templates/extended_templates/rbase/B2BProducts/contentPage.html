@@ -1,0 +1,6 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load content_tags %}
+{% block content %}
+{{ block.super }}
+    {% b2b_products 'B2BProducts/list.html' 15 page category %}
+{% endblock %}

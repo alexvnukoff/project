@@ -1,0 +1,25 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load staticfiles %}{% load i18n %}{% load cache %}{% load CustomFilters %}{% load content_tags %}
+
+{% block content %}
+
+    <div class="container">
+    <h3 class="section-header">{% trans "All Categories" %}</h3>
+
+    <div class="all-cat-section">
+    <h3 class="letter-header">-</h3>
+
+        <ul class="all-cat-list">
+            <li>
+                <ul>
+            {% b2c_categories_ex as categories %}
+            {% for k,v in categories.items %}
+                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+            {% endfor %}
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+
+{% endblock %}

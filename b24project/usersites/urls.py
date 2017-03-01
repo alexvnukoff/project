@@ -13,6 +13,7 @@ import usersites.Proposals.urls
 import usersites.Questionnaires.urls
 import usersites.Video.urls
 import usersites.Exhibitions.urls
+import usersites.Category.urls
 import usersites.views
 from appl import func
 
@@ -39,6 +40,9 @@ urlpatterns = [
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^denied/$', TemplateView.as_view(template_name="usersites/denied.html"), name='denied'),
+
+    # Extended 
+    url(r'^category/', include(usersites.Category.urls, namespace='category')),
 
     # url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),

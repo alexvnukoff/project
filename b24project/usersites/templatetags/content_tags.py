@@ -141,10 +141,17 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
     else:
         url_paginator = "b2b_products:search_paginator"
 
-    if isinstance(organization, Company):
-        queryset = B2BProduct.get_active_objects().filter(company=organization)
+    if not isinstance(order_by, (list, tuple)):
+        order_by = [order_by, ]
+
+    if template.typeof == 1:
+        children = organization.children.all()
+        queryset = B2BProduct.get_active_objects().filter(company__in=children).order_by(*order_by)
     else:
-        queryset = B2BProduct.objects.none()
+        if isinstance(organization, Company):
+            queryset = B2BProduct.get_active_objects().filter(company=organization).order_by(*order_by)
+        else:
+            queryset = B2BProduct.objects.none()
 
     return ProductsTag(
         order_by=order_by,
@@ -173,10 +180,14 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
     if not isinstance(order_by, (list, tuple)):
         order_by = [order_by, ]
 
-    if isinstance(organization, Company):
-        queryset = B2CProduct.get_active_objects().filter(company=organization).order_by(*order_by)
+    if template.typeof == 1:
+        children = organization.children.all()
+        queryset = B2CProduct.get_active_objects().filter(company__in=children).order_by(*order_by)
     else:
-        queryset = B2CProduct.objects.none()
+        if isinstance(organization, Company):
+            queryset = B2CProduct.get_active_objects().filter(company=organization).order_by(*order_by)
+        else:
+            queryset = B2CProduct.objects.none()
 
     return ProductsTag(
         order_by=order_by,
