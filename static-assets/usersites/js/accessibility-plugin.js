@@ -4,7 +4,7 @@
 
 var $sizeAffectedElements = $("div, p, a");
 var $LinksElements = $("a");
-var $colorAffectedElements = $("div, p, a, h1, h2, h3, h4, span");
+var $colorAffectedElements = $("div, p, a, h1, h2, h3, h4, span, body, footer, button");
 var darkon = false;
 var ydarkon = false;
 var lighton = false;
