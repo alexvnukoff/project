@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import logging
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
@@ -144,6 +145,8 @@ class ProfileUpdate(UserTemplateMixin, ItemUpdate):
         return super().form_invalid(form)
 
     def get_object(self, queryset=None):
+        if self.template.typeof == settings.TYPEOF_TEMPLATE[1][0]:
+            self.template_name = '{template_path}/profileForm.html'
         try:
             return Profile.objects.get(user=self.request.user)
         except ObjectDoesNotExist:

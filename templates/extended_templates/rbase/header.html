@@ -2,6 +2,8 @@
 
 {% load CustomFilters %}
 
+
+
   <!-- Navigation -->
     <!-- top page navigation, will apear on all pages -->
     <div class="top-navigation">
@@ -9,23 +11,29 @@
 
           <ul class="top-navigation__menu">
               <li class="hidden-xs"><a href="b_index.html">{% trans "Business Index" %}</a></li>
+              {% if request.user.is_authenticated %}
+              <li class="hidden-xs"><a href="{% url 'my_profile' %}">{% trans "Profile" %}</a></li>
+              <li class="hidden-xs"><a href="{% url 'auth_logout' %}">{% trans "Logout" %}</a></li>
+              {% else %}
               <li class="hidden-xs"><a href="#" data-toggle="modal" data-target="#myModal">{% trans "Login" %}</a> / <a href="register.html">{% trans "Join for FREE" %}</a></li>
               <li class="visible-xs"><a href="#" data-toggle="modal" data-target="#myModal">{% trans "Login" %}</a> / <a href="register.html">{% trans "Join" %}</a></li>
+              {% endif %}
               <li class="hidden-xs">{% trans "Help &amp; Contact" %}</li>
               <li class="visible-xs">{% trans "Contact" %}</li>
-            <li class="lang-nav">
-                <!-- <select name="countries" id="countries">
-                    <option value='il' data-title="Hebrew" style="background-image:url({% static 'ext/rbase/images/flags/Israel.png' %}); padding-left:15px;">Hebrew</option>
-                    <option value='ae' data-image="{% static 'ext/rbase/images/flags/Saudi-Arabia.png' %}" data-imagecss="flag ae" data-title="United Arab Emirates">United Arab Emirates</option>
-                    <option value='af' data-image="{% static 'ext/rbase/images/flags/Armenia.png' %}" data-imagecss="flag af" data-title="Afghanistan">Afghanistan</option>
-                    <option value='ag' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}' %}" data-imagecss="flag ag" data-title="Antigua and Barbuda">Antigua and Barbuda</option>
-                    <option value='ai' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag ai" data-title="Anguilla">Anguilla</option>
-                    <option value='al' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag al" data-title="Albania">Albania</option>
-                    <option value='am' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag am" data-title="Armenia">Armenia</option>
-                    <option value='an' data-image="{% static 'ext/rbase/images/flags/blank.gif' %}" data-imagecss="flag an" data-title="Netherlands Antilles">Netherlands Antilles</option>
-                </select>  -->
-                <a href="#"><img src="{% static 'ext/rbase/images/flags/Israel.png' %}" /></a>
-                </li>
+              <li class="lang-nav dropdown">
+
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png"></a>
+
+                {% get_available_languages as LANGUAGES %}
+                <div id="lang-dropdown" role="menu" class="dropdown-menu">
+                    {% for code, lang in LANGUAGES %}
+                      {% if not code == LANGUAGE_CODE %}
+                          <a href="http://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                      {% endif %}
+                  {% endfor %}
+                </div>
+
+            </li>
           </ul>
 
         </div><!-- end of top navigation container -->
@@ -52,18 +60,18 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" id="myModalLabel">Login to B24Online</h4>
+            <h4 class="modal-title" id="myModalLabel">{% trans "Login to B24Online" %}</h4>
           </div>
 
           <div class="modal-body">
-            <form role="form">
+              <form role="form" action="{% url 'auth_login' %}" method="POST">{% csrf_token %}
               <div class="alert alert-danger">
-                <a class="close" data-dismiss="alert" href="#">×</a>Incorrect Username or Password!
+                  <a class="close" data-dismiss="alert" href="#">×</a>{% trans "Incorrect Username or Password!" %}
               </div>
 
               <div style="margin-bottom: 12px" class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+                  <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="{% trans "username or email" %}">
               </div>
 
               <div style="margin-bottom: 12px" class="input-group">
@@ -119,8 +127,10 @@
                     <!-- End Carousel Inner -->
                   </div>
                   <!-- /.carousel -->
+                  {% comment %}
                   <li class="divider"></li>
                   <li><a href="#">View all Coupons <span class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
+                  {% endcomment %}
                 </ul>
               </li>
               <li class="col-sm-3">
@@ -132,20 +142,22 @@
                     {% endfor %}
                 </ul>
               </li>
+              {% comment %}
               <li class="col-sm-3">
-                <ul>
-                  <li class="dropdown-header">Newsletter</li>
-                  <form class="form" role="form">
-                    <div class="form-group">
-                      <label class="sr-only" for="email">Email address</label>
-                      <input type="email" class="form-control" id="email" placeholder="Enter email">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                  </form>
-                   <li class="divider"></li>
-                   <li><a href="#">{% trans "Full Categories Page" %} ></a></li>
-                </ul>
+                  <ul>
+                      <li class="dropdown-header">Newsletter</li>
+                      <form class="form" role="form">
+                          <div class="form-group">
+                              <label class="sr-only" for="email">Email address</label>
+                              <input type="email" class="form-control" id="email" placeholder="Enter email">
+                          </div>
+                          <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                      </form>
+                      <li class="divider"></li>
+                      <li><a href="#">{% trans "Full Categories Page" %} ></a></li>
+                  </ul>
               </li>
+              {% endcomment %}
             </ul>
           </li>
         </ul>
