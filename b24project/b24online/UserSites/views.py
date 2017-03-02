@@ -278,6 +278,9 @@ class SiteUpdate(UpdateView):
         if 'odnoklassniki' in form.changed_data:
             form.instance.metadata['odnoklassniki'] = form.cleaned_data['odnoklassniki']
 
+        if 'google_analytics' in form.changed_data:
+            form.instance.metadata['google_analytics'] = form.cleaned_data['google_analytics']
+
         with transaction.atomic():
             self.object = form.save()
             gallery_images_form.instance = self.object.get_gallery(self.request.user)

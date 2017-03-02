@@ -200,6 +200,12 @@ class UserSite(ActiveModelMixing, models.Model):
         return None
 
     @property
+    def google_analytics(self):
+        if self.metadata:
+            return self.metadata.get('google_analytics', '')
+        return None
+
+    @property
     def color(self):
         if self.color_template:
             return {

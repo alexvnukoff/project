@@ -21,6 +21,7 @@ class SiteForm(forms.ModelForm):
     instagram = forms.CharField(required=False)
     vkontakte = forms.CharField(required=False)
     odnoklassniki = forms.CharField(required=False)
+    google_analytics = forms.CharField(required=False)
 
     languages = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, choices=settings.LANGUAGES)
 
@@ -40,6 +41,7 @@ class SiteForm(forms.ModelForm):
         self.initial['instagram'] = self.instance.instagram
         self.initial['vkontakte'] = self.instance.vkontakte
         self.initial['odnoklassniki'] = self.instance.odnoklassniki
+        self.initial['google_analytics'] = self.instance.google_analytics
         self.fields['delivery_currency'].widget.attrs.update({
             'style': 'width:60%;',
         })

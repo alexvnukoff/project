@@ -201,6 +201,15 @@
         </div>
 
         <br>
+
+        <h3>{% trans 'Google Analytics' %}</h3>
+        <div class="form-group">
+        <label>{% trans "Google Analytics code" %}</label>
+        <input type="text" name="google_analytics" placeholder="for example: UA-69005122-2" maxlength="30" class="text" style="width:60%;" value="{{ form.google_analytics.value|default_if_none:"" }}">
+        {% if form.errors.google_analytics %}<small class="error">{{ form.errors.google_analytics.0 }}</small>{% endif %}
+        </div>
+
+        <br>
         <div class="form-group">
         <label>{% trans "Organization logo" %} <span>({% trans "Max Dimensions" %} 220x120px)</span></label>
         <input type="file" name="logo">
