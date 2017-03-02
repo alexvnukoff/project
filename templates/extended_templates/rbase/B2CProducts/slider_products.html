@@ -1,0 +1,23 @@
+{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}
+
+<!-- categories carusel -->
+<div class="container">
+  <div class="row">
+      <h3 class="section-header">{% trans "Other products" %}</h3>
+  </div>
+
+    <div class="items-slider">
+    <div id="owl-slide-1">
+    {% if products %}
+    {% with num_of_prod=products|length %}
+    {% for product in products %}
+    <div style="" class="item"><a href="{% url 'b2c_products:detail' product.slug product.pk %}"><img src="{{ product.image.big }}" alt="{{ product.name }}"></a></div>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+
+    </div>
+  </div>
+
+  </div>
+  <!-- ************************ -->

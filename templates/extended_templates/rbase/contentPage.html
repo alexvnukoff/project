@@ -9,19 +9,14 @@
     <div class="container">
       <div class="row main-banners">
 
-                      {# 4 banners, will lead to categories or products #}
-            {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
-            {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
-                {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
             {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
             {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
             {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
 
             {% if right_banner_1 %}
                     <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
-
-
-        {% if right_banner_4 %}
+            {% if right_banner_4 %}
 
               <div class="col-sm-3 col-xs-3 banner-1">
                 <div class="banner-box">
@@ -47,7 +42,7 @@
                 </div>
               </div>
 
-        {% elif right_banner_3 %}
+            {% elif right_banner_3 %}
 
               <div class="col-sm-4 col-xs-4 banner-1">
                 <div class="banner-box">
@@ -67,7 +62,7 @@
                 </div>
               </div>
 
-         {% elif right_banner_2 %}
+             {% elif right_banner_2 %}
 
               <div class="col-sm-6 col-xs-6 banner-1">
                 <div class="banner-box">
@@ -81,7 +76,7 @@
                 </div>
               </div>
 
-         {% elif right_banner_1 %}
+             {% elif right_banner_1 %}
 
               <div class="col-sm-12 col-xs-12 banner-1">
                 <div class="banner-box">
@@ -89,7 +84,7 @@
                 </div>
               </div>
 
-        {% endif %}
+            {% endif %}
             </div>
 
 {% endif %}
@@ -97,6 +92,83 @@
       </div>
     </div>
     <!-- end of banners under slider -->
+
+    <!-- **************************************** -->
+    <!-- main sidebar + products                  -->
+    <!-- **************************************** -->
+    <div class="container">
+      <div class="hidden-sm hidden-xs main-sidebar">
+
+        <div class="row front-heading">
+            <h3 class="section-header">{% trans "Categories" %}</h3>
+        </div>
+
+            <!--code http://bytutorial.com/blogs/css/css-vertical-fly-out-menu -->
+            <div id="menuwrapper">
+                <ul>
+                {% b2c_categories_ex as categories %}
+                {% for k,v in categories.items %}
+                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+
+        <div class="side-banners-wrap">
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 1" %}
+          </div>
+
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 2" %}
+          </div>
+        </div>
+
+    </div>
+    <!--end of the sidebar menu -->
+
+    {% b2c_products 'B2CProducts/new_label_products.html' 8 %}
+    {% b2c_products 'B2CProducts/special_products.html' 3 %}
+
+      <div class="container">
+      <div class="info-banners-wrap">
+        <div class="row">
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-truck" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>Shipping</h2>
+              <p>We deliver all over the country!</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-credit-card" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>Payments</h2>
+              <p>We get all credit cards and paypal!</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-life-ring" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>Support</h2>
+              <p>Have a question? Get in touch!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    {% b2c_products 'B2CProducts/slider_products.html' 8 %}
+
 {% endblock %}
 {% block js %}{% endblock %}
 

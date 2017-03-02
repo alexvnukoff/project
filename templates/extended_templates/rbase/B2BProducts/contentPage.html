@@ -1,4 +1,4 @@
-{% extends 'usersites/index.html' %}
+{% extends 'extended_tempates/rbase/index.html' %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
@@ -16,7 +16,7 @@
     {{ block.super }}
 
 <section class="content__info">
-   {% include 'usersites/Paginator.html' %}
+   {% include 'extended_tempates/rbase/Paginator.html' %}
 
                 <section class="content__info__products">
                     <h2>{% trans 'B2B Products' %}</h2>
@@ -53,5 +53,5 @@
                     </ul>
                 </section>
 
-   {% include 'usersites/Paginator.html' %}
+   {% include 'extended_tempates/rbase/Paginator.html' %}
 {% endblock %}

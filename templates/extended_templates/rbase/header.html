@@ -15,8 +15,8 @@
               <li class="hidden-xs"><a href="{% url 'my_profile' %}">{% trans "Profile" %}</a></li>
               <li class="hidden-xs"><a href="{% url 'auth_logout' %}">{% trans "Logout" %}</a></li>
               {% else %}
-              <li class="hidden-xs"><a href="#" data-toggle="modal" data-target="#myModal">{% trans "Login" %}</a> / <a href="register.html">{% trans "Join for FREE" %}</a></li>
-              <li class="visible-xs"><a href="#" data-toggle="modal" data-target="#myModal">{% trans "Login" %}</a> / <a href="register.html">{% trans "Join" %}</a></li>
+              <li class="hidden-xs"><a href="#" data-toggle="modal" data-target="#modal-login">{% trans "Login" %}</a> / <a data-toggle="modal" data-target="#modal-register" href="#">{% trans "Join for FREE" %}</a></li>
+              <li class="visible-xs"><a href="#" data-toggle="modal" data-target="#modal-login">{% trans "Login" %}</a> / <a data-toggle="modal" data-target="#modal-register" href="#">{% trans "Join" %}</a></li>
               {% endif %}
               <li class="hidden-xs">{% trans "Help &amp; Contact" %}</li>
               <li class="visible-xs">{% trans "Contact" %}</li>
@@ -52,8 +52,9 @@
         <a href="/" class="navbar-brand" rel="first"><img src="{% static 'ext/rbase/images/b24_logo.png' %}"></a>
       </div>
 
+  {% if not request.user.is_authenticated %}
     <!-- Modal Login-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -65,9 +66,12 @@
 
           <div class="modal-body">
               <form role="form" action="{% url 'auth_login' %}" method="POST">{% csrf_token %}
+
+              {% comment %}
               <div class="alert alert-danger">
                   <a class="close" data-dismiss="alert" href="#">×</a>{% trans "Incorrect Username or Password!" %}
               </div>
+              {% endcomment %}
 
               <div style="margin-bottom: 12px" class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -76,29 +80,19 @@
 
               <div style="margin-bottom: 12px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+                <input id="login-password" type="password" class="form-control" name="password" placeholder="{% trans "password" %}">
               </div>
 
-              <div class="input-group">
-                <div class="checkbox" style="margin-top: 0px;">
-                  <label>
-                  <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
-                  </label>
-                </div>
-              </div>
-
-              <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+              <input class="btn btn-lg btn-success btn-block" type="submit" value="{% trans "Login" %}">
+              {% comment %}
               <center><h4>OR</h4></center>
               <input class="btn btn-lg btn-facebook btn-block" type="submit" value="Login via facebook">
+              {% endcomment %}
             </form>
           </div>
           <div class="modal-footer">
             <div style="font-size:85%">
-                <a href="#" class="forgot-pass">Forgot password?</a><br/>
-                Don't have an account!
-                <a href="register.html" class="login-signup">
-                    Sign Up Here
-                </a>
+                <a href="{% url 'auth_password_reset' %}" class="forgot-pass">{% trans "Forgot password?" %}</a>
             </div>
           </div>
 
@@ -106,6 +100,50 @@
       </div>
     </div><!-- end of dialog -->
 
+
+    <!-- Modal Register-->
+    <div class="modal fade" id="modal-register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">{% trans "Register to B24Online" %}</h4>
+          </div>
+
+          <div class="modal-body">
+              <form role="form" action="{% url 'registration_register' %}" method="POST">{% csrf_token %}
+
+              {% comment %}
+              <div class="alert alert-danger">
+                  <a class="close" data-dismiss="alert" href="#">×</a>{% trans "Incorrect Username or Password!" %}
+              </div>
+              {% endcomment %}
+
+              <div style="margin-bottom: 12px" class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                  <input id="login-username" type="text" class="form-control" name="email" value="" placeholder="{% trans "email" %}">
+              </div>
+
+              <div style="margin-bottom: 12px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="login-password" type="password" class="form-control" name="password1" placeholder="{% trans "password" %}">
+              </div>
+
+              <div style="margin-bottom: 12px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="login-password" type="password" class="form-control" name="password2" placeholder="{% trans "confirm the password" %}">
+              </div>
+              <input class="btn btn-lg btn-success btn-block" type="submit" value="{% trans "Register" %}">
+
+            </form>
+          </div>
+
+        </div><!-- end of modal-content -->
+      </div>
+    </div><!-- end of dialog -->
+    {% endif %}
 
       <div class="collapse navbar-collapse js-navbar-collapse cat-menu">
         <ul class="nav navbar-nav">
