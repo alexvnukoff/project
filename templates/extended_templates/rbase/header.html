@@ -145,6 +145,7 @@
     </div><!-- end of dialog -->
     {% endif %}
 
+
       <div class="collapse navbar-collapse js-navbar-collapse cat-menu">
         <ul class="nav navbar-nav">
           <li class="dropdown mega-dropdown">
@@ -218,4 +219,7 @@
     </form>
 </div><!--end of navbar -->
 
+<div style="position:absolute;top:50px;right:80px;">
+<span ngCloak><a href="{% url 'b2c_products:basket' %}">Basket: {{ request|basket_quantity }}</a></span>
+</div>
 

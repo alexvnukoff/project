@@ -1,0 +1,33 @@
+{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}{% load inclusionTags %}{% load content_tags %}
+
+    <!-- **************************************** -->
+    <!-- main sidebar + products                  -->
+    <!-- **************************************** -->
+    <div class="container">
+    <div class="row front-heading">
+        <h3 class="section-header">{{ category }}</h3>
+        </div>
+      <div class="hidden-sm hidden-xs main-sidebar">
+
+            <!--code http://bytutorial.com/blogs/css/css-vertical-fly-out-menu -->
+            <div id="menuwrapper">
+                <ul>
+                {% b2c_categories_ex as categories %}
+                {% for k,v in categories.items %}
+                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+
+        <div class="side-banners-wrap">
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 1" %}
+          </div>
+
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 2" %}
+          </div>
+        </div>
+
+    </div>
+    <!--end of the sidebar menu -->
