@@ -328,7 +328,8 @@ body{
 }
 
 .main-video .main-video-img,
-.main-video .main-video-caption{
+.main-video .main-video-caption,
+.main-video .media {
 	float: right;
 }
 

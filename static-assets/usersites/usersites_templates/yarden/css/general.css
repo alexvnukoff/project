@@ -1974,6 +1974,11 @@ footer .btn-default{
 .galllery-page-wrapper .gallery img{
 	float: right;
 	padding: 0;
+	margin-bottom: 10px;
+}
+
+.gal-container{
+	margin-bottom: 20px;
 }
 
 .galllery-page-wrapper{
