@@ -22,6 +22,10 @@ h1 a:focus,
 	background-color: #ddd;
 }
 
+.user-reg a {
+    color: #fff;
+}
+
 /** Slider Styling ***************/
 /*********************************/
 
