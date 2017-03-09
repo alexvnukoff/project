@@ -46,6 +46,17 @@ body{
 	right: 0;
 }
 
+.top-nav .dropdown-menu{
+	right: 0;
+    left: auto;
+    float: left;
+    text-align: right;
+}
+
+.top-nav .social-header{
+	float: left;
+}
+
 /** Slider Styling ***************/
 /*********************************/
 
@@ -74,6 +85,14 @@ body{
 	position: relative;
 	padding-left: 10px;
 }
+
+@media (max-width: 480px) {
+	.main-products__row .main-products__col .thumbnail img{
+		float: right;
+		margin-left: 5px;
+	}
+}
+
 
 /** About Page Styling ***************/
 /*********************************/

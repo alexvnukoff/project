@@ -7,6 +7,16 @@
 	float: left;
 }
 
+.top-nav .pull-left{
+	float: right!important;
+}
+
+.top-nav .social-header,
+.top-search-block{
+	float: left;
+}
+
+
 /** Slider Styling ***************/
 /*********************************/
 
@@ -38,6 +48,13 @@
 	float: left;
 	position: relative;
 	padding-right: 10px;
+}
+
+@media (max-width: 480px) {
+	.main-products__row .main-products__col .thumbnail img{
+		float: left;
+		margin-right: 5px;
+	}
 }
 
 /** About Page Styling ***************/

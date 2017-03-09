@@ -1,6 +1,111 @@
 {% load i18n %}{% load staticfiles %}
 {% load CustomFilters %}
 
+{# Top navigation. Include: search, basket, lanuage menu and social icons. In xs mode will include call now button too. #}
+<div class="top-nav">
+        <div class="pull-left">
+            <div class="top-search-block">
+
+                <div class="tmp_search  top_search clearfix hidden-xs">
+                    <form action="{% url 'b2c_products:search' %}">
+                        <input type="text" placeholder="Search" name="s">
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="social-header">
+              <div style="text-align:center;margin:0 auto;">
+
+                {% if site.user_site.facebook %}
+                <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.youtube %}
+                <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.twitter %}
+                <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.instagram %}
+                <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.vkontakte %}
+                <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
+                {% endif %}
+
+                {% if site.user_site.odnoklassniki %}
+                <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
+                {% endif %}
+
+                {% if site_languages|length > 1 %}
+                    <div class="language-navi">
+                        <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
+                        <div class="language-navi-dropdown">
+                            {% for code, lang in site_languages %}
+                                {% if not code == LANGUAGE_CODE %}
+                                    <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+              </div>
+        </div>
+    </div>
+
+    <div class="user-reg hidden-xs hidden-sm">
+        {# Registration. login and logout #}
+            {% if user.is_authenticated %}
+                <ul class="">
+                    {% get_messages_number as messages_number %}
+                    <li>
+                        <a href="{% url 'my_profile' %}">
+                            {% if request.user.profile.avatar %}
+                                <img src="{{ request.user.profile.avatar.th }}"
+                                    style="vertical-align:middle;margin-top:-4px;width:18px;">
+                            {% else %}
+                                <img src="/static/b24online/img/profile_24x24.jpg">
+                            {% endif %}
+                            &nbsp;
+                            {% if request.user.profile %}
+                                {{ request.user.profile.full_name }}
+                            {% else %}
+                                {{ request.user }}
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li><a href="{% url 'auth_logout' %}">{% trans 'Sign out' %}</a></li>
+                    <li><a href="{% url 'messages:main' %}">
+                        <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png">{{ messages_number }}</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul>
+                    <li>
+                        <a href="{% url 'registration_register' %}" class="dialog-open"
+                            data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'auth_login' %}" class="dialog-open"
+                            data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a>
+                    </li>
+                </ul>
+           {% endif %}
+
+    </div>
+
+        <div class="tel vertical visible-xs">
+            <i class="fa fa-phone-square" aria-hidden="true"></i>
+            <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
+        </div>
+</div>
+{# End of top navigation. #}
 
 {#<!-- Navigation on Top. Logo on the top bar. -->#}
 <nav role="navigation" class="navbar navbar-default">
@@ -57,57 +162,10 @@
             <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
         </ul>
 
-        <form role="search" class="navbar-form navbar-right">
-            <div class="form-group">
-                <form action="{% url 'b2c_products:search' %}">
-                    <input type="text" placeholder="Search" name="s">
-                </form>
-            </div>
-        </form>
 
-        {% comment %}<div class="top-search-block">
-            <div class="tmp_search  top_search clearfix hidden-xs">
-                <form action="{% url 'b2c_products:search' %}">
-                    <input type="text" placeholder="Search" name="s">
-                </form>
-            </div>
-        </div>{% endcomment %}
 
         <ul id="cart-menu" class="nav navbar-nav navbar-right">
-            <li>
 
-{#              <!-- Social links  -->#}
-                <div class="social-header">
-                  <div style="text-align:center;margin:0 auto;">
-
-                    {% if site.user_site.facebook %}
-                    <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
-                    {% endif %}
-
-                    {% if site.user_site.youtube %}
-                    <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
-                    {% endif %}
-
-                    {% if site.user_site.twitter %}
-                    <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
-                    {% endif %}
-
-                    {% if site.user_site.instagram %}
-                    <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
-                    {% endif %}
-
-                    {% if site.user_site.vkontakte %}
-                    <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
-                    {% endif %}
-
-                    {% if site.user_site.odnoklassniki %}
-                    <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
-                    {% endif %}
-
-                  </div>
-                </div>
-
-            </li>
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><span> {{ request|basket_quantity }} </span><b class="glyphicon glyphicon-shopping-cart"></b> <b class="caret"></b></a>
                 <ul id="cart-dropdown" role="menu" class="dropdown-menu">
@@ -142,21 +200,6 @@
             </li>
 
             {# lanuage dropdown list. open in hover. #}
-            <li class="dropdown">
-                {% if site_languages|length > 1 %}
-                    <div class="language-navi">
-                        <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
-                        <div class="language-navi-dropdown">
-                            {% for code, lang in site_languages %}
-                                {% if not code == LANGUAGE_CODE %}
-                                    <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                {% endif %}
-            </li>
 
         </ul>
     </div>
