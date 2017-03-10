@@ -249,7 +249,8 @@ class B2CProductByEmail(UserTemplateMixin, FormView):
                       [org_email, 'migirov@gmail.com'], fail_silently=False)
 
         # Save the bought products to Deal and DealItems
-        self.save_deal_order(basket, data=cd)
+        if self.template.typeof == settings.TYPEOF_TEMPLATE[0][0]:
+            self.save_deal_order(basket, data=cd)
         return super(B2CProductByEmail, self).form_valid(form)
 
     def save_deal_order(self, basket, data={}):

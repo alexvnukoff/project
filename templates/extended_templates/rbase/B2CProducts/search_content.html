@@ -1,18 +1,13 @@
 {% load i18n %}
 {% load CustomFilters %}
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
-
-{% block title %}{% trans "B2C Products" %}{% endblock %}
 
 <section class="content__info">
 
-{# Page title #}
  <div class="container">
             <h2 class="page-header in-page">{% trans 'Search B2C Products' %}</h2>
-            {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
-
-{#        <div class="row main-products-thumb">#}
+            {% include 'extended_templates/rbase/B2CProducts/paginator.html' %}
 
             <div id="wrapper">
                 <div id="columns">
@@ -68,10 +63,8 @@
                     {% endfor %}
 
                 </div>
-{#            </div>#}
-
         </div>
 
- {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
+{% include 'extended_templates/rbase/B2CProducts/paginator.html' %}
  </div>
 

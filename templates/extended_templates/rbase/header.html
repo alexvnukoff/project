@@ -2,8 +2,6 @@
 
 {% load CustomFilters %}
 
-
-
   <!-- Navigation -->
     <!-- top page navigation, will apear on all pages -->
     <div class="top-navigation">
@@ -38,7 +36,6 @@
 
         </div><!-- end of top navigation container -->
     </div><!-- end of top navigtion -->
-
 
   <div class="container">
     <nav class="navbar navbar-default main-navbar">
@@ -201,9 +198,9 @@
           </li>
         </ul>
 
-        <form id="custom-search-form" class="form hidden-xs">
+        <form id="custom-search-form" action="{% url 'b2c_products:search' %}" class="form hidden-xs">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control" placeholder="Search" name="s">
                 <button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
             </div>
         </form>
