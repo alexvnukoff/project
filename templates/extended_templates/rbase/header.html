@@ -1,6 +1,4 @@
-{% load i18n %}{% load static %}{% load content_tags %}
-
-{% load CustomFilters %}
+{% load i18n %}{% load static %}{% load content_tags %}{% load CustomFilters %}
 
   <!-- Navigation -->
     <!-- top page navigation, will apear on all pages -->
@@ -176,6 +174,7 @@
                     {% for k,v in categories.items %}
                     <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
                     {% endfor %}
+                    <li><a href="{% url 'b2c_products:categories' %}">{% trans "Full Categories Page >" %}</a></li>
                 </ul>
               </li>
               {% comment %}

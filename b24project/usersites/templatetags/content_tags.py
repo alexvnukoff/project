@@ -203,6 +203,25 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
 
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
+def b2c_products_special(context, template_name, on_page):
+    usersite, template, organization = get_usersite_objects()
+
+    if template.typeof == 1:
+        children = organization.children.all()
+        queryset = B2CProduct.get_active_objects().filter(company__in=children).order_by('?')[:3]
+    else:
+        if isinstance(organization, Company):
+            queryset = B2CProduct.get_active_objects().filter(company=organization).order_by('?')[:3]
+        else:
+            queryset = B2CProduct.objects.none()
+
+    return {
+            'template': get_template_with_base_path(template_name),
+            'products': queryset
+        }
+
+
+@register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
 def coupons(context, template_name, on_page, page=1, selected_category=None, order_by='-created_at'):
     usersite, template, organization = get_usersite_objects()
     # TODO

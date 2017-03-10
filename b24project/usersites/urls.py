@@ -36,14 +36,12 @@ urlpatterns = [
     # Additionals
     url(r'^api/', include(usersites.Api.urls)),
     url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
+    url(r'^profile/change_password/$', usersites.views.ChangePassword.as_view(), name='change_password'),
+    url(r'^profile/change_password/done/$', usersites.views.ChangePasswordDone.as_view(), name='change_password_done'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^denied/$', TemplateView.as_view(template_name="usersites/denied.html"), name='denied'),
-
-    # Extended 
-    url(r'^category/', include(usersites.Category.urls, namespace='category')),
-
     # url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),
     #url(r'^page(?P<page>[0-9]+)?/$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name="paginator"),

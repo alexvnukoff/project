@@ -38,73 +38,6 @@
     <!-- **************************************** -->
     <div class="col-md-9 col-sm-12 col-xs-12 main-prod-wrapper">
 
-    {% comment %}
-        <div class="container-fluid">
-            <div id="product_carousel" class="carousel slide" data-ride="carousel" data-interval="2500">
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner">
-                    <div class="item active">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-7"><img src="images/ps1.jpg" class="img-responsive"></div>
-                                <div class="col-md-5">
-                                    <h2>Apple Macbook Pro 13 A1278 2.3GHz i5-2415M 320GB HDD 4GB Ram MC700LL Early-2011</h2>
-                                    <p class="hidden-xs">OS X El Capitan; USB-C Port Only. PEASE NOTE: This MacBook has a single USB-C port (a new version of USB) which handles power and connectivity to all peripherals. </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-7"><img src="images/ps2.jpg" class="img-responsive"></div>
-                                <div class="col-md-5">
-                                    <h2>Apple MacBook MLHF2LL/A 12-Inch Laptop with Retina Display</h2>
-                                    <p class="hidden-xs">OS X El Capitan; USB-C Port Only. PEASE NOTE: This MacBook has a single USB-C port (a new version of USB) which handles power and connectivity to all peripherals. </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-7"><img src="images/ps3.jpg" class="img-responsive"></div>
-                                <div class="col-md-5">
-                                    <h2>Samsung Galaxy S7 Edge G935F 4G 32GB Octa-Core 5.5" Factory Unlocked Silver</h2>
-                                    <p class="hidden-xs">The new Samsung Galaxy S7 edge boasts the first Dual Pixel camera on a smartphone, delivering brighter and sharper images, even in low light.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-7"><img src="images/ps4.jpg" class="img-responsive"></div>
-                                <div class="col-md-5">
-                                    <h2>Nikon D5300 24.2 MP CMOS Digital SLR Camera</h2>
-                                    <p class="hidden-xs">Capture and instantly share the most vibrant, lifelike images of your life. Meet the first in an exciting new generation of Wi-Fi enabled, ultra-high-resolution Nikon HD-SLRs: the D5300.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Item -->
-                </div>
-                <!-- End Carousel Inner -->
-                <div class="controls">
-                    <ul class="nav">
-                        <li data-target="#product_carousel" data-slide-to="0" class="active"><a href="#"><div class="slide-img-wrap"><img src="images/ps1.jpg"></div><small class="hidden-xs">Apple Macbook Pro 13 A1278 2.3GHz i5-2415M 320GB HDD 4GB Ram MC700LL</small></a></li>
-                        <li data-target="#product_carousel" data-slide-to="1"><a href="#"><div class="slide-img-wrap"><img src="images/ps2.jpg"></div><small class="hidden-xs">Apple MacBook MLHF2LL/A 12-Inch Laptop with Retina Display</small></a></li>
-                        <li data-target="#product_carousel" data-slide-to="2"><a href="#"><div class="slide-img-wrap"><img src="images/ps3.jpg"></div><small class="hidden-xs">Samsung Galaxy S7 Edge G935F 4G 32GB Octa-Core 5.5"</small></a></li>
-                        <li data-target="#product_carousel" data-slide-to="3"><a href="#"><div class="slide-img-wrap"><img src="images/ps4.jpg"></div><small class="hidden-xs">Nikon D5300 24.2 MP CMOS Digital SLR Camera</small></a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End Carousel -->
-        </div>
-
-        {% endcomment %}
-
-
       <div class="row products-grid">
 
       {% comment %}
@@ -191,7 +124,7 @@
     {% endif %}
     </div>
 
-    {% b2c_products 'B2CProducts/special_products.html' 3 %}
+    {% b2c_products_special 'B2CProducts/special_products.html' 3 %}
     </div>
     </div>
 

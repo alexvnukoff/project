@@ -466,3 +466,19 @@ def delivery_info_json(request, **kwargs):
 
     return HttpResponseBadRequest()
 
+
+class CategoriesView(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/B2CProducts/categoriesPage.html'
+    current_section = ""
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoriesView, self).get_context_data(**kwargs)
+
+        context = {
+            'current_section': self.current_section,
+            'organization': self.organization,
+            'title': _("Categories"),
+        }
+
+        return context
+

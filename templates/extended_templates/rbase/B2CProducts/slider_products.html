@@ -9,11 +9,9 @@
     <div class="items-slider">
     <div id="owl-slide-1">
     {% if products %}
-    {% with num_of_prod=products|length %}
     {% for product in products %}
     <div style="" class="item"><a href="{% url 'b2c_products:detail' product.slug product.pk %}"><img src="{{ product.image.big }}" alt="{{ product.name }}"></a></div>
     {% endfor %}
-    {% endwith %}
     {% endif %}
 
     </div>
