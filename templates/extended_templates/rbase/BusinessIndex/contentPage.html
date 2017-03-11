@@ -1,0 +1,78 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load i18n %}{% load content_tags %}{% load static %}{% load humanize %}{% load inclusionTags %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+  <div class="container">
+    <div class="row bindex-features">
+      <div class="col-md-4 col-sm-4 bindex-single-feature">
+        <img src="{% static 'ext/rbase/images/bindex-icon2.png' %}">
+        <h2>{% trans "Find the best busines" %}</h2>
+        <p></p>
+      </div>
+
+      <div class="col-md-4 col-sm-4 bindex-single-feature">
+        <img src="{% static 'ext/rbase/images/bindex-icon1.png' %}">
+        <h2>{% trans "The fast and best way" %}</h2>
+        <p></p>
+      </div>
+
+      <div class="col-md-4 col-sm-4 bindex-single-feature">
+        <img src="{% static 'ext/rbase/images/bindex-icon3.png' %}">
+        <h2>{% trans "It's all around you" %}</h2>
+        <p></p>
+      </div>
+    </div>
+  </div>
+
+{% comment %}
+  <!-- categories -->
+  <div class="container">
+    <div id="bindex-cat-list">
+      <ul>
+        <li><a href="bindex_cat_page.html">Accountants</a></li>
+        <li><a href="bindex_cat_page.html">Advertising</a></li>
+        <li><a href="bindex_cat_page.html">Architects</a></li>
+        <li><a href="bindex_cat_page.html">Artists</a></li>
+        <li><a href="bindex-cat-page.html">Builders</a></li>
+        <li><a href="bindex-cat-page.html">Cafes</a></li>
+        <li><a href="bindex-cat-page.html">Car Hire</a></li>
+        <li><a href="bindex-cat-page.html">Catering</a></li>
+        <li><a href="bindex-cat-page.html">Clothes Shops</a></li>
+        <li><a href="bindex-cat-page.html">Computers</a></li>
+        <li><a href="bindex-cat-page.html">Driving Instructors</a></li>
+        <li><a href="bindex-cat-page.html">Education</a></li>
+        <li><a href="bindex-cat-page.html">Electricians</a></li>
+        <li><a href="bindex-cat-page.html">Estate Agents</a></li>
+        <li><a href="bindex-cat-page.html">Fitness</a></li>
+        <li><a href="bindex-cat-page.html">Florists</a></li>
+        <li><a href="bindex-cat-page.html">Gifts</a></li>
+        <li><a href="bindex-cat-page.html">Hairdressers</a></li>
+        <li><a href="bindex-cat-page.html">Hotels</a></li>
+        <li><a href="bindex-cat-page.html">Insurance</a></li>
+        <li><a href="bindex-cat-page.html">Jewellery</a></li>
+        <li><a href="bindex-cat-page.html">Lawyers</a></li>
+        <li><a href="bindex-cat-page.html">Manufacturing</a></li>
+        <li><a href="bindex-cat-page.html">Marketing</a></li>
+        <li><a href="bindex-cat-page.html">Music</a></li>
+        <li><a href="bindex-cat-page.html">Photographers</a></li>
+        <li><a href="bindex-cat-page.html">Plumbers</a></li>
+        <li><a href="bindex-cat-page.html">Printing</a></li>
+        <li><a href="bindex-cat-page.html">Restaurants</a></li>
+        <li><a href="bindex-cat-page.html">Sports</a></li>
+        <li><a href="bindex-cat-page.html">Taxis</a></li>
+        <li><a href="bindex-cat-page.html">Travel Agents</a></li>
+        <li><a href="bindex-cat-page.html">Web Designers</a></li>
+        <li><a href="bindex-cat-page.html">Web Development</a></li>
+        <li><a href="bindex-cat-page.html">Weddings</a></li>
+      </ul>
+    </div>
+
+  </div>
+{% endcomment %}
+
+
+{% endblock %}

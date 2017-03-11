@@ -14,6 +14,7 @@ import usersites.Questionnaires.urls
 import usersites.Video.urls
 import usersites.Exhibitions.urls
 import usersites.Category.urls
+import usersites.BusinessIndex.urls
 import usersites.views
 from appl import func
 
@@ -32,6 +33,7 @@ urlpatterns = [
     url(r'^exhibitions/', include(usersites.Exhibitions.urls, namespace='exhibitions')),
     url(r'^sendmessage/$', usersites.views.sendmessage.as_view(), name='sendmessage'),
     url(r'^message_sent/$', usersites.views.MessageSent.as_view(), name='message_sent'),
+    url(r'^business_index/', include(usersites.BusinessIndex.urls, namespace='business_index')),
 
     # Additionals
     url(r'^api/', include(usersites.Api.urls)),

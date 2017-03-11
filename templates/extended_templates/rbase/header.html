@@ -6,7 +6,7 @@
         <div class="container">
 
           <ul class="top-navigation__menu">
-              <li class="hidden-xs"><a href="b_index.html">{% trans "Business Index" %}</a></li>
+              <li class="hidden-xs"><a href="{% url 'business_index:main' %}">{% trans "Business Index" %}</a></li>
               {% if request.user.is_authenticated %}
               <li class="hidden-xs"><a href="{% url 'my_profile' %}">{% trans "Profile" %}</a></li>
               <li class="hidden-xs"><a href="{% url 'auth_logout' %}">{% trans "Logout" %}</a></li>

@@ -81,7 +81,7 @@
             {% endif %}
 
             </form>
-      </div>
+
         {% if object.cost %}
         {% include "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
         {% if paypal_form %}
@@ -97,8 +97,9 @@
         <div class="product-page-shipping">{% trans "Shipping: FREE shipping all over the world!" %}</div>
         <hr class="hr-gray">
         <div class="well product-page-seller"><b>{% trans "Seller information" %}:</b><br/>
-        {{ object.company }}<br />
+        <a href="{% url 'pages:company' object.company.id %}">{{ object.company }}</a><br />
       </div>
+    </div>
     </div>
 
     <div class="product-page-description">
