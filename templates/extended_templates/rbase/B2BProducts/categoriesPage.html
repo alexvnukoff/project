@@ -1,0 +1,21 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load i18n %}{% load content_tags %}{% load static %}{% load humanize %}{% load inclusionTags %}
+
+{% block title %}{% trans "B2B Products" %}{% endblock %}
+
+{% block content %}
+
+
+<div class="all-cat-section">
+<h3 class="letter-header">{% trans "Full Categories Page" %}</h3>
+<ul class="all-cat-list">
+
+    {% b2b_categories_ex as categories %}
+    {% for k,v in categories.items %}
+    <li><a href="{% url 'b2b_products:category' v.slug k %}">{{ v.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+
+</div>
+{% endblock %}

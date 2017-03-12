@@ -12,9 +12,9 @@
             <!--code http://bytutorial.com/blogs/css/css-vertical-fly-out-menu -->
             <div id="menuwrapper">
                 <ul>
-                {% b2c_categories_ex as categories %}
+                {% b2b_categories_ex as categories %}
                 {% for k,v in categories.items %}
-                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                <li><a href="{% url 'b2b_products:category' v.slug k %}">{{ v.name }}</a></li>
                 {% endfor %}
                 </ul>
             </div>

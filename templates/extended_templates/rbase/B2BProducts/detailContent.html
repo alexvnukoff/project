@@ -1,135 +1,88 @@
-{% extends 'extended_tempates/rbase/index.html' %}
-{% load static %}
-{% load i18n %}
-{% load CustomFilters %}
-{% load inclusionTags %}
-{% load humanize %}
-{% block title %}{{ object.name }} {{ object.sku }}{% endblock %}
+{% extends 'extended_templates/rbase/index.html' %}
+{% load static %}{% load i18n %}{% load CustomFilters %}{% load staticfiles %}{% load inclusionTags %}{% load humanize %}
+{% block title %}{{ object.name }}{% endblock %}
 {% block content %}
     {{ block.super }}
 
-   <section class="content__info grid-layout">
-        {# Register the 'view' event for b2c product #}
-        {{ object|register_event:"click"|process_event:request }}
+    <!-- product page content -->
+  <div class="container product-page-wrap">
+    {# Register the 'view' event for b2c product #}
+    {{ object|register_event:"click"|process_event:request }}
 
-        <div class="product_box clearfix">
-            <h2>{{ object.name }} {{ object.sku }}</h2>
-            <div class="preview">
-                {% if object.image %}
-                  <img src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />
-                {% else %}
-                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </div>
-            <div class="info">
-                <form>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>{% trans "Price" %}:</td>
-                                <td>{{ object.currency|getSymbol }} {{ object.cost|formatPrice }}</td>
-                            </tr>
-                                {% if object.measurement_unit %}
-                                <tr>
-                                    <td>{% trans 'Unit' %}:</td>
-                                    <td>{{ object.get_measurement_unit_display }}</td>
-                                </tr>
-                                {% endif %}
+    <div class="row product-page-top">
+      <div class="col-md-6 col-sm-6 col-xs-12 product-page-image">
+        {% if object.image %}
+            <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
+        {% else %}
+            <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+        {% endif %}
+      </div>
 
-                            {% if paypal_form %}
-                            <tr>
-                                <td>{% trans 'Amount' %}:</td>
-                                <td><input type="text" id="item-amount" ng-model="quantity" name="amount"></td>
-                                </form>
-                            </tr>
-                            {% endif %}
-
-                            <tr>
-                                <td></td>
-                                <td>
-                                    {% if paypal_form %}
-                                    {{ paypal_form.render }}
-                                    {% else %}
-                                        <a style="color:#000;" href="{% url 'pages:contacts' %}">{% trans 'Countact us' %}</a>
-                                    {% endif %}
-                                </td>
-
-                            <tr>
-                                <td></td>
-                                <td>
-                                    {% b2b_social_buttons object.image object.name object.description %}
-                                </td>
-
-                            </td>
-                        </tbody>
-                    </table>
-
-            </div>
-        </div>
+      <div class="col-md-6 col-sm-6 col-xs-12 product-page-info">
+        <h1 class="product-page-title">{{ object.name }}</h1>
+        {% if object.cost %}
+            <p class="product-page-fprice">{{ object.currency|getSymbol }} {{ object.cost|formatPrice }}</p>
+            <br><br>
+        {% else %}
+            <h3><a href="{% url 'pages:company' object.company.id %}">{% trans "Contact Us" %}</a></h3>
+        {% endif %}
 
 
+        {% if object.measurement_unit %}
+          <p>{% trans 'Unit' %}: {{ object.get_measurement_unit_display }}</p>
+        {% endif %}
 
-            {% comment %}
-            <li>
-                <label>{% trans 'Deleviry method' %}:</label>
-                 <div class="rightinfo">
-                        <span class="trans-services"><i class="imgmain transport trans-1"></i></span>
-                        <span class="trans-services"><i class="imgmain transport trans-2"></i></span>
-                        <span class="trans-services"><i class="imgmain transport trans-3"></i></span>
-                        <span class="trans-services"><i class="imgmain transport trans-4"></i></span>
-                        <span class="trans-services"><i class="imgmain transport trans-5"></i></span>
-                 </div>
-            </li>
-            {% endcomment %}
+        <hr class="hr-gray">
+        <div class="product-page-shipping">{% trans "Shipping: FREE shipping all over the world!" %}</div>
+        <hr class="hr-gray">
+        <div class="well product-page-seller"><b>{% trans "Seller information" %}:</b><br/>
+        <a href="{% url 'pages:company' object.company.id %}">{{ object.company }}</a><br />
+      </div>
+    </div>
+    </div>
 
-        <div class="InfoTabs">
-            <ul>
-                <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
-                <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
-                <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
-            </ul>
+    <div class="product-page-description">
+      <ul id="comp-nav">
 
-
-            <div id="tabs-1">
+          <li><a href="#" class="empty-link active">{% trans "Description" %}</a>
+          <section>
+            <div class="product-page-full-desc">
                 {{ object.description|cleanHtml|safe }}
             </div>
+          </section>
+        </li>
 
-
-            <div id="tabs-2">
-                <ul class="tpp-gallery gallery">
+        <li><a href="#" class="empty-link">{% trans "Documents" %}</a>
+          <section>
+            <div class="product-page-full-desc">
+                <ul class="">
                     {% for document_obj in object.documents.all %}
                     <li>
-                        <div class="b-img">
+                        <div class="viewimge">
+                            {{ document_obj.name }}
                             <a target="_blank" href="{{ document_obj.document.url }}">
-                                <img src="{% static "b24online/img/file_icon.png" %}" />
+                                <i class="imgnews"></i><span class="zoomtext"> {% trans 'Download' %}</span>
                             </a>
-                            <div class="viewimge">
-                                <a target="_blank" href="{{ document_obj.document.url }}">
-                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
-                                </a>
-                            </div>
-                            <div class="gray-img"></div>
                         </div>
-                        <div>{{ document_obj.name }}</div>
+                        <div class="gray-img"></div>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
+          </section>
+        </li>
 
-
-            <div id="tabs-3">
-                <ul class="gallery">
-                {% for gallery_obj in object.gallery_images %}
-                    <figure>
-                            <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
-                                <img alt="" src="{{ gallery_obj.image.big }}" />
-                            </a>
-                    </figure>
-                {% endfor %}
-                 </ul>
+        <li><a href="#" class="empty-link">{% trans "Shipping and Payments" %}</a>
+          <section>
+            <div class="product-page-full-desc">
             </div>
-        </div>
-    </section>
+          </section>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
 
 
 {% endblock %}

@@ -170,11 +170,11 @@
               <li class="col-sm-3">
                 <ul>
                     <li class="dropdown-header">{% trans "Categories" %}</li>
-                    {% b2c_categories_ex as categories %}
+                    {% b2b_categories_ex as categories %}
                     {% for k,v in categories.items %}
-                    <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                    <li><a href="{% url 'b2b_products:category' v.slug k %}">{{ v.name }}</a></li>
                     {% endfor %}
-                    <li><a href="{% url 'b2c_products:categories' %}">{% trans "Full Categories Page >" %}</a></li>
+                    <li><a href="{% url 'b2b_products:categories' %}">{% trans "Full Categories Page >" %}</a></li>
                 </ul>
               </li>
               {% comment %}
@@ -197,7 +197,7 @@
           </li>
         </ul>
 
-        <form id="custom-search-form" action="{% url 'b2c_products:search' %}" class="form hidden-xs">
+        <form id="custom-search-form" action="{% url 'b2b_products:search' %}" class="form hidden-xs">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Search" name="s">
                 <button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
@@ -215,7 +215,9 @@
     </form>
 </div><!--end of navbar -->
 
+{% comment %}
 <div style="position:absolute;top:50px;right:80px;">
 <span ngCloak><a href="{% url 'b2c_products:basket' %}">Basket: {{ request|basket_quantity }}</a></span>
 </div>
+{% endcomment %}
 

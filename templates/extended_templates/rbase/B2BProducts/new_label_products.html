@@ -1,0 +1,58 @@
+{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}
+
+    <!-- **************************************** -->
+    <!-- products front page grid -->
+    <!-- **************************************** -->
+    <div class="col-md-9 col-sm-12 col-xs-12 main-prod-wrapper">
+
+    <div class="row front-heading">
+    <h3 class="section-header">{% trans "New Products" %}</h3>
+    </div>
+
+   <div class="row products-grid">
+    {% if products %}
+    {% with num_of_prod=products|length %}
+    {% for product in products %}
+
+       <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 products-wrap">
+          <div class="product product-primary">
+            <div class="product-shape">
+              <div class="product-shape-text">
+                  {% trans "new" %}
+              </div>
+            </div>
+            <div class="product-content">
+
+              <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
+              {% if product.image %}
+              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+              {% else %}
+              <img src="{% static 'b24online/img/item.jpg' %}" />
+              {% endif %}
+
+              <h3 class="lead">{{ product.name|truncatechars:20 }}</h3></a>
+              <p>{{ product.short_description|truncatechars:130 }}</p>
+
+              <hr class="prod-hr">
+              <div class="price-wrap">
+
+                {% if product.cost %}
+                <div class="price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}</div>
+
+                {% if product.cost != product.get_discount_price %}
+                <div class="d-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
+                {% endif %}
+
+                {% else %}
+                <p><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    </div>
+

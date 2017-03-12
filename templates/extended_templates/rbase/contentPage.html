@@ -106,9 +106,9 @@
             <!--code http://bytutorial.com/blogs/css/css-vertical-fly-out-menu -->
             <div id="menuwrapper">
                 <ul>
-                {% b2c_categories_ex as categories %}
+                {% b2b_categories_ex as categories %}
                 {% for k,v in categories.items %}
-                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                <li><a href="{% url 'b2b_products:category' v.slug k %}">{{ v.name }}</a></li>
                 {% endfor %}
                 </ul>
             </div>
@@ -126,8 +126,8 @@
     </div>
     <!--end of the sidebar menu -->
 
-    {% b2c_products 'B2CProducts/new_label_products.html' 8 %}
-    {% b2c_products_special 'B2CProducts/special_products.html' 3 %}
+    {% b2b_products 'B2BProducts/new_label_products.html' 8 %}
+    {% b2b_products_special 'B2BProducts/special_products.html' 3 %}
 
       <div class="container">
       <div class="info-banners-wrap">
@@ -167,7 +167,7 @@
       </div>
     </div>
 
-    {% b2c_products 'B2CProducts/slider_products.html' 8 %}
+    {% b2b_products 'B2BProducts/slider_products.html' 8 %}
 
 {% endblock %}
 {% block js %}{% endblock %}

@@ -1,0 +1,21 @@
+{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}
+
+<!-- categories carusel -->
+<div class="container">
+  <div class="row">
+      <h3 class="section-header">{% trans "Other products" %}</h3>
+  </div>
+
+    <div class="items-slider">
+    <div id="owl-slide-1">
+    {% if products %}
+    {% for product in products %}
+    <div style="" class="item"><a href="{% url 'b2b_products:detail' product.slug product.pk %}"><img src="{{ product.image.big }}" alt="{{ product.name }}"></a></div>
+    {% endfor %}
+    {% endif %}
+
+    </div>
+  </div>
+
+  </div>
+  <!-- ************************ -->

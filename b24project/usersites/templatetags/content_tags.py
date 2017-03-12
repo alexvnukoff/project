@@ -61,13 +61,15 @@ class ItemsTag:
 
 
 class ProductsTag(ItemsTag):
-    def __init__(self, selected_category, search_query=None, *args, **kwargs):
+    def __init__(self, selected_category, search_query=None, children=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.category = self.get_category_model().objects.get(pk=selected_category) if selected_category else None
         self.selected_category = self.category
         self.search_query = search_query.strip() if search_query else None
         self.producer = self.context['request'].GET.get('pr', False)
         self.usersite, self.template, self.organization = get_usersite_objects()
+        # self.children = [x for x in children.all().values_list('id', flat=True)] if children else None
+        self.children = children if children else None
 
     def get_category_model(self):
         for field in self.queryset.model._meta.get_fields():
@@ -90,10 +92,17 @@ class ProductsTag(ItemsTag):
 
         if self.search_query:
             s = SearchEngine(doc_type=self.queryset.model.get_index_model())
-            s = s.query('match', name=self.search_query) \
-                .query('match', is_active=True) \
-                .query('match', is_deleted=False) \
-                .query('match', organization=self.organization.pk)
+            if self.children:
+                s = s.query('match', name=self.search_query) \
+                    .query('match', is_active=True) \
+                    .query('match', is_deleted=False)
+                   # .query('match', organization=self.organization.pk)
+                   # .query('multi_match', query=self.children, fields=['organization'])
+            else:
+                s = s.query('match', name=self.search_query) \
+                    .query('match', is_active=True) \
+                    .query('match', is_deleted=False) \
+                    .query('match', organization=self.organization.pk)
 
             if categories:
                 s = s.filter('terms', b2c_categories=categories, b2b_categories=categories)
@@ -148,6 +157,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
         children = organization.children.all()
         queryset = B2BProduct.get_active_objects().filter(company__in=children).order_by(*order_by)
     else:
+        children = None
         if isinstance(organization, Company):
             queryset = B2BProduct.get_active_objects().filter(company=organization).order_by(*order_by)
         else:
@@ -163,6 +173,7 @@ def b2b_products(context, template_name, on_page, page=1, selected_category=None
         on_page=on_page,
         current_page=page,
         url_paginator=url_paginator,
+        children=children,
         queryset_key='products').result_data
 
 
@@ -200,6 +211,25 @@ def b2c_products(context, template_name, on_page, page=1, selected_category=None
         current_page=page,
         url_paginator=url_paginator,
         queryset_key='products').result_data
+
+
+@register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
+def b2b_products_special(context, template_name, on_page):
+    usersite, template, organization = get_usersite_objects()
+
+    if template.typeof == 1:
+        children = organization.children.all()
+        queryset = B2BProduct.get_active_objects().filter(company__in=children).order_by('?')[:3]
+    else:
+        if isinstance(organization, Company):
+            queryset = B2BProduct.get_active_objects().filter(company=organization).order_by('?')[:3]
+        else:
+            queryset = B2BProduct.objects.none()
+
+    return {
+            'template': get_template_with_base_path(template_name),
+            'products': queryset
+        }
 
 
 @register.inclusion_tag('usersites_templates/dummy_extends_template.html', takes_context=True)
