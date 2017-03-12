@@ -1,4 +1,5 @@
 {% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}
+{% if products %}
 
     <!-- **************************************** -->
     <!-- products front page grid -->
@@ -10,10 +11,8 @@
     </div>
 
    <div class="row products-grid">
-    {% if products %}
-    {% with num_of_prod=products|length %}
-    {% for product in products %}
 
+    {% for product in products %}
        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 products-wrap">
           <div class="product product-primary">
             <div class="product-shape">
@@ -37,14 +36,9 @@
               <div class="price-wrap">
 
                 {% if product.cost %}
-                <div class="price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}</div>
-
-                {% if product.cost != product.get_discount_price %}
-                <div class="d-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
-                {% endif %}
-
+                <div class="price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
                 {% else %}
-                <p><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                <p><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                 {% endif %}
                 </div>
               </div>
@@ -52,7 +46,7 @@
           </div>
 
     {% endfor %}
-    {% endwith %}
-    {% endif %}
     </div>
+
+{% endif %}
 

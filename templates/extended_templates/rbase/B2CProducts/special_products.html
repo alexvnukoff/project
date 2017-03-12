@@ -1,5 +1,5 @@
 {% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}
-
+    {% if products %}
       <!-- *********************************** -->
 
     <!-- **************************************** -->
@@ -11,7 +11,6 @@
     </div>
 
    <div class="row products-grid">
-    {% if products %}
     {% with num_of_prod=products|length %}
     {% for product in products %}
 
@@ -45,7 +44,7 @@
                 {% endif %}
 
                 {% else %}
-                <p><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                <p><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                 {% endif %}
                 </div>
               </div>
@@ -54,8 +53,9 @@
 
     {% endfor %}
     {% endwith %}
-    {% endif %}
 
     </div>
     </div>
     </div>
+{% endif %}
+

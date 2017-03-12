@@ -78,7 +78,7 @@
                                 </p>
 
                                 {% else %}
-                                    <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                    <p class="product__price"><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                             {% endif %}
 
                             {# The button will lead to the product details. #}

@@ -23,7 +23,7 @@
                         {% if product.cost %}
                         <p class="price"><span class="value">{{ product.get_discount_price|formatPrice }}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
                         {% else %}
-                        <p class="price"><a style="color:#000" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                        <p class="price"><a style="color:#000" href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                         {% endif %}
                     </div>
                     <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>

@@ -39,7 +39,7 @@
                                         {% endif %}
                                     </p>
                                 {% else %}
-                                        <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                                        <p class="product__price"><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                                 {% endif %}
 
                                 {# If the product is a coupon, the color of the button will be diff #}

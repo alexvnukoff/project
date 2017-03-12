@@ -106,14 +106,9 @@
               <div class="price-wrap">
 
                 {% if product.cost %}
-                <div class="price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}</div>
-
-                {% if product.cost != product.get_discount_price %}
-                <div class="d-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
-                {% endif %}
-
+                <div class="price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
                 {% else %}
-                <p><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                <p><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
                 {% endif %}
                 </div>
               </div>
@@ -123,8 +118,6 @@
     {% endwith %}
     {% endif %}
     </div>
-
-    {% b2c_products_special 'B2BProducts/special_products.html' 3 %}
     </div>
     </div>
 
