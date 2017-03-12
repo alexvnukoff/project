@@ -26,7 +26,7 @@ class UserSiteAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserSiteAdminForm, self).__init__(*args, **kwargs)
-        if self.instance:
+        if self.instance.user_template:
             self.fields['color_template'].queryset = self.instance.user_template.colors.all()
 
     languages = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, choices=settings.LANGUAGES)
