@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import logging
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
@@ -8,6 +9,14 @@ from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView
+from django.views.generic.edit import FormView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import SetPasswordForm
 from registration.backends.default.views import RegistrationView
 from b24online.Leads.utils import GetLead
 from b24online.cbv import ItemUpdate
@@ -18,6 +27,8 @@ from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
 from usersites.mixins import UserTemplateMixin
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -144,6 +155,8 @@ class ProfileUpdate(UserTemplateMixin, ItemUpdate):
         return super().form_invalid(form)
 
     def get_object(self, queryset=None):
+        if self.template.typeof == settings.TYPEOF_TEMPLATE[1][0]:
+            self.template_name = '{template_path}/profileForm.html'
         try:
             return Profile.objects.get(user=self.request.user)
         except ObjectDoesNotExist:
@@ -165,3 +178,29 @@ class ProfileUpdate(UserTemplateMixin, ItemUpdate):
 class MessageSent(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/message_sent.html'
 
+
+class ChangePassword(UserTemplateMixin, FormView):
+    model = Profile
+    form_class = SetPasswordForm
+    template_name = '{template_path}/change_password.html'
+    success_url = reverse_lazy('change_password_done')
+
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ChangePassword, self).dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePassword, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        return super(ChangePassword, self).form_valid(form)
+
+
+class ChangePasswordDone(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/change_password_done.html'

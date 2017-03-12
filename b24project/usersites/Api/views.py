@@ -16,17 +16,21 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
-    Banner, AdditionalPage, Company, Questionnaire, Question, QuestionnaireCase
+from b24online.models import (News, BusinessProposal, GalleryImage, Department,
+                B2BProduct, B2BProductCategory, Banner, AdditionalPage, Company,
+                Questionnaire, Question, QuestionnaireCase)
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tpp.DynamicSiteMiddleware import get_current_site
-from usersites.Api.serializers import GallerySerializer, \
-    DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
-    DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
-    DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
-    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer, \
-    ListQuestionSerializer, QuestionnaireSerializer, AtFirstAnswersSerializer, \
-    AtSecondAnswersSerializer, ListRecommendationSerializer
+from usersites.redisHash import get_usersite_objects
+from usersites.Api.serializers import (GallerySerializer, DepartmentSerializer,
+    ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer,
+    DetailBusinessProposalSerializer, ListB2BProductSerializer,
+    DetaiB2BlProductSerializer, ListB2CProductSerializer,
+    DetaiB2ClProductSerializer, B2BProductCategorySerializer,
+    B2CProductCategorySerializer, ListCouponSerializer, DetaiCouponSerializer,
+    ListAdditionalPageSerializer, DetailAdditionalPageSerializer,
+    ListQuestionSerializer, QuestionnaireSerializer, AtFirstAnswersSerializer,
+    AtSecondAnswersSerializer, ListRecommendationSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +75,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
-        organization = get_current_site().user_site.organization
+        organization = get_usersite_objects(typeof=True)['organization']
         return queryset.filter(organization=organization)
 
     def get_serializer_class(self):
@@ -88,7 +92,8 @@ class AdditionalPageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AdditionalPage.objects.all()
 
     def get_queryset(self):
-        return get_current_site().user_site.organization.additional_pages
+        organization = get_usersite_objects(typeof=True)['organization']
+        return organization.additional_pages
 
     def get_serializer_class(self):
         if hasattr(self, 'action'):
@@ -105,7 +110,7 @@ class BusinessProposalViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
-        organization = get_current_site().user_site.organization
+        organization = get_usersite_objects(typeof=True)['organization']
         return queryset.filter(organization=organization)
 
     def get_serializer_class(self):
@@ -251,16 +256,16 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     def filter_queryset(self, queryset):
-        organization = get_current_site().user_site.organization
-        return queryset.filter(products__company_id=organization.pk) \
-            .order_by('level').distinct()
-
+        organization = get_usersite_objects(typeof=True)['organization']
+        return queryset.filter(
+                products__company_id=organization.pk
+            ).order_by('level').distinct()
 
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def interface(request):
-    organization = get_current_site().user_site.organization
+    organization = get_usersite_objects(typeof=True)['organization']
     menu = [{
         'name': _('Home'),
         'href': 'home/'
@@ -317,7 +322,7 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
-        organization = get_current_site().user_site.organization
+        organization = get_usersite_objects(typeof=True)['organization']
 
         if isinstance(organization, Company):
             return queryset.filter(company=organization, coupon_dates__contains=now().date(),
@@ -338,46 +343,49 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def settings_api(request):
-    user_site = get_current_site().user_site
+    usersite, template, organization = get_usersite_objects()
     result = {
         'menu': [],
         'slides': [],
         'contacts': {
-            'tel': clean_html(user_site.organization.phone) if user_site.organization.phone else None,
-            'email': clean_html(user_site.organization.email) if user_site.organization.email else None,
-            'address': clean_html(user_site.organization.address) if user_site.organization.address else None,
-            'orgName': clean_html(user_site.organization.name)
+            'tel': clean_html(organization.phone) if organization.phone else None,
+            'email': clean_html(organization.email) if organization.email else None,
+            'address': clean_html(organization.address) if organization.address else None,
+            'orgName': clean_html(organization.name)
         },
         'map': None,
-        "orgLogo": user_site.organization.logo.original if user_site.organization.logo else None,
-        "logo": user_site.logo.original if user_site.logo else None,
+        "orgLogo": organization.logo.original if organization.logo else None,
+        "logo": usersite.logo.original if usersite.logo else None,
         "offerIcons": [],
         "footerBanner": None,
     }
 
     # Deprecated
-    for page in user_site.organization.additional_pages.all():
+    for page in organization.additional_pages.all():
         result['menu'].append({
             'name': clean_html(page.title),
             'href': "/current",
         })
 
     import glob
-    if user_site.slider_images:
-        images = [obj.image.original for obj in user_site.slider_images.only('image')]
+    if usersite.slider_images:
+        images = [obj.image.original for obj in usersite.slider_images.only('image')]
     else:
         static_url = "%susersites/templates" % settings.STATIC_URL
-        dir = user_site.template.folder_name
-        images = ["%s/%s/%s" % (static_url, os.path.basename(dir), os.path.basename(image))
-                  for image in glob.glob(dir + "/*.jpg")]
+        d = template.folder_name
+        images = ["%s/%s/%s" % (
+                static_url,
+                os.path.basename(d),
+                os.path.basename(image)
+            ) for image in glob.glob(d + "/*.jpg")]
 
     for image in images:
         result['slides'].append({
             'url': image,
         })
 
-    if user_site.organization.location:
-        lat, long = user_site.organization.location.split(',')
+    if organization.location:
+        lat, long = organization.location.split(',')
 
         result['map'] = {
             "lat": lat,
@@ -390,7 +398,7 @@ def settings_api(request):
 
     for block in banner_blocks:
         banner = Banner.objects.filter(
-            site_id=get_current_site().pk,
+            site_id=usersite.pk,
             block__code=block,
             block__block_type='user_site',
             image__isnull=False
@@ -427,7 +435,7 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
         Filter the Quest-e only for current Company.
         """
         from b24online.utils import get_company_questionnaire_qs
-    
+
         organization = get_current_site().user_site.organization
         return get_company_questionnaire_qs(organization)
 
@@ -440,13 +448,13 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = instance.recommendations.all()
         serializer = ListRecommendationSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     def _get_questions(self, instance):
         return instance.questions\
             .filter((Q(who_created=Question.BY_AUTHOR) | \
                      Q(is_approved=True)),
                     is_active=True, is_deleted=False)
-    
+
     @detail_route(methods=['GET', 'POST'])
     def inviter(self, request, pk=None):
         """
@@ -461,13 +469,13 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
             if serializer.is_valid():
                 new_questionnaire_case = serializer.save()
                 return Response(
-                    {'result': 'success', 
+                    {'result': 'success',
                      'case_id': new_questionnaire_case.id,
                      'case_uuid': new_questionnaire_case.case_uuid})
             else:
-                return Response({'result': 'error', 
+                return Response({'result': 'error',
                                  'errors': serializer.errors})
-        
+
         serializer = ListQuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
@@ -482,12 +490,12 @@ class QuestionnaireInviterView(APIView):
             .filter((Q(who_created=Question.BY_AUTHOR) | \
                 Q(id__in=extra_ids)),
                 is_active=True, is_deleted=False)
-    
+
     def get(self, request, uuid, format=None):
-        try:           
+        try:
             instance = QuestionnaireCase.objects.get(case_uuid=uuid)
         except QuestionnaireCase.DoesNotExist:
-            return Response({'result': 'error', 
+            return Response({'result': 'error',
                 'errors': [
                     _('There is no such QuestionnaireCase with UUID=%d') % \
                         uuid]})
@@ -497,10 +505,10 @@ class QuestionnaireInviterView(APIView):
             return Response(serializer.data)
 
     def post(self, request, uuid, format=None):
-        try:           
+        try:
             instance = QuestionnaireCase.objects.get(case_uuid=uuid)
         except QuestionnaireCase.DoesNotExist:
-            return Response({'result': 'error', 
+            return Response({'result': 'error',
                 'errors': [
                     _('There is no such QuestionnaireCase with UUID=%d') % \
                         uuid]})
@@ -514,9 +522,9 @@ class QuestionnaireInviterView(APIView):
                     serializer.process_answers(instance)
                     return Response(
                         {'result': 'success',}
-                    ) 
+                    )
                 else:
-                    return Response({'result': 'error', 
+                    return Response({'result': 'error',
                                      'errors': [
                                          'There is an error at saving',
                                      ]})
@@ -531,16 +539,16 @@ class QuestionnaireCaseRecommendationsView(APIView):
     def get(self, request, pk, format=None, **kwargs):
         logger.debug(pk)
         logger.debug(kwargs)
-        try:           
+        try:
             instance = QuestionnaireCase.objects.get(pk=pk)
         except QuestionnaireCase.DoesNotExist:
-            return Response({'result': 'error', 
+            return Response({'result': 'error',
                 'errors': [
                     _('There is no such QuestionnaireCase with ID=%s') % \
                         pk]})
         else:
             serializer = ListRecommendationSerializer(
-                instance.recommendations.all(), 
+                instance.recommendations.all(),
                 many=True
             )
             return Response(serializer.data)

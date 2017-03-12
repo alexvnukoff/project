@@ -1,0 +1,71 @@
+{% load i18n %}{% load static %}{% load CustomFilters %}
+
+<!-- ******************************************************* -->
+<!-- slider -->
+<!-- ******************************************************* -->
+
+    <div class="container">
+      <div class="main-slider">
+
+        <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
+          <!-- Overlay -->
+          <div class="overlay"></div>
+
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#bs-carousel" data-slide-to="1"></li>
+            <li data-target="#bs-carousel" data-slide-to="2"></li>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+                {% if site.user_site.slider_images|length == 0 %}
+
+                  <div class="item slides active">
+                  <div class="slide-1" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg)"></div>
+                  </div>
+
+                  <div class="item slides">
+                  <div class="slide-2" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg)"></div>
+                  </div>
+
+                  <div class="item slides">
+                  <div class="slide-3" style="background-image: url({% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg)"></div>
+                  </div>
+
+                {% else %}
+
+                {% for i in site.user_site.slider_images %}
+
+                  <div class="item slides{% if forloop.first %} active{% endif %}">
+                  <div class="slide-{{ forloop.counter }}" style="background-image: url({{ i.image.big }})"></div>
+                  <div class="hero">
+                  {% if i.description %}
+                    <hgroup>
+                        <h1>{{ i.description }}</h1>
+                        {% comment %}
+                        <h3>Special discounts for mother day!</h3>
+                        {% endcomment %}
+                    </hgroup>
+                    {% endif %}
+                    {% comment %}
+                    <button class="btn btn-hero btn-lg btn-responsive" role="button">{% trans "Go check" %}</button>
+                    {% endcomment %}
+                  </div>
+
+            </div>
+
+                {% endfor %}
+                {% endif %}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+<!-- ******************************************************* -->
+<!-- end of slider -->
+<!-- ******************************************************* -->
+

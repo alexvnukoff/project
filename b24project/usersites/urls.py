@@ -13,9 +13,14 @@ import usersites.Proposals.urls
 import usersites.Questionnaires.urls
 import usersites.Video.urls
 import usersites.Exhibitions.urls
+import usersites.Category.urls
+import usersites.BusinessIndex.urls
 import usersites.views
 from appl import func
 
+from rest_framework import routers, serializers, viewsets
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^$', usersites.views.WallView.as_view(), name='main'),
@@ -28,15 +33,17 @@ urlpatterns = [
     url(r'^exhibitions/', include(usersites.Exhibitions.urls, namespace='exhibitions')),
     url(r'^sendmessage/$', usersites.views.sendmessage.as_view(), name='sendmessage'),
     url(r'^message_sent/$', usersites.views.MessageSent.as_view(), name='message_sent'),
+    url(r'^business_index/', include(usersites.BusinessIndex.urls, namespace='business_index')),
 
     # Additionals
-    url(r'^api/', include(usersites.Api.urls, namespace='api')),
+    url(r'^api/', include(usersites.Api.urls)),
     url(r'^profile/$', usersites.views.ProfileUpdate.as_view(), name='my_profile'),
+    url(r'^profile/change_password/$', usersites.views.ChangePassword.as_view(), name='change_password'),
+    url(r'^profile/change_password/done/$', usersites.views.ChangePasswordDone.as_view(), name='change_password_done'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^denied/$', TemplateView.as_view(template_name="usersites/denied.html"), name='denied'),
-
     # url(r'^new/$', TemplateView.as_view(template_name="usersites_angular/index.html")),
     #url(r'^$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name='main'),
     #url(r'^page(?P<page>[0-9]+)?/$', render_page, kwargs={'template': 'News/contentPage.html', 'title': _("News")}, name="paginator"),

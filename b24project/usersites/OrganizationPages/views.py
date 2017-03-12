@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.views.generic import DetailView, ListView, TemplateView
 from django.utils.translation import ugettext as _
 
@@ -12,6 +12,8 @@ from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
 from usersites.mixins import UserTemplateMixin
 from b24online.Leads.utils import GetLead
+from b24online.models import (Company, News, BusinessProposal, Video,
+                                       InnovationProject, Exhibition)
 
 
 class PageDetail(UserTemplateMixin, ItemDetail):
@@ -125,4 +127,35 @@ class Gallery(UserTemplateMixin, TemplateView):
 
     def get_queryset(self):
         return get_current_site().user_site.organization.additional_pages.all()
+
+
+class CompanyView(UserTemplateMixin, DetailView):
+    template_name = '{template_path}/OrganizationPages/company.html'
+    model = Company
+    current_section = ""
+
+    def get_object(self, queryset=None):
+        self.user = self.request.user
+        self.company_id = self.kwargs.get(self.pk_url_kwarg)
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyView, self).get_context_data(**kwargs)
+
+        try:
+            company = Company.objects.get(pk=self.company_id)
+        except Company.DoesNotExist as e:
+            raise Http404
+
+        context = {
+            'current_section': self.current_section,
+            'organization': self.organization,
+            'company': company,
+            'news': News.get_active_objects().filter(organization=company)[:2],
+            'business_proposal': BusinessProposal.get_active_objects().filter(organization=company)[:2],
+            'video': Video.get_active_objects().filter(organization=company)[:2],
+            'innovation_project': InnovationProject.get_active_objects().filter(organization=company)[:2],
+            'exhibition': Exhibition.get_active_objects().filter(organization=company)[:2]
+        }
+
+        return context
 

@@ -1,0 +1,132 @@
+{% load i18n %}{% load CustomFilters %}{% load static %}{% load humanize %}{% load inclusionTags %}{% load content_tags %}
+
+    <!-- **************************************** -->
+    <!-- main sidebar + products                  -->
+    <!-- **************************************** -->
+    <div class="container">
+    <div class="row front-heading">
+        {% comment %}
+        <h3 class="section-header">{{ category }}</h3>
+        {% endcomment %}
+        </div>
+      <div class="hidden-sm hidden-xs main-sidebar">
+
+            <!--code http://bytutorial.com/blogs/css/css-vertical-fly-out-menu -->
+            <div id="menuwrapper">
+                <ul>
+                {% b2c_categories_ex as categories %}
+                {% for k,v in categories.items %}
+                <li><a href="{% url 'b2c_products:category' v.slug k %}">{{ v.name }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+
+        <div class="side-banners-wrap">
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 1" %}
+          </div>
+
+          <div class="side-banner">
+            {% site_banner "left" "SITES LEFT 2" %}
+          </div>
+        </div>
+
+    </div>
+    <!--end of the sidebar menu -->
+    <!-- **************************************** -->
+    <!-- products front page grid -->
+    <!-- **************************************** -->
+    <div class="col-md-9 col-sm-12 col-xs-12 main-prod-wrapper">
+
+      <div class="row products-grid">
+
+      {% comment %}
+      <hr class="hr-gray">
+      {% endcomment %}
+      <div id="prod-nav-header">
+          {% comment %}
+          <div class="form-group sort-form hidden-xs">
+              <label for="sort-prod" class="label-in">Sort By:</label>
+              <select class="form-control" id="sort-prod">
+                  <option>Default sorting</option>
+                  <option>Sort by popularity</option>
+                  <option>Sort by newness</option>
+                  <option>Sort by price: low to high</option>
+                  <option>Sort by price: high to low</option>
+              </select>
+          </div>
+          {% endcomment %}
+
+        <nav aria-label="Page navigation example" id="cat-pagi" >
+
+        {% include 'extended_templates/rbase/Paginator.html' %}
+        {% comment %}
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+        {% endcomment %}
+        </nav>
+      </div>
+      {% comment %}
+      <hr class="hr-gray">
+      {% endcomment %}
+
+    {% if products %}
+    {% with num_of_prod=products|length %}
+    {% for product in products %}
+        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 products-wrap">
+          <div class="product product-primary">
+            <div class="product-content">
+
+              <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+              {% if product.image %}
+              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+              {% else %}
+              <img src="{% static 'b24online/img/item.jpg' %}" />
+              {% endif %}
+
+              <h3 class="lead">{{ product.name|truncatechars:20 }}</h3></a>
+              <p>{{ product.short_description|truncatechars:130 }}</p>
+
+              <hr class="prod-hr">
+              <div class="price-wrap">
+
+                {% if product.cost %}
+                <div class="price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}</div>
+
+                {% if product.cost != product.get_discount_price %}
+                <div class="d-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
+                {% endif %}
+
+                {% else %}
+                <p><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    </div>
+
+    {% b2c_products_special 'B2CProducts/special_products.html' 3 %}
+    </div>
+    </div>
+
+      <!-- *********************************** -->
+

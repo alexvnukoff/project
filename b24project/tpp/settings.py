@@ -133,13 +133,16 @@ LOGOUT_URL = reverse_lazy('loginas-logout')
 CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
+    'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ),
+    ],
 }
 
 ACCOUNT_ACTIVATION_DAYS = 7  # One week user's account activation period
@@ -149,7 +152,7 @@ LOGIN_REDIRECT_URL = 'profile:main'
 
 MIDDLEWARE_CLASSES = (
     # 'django.middleware.gzip.GZipMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',

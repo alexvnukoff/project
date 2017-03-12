@@ -1,0 +1,149 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load static %}{% load i18n %}{% load CustomFilters %}{% load staticfiles %}{% load inclusionTags %}{% load humanize %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <!-- product page content -->
+  <div class="container product-page-wrap">
+    {# Register the 'view' event for b2c product #}
+    {{ object|register_event:"click"|process_event:request }}
+
+    <div class="row product-page-top">
+      <div class="col-md-6 col-sm-6 col-xs-12 product-page-image">
+        {% if object.image %}
+            <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
+        {% else %}
+            <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+        {% endif %}
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-12 product-page-info">
+        <h1 class="product-page-title">{{ object.name }}</h1>
+        <div class="product-page-price">
+            <p class="product-page-fprice">{{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}</p>
+            <p class="product-page-oprice">{{ object.currency|getSymbol }} {{ object.cost|formatPrice }}</p></div>
+            {% if object.discount_percent %}
+              % {{ object.discount_percent|formatPrice }}
+            {% elif object.coupon_discount_percent %}
+                % {{ object.coupon_discount_percent|formatPrice }}
+            {% endif %}
+        {% if object.measurement_unit %}
+          <br/>{% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
+        {% endif %}
+
+            <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
+                {% if extra_params_uuid %}
+                <input type="hidden" name="extra_params_uuid" value="{{ extra_params_uuid }}">
+                {% endif %}
+
+                <input type="hidden" id="product_id" name="product_id" value="{{ object.pk }}">
+                <input type="hidden" name="currency" value="{{ object.currency }}">
+                <input type="hidden" name="company_paypal" value="{{ object.company.company_paypal_account }}">
+                <input type="hidden" name="amount" value="{{ object.get_discount_price|formatPrice }}" id="id_amount_src">
+
+                {% if object.cost %}
+
+                <p>{% trans "Price" %}:<br/></p>
+                <div class="item-page__price">
+                  {{ object.currency|getSymbol }} {{ object.get_discount_price|formatPrice }}
+                    {% if object.measurement_unit %}
+                        <br/>
+                        {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
+                    {% endif %}
+                </div>
+
+                {# This div will show only if there is a discount #}
+                {% if object.discount_percent or object.coupon_discount_percent %}
+                    <div class="item-page__coupon clearfix">
+                      <div class="item-page__regular">
+                        {% trans 'Original Price' %}:<br/>
+                        {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
+                      </div>
+                      <div class="item-page__discount">
+                        {% trans 'Discount' %}:<br/>
+                          {% if object.discount_percent %}
+                            % {{ object.discount_percent|formatPrice }}
+                          {% elif object.coupon_discount_percent %}
+                              % {{ object.coupon_discount_percent|formatPrice }}
+                          {% endif %}
+                      </div>
+                    </div>
+                {% endif %}
+
+                <div class="product-page-quantity">{% trans "Quantity" %}:<input type="text" id="product-qty" value="1" class="product-page-qinput" name="quantity"></div>
+
+                {# display the timer only if coupon #}
+                {% if object.coupon_discount_percent %}
+                    <div id="timer-detail-page" class="timer-mini" date="{{ object.end_coupon_date|date:'Y-m-d' }}"></div>
+                {% endif %}
+
+                <div class="product-page-buttons"><button class="btn btn-info btn-add-cart" id="result">{% trans "Add To basket" %}</button></div>
+            {% endif %}
+
+            </form>
+
+        {% if object.cost %}
+        {% include "usersites/B2CProducts/include/deliveryNeed_cineret.html" %}
+        {% if paypal_form %}
+        <div id="paypal_form_layer">
+            {{ paypal_form.render }}
+        </div>
+        {% else %}
+        {# <a style="color:#000;" href="{% url 'pages:contacts' %}" >{% trans 'Contact us' %}</a> #}
+        {% endif %}
+        {% endif %}
+
+        <hr class="hr-gray">
+        <div class="product-page-shipping">{% trans "Shipping: FREE shipping all over the world!" %}</div>
+        <hr class="hr-gray">
+        <div class="well product-page-seller"><b>{% trans "Seller information" %}:</b><br/>
+        <a href="{% url 'pages:company' object.company.id %}">{{ object.company }}</a><br />
+      </div>
+    </div>
+    </div>
+
+    <div class="product-page-description">
+      <ul id="comp-nav">
+
+          <li><a href="#" class="empty-link active">{% trans "Description" %}</a>
+          <section>
+            <div class="product-page-full-desc">
+                {{ object.description|cleanHtml|safe }}
+            </div>
+          </section>
+        </li>
+
+        <li><a href="#" class="empty-link">{% trans "Documents" %}</a>
+          <section>
+            <div class="product-page-full-desc">
+                <ul class="">
+                    {% for document_obj in object.documents.all %}
+                    <li>
+                        <div class="viewimge">
+                            {{ document_obj.name }}
+                            <a target="_blank" href="{{ document_obj.document.url }}">
+                                <i class="imgnews"></i><span class="zoomtext"> {% trans 'Download' %}</span>
+                            </a>
+                        </div>
+                        <div class="gray-img"></div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+          </section>
+        </li>
+
+        <li><a href="#" class="empty-link">{% trans "Shipping and Payments" %}</a>
+          <section>
+            <div class="product-page-full-desc">
+            </div>
+          </section>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+
+
+{% endblock %}

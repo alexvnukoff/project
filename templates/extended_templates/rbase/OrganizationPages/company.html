@@ -1,0 +1,259 @@
+{% extends 'extended_templates/rbase/index.html' %}
+{% load i18n %}{% load content_tags %}{% load CustomFilters %}{% load static %}
+{% block title %}{{ company }}{% endblock %}
+
+{% block content %}
+
+    {{ block.super }}
+
+    <img src="{% static "ext/rbase/images/comp-bg.jpg" %}" alt="{{ company }}" class="comp-top-banner" />
+    <div class="container comp-top-wrap">
+      <div class="comp-top-logo">
+        <img src="{{ company.logo.big }}" alt="logo" />
+      </div>
+      <div class="comp-top-name">
+        <h3 class="section-header">{{ company.slogan }}</h3>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <div class="comp-about col-md-9">
+        {{ company.description|cleanHtml|safe }}
+      </div>
+
+      <div class="comp-about col-md-3">
+        <div class="well special-offer">
+          <h2 class="offer-title">{% trans "Only On B24Online" %}</h2>
+          <p class="offer-text"><span class="offer-price">20%</span>{% trans "On All Products!" %}</p>
+          <p class="offer-footer">{% trans "Special Offer" %}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="info-banners-wrap">
+        <div class="row">
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>{% trans "Address" %}</h2>
+              <p>{{ company.address }}</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-mobile" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>{% trans "Phone" %}</h2>
+              <p>{{ company.phone }}</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 info-banner">
+            <div class="col-md-3">
+              <i class="fa fa-envelope-o" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-9">
+              <h2>{% trans "Mail" %}</h2>
+              <p>{{ company.email }}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+{#     {% b2c_products 'B2CProducts/list.html' 16 page category %} #}
+
+
+
+    <div class="container">
+      <ul id="comp-nav">
+
+      <li><a href="#" class="empty-link active">{% trans "News" %}</a>
+          <section>
+            <div class="items-slider">
+    <div id="owl-comp-nav"  class="owl-carusel oel-theme">
+
+        {% for entry in news %}
+            <h3>{{ entry.title }}</h3>
+            {{ entry.short_description|cleanHtml|safe }}
+        {% endfor %}
+
+    </div>
+  </div>
+
+          </section>
+        </li>
+
+        <li><a href="#" class="empty-link">{% trans "Business Proposals" %}</a>
+          <section>
+            <div class="comp-business-p">
+
+                {% for entry in business_proposal %}
+                    <h3>{{ entry.title }}</h3>
+                    {{ entry.description|cleanHtml|safe }}
+                {% endfor %}
+
+            </div>
+           </section>
+        </li>
+        <li><a href="#" class="empty-link">{% trans "Image Gallery" %}</a>
+          <section>
+            <div class="comp-gallery">
+              <ul>
+              {% for i in company.gallery_images %}
+                <li><img src="{{ i.image.big }}"></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+        </li>
+        <li><a href="#" class="empty-link">{% trans "Video Gallery" %}</a>
+          <section>
+            <div class="comp-video">
+              <ul>
+              {% for i in video %}
+              {% if i.image %}
+                <li><img src="{{ i.image.big }}"></li>
+                {% endif %}
+                <li><h3>{{ i.title }}</h3>
+                <small>{{ i.video_code }}</small>
+                <p>{{ i.short_description }}</p></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+        </li>
+        <li><a href="#" class="empty-link">Documents</a>
+          <section>
+            <div class="comp-docs">
+              <ul>
+              {% for i in company.document_files %}
+                <li><a href="{{ i.document.url }}" rel="nofollow" target="_blank">{{ i.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+        </li>
+        <li><a href="#" class="empty-link">{% trans "Innovation Projects" %}</a>
+          <section>
+               <div class="comp-business-p">
+              <ul>
+              {% for i in innovation_project %}
+                <li>
+                  <h4>{{ i.name }}</h4>
+                  {{ i.description|cleanHtml|safe }}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+        </li>
+        <li><a href="#" class="empty-link">{% trans "Exhibitions" %}</a>
+          <section>
+            {% for i in exhibition %}
+               <div class="comp-exhibitions">
+                 <h4>{{ i.title }}</h4>
+               </div>
+            {% endfor %}
+          </section>
+        </li>
+      </ul>
+    </div>
+
+
+{% comment %}
+    <div class="container" id="comp-jobs">
+    <h2>Jobs</h2>
+    <div class="panel-group comp-jobs" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><h4>Web Designer / Programmer</h4> - <span class="bindex-jobs-comp-name">Expert Center </span><span class="bindex-jobs-date">2 days ago</span></a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <h5>Job Overview</h5>
+                    <p>An exciting opportunity has risen for a web programmer/designer to work with a well established design and marketing agency in mid Cornwall. The position can be offered as part-time employed or freelance.</p>
+                    <h5>Skills / Qualifications / Experience Required</h5>
+                    <p>You must be proficient in building websites and emails in HTML, CSS and Javascript, plus be able to create word press template themes, be confident using various social media platforms. <br/>
+                    We require a motivated, reliable candidate who can work well both in a team or independently, and able to work to strict deadlines. <br/>
+                    Please send/email your CV and a covering letter with your application, with examples of your work if possible.</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><h4>Project Manager</h4> - <span class="bindex-jobs-comp-name">Expert Center </span><span class="bindex-jobs-date">2 days ago</span></a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <h5>Job Overview</h5>
+                    <p>An exciting opportunity has risen for a web programmer/designer to work with a well established design and marketing agency in mid Cornwall. The position can be offered as part-time employed or freelance.</p>
+                    <h5>Skills / Qualifications / Experience Required</h5>
+                    <p>You must be proficient in building websites and emails in HTML, CSS and Javascript, plus be able to create word press template themes, be confident using various social media platforms. <br/>
+                    We require a motivated, reliable candidate who can work well both in a team or independently, and able to work to strict deadlines. <br/>
+                    Please send/email your CV and a covering letter with your application, with examples of your work if possible.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><h4>Experienced WordPress Developer</h4> - <span class="bindex-jobs-comp-name">Expert Center </span><span class="bindex-jobs-date">2 days ago</span></a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <h5>Job Overview</h5>
+                    <p>An exciting opportunity has risen for a web programmer/designer to work with a well established design and marketing agency in mid Cornwall. The position can be offered as part-time employed or freelance.</p>
+                    <h5>Skills / Qualifications / Experience Required</h5>
+                    <p>You must be proficient in building websites and emails in HTML, CSS and Javascript, plus be able to create word press template themes, be confident using various social media platforms. <br/>
+                    We require a motivated, reliable candidate who can work well both in a team or independently, and able to work to strict deadlines. <br/>
+                    Please send/email your CV and a covering letter with your application, with examples of your work if possible.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    </div> {% endcomment %}
+
+{% comment %}
+<!-- categories carusel -->
+<div class="container">
+  <div class="row">
+    <h3 class="section-header">New on B24Online</h3>
+  </div>
+
+  <div class="items-slider">
+    <div id="owl-slide-1">
+
+      <div class="item"><img src="images/car-img-1.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-2.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-3.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-4.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-1.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-2.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-4.jpg" alt="Owl Image"></div>
+      <div class="item"><img src="images/car-img-3.jpg" alt="Owl Image"></div>
+
+    </div>
+  </div>
+</div>
+{% endcomment %}
+
+{% endblock %}
