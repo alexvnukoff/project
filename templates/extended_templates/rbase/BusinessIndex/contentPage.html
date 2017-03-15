@@ -35,7 +35,7 @@
     <div id="bindex-cat-list">
       <ul>
         {% for i in branches %}
-          <li><a href="#">{{ i }}</a></li>
+          <li><a href="{% url 'business_index:branch' i.id %}">{{ i }}</a></li>
       {% endfor %}
       </ul>
   {% endif %}

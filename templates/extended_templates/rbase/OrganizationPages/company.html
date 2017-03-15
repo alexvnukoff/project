@@ -9,7 +9,7 @@
     <img src="{% static "ext/rbase/images/comp-bg.jpg" %}" alt="{{ company }}" class="comp-top-banner" />
     <div class="container comp-top-wrap">
       <div class="comp-top-logo">
-        <img src="{{ company.logo.big }}" alt="logo" />
+        {% if company.logo %}<img src="{{ company.logo.big }}" alt="logo" />{% endif %}
       </div>
       <div class="comp-top-name">
         <h3 class="section-header">{{ company.slogan }}</h3>
