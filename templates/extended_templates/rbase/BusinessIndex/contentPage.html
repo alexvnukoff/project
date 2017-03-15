@@ -31,17 +31,11 @@
   <!-- categories -->
   <div class="container">
 
-  {% if children %}
+  {% if branches %}
     <div id="bindex-cat-list">
       <ul>
-        {% for i in children %}
-        {% if i.branches.all|length > 1 %}
-          {% for b in i.branches.all %}
-            <li><a href="#">{{ b }}</a></li>
-          {% endfor %}
-        {% else %}
-          <li><a href="#">{{ i.branches.first }}</a></li>
-        {% endif %}
+        {% for i in branches %}
+          <li><a href="#">{{ i }}</a></li>
       {% endfor %}
       </ul>
   {% endif %}

@@ -11,13 +11,17 @@ class BIndexView(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/BusinessIndex/contentPage.html'
     current_section = ""
 
+    def get_branches(self):
+        children = self.organization.children.all()
+        return Branch.objects.filter(company__in=children).distinct()
+
     def get_context_data(self, **kwargs):
         context = super(BIndexView, self).get_context_data(**kwargs)
 
         context = {
             'current_section': self.current_section,
             'organization': self.organization,
-            'children': self.organization.children.all(),
+            'branches': self.get_branches(),
             'title': _("Business Index")
         }
 
