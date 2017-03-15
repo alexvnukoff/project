@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
 from usersites.mixins import UserTemplateMixin
+from b24online.models import Branch
 from centerpokupok.models import B2CProductCategory, B2CProduct
 
 
@@ -16,7 +17,8 @@ class BIndexView(UserTemplateMixin, TemplateView):
         context = {
             'current_section': self.current_section,
             'organization': self.organization,
-            'title': _("Business Index"),
+            'children': self.organization.children.all(),
+            'title': _("Business Index")
         }
 
         return context

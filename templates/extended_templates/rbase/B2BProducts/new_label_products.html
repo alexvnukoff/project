@@ -41,7 +41,7 @@
                 {% if product.cost %}
                 <div class="price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }}</div>
                 {% else %}
-                <p><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></p>
+                <div class="price"><a href="{% url 'pages:company' product.company.id %}" >{% trans 'Countact us' %}</a></div>
                 {% endif %}
                 </div>
               </div>
