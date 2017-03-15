@@ -6,91 +6,42 @@
 {% block content %}
 
     <!-- banners under slider -->
-    <div class="container">
-      <div class="row main-banners">
+ <div class="container">
 
-            {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
-            {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
-            {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
-            {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
+ {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+ {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+ {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+ {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
 
-            {% if right_banner_1 %}
-                    <div class="col-md-12 col-sm-12 col-xs-12 banner-ad-main-collection">
-            {% if right_banner_4 %}
+ <div class="row row-banners-wrap">
 
-              <div class="col-sm-3 col-xs-3 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                </div>
-              </div>
+   {% if right_banner_1 %}
+     <div class="simple-banner">
+       {% site_banner "top" "SITES RIGHT 1" %}
+     </div>
+   {% endif %}
 
-              <div class="col-sm-3 col-xs-3 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                </div>
-              </div>
+   {% if right_banner_2 %}
+     <div class="simple-banner">
+       {% site_banner "top" "SITES RIGHT 2" %}
+     </div>
+   {% endif %}
 
-              <div class="col-sm-3 col-xs-3 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 3" %}
-                </div>
-              </div>
+   {% if right_banner_3 %}
+     <div class="simple-banner">
+       {% site_banner "top" "SITES RIGHT 3" %}
+     </div>
+   {% endif %}
 
-              <div class="col-sm-3 col-xs-3 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 4" %}
-                </div>
-              </div>
+   {% if right_banner_4 %}
+     <div class="simple-banner">
+       {% site_banner "top" "SITES RIGHT 4" %}
+     </div>
+   {% endif %}
 
-            {% elif right_banner_3 %}
+ </div>
 
-              <div class="col-sm-4 col-xs-4 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                </div>
-              </div>
-
-              <div class="col-sm-4 col-xs-4 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                </div>
-              </div>
-
-              <div class="col-sm-4 col-xs-4 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 3" %}
-                </div>
-              </div>
-
-             {% elif right_banner_2 %}
-
-              <div class="col-sm-6 col-xs-6 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 1" %}
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-xs-6 banner-1">
-                <div class="banner-box">
-                        {% site_banner "top" "SITES RIGHT 2" %}
-                </div>
-              </div>
-
-             {% elif right_banner_1 %}
-
-              <div class="col-sm-12 col-xs-12 banner-1">
-                <div class="banner-box">
-                    {% site_banner "top" "SITES RIGHT 1" %}
-                </div>
-              </div>
-
-            {% endif %}
-            </div>
-
-{% endif %}
-
-      </div>
-    </div>
+</div>
     <!-- end of banners under slider -->
 
     <!-- **************************************** -->
