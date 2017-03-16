@@ -27,6 +27,7 @@ body{
 
 .navbar-brand {
     float: right;
+    padding-right: 60px;
 }
 
 .navbar-nav {
@@ -46,17 +47,32 @@ body{
 	right: 0;
 }
 
-.top-nav .dropdown-menu{
-	right: 0;
-    left: auto;
+.top-nav .social-header {
     float: left;
-    text-align: right;
 }
 
-.top-nav .social-header{
+.top-search-block{
 	float: left;
 }
 
+@media (min-width: 768px) {
+	.navbar-right .dropdown-menu {
+		right: auto;
+		left: 0;
+	}
+}
+
+
+
+@media (max-width: 480px) {
+	.navbar-header{
+		float: none;
+	}
+
+	.navbar-nav>li {
+		float: none;
+	}
+}
 /** Slider Styling ***************/
 /*********************************/
 
@@ -86,13 +102,21 @@ body{
 	padding-left: 10px;
 }
 
-@media (max-width: 480px) {
-	.main-products__row .main-products__col .thumbnail img{
-		float: right;
-		margin-left: 5px;
-	}
+.main-coupons__col {
+    float: right;
 }
 
+.img-wrap-coupon{
+	float: right;
+    margin-left: 15px;
+}
+
+@media (max-width: 480px) {
+	.img-wrap-product{
+		float: right;
+		margin-left: 15px;
+	}
+}
 
 /** About Page Styling ***************/
 /*********************************/
@@ -104,10 +128,6 @@ body{
 /*********************************/
 .prod-page__img-col{
 	border-left: 1px solid #ccc;
-}
-
-#product-page-slider #slider-thumbs .thumbnails li{
-	float: right!important;
 }
 
 .search-in-pag{
@@ -196,6 +216,9 @@ body{
 
 /** Gallery Styling ***************/
 /*********************************/
+.gal-item {
+    float: right;
+}
 
 /** Media carusel Styling ***************/
 /*********************************/
@@ -217,9 +240,4 @@ footer span {
 
 .footer-container>div{
 	float: right;
-}
-
-.language-navi-dropdown {
-    margin: -10px -101px 0 0;
-    z-index: 99;
 }

@@ -21,9 +21,11 @@
                         <div class="thumbnail thumbnail__page">
 
                             {% if product.image %}
-                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="main-coupons__img">
-                                </a>
+                                <div class="img-wrap-coupon">
+                                    <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" class="main-coupons__img">
+                                    </a>
+                                </div>
                             {% else %}
                                 <img src="{% static 'b24online/img/item.jpg' %}" class="main-coupons__img" />
                             {% endif %}
