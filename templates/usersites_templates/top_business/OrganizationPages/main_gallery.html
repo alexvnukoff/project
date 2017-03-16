@@ -14,16 +14,18 @@
     <div class="gal-items">
 
         {% for gallery_obj in site.user_site.organization.gallery_images|slice:":5" %}
-            {% if forloop.counter == 1 %}
-                <div class="col-md-8 col-sm-12 co-xs-12 gal-item">
-            {% else %}
-                <div class="col-md-4 col-sm-6 co-xs-6 gal-item">
-            {% endif %}
+{#            {% if forloop.counter == 1 %}#}
+{#                <div class="col-md-8 col-sm-12 co-xs-12 gal-item">#}
+{#            {% else %}#}
+                <div class="col-md-3 col-sm-6 co-xs-6 gal-item">
+{#            {% endif %}#}
 
                 <div class="box">
-                    <a href="#" data-toggle="modal" data-target="#{{ forloop.counter }}">
-                      <img src="{{ gallery_obj.image.original }}">
-                    </a>
+                    <div class="gal-img-wrap">
+                        <a href="#" data-toggle="modal" data-target="#{{ forloop.counter }}">
+                          <img src="{{ gallery_obj.image.original }}">
+                        </a>
+                    </div>
                     <div class="modal fade" id="{{ forloop.counter }}" tabindex="-1" role="dialog">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">

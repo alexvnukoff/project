@@ -7,16 +7,22 @@
 	float: left;
 }
 
-.top-nav .pull-left{
-	float: right!important;
+.navbar-brand {
+    float: left;
+    padding-right: 60px;
 }
 
-.top-nav .social-header,
+.pull-left {
+    float: right!important;
+}
+
+.top-nav .social-header {
+    float: right;
+}
+
 .top-search-block{
-	float: left;
+	float: right;
 }
-
-
 /** Slider Styling ***************/
 /*********************************/
 
@@ -50,10 +56,15 @@
 	padding-right: 10px;
 }
 
+.img-wrap-coupon{
+	float: left;
+    margin-right: 15px;
+}
+
 @media (max-width: 480px) {
-	.main-products__row .main-products__col .thumbnail img{
+	.img-wrap-product{
 		float: left;
-		margin-right: 5px;
+		margin-right: 15px;
 	}
 }
 
