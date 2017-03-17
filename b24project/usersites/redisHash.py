@@ -21,7 +21,7 @@ def get_usersite_objects(typeof=None):
 
 
 class UsersiteHash:
-    """A siple usersite hash class"""
+    """A simple usersite hash class"""
     def __init__(self):
         self.domain = get_current_site()
         try:

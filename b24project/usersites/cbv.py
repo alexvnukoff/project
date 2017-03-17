@@ -37,10 +37,10 @@ class ItemList(ListView):
         return self.filter_key
 
     def get_filter_kwargs(self):
-        organization = get_current_site().user_site.organization
+        #organization = get_current_site().user_site.organization
 
         return {
-            self.get_filter_key(): organization
+            self.get_filter_key(): self.organization
         }
 
     def get_queryset(self):
