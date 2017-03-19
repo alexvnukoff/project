@@ -150,7 +150,8 @@
                         <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
                     {% endif %}
 
-                    {% if site.user_site.organization.news.exists %}
+{#                    {% if site.user_site.organization.news.exists %}#}
+                    {% if news|length > 0 %}
                         <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>
                     {% endif %}
 

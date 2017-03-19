@@ -111,6 +111,21 @@ body{
     margin-left: 15px;
 }
 
+.media-carousel .carousel-control.left {
+	right: -12px;
+	left: inherit;
+}
+
+.media-carousel .carousel-control.right {
+	left: -12px !important;
+	right: inherit;
+}
+
+.item-page__price{
+	float: right;
+}
+
+
 @media (max-width: 480px) {
 	.img-wrap-product{
 		float: right;

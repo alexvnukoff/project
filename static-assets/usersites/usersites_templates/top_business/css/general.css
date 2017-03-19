@@ -404,7 +404,7 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 .item-page__price{
 	font-size: 18pt;
 	font-weight:bold;
-	padding: 10px 0 10px 0;
+	padding: 10px;
 }
 
 .item-page__regular{
@@ -583,6 +583,7 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
     border-radius: 3px;
     background: #666;
     display: inline-block;
+	width: 100%;
 }
 
 .smalltext{
@@ -593,6 +594,16 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 .clock-container{
 	width: 100%;
 	text-align: center;
+}
+
+.item-price-table input[type="image"]{
+	margin:auto;
+	width:80px;
+	display:block
+}
+
+.item-page__qty .form-group{
+	clear: both;
 }
 
 
@@ -1352,6 +1363,10 @@ footer p{
 ****************************/
 .top-nav .tel{
 	padding: 5px;
+}
+
+.top-nav .tel a{
+	color: #fff;
 }
 
 .top-nav{
