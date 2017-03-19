@@ -148,7 +148,7 @@
 
             {% if site.user_site.organization.additional_pages.exists %}
                 <li class="dropdown ">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Learn More <b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">{% trans 'Learn more' %}<b class="caret"></b></a>
                     <ul role="menu" class="dropdown-menu dropdown-submenu reg-dropdown">
 
                         {% for page in site.user_site.organization.additional_pages.all %}

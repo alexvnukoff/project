@@ -43,8 +43,10 @@
                                 </p>
 
                                 <div class="main-products__timer">
-                                    <p >{% trans "Promotion ends" %}:</p>
-                                    <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
+                                    <p >{% trans "Promotion ends" %}: </p>
+
+
+                                {{ product.end_coupon_date|date:"d.m.Y" }}
                                 </div>
 {#                                <p class="main-products__timer">Valid until: <span>1d 27h 56m 12s</span></p>#}
                             </div>

@@ -737,6 +737,41 @@ collapse the menu on 991px. */
 	padding: 1px;
 }
 
+/* leads in page form */
+#leads-in-product{
+	padding: 10px 5px 5px 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+}
+
+#leads-in-product .row{
+	padding: 5px;
+}
+
+#leads-in-product input{
+	width: 100%!important;
+}
+
+/* Pages leads styling */
+#leads-in-page{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+#leads-in-page .leads-form-lbl{
+    font-size: 1.2em;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #leads-in-page input{
+        width: 120px;
+    }
+}
+
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
 	.coupon-timer{
