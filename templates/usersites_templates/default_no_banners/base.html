@@ -29,12 +29,8 @@
 
 <body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
-    <div id="accessDialog" class="accessibility hidden-xs" onclick="createModelBox();" >
-        <form action="#">
-            <input type="hidden" id="colorAccess"  value="#aaa" />
-            <input type="hidden" id="topPosAccess"  value="60px" />
-        </form>
-    </div>
+    <div id="accessDialog" class="accessibility hidden-xs" >
+        </div>
     {% include 'usersites_templates/default_no_banners/header.html' %}
 
         <section class="offer">
