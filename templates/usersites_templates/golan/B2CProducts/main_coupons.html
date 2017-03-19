@@ -36,8 +36,8 @@
                     </div>
 
                     <div class="coupon-timer clearfix">
-                            <p class="timer-heading">{% trans "Promotion ends" %}:</p>
-                            <div class="timer-div" date="{{ product.end_coupon_date|date:'Y-m-d' }}">{{ product.end_coupon_date|date:'d.m.Y' }}</div>
+                            <p class="timer-heading">{% trans "Promotion ends" %}: </p>
+                            {{ product.end_coupon_date|date:"Y-m-d" }}
                     </div>
 
                     {% if product.cost %}
@@ -70,6 +70,6 @@
 
 <script>
     $(document).ready( function() {
-        $(".timer-div").append($(".timer-div").date);
+{#        $(".timer-div").append($(".timer-div").date);#}
     });
 </script>

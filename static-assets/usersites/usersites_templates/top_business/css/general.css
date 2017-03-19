@@ -301,6 +301,41 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	height: 160px;
 }
 
+/* leads in page form */
+#leads-in-product{
+	padding: 10px 5px 5px 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+}
+
+#leads-in-product .row{
+	padding: 5px;
+}
+
+#leads-in-product input{
+	width: 100%!important;
+}
+
+/* Pages leads styling */
+#leads-in-page{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+#leads-in-page .leads-form-lbl{
+    font-size: 1.2em;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #leads-in-page input{
+        width: 120px;
+    }
+}
+
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
 

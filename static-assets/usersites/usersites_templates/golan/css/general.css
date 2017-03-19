@@ -1876,6 +1876,11 @@ footer .btn-default{
 	padding: 0;
 }
 
+.product-page-slider .carousel-inner .item{
+	width: 100%;
+    height: auto;
+}
+
 .galllery-page-wrapper{
 	margin-bottom: 20px;
 }

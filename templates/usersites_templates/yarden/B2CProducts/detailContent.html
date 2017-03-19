@@ -164,6 +164,38 @@
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
 
+                        {% if not object.cost %}
+
+                {# contact form #}
+            <form class="form-inline " id="leads-in-product" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
+              <label class="leads-form-lbl">{% trans "Contact us:" %}</label>
+              <input type="hidden" name="co_id" value="{{ site.pk }}">
+              <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+
+              <div class="row">
+                  <div class="control-group form-group col-md-6">
+                    <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
+                  </div>
+
+                  <div class="control-group form-group form-group col-md-6">
+                    <input type="tel" class="form-control"  value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="control-group form-group form-group col-md-9">
+                    <input type="email" class="form-control" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                  </div>
+
+
+                  <div class="control-group form-group col-md-3">
+                    <input type="submit" class="btn btn-default main-contact-btn" value="{% trans 'Send' %}">
+                  </div>
+              </div>
+          </form>
+
+            {% endif %}
+
             <div id="product-docs">
                 <ul class="">
                     {% for document_obj in object.documents.all %}
