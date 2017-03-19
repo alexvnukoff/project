@@ -12,11 +12,11 @@
     {# Page Content #}
     <div class="container product-page-container">
         {# Register the 'view' event for b2c product #}
-        {{ object|register_event:"click"|process_event:request }}
+{#        {{ object|register_event:"click"|process_event:request }}#}
 
         <div class="row">
 
-                        {% if not object.gallery_images %}
+                {% if not object.gallery_images %}
                 {# If there is, the image of the product #}
                 <div class="col-md-6 item-page">
                     {% if object.image %}
@@ -103,27 +103,30 @@
                                 {% trans 'Unit' %}: {{ object.get_measurement_unit_display }}
                             {% endif %}
                         </div>
+
+                        {# This div will show only if there is a discount #}
+                        {% if object.discount_percent or object.is_coupon %}
+                            <div class="item-page__coupon clearfix">
+                              <div class="item-page__regular">
+    {#                            {% trans 'Original Price' %}:<br/>#}
+                                {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
+                              </div>
+    {#                          <div class="item-page__discount">#}
+    {#                            {% trans 'Discount' %}:<br/>#}
+    {#                              {% if object.discount_percent %}#}
+    {#                                % {{ object.discount_percent|formatPrice }}#}
+    {#                              {% elif object.coupon_discount_percent %}#}
+    {#                                  % {{ object.coupon_discount_percent|formatPrice }}#}
+    {#                              {% endif %}#}
+    {#                          </div>#}
+
+                            </div>
+                        {% endif %}
+
                     {% endif %}
 
 
-                    {# This div will show only if there is a discount #}
-                    {% if object.discount_percent or object.is_coupon %}
-                        <div class="item-page__coupon clearfix">
-                          <div class="item-page__regular">
-{#                            {% trans 'Original Price' %}:<br/>#}
-                            {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}
-                          </div>
-{#                          <div class="item-page__discount">#}
-{#                            {% trans 'Discount' %}:<br/>#}
-{#                              {% if object.discount_percent %}#}
-{#                                % {{ object.discount_percent|formatPrice }}#}
-{#                              {% elif object.coupon_discount_percent %}#}
-{#                                  % {{ object.coupon_discount_percent|formatPrice }}#}
-{#                              {% endif %}#}
-{#                          </div>#}
 
-                        </div>
-                    {% endif %}
 
                     {% if object.cost %}
                         <div class="item-page__qty">
