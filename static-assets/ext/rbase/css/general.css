@@ -175,7 +175,7 @@ h1,
 
 
 .top-navigation__menu{
-  list-style: none;
+  list-style: none; 
   float: right;
   padding: 0;
 }
@@ -185,7 +185,7 @@ h1,
 }
 
 .top-navigation__menu select{
-  width: 80px;
+  width: 80px; 
 }
 
 /*search box */
@@ -239,7 +239,7 @@ h1,
 }
 
 .search-query:focus + button {
-    z-index: 3;
+    z-index: 3;   
 }
 
 .lang-nav{
@@ -342,7 +342,7 @@ Image credits: unsplash.com
               transform: translate3d(-50%,-50%,0);
 }
 .hero h1 {
-    font-size: 6em;
+    font-size: 6em;    
     font-weight: bold;
     margin: 0;
     padding: 0;
@@ -351,18 +351,18 @@ Image credits: unsplash.com
 .fade-carousel .carousel-inner .item .hero {
     opacity: 0;
     -webkit-transition: 2s all ease-in-out .1s;
-       -moz-transition: 2s all ease-in-out .1s;
-        -ms-transition: 2s all ease-in-out .1s;
-         -o-transition: 2s all ease-in-out .1s;
-            transition: 2s all ease-in-out .1s;
+       -moz-transition: 2s all ease-in-out .1s; 
+        -ms-transition: 2s all ease-in-out .1s; 
+         -o-transition: 2s all ease-in-out .1s; 
+            transition: 2s all ease-in-out .1s; 
 }
 .fade-carousel .carousel-inner .item.active .hero {
     opacity: 1;
     -webkit-transition: 2s all ease-in-out .1s;
-       -moz-transition: 2s all ease-in-out .1s;
-        -ms-transition: 2s all ease-in-out .1s;
-         -o-transition: 2s all ease-in-out .1s;
-            transition: 2s all ease-in-out .1s;
+       -moz-transition: 2s all ease-in-out .1s; 
+        -ms-transition: 2s all ease-in-out .1s; 
+         -o-transition: 2s all ease-in-out .1s; 
+            transition: 2s all ease-in-out .1s;    
 }
 
 /********************************/
@@ -394,7 +394,7 @@ Image credits: unsplash.com
 /********************************/
 /*       Slides backgrounds     */
 /********************************/
-.fade-carousel .slides .slide-1,
+.fade-carousel .slides .slide-1, 
 .fade-carousel .slides .slide-2,
 .fade-carousel .slides .slide-3 {
   height: 40vh;
@@ -404,17 +404,17 @@ Image credits: unsplash.com
   background-size:100% auto;
 }
 .fade-carousel .slides .slide-1 {
-  background-image: url("../images/slides1.png");
+  background-image: url("../images/slides1.png"); 
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
 .fade-carousel .slides .slide-2 {
-  background-image: url("../images/slides2.png");
+  background-image: url("../images/slides2.png"); 
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
 .fade-carousel .slides .slide-3 {
-  background-image: url("../images/slides3.png");
+  background-image: url("../images/slides3.png"); 
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
@@ -423,7 +423,7 @@ Image credits: unsplash.com
 /*          Media Queries       */
 /********************************/
 @media screen and (min-width: 980px){
-    .hero { width: 980px; }
+    .hero { width: 980px; }    
 }
 
 @media (min-width: 768px) and (max-width: 991px){
@@ -431,17 +431,17 @@ Image credits: unsplash.com
 }
 
 @media screen and (max-width: 768px){
-    .hero h1 { font-size: 2em; white-space: nowrap; }
-    .hero h3 { font-size: 1em; }
+    .hero h1 { font-size: 2em; white-space: nowrap; } 
+    .hero h3 { font-size: 1em; }  
     .btn.btn-responsive {
       padding:6px 10px;
       font-size:90%;
       line-height: 1;
       border-radius:3px;
-    }
+    } 
     .fade-carousel,
     .fade-carousel .carousel-inner .item,
-    .fade-carousel .slides .slide-1,
+    .fade-carousel .slides .slide-1, 
     .fade-carousel .slides .slide-2,
     .fade-carousel .slides .slide-3 {
       height: 30vh;
@@ -485,7 +485,7 @@ Image credits: unsplash.com
 .banner-1 {
   position: relative;
   z-index: 0;
-  margin: 11px 0 0;
+  margin: 11px 0 0; 
 }
 
 .banner-1 .s-desc {
@@ -494,7 +494,7 @@ Image credits: unsplash.com
   -moz-transition: 0.3s all ease;
   -o-transition: 0.3s all ease;
   -webkit-transition: 0.3s all ease;
-  transition: 0.3s all ease;
+  transition: 0.3s all ease; 
 }
 
 .banner-1 h2 {
@@ -502,32 +502,32 @@ Image credits: unsplash.com
   font-size: 19px;
   font-weight: 400;
   margin-top: 5px;
-  padding-right: 150px;
+  padding-right: 150px;  
 }
 
 .banner-1 .link {
   margin-top: 11px;
   font-size: 14px;
-  color: #2f2f2f;
+  color: #2f2f2f; 
 }
 
 .banner-1 h2, .banner-1 p {
   -moz-transition: 0.3s all ease;
   -o-transition: 0.3s all ease;
   -webkit-transition: 0.3s all ease;
-  transition: 0.3s all ease;
+  transition: 0.3s all ease; 
 }
 
 .banner-1 p{
   font-size: 11px;
   margin-top: 10px;
-  padding-right: 160px;
+  padding-right: 160px; 
   color: #000;
 }
 
 .banner-1 .banner-box > a:hover .s-desc {
   border-color: #0077c0;
-  background: #0077c0;
+  background: #0077c0; 
 }
 
 .banner-1 .banner-box > a:hover .s-desc h2, .banner-1 .banner-box > a:hover .s-desc h2 + p { color: #FFF; }
@@ -538,40 +538,40 @@ Image credits: unsplash.com
  Responsive Banners
 ****************************************************/
 .main-banners > .banner-1{
-  visibility: inherit;
-  opacity: 1;
+  visibility: inherit; 
+  opacity: 1; 
   left: 0px;
 }
 @media (min-width: 768px) and (max-width: 1199px) {
   .main-banners > .banner-1 .s-desc {
     top: 0;
     bottom: 10px;
-    padding: 10px 5px 5px 15px;
+    padding: 10px 5px 5px 15px; 
   }
 
   .main-banners > .banner-1 .s-desc p, .main-banners > .banner-1 .s-desc h2 { padding-right: 110px; }
 
-  .banner-1 { margin-bottom: 20px; }
+  .banner-1 { margin-bottom: 20px; } 
 }
 
 @media (min-width: 768px) and (max-width: 991px), (max-width: 480px) {
   .main-banners > .banner-1 .s-desc {
     z-index: 0;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.6); 
   }
 
-  .main-banners > .banner-1 .s-desc p, .main-banners > .banner-1 .s-desc h2 { padding-right: 10px; margin-bottom: 3px; }
+  .main-banners > .banner-1 .s-desc p, .main-banners > .banner-1 .s-desc h2 { padding-right: 10px; margin-bottom: 3px; } 
 
   .main-banners > .banner-1 .s-desc .link { margin-top: 0px; margin-bottom: 3px; }
 }
-
+    
 @media (min-width: 768px) and (max-width: 991px) {
   .main-banners > .banner-1 banner-box  .s-desc {
     z-index: 0;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.6); 
   }
 
-  .main-banners > .banner-1 .s-desc p { padding-right: 10px; }
+  .main-banners > .banner-1 .s-desc p { padding-right: 10px; } 
 
   .banner-1 h2 + p {
     margin-top: 0;
@@ -584,18 +584,18 @@ Image credits: unsplash.com
     top: 0;
   }
 
-}
+}  
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {   
   .product-thumb .cart-button * + * { margin-left: 0px; }
 }
-
+    
 @media (max-width: 767px) {
   .main-banners > .banner-1 .s-desc{ padding: 5px; top: 0; bottom: 0; border: none;}
   .main-banners > .banner-1 a { text-align: right; }
   .main-banners > .banner-1 h2{ font-size: 16px; margin-top: 8px; }
   .main-banners > .banner-1 a img { display: inline-block; }
-  .main-banners > .banner-1 a .s-desc { text-align: left; }
+  .main-banners > .banner-1 a .s-desc { text-align: left; } 
   .main-banners > .banner-1 .s-desc .p-desc { display: none; }
   .main-banners > .banner-1 .s-desc p, .main-banners > .banner-1 .s-desc h2{ padding-right: 50px; }
 }
@@ -606,10 +606,10 @@ Image credits: unsplash.com
 @media (max-width: 480px) {
   .main-banners > .banner-1 .s-desc {
     top: 0;
-    bottom: 0;
+    bottom: 0; 
   }
 
-  .banner-1 { margin-bottom: 5px; padding: 0 3px;}
+  .banner-1 { margin-bottom: 5px; padding: 0 3px;} 
   .main-banners > .banner-1 .s-desc h2{ padding-right: 30px; }
   .main-banners > .banner-1 .s-desc p{ display: none; }
   .main-banners > .banner-1 h2{ font-size: 12px; margin-top: 8px; }
@@ -642,7 +642,7 @@ Products front page grid
   }
 }
 
-.product-shape{
+.product-shape{    
   border-style: solid; border-width: 0 70px 40px 0; float:right; height: 0px; width: 0px;
   -ms-transform:rotate(360deg); /* IE 9 */
   -o-transform: rotate(360deg);  /* Opera 10.5 */
@@ -670,7 +670,7 @@ Products front page grid
   -o-transform: rotate(360deg);  /* Opera 10.5 */
   -webkit-transform:rotate(30deg); /* Safari and Chrome */
   transform:rotate(30deg);
-}
+} 
 .product-content{
   padding:0 20px 10px;
 }
@@ -689,10 +689,6 @@ Products front page grid
 .product-coupon { border-color: #d9534f; }
 .product-coupon .product-shape{
   border-color: transparent #d9534f transparent transparent;
-}
-
-.lead{
-  margin-bottom: 5px;
 }
 
 .products-grid{
@@ -721,8 +717,8 @@ Products front page grid
 }
 
 .product-content .d-price{
-  color: #979797;
-  text-decoration: line-through;
+  color: #979797; 
+  text-decoration: line-through; 
 }
 
 .product-content .btn-add-cart{
@@ -748,7 +744,12 @@ Products front page grid
 .product-content .lead{
     margin-top: 5px;
     color: #000;
+    margin-bottom: 5px;
+    height: 25px;
+    overflow: hidden;
   }
+
+
 
   .product-content a{
     text-decoration: none;
@@ -758,16 +759,20 @@ Products front page grid
   width: 100%;
   height: 170px;
   overflow: hidden;
-}
+}  
 
  .product-content p{
   height: 50px;
   overflow: hidden;
  }
 
-@media (min-width: 991px) {
+@media (min-width: 991px) {   
   .products-wrap:first-child{
     padding-left: 5px;
+  }
+
+  .lead {
+      font-size: 16px;
   }
 }
 
@@ -787,6 +792,8 @@ Products front page grid
 
 /* Portrait phones and smaller */
 @media (max-width: 480px) {
+  
+
   .products-grid .product .product-content-img {
     width: 30%;
     float: left;
@@ -801,6 +808,7 @@ Products front page grid
     padding: 0 10px 10px;
   }
 }
+
 
 /****************************************************
 sidebar
@@ -1047,7 +1055,7 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
 ***********  inner sidebar  *************************
 *****************************************************/
 .panel-group .panel+.panel {
-     margin-top: 0;
+     margin-top: 0; 
 }
 
 .panel-group {
@@ -1123,14 +1131,14 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
 }
 
 /* carousel */
-.media-carousel
+.media-carousel 
 {
   margin-bottom: 0;
   padding: 0 40px 0 40px;
   margin-top: 0;
 }
 /* Previous button  */
-.media-carousel .carousel-control.left
+.media-carousel .carousel-control.left 
 {
   left: -12px;
   background-image: none;
@@ -1142,7 +1150,7 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
   margin-top: 30px
 }
 /* Next button  */
-.media-carousel .carousel-control.right
+.media-carousel .carousel-control.right 
 {
   right: -12px !important;
   background-image: none;
@@ -1154,7 +1162,7 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
   margin-top: 30px
 }
 /* Changes the position of the indicators */
-.media-carousel .carousel-indicators
+.media-carousel .carousel-indicators 
 {
   right: 50%;
   top: auto;
@@ -1162,11 +1170,11 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
   margin-right: -19px;
 }
 /* Changes the colour of the indicators */
-.media-carousel .carousel-indicators li
+.media-carousel .carousel-indicators li 
 {
   background: #c0c0c0;
 }
-.media-carousel .carousel-indicators .active
+.media-carousel .carousel-indicators .active 
 {
   background: #333333;
 }
@@ -1353,7 +1361,7 @@ a.socialIcon:hover, .socialHoverClass {
 }
 
 .social-circle a {
- background-color: #D3D3D3;
+ background-color: #D3D3D3;   
 }
 
 
@@ -1369,7 +1377,7 @@ a.socialIcon:hover, .socialHoverClass {
 
 
 /*********** offers *****************/
-.shape{
+.shape{    
   border-style: solid; border-width: 0 70px 40px 0; float:right; height: 0px; width: 0px;
   -ms-transform:rotate(360deg); /* IE 9 */
   -o-transform: rotate(360deg);  /* Opera 10.5 */
@@ -1382,13 +1390,13 @@ a.socialIcon:hover, .socialHoverClass {
 }
 
 .offer:hover {
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform:rotate scale(1.1);
-    -webkit-transition: all 0.4s ease-in-out;
--moz-transition: all 0.4s ease-in-out;
+    -webkit-transform: scale(1.1); 
+    -moz-transform: scale(1.1); 
+    -ms-transform: scale(1.1); 
+    -o-transform: scale(1.1); 
+    transform:rotate scale(1.1); 
+    -webkit-transition: all 0.4s ease-in-out; 
+-moz-transition: all 0.4s ease-in-out; 
 -o-transition: all 0.4s ease-in-out;
 transition: all 0.4s ease-in-out;
     }
@@ -1429,7 +1437,7 @@ transition: all 0.4s ease-in-out;
   -o-transform: rotate(360deg);  /* Opera 10.5 */
   -webkit-transform:rotate(30deg); /* Safari and Chrome */
   transform:rotate(30deg);
-}
+} 
 .offer-content{
   padding:0 20px 10px;
 }
@@ -1458,13 +1466,9 @@ transition: all 0.4s ease-in-out;
   }
   .col-lg-3 {
     width: 25%;
-  }
+  } 
 }*/
-@media (min-width: 768px){}
-  .lead {
-      font-size: 16px;
-  }
-}
+
 
 /********** changing screens design *********/
 /* Large desktops and laptops */
@@ -1500,7 +1504,7 @@ transition: all 0.4s ease-in-out;
     width: 30%;
     float: left;
     clear: both;
-  }
+  } 
 
   .info-banner{
     border-bottom: 1px solid #444;
@@ -1645,9 +1649,9 @@ transition: all 0.4s ease-in-out;
 }
 
 #profile-form legend {
-     margin-bottom: 5px;
-     font-size: 1em;
-     border-bottom: none;
+     margin-bottom: 5px; 
+     font-size: 1em; 
+     border-bottom: none; 
      text-align: center;
      width: 50%;
 }
@@ -1832,15 +1836,15 @@ transition: all 0.4s ease-in-out;
 }
 
 .comp-top-logo img{
-  max-height: 100%;
-    max-width: 100%;
+  max-height: 100%;  
+    max-width: 100%; 
     width: auto;
     height: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: absolute;  
+    top: 0;  
+    bottom: 0;  
+    left: 0;  
+    right: 0;  
     margin: auto;
 }
 
@@ -1874,7 +1878,7 @@ transition: all 0.4s ease-in-out;
     font-size: 18px;
     margin-right: 20px;
   }
-
+  
 }
 
 #owl-comp-nav .item div{
@@ -1935,7 +1939,7 @@ ul#comp-nav {
 }
 
 #comp-nav>li {
-  list-style: none;
+  list-style: none; 
 }
 #comp-nav>li>a {
   display: block;
@@ -1956,7 +1960,7 @@ ul#comp-nav {
   display: none; /* I NEED TO FIX THIS */
   float: left;
   background: #fcfcfc;
-  overflow: hidden;
+  overflow: hidden; 
   padding: 1% 3% 0 3%;
   width: 100%;
 }
@@ -1970,12 +1974,12 @@ ul#comp-nav {
     border-bottom: 1px dotted #ccc;
 }
 
-@media only screen and (min-width: 30em) {
+@media only screen and (min-width: 30em) { 
     #comp-nav {width: 100%; position: relative; border: none; }
     #comp-nav>li { display: inline; }
-    #comp-nav>li a {display: inline-block; }
+    #comp-nav>li a {display: inline-block; }  
     #comp-nav section { padding: 1%; /*position: absolute;*/ top: 42px; left: 0;  }
-
+    
 }
 
 .comp-product .lead{
@@ -2220,7 +2224,7 @@ ul#comp-nav {
   width: 100%;
   height: 300px;
   }
-
+ 
 .product-carousel .carousel-control.right {
   right: 0;
   left: auto;
@@ -2279,7 +2283,7 @@ ul#comp-nav {
 }
 
 @media (max-width: 480px) {
-
+  
 }
 
 @media (max-width: 480px) {
@@ -2315,7 +2319,7 @@ ul#comp-nav {
   margin-bottom: 10px;
   list-style: none;
   width: 100%;
-
+  
 }
 
 #bindex-cat-list ul{
@@ -2641,7 +2645,7 @@ div.bindex-tab-menu h4{
 @media (max-width: 767px) {
   .bindex-inpage-contant h2{
     font-size: 24px;
-  }
+  }  
 }
 
 /* Portrait phones and smaller */
@@ -2672,7 +2676,7 @@ div.bindex-tab-menu h4{
   text-decoration: none;
   font-size: 16px;
   line-height: 1.5em;
-
+  
 }
 
 .all-cat-section .all-cat-list>li{
@@ -2695,13 +2699,13 @@ div.bindex-tab-menu h4{
 @media (max-width: 991px) {
   .all-cat-section .all-cat-list ul{
     column-count: 2;
-  }
+  }  
 }
 
 @media (max-width: 480px) {
   .all-cat-section .all-cat-list ul{
     column-count: 1;
-  }
+  }  
 }
 
 /* job index category in page */
@@ -2826,7 +2830,7 @@ table.shoping-cart-table tr td:last-child {
   font-size: 10px;
   /*padding: 10px;*/
   background-color: #fff;
-
+  
 }
 
 .number-spinner .input-group-btn,
@@ -2880,7 +2884,7 @@ table.shoping-cart-table tr td:last-child {
 .social-cont .social{
   text-align: right;
   display: inline-block;
-  float: right;
+  float: right;  
 }
 
 @-webkit-keyframes fadeInRight {
@@ -3164,20 +3168,20 @@ a.social-icon:focus, a.social-icon:active, a.social-icon:hover{
   cursor:pointer;
 }
 #newsCarousel .list-group .active {
-  background-color:#eee;
+  background-color:#eee;  
 }
 
 #newsCarousel .list-group .active h4{
   color: #337ab7;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 992px) { 
   #newsCarousel {padding-right:33.3333%;}
-  #newsCarousel .carousel-controls {display:none;}
+  #newsCarousel .carousel-controls {display:none;}  
 }
-@media (max-width: 991px) {
+@media (max-width: 991px) { 
   .carousel-caption p,
-  #newsCarousel .list-group {display:none;}
+  #newsCarousel .list-group {display:none;} 
 }
 
 .news-more-cont h4 a{
@@ -3271,17 +3275,17 @@ a.social-icon:focus, a.social-icon:active, a.social-icon:hover{
     direction: ltr;
   text-align: left;
   }
-
+  
 .fc table {
   border-collapse: collapse;
   border-spacing: 0;
   }
-
+  
 html .fc,
 .fc table {
   font-size: 1em;
   }
-
+  
 .fc td,
 .fc th {
   padding: 0;
@@ -3301,53 +3305,53 @@ html .fc,
   width: 25%;
   text-align: left;
   }
-
+  
 .fc-header-center {
   text-align: center;
   }
-
+  
 .fc-header-right {
   width: 25%;
   text-align: right;
   }
-
+  
 .fc-header-title {
   display: inline-block;
   vertical-align: top;
   }
-
+  
 .fc-header-title h2 {
   margin-top: 0;
   white-space: nowrap;
   }
-
+  
 .fc .fc-header-space {
   padding-left: 10px;
   }
-
+  
 .fc-header .fc-button {
   margin-bottom: 1em;
   vertical-align: top;
   }
-
+  
 /* buttons edges butting together */
 
 .fc-header .fc-button {
   margin-right: -1px;
   }
-
+  
 .fc-header .fc-corner-right,  /* non-theme */
 .fc-header .ui-corner-right { /* theme */
   margin-right: 0; /* back to normal */
   }
-
+  
 /* button layering (for border precedence) */
-
+  
 .fc-header .fc-state-hover,
 .fc-header .ui-state-hover {
   z-index: 2;
   }
-
+  
 .fc-header .fc-state-down {
   z-index: 3;
   }
@@ -3356,23 +3360,23 @@ html .fc,
 .fc-header .ui-state-active {
   z-index: 4;
   }
-
-
-
+  
+  
+  
 /* Content
 ------------------------------------------------------------------------*/
-
+  
 .fc-content {
   clear: both;
   zoom: 1; /* for IE7, gives accurate coordinates for [un]freezeContentHeight */
   }
-
+  
 .fc-view {
   width: 100%;
   overflow: hidden;
   }
-
-
+  
+  
 
 /* Cell Styles
 ------------------------------------------------------------------------*/
@@ -3381,17 +3385,17 @@ html .fc,
 .fc-widget-content {  /* <td>, usually */
   border: 1px solid #ddd;
   }
-
+  
 .fc-state-highlight { /* <td> today cell */ /* TODO: add .fc-today to <th> */
   background: #fcfcfc;
   }
-
+  
 .fc-cell-overlay { /* semi-transparent rectangle while dragging */
   background: #bcccbc;
   opacity: .3;
   filter: alpha(opacity=30); /* for IE */
   }
-
+  
 
 
 /* Buttons
@@ -3417,7 +3421,7 @@ html .fc,
   }
 
 
-
+  
 /*
   button states
   borrowed from twitter bootstrap (http://twitter.github.com/bootstrap/)
@@ -3461,7 +3465,7 @@ html .fc,
   box-shadow: none;
   }
 
-
+  
 
 /* Global Event Styles
 ------------------------------------------------------------------------*/
@@ -3474,7 +3478,7 @@ html .fc,
 .fc-event-container > .ui-resizable-resizing {
   z-index: 9;
   }
-
+   
 .fc-event {
   border: 1px solid #3a87ad; /* default BORDER color */
   background-color: #3a87ad; /* default BACKGROUND color */
@@ -3486,12 +3490,12 @@ html .fc,
 a.fc-event {
   text-decoration: none;
   }
-
+  
 a.fc-event,
 .fc-event-draggable {
   cursor: pointer;
   }
-
+  
 .fc-rtl .fc-event {
   text-align: right;
   }
@@ -3501,12 +3505,12 @@ a.fc-event,
   height: 100%;
   overflow: hidden;
   }
-
+  
 .fc-event-time,
 .fc-event-title {
   padding: 0 1px;
   }
-
+  
 .fc .ui-resizable-handle {
   display: block;
   position: absolute;
@@ -3515,9 +3519,9 @@ a.fc-event,
   font-size: 300%;  /* */
   line-height: 50%; /* */
   }
-
-
-
+  
+  
+  
 /* Horizontal Events
 ------------------------------------------------------------------------*/
 
@@ -3535,9 +3539,9 @@ a.fc-event,
 .fc-rtl .fc-event-hori.fc-event-start {
   border-right-width: 1px;
   }
-
+  
 /* resizable */
-
+  
 .fc-event-hori .ui-resizable-e {
   top: 0           !important; /* importants override pre jquery ui 1.7 styles */
   right: -3px      !important;
@@ -3545,7 +3549,7 @@ a.fc-event,
   height: 100%     !important;
   cursor: e-resize;
   }
-
+  
 .fc-event-hori .ui-resizable-w {
   top: 0           !important;
   left: -3px       !important;
@@ -3553,37 +3557,37 @@ a.fc-event,
   height: 100%     !important;
   cursor: w-resize;
   }
-
+  
 .fc-event-hori .ui-resizable-handle {
   _padding-bottom: 14px; /* IE6 had 0 height */
   }
-
+  
 
 table.fc-border-separate {
   border-collapse: separate;
   }
-
+  
 .fc-border-separate th,
 .fc-border-separate td {
   border-width: 1px 0 0 1px;
   }
-
+  
 .fc-border-separate th.fc-last,
 .fc-border-separate td.fc-last {
   border-right-width: 1px;
   }
-
+  
 .fc-border-separate tr.fc-last th,
 .fc-border-separate tr.fc-last td {
   border-bottom-width: 1px;
   }
-
+  
 .fc-border-separate tbody tr.fc-first td,
 .fc-border-separate tbody tr.fc-first th {
   border-top-width: 0;
   }
-
-
+  
+  
 
 /* Month View, Basic Week View, Basic Day View
 ------------------------------------------------------------------------*/
@@ -3600,12 +3604,12 @@ table.fc-border-separate {
 .fc .fc-week-number div {
   padding: 0 2px;
   }
-
+  
 .fc-grid .fc-day-number {
   float: right;
   padding: 0 2px;
   }
-
+  
 .fc-grid .fc-other-month .fc-day-number {
   opacity: 0.3;
   filter: alpha(opacity=30); /* for IE */
@@ -3613,29 +3617,29 @@ table.fc-border-separate {
      might want to set the 'color' property instead
      making day-numbers bold also fixes the problem */
   }
-
+  
 .fc-grid .fc-day-content {
   clear: both;
   padding: 2px 2px 1px; /* distance between events and day edges */
   }
-
+  
 /* event styles */
-
+  
 .fc-grid .fc-event-time {
   font-weight: bold;
   }
-
+  
 /* right-to-left */
-
+  
 .fc-rtl .fc-grid .fc-day-number {
   float: left;
   }
-
+  
 .fc-rtl .fc-grid .fc-event-time {
   float: right;
   }
-
-
+  
+  
 
 /* Agenda Week View, Agenda Day View
 ------------------------------------------------------------------------*/
@@ -3643,11 +3647,11 @@ table.fc-border-separate {
 .fc-agenda table {
   border-collapse: separate;
   }
-
+  
 .fc-agenda-days th {
   text-align: center;
   }
-
+  
 .fc-agenda .fc-agenda-axis {
   width: 50px;
   padding: 0 4px;
@@ -3660,58 +3664,58 @@ table.fc-border-separate {
 .fc-agenda .fc-week-number {
   font-weight: bold;
   }
-
+  
 .fc-agenda .fc-day-content {
   padding: 2px 2px 1px;
   }
-
+  
 /* make axis border take precedence */
-
+  
 .fc-agenda-days .fc-agenda-axis {
   border-right-width: 1px;
   }
-
+  
 .fc-agenda-days .fc-col0 {
   border-left-width: 0;
   }
-
+  
 /* all-day area */
-
+  
 .fc-agenda-allday th {
   border-width: 0 1px;
   }
-
+  
 .fc-agenda-allday .fc-day-content {
   min-height: 34px; /* TODO: doesnt work well in quirksmode */
   _height: 34px;
   }
-
+  
 /* divider (between all-day and slots) */
-
+  
 .fc-agenda-divider-inner {
   height: 2px;
   overflow: hidden;
   }
-
+  
 .fc-widget-header .fc-agenda-divider-inner {
   background: #eee;
   }
-
+  
 /* slot rows */
-
+  
 .fc-agenda-slots th {
   border-width: 1px 1px 0;
   }
-
+  
 .fc-agenda-slots td {
   border-width: 1px 0 0;
   background: none;
   }
-
+  
 .fc-agenda-slots td div {
   height: 20px;
   }
-
+  
 .fc-agenda-slots tr.fc-slot0 th,
 .fc-agenda-slots tr.fc-slot0 td {
   border-top-width: 0;
@@ -3721,11 +3725,11 @@ table.fc-border-separate {
 .fc-agenda-slots tr.fc-minor td {
   border-top-style: dotted;
   }
-
+  
 .fc-agenda-slots tr.fc-minor th.ui-widget-header {
   *border-top-style: solid; /* doesn't work with background in IE6/7 */
   }
-
+  
 
 
 /* Vertical Events
@@ -3742,7 +3746,7 @@ table.fc-border-separate {
 .fc-event-vert.fc-event-end {
   border-bottom-width: 1px;
   }
-
+  
 .fc-event-vert .fc-event-time {
   white-space: nowrap;
   font-size: 10px;
@@ -3752,7 +3756,7 @@ table.fc-border-separate {
   position: relative;
   z-index: 2;
   }
-
+  
 .fc-event-vert .fc-event-bg { /* makes the event lighter w/ a semi-transparent overlay  */
   position: absolute;
   z-index: 1;
@@ -3764,14 +3768,14 @@ table.fc-border-separate {
   opacity: .25;
   filter: alpha(opacity=25);
   }
-
+  
 .fc .ui-draggable-dragging .fc-event-bg, /* TODO: something nicer like .fc-opacity */
 .fc-select-helper .fc-event-bg {
   display: none\9; /* for IE6/7/8. nested opacity filters while dragging don't work */
   }
-
+  
 /* resizable */
-
+  
 .fc-event-vert .ui-resizable-s {
   bottom: 0        !important; /* importants override pre jquery ui 1.7 styles */
   width: 100%      !important;
@@ -3783,8 +3787,8 @@ table.fc-border-separate {
   text-align: center;
   cursor: s-resize;
   }
-
-
+  
+  
 
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
