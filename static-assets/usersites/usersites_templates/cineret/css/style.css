@@ -69,8 +69,12 @@
 
 .news__img{
     float: left;
-    padding-right: 10px;
-    margin: 20px 0 20px;
+    /*padding-right: 10px;*/
+    /*margin: 20px 0 20px;*/
+}
+
+.media-list .media-wrap{
+    float: left;
 }
 
  /* ----------- Coupons Styling -------------------- */

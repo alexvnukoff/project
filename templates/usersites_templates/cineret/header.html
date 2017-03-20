@@ -151,7 +151,7 @@
                     {% endif %}
 
 {#                    {% if site.user_site.organization.news.exists %}#}
-                    {% if news|length > 0 %}
+                    {% if news %}
                         <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>
                     {% endif %}
 

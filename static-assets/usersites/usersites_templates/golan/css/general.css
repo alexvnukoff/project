@@ -1876,7 +1876,7 @@ footer .btn-default{
 	padding: 0;
 }
 
-.product-page-slider .carousel-inner .item{
+.carousel-inner>.item{
 	width: 100%;
     height: auto;
 }

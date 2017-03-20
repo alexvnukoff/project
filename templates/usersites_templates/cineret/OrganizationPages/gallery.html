@@ -11,12 +11,14 @@
 
                 <ul class="gallery">
                     {% for gallery_obj in site.user_site.organization.gallery_images %}
-                        <div class="col-md-3 col-sm-6 co-xs-12 gal-item">
+                        <div class="col-md-2 col-sm-3 col-xs-4 gal-item">
+                        <div class="img-wrap">
                             <figure>
                                 <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
                                     <img src="{{ gallery_obj.image.original }}">
                                 </a>
                             </figure>
+                        </div>
                         </div>
                 {% endfor %}
                 </ul>
