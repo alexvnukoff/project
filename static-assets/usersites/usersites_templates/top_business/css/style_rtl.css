@@ -183,8 +183,8 @@ body{
 /** News Styling ***************/
 /*********************************/
 .main-news__img{
-	float: right;
-	padding: 0 0 10px 10px;
+	/*float: right;*/
+	/*padding: 0 0 10px 10px;*/
 }
 
 .news-item a{

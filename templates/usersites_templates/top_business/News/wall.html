@@ -3,44 +3,41 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{% if news %}
 
-        <div class="row">
-            <h1><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h1>
-        </div>
+        <h1><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h1>
 
-        <div class="row main-news__row">
-            <div class="panel panel-default main-news__panel">
-                <div class="panel-body main-news__panel-body">
+        <div class="col-12-md news-wrapper">
+            <ul class="media-list">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ul class="main-news__list">
+                {# News feed wil contain a photo, header, date, short text and a burron to the main news page. #}
+                {% for article in news %}
+                    <div class="col-md-3 media-wrap">
+                    <li class="media">
 
-                                {% for article in news %}
-                                    <li class="news-item clear">
-                                        {% if article.image %}
-                                            <img src="{{ article.image.small }}" alt="" class="main-news__img">
-                                        {% endif %}
+                        <a href="#" class="news__img">
+                        {% if article.image %}
+                            <img src="{{ article.image.small }}" alt="" class="img-responsive">
+                        {% endif %}
+                        </a>
 
-                                        <h3>{{ article.title }}</h3>
+                        <div class="news__text">
+                            <h4>{{ article.title|truncatewords_html:"6" }}</h4>
+                            <p class="date">{{ article.created_at|date:'d M Y' }}</p>
 
-                                        {% if article.short_description %}
-                                            <p>{{ article.short_description|force_escape|linebreaks|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
-                                        {% else %}
-                                            <p>{{ article.content|cleanHtml|safe|truncatewords_html:"25" }}<a href="{% url 'news:main' %}">{% trans 'More' %}</a></p>
-                                        {% endif %}
+                            {% if article.short_description %}
+                                <p class="text">{{ article.short_description|force_escape|linebreaks|truncatechars:"100" }}</p>
+                            {% else %}
+                                <p class="text">{{ article.content|cleanHtml|safe|truncatechars:"100" }}</p>
+                            {% endif %}
 
-                                    </li>
-                                {% endfor %}
+                            <a type="button" class="btn btn-default news__btn-main" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
 
-                            </ul>
                         </div>
-                    </div>
+                        </div>
+                    </li>
+                {% endfor %}
 
-                </div>
-            </div>
+            </ul>
         </div>
 
 
-{% endif %}
