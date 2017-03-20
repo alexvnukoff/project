@@ -93,12 +93,16 @@ body{
 
 .news__img{
     float: right;
-    padding-left: 10px;
-    margin: 20px 0 20px;
+    /*padding-left: 10px;*/
+    /*margin: 20px 0 20px;*/
 }
 
 .about-main{
     float: left;
+}
+
+.media-list .media-wrap{
+    float: right;
 }
 
 /* ----------- Coupons Styling -------------------- */

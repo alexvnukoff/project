@@ -778,17 +778,22 @@ h3 a:focus{
 
 .news__img{
     position: relative;
-    padding-bottom: 10px;
+    padding: 0;
+    margin: 0 0 5px 0;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
 }
 
 .news__img img{
-    max-width: 100px;
-    max-height: 100px;
+    width: auto;
+    height: 100%;
 }
 
-.news__text{
-    /*position: relative;*/
-    /*float: right;*/
+.news__text .date{
+    margin: 0;
+    font-size: 10px;
+    color: #999;
 }
 
 .news__btn-main{
@@ -1832,9 +1837,20 @@ header.carousel .fill {
 	padding: 3px;
 }
 
+.gal-item .img-wrap{
+	overflow: hidden;
+    height: 150px;
+    width: 100%;
+}
+
 .gal-item .box{
 	height: 350px;
 	overflow: hidden;
+}
+
+.gal-item img{
+    height: auto;
+    width: 100%;
 }
 
 .box img{
@@ -1859,7 +1875,7 @@ header.carousel .fill {
 	top: 3px;
 	bottom: 3px;
 	text-align: center;
-    line-height: 350px;
+    line-height: 150px;
     font-size: 30px;
     color: #fff;
     -webkit-transition: all 0.5s ease-in-out 0s;
@@ -1981,6 +1997,10 @@ header.carousel .fill {
 .main-video .main-video-img {
 	padding-right: 0;
 	padding-left: 0;
+}
+
+.news-wrapper li{
+    margin-bottom: 10px;
 }
 
 .main-video .news-wrapper {

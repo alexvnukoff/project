@@ -93,8 +93,8 @@
 /** News Styling ***************/
 /*********************************/
 .main-news__img{
-	float: left;
-	padding: 0 10px 10px 0;
+	/*float: left;*/
+	/*padding: 0 10px 10px 0;*/
 }
 
 .news-item a{

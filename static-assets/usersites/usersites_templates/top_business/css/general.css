@@ -683,6 +683,26 @@ h1 a:hover, h1 a:visited, h1 a:link, h1 a:active
 	padding: 0;
 }
 
+.news__img{
+    position: relative;
+    padding: 0;
+    margin: 0 0 5px 0;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+
+.news__img img{
+    width: auto;
+    height: 100%;
+}
+
+.news__text .date{
+    margin: 0;
+    font-size: 10px;
+    color: #999;
+}
+
 /* image thumbnail */
 .thumb {
     display: block;
