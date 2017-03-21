@@ -230,7 +230,7 @@ class UserSite(ActiveModelMixing, models.Model):
 
 
 class LandingPage(models.Model):
-    src = models.OneToOneField(UserSite, related_name='landing')
+    src = models.ForeignKey(UserSite, related_name='landing')
     title = models.CharField(max_length=2048, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
     cover = CustomImageField(
