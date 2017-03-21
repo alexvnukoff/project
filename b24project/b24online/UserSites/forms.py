@@ -180,4 +180,4 @@ class TemplateForm(forms.ModelForm):
 class LandingForm(forms.ModelForm):
     class Meta:
         model = LandingPage
-        fields = ('title', 'description', 'image')
+        fields = ('title', 'description', 'cover')

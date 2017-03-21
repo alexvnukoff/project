@@ -233,7 +233,7 @@ class LandingPage(models.Model):
     src = models.OneToOneField(UserSite, related_name='landing')
     title = models.CharField(max_length=2048, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
-    image = CustomImageField(
+    cover = CustomImageField(
         upload_to=generate_upload_path, storage=image_storage, null=True,
         blank=True, sizes=['big'], max_length=255)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
@@ -243,6 +243,17 @@ class LandingPage(models.Model):
 
     def __str__(self):
         return "{0}".format(self.src)
+
+    def upload_images(self):
+        from core import tasks
+        params = []
+        params.append({
+            'file': self.cover.path,
+            'sizes': {
+                'big': {'box': (1200, 800), 'fit': True},
+            }
+        })
+        tasks.upload_images.delay(*params)
 
 
 @receiver(post_save, sender=UserSite)
