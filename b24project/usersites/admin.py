@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from usersites.models import ExternalSiteTemplate, UserSite, UserSiteTemplate, UserSiteSchemeColor
+from usersites.models import (ExternalSiteTemplate, UserSite, UserSiteTemplate,
+                    UserSiteSchemeColor, LandingPage)
 from django import forms
-from django.forms.fields import MultipleChoiceField
 from django.conf import settings
 
 
@@ -48,3 +48,4 @@ class UserSiteAdmin(admin.ModelAdmin):
 admin.site.register(ExternalSiteTemplate, ModelAdmin)
 admin.site.register(UserSite, UserSiteAdmin)
 admin.site.register(UserSiteTemplate, UserSiteTemplateAdmin)
+admin.site.register(LandingPage, ModelAdmin)

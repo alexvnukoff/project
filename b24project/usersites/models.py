@@ -15,7 +15,6 @@ from b24online.models import (Organization, image_storage, Gallery,
                               CURRENCY)
 from paypal.standard.ipn.models import PayPalIPN
 from b24online.utils import generate_upload_path
-from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
@@ -97,9 +96,9 @@ class UserSite(ActiveModelMixing, models.Model):
     galleries = GenericRelation(Gallery, related_query_name='sites')
     metadata = JSONField(default=dict())
     is_delivery_available = models.BooleanField(default=True)
-    delivery_currency = models.CharField(max_length=20, blank=False, 
+    delivery_currency = models.CharField(max_length=20, blank=False,
                                          null=True, choices=CURRENCY)
-    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, 
+    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2,
                                         null=True, blank=False)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -229,6 +228,21 @@ class UserSite(ActiveModelMixing, models.Model):
             cache.delete(site_cache)
 
 
+class LandingPage(models.Model):
+    src = models.OneToOneField(UserSite, related_name='landing')
+    title = models.CharField(max_length=2048, blank=True, null=True)
+    description = models.TextField(null=True, blank=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{0}".format(self.src)
+
+
 @receiver(post_save, sender=UserSite)
 def index_item(sender, instance, created, **kwargs):
     instance.clear_cache()
@@ -237,7 +251,7 @@ def index_item(sender, instance, created, **kwargs):
 @receiver(post_save, sender=PayPalIPN)
 def add_deal_for_product(sender, instance, created, **kwargs):
     """
-    Add Deal for the product from Basket after PayPal success payment. 
+    Add Deal for the product from Basket after PayPal success payment.
     """
     from tpp.DynamicSiteMiddleware import get_current_site
     from centerpokupok.models import B2CProduct

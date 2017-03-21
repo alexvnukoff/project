@@ -17,8 +17,7 @@ import usersites.Category.urls
 import usersites.BusinessIndex.urls
 import usersites.views
 from appl import func
-
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 

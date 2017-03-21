@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from collections import OrderedDict
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -383,3 +384,10 @@ class TemplateUpdate(UpdateView):
         self.template_id = self.kwargs.get(self.pk_url_kwarg)
         return self.site
 
+
+
+class LandingPageView(UpdateView):
+    model = UserSite
+    form_class = TemplateForm
+    template_name = 'b24online/UserSites/templateForm.html'
+    success_url = reverse_lazy('site:main')
