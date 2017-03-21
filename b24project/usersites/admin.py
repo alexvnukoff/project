@@ -45,7 +45,23 @@ class UserSiteAdmin(admin.ModelAdmin):
             ]
 
 
+class LandingPageAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = ('src', 'created_by', 'updated_by',)
+
+    raw_id_fields = [
+            'src',
+            'created_by',
+            'updated_by'
+            ]
+
+    readonly_fields = [
+            'created_at',
+            'updated_at',
+            ]
+
+
 admin.site.register(ExternalSiteTemplate, ModelAdmin)
 admin.site.register(UserSite, UserSiteAdmin)
 admin.site.register(UserSiteTemplate, UserSiteTemplateAdmin)
-admin.site.register(LandingPage, ModelAdmin)
+admin.site.register(LandingPage, LandingPageAdmin)

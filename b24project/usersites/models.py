@@ -41,7 +41,8 @@ class UserSiteTemplate(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    thumbnail = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small'], max_length=1000)
+    thumbnail = CustomImageField(upload_to=generate_upload_path,
+        storage=image_storage, sizes=['big', 'small'], max_length=1000)
     folder_name = models.CharField(max_length=255)
     typeof = models.IntegerField(choices=settings.TYPEOF_TEMPLATE, default=0)
     published = models.BooleanField(default=True)
@@ -232,8 +233,9 @@ class LandingPage(models.Model):
     src = models.OneToOneField(UserSite, related_name='landing')
     title = models.CharField(max_length=2048, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
-    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)
-
+    image = CustomImageField(
+        upload_to=generate_upload_path, storage=image_storage, null=True,
+        blank=True, sizes=['big'], max_length=255)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
