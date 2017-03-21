@@ -1,7 +1,16 @@
-{% extends 'b24online/forms.html' %}
+{% extends 'b24online/main_page.html' %}
 {% load i18n %}
 {% load staticfiles %}
 {% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block center %}
+<div class="forms-content">
+<div class="keyword">
+{% block keywords %}{% endblock %}
+</div>
+
 {% block content %}
 
 <style>
@@ -44,4 +53,14 @@ label {display:block;margin:3px 0;color:#949494;font-weight:bold;}
     </div>
 
 </div>
+
+
+
+
+
+</div>
+
 {% endblock %}
+</div>
+{% endblock %}
+{% block right %}{% endblock %}

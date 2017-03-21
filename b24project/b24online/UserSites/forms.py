@@ -6,10 +6,8 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
-from django.forms.fields import MultipleChoiceField
 from b24online.models import GalleryImage, Gallery, Banner
-
-from usersites.models import UserSite
+from usersites.models import UserSite, LandingPage
 
 
 class SiteForm(forms.ModelForm):
@@ -178,3 +176,8 @@ class TemplateForm(forms.ModelForm):
         model = UserSite
         fields = ('user_template', 'color_template',)
 
+
+class LandingForm(forms.ModelForm):
+    class Meta:
+        model = LandingPage
+        fields = ('title', 'description', 'image')

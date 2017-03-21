@@ -7,14 +7,13 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
-from django.db.utils import IntegrityError
 from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView, ListView
 from b24online.models import Organization, Company, BannerBlock
 from django.utils.translation import ugettext_lazy as _
 from b24online.UserSites.forms import (GalleryImageFormSet, SiteForm,
-            TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet)
+        TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet, LandingForm)
 from usersites.models import (UserSite, ExternalSiteTemplate, UserSiteTemplate,
             UserSiteSchemeColor, LandingPage)
 
@@ -351,6 +350,11 @@ class UserTemplateView(ListView):
     model = UserSiteTemplate
     template_name = 'b24online/UserSites/templateList.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Select Template"
+        return context
+
     def get_queryset(self):
         return self.model.objects.filter(published=True)
 
@@ -385,6 +389,7 @@ class TemplateUpdate(UpdateView):
             raise Http404("No found matching the template in UserSiteTemplate.")
 
         context['template'] = obj
+        context['title'] = "Select Template"
         context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
         return context
 
@@ -395,7 +400,7 @@ class TemplateUpdate(UpdateView):
 
 class LandingPageView(UpdateView):
     model = LandingPage
-    form_class = TemplateForm
+    form_class = LandingForm
     template_name = 'b24online/UserSites/landingForm.html'
     success_url = reverse_lazy('site:landing_page')
 
@@ -420,5 +425,11 @@ class LandingPageView(UpdateView):
             obj = queryset.get(src=self.site)
         except queryset.model.DoesNotExist:
             obj = queryset.create(src=self.site, created_by=self.user, updated_by=self.user)
+            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been created!"))
 
         return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Langing Page"
+        return context

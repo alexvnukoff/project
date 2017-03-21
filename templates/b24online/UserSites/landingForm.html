@@ -1,1 +1,58 @@
-landing page {{ object }}
+{% extends 'b24online/main_page.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block center %}
+<div class="forms-content">
+<div class="keyword">
+{% block keywords %}{% endblock %}
+</div>
+
+{% block content %}
+
+
+<style>
+.wrapper {width:840px;padding:0 10px;}
+p.lead {font-size:14px;margin:3px 0;}
+.templates-box {display:inline-block;}
+.templates-box label {cursor:pointer;}
+.templates-box img.t-image {width:185px;border:1px solid #919191;display:block;}
+ol.breadcrumb li {display:inline-block;margin:10px 0;font-size:13px;color:#848484;}
+ol.breadcrumb li:after {margin:0 10px 0 10px;content:"/";color:#dedede;}
+ol.breadcrumb li:last-child:after {content:none;}
+.link img.t-image {opacity:1}
+.link:hover {color:#009eda;text-decoration:none;}
+.link:hover img.t-image {opacity:0.8;}
+</style>
+
+{% if messages %}
+{% for message in messages %}
+
+    {% if 'success' in message.tags %}
+        <div id="notification-success"><p>{{ message }}</p></div>
+    {% endif %}
+
+    {% if 'error' in message.tags %}
+        <div id="notification-error"><p>{{ message }}</p></div>
+    {% endif %}
+
+{% endfor %}
+{% endif %}
+
+
+<div class="wrapper">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Landing Page" %}</li>
+    </ol>
+
+
+
+</div>
+
+{% endblock %}
+</div>
+{% endblock %}
+{% block right %}{% endblock %}
