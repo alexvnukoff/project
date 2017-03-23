@@ -3137,8 +3137,22 @@ def flush_redis_usersite_info(sender, instance, *args, **kwargs):
     """
     Remove all the instance cache form redis.
     """
+    from usersites.models import UserSite
     from usersites.redisHash import UsersiteHash
-    list_of_models = ('UserSite', 'Organization', 'Company', 'LandingPage')
+    list_of_models = ('UserSite', 'Chamber', 'Company', 'LandingPage')
     if sender.__name__ in list_of_models:
         cls = UsersiteHash()
-        cls.flush(instance)
+
+        if sender.__name__ == 'UserSite':
+            org = instance.organization
+        elif sender.__name__ == 'LandingPage':
+            org = instance.src.organization
+        else:
+            org = instance
+
+        try:
+            site = UserSite.objects.get(organization=org)
+        except UserSite.DoesNotExist as e:
+            logger.error(e, exc_info=True)
+        else:
+            cls.flush(site)

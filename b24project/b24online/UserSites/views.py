@@ -436,7 +436,6 @@ class LandingPageView(UpdateView):
 
     def form_valid(self, form):
         if form.has_changed():
-            form.save()
             messages.add_message(self.request, messages.SUCCESS, _("Landing page has been saved!"))
 
         if 'cover' in form.changed_data:
