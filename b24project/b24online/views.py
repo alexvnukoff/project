@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-import json
 import logging
 from urllib.parse import urljoin
 
@@ -13,7 +12,6 @@ from django.core.urlresolvers import reverse
 from django.http import (HttpResponse, HttpResponseRedirect,
                     HttpResponseBadRequest, JsonResponse, HttpResponseNotFound)
 from django.shortcuts import render_to_response, get_object_or_404, render
-from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
