@@ -447,6 +447,14 @@ TYPEOF_TEMPLATE = (
     (1, 'Extend'),
 )
 
+# CAPTCHA SETTINGS
+CAPTCHA_FONT_SIZE = 26
+CAPTCHA_IMAGE_SIZE = (120, 50)
+CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
+CAPTCHA_BACKGROUND_COLOR = '#f1f1f1'
+CAPTCHA_FOREGROUND_COLOR = '#666666'
+
+
 try:
     from local_settings import *
 except ImportError as e:

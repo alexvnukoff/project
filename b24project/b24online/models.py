@@ -3152,7 +3152,7 @@ def flush_redis_usersite_info(sender, instance, *args, **kwargs):
 
         try:
             site = UserSite.objects.get(organization=org)
-        except UserSite.DoesNotExist as e:
-            logger.error(e, exc_info=True)
+        except UserSite.DoesNotExist:
+            pass
         else:
             cls.flush(site)
