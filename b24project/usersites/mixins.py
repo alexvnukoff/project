@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-from django.core.exceptions import ObjectDoesNotExist
 from usersites.redisHash import get_usersite_objects
 
 DEFAULT_TEMPLATE_PATH = 'usersites'

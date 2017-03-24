@@ -1,7 +1,15 @@
-{% extends 'b24online/forms.html' %}
+{% extends 'b24online/main_page.html' %}
 {% load i18n %}
 {% load staticfiles %}
 {% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block center %}
+<div class="forms-content">
+<div class="keyword">
+{% block keywords %}{% endblock %}
+</div>
 {% block content %}
 
 <style>
@@ -20,7 +28,7 @@ ol.breadcrumb li:last-child:after {content:none;}
 
 <div class="wrapper">
     <ol class="breadcrumb">
-        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Select template" %}</li>
+        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Select Template" %}</li>
     </ol>
 
     <h1>{% trans "Select Template" %}</h1>
@@ -37,5 +45,8 @@ ol.breadcrumb li:last-child:after {content:none;}
 
     {% endfor %}
 
+{% endblock %}
 </div>
 {% endblock %}
+{% block right %}{% endblock %}
+

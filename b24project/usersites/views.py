@@ -4,14 +4,13 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse_lazy
-from django.http import JsonResponse, Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth import update_session_auth_hash
@@ -23,11 +22,10 @@ from b24online.cbv import ItemUpdate
 from b24online.models import BusinessProposal, B2BProduct, News, Company, Profile, Exhibition
 from b24online.utils import get_template_with_base_path
 from centerpokupok.models import B2CProduct
-from tpp.DynamicSiteMiddleware import get_current_site
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.forms import ProfileForm
 from usersites.mixins import UserTemplateMixin
-
+from usersites.models import LandingPage
 
 
 logger = logging.getLogger(__name__)
@@ -204,3 +202,17 @@ class ChangePassword(UserTemplateMixin, FormView):
 
 class ChangePasswordDone(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/change_password_done.html'
+
+
+class LandingView(UserTemplateMixin, TemplateView):
+    template_name = '{template_path}/landingPage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("Landing Page")
+        try:
+            context['object'] = LandingPage.objects.get(src=self.usersite)
+        except LandingPage.DoesNotExist:
+            raise Http404
+
+        return context

@@ -61,7 +61,7 @@ class UsersiteHash:
         try:
             site = instance.site.domain
         except AttributeError as e:
-            logging.info(e)
+            logger.error(e, exc_info=True)
         else:
             try:
                 self.r.delete(site)

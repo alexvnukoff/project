@@ -97,7 +97,8 @@
 </div>
 
 <p><a href="{% url 'site:template' %}"><button class="btn-link">{% trans 'Select Template' %}</button></a></p>
-
+<p>&nbsp;</p>
+<p><a href="{% url 'site:landing_page' %}"><button class="btn-link">{% if object.site.user_site.landing %}{% trans "Edit Landing Page" %}{% else %}{% trans "Create Landing Page Right Now" %}{% endif %}</button></a></p>
 
 <h3>{% trans "Your site" %}</h3>
 

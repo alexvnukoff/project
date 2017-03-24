@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from usersites.models import ExternalSiteTemplate, UserSite, UserSiteTemplate, UserSiteSchemeColor
+from usersites.models import (ExternalSiteTemplate, UserSite, UserSiteTemplate,
+                    UserSiteSchemeColor, LandingPage)
 from django import forms
-from django.forms.fields import MultipleChoiceField
 from django.conf import settings
 
 
@@ -45,6 +45,23 @@ class UserSiteAdmin(admin.ModelAdmin):
             ]
 
 
+class LandingPageAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = ('src', 'created_by', 'updated_by',)
+
+    raw_id_fields = [
+            'src',
+            'created_by',
+            'updated_by'
+            ]
+
+    readonly_fields = [
+            'created_at',
+            'updated_at',
+            ]
+
+
 admin.site.register(ExternalSiteTemplate, ModelAdmin)
 admin.site.register(UserSite, UserSiteAdmin)
 admin.site.register(UserSiteTemplate, UserSiteTemplateAdmin)
+admin.site.register(LandingPage, LandingPageAdmin)

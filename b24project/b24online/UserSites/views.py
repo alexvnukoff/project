@@ -1,5 +1,7 @@
+# -*- encoding: utf-8 -*-
 from collections import OrderedDict
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,8 +11,11 @@ from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView, ListView
 from b24online.models import Organization, Company, BannerBlock
-from b24online.UserSites.forms import GalleryImageFormSet, SiteForm, TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet
-from usersites.models import UserSite, ExternalSiteTemplate, UserSiteTemplate, UserSiteSchemeColor
+from django.utils.translation import ugettext_lazy as _
+from b24online.UserSites.forms import (GalleryImageFormSet, SiteForm,
+        TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet, LandingForm)
+from usersites.models import (UserSite, ExternalSiteTemplate, UserSiteTemplate,
+            UserSiteSchemeColor, LandingPage)
 
 
 @login_required()
@@ -345,6 +350,11 @@ class UserTemplateView(ListView):
     model = UserSiteTemplate
     template_name = 'b24online/UserSites/templateList.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Select Template"
+        return context
+
     def get_queryset(self):
         return self.model.objects.filter(published=True)
 
@@ -357,6 +367,8 @@ class TemplateUpdate(UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         organization_id = request.session.get('current_company', None)
+        self.template_id = self.kwargs.get(self.pk_url_kwarg)
+
         if not organization_id:
             return HttpResponseRedirect(reverse('denied'))
         organization = Organization.objects.get(pk=organization_id)
@@ -365,7 +377,8 @@ class TemplateUpdate(UpdateView):
             self.site = site
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('denied'))
-        return super(TemplateUpdate, self).dispatch(request, *args, **kwargs)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -376,10 +389,57 @@ class TemplateUpdate(UpdateView):
             raise Http404("No found matching the template in UserSiteTemplate.")
 
         context['template'] = obj
+        context['title'] = "Select Template"
         context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
         return context
 
     def get_object(self, queryset=None):
-        self.template_id = self.kwargs.get(self.pk_url_kwarg)
         return self.site
+
+
+
+class LandingPageView(UpdateView):
+    model = LandingPage
+    form_class = LandingForm
+    template_name = 'b24online/UserSites/landingForm.html'
+    success_url = reverse_lazy('site:landing_page')
+
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        try:
+            obj = queryset.get(src=self.site)
+        except queryset.model.DoesNotExist:
+            obj = queryset.create(src=self.site, created_by=self.user, updated_by=self.user)
+            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been created!"))
+
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Langing Page"
+        return context
+
+    def form_valid(self, form):
+        if form.has_changed():
+            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been saved!"))
+
+        if 'cover' in form.changed_data:
+            self.object.upload_images()
+
+        return super().form_valid(form)
 

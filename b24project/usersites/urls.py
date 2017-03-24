@@ -17,8 +17,7 @@ import usersites.Category.urls
 import usersites.BusinessIndex.urls
 import usersites.views
 from appl import func
-
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 
@@ -50,6 +49,7 @@ urlpatterns = [
     #url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', NewsDetail.as_view(), name='detail'),
     url(r'^questionnaires/', include(usersites.Questionnaires.urls, namespace='questionnaires')),
     url(r'^messages/', include(usersites.Messages.urls, namespace='messages')),
+    url(r'^landing/$', usersites.views.LandingView.as_view(), name='landing'),
 ]
 
 if settings.DEBUG:

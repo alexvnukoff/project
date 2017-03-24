@@ -1,0 +1,78 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<script>$(function() {setTiny('textarea[class="tiny"]');});</script>
+
+<style>
+.wrapper {width:840px;padding:0 10px;}
+p.lead {font-size:14px;margin:3px 0;}
+ol.breadcrumb li {display:inline-block;margin:10px 0;font-size:13px;color:#848484;}
+ol.breadcrumb li:after {margin:0 10px 0 10px;content:"/";color:#dedede;}
+ol.breadcrumb li:last-child:after {content:none;}
+.link img.t-image {opacity:1}
+.link:hover {color:#009eda;text-decoration:none;}
+.link:hover img.t-image {opacity:0.8;}
+.form-group {display:block;margin:15px 0;}
+.form-group label {display:block;}
+input.text {width:98%;}
+.bigbuy {margin:20px 0;}
+.notification-success {display:block;color:#3c763d;background:#dff0d8;border:1px solid #d6e9c6;margin:5px 0;padding:15px;font-size:14px;}
+</style>
+
+
+<div class="wrapper">
+<ol class="breadcrumb">
+    <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Landing Page" %}</li>
+</ol>
+
+{% if messages %}
+{% for message in messages %}
+
+    {% if 'success' in message.tags %}
+        <div class="notification-success"><i class="icon-ok"></i> {{ message }}</div>
+    {% endif %}
+
+    {% if 'error' in message.tags %}
+        <div class="notification-error">{{ message }}</div>
+    {% endif %}
+
+{% endfor %}
+{% endif %}
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+
+<div class="form-group">
+    <label>{% trans "Title" %}</label>
+    <input type="text" id="id_title" name="title" class="text" maxlength="2048" value="{{ form.title.value|default_if_none:"" }}"/>
+    {% if form.errors.title %}<small class="error">{{ form.errors.title.0 }}</small>{% endif %}
+</div>
+
+<div class="form-group">
+
+    {% if object.cover %}
+        <img src="{{ object.cover.big }}" style="margin:10px 0;width:100%;">
+    {% endif %}
+
+    <label>{% trans "Image" %}</label>
+    <input id="id_image" name="cover" type="file" />
+    {% if form.errors.cover %}<small class="error">{{ form.errors.cover.0 }}</small>{% endif %}
+</div>
+
+<div class="form-group">
+    <label>{% trans "Description" %}</label>
+    <textarea name="description" class="tiny">{{ form.description.value|default_if_none:"" }}</textarea>
+    {% if form.errors.description %}<small class="error">{{ form.errors.description.0 }}</small>{% endif %}
+</div>
+
+<div class="form-group">
+    <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+</div>
+
+</form>
+</div>
+{% endblock %}
