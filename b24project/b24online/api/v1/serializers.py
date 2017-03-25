@@ -15,6 +15,20 @@ class B2BProductSerializer(serializers.ModelSerializer):
     detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        extra_options = getattr(instance, 'get_contextmenu_options', None)
+
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('products:update', args=[instance.pk]),
+                'removeUrl': reverse('products:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+                'extraOptions': dict(zip(['url', 'title'], extra_options))
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.image.big if instance.image else static('b24online/img/item.jpg')
@@ -24,7 +38,7 @@ class B2BProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2BProduct
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image', 'contextMenu')
 
 
 class BranchSerializer(serializers.ModelSerializer):
@@ -57,26 +71,48 @@ class ProjectsSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer()
     publicationDate = DateTimeToDateField(source='created_at')
     detailUrl = serializers.CharField(source='get_absolute_url')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('innov:update', args=[instance.pk]),
+                'removeUrl': reverse('innov:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     class Meta:
         model = InnovationProject
         fields = ('id', 'name', 'cost', 'currency', 'branches', 'organization', 'detailUrl',
-                  'cost', 'currency', 'branches', 'publicationDate')
+                  'cost', 'currency', 'branches', 'publicationDate', 'contextMenu')
 
 
 class ExhibitionsSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer()
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
+    startDate = serializers.DateField()
+    endDate = serializers.DateField()
     date = DateTimeToDateField(source='created_at')
     flag = serializers.CharField(source='country.flag')
     countryName = serializers.CharField(source='country.name')
     detailUrl = serializers.CharField(source='get_absolute_url')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('exhibitions:update', args=[instance.pk]),
+                'removeUrl': reverse('exhibitions:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     class Meta:
         model = Exhibition
-        fields = ('id', 'city', 'start_date', 'end_date', 'title', 'organization',
-                  'date', 'flag', 'countryName', 'detailUrl')
+        fields = ('id', 'city', 'startDate', 'endDate', 'title', 'organization',
+                  'date', 'flag', 'countryName', 'detailUrl', 'contextMenu')
 
 
 class ProposalsSerializer(serializers.ModelSerializer):
@@ -85,10 +121,21 @@ class ProposalsSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
     countryName = serializers.CharField(source='country.name')
     detailUrl = serializers.CharField(source='get_absolute_url')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('proposal:update', args=[instance.pk]),
+                'removeUrl': reverse('proposal:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     class Meta:
         model = BusinessProposal
-        fields = ('id', 'title', 'organization', 'date', 'flag', 'countryName', 'detailUrl')
+        fields = ('id', 'title', 'organization', 'date', 'flag', 'countryName', 'detailUrl', 'contextMenu')
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -97,13 +144,25 @@ class NewsSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
     date = DateTimeToDateField(source='created_at')
     detailUrl = serializers.CharField(source='get_absolute_url')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('news:update', args=[instance.pk]),
+                'removeUrl': reverse('news:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.image.big if instance.image else static('b24online/img/news.jpg')
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detailUrl')
+        fields = ('id', 'title', 'content', 'organization',
+                  'date', 'flag', 'image', 'detailUrl', 'contextMenu')
 
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -116,6 +175,22 @@ class CompanySerializer(serializers.ModelSerializer):
     phone = serializers.CharField()
     email = serializers.CharField()
     organization = OrganizationSerializer(source='parent')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+    contactLink = serializers.SerializerMethodField(method_name='get_contact_link')
+
+    def get_contact_link(self, instance):
+        return reverse('messages:send_message_to_recipient', args=['organization', instance.pk])
+
+    def get_context_menu(self, instance):
+        if not instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('companies:update', args=[instance.pk]),
+                'removeUrl': reverse('companies:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+                'setCurrentUrl': reverse('setCurrent', args=[instance.pk]),
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.logo.big if instance.logo else static('b24online/img/company.jpg')
@@ -125,8 +200,8 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ('id', 'name', 'description', 'image', 'flag', 'detailUrl',
-                  'site', 'fax', 'phone', 'address', 'logo', 'email', 'organization')
+        fields = ('id', 'name', 'description', 'image', 'flag', 'detailUrl', 'contextMenu',
+                  'site', 'fax', 'phone', 'address', 'logo', 'email', 'organization', 'contactLink')
 
 
 class ChamberSerializer(serializers.ModelSerializer):
@@ -138,6 +213,18 @@ class ChamberSerializer(serializers.ModelSerializer):
     phone = serializers.CharField()
     email = serializers.CharField()
     contactLink = serializers.SerializerMethodField(method_name='get_contact_link')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('tpp:update', args=[instance.pk]),
+                'removeUrl': reverse('tpp:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+                'setCurrentUrl': reverse('setCurrent', args=[instance.pk]),
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.logo.big if instance.logo else static('b24online/img/company.jpg')
@@ -147,7 +234,6 @@ class ChamberSerializer(serializers.ModelSerializer):
 
     def get_contact_link(self, instance):
         return reverse('messages:send_message_to_recipient', args=['organization', instance.pk])
-
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -162,7 +248,7 @@ class ChamberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chamber
         fields = ('id', 'name', 'description', 'image', 'detailUrl', 'contactLink',
-                  'site', 'fax', 'phone', 'address', 'logo', 'email')
+                  'site', 'fax', 'phone', 'address', 'logo', 'email', 'contextMenu')
 
 
 class B2CProductSerializer(serializers.ModelSerializer):
@@ -170,6 +256,16 @@ class B2CProductSerializer(serializers.ModelSerializer):
     detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('products:updateB2C', args=[instance.pk]),
+                'removeUrl': reverse('products:deleteB2C', args=[instance.pk])
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.image.big if instance.image else static('b24online/img/item.jpg')
@@ -179,7 +275,7 @@ class B2CProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2BProduct
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image', 'contextMenu')
 
 
 class CouponSerializer(serializers.ModelSerializer):
@@ -187,8 +283,18 @@ class CouponSerializer(serializers.ModelSerializer):
     detailUrl = serializers.CharField(source='get_absolute_url')
     image = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
-    discount_percent = serializers.FloatField(source='coupon_discount_percent')
-    end_date = serializers.DateField(source='end_coupon_date')
+    discountPercent = serializers.FloatField(source='coupon_discount_percent')
+    endDate = serializers.DateField(source='end_coupon_date')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('products:updateB2C', args=[instance.pk]),
+                'removeUrl': reverse('products:deleteB2C', args=[instance.pk]),
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.image.big if instance.image else static('b24online/img/item.jpg')
@@ -198,7 +304,8 @@ class CouponSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Coupon
-        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl', 'image', 'discount_percent', 'end_date')
+        fields = ('id', 'name', 'cost', 'currency', 'flag', 'detailUrl',
+                  'image', 'discountPercent', 'endDate', 'contextMenu')
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -208,13 +315,24 @@ class VideoSerializer(serializers.ModelSerializer):
     date = DateTimeToDateField(source='created_at')
     detailUrl = serializers.CharField(source='get_absolute_url')
     videoCode = serializers.CharField(source='video_code')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('tv:update', args=[instance.pk]),
+                'removeUrl': reverse('tv:delete', args=[instance.pk]),
+            }
+
+        return None
 
     def get_image(self, instance):
         return instance.image.big if instance.image else '//img.youtube.com/vi/%s/0.jpg' % instance.video_code
 
     class Meta:
         model = VideoChannel
-        fields = ('id', 'title', 'content', 'organization', 'date', 'flag', 'image', 'detailUrl')
+        fields = ('id', 'title', 'content', 'organization', 'date',
+                  'flag', 'image', 'detailUrl', 'contextMenu')
 
 
 class VacancySerializer(serializers.ModelSerializer):
@@ -222,10 +340,22 @@ class VacancySerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='country.flag')
     countryName = serializers.CharField(source='country.name')
     date = DateTimeToDateField(source='created_at')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('vacancy:update', args=[instance.pk]),
+                'removeUrl': reverse('vacancy:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     class Meta:
         model = Requirement
-        fields = ('id', 'title', 'city', 'description', 'date', 'countryName', 'detailUrl', 'flag')
+        fields = ('id', 'title', 'city', 'description', 'date',
+                  'countryName', 'detailUrl', 'flag', 'contextMenu')
 
 
 class ResumeSerializer(serializers.ModelSerializer):
@@ -233,10 +363,21 @@ class ResumeSerializer(serializers.ModelSerializer):
     flag = serializers.CharField(source='user.profile.country.flag')
     date = DateTimeToDateField(source='created_at')
     detailUrl = serializers.CharField(source='get_absolute_url')
+    contextMenu = serializers.SerializerMethodField(method_name='get_context_menu')
+
+    def get_context_menu(self, instance):
+        if instance.has_perm(self.context['request'].user):
+            return {
+                'editUrl': reverse('resume:update', args=[instance.pk]),
+                'removeUrl': reverse('resume:delete', args=[instance.pk]),
+                'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
+            }
+
+        return None
 
     class Meta:
         model = Resume
-        fields = ('id', 'title', 'date', 'flag', 'fullName', 'detailUrl')
+        fields = ('id', 'title', 'date', 'flag', 'fullName', 'detailUrl', 'contextMenu')
 
 
 class BannerSerializer(serializers.ModelSerializer):

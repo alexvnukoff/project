@@ -80,8 +80,8 @@ class CreateContextAdvertisement(ItemCreate):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        class_name = request.GET.get('type', None)
-        pk = request.GET.get('id', None)
+        class_name = kwargs.get('class_name', None)
+        pk = kwargs.get('pk', None)
 
         if not class_name or not pk:
             return HttpResponseNotFound()

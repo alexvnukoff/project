@@ -35,13 +35,32 @@ class Wall(APIView, FilterableViewMixin):
         .select_related('country').prefetch_related('organization', 'organization__countries')
 
     def get(self, *args, **kwargs):
+        context = {
+            'request': self.request
+        }
+
         result = {
             'content': {
-                'products': B2BProductSerializer(self.get_content(self.products_queryset, 4), many=True).data,
-                'projects': ProjectsSerializer(self.get_content(self.projects_queryset, 1), many=True).data,
-                'exhibitions': ExhibitionsSerializer(self.get_content(self.exhibitions_queryset, 1), many=True).data,
-                'proposals': ProposalsSerializer(self.get_content(self.proposals_queryset, 1), many=True).data,
-                'news': NewsSerializer(self.get_content(self.news_queryset, 1), many=True).data
+                'products': B2BProductSerializer(
+                    self.get_content(self.products_queryset, 4),
+                    context=context,
+                    many=True).data,
+                'projects': ProjectsSerializer(
+                    self.get_content(self.projects_queryset, 1),
+                    context=context,
+                    many=True).data,
+                'exhibitions': ExhibitionsSerializer(
+                    self.get_content(self.exhibitions_queryset, 1),
+                    context=context,
+                    many=True).data,
+                'proposals': ProposalsSerializer(
+                    self.get_content(self.proposals_queryset, 1),
+                    context=context,
+                    many=True).data,
+                'news': NewsSerializer(
+                    self.get_content(self.news_queryset, 1),
+                    context=context,
+                    many=True).data
             }
         }
 

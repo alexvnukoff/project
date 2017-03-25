@@ -1066,16 +1066,14 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
-    def get_contextmenu_options(self, context):
+    def get_contextmenu_options(self):
         """
         Return extra options for context menu.
         """
         model_type = ContentType.objects.get_for_model(self)
         if getattr(self, 'pk', False):
             yield (reverse('questionnaires:list',
-                           kwargs={'content_type_id': model_type.id,
-                                   'item_id': self.id}),
-                   _('Questionnaire'))
+                           kwargs={'content_type_id': model_type.id, 'item_id': self.id}), _('Questionnaire'))
 
 
 class B2BProductComment(MPTTModel):
