@@ -118,6 +118,7 @@ class SiteCreate(CreateView):
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         form.instance.organization = self.organization
+        form.instance.user_template_id = 1
         form.instance.domain_part = form.cleaned_data.get('domain', None) or form.cleaned_data.get('sub_domain')
 
         with transaction.atomic():
