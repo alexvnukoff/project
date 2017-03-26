@@ -34,7 +34,9 @@
 
                         {% if product.image %}
                             <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                            <div class="main-img-wrap">
                                 <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                            </div>
                             </a>
                         {% else %}
                             <img src="{% static 'b24online/img/item.jpg' %}" />

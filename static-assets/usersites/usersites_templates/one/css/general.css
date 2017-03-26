@@ -420,6 +420,7 @@ section.success a.active {
     padding-top: 10px;
     padding-bottom: 10px;
     width: 100%;
+    background-color: #fafafa;
 }
 
 form:first-child .contact-form-elem {
