@@ -334,7 +334,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details'
 )
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 LANGUAGES = [
     ('en', _('English')),
@@ -360,7 +360,7 @@ LANGUAGES = [
     ('es', _('Spanish')),
 ]
 
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
