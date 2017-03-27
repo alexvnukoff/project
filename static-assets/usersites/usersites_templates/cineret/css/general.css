@@ -987,6 +987,11 @@ h3 a:focus{
     .main-products .product {
         margin-bottom: 5px;
     }
+
+    .main-img-wrap{
+        width: 100%;
+        height: inherit;
+    }
 }
 
 @media (max-width: 767px) {
@@ -2080,6 +2085,12 @@ i.red{
     padding-bottom:40px;
 }
 
+@media (max-width: 767px) {
+    .gal-container{
+        padding-bottom:0;
+    }
+}
+
 .small-navbar{
     background-color: #fff;
     padding: 5px;
@@ -2135,6 +2146,30 @@ i.red{
 .language-navi-dropdown img {
     width: 24px;
 	display: inline;
+}
+
+.main-contact img,
+.form-inline img{
+    display: inline;
+    height: 34px;
+}
+
+.main-contact p,
+.form-inline p{
+    margin: 0;
+}
+
+#id_captcha_1{
+    width: 120px;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 /*********************************************/
