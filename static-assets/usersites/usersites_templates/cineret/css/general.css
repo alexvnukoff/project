@@ -2181,6 +2181,7 @@ i.red{
     height: 800px;
     width: 100%;
     position: relative;
+    overflow: hidden;
 }
 .landing-img{
     width: 100%;
