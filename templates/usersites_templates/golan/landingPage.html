@@ -19,6 +19,17 @@
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
 
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/general.css' %}">
+    <link rel="stylesheet" href="{{ site.user_site.color.path }}">
+
+    {% if LANGUAGE_BIDI %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style_rtl.css' %}" />
+    {% else %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/golan/css/style.css' %}" />
+    {% endif %}
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -28,21 +39,86 @@
 
 </head>
 
-<body>
+<body {% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <span class="navbar-brand">{{ site }}</span>
+{#    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">#}
+{#        <div class="container">#}
+{#            <div class="navbar-header">#}
+{#                <span class="navbar-brand">{{ site }}</span>#}
+{#            </div>#}
+{#        </div>#}
+{#    </nav>#}
+
+
+    <div class="landing-img-contact-wrap">
+        {% if object.cover %}<img src="{{ object.cover.big }}"  class="landing-img"/>{% endif %}
+        <div class="landing-contact-wrap">
+            <div class="landing-contact-form">
+
+                <form action="{% url 'sendmessage' %}" method="post">
+                    <input type="hidden" name="co_id" value="{{ site.pk }}">
+                    <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+                        <div class="col-md-12">
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <label>{% trans 'Your name' %}:</label>
+                                    <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" id="name" name="name" placeholder="{% trans 'Your name' %}">
+                                    <p class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <label>{% trans 'Phone Number' %}:</label>
+                                    <input type="tel" class="form-control" id="phone" value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <label>{% trans 'Your email' %}:</label>
+                                    <input type="email" class="form-control" id="email" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                <p>{{ form.captcha }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <label>{% trans 'Message' %}:</label>
+                                    <textarea name="message" rows="10" cols="100" class="form-control" id="message" maxlength="999" style="resize:none" placeholder="{% trans 'Message' %}">{{ form.message.value|default_if_none:"" }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-default landing-btn">{% trans 'Send' %}</button>
+                        </div>
+                </form>
+
+                {% if form.errors.name %}
+                    <p style="color:red;">{{ form.errors.name.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.email %}
+                    <p style="color:red;">{{ form.errors.email.0 }}</p>
+                {% endif %}
+
+                {% if form.errors.message %}
+                    <p style="color:red;">{{ form.errors.message.0 }}</p>
+                {% endif %}
+
             </div>
         </div>
-    </nav>
-
+    </div>
 
 <div class="container" style="margin-top:60px">
 
-    {% if object.cover %}<img src="{{ object.cover.big }}" />{% endif %}
     {% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
     {% if object.description %}{{ object.description|cleanHtml|safe }}{% endif %}
 

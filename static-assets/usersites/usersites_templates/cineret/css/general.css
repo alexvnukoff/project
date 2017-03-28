@@ -2174,6 +2174,47 @@ i.red{
 
 /*********************************************/
 
+/***************************
+** landing page design *****
+***************************/
+.landing-img-contact-wrap{
+    height: 800px;
+    width: 100%;
+    position: relative;
+}
+.landing-img{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.landing-contact-wrap{
+    position: relative;
+    padding: 30px;
+    width: 400px;
+    /*background-color: #0a1600;*/
+    height: 100%;
+}
+
+.landing-contact-form{
+    /*margin: 5%;*/
+    z-index: 2;
+    padding: 20px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 80%;
+    border-radius: 10px;
+}
+
+.landing-contact-form form .landing-btn{
+    background-color: #0a6aa1;
+    color: #fff;
+    background-image: none;
+}
+
 @media(max-width:767px) {
 
 
