@@ -22,7 +22,7 @@
             {% if top_perm %}
                  <div class="tender-action">
                      <i class="imgnews noty icon-action"></i>
-                     <a href="{% url 'adv_top:top_form' obj.pk %}?type={{ top_type }}&id={{ obj.pk }}">
+                     <a href="{% url 'adv_top:top_form' top_type obj.pk %}">
                          <span class="deletext">{% trans 'Advertise' %}</span>
                      </a>
                  </div>
