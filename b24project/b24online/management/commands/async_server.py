@@ -12,9 +12,9 @@ class Command(BaseCommand):
         tornado.ioloop.IOLoop.instance().add_callback(self.shutdown)
 
     def handle(self, *args, **options):
-        router = SockJSRouter(Connection, '/orders')
+        router = SockJSRouter(Connection, '/echo')
         app = tornado.web.Application(router.urls)
-        app.listen(9999)
+        app.listen(9998)
 
         # Init signals handler
         signal.signal(signal.SIGTERM, self.sig_handler)

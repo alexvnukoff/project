@@ -3,8 +3,11 @@ ENV PYTHONUNBUFFERED 1
 
 ENV C_FORCE_ROOT true
 
+
+
 ENV APP_ROOT /src
-RUN mkdir /src;
+RUN mkdir /src
+RUN mkdir /src/log
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -12,6 +15,7 @@ RUN apt-get update && \
 	git \
 	vim \
 	libpq-dev \
+	gettext \
 	libgeoip-dev && \
 	pip3 install -U pip setuptools && \
    rm -rf /var/lib/apt/lists/*

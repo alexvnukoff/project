@@ -71,9 +71,19 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/src/log/error.log',
+        },
     },
     'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
         'django.db.backends': {
             'level': 'ERROR',
             'handlers': ['console'],
@@ -234,7 +244,7 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com:6379/1",
+        "LOCATION": "redis://redis:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -383,7 +393,7 @@ BUCKET_REGION = 'eu-west-1'
 
 ##################### Celery settings ####################################
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com:6379'
+CELERY_BROKER_URL = 'redis://redis:6379/4'
 
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
@@ -405,7 +415,7 @@ RAVEN_CONFIG = {
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
 
 # The Redis DB url for stats
-EVENT_STORE_REDIS_URL = 'redis://celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com/2'
+EVENT_STORE_REDIS_URL = 'redis://redis/2'
 ANALYTIC = True
 
 try:
@@ -437,9 +447,9 @@ GEO_COUNTRY_DB = {
 }
 
 REDIS_USERSITE = redis.Redis(
-        host='tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com',
+        host='redis',
         port=6379,
-        db=2
+        db=3
     )
 
 TYPEOF_TEMPLATE = (

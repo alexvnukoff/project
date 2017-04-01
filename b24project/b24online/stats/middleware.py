@@ -48,7 +48,7 @@ class RegisteredEventMiddleware(object):
                 event_data['url'] = request.path
                 event_data['username'] = request.META.get('REMOTE_USER')
                 event_data['user_agent'] = _ua = request.META.get('HTTP_USER_AGENT') 
-                geo_data = GeoIPHelper.get_geoip_data(_ip) 
-                event_data.update(dict((k, str(v)) for k, v in geo_data.items()))
+                geo_data = getattr(GeoIPHelper.get_geoip_data(_ip), 'raw', {})
+                event_data.update(geo_data)
                 process_events_queue.delay(request_uuid, event_data)
         return response

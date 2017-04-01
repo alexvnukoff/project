@@ -59,11 +59,11 @@ class GeolocationMiddleware(object):
             try:
                 geo_info = geo.get_geoip_data(ip)
             except KeyError:
-                geo_info = False
+                geo_info = None
                 request.session['geo_country'] = None
 
             if geo_info:
-                request.session['geo_country'] = get_main_c(geo_info['country_code'].lower())
+                request.session['geo_country'] = get_main_c(geo_info.country.iso_code.lower())
             else:
                 request.session['geo_country'] = None
 

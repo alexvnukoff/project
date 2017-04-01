@@ -4,26 +4,26 @@
 The helpers for events stats processing.
 """
 
-import os
-import socket
-import random
-import struct
 import datetime
-import logging
-import uuid
 import hashlib
+import logging
+import os
+import re
 
-from django.db import models
+import geoip2.database
+import maxminddb
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.utils.encoding import smart_str
+from django.utils.functional import cached_property
+from geoip2.errors import AddressNotFoundError
 
 from b24online.models import RegisteredEventType
 from b24online.stats import InconsistentDataError
 from b24online.stats.utils import glue, get_redis_connection
 
 logger = logging.getLogger(__name__)
-
 
 class GeoIPHelper(object):
     """
@@ -42,21 +42,41 @@ class GeoIPHelper(object):
         'REMOTE_ADDR',
     )
 
+    _state = {}
+
+    def __new__(cls, *p, **k):
+        self = object.__new__(cls)
+        self.__dict__ = cls._state
+        return self
+
+    @cached_property
+    def city_reader(self):
+        return geoip2.database.Reader(os.path.join(self.gi_db_path, 'GeoLite2-City.mmdb'))
+
+    @cached_property
+    def country_reader(self):
+        return geoip2.database.Reader(os.path.join(self.gi_db_path, 'GeoLite2-Country.mmdb'))
+
+    @cached_property
+    def gi_db_path(self):
+        return getattr(settings, 'GEOIP_DB_PATH', None)
+
     @staticmethod
     def is_valid_ip(ip_str):
         """
         Check the validity of an IPv4 address
         """
-        try:
-            socket.inet_pton(socket.AF_INET, ip_str)
-        except AttributeError:
-            try:
-                socket.inet_aton(ip_str)
-            except (AttributeError, socket.error):
-                return False
-            return ip_str.count('.') == 3
-        except socket.error:
+        match = re.match("^(\d{0,3})\.(\d{0,3})\.(\d{0,3})\.(\d{0,3})$", ip_str)
+        if not match:
             return False
+        quad = []
+        for number in match.groups():
+            quad.append(int(number))
+        if quad[0] < 1:
+            return False
+        for number in quad:
+            if number > 255 or number < 0:
+                return False
         return True
 
     @classmethod
@@ -75,34 +95,12 @@ class GeoIPHelper(object):
 
     @classmethod
     def get_geoip_data(cls, ip):
-
-        import GeoIP
-        """
-        Return the info from GeoIP database for IP address.
-        """
-        geoip_data = {}
-        gi_db_path = getattr(settings, 'GEOIP_DB_PATH', None)
-        if gi_db_path:
-            try:
-                gi_city_h = GeoIP.open(
-                    os.path.join(gi_db_path, 'GeoLiteCity.dat'),
-                    GeoIP.GEOIP_STANDARD)
-            except GeoIP.error:
-                pass
-            else:
-                geoip_data = gi_city_h.record_by_addr(ip) or {}
-                if not geoip_data:
-                    try:
-                        gi_country_h = GeoIP.open(
-                            os.path.join(gi_db_path, 'GeoIP.dat'),
-                            GeoIP.GEOIP_STANDARD)
-                    except GeoIP.error:
-                        pass
-                    else:
-                        country_code = gi_country_h.country_code_by_addr(ip)
-                        if country_code:
-                            geoip_data['country_code'] = country_code
-        return geoip_data
+        try:
+            return cls().city_reader.city(ip)
+        except (maxminddb.InvalidDatabaseError, AddressNotFoundError):
+            return cls().country_reader.country(ip)
+        except (maxminddb.InvalidDatabaseError, AddressNotFoundError):
+            return None
 
     @staticmethod
     def get_random_ip():
@@ -132,10 +130,10 @@ class RegisteredEventHelper(object):
         """
         Return events query key for the HTTPRequest instance
         """
-        
+
         return glue('registered', 'events',
-            datetime.date.today().strftime('%Y-%m-%d'),
-            request_uuid, affix)
+                    datetime.date.today().strftime('%Y-%m-%d'),
+                    request_uuid, affix)
 
     @classmethod
     def get_stored_event(cls, instance, event_type_slug):
@@ -176,7 +174,7 @@ class RegisteredEventHelper(object):
         ua = extra_data.get('user_agent')
         if all((ip, ua)):
             meaning_data = (ip, ua)
-            key_str_raw = ':' . join(map(smart_str, meaning_data))
+            key_str_raw = ':'.join(map(smart_str, meaning_data))
             key_str = key_str_raw.encode('utf-8')
             return hashlib.md5(key_str).hexdigest()
         return None
@@ -184,10 +182,16 @@ class RegisteredEventHelper(object):
     @classmethod
     def get_geoip_info_key(cls, extra_data):
         key_data = []
-        for _key in ('country_code', 'country_name', 'city'):
-            _value = extra_data.get(_key)
-            if not _value or _value == 'None':
-                _value = 'undef'
-            key_data.append(_value.strip())
-        return glue(key_data) if key_data else None
 
+        if 'country' in extra_data and extra_data['country'] != 'None':
+            key_data.append(extra_data['country'].get('is_code', '').strip())
+            key_data.append(extra_data['country']['names'].get('en', '').strip())
+        else:
+            key_data += ['undef', 'undef']
+
+        if 'city' in extra_data and extra_data['city'] != 'None':
+            key_data.append(extra_data['city']['names'].get('en', '').strip())
+        else:
+            key_data.append('undef')
+
+        return glue(key_data)

@@ -1,7 +1,7 @@
 {% load CustomFilters %}
 
 <script>
-    var ptext_{{ item_id }} = '{{ text|truncatechars:200|cleanHtml|striptags|safe }}';
+    var ptext_{{ item_id }} = '{{ text|truncatechars:200|linebreaksbr|cleanHtml|striptags|safe }}';
     var purl = window.location.origin + window.location.pathname;
     var ptitle_{{ item_id }} = '{{ title }}';
     var pimage_{{ item_id}} = '';
