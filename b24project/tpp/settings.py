@@ -379,7 +379,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
 
-ELASTIC_SEARCH_HOSTS = ['ec2-54-72-220-8.eu-west-1.compute.amazonaws.com']
+ELASTIC_SEARCH_HOSTS = ['elasticsearch']
 
 ############################# LXML settings ################################
 ALLOWED_IFRAME_HOSTS = ['www.youtube.com']
