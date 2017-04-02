@@ -53,10 +53,11 @@ services:
   web:
     environment:
       - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
+      - DJANGO_SETTINGS_MODULE=tpp.settings
     build: .
     container_name: dg01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8001 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.b24online_wsgi'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8001 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.wsgi'
     volumes:
       - /mnt/log/web/:/src/log/
       - ./static-assets:/src/static-assets
@@ -78,10 +79,11 @@ services:
   usersite:
     environment:
       - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
+      - DJANGO_SETTINGS_MODULE=tpp.usersites_settings
     build: .
     container_name: dg02
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8002 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.usersites_wsgi'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8002 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.wsgi'
     volumes:
       - /mnt/log/usersite/:/src/log/
       - ./static-assets:/src/static-assets
@@ -123,8 +125,9 @@ services:
       - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
     container_name: cb01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/newrelic-admin run-program /usr/local/bin/celery beat -A tpp --pidfile /tmp/celerybeat.pid -f /src/log/celery.log -l ERROR'
+    command: bash -c '/usr/local/bin/newrelic-admin run-program /usr/local/bin/celery beat -A tpp --pidfile /tmp/beat/celerybeat.pid -f /src/log/celery.log -l ERROR'
     volumes:
+      - ./:/tmp/beat/
       - /mnt/log/beat/:/src/log/
       - ./b24project:/src/b24project
       - ./newrelic_celery.ini:/src/newrelic.ini

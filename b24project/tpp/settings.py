@@ -6,12 +6,12 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-DEFAULT_FROM_EMAIL = 'noreply@b24online.com'
-SERVER_EMAIL = 'noreply@b24online.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'noreply@b24online.com'
-EMAIL_HOST_PASSWORD = 'qazZAQ123'
-EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = os.getenv('SETTING_DEFAULT_FROM_EMAIL', 'noreply@b24online.com')
+SERVER_EMAIL = os.getenv('SETTING_SERVER_EMAIL', 'noreply@b24online.com')
+EMAIL_HOST = os.getenv('SETTING_EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_HOST_USER = os.getenv('SETTING_EMAIL_HOST_USER', 'noreply@b24online.com')
+EMAIL_HOST_PASSWORD = os.getenv('SETTING_EMAIL_HOST_PASSWORD', 'qazZAQ123')
+EMAIL_PORT = os.getenv('SETTING_EMAIL_PORT', 587)
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 
@@ -22,8 +22,6 @@ RAISE_EXCEPTIONS = True
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
-    ('Jenya', 'jenyapri@tppcenter.com'),
-    ('Iliya', 'afend@tppcenter.com'),
 )
 
 ANONYMOUS_USER_ID = -1
@@ -32,21 +30,11 @@ MANAGERS = ADMINS
 SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
 DEBUG = False
 
-INTERNAL_IPS = ['80.179.7.34']
+INTERNAL_IPS = []
 ALLOWED_HOSTS = ['*']
 USER_SITES_DOMAIN = "b24online.com"
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'mail_admins': {
-#             'level': 'ERROR',
-#             'class': 'django.utils.log.AdminEmailHandler',
-#             'include_html': False,
-#         }
-#     },
-# }
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 LOGGING = {
     'version': 1,
@@ -239,12 +227,10 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 #     'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
 # }
 
-WSGI_APPLICATION = 'tpp.wsgi.application'
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": os.getenv('SETTING_REDIS_CACHE_LOCATION', "redis://redis:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -255,13 +241,6 @@ CACHES = {
     }
 }
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#         'LOCATION': 'unique-snowflake',
-#     }
-# }
-
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 SESSION_SAVE_EVERY_REQUEST = True
@@ -269,11 +248,11 @@ SESSION_SAVE_EVERY_REQUEST = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'b24online_db',
-        'USER': 'b24online',
-        'PASSWORD': 'b24online**',
-        'HOST': 'b24online-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': os.getenv('SETTING_DB_NAME', 'b24online_db'),
+        'USER': os.getenv('SETTING_DB_USER', 'b24online'),
+        'PASSWORD': os.getenv('SETTING_DB_PASSWORD', 'b24online**'),
+        'HOST': os.getenv('SETTING_DB_HOST', 'b24online-db.cueshukzldr1.eu-west-1.rds.amazonaws.com'),
+        'PORT': os.getenv('SETTING_DB_PORT', '5432'),
         'CONN_MAX_AGE': 60
     }
 }
@@ -302,18 +281,18 @@ SITE_ID = 143
 
 AUTH_USER_MODEL = 'b24online.User'
 
-MEDIA_URL = '//static.b24online.com/'
+MEDIA_URL = os.getenv('SETTING_MEDIA_URL', '//static.b24online.com/')
 MEDIA_ROOT = (os.path.join(BASE_DIR, '..', 'uploads').replace('\\', '/'))
 
 # FACEBOOK
-SOCIAL_AUTH_FACEBOOK_KEY = '1701658433380177'
-SOCIAL_AUTH_FACEBOOK_SECRET = '72a75fd39cc67a7682e23c4939b48d1e'
+SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SETTING_SOCIAL_AUTH_FACEBOOK_KEY', '1701658433380177')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SETTING_SOCIAL_AUTH_FACEBOOK_SECRET', '72a75fd39cc67a7682e23c4939b48d1e')
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'id,name,email', }
 
 # GOOGLE
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '941800294954-4vsfrb8u7ctc6bjvvfree9m9ja54d6bp.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'KPftndibEQQ5fvqYQyRqebR9'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SETTING_SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', '941800294954-4vsfrb8u7ctc6bjvvfree9m9ja54d6bp.apps.googleusercontent.com')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SETTING_SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', 'KPftndibEQQ5fvqYQyRqebR9')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -379,21 +358,21 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
 
-ELASTIC_SEARCH_HOSTS = ['elasticsearch']
+ELASTIC_SEARCH_HOSTS = [os.getenv('SETTING_ELASTIC_SEARCH_HOST', 'elasticsearch')]
 
 ############################# LXML settings ################################
 ALLOWED_IFRAME_HOSTS = ['www.youtube.com']
 
 ############################# AWS settings ################################
 
-AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
-AWS_SECRET = '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'
-BUCKET = 'uploadstg'
-BUCKET_REGION = 'eu-west-1'
+AWS_SID = os.getenv('SETTING_AWS_SID', 'AKIAI5PE5AH2TNVDXCQQ')
+AWS_SECRET = os.getenv('SETTING_AWS_SECRET', '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')
+BUCKET = os.getenv('SETTING_BUCKET', 'uploadstg')
+BUCKET_REGION = os.getenv('SETTING_BUCKET_REGION', 'eu-west-1')
 
 ##################### Celery settings ####################################
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://redis:6379/4'
+CELERY_BROKER_URL = os.getenv('SETTING_CELERY_REDIS_BROKER_URL', 'redis://redis:6379/4')
 
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
@@ -402,7 +381,7 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
 
 ##################### Tornado settings ####################################
-ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'
+ORDERS_REDIS_HOST = os.getenv('SETTING_ORDERS_REDIS_HOST', 'redis://redis:6379/5')
 
 ###################### Custom settings ###################################
 
@@ -415,19 +394,15 @@ RAVEN_CONFIG = {
 GEOIP_DB_PATH = '/usr/share/GeoIP/'
 
 # The Redis DB url for stats
-EVENT_STORE_REDIS_URL = 'redis://redis/2'
+EVENT_STORE_REDIS_URL = os.getenv('SETTING_EVENT_STORE_REDIS_URL', 'redis://redis/2')
 ANALYTIC = True
 
-try:
-    from local_settings import *
-except ImportError as e:
-    logging.info(e)
 
 # The text template for notification about ordered product
 ORDER_NOTIFICATION_TEMPLATE = 'b24online/Products/notification.txt'
 ORDER_NOTIFICATION_DISABLE = False
-ORDER_NOTIFICATION_FROM = 'noreply@tppcenter.com'
-ORDER_NOTIFICATION_TO = 'orders@b24online.com'
+ORDER_NOTIFICATION_FROM = os.getenv('SETTING_ORDER_NOTIFICATION_FROM', 'noreply@b24online.com')
+ORDER_NOTIFICATION_TO = os.getenv('SETTING_ORDER_NOTIFICATION_TO', 'orders@b24online.com')
 
 # Countries ID's form our database
 GEO_COUNTRY_DB = {
@@ -447,9 +422,9 @@ GEO_COUNTRY_DB = {
 }
 
 REDIS_USERSITE = redis.Redis(
-        host='redis',
-        port=6379,
-        db=3
+        host=os.getenv('SETTING_REDIS_USERSITE_HOST', 'redis'),
+        port=os.getenv('SETTING_REDIS_USERSITE_PORT', 6379),
+        db=os.getenv('SETTING_REDIS_USERSITE_DB', 3),
     )
 
 TYPEOF_TEMPLATE = (

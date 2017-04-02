@@ -160,20 +160,20 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def get_profit(self):
         return self.cost - self.get_discount_price()
 
-    def get_contextmenu_options(self, context):
+    def get_contextmenu_options(self):
         """
         Return extra options for context menu.
         """
         model_type = ContentType.objects.get_for_model(self)
-        if getattr(self, 'pk', False):
+        if getattr(self, 'pk', None):
             yield (reverse(
                 'questionnaires:list',
-                kwargs={'content_type_id': model_type.id, 'item_id': self.id}),
+                kwargs={'content_type_id': model_type.id, 'item_id': self.pk}),
                    _('Questionnaire')
             )
             yield (reverse(
                 'products:extra_params_list',
-                kwargs={'item_id': self.id}),
+                kwargs={'item_id': self.pk}),
                    _('Additional_parameters')
             )
 
