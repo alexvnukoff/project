@@ -10,12 +10,19 @@ services:
       - ./static-assets:/src/static-assets
       - ./static:/src/static
       - ./.docker/nginx.conf:/etc/nginx/nginx.conf
-      - ./.docker/nginx-app.conf:/etc/nginx/conf.d/b24.conf
-      - /mnt/log/nginx:/var/log/nginx
+      - ./.docker/nginx-app.loca.conf:/etc/nginx/conf.d/b24.conf
+      - ./log/nginx:/var/log/nginx
     depends_on:
       - web
       - usersite
       - tornado
+    restart: always
+
+  db:
+    image: postgres:9.5
+    hostname: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     restart: always
 
   elasticsearch:
@@ -37,7 +44,7 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - /mnt/esdata:/usr/share/elasticsearch/data
+      - ./esdata:/usr/share/elasticsearch/data
     expose:
       - "9200"
       - "9300"
@@ -47,57 +54,68 @@ services:
     image: redis:latest
     command: redis-server --appendonly yes
     volumes:
-      - /mnt/redis/data:/data
+      - ./redis/data:/data
     restart: always
 
   web:
     environment:
-      - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
       - DJANGO_SETTINGS_MODULE=tpp.settings
+      - SETTING_DB_NAME=postgres
+      - SETTING_DB_USER=postgres
+      - SETTING_DB_PASSWORD=postgres
+      - SETTING_DB_HOST=db
+      - SETTING_BUCKET=tppuploads
     build: .
     container_name: dg01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8001 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.wsgi'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8001 --log-file /src/log/gunicorn.log --log-level debug tpp.wsgi'
     volumes:
-      - /mnt/log/web/:/src/log/
+      - ./insatll.sh:/src/insatll.sh
+      - ./b24project/local_settings.py:/src/b24project/local_settings.py
+      - ./log/web/:/src/log/
       - ./static-assets:/src/static-assets
       - ./b24project:/src/b24project
       - ./templates:/src/templates
       - ./locale:/src/locale
       - ./static:/src/static
       - ./uploads:/src/uploads
-      - ./newrelic.ini:/src/newrelic.ini
       - ./GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
       - ./GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:
       - redis
       - elasticsearch
+      - db
     expose:
       - "8001"
     restart: always
 
   usersite:
     environment:
-      - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
       - DJANGO_SETTINGS_MODULE=tpp.usersites_settings
+      - SETTING_DB_NAME=postgres
+      - SETTING_DB_USER=postgres
+      - SETTING_DB_PASSWORD=postgres
+      - SETTING_DB_HOST=db
+      - SETTING_BUCKET=tppuploads
     build: .
     container_name: dg02
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8002 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level error tpp.wsgi'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8002 -w 5 -t 300 --log-file /src/log/gunicorn.log --log-level debug tpp.wsgi'
     volumes:
-      - /mnt/log/usersite/:/src/log/
+      - ./b24project/local_settings.py:/src/b24project/local_settings.py
+      - ./log/usersite/:/src/log/
       - ./static-assets:/src/static-assets
       - ./b24project:/src/b24project
       - ./templates:/src/templates
       - ./locale:/src/locale
       - ./static:/src/static
       - ./uploads:/src/uploads
-      - ./newrelic_usersite.ini:/src/newrelic.ini
       - ./GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
       - ./GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:
       - redis
       - elasticsearch
+      - db
     expose:
       - "8002"
     restart: always
@@ -105,51 +123,66 @@ services:
   celery:
     build: .
     environment:
-      - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
+      - SETTING_DB_NAME=postgres
+      - SETTING_DB_USER=postgres
+      - SETTING_DB_PASSWORD=postgres
+      - SETTING_DB_HOST=db
+      - SETTING_BUCKET=tppuploads
     container_name: cl01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/newrelic-admin run-program /usr/local/bin/celery worker -A tpp -f /src/log/celery.log -l ERROR'
+    command: bash -c '/usr/local/bin/celery worker -A tpp -f /src/log/celery.log -l DEBUG'
     volumes:
-      - /mnt/log/celery/:/src/log/
+      - ./b24project/local_settings.py:/src/b24project/local_settings.py
+      - ./log/celery/:/src/log/
       - ./b24project:/src/b24project
       - ./uploads:/src/uploads
-      - ./newrelic_celery.ini:/src/newrelic.ini
     depends_on:
       - redis
       - elasticsearch
+      - db
     restart: always
 
   beat:
     build: .
     environment:
-      - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
+      - SETTING_DB_NAME=postgres
+      - SETTING_DB_USER=postgres
+      - SETTING_DB_PASSWORD=postgres
+      - SETTING_DB_HOST=db
+      - SETTING_BUCKET=tppuploads
     container_name: cb01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/newrelic-admin run-program /usr/local/bin/celery beat -A tpp --pidfile /tmp/beat/celerybeat.pid -f /src/log/celery.log -l ERROR'
+    command: bash -c '/usr/local/bin/celery beat -A tpp --pidfile /tmp/beat/celerybeat.pid -f /src/log/celery.log -l DEBUG'
     volumes:
+      - ./b24project/local_settings.py:/src/b24project/local_settings.py
       - ./:/tmp/beat/
-      - /mnt/log/beat/:/src/log/
+      - ./log/beat/:/src/log/
       - ./b24project:/src/b24project
-      - ./newrelic_celery.ini:/src/newrelic.ini
     depends_on:
       - redis
       - elasticsearch
+      - db
     restart: always
 
   tornado:
     build: .
     environment:
-      - NEW_RELIC_CONFIG_FILE=/src/newrelic.ini
+      - SETTING_DB_NAME=postgres
+      - SETTING_DB_USER=postgres
+      - SETTING_DB_PASSWORD=postgres
+      - SETTING_DB_HOST=db
+      - SETTING_BUCKET=tppuploads
     container_name: tr01
     working_dir: /src/b24project
-    command: bash -c '/usr/local/bin/newrelic-admin run-program python3 manage.py async_server'
+    command: bash -c 'python3 manage.py async_server'
     volumes:
-      - /mnt/log/tornado/:/src/log/
+      - ./b24project/local_settings.py:/src/b24project/local_settings.py
+      - ./log/tornado/:/src/log/
       - ./b24project:/src/b24project
-      - ./newrelic_tornado.ini:/src/newrelic.ini
     expose:
       - "9998"
     depends_on:
       - redis
       - elasticsearch
+      - db
     restart: always
