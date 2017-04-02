@@ -219,7 +219,6 @@ class ChamberSerializer(serializers.ModelSerializer):
         if instance.has_perm(self.context['request'].user):
             return {
                 'editUrl': reverse('tpp:update', args=[instance.pk]),
-                'removeUrl': reverse('tpp:delete', args=[instance.pk]),
                 'advertiseUrl': reverse('adv_top:top_form', args=[self.Meta.model.__name__.lower(), instance.pk]),
                 'setCurrentUrl': reverse('setCurrent', args=[instance.pk]),
             }
