@@ -55,7 +55,7 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - ./redis/data:/data
-    restart: always
+    
 
   web:
     environment:
@@ -70,7 +70,6 @@ services:
     working_dir: /src/b24project
     command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8001 --log-file /src/log/gunicorn.log --log-level debug tpp.wsgi'
     volumes:
-      - ./insatll.sh:/src/insatll.sh
       - ./b24project/local_settings.py:/src/b24project/local_settings.py
       - ./log/web/:/src/log/
       - ./static-assets:/src/static-assets
@@ -81,6 +80,7 @@ services:
       - ./uploads:/src/uploads
       - ./GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
       - ./GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
+      - ./install.sh:/src/b24project/install.sh
     depends_on:
       - redis
       - elasticsearch
