@@ -78,9 +78,9 @@ services:
       - ./locale:/src/locale
       - ./static:/src/static
       - ./uploads:/src/uploads
-      - ./GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
-      - ./GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
       - ./install.sh:/src/b24project/install.sh
+      - ./geoip/GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
+      - ./geoip/GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:
       - redis
       - elasticsearch
@@ -110,8 +110,8 @@ services:
       - ./locale:/src/locale
       - ./static:/src/static
       - ./uploads:/src/uploads
-      - ./GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
-      - ./GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
+      - ./geoip/GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
+      - ./geoip/GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:
       - redis
       - elasticsearch
