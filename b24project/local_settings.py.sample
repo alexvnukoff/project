@@ -1,0 +1,57 @@
+import redis
+from tpp.settings import *
+
+DEBUG = True
+COMPRESS_ENABLED = False
+
+SITE_ID = 1
+
+ALLOWED_HOSTS = ['*']
+USER_SITES_DOMAIN = 'en.b24online.dev'
+ADMINS = ()
+MANAGERS = ADMINS
+
+# INTERNAL_IPS = ['10.0.2.2']
+
+DATABASES = {
+    'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'postgres',
+         'USER': 'postgres',
+         'PASSWORD': 'postgres',
+         'HOST': 'db',
+         'PORT': '5432'
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    'locmem': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+LOCAL_APPS = (
+    #'social.apps.django_app.default',
+    # 'raven.contrib.django.raven_compat',
+    'b24online',
+    'captcha',
+    'jobs',
+    'centerpokupok',
+    'usersites',
+    #'django_s3_storage',
+)
+

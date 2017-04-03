@@ -79,6 +79,7 @@ services:
       - ./static:/src/static
       - ./uploads:/src/uploads
       - ./install.sh:/src/b24project/install.sh
+      - ./fixtures:/src/fixtures
       - ./geoip/GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
       - ./geoip/GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:

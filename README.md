@@ -11,8 +11,7 @@ B24 и остальные сайты
 
 ####Сервера
 
- + EC2 под проект B24online.com
- + EC2 под пользовательские сайты
+ + EC2 под проект B24online.com (Docker)
  + 1 EC2 для Elasticsearch
  + Аналитика в NewRelic
  + 1 Elastic Cache Redis для очередей Celery
@@ -23,18 +22,64 @@ B24 и остальные сайты
 
 --
 
-*Внимание!* Модели в b24project/appl/models.py и b24project/core/models.py - Deprecated (Кроме модели User)
 
-Модели бывают могут быть индексируемыми и наследуют от IndexedModelMixin,
-а также не удаляемыми(Вместо удаления деактивируем, наследуют от ActiveModelMixing
+####Развёртывание Docker на локальном стенде
 
-Используются спец. поля Postgres (HStore, Range).
+ + docker-compose build
+ + docker-compose -f docker-compose.local.yml create
+ + docker-compose start
 
-####GeoIP
+--
 
- + mkdir /usr/share/GeoIP && cd /usr/share/GeoIP
- + wget "http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz"
- + wget "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
- + gunzip GeoIP.dat.gz && gunzip GeoLiteCity.dat.gz
- + yum update && yum install geoip geoip-devel
- + pip install geoip
+Далее:
+
+ + docker ps -a
+ + docker start <id> # ID для db контейнера
+ + docker exec -ti <id> psql -U postgres -d postgres -c 'create extension hstore;'
+ + docker ps # Все контейнеры должны быть в статусе Up (подробнее команда 'docker-compose top')
+
+Далее:
+
+ + docker-compose -f docker-compose.local.yml run --rm web ./install.sh
+ + docker-compose restart
+
+--
+
+Добавляем записи в /etc/hosts:
+
+    # b24onlie
+
+    127.0.0.1 b24online.dev
+    127.0.0.1 en.b24online.dev
+    127.0.0.1 ru.b24online.dev
+    127.0.0.1 he.b24online.dev
+    127.0.0.1 es.b24online.dev
+    127.0.0.1 zh.b24online.dev
+    127.0.0.1 ar.b24online.dev
+
+    127.0.0.1 mysite.b24online.dev
+    127.0.0.1 en.mysite.b24online.dev
+    127.0.0.1 ru.mysite.b24online.dev
+    127.0.0.1 he.mysite.b24online.dev
+    127.0.0.1 es.mysite.b24online.dev
+    127.0.0.1 zh.mysite.b24online.dev
+    127.0.0.1 ar.mysite.b24online.dev
+
+ Готово!
+
+ --
+
+
+ Выполнеие разовых команд:
+
+ # CREATESUPERUSER
+ + docker exec -ti <id> python3 manage.py createsuperuser
+
+# COLLECTSTATIC
+ + docker exec -ti <id> python3 manage.py collectstatic
+
+# COMPILEMESSAGES
+ + docker exec -ti <id> python3 manage.py compilemessages -f
+
+ и так далее..
+
