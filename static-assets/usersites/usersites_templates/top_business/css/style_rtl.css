@@ -195,6 +195,10 @@ body{
 	float: right;
 }
 
+.news-main .media-wrap{
+	float: right;
+}
+
 .about-main{
 	float: left;
 }
