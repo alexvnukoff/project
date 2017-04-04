@@ -23,11 +23,21 @@ B24 и остальные сайты
 --
 
 
-#Развёртывание Docker на локальном стенде
+# Развёртывание Docker на локальном стенде (MacOS)
 
  + cp ./b24project/local_settings.py.sample ./b24project/local_settings.py
  + docker-compose -f docker-compose.local.yml up -d
- + ./postinstall.sh CONTAINER_ID
+ + ./postinstall.sh DB_CONTAINER_ID
+ + docker-compose restart
+
+# Развёртывание Docker на локальном стенде (Linux)
+
+ + cp ./b24project/local_settings.py.sample ./b24project/local_settings.py
+ + sudo sysctl -w vm.max_map_count=262144 # specific settings for ES
+ + docker-compose -f docker-compose.local.yml up -d
+ + sudo chown -R uid:gid ./
+ + ./postinstall.sh DB_CONTAINER_ID
+ + docker-compose restart
 
 --
 
