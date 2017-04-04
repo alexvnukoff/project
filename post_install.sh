@@ -9,6 +9,10 @@ else
     docker exec -i "${DOCKER_DB_NAME}" psql -U postgres -c 'CREATE DATABASE b24online_db;'
     docker exec -i "${DOCKER_DB_NAME}" psql -U postgres -d postgres -c 'create extension hstore;'
     docker exec -i "${DOCKER_DB_NAME}" pg_restore -U postgres -d b24online_db -Fc < "${LOCAL_DUMP_PATH}"
+    echo "++++++++++++++++++ ++++++++++++++++++ ++++++++++++++++++ collectstatic.."
+    docker exec -it ${DOCKER_WEB_NAME} python3 manage.py collectstatic
+    echo "++++++++++++++++++ ++++++++++++++++++ ++++++++++++++++++ compilemessages.."
+    docker exec -it ${DOCKER_WEB_NAME} python3 manage.py compilemessages -f
     echo "++++++++++++++++++ ++++++++++++++++++ ++++++++++++++++++ reindex.."
     docker exec -it ${DOCKER_WEB_NAME} python3 manage.py reindex
 fi
