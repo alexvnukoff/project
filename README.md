@@ -25,6 +25,7 @@ B24 и остальные сайты
 
 #Развёртывание Docker на локальном стенде
 
+ + cp ./b24project/local_settings.py.sample ./b24project/local_settings.py
  + docker-compose -f docker-compose.local.yml up -d
  + ./postinstall.sh <db container id>'
 
