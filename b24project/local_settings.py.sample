@@ -7,16 +7,20 @@ COMPRESS_ENABLED = False
 SITE_ID = 1
 
 ALLOWED_HOSTS = ['*']
-USER_SITES_DOMAIN = 'en.b24online.dev'
+USER_SITES_DOMAIN = 'en.nexus.dev'
 ADMINS = ()
 MANAGERS = ADMINS
 
 # INTERNAL_IPS = ['10.0.2.2']
 
+BUCKET = 'tppuploads'
+MEDIA_URL = 'https://s3-eu-west-1.amazonaws.com/tppuploads/'
+
+
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'postgres',
+         'NAME': 'b24online_db',
          'USER': 'postgres',
          'PASSWORD': 'postgres',
          'HOST': 'db',
@@ -55,3 +59,4 @@ LOCAL_APPS = (
     #'django_s3_storage',
 )
 
+RAVEN_CONFIG = {}
