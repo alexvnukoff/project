@@ -97,8 +97,9 @@ class GeoIPHelper(object):
     def get_geoip_data(cls, ip):
         try:
             return cls().city_reader.city(ip)
-        except (maxminddb.InvalidDatabaseError, AddressNotFoundError):
-            return cls().country_reader.country(ip)
+        # except (maxminddb.InvalidDatabaseError, AddressNotFoundError):
+        #     return None
+        #     return cls().country_reader.country(ip)
         except (maxminddb.InvalidDatabaseError, AddressNotFoundError):
             return None
 

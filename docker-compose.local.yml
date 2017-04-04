@@ -1,7 +1,7 @@
 version: '2'
 services:
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: nx01
     command: nginx
     ports:
@@ -23,6 +23,8 @@ services:
     hostname: postgres
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     restart: always
 
   elasticsearch:
@@ -60,7 +62,7 @@ services:
   web:
     environment:
       - DJANGO_SETTINGS_MODULE=tpp.settings
-      - SETTING_DB_NAME=postgres
+      - SETTING_DB_NAME=b24online_db
       - SETTING_DB_USER=postgres
       - SETTING_DB_PASSWORD=postgres
       - SETTING_DB_HOST=db
@@ -78,8 +80,6 @@ services:
       - ./locale:/src/locale
       - ./static:/src/static
       - ./uploads:/src/uploads
-      - ./install.sh:/src/b24project/install.sh
-      - ./fixtures:/src/fixtures
       - ./geoip/GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb
       - ./geoip/GeoLite2-Country.mmdb:/usr/share/GeoIP/GeoLite2-Country.mmdb
     depends_on:
@@ -93,7 +93,7 @@ services:
   usersite:
     environment:
       - DJANGO_SETTINGS_MODULE=tpp.usersites_settings
-      - SETTING_DB_NAME=postgres
+      - SETTING_DB_NAME=b24online_db
       - SETTING_DB_USER=postgres
       - SETTING_DB_PASSWORD=postgres
       - SETTING_DB_HOST=db
@@ -124,7 +124,7 @@ services:
   celery:
     build: .
     environment:
-      - SETTING_DB_NAME=postgres
+      - SETTING_DB_NAME=b24online_db
       - SETTING_DB_USER=postgres
       - SETTING_DB_PASSWORD=postgres
       - SETTING_DB_HOST=db
@@ -146,7 +146,7 @@ services:
   beat:
     build: .
     environment:
-      - SETTING_DB_NAME=postgres
+      - SETTING_DB_NAME=b24online_db
       - SETTING_DB_USER=postgres
       - SETTING_DB_PASSWORD=postgres
       - SETTING_DB_HOST=db
@@ -168,7 +168,7 @@ services:
   tornado:
     build: .
     environment:
-      - SETTING_DB_NAME=postgres
+      - SETTING_DB_NAME=b24online_db
       - SETTING_DB_USER=postgres
       - SETTING_DB_PASSWORD=postgres
       - SETTING_DB_HOST=db
