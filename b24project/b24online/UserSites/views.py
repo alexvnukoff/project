@@ -9,13 +9,17 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView, TemplateView
 from b24online.models import Organization, Company, BannerBlock
 from django.utils.translation import ugettext_lazy as _
-from b24online.UserSites.forms import (GalleryImageFormSet, SiteForm,
-        TemplateForm, CompanyBannerFormSet, ChamberBannerFormSet, LandingForm)
-from usersites.models import (UserSite, ExternalSiteTemplate, UserSiteTemplate,
-            UserSiteSchemeColor, LandingPage)
+
+from b24online.UserSites.forms import (
+    GalleryImageFormSet, SiteForm, SiteCreateForm, TemplateForm,
+    CompanyBannerFormSet, ChamberBannerFormSet, LandingForm)
+
+from usersites.models import (UserSite, ExternalSiteTemplate,
+                UserSiteTemplate, UserSiteSchemeColor, LandingPage)
+
 
 
 @login_required()
@@ -24,11 +28,98 @@ def form_dispatch(request):
     if not organization_id:
         return HttpResponseRedirect(reverse('denied'))
     organization = Organization.objects.get(pk=organization_id)
+
     try:
         site = UserSite.objects.get(organization=organization)
-        return SiteUpdate.as_view()(request, site=site, organization=organization)
+        return UpdateSite.as_view()(request, site=site, organization=organization)
     except ObjectDoesNotExist:
-        return SiteCreate.as_view()(request, organization=organization)
+        return CreateSite.as_view()(request, organization=organization)
+
+
+
+class CreateSite(CreateView):
+    model = UserSite
+    form_class = SiteCreateForm
+    template_name = 'b24online/UserSites/createSite.html'
+    success_url = reverse_lazy('site:main')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, organization, *args, **kwargs):
+        self.organization = organization
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['domain'] = settings.USER_SITES_DOMAIN
+        context_data['title'] = _("Create Site")
+        return context_data
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['domain_part'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+
+    def form_valid(self, form):
+        domain_part = form.cleaned_data.get('domain_part', None)
+        domain = "{0}.{1}".format(domain_part, settings.USER_SITES_DOMAIN)
+        tempate = ExternalSiteTemplate.objects.first()
+        user_site = UserSiteTemplate.objects.filter(published=True).first()
+
+        with transaction.atomic():
+            form.instance.created_by = self.request.user
+            form.instance.updated_by = self.request.user
+            form.instance.organization = self.organization
+            form.instance.template = tempate
+            form.instance.user_template = user_site
+            form.instance.domain_part = domain_part
+            form.instance.logo = self.organization.logo
+            form.instance.site = Site.objects.create(
+                name='usersites',
+                domain=domain)
+            self.object = form.save()
+        messages.add_message(self.request, messages.SUCCESS, _("Your site has been created!"))
+        return HttpResponseRedirect(self.get_success_url())
+
+
+
+
+class UpdateSite(TemplateView):
+    template_name = 'b24online/UserSites/updateSite.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, site, organization, *args, **kwargs):
+        self.site = site
+        self.organization = organization
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['domain'] = settings.USER_SITES_DOMAIN
+        context_data['title'] = _("Update Site")
+        return context_data
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required()
+# def form_dispatch(request):
+#     organization_id = request.session.get('current_company', None)
+#     if not organization_id:
+#         return HttpResponseRedirect(reverse('denied'))
+#     organization = Organization.objects.get(pk=organization_id)
+#     try:
+#         site = UserSite.objects.get(organization=organization)
+#         return SiteUpdate.as_view()(request, site=site, organization=organization)
+#     except ObjectDoesNotExist:
+#         return SiteCreate.as_view()(request, organization=organization)
 
 class SiteCreate(CreateView):
     model = UserSite
@@ -444,4 +535,3 @@ class LandingPageView(UpdateView):
             self.object.upload_images()
 
         return super().form_valid(form)
-

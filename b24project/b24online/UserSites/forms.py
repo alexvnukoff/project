@@ -8,6 +8,52 @@ from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
 from b24online.models import GalleryImage, Gallery, Banner
 from usersites.models import UserSite, LandingPage
+from django.forms.widgets import FileInput, Select
+
+
+class SiteCreateForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('domain_part',)
+
+    # domain_part = forms.CharField(required=False)
+
+    def clean_domain_part(self):
+        domain_part = self.cleaned_data.get('domain_part', None)
+        if not domain_part:
+            return
+
+        languages = [lan[0] for lan in settings.LANGUAGES]
+        if '.' in domain_part or domain_part in languages:
+            raise ValidationError(_('Enter a valid URL.'))
+
+        root_domain = settings.USER_SITES_DOMAIN
+        full_domain = "%s.%s" % (domain_part, root_domain)
+        validator = validators.URLValidator()
+        validator("http://%s" % full_domain)
+
+        if Site.objects.filter(domain=full_domain).exists():
+            raise ValidationError(_('This domain already taken'))
+        return domain_part
+
+    # def clean_domain(self):
+    #     domain = self.cleaned_data.get('domain', None)
+    #     if Site.objects.filter(domain=domain).exists():
+    #         raise ValidationError(_('The domain already in use'))
+    #     parsed_uri = urlparse(domain)
+    #     return parsed_uri.netloc
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class SiteForm(forms.ModelForm):

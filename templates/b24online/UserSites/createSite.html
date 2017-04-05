@@ -1,0 +1,53 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }} - {{ current_organization }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+
+<h1>{% trans "Create Site" %}</h1>
+<p style="font-size:14.5px;padding:8px 0;color:#949494">{% blocktrans %}Dear colleagues, we are pleased to inform you that for the convenience of providing your interests, we have developed an easy website builder that will help you create your own  external website in just a couple of minutes.{% endblocktrans %}{% trans "support" %}: <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.</p>
+<p style="font-size:14.5px;padding:8px 0;color:#949494">{% trans "Create your own site:" %}</p>
+
+<form action="" method="POST">{% csrf_token %}
+<p><label>{% trans "Domain:" %}</label>
+<input id="id_domain_part" name="domain_part" type="text" {% if form.errors.domain_part %}style="border:1px solid #ef6066;"{% endif %} />.{{ site }}</p>
+
+<br>
+<p><input type="submit" value="{% trans 'Create Site' %}"></p>
+</form>
+
+<p style="padding:15px 0;color:#949494">{% trans "In the future you will be able to change domain, or even use a your own domain." %}</p>
+
+    <!-- Select site category -->
+    <div class="external-type">
+        <i class="close-regform imgnews"></i>
+        <div class="title">{% trans "Select a category" %}</div>
+        <div class="listtype">
+            {% for template in form.template.field.choices.queryset.all %}
+                 {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
+                      <ul>
+                 {% endif %}
+                      <li><a class="selectTemplate" data-id="{{ template.pk }}" data-folder="{{ template.theme_folder }}" href="#">{{ template.name }}</a></li>
+                {% if forloop.counter|divisibleby:"16" or forloop.last %}
+                      </ul>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+

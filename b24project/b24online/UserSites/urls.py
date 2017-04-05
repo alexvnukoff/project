@@ -6,9 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
 
-    url(r'^$',
-        form_dispatch,
-        name='main'),
+    url(r'^$', form_dispatch, name='main'),
 
     url(r'templates/$',
         login_required(UserTemplateView.as_view()),
