@@ -1289,7 +1289,7 @@ footer .btn-default{
 		-webkit-column-count: 3;
 		-moz-column-count: 3;
 		column-count: 3;
-        height: 450px;
+        /*height: 450px;*/
 	}
 }
 
@@ -1298,7 +1298,7 @@ footer .btn-default{
 		-webkit-column-count: 3;
 		-moz-column-count: 3;
 		column-count: 3;
-        height: 500px;
+        /*height: 500px;*/
 	}
 
 
