@@ -90,12 +90,12 @@
         var STAFFGROUPS = [
             {% for item in staffgroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
         var EXTRAGROUPS = [
             {% for item in extragroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
     </script>
     <script type="text/javascript">
@@ -103,7 +103,7 @@
             function addOneMoreInput() {
                 $('.file-attachment').last().change(function() {
                     $(this).after('<input name="attachment" class="file-attachment" type="file" />');
-                    $(this).off('change');  
+                    $(this).off('change');
                     addOneMoreInput();
                 });
             }
@@ -316,7 +316,7 @@
                             <span class="left">{% trans 'Feedback' %}: </span>
                             <span class="right"><a id="feebackform-btn" href="#" data-toggle="modal" data-target="#myModal">{% trans 'Write a message' %}</a></span>
                             <div class="alert alert-success" id="success-alert" style="margin: 30px 10px;">
-                              <div>{% trans "Благодарим за Ваш отзыв" %}</div>
+                              <div>{% trans "Ваше сообщение отправлено. Благодарим за отзыв" %}</div>
                             </div>
                             </li>
                         </ul>
