@@ -279,5 +279,11 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
     position: relative;
     cursor: pointer;
     width: 26px;
-    top: -3px
+    top: -3px;
+}
+#header-language-selector img {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+.tophead-r .dropdown-menu a img {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
 }
