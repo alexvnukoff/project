@@ -14,24 +14,25 @@
       <div class="tophead-center">
       </div>
 
-
     <div class="tophead-r">
 
       <div class="geolocation-navi">
         <a href="/wall/" title="Geolocation"><span class="icon-location"></span></a>
       </div>
 
-            <div class="language-navi">
-            <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
-            {% get_available_languages as LANGUAGES %}
-            <div class="language-navi-dropdown">
-              {% for code, lang in LANGUAGES %}
-                  {% if not code == LANGUAGE_CODE %}
-                  <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
-                  {% endif %}
-              {% endfor %}
-            </div>
-            </div>
+			<div class="btn-group">
+				<div id="header-language-selector" data-toggle="dropdown">
+					<img class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png" />
+				</div>
+				{% get_available_languages as LANGUAGES %}
+			  <ul class="dropdown-menu" role="menu">
+					{% for code, lang in LANGUAGES %}
+						{% if not code == LANGUAGE_CODE %}
+							<a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png" /></a>
+						{% endif %}
+					{% endfor %}
+			  </ul>
+			</div>
 
     {% if request.user.is_authenticated %}
     <div style="display:inline-block;width:auto;margin-top:2px;">
