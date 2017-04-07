@@ -169,8 +169,8 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
 .addButton:before{content:"";width:200%;height:200%;position:absolute;top:-200%;left:-225%;background-image:-webkit-linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,0.6),rgba(255,255,255,0));background-image:-moz-linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,0.6),rgba(255,255,255,0));-moz-transition:all .5s ease-out;-o-transition:all .5s ease-out;-webkit-transition:all .5s ease-out;-ms-transition:all .5s ease-out}
 .addButton:after{content:"";width:50%;height:200%;position:absolute;top:0;right:-22%;background-image:-webkit-linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.1),rgba(255,255,255,0.1));background-image:-moz-linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.1),rgba(255,255,255,0.1));-webkit-transform:rotate(30deg);-ms-transform:rotate(30deg);-o-transform:rotate(30deg);transform:rotate(30deg);z-index:-1}
 .addButton:hover:before{top:200%;left:200%}
-.addButton img     {	display: inline-block; vertical-align: middle; width: 8px; margin-right: 1px; }
-.addButton span    {	display: inline-block; vertical-align: middle;font-weight: 900; font: 11px Arial; color: #1A1A1A; text-shadow: rgba(255,255,255,0.5) 0 1px 0;}
+.addButton img     {    display: inline-block; vertical-align: middle; width: 8px; margin-right: 1px; }
+.addButton span    {    display: inline-block; vertical-align: middle;font-weight: 900; font: 11px Arial; color: #1A1A1A; text-shadow: rgba(255,255,255,0.5) 0 1px 0;}
 .addButton.disable span {text-shadow: rgba(255,255,255,0.5) 0 1px 0;}
 
   /*---------People---------*/
@@ -274,21 +274,3 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .profile-socials {width:48%;margin:0;float:left;}
 .profile-socials label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
 .profile-socials input.text {width:93%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
-
-#header-language-selector {
-    position: relative;
-    cursor: pointer;
-    width: 26px;
-    top: -3px;
-}
-#header-language-selector img {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
-}
-.tophead-r .dropdown-menu a img {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
-}
-.tophead-r .dropdown-menu {
-    position: absolute;
-    width: 175px;
-    left: -70px;
-}
