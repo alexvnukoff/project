@@ -4,6 +4,8 @@
 {% load inclusionTags %}
 
 <script type="text/javascript">if (window.location.hash == '#_=_') { window.location.hash = '';}</script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
 
 <div class="tophead">
     <div class="news">
@@ -38,7 +40,7 @@
 
     <a href="{% url "profile:main" %}" style="text-decoration:none" id="hava01">
     {% if request.user.profile.avatar %}
-    <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:-4px;width:18px;">
+    <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:3px;width:18px;">
     {% else %}
     <div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin-top:-4px;border:1px solid #aeaeae;"></div>
     {% endif %}
