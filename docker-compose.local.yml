@@ -52,7 +52,7 @@ services:
     build: .
     container_name: dg01
     working_dir: /src/b24project
-    command: bash -c 'python3 manage.py runserver'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:80 -w 3 -t 300 --log-file /src/log/gunicorn.log --log-level debug tpp.wsgi'
     volumes:
       - ./b24project/local_settings.py:/src/b24project/local_settings.py
       - ./log/web/:/src/log/
@@ -83,7 +83,7 @@ services:
     build: .
     container_name: dg02
     working_dir: /src/b24project
-    command: bash -c 'python3 manage.py runserver'
+    command: bash -c '/usr/local/bin/gunicorn -b 0.0.0.0:8080 -w 3 -t 300 --log-file /src/log/gunicorn.log --log-level debug tpp.wsgi'
     volumes:
       - ./b24project/local_settings.py:/src/b24project/local_settings.py
       - ./log/usersite/:/src/log/
@@ -100,7 +100,7 @@ services:
       - elasticsearch
       - db
     ports:
-      - "81:80"
+      - "8080:8080"
     restart: always
 
   celery:

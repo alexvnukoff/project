@@ -38,7 +38,8 @@ B24 и остальные сайты
  + docker-compose -f docker-compose.local.yml up -d
  + sudo chown -R uid:gid ./
  + ./postinstall.sh DB_CONTAINER_ID
- + docker-compose restart
+ + docker-compose -f docker-compose.local.yml stop
+ + docker-compose -f docker-compose.local.yml up -d
 
 --
 
