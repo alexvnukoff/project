@@ -69,7 +69,7 @@ services:
       - elasticsearch
       - db
     ports:
-      - "80:80
+      - "80:80"
     restart: always
 
   usersite:
@@ -100,7 +100,7 @@ services:
       - elasticsearch
       - db
     ports:
-      - "81:80
+      - "81:80"
     restart: always
 
   celery:

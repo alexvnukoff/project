@@ -29,7 +29,7 @@ B24 и остальные сайты
  + docker-compose -f docker-compose.local.yml up -d
  + ./postinstall.sh DB_CONTAINER_ID
  + docker-compose -f docker-compose.local.yml stop
- + docker-compose -f docker-compose.local.yml up
+ + docker-compose -f docker-compose.local.yml up -d
 
 # Развёртывание Docker на локальном стенде (Linux)
 
