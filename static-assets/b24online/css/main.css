@@ -1,5 +1,5 @@
 @charset "utf-8";
-body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:12px !important; color:#4a4a4a;}
+body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#4a4a4a;}
 .logo-main{ background:url(/static/b24online/img/b24_big.png) no-repeat; }
 .imgmain{ background:url(/static/b24online/img/imgmain.png);}
 .icons{ background:url(/static/b24online/img/icons.png);}
@@ -19,8 +19,9 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-l{ float:left; width:60%; line-height:34px; color:#9b9b9b;}
 .tophead-l a{ color:#9b9b9b; padding:0 5px;}
 .tophead-l a:hover{ color:#0089bc; text-decoration:none;}
-.tophead-r{float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}
-.tophead-r a{ color:#0089bc; padding:0 8px;}
+.tophead-r{float: right;line-height:34px;color:#9b9b9b;padding-right:20px}
+.tophead-r a{ color:#0089bc; padding:0 5px;}
+.tophead-r .language-navi{width:35px;font-size:20px;position:relative;display:inline-block;cursor:pointer;margin: 4px 5px;}
 .tophead-center { float: left;}
 .i-lock{ display:inline-block; width:16px; height:18px; background-position:0px 1px; margin:0 5px 0 0; vertical-align:middle;}
 .tophead-r a:hover{ text-decoration:underline;}
@@ -263,7 +264,7 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .language-navi:hover .language-navi-dropdown {display:block;}
 .add-new {float:right;margin:0 5px 0 0;}
 .my-filter-button {margin:10px 0 5px 0;padding:0;display:block;float:left;}
-.geolocation-navi {position;relative;float:left;width:40px;font-size:20px;margin: 0 7px}
+.geolocation-navi {width:35px;font-size:20px;vertical-align:middle;position:relative;display:inline-block;cursor:pointer;float:left;margin:3px 5px;top:-1px}
 .content-goods-tab > th, .content-goods-tab > td, .content-news > th, .content-news > td {padding: 5px !important;}
 .content-video {height:370px;padding:10px 0;background:transparent;}
 .content-video-text {background:#fafbfa;padding:10px;font-size:15px;line-height:1.3;}
@@ -276,11 +277,13 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .profile-socials input.text {width:93%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
 
 #header-language-selector {
-    position: relative;
-    cursor: pointer;
+  position: relative;
+  cursor: pointer;
+  width: 26px;
+  top: -3px;
+}
+#header-language-selector img {
     width: 23px;
-    top: -3px;
-    left: -4px;
 }
 .tophead-r .dropdown-menu a img {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
@@ -288,5 +291,5 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .tophead-r .dropdown-menu {
     position: absolute;
     width: 175px;
-    left: -77px;
+    left: -70px;
 }
