@@ -57,9 +57,9 @@
 
     <h3>{% trans "Appearance:" %}</h3>
 
-    <a href="#">
+    <a href="{% url 'site:template' %}">
         <li>
-            <strong>{% trans "Site Template" %}</strong>
+            <strong>{% trans "Site Template" %} ({{ object.site.user_site.user_template }})</strong>
         </li>
     </a>
 

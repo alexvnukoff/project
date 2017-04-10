@@ -154,6 +154,17 @@ class LandingPageView(UpdateView):
 
 
 
+class UserTemplateView(ListView):
+    model = UserSiteTemplate
+    template_name = 'b24online/UserSites/templateList.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Select Template"
+        return context
+
+    def get_queryset(self):
+        return self.model.objects.filter(published=True)
 
 
 
@@ -161,8 +172,42 @@ class LandingPageView(UpdateView):
 
 
 
+class TemplateUpdate(UpdateView):
+    model = UserSite
+    form_class = TemplateForm
+    template_name = 'b24online/UserSites/templateForm.html'
+    success_url = reverse_lazy('site:main')
 
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.template_id = self.kwargs.get(self.pk_url_kwarg)
 
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        try:
+            obj = UserSiteTemplate.objects.get(pk=self.template_id)
+        except UserSiteTemplate.DoesNotExist:
+            raise Http404("No found matching the template in UserSiteTemplate.")
+
+        context['template'] = obj
+        context['title'] = "Applying Template"
+        context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
+        return context
+
+    def get_object(self, queryset=None):
+        return self.site
 
 
 
@@ -498,53 +543,5 @@ class SiteUpdate(UpdateView):
         return self.site
 
 
-class UserTemplateView(ListView):
-    model = UserSiteTemplate
-    template_name = 'b24online/UserSites/templateList.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = "Select Template"
-        return context
-
-    def get_queryset(self):
-        return self.model.objects.filter(published=True)
-
-
-class TemplateUpdate(UpdateView):
-    model = UserSite
-    form_class = TemplateForm
-    template_name = 'b24online/UserSites/templateForm.html'
-    success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.template_id = self.kwargs.get(self.pk_url_kwarg)
-
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        try:
-            obj = UserSiteTemplate.objects.get(pk=self.template_id)
-        except UserSiteTemplate.DoesNotExist:
-            raise Http404("No found matching the template in UserSiteTemplate.")
-
-        context['template'] = obj
-        context['title'] = "Select Template"
-        context['template_color'] = UserSiteSchemeColor.objects.filter(template=obj)
-        return context
-
-    def get_object(self, queryset=None):
-        return self.site
 

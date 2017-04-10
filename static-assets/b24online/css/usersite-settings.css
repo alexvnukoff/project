@@ -17,17 +17,18 @@
 #u-site-wrapper .external-type .title {font-size:18px;}
 #u-site-wrapper .external-type .listtype {width:100% !important;}
 #u-site-wrapper .external-type > .ul {float:right !important;}
-
 #u-site-wrapper .template .ex-img {width:400px;display:inline-block;margin:5px 10px 5px 0;}
 #u-site-wrapper .template .ex-img img {border:1px solid #dedede;}
-
 #u-site-wrapper label {font-weight:bold;}
 #u-site-wrapper input {padding:3px;}
-
 #u-site-wrapper ul.site-sections a  {display:inline-block;font-size:14px;opacity:1;text-align:center;text-decoration:none;padding:15px 25px;margin:2px 0;background:#f6f6f6;}
 #u-site-wrapper ul.site-sections a:hover {background:#222;opacity:0.8;}
 #u-site-wrapper ul.site-sections a:hover li {color:#fff;}
 #u-site-wrapper ul.site-sections li > i {font-size:24px;padding-bottom:10px;display:block;}
-
 #u-site-wrapper h3 {border-bottom:1px solid #efefef;margin:15px 0;padding:0 0 5px 0;}
 #u-site-wrapper .bigbuy {padding:10px 15px;cursor:pointer;}
+#u-site-wrapper .templates-box {width:180px;display:inline-block;}
+#u-site-wrapper .templates-box label {cursor:pointer;}
+#u-site-wrapper .templates-box img.t-image {width:185px;border:1px solid #919191;display:block;}
+
+

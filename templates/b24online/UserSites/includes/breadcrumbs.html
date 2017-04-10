@@ -2,5 +2,7 @@
 {% load static %}
 
 <ol class="breadcrumb">
-    <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{{ title }}</li>
+    <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li>
+    {% if template_color %}<li><a href="{% url 'site:template' %}">{% trans "Select Template" %}</a></li>{% endif %}
+    <li class="active">{{ title }}</li>
 </ol>
