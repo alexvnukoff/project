@@ -4,13 +4,15 @@
 {% load inclusionTags %}
 
 <script type="text/javascript">if (window.location.hash == '#_=_') { window.location.hash = '';}</script>
-<link type="text/css" rel="stylesheet" href="{% static "b24online/css/bootstrap-scoped.css" %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/bootstrap-scoped.css' %}" />
 
 <div class="tophead">
-    <div class="news">
-        <div class="tophead-l">
-            <a href="/"><i class="logo news-logo"></i></a>
-            {% show_top_static_pages %}
+
+	<div class="news">
+    	<div class="tophead-l">
+        	<a href="/"><i class="logo news-logo"></i></a>
+        	{% show_top_static_pages %}
+
         </div>
       <div class="tophead-center">
       </div>
@@ -22,12 +24,12 @@
         <a href="/wall/" title="Geolocation"><span class="icon-location"></span></a>
       </div>
 
-			<div class="bs btn-group language-navi">
+			<div class="bootstrap-scoped btn-group language-navi">
 				<div id="header-language-selector" data-toggle="dropdown">
 					<img class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png" />
 				</div>
 				{% get_available_languages as LANGUAGES %}
-			  <ul class="bs dropdown-menu" role="menu">
+			  <ul class="bootstrap-scoped dropdown-menu" role="menu">
 					{% for code, lang in LANGUAGES %}
 						{% if not code == LANGUAGE_CODE %}
 							<a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png" /></a>
