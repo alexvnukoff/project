@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from b24online.UserSites.forms import (
     GalleryImageFormSet, SiteForm, SiteCreateForm, TemplateForm,
-    CompanyBannerFormSet, ChamberBannerFormSet, LandingForm)
+    CompanyBannerFormSet, ChamberBannerFormSet, LandingForm, DomainForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -82,7 +82,6 @@ class CreateSite(CreateView):
 
 
 
-
 class UpdateSite(TemplateView):
     template_name = 'b24online/UserSites/updateSite.html'
 
@@ -98,9 +97,6 @@ class UpdateSite(TemplateView):
         context_data['title'] = _("Update Site")
         context_data['object'] = self.site
         return context_data
-
-
-
 
 
 
@@ -152,11 +148,20 @@ class LandingPageView(UpdateView):
 
 
 
-
-
 class UserTemplateView(ListView):
     model = UserSiteTemplate
     template_name = 'b24online/UserSites/templateList.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -165,10 +170,6 @@ class UserTemplateView(ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(published=True)
-
-
-
-
 
 
 
@@ -208,6 +209,58 @@ class TemplateUpdate(UpdateView):
 
     def get_object(self, queryset=None):
         return self.site
+
+
+
+class DomainNameView(UpdateView):
+    model = UserSite
+    form_class = DomainForm
+    template_name = 'b24online/UserSites/domainForm.html'
+    success_url = reverse_lazy('site:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        domain = form.cleaned_data.get('domain', None)
+        domain_part = form.cleaned_data.get('domain_part')
+
+        if form.has_changed():
+            form.instance.domain_part = domain or domain_part
+            self.object = form.save()
+            messages.add_message(self.request, messages.SUCCESS, _("Domain Name has been saved!"))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Domain Name"
+        return context
+
+    def get_object(self, queryset=None):
+        return self.site
+
+
+
+
+
+
+
+
+
 
 
 

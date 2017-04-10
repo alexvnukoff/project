@@ -11,12 +11,11 @@ from usersites.models import UserSite, LandingPage
 from django.forms.widgets import FileInput, Select
 
 
+
 class SiteCreateForm(forms.ModelForm):
     class Meta:
         model = UserSite
         fields = ('domain_part',)
-
-    # domain_part = forms.CharField(required=False)
 
     def clean_domain_part(self):
         domain_part = self.cleaned_data.get('domain_part', None)
@@ -36,18 +35,70 @@ class SiteCreateForm(forms.ModelForm):
             raise ValidationError(_('This domain already taken'))
         return domain_part
 
-    # def clean_domain(self):
-    #     domain = self.cleaned_data.get('domain', None)
-    #     if Site.objects.filter(domain=domain).exists():
-    #         raise ValidationError(_('The domain already in use'))
-    #     parsed_uri = urlparse(domain)
-    #     return parsed_uri.netloc
 
 
+class DomainForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('slogan',)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        if self.instance.pk:
+            if self.instance.domain_part == self.instance.site.domain:
+                self.initial['domain'] = self.instance.domain_part
+            else:
+                self.initial['domain_part'] = self.instance.domain_part
 
+    domain = forms.CharField(required=False)
+    domain_part = forms.CharField(required=False)
 
+    def clean_domain_part(self):
+        domain_part = self.cleaned_data.get('domain_part', None)
+
+        if not domain_part:
+            return
+
+        languages = [lan[0] for lan in settings.LANGUAGES]
+
+        if '.' in domain_part or domain_part in languages:
+            raise ValidationError(_('Enter a valid URL.'))
+
+        root_domain = settings.USER_SITES_DOMAIN
+
+        if self.instance.pk and self.instance.domain_part != self.instance.site.domain:
+            root_domain = self.instance.root_domain or root_domain
+
+        full_domain = "%s.%s" % (domain_part, root_domain)
+
+        validator = validators.URLValidator()
+        validator("http://%s" % full_domain)
+
+        queryset = Site.objects.filter(domain=full_domain)
+
+        if self.instance.pk:
+            queryset = queryset.exclude(user_site=self.instance.pk)
+
+        if queryset.exists():
+            raise ValidationError(_('This domain already taken'))
+
+        return domain_part
+
+    def clean_domain(self):
+        domain = self.cleaned_data.get('domain', None)
+        if Site.objects.filter(domain=domain).exists():
+            raise ValidationError(_('The domain already in use'))
+        parsed_uri = urlparse(domain)
+        return parsed_uri.netloc
+
+    def clean(self):
+        cleaned_data = super().clean()
+        domain_part = cleaned_data.get('domain_part', None)
+        domain = cleaned_data.get('domain', None)
+
+        if not domain_part and not domain:
+            self.add_error('domain_part', _('Domain is required'))
 
 
 

@@ -29,7 +29,7 @@
 
     <h3>{% trans "General Settings:" %}</h3>
 
-    <a href="#">
+    <a href="{% url 'site:domain_name' %}">
         <li>
             <strong>{% trans "Domain Name" %}</strong>
         </li>
@@ -59,7 +59,7 @@
 
     <a href="{% url 'site:template' %}">
         <li>
-            <strong>{% trans "Site Template" %} ({{ object.site.user_site.user_template }})</strong>
+            <strong>{% trans "Site Template" %} - {{ object.site.user_site.user_template }}</strong>
         </li>
     </a>
 

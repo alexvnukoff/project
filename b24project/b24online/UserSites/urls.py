@@ -1,7 +1,13 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls import url
-from b24online.UserSites.views import (form_dispatch, UserTemplateView,
-                                    TemplateUpdate, LandingPageView)
+from b24online.UserSites.views import (
+    form_dispatch,
+    UserTemplateView,
+    TemplateUpdate,
+    LandingPageView,
+    DomainNameView
+
+    )
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -19,5 +25,10 @@ urlpatterns = [
     url(r'landing_page/$',
         login_required(LandingPageView.as_view()),
         name='landing_page'),
+
+    url(r'domain_name/$',
+        login_required(DomainNameView.as_view()),
+        name='domain_name'),
+
 
 ]
