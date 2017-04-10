@@ -236,7 +236,7 @@ select#id_language {float:right;}
 .language-navi:hover .language-navi-dropdown {display:block;}
 
 .add-new {float:left;margin:0 0 0 5px;}
-.geolocation-navi {float:right;width:40px;font-size:20px;}
+.geolocation-navi {position:relative;float:right;width:40px;font-size:20px;top:2px;}
 .chat-title-imgs {float:left;}
 .message-attachments {float:right;}
 .profile-socials {float:right;}

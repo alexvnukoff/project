@@ -4,12 +4,15 @@
 {% load inclusionTags %}
 
 <script type="text/javascript">if (window.location.hash == '#_=_') { window.location.hash = '';}</script>
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/bootstrap-scoped.css' %}" />
 
 <div class="tophead">
-    <div class="news">
-        <div class="tophead-l">
-            <a href="/"><i class="logo news-logo"></i></a>
-            {% show_top_static_pages %}
+
+	<div class="news">
+    	<div class="tophead-l">
+        	<a href="/"><i class="logo news-logo"></i></a>
+        	{% show_top_static_pages %}
+
         </div>
       <div class="tophead-center">
       </div>
@@ -21,29 +24,31 @@
         <a href="/wall/" title="Geolocation"><span class="icon-location"></span></a>
       </div>
 
-            <div class="language-navi">
-            <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
-            {% get_available_languages as LANGUAGES %}
-            <div class="language-navi-dropdown">
-              {% for code, lang in LANGUAGES %}
-                  {% if not code == LANGUAGE_CODE %}
-                  <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
-                  {% endif %}
-              {% endfor %}
-            </div>
-            </div>
+			<div class="bootstrap-scoped btn-group language-navi">
+				<div id="header-language-selector" data-toggle="dropdown">
+					<img class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png" />
+				</div>
+				{% get_available_languages as LANGUAGES %}
+			  <ul class="bootstrap-scoped dropdown-menu" role="menu">
+					{% for code, lang in LANGUAGES %}
+						{% if not code == LANGUAGE_CODE %}
+							<a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png" /></a>
+						{% endif %}
+					{% endfor %}
+			  </ul>
+			</div>
 
     {% if request.user.is_authenticated %}
     <div style="display:inline-block;width:auto;margin-top:2px;">
 
-    <a href="{% url "profile:main" %}" style="text-decoration:none" id="hava01">
-    {% if request.user.profile.avatar %}
-    <img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:-4px;width:18px;">
-    {% else %}
-    <div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin-top:-4px;border:1px solid #aeaeae;"></div>
-    {% endif %}
-    </a>
-    <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
+	    <a href="{% url "profile:main" %}" style="text-decoration:none" id="hava01">
+		    {% if request.user.profile.avatar %}
+		    	<img src="{{ request.user.profile.avatar.th }}" style="vertical-align:middle;margin-top:0px;width:18px;">
+		    {% else %}
+		    	<div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin-top:0px;border:1px solid #aeaeae;"></div>
+		    {% endif %}
+	    </a>
+	    <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
     </div>
     {% endif %}
 
