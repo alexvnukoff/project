@@ -290,6 +290,6 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
 }
 .tophead-r .dropdown-menu {
-  width: 200px;
+  width: 175px;
   left: -92px !important;
 }
