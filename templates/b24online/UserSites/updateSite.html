@@ -48,9 +48,10 @@
     </a>
 
 
-    <a href="#">
+    <a href="{% url 'site:landing_page' %}">
         <li>
-            <strong>{% trans "Landing Page" %}</strong>
+            <strong>{% if object.site.user_site.landing.all|length > 0 %}{% trans "Landing Page" %}{% else %}{% trans "Create Landing Page" %}{% endif %}</strong>
+
         </li>
     </a>
 

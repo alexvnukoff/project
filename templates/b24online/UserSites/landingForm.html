@@ -24,25 +24,13 @@ input.text {width:98%;}
 .notification-success {display:block;color:#3c763d;background:#dff0d8;border:1px solid #d6e9c6;margin:5px 0;padding:15px;font-size:14px;}
 </style>
 
+<div id="u-site-wrapper">
 
-<div class="wrapper">
-<ol class="breadcrumb">
-    <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li class="active">{% trans "Landing Page" %}</li>
-</ol>
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
 
-{% if messages %}
-{% for message in messages %}
+<h1>{{ title }}</h1>
 
-    {% if 'success' in message.tags %}
-        <div class="notification-success"><i class="icon-ok"></i> {{ message }}</div>
-    {% endif %}
-
-    {% if 'error' in message.tags %}
-        <div class="notification-error">{{ message }}</div>
-    {% endif %}
-
-{% endfor %}
-{% endif %}
 
 <form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
 

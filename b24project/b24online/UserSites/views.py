@@ -96,7 +96,67 @@ class UpdateSite(TemplateView):
         context_data = super().get_context_data(**kwargs)
         context_data['domain'] = settings.USER_SITES_DOMAIN
         context_data['title'] = _("Update Site")
+        context_data['object'] = self.site
         return context_data
+
+
+
+
+
+
+class LandingPageView(UpdateView):
+    model = LandingPage
+    form_class = LandingForm
+    template_name = 'b24online/UserSites/landingForm.html'
+    success_url = reverse_lazy('site:landing_page')
+
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        try:
+            obj = queryset.get(src=self.site)
+        except queryset.model.DoesNotExist:
+            obj = queryset.create(src=self.site, created_by=self.user, updated_by=self.user)
+            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been created!"))
+
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Langing Page"
+        return context
+
+    def form_valid(self, form):
+        if form.has_changed():
+            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been saved!"))
+            form.save()
+
+        if 'cover' in form.changed_data:
+            self.object.upload_images()
+
+        return super().form_valid(form)
+
+
+
+
+
+
+
+
 
 
 
@@ -488,50 +548,3 @@ class TemplateUpdate(UpdateView):
     def get_object(self, queryset=None):
         return self.site
 
-
-
-class LandingPageView(UpdateView):
-    model = LandingPage
-    form_class = LandingForm
-    template_name = 'b24online/UserSites/landingForm.html'
-    success_url = reverse_lazy('site:landing_page')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        try:
-            obj = queryset.get(src=self.site)
-        except queryset.model.DoesNotExist:
-            obj = queryset.create(src=self.site, created_by=self.user, updated_by=self.user)
-            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been created!"))
-
-        return obj
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = "Langing Page"
-        return context
-
-    def form_valid(self, form):
-        if form.has_changed():
-            messages.add_message(self.request, messages.SUCCESS, _("Landing page has been saved!"))
-            form.save()
-
-        if 'cover' in form.changed_data:
-            self.object.upload_images()
-
-        return super().form_valid(form)
