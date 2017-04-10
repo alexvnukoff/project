@@ -12,7 +12,6 @@ from b24online.utils import get_index_name
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        settings.ELASTIC_SEARCH_HOSTS = ['elasticsearch']
         languages = [lan[0] for lan in settings.LANGUAGES]
         conn = SearchEngine.get_connection()
 

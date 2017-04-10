@@ -11,8 +11,6 @@
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/tpp.reset.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/gmapCompany.css' %}" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
       {% endcompress %}
 
 {% endblock %}
@@ -22,7 +20,6 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script src="{% static 'b24online/js/gmapSearchMarker.js' %}"></script>
     <script src="{% static 'b24online/js/jquery.uploadify.min.js' %}"></script>
-    <script src="{% static 'b24online/js/detailContentModal.js' %}"></script>
 
     <!-- Google maps -->
     <script type="text/javascript">
@@ -45,6 +42,106 @@
         });
     </script>
     <!-- /Google maps -->
+
+  <script type="text/javascript">
+   $(document).ready(function($) {
+
+    var dialog, form,
+    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    realname = $("#fback-name"),
+    phone = $("#fback-phone"),
+    email = $("#fback-email"),
+    message = $("#fback-message"),
+    allFields = $([]).add(realname).add(phone).add(email).add(message),
+    tips = $("#validateTips");
+
+    function updateTips(t) {
+        tips.text(t);
+      };
+
+    function checkLength(o, n, min, max) {
+      if (o.val().length > max || o.val().length < min) {
+          o.addClass("ui-state-error");
+          updateTips("{% trans 'This field is required.' %}");
+          return false;
+        } else {
+            return true;
+          }
+      };
+
+    function checkRegexp(o, regexp, n) {
+      if (!( regexp.test(o.val() ))) {
+          o.addClass("ui-state-error");
+          updateTips(n);
+          return false;
+        } else {
+           return true;
+          }
+      };
+
+    function SendFeedbackForm() {
+      var valid = true;
+      allFields.removeClass("ui-state-error");
+
+      valid = valid && checkLength(realname, "realname", 2, 40);
+//      valid = valid && checkLength(phone, "phone", 2, 40);
+      valid = valid && checkLength(email, "email", 6, 80 );
+      valid = valid && checkRegexp(email, emailRegex, '{% trans 'Enter a valid email address.' %}' );
+      valid = valid && checkLength(message, "message", 2, 1000);
+
+      if(valid) {
+        formdata = form.serialize();
+         $.ajax({
+          type: 'POST',
+          url: '/feedback/send/email/',
+          data: formdata,
+          success: function(data) { alert("{% trans 'Your message has been sent!' %}") }
+         });
+
+        dialog.dialog("close");
+      }
+        return valid;
+      };
+
+      dialog = $('#feedbackform').dialog({
+      autoOpen: false,
+      modal: true,
+      width: 650,
+      height: 470,
+      draggable: false,
+      resizable: false,
+      buttons: {
+        "{% trans 'Submit' %}": SendFeedbackForm,
+        Cancel: function() {
+            dialog.dialog("close");
+          }
+        },
+        close: function() {
+            form[0].reset();
+            allFields.removeClass("ui-state-error");
+            updateTips("{% trans 'All form fields are required.' %}");
+          }
+      });
+
+    form = dialog.find("form").on("submit", function(event) {
+      event.preventDefault();
+      SendFeedbackForm();
+      });
+
+      $('#feebackform-btn').click(function(e) {
+      e.preventDefault();
+      $('#feedbackform').dialog('open');
+      });
+
+    form.on("keypress", "input[type=text]", function(e) {
+      if(e.keyCode == 13) {
+          SendFeedbackForm();
+        }
+      });
+
+  });
+</script>
+
 <style>
 
 .my-feedback {background:#f7f7f7;}
@@ -141,18 +238,18 @@
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
                             <div id="paypal-membership" style="padding-left: 30px; padding-bottom: 10px">
                                 <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"
-                                        data-name="{% trans '1-year www.b24online.com membership' %}"
-                                        data-number="Company ID: {{ item.pk }} ({{ item.title }})" {% comment %} Company database ID{% endcomment %}
-                                        data-quantity="1"
-                                        data-button="paynow"
-                                        data-amount="100"
-                                        data-currency="USD"
-                                        data-callback="www.b24online.com/payments/membership/"
-                                        data-env=""
-                                        data-charset="utf-8"></script>
-                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com" />{% endcomment %}
-                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com" />{% endcomment %}
-
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com"{% endcomment %}
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"{% endcomment %}
+                                    data-name="{% trans '1-year www.b24online.com membership' %}"
+                                    data-number="Company ID: {{ item.pk }} ({{ item.title }})" {% comment %} Company's database ID{% endcomment %}
+                                    data-quantity="1"
+                                    data-button="paynow"
+                                    data-amount="100"
+                                    data-currency="USD"
+                                    data-callback="www.b24online.com/payments/membership/"
+                                    data-env=""
+                                    data-charset="utf-8"
+                                ></script>
                                 {% comment %}
                                 PayPal Debugging Info
                                 Sandbox ApplID: APP-80W284485P519543T
@@ -183,7 +280,7 @@
                 <div class="cpn-details-tab" id="tpp-details-tab">
                     <div class="tab-cate">
                         <ul>
-                        	<li>
+                            <li>
                                 <a href="#cpn-tabs-about">
                                     {% trans "About" %}
                                 </a>
@@ -270,17 +367,16 @@
                     </div>
                     <div id="cpn-tabs-about">
                         <div class="tpp-dt-content">
-                        	{{ item.description|cleanHtml|safe }}
+                            {{ item.description|cleanHtml|safe }}
                         </div>
                     </div>
                     <div id="cpn-tabs-recvisits">
                         <div class="tpp-dt-content"></div>
                     </div>
             <div id="cpn-tabs-contacts">
-                <div class="tpp-dt-content row"
-                    style="width: 100%">
+                <div class="tpp-dt-content">
 
-                    <div class="org-contacts col-5">
+                    <div class="org-contacts">
                         <ul class="innov-tab-content">
                             {% if item.address %}
                                 <li>
@@ -302,7 +398,7 @@
                             {% endif %}
                             {% if item.email %}
                                 <li>
-                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="left">{% trans 'Email' %}: </span>
                                         <span class="right">{{ item.email }}</span>
                                 </li>
                             {% endif %}
@@ -314,88 +410,47 @@
                             {% endif %}
                             <li>
                             <span class="left">{% trans 'Feedback' %}: </span>
-                            <span class="right"><a id="feebackform-btn" href="#" data-toggle="modal" data-target="#myModal">{% trans 'Write a message' %}</a></span>
-                            <div class="alert alert-success" id="success-alert" style="margin: 30px 10px;">
-                              <div>{% trans "Ваше сообщение отправлено. Благодарим за отзыв" %}</div>
-                            </div>
+                            <span class="right"><a id="feebackform-btn" href="#">{% trans 'Write a message' %}</a></span>
                             </li>
                         </ul>
                     </div>
-                    <div class="org-map col-7"> <div id="map-canvas"></div></div>
+                    <div class="org-map"> <div   id="map-canvas"></div></div>
 
                 </div>
             </div>
           </div>
   </div>
 
-  <script>$("#success-alert").ready(function() { $("#success-alert").hide() })</script>
+  <div id="feedbackform" title="Feedback">
 
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title" id="myModalLabel">{% trans "Отправить отзыв" %}</h4>
-        </div>
-        <div class="modal-body">
-      <form action="" id="myBootstrapForm" role="form" class="form-horizontal" method="post">{% csrf_token %}
+    <form action="" method="post">{% csrf_token %}
       <input type="hidden" name="co_email" value="{{ item.email }}">
       <input type="hidden" name="co_id" value="{{ item.pk }}">
       <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
-      <div class="form-group has-feedback">
-        <label for="login" class="control-label col-xs-3">{% trans "Ваше имя" %}</label>
-        <div class="col-xs-8">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input type="text" class="form-control" name="realname" maxlength="40" pattern=".{3,}" title="3 characters minimum" required>
-          </div>
-          <span class="glyphicon form-control-feedback"></span>
-        </div>
+
+      <div class="my-feedback">
+      <label>{% trans "Your name" %}</label>
+      <input type="text" name="realname" id="fback-name" maxlength="40">
       </div>
-      <div class="form-group has-feedback">
-        <label for="email" class="control-label col-xs-3">{% trans "Ваша почта" %}</label>
-        <div class="col-xs-8">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-            <input type="email" class="form-control" maxlength="80" name="email" required>
-          </div>
-          <span class="glyphicon form-control-feedback"></span>
-        </div>
+
+      <div class="my-feedback">
+      <label>{% trans "Your phone" %}</label>
+      <input type="text" name="phone" id="fback-phone" maxlength="40">
       </div>
-      <div class="form-group has-feedback">
-        <label for="phone" class="control-label col-xs-3">{% trans "Ваш телефон" %}</label>
-        <div class="col-xs-8">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-            <input type="phone" class="form-control" maxlength="40" name="phone" required>
-          </div>
-          <span class="glyphicon form-control-feedback"></span>
-        </div>
+
+      <div class="my-feedback">
+      <label>{% trans "Your email" %}</label>
+      <input type="text" name="email" id="fback-email" maxlength="80">
       </div>
-      <div class="form-group has-feedback">
-        <label for="message" class="control-label col-xs-3" maxlength="1000">{% trans "Ваше сообщение" %}</label>
-        <div class="col-xs-8">
-          <div class="input-group">
-            <textarea class="form-control"
-                      name="message"
-                      id="message"
-                      rows="6"
-                      style="width: 370px;"
-                      maxlength="1000"
-                      required
-            ></textarea>
-          </div>
-          <span class="glyphicon form-control-feedback"></span>
-        </div>
+
+      <div class="my-feedback">
+      <label>{% trans "Your message" %}</label>
+      <textarea name="message" id="fback-message" maxlength="1000"></textarea>
       </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Отмена" %}</button>
-          <button id="save" type="button" class="btn btn-primary">{% trans "Отправить" %}</button>
-        </div>
-      </div>
-    </div>
+
+    </form>
+    <br>
+<p id="validateTips">{% trans 'All form fields are required.' %}</p>
   </div>
 
         <div class="cpn-details-tab" id="tpp-details-tab">
