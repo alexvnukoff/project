@@ -134,7 +134,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .tab1-cate li.highlight { background-color: red; }
 .tab1-cate li.highlight a { color: #fff; }
 .tab1-cate li{ float:left; width:100%;}
-.tab1-cate li a{ display:block; padding:5px 0px 5px 10px;}
+.tab1-cate li a{ display:block; padding:4px 0 3px 10px;}
 .tab1-cate li a:hover, .tab1-cate li a.current{ background-color:#4a4a4a; color:#FFF; text-decoration:none;}
 .bannerleft{ float:left; width:100%; margin-top:15px;}
 .news-center{ float:left; width:660px; margin: 0 0 0 18px; display:inline; word-break: keep-all;}
@@ -208,7 +208,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .btntype1,.btntype2{ margin:0 5px;}
 .filterbtn .btntype1, .filterbtn .btntype2, .profilebutton .btntype1, .profilebutton .btntype2{ padding:8px 35px;}
 .filterbtn .btntype1, .profilebutton .btntype1{ background: #FFF url(/static/b24online/img/bgbutton.gif) repeat-x bottom center;}
-.filterbtn .btntype2, .profilebutton .btntype2{ 
+.filterbtn .btntype2, .profilebutton .btntype2{
 background-color:#2186b8;
 background-image: -webkit-gradient(
 linear,
