@@ -4,21 +4,10 @@
 {% load inclusionTags %}
 
 <script type="text/javascript">if (window.location.hash == '#_=_') { window.location.hash = '';}</script>
-<style>
-	/*.bootstrap-scoped.btn-group {
-		position: relative;
-		display: inline-block;
-		vertical-align: middle;
-	}
-	.bootstrap-scoped .dropdown-menu {
-	  margin-top: -1px;
-	  border-top-right-radius: 0;
-	  border-top-left-radius: 0;
-	}*/
-</style>
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/bootstrap-scoped.css' %}" />
+
 <div class="tophead">
 
-	<link rel="stylesheet" href="{% static 'b24online/css/bootstrap-scoped.css' %}">
 	<div class="news">
     	<div class="tophead-l">
         	<a href="/"><i class="logo news-logo"></i></a>
@@ -37,7 +26,7 @@
 
 			<div class="bootstrap-scoped btn-group language-navi">
 				<div id="header-language-selector" data-toggle="dropdown">
-					<img class="flag-icon" src="{% static 'b24online/bt/flags/{{ LANGUAGE_CODE }}.png' %}" />
+					<img class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png" />
 				</div>
 				{% get_available_languages as LANGUAGES %}
 			  <ul class="bootstrap-scoped dropdown-menu" role="menu">
