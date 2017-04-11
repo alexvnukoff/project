@@ -49,20 +49,20 @@ class DomainForm(forms.ModelForm):
             if self.instance.domain_part == self.instance.site.domain:
                 self.initial['domain'] = self.instance.domain_part
             else:
-                self.initial['domain_part'] = self.instance.domain_part
+                self.initial['sub_domain'] = self.instance.domain_part
 
-    domain = forms.CharField(required=False)
-    domain_part = forms.CharField(required=False)
+    domain = forms.URLField(required=False)
+    sub_domain = forms.CharField(required=False)
 
-    def clean_domain_part(self):
-        domain_part = self.cleaned_data.get('domain_part', None)
+    def clean_sub_domain(self):
+        sub_domain = self.cleaned_data.get('sub_domain', None)
 
-        if not domain_part:
+        if not sub_domain:
             return
 
         languages = [lan[0] for lan in settings.LANGUAGES]
 
-        if '.' in domain_part or domain_part in languages:
+        if '.' in sub_domain or sub_domain in languages:
             raise ValidationError(_('Enter a valid URL.'))
 
         root_domain = settings.USER_SITES_DOMAIN
@@ -70,7 +70,7 @@ class DomainForm(forms.ModelForm):
         if self.instance.pk and self.instance.domain_part != self.instance.site.domain:
             root_domain = self.instance.root_domain or root_domain
 
-        full_domain = "%s.%s" % (domain_part, root_domain)
+        full_domain = "%s.%s" % (sub_domain, root_domain)
 
         validator = validators.URLValidator()
         validator("http://%s" % full_domain)
@@ -83,22 +83,29 @@ class DomainForm(forms.ModelForm):
         if queryset.exists():
             raise ValidationError(_('This domain already taken'))
 
-        return domain_part
+        return sub_domain
 
     def clean_domain(self):
         domain = self.cleaned_data.get('domain', None)
-        if Site.objects.filter(domain=domain).exists():
+        queryset = Site.objects.filter(domain=domain)
+
+        if self.instance.pk:
+            queryset = queryset.exclude(user_site=self.instance.pk)
+
+        if queryset.exists():
             raise ValidationError(_('The domain already in use'))
+
         parsed_uri = urlparse(domain)
+
         return parsed_uri.netloc
 
     def clean(self):
         cleaned_data = super().clean()
-        domain_part = cleaned_data.get('domain_part', None)
+        sub_domain = cleaned_data.get('sub_domain', None)
         domain = cleaned_data.get('domain', None)
 
-        if not domain_part and not domain:
-            self.add_error('domain_part', _('Domain is required'))
+        if not sub_domain and not domain:
+            self.add_error('sub_domain', _('Domain is required.'))
 
 
 

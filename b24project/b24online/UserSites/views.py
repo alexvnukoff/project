@@ -232,16 +232,23 @@ class DomainNameView(UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
+        messages.add_message(self.request, messages.ERROR, form['sub_domain'].errors)
+        messages.add_message(self.request, messages.ERROR, form['domain'].errors)
         return super().render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
         domain = form.cleaned_data.get('domain', None)
-        domain_part = form.cleaned_data.get('domain_part')
+        sub_domain = form.cleaned_data.get('sub_domain')
 
         if form.has_changed():
-            form.instance.domain_part = domain or domain_part
+            form.instance.domain_part = domain or sub_domain
+
+            if not domain:
+                    domain = "%s.%s" % (sub_domain, settings.USER_SITES_DOMAIN)
+
+            form.instance.site = Site.objects.create(name='usersites', domain=domain)
             self.object = form.save()
+
             messages.add_message(self.request, messages.SUCCESS, _("Domain Name has been saved!"))
         return super().form_valid(form)
 
