@@ -5,9 +5,11 @@ from b24online.UserSites.views import (
     UserTemplateView,
     TemplateUpdate,
     LandingPageView,
-    DomainNameView
-
+    DomainNameView,
+    LanguagesView,
+    ProductDeliveryView
     )
+
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -30,5 +32,12 @@ urlpatterns = [
         login_required(DomainNameView.as_view()),
         name='domain_name'),
 
+    url(r'site_languages/$',
+        login_required(LanguagesView.as_view()),
+        name='site_languages'),
+
+    url(r'product_delivery/$',
+        login_required(ProductDeliveryView.as_view()),
+        name='product_delivery'),
 
 ]

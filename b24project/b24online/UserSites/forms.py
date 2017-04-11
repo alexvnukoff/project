@@ -63,7 +63,7 @@ class DomainForm(forms.ModelForm):
         languages = [lan[0] for lan in settings.LANGUAGES]
 
         if '.' in sub_domain or sub_domain in languages:
-            raise ValidationError(_('Enter a valid URL.'))
+            raise ValidationError(_('Enter a valid URL'))
 
         root_domain = settings.USER_SITES_DOMAIN
 
@@ -106,6 +106,53 @@ class DomainForm(forms.ModelForm):
 
         if not sub_domain and not domain:
             self.add_error('sub_domain', _('Domain is required'))
+
+
+
+class LanguagesForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('language', 'languages',)
+
+    languages = forms.MultipleChoiceField(
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+            choices=settings.LANGUAGES
+        )
+
+
+
+class ProductDeliveryForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('is_delivery_available', 'delivery_currency', 'delivery_cost',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['delivery_currency'].widget.attrs.update({
+            'style': 'width:200px;float:none;',
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

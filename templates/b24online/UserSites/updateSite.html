@@ -24,27 +24,19 @@
 <p style="font-size:14.5px;padding:15px 0;color:#949494">{% trans "Choose the section that you want to change:" %}</p>
 
 
-
 <ul class="site-sections">
 
-    <h3>{% trans "General Settings:" %}</h3>
-
+    <h3>{% trans "General Settings for " %}{{ object.site }}:</h3>
     <a href="{% url 'site:domain_name' %}">
-        <li>
-            <strong>{% trans "Domain Name" %}</strong>
-        </li>
+        <li><strong>{% trans "Domain Name" %}</strong></li>
     </a>
 
-    <a href="#">
-        <li>
-            <strong>{% trans "Site Languages" %}</strong>
-        </li>
+    <a href="{% url 'site:site_languages' %}">
+        <li><strong>{% trans "Site Languages" %}</strong></li>
     </a>
 
-    <a href="#">
-        <li>
-            <strong>{% trans "Product Delivery" %}</strong>
-        </li>
+    <a href="{% url 'site:product_delivery' %}">
+        <li><strong>{% trans "Product Delivery" %}</strong></li>
     </a>
 
 
