@@ -105,7 +105,7 @@ class DomainForm(forms.ModelForm):
         domain = cleaned_data.get('domain', None)
 
         if not sub_domain and not domain:
-            self.add_error('sub_domain', _('Domain is required.'))
+            self.add_error('sub_domain', _('Domain is required'))
 
 
 

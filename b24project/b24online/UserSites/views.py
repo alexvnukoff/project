@@ -58,7 +58,6 @@ class CreateSite(CreateView):
         messages.add_message(self.request, messages.ERROR, form['domain_part'].errors)
         return super().render_to_response(self.get_context_data(form=form))
 
-
     def form_valid(self, form):
         domain_part = form.cleaned_data.get('domain_part', None)
         domain = "{0}.{1}".format(domain_part, settings.USER_SITES_DOMAIN)
@@ -160,8 +159,9 @@ class UserTemplateView(ListView):
         try:
             site = UserSite.objects.get(organization=organization)
             self.site = site
-        except ObjectDoesNotExist:
+        except UserSite.DoesNotExist:
             return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -238,19 +238,24 @@ class DomainNameView(UpdateView):
 
     def form_valid(self, form):
         domain = form.cleaned_data.get('domain', None)
-        sub_domain = form.cleaned_data.get('sub_domain')
+        sub_domain = form.cleaned_data.get('sub_domain', None)
 
-        if form.has_changed():
+        form.instance.updated_by = self.request.user
+        root_domain = self.object.root_domain or settings.USER_SITES_DOMAIN
+
+        if form.has_changed() and ('sub_domain' in form.changed_data or 'domain' in form.changed_data):
             form.instance.domain_part = domain or sub_domain
 
             if not domain:
-                    domain = "%s.%s" % (sub_domain, settings.USER_SITES_DOMAIN)
+                domain = "%s.%s" % (form.cleaned_data.get('sub_domain'), root_domain)
 
-            form.instance.site = Site.objects.create(name='usersites', domain=domain)
             self.object = form.save()
-
+            site = self.object.site
+            site.domain = domain
+            site.save()
             messages.add_message(self.request, messages.SUCCESS, _("Domain Name has been saved!"))
-        return super().form_valid(form)
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
