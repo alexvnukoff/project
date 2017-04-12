@@ -1,0 +1,97 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+
+        <div class="form-group">
+        <label>{% trans "Slider images" %} ({% trans "Dimensions" %} 700Х183)</label>
+        <br>
+
+            <ul class="custom_images">
+                {{ gallery_images_form.management_form }}
+                {{ gallery_images_form.non_form_errors }}
+                {% for gallery_form in gallery_images_form %}
+                    {{ gallery_form.id }}
+                    {% if gallery_form.initial.image %}
+
+                    <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
+                    <li><img src='{{ gallery_form.initial.image.big }}'></li>
+                    {% if gallery_form.DELETE %}
+                        <div class="remove_image">{% trans 'Remove' %}{{ gallery_form.DELETE }}</div>
+                    {% endif %}
+                    {% else %}
+                    <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
+                    {% endif %}
+                    <li>
+                        {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
+                        <div class="fileinputs" style="margin-bottom:10px;">
+
+                        <div style="background:#efefef;width:600px;margin-bottom:20px;">
+                            <input type="file" name="{{ gallery_form.image.html_name }}">
+                        </div>
+
+                      <table class="desctable">
+
+                        <tr>
+                          <th>{% trans "Image description:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.description }}</td>
+                        </tr>
+
+                        <tr>
+                          <th>{% trans "Image link:" %}</th>
+                        </tr>
+
+                        <tr>
+                          <td>{{ gallery_form.link }}</td>
+                        </tr>
+
+                      </table>
+
+                        </div>
+
+                    </li>
+                    <div class="clear"></div>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

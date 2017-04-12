@@ -15,9 +15,10 @@ from b24online.models import Organization, Company, BannerBlock
 from django.utils.translation import ugettext_lazy as _
 
 from b24online.UserSites.forms import (
-    GalleryImageFormSet, SiteForm, SiteCreateForm, TemplateForm, LandingForm,
-    CompanyBannerFormSet, ChamberBannerFormSet, DomainForm, LanguagesForm,
-    ProductDeliveryForm, SiteSloganForm, FooterTextForm, SiteLogoForm)
+    GalleryImageFormSet, GalleryForm, SiteForm, SiteCreateForm, TemplateForm,
+    LandingForm, CompanyBannerFormSet, ChamberBannerFormSet, DomainForm,
+    LanguagesForm, ProductDeliveryForm, SiteSloganForm, FooterTextForm,
+    SiteLogoForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -384,6 +385,91 @@ class SiteLogoView(SiteDispatch, UpdateView):
 
 
 
+class SliderImagesView(SiteDispatch, UpdateView):
+    model = UserSite
+    form_class = GalleryImageFormSet
+    template_name = 'b24online/UserSites/slider_imagesForm.html'
+    success_url = reverse_lazy('site:slider_images')
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         self.gallery_images_form = GalleryImageFormSet(instance=self.object.get_gallery(self.request.user))
+#         banners_form = self.get_banners_form(instance=self.object.site)
+#         form_class = self.get_form_class()
+#         form = self.get_form(form_class)
+
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        return self.render_to_response(self.get_context_data(gallery_images_form=form))
+
+    def post(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         self.gallery_images_form = GalleryImageFormSet(self.request.POST, self.request.FILES,
+#                                                        instance=self.object.get_gallery(self.request.user))
+#         banners_form = self.get_banners_form(self.request.POST, self.request.FILES, instance=self.object.site)
+#         form_class = self.get_form_class()
+#         form = self.get_form(form_class)
+
+#         if form.is_valid() and self.gallery_images_form.is_valid() and banners_form.is_valid():
+#             return self.form_valid(form, self.gallery_images_form, banners_form=banners_form)
+#         else:
+#             return self.form_invalid(form, self.gallery_images_form, banners_form=banners_form)
+
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        if form.is_valid():
+            return self.form_valid(form=form)
+        else:
+            return self.form_invalid(form=form)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Slider images"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+
+        if form.has_changed():
+            form.instance = self.object.get_gallery(self.request.user)
+
+            for gallery in form:
+                gallery.instance.created_by = self.request.user
+                gallery.instance.updated_by = self.request.user
+
+            form.save()
+
+            form.instance.created_by = self.request.user
+            form.instance.updated_by = self.request.user
+
+        messages.add_message(self.request, messages.SUCCESS, _("Slider images has been saved!"))
+        return super().form_valid(form)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -541,6 +627,27 @@ class SiteLogoView(SiteDispatch, UpdateView):
 #             context_data['template'] = ExternalSiteTemplate.objects.get(pk=template_id)
 
 #         return context_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class SiteUpdate(UpdateView):

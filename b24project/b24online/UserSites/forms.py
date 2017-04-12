@@ -180,6 +180,42 @@ class SiteLogoForm(forms.ModelForm):
 
 
 
+class GalleryForm(forms.ModelForm):
+    class Meta:
+        model = GalleryImage
+        fields = ('image', 'description', 'link')
+
+    # def clean_image(self):
+    #     image_obj = self.cleaned_data.get('image', None)
+
+    #     if 'image' not in self.changed_data:
+    #         return image_obj
+
+    #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
+    #         raise ValidationError(_('Image dimensions not equals required dimension'))
+
+    #     return image_obj
+
+
+GalleryImageFormSet = inlineformset_factory(
+        Gallery,
+        GalleryImage,
+        form=GalleryForm,
+        max_num=5,
+        validate_max=True,
+        extra=5,
+        fields=('image', 'description', 'link')
+    )
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -302,10 +338,10 @@ class SiteForm(forms.ModelForm):
             'is_delivery_available', 'delivery_currency', 'delivery_cost', 'languages')
 
 
-class GalleryForm(forms.ModelForm):
-    class Meta:
-        model = GalleryImage
-        fields = ('image', 'description', 'link')
+# class GalleryForm(forms.ModelForm):
+#     class Meta:
+#         model = GalleryImage
+#         fields = ('image', 'description', 'link')
 
    # def clean_image(self):
    #     image_obj = self.cleaned_data.get('image', None)
@@ -339,8 +375,7 @@ class BannerForm(forms.ModelForm):
 
 
 
-GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
-                                            form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description', 'link'))
+
 CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=24, extra=24)
 ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
