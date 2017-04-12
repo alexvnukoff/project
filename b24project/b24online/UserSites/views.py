@@ -16,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from b24online.UserSites.forms import (
     GalleryImageFormSet, SiteForm, SiteCreateForm, TemplateForm, LandingForm,
     CompanyBannerFormSet, ChamberBannerFormSet, DomainForm, LanguagesForm,
-    ProductDeliveryForm)
+    ProductDeliveryForm, SiteSloganForm, FooterTextForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -341,7 +341,79 @@ class ProductDeliveryView(UpdateView):
 
 
 
+class SiteSloganView(UpdateView):
+    model = UserSite
+    form_class = SiteSloganForm
+    template_name = 'b24online/UserSites/site_sloganForm.html'
+    success_url = reverse_lazy('site:main')
 
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Site Slogan"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['slogan'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            messages.add_message(self.request, messages.SUCCESS, _("Site Slogan has been saved!"))
+        return super().form_valid(form)
+
+
+
+class FooterTextView(UpdateView):
+    model = UserSite
+    form_class = FooterTextForm
+    template_name = 'b24online/UserSites/footer_textForm.html'
+    success_url = reverse_lazy('site:main')
+
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Footer Text"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['footer_text'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            messages.add_message(self.request, messages.SUCCESS, _("Footer Text has been saved!"))
+        return super().form_valid(form)
 
 
 

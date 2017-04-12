@@ -136,16 +136,31 @@ class ProductDeliveryForm(forms.ModelForm):
 
 
 
+class SiteSloganForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('slogan',)
 
 
 
+class FooterTextForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('footer_text',)
 
 
 
+class TemplateForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('user_template', 'color_template',)
 
 
 
-
+class LandingForm(forms.ModelForm):
+    class Meta:
+        model = LandingPage
+        fields = ('title', 'description', 'cover')
 
 
 
@@ -322,13 +337,3 @@ ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fiel
                                              validate_max=True, max_num=8, extra=8)
 
 
-class TemplateForm(forms.ModelForm):
-    class Meta:
-        model = UserSite
-        fields = ('user_template', 'color_template',)
-
-
-class LandingForm(forms.ModelForm):
-    class Meta:
-        model = LandingPage
-        fields = ('title', 'description', 'cover')

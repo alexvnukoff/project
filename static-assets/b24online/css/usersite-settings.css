@@ -8,8 +8,13 @@
 #u-site-wrapper .link:hover img.t-image {opacity:0.8;}
 #u-site-wrapper .form-group {display:block;margin:15px 0;}
 #u-site-wrapper .form-group label {display:block;}
-#u-site-wrapper input.text {width:98%;}
-#u-site-wrapper input.short {width:20%;}
+#u-site-wrapper input {}
+#u-site-wrapper input.text {width:98%;border:2px solid #848484;}
+#u-site-wrapper input.middle {width:50%;border:2px solid #848484;}
+#u-site-wrapper input.short {width:20%;border:2px solid #848484;}
+#u-site-wrapper textarea {border:2px solid #848484;}
+
+
 #u-site-wrapper .bigbuy {margin:20px 0;}
 #u-site-wrapper .notification-section {display:block;margin:5px 0 10px 0;}
 #u-site-wrapper .notification-success {display:block;color:#3c763d;background:#dff0d8;border:1px solid #d6e9c6;margin:5px 0;padding:15px;font-size:14px;}

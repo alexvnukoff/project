@@ -22,6 +22,7 @@
             <small class="error">{{ form.is_delivery_available.errors|striptags }}</small>
             {% endif %}
         </div>
+
         <div class="form-group">
             <label>{% trans "Delivery currency" %}</label>
             <div>{{ form.delivery_currency }}</div>
@@ -29,7 +30,7 @@
                 <small class="error">{{ form.delivery_currency.errors|striptags }}</small>
             {% endif %}
         </div>
-        <br>
+
         <div class="form-group">
             <label>{% trans "Delivery cost" %}</label>
             <input type="text" name="delivery_cost" placeholder="{% trans 'Delivery cost' %}" maxlength="20" class="text" style="width:200px;" value="{{ form.delivery_cost.value|default_if_none:'' }}">

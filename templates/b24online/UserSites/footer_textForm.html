@@ -1,0 +1,30 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" action="">{% csrf_token %}
+
+        <div class="form-group">
+        <label>{% trans "Footer text" %}</label>
+            <textarea cols="120" id="id_footer_text" name="footer_text" rows="10">{{ form.footer_text.value|default_if_none:"" }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

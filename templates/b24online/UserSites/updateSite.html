@@ -57,13 +57,13 @@
 
     <h3>{% trans "Content:" %}</h3>
 
-    <a href="#">
+    <a href="{% url 'site:site_slogan' %}">
         <li>
             <strong>{% trans "Site Slogan" %}</strong>
         </li>
     </a>
 
-    <a href="#">
+    <a href="{% url 'site:footer_text' %}">
         <li>
             <strong>{% trans "Footer Text" %}</strong>
         </li>

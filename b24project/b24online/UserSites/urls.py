@@ -7,7 +7,9 @@ from b24online.UserSites.views import (
     LandingPageView,
     DomainNameView,
     LanguagesView,
-    ProductDeliveryView
+    ProductDeliveryView,
+    SiteSloganView,
+    FooterTextView
     )
 
 from django.contrib.auth.decorators import login_required
@@ -39,5 +41,13 @@ urlpatterns = [
     url(r'product_delivery/$',
         login_required(ProductDeliveryView.as_view()),
         name='product_delivery'),
+
+    url(r'site_slogan/$',
+        login_required(SiteSloganView.as_view()),
+        name='site_slogan'),
+
+    url(r'footer_text/$',
+        login_required(FooterTextView.as_view()),
+        name='footer_text'),
 
 ]
