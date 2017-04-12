@@ -39,6 +39,22 @@ def form_dispatch(request):
 
 
 
+class SiteDispatch:
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
+
+
+
 class CreateSite(CreateView):
     model = UserSite
     form_class = SiteCreateForm
@@ -101,24 +117,11 @@ class UpdateSite(TemplateView):
 
 
 
-class LandingPageView(UpdateView):
+class LandingPageView(SiteDispatch, UpdateView):
     model = LandingPage
     form_class = LandingForm
     template_name = 'b24online/UserSites/landingForm.html'
     success_url = reverse_lazy('site:landing_page')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -144,7 +147,7 @@ class LandingPageView(UpdateView):
 
         if 'cover' in form.changed_data:
             self.object.upload_images()
-
+            time.sleep(5)
         return super().form_valid(form)
 
 
@@ -214,24 +217,11 @@ class TemplateUpdate(UpdateView):
 
 
 
-class DomainNameView(UpdateView):
+class DomainNameView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = DomainForm
     template_name = 'b24online/UserSites/domainForm.html'
     success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-
-        return super().dispatch(request, *args, **kwargs)
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, form['sub_domain'].errors)
@@ -269,24 +259,11 @@ class DomainNameView(UpdateView):
 
 
 
-class LanguagesView(UpdateView):
+class LanguagesView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = LanguagesForm
     template_name = 'b24online/UserSites/languagesForm.html'
     success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.site
@@ -304,24 +281,11 @@ class LanguagesView(UpdateView):
 
 
 
-class ProductDeliveryView(UpdateView):
+class ProductDeliveryView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = ProductDeliveryForm
     template_name = 'b24online/UserSites/product_deliveryForm.html'
     success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.site
@@ -342,24 +306,11 @@ class ProductDeliveryView(UpdateView):
 
 
 
-class SiteSloganView(UpdateView):
+class SiteSloganView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = SiteSloganForm
     template_name = 'b24online/UserSites/site_sloganForm.html'
     success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.site
@@ -380,24 +331,11 @@ class SiteSloganView(UpdateView):
 
 
 
-class FooterTextView(UpdateView):
+class FooterTextView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = FooterTextForm
     template_name = 'b24online/UserSites/footer_textForm.html'
     success_url = reverse_lazy('site:main')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.site
@@ -418,24 +356,11 @@ class FooterTextView(UpdateView):
 
 
 
-class SiteLogoView(UpdateView):
+class SiteLogoView(SiteDispatch, UpdateView):
     model = UserSite
     form_class = SiteLogoForm
     template_name = 'b24online/UserSites/logoForm.html'
     success_url = reverse_lazy('site:site_logo')
-
-    def dispatch(self, request, *args, **kwargs):
-        organization_id = request.session.get('current_company', None)
-        self.user = request.user
-        if not organization_id:
-            return HttpResponseRedirect(reverse('denied'))
-        organization = Organization.objects.get(pk=organization_id)
-        try:
-            site = UserSite.objects.get(organization=organization)
-            self.site = site
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.site
@@ -456,11 +381,6 @@ class SiteLogoView(UpdateView):
             messages.add_message(self.request, messages.SUCCESS, _("Site Logo has been saved!"))
             time.sleep(2)
         return super().form_valid(form)
-
-
-
-
-
 
 
 
