@@ -164,9 +164,19 @@ class LandingForm(forms.ModelForm):
 
 
 
+class SiteLogoForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('logo',)
 
+    def clean_logo(self):
+        logo = self.cleaned_data.get('logo', None)
+        if 'logo' not in self.changed_data:
+            return logo
 
-
+        if logo and (logo.image.width > 220 or logo.image.height > 120):
+            raise ValidationError(_('Logo exceeded dimension limit'))
+        return logo
 
 
 

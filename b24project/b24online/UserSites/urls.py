@@ -9,7 +9,8 @@ from b24online.UserSites.views import (
     LanguagesView,
     ProductDeliveryView,
     SiteSloganView,
-    FooterTextView
+    FooterTextView,
+    SiteLogoView
     )
 
 from django.contrib.auth.decorators import login_required
@@ -49,5 +50,9 @@ urlpatterns = [
     url(r'footer_text/$',
         login_required(FooterTextView.as_view()),
         name='footer_text'),
+
+    url(r'site_logo/$',
+        login_required(SiteLogoView.as_view()),
+        name='site_logo'),
 
 ]

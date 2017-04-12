@@ -39,70 +39,49 @@
         <li><strong>{% trans "Product Delivery" %}</strong></li>
     </a>
 
-
     <a href="{% url 'site:landing_page' %}">
-        <li>
-            <strong>{% if object.site.user_site.landing.all|length > 0 %}{% trans "Landing Page" %}{% else %}{% trans "Create Landing Page" %}{% endif %}</strong>
-
-        </li>
+        <li><strong>{% if object.site.user_site.landing.all|length > 0 %}{% trans "Landing Page" %}{% else %}{% trans "Create Landing Page" %}{% endif %}</strong></li>
     </a>
 
     <h3>{% trans "Appearance:" %}</h3>
 
     <a href="{% url 'site:template' %}">
-        <li>
-            <strong>{% trans "Site Template" %} - {{ object.site.user_site.user_template }}</strong>
-        </li>
+        <li><strong>{% trans "Site Template" %} - {{ object.site.user_site.user_template }}</strong></li>
     </a>
 
     <h3>{% trans "Content:" %}</h3>
 
     <a href="{% url 'site:site_slogan' %}">
-        <li>
-            <strong>{% trans "Site Slogan" %}</strong>
-        </li>
+        <li><strong>{% trans "Site Slogan" %}</strong></li>
     </a>
 
     <a href="{% url 'site:footer_text' %}">
-        <li>
-            <strong>{% trans "Footer Text" %}</strong>
-        </li>
+        <li><strong>{% trans "Footer Text" %}</strong></li>
     </a>
 
     <h3>{% trans "Images:" %}</h3>
 
-    <a href="#">
-        <li>
-            <strong>{% trans "Organization Logo" %}</strong>
-        </li>
+    <a href="{% url 'site:site_logo' %}">
+        <li><strong>{% trans "Organization Logo" %}</strong></li>
     </a>
 
     <a href="#">
-        <li>
-            <strong>{% trans "Slider Images" %}</strong>
-        </li>
+        <li><strong>{% trans "Slider Images" %}</strong></li>
     </a>
 
     <a href="#">
-        <li>
-            <strong>{% trans "Banners" %}</strong>
-        </li>
+        <li><strong>{% trans "Banners" %}</strong></li>
     </a>
 
     <h3>{% trans "Links:" %}</h3>
 
     <a href="#">
-        <li>
-            <strong>{% trans "Social Links" %}</strong>
-        </li>
+        <li><strong>{% trans "Social Links" %}</strong></li>
     </a>
 
     <a href="#">
-        <li>
-            <strong>{% trans "Google Analytics" %}</strong>
-        </li>
+        <li><strong>{% trans "Google Analytics" %}</strong></li>
     </a>
-
 
 </ul>
 

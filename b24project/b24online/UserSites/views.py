@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import time
 from collections import OrderedDict
 from django.conf import settings
 from django.contrib import messages
@@ -16,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from b24online.UserSites.forms import (
     GalleryImageFormSet, SiteForm, SiteCreateForm, TemplateForm, LandingForm,
     CompanyBannerFormSet, ChamberBannerFormSet, DomainForm, LanguagesForm,
-    ProductDeliveryForm, SiteSloganForm, FooterTextForm)
+    ProductDeliveryForm, SiteSloganForm, FooterTextForm, SiteLogoForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -417,8 +418,44 @@ class FooterTextView(UpdateView):
 
 
 
+class SiteLogoView(UpdateView):
+    model = UserSite
+    form_class = SiteLogoForm
+    template_name = 'b24online/UserSites/logoForm.html'
+    success_url = reverse_lazy('site:site_logo')
 
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = request.session.get('current_company', None)
+        self.user = request.user
+        if not organization_id:
+            return HttpResponseRedirect(reverse('denied'))
+        organization = Organization.objects.get(pk=organization_id)
+        try:
+            site = UserSite.objects.get(organization=organization)
+            self.site = site
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+        return super().dispatch(request, *args, **kwargs)
 
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Site Logo"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['logo'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            self.object = form.save()
+            self.object.upload_images(form.cleaned_data)
+            messages.add_message(self.request, messages.SUCCESS, _("Site Logo has been saved!"))
+            time.sleep(2)
+        return super().form_valid(form)
 
 
 

@@ -1,0 +1,52 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+
+        <div class="form-group">
+
+            <div class="viewimg">
+                <img src="{{ form.logo.value.big }}">
+            </div>
+
+            <label>{% trans "Organization logo" %} <span>({% trans "Max Dimensions" %} 220x120px)</span></label>
+            <input type="file" name="logo">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
