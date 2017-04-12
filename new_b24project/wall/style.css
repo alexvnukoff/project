@@ -1,0 +1,85 @@
+.wrapper {
+  padding-top: 10px;
+}
+.wrapper .navbar-brand .logo {
+  position: relative;
+  width: 100px;
+  top: -7px;
+}
+.wrapper #responsive-menu #language-flag {
+  position: relative;
+  top: 15px;
+}
+.wrapper #responsive-menu .flag-icon {
+  box-shadow: 2px 1px 5px #888;
+  margin: 5px 2px;
+  width: 30px;
+}
+.wrapper #responsive-menu .user-icon {
+  font-size: 22px;
+}
+.wrapper #responsive-menu .dropdown-flags {
+  top: 40px;
+  padding: 5px 5px;
+}
+.wrapper #content .left-menu .btn-menu {
+  position: relative;
+  height: 35px;
+  width: 35px;
+  color: #888;
+  margin: 0 0 2px 10px;
+  float: left;
+  clear: left;
+}
+.wrapper #content .left-menu .btn-menu i {
+  position: absolute;
+  left: 6px;
+  font-size: 1.5em;
+}
+.wrapper #content .left-menu .btn-menu i.fa-bars {
+  left: 8px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-newspaper-o {
+  left: 6px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-star-o {
+  left: 7px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-handshake-o {
+  left: 3px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-shield {
+  left: 10px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-lightbulb-o {
+  left: 11px;
+}
+.wrapper #content .left-menu .btn-menu i.fa-graduation-cap {
+  left: 4px;
+}
+.wrapper #content .main .main-content {
+  margin-top: 10px;
+}
+.wrapper #content .main .main-tabs-link {
+  margin-top: 5px;
+}
+.wrapper #content .goods-caption {
+  padding: 0;
+}
+.wrapper #content .goods-flag {
+  width: 20px;
+  margin: 0 5px 5px 0;
+}
+.wrapper #content .thumbnail {
+  padding: 10px;
+}
+.wrapper #content .right-menu .paid-thumbnail {
+  border-color: #ff6347;
+  padding: 10px;
+}
+.wrapper #content .right-menu .paid-alert {
+  font-size: 12px;
+}
+.wrapper #content .right-menu .paid-alert a {
+  font-weight: 300;
+}
