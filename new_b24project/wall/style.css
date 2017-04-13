@@ -72,7 +72,42 @@ body .main-row .main-container .main-content {
   padding-top: 2px;
 }
 body .main-row .article-filter {
-  background-color: #eee;
+  background-color: #4a4a4a;
+  height: 45px;
+  border-radius: 4px;
+}
+body .main-row .article-filter .filter-ico {
+  float: left;
+  width: 32px;
+  height: 32px;
+  margin: -7px 10px 0 -7px;
+  display: inline;
+  background: url("../../static-assets/b24online/img/news.png");
+  background-position: 0px -24px;
+  cursor: pointer;
+}
+body .main-row .article-filter .filter-langs {
+  margin-top: 13px;
+}
+body .main-row .article-filter .filter-langs .filter-lang {
+  color: #fff;
+  background-color: #333;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: default;
+}
+body .main-row .article-filter .filter-langs .filter-lang a {
+  color: #888;
+  cursor: pointer;
+}
+body .main-row .article-filter .filter-search {
+  top: -25px;
+  width: 220px;
+  right: -5px;
+}
+body .main-row .article-filter .filter-search input {
+  height: 28px;
 }
 body .main-row .left-aside {
   font-size: 12px;
