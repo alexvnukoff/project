@@ -74,7 +74,10 @@ body .main-row .main-container .main-content {
 body .main-row .article-filter {
   background-color: #4a4a4a;
   height: 45px;
+  width: 640px;
   border-radius: 4px;
+  margin-left: -30px;
+  margin-right: -30px;
 }
 body .main-row .article-filter .filter-ico {
   float: left;
@@ -103,7 +106,7 @@ body .main-row .article-filter .filter-langs .filter-lang a {
 }
 body .main-row .article-filter .filter-search {
   top: -25px;
-  width: 220px;
+  width: 160px;
   right: -5px;
 }
 body .main-row .article-filter .filter-search input {
@@ -137,8 +140,47 @@ body .main-row .left-aside a i {
   width: 15px;
   margin-right: 5px;
 }
-body .main-row .right-aside {
-  background-color: #eee;
+body .main-row .right-aside .right-aside-block {
+  height: 45px;
+  border-radius: 4px;
+  background-color: #4a4a4a;
+  padding: 12px;
+}
+body .main-row .right-aside .right-aside-block a {
+  margin-left: 5px;
+}
+body .main-row .right-aside .right-aside-block i {
+  font-size: 16px;
+  color: #fff;
+}
+body .main-row .right-aside .right-aside-block span {
+  margin-left: 3px;
+  font-size: 10px;
+  margin-top: 2px;
+}
+body .main-row .right-aside .right-aside-block.sell {
+  margin-top: 15px;
+}
+body .main-row .right-aside .right-aside-block.title {
+  margin-top: 15px;
+  height: 35px;
+  padding: 8px;
+  border-radius: 3px 3px 0 0;
+  color: #fff;
+}
+body .main-row .right-aside .right-aside-block.title span {
+  font-size: 16px;
+}
+body .main-row .right-aside .right-aside-block.list {
+  background-color: #f5f5f5;
+  height: 35px;
+  padding: 8px;
+  border-radius: 0 0 3px 3px;
+  border: solid 1px #484848;
+}
+body .main-row .right-aside .right-aside-block.list span {
+  font-size: 12px;
+  font-weight: 500;
 }
 body .main-row .article-content {
   background-color: #eee;
