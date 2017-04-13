@@ -1,85 +1,97 @@
-.wrapper {
-  padding-top: 10px;
-}
-.wrapper .navbar-brand .logo {
-  position: relative;
-  width: 100px;
-  top: -7px;
-}
-.wrapper #responsive-menu #language-flag {
-  position: relative;
-  top: 15px;
-}
-.wrapper #responsive-menu .flag-icon {
-  box-shadow: 2px 1px 5px #888;
-  margin: 5px 2px;
-  width: 30px;
-}
-.wrapper #responsive-menu .user-icon {
-  font-size: 22px;
-}
-.wrapper #responsive-menu .dropdown-flags {
-  top: 40px;
-  padding: 5px 5px;
-}
-.wrapper #content .left-menu .btn-menu {
-  position: relative;
-  height: 35px;
-  width: 35px;
-  color: #888;
-  margin: 0 0 2px 10px;
-  float: left;
-  clear: left;
-}
-.wrapper #content .left-menu .btn-menu i {
-  position: absolute;
-  left: 6px;
-  font-size: 1.5em;
-}
-.wrapper #content .left-menu .btn-menu i.fa-bars {
-  left: 8px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-newspaper-o {
-  left: 6px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-star-o {
-  left: 7px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-handshake-o {
-  left: 3px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-shield {
-  left: 10px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-lightbulb-o {
-  left: 11px;
-}
-.wrapper #content .left-menu .btn-menu i.fa-graduation-cap {
-  left: 4px;
-}
-.wrapper #content .main .main-content {
-  margin-top: 10px;
-}
-.wrapper #content .main .main-tabs-link {
-  margin-top: 5px;
-}
-.wrapper #content .goods-caption {
-  padding: 0;
-}
-.wrapper #content .goods-flag {
-  width: 20px;
-  margin: 0 5px 5px 0;
-}
-.wrapper #content .thumbnail {
-  padding: 10px;
-}
-.wrapper #content .right-menu .paid-thumbnail {
-  border-color: #ff6347;
-  padding: 10px;
-}
-.wrapper #content .right-menu .paid-alert {
+body {
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
-.wrapper #content .right-menu .paid-alert a {
-  font-weight: 300;
+body .wrapper {
+  padding: 0;
+}
+body .header-row {
+  background-image: linear-gradient(180deg, #efefef, #fbfbfb);
+}
+body .header-row .header-container {
+  width: 1050px;
+}
+body .header-row .header-container .header {
+  min-width: 990px;
+  margin-left: 0;
+  padding-top: 2px;
+}
+body .header-row .header-container .header .logo img {
+  width: 70px;
+}
+body .header-row .header-container .header .nav {
+  margin-left: 18px;
+  color: #acacac;
+  font-size: 12px;
+  line-height: 23px;
+  margin-top: 4px;
+}
+body .header-row .header-container .header .nav .tab {
+  padding: 0 5px;
+}
+body .header-row .header-container .header .fa-map-marker {
+  position: relative;
+  font-size: 18px;
+  top: 3px;
+  margin-right: 10px;
+}
+body .header-row .header-container .header .flag-current {
+  position: relative;
+  height: 18px;
+  margin-right: 10px;
+}
+body .header-row .header-container .header .avatar {
+  position: relative;
+  height: 18px;
+  margin-right: 5px;
+}
+body .header-row .header-container .header .person-name {
+  position: relative;
+  height: 18px;
+  margin-right: 8px;
+  color: #000;
+}
+body .header-row .header-container .header .logout {
+  position: relative;
+  height: 18px;
+  margin-left: 10px;
+}
+body .main {
+  margin-top: 20px;
+  min-width: 1092px;
+}
+body .main .article-filter {
+  background-color: #eee;
+}
+body .main .left-aside {
+  font-size: 12px;
+}
+body .main .left-aside a {
+  background-color: #f6f6f6;
+  color: #0089bc;
+  height: 30px;
+  padding: 6px 10px;
+}
+body .main .left-aside a.active {
+  color: #fff;
+  background-color: #d7d7d7;
+  border: none;
+}
+body .main .left-aside a.red {
+  background-color: #f00;
+}
+body .main .left-aside a:hover {
+  color: #fff;
+  background-color: #f00;
+}
+body .main .left-aside a i {
+  width: 15px;
+  margin-right: 5px;
+}
+body .main .right-aside {
+  background-color: #eee;
+}
+body .main .article-content {
+  background-color: #eee;
+  margin-top: 15px;
 }

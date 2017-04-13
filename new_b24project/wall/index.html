@@ -19,223 +19,64 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
   <body>
-    <div class="container wrapper">
-      <div class="row">
-        <div class="navbar navbar-inverse header">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
-                <span class="sr-only">Навигация</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand hidden-sm" href="#">
-                <img src="images/b24_big.png" class="logo" alt="logo">
-              </a>
+    <div class="container-fluid wrapper">
+      <div class="row header-row">
+        <div class="container header-container">
+          <div class="col-xs-12 header">
+            <div class="logo pull-left">
+              <img src="images/b24_big.png" alt="logo">
             </div>
-            <div class="collapse navbar-collapse" id="responsive-menu">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Советы</a></li>
-                <li><a href="#">Реклама на портале</a></li>
-                <li><a href="#">Описание</a></li>
-                <li><a href="#">Публичная оферта</a></li>
-                <li><a href="#">Новый пользователь</a></li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown hidden-sm">
-                  <div id="language-flag" class="dropdown-toggle hidden-xs" data-toggle="collapse" data-target="#flags-toggle">
-                    <img src="flags/am.png" alt="am">
-                  </div>
-                  <a id="language-fla" class="dropdown-toggle visible-xs" data-toggle="collapse" data-target="#flags-toggle">
-                    Язык
-                  </a>
-                  <ul class="dropdown-menu dropdown-flags" role="menu" id="flags-toggle">
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                    <a href="#"><img class="flag-icon" src="flags/bg.png" /></a>
-                  </ul>
-                </li>
-                <li class="divider"></li>
-                <li class="dropdown">
-                  <a class="dropdown-toggle hidden-xs" data-toggle="dropdown">
-                    <i class="fa fa-user user-icon"></i>
-                  </a>
-                  <a class="visible-xs dropdown-toggle" data-toggle="dropdown">Ваш профиль</a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action 1</a></li>
-                    <li><a href="#">Action 2</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Action last</a></li>
-                  </ul>
-                </li>
-              </ul>
+            <div class="nav pull-left">
+              <span class="tab">Советы</span> |
+              <span class="tab">Реклама на портале</span> |
+              <span class="tab">Описание</span> |
+              <span class="tab">Публичная офертa</span> |
+              <span class="tab">Новый пользователь</span>
+            </div>
+            <div class="nav pull-right">
+              <span><a href="" class="fa fa-map-marker"></a></span>
+              <span><img class="flag-current" src="flags/english.png" alt="en"></span>
+              <span><img class="avatar" src="http://lorempixel.com/20/20" alt="avatar"/></span>
+              <span class="person-name">Геннадий Андреевич Балачков <span class="caret"></span></span>
+              <span><a class="logout" href="#exit">Выйти</a></span>
             </div>
           </div>
         </div>
-        <div id="content">
-          <div class="left-menu col-xs-1">
-              <div class="row">
-                <div class="btn-toolbar">
-                  <a class="btn btn-default btn-menu active">
-                    <i class="menu-icon fa fa-bars" data-toggle="tooltip" data-placement="right" title="Стена"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-newspaper-o" data-toggle="tooltip" data-placement="right" title="Новости"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-shopping-cart" data-toggle="tooltip" data-placement="right" title="Центр покупок"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-star-o" data-toggle="tooltip" data-placement="right" title="Купоны"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-handshake-o" data-toggle="tooltip" data-placement="right" title="Бизнес"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-shield" data-toggle="tooltip" data-placement="right" title="Организации"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-lightbulb-o" data-toggle="tooltip" data-placement="right" title="Инновационные идеи"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-users" data-toggle="tooltip" data-placement="right" title="Выставки / Форумы"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-graduation-cap" data-toggle="tooltip" data-placement="right" title="Требуются"></i>
-                  </a>
-                  <a class="btn btn-default btn-menu">
-                    <i class="menu-icon fa fa-user-plus" data-toggle="tooltip" data-placement="right" title="Резюме"></i>
-                  </a>
-                </div>
-              </div>
-          </div>
-          <div class="main">
-            <div class="col-xs-11 col-sm-9">
-              <div class="container">
-
-              </div>
-              <div class="row main-tabs">
-                <ul class="nav nav-pills">
-                  <li class="active"><a href="#" class="main-tabs-link">Товары <span class="badge">12</span></a></li>
-                  <li><a href="#" class="main-tabs-link">Инновационные проекты <span class="badge">28</span></a></li>
-                  <li><a href="#" class="main-tabs-link">Выставки <span class="badge">15</span></a></li>
-                  <li><a href="#" class="main-tabs-link">Бизнес предложения <span class="badge">5</span></a></li>
-                  <li><a href="#" class="main-tabs-link">Новости <span class="badge">2</span></a></li>
-                </ul>
-              </div>
-              <div class="row main-content">
-                <div class="row">
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/abstract" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/food" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/technics" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/business/" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/business/2" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/business/3" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="thumbnail">
-                      <img src="http://lorempixel.com/180/120/business/4" alt="default-img">
-                      <span class="caption goods-caption">
-                        <h4>Title</h4>
-                        <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                        <a class="aull-right">Подробнее...</p>
-                        <a href="#" class="btn btn-primary" role="button">Купить</a>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+      </div>
+      <div class="container main">
+        <div class="row">
+          <div class="left-aside col-xs-3">
+            <div class="list-group">
+              <a href="#" class="list-group-item active red"><i class="fa fa-desktop"></i>Управление</a>
+              <a href="#" class="list-group-item"><i class="fa fa-bars"></i>Стена</a>
+              <a href="#" class="list-group-item"><i class="fa fa-coffee"></i>Новости</a>
+              <a href="#" class="list-group-item"><i class="fa fa-suitcase"></i>B2B Центр</a>
+              <a href="#" class="list-group-item"><i class="fa fa-shopping-cart"></i>Центр покупок</a>
+              <a href="#" class="list-group-item"><i class="fa fa-globe"></i>Купоны</a>
+              <a href="#" class="list-group-item"><i class="fa fa-shield"></i>Организации</a>
+              <a href="#" class="list-group-item"><i class="fa fa-briefcase"></i>Компании</a>
+              <a href="#" class="list-group-item"><i class="fa fa-lightbulb-o"></i>Инновационные продукты</a>
+              <a href="#" class="list-group-item"><i class="fa fa-laptop"></i>Бизнес предложения</a>
+              <a href="#" class="list-group-item"><i class="fa fa-users"></i>Выставки / Форумы</a>
+              <a href="#" class="list-group-item"><i class="fa fa-desktop"></i>TPP CHANNEL</a>
+              <a href="#" class="list-group-item"><i class="fa fa-graduation-cap"></i>Требуются</a>
+              <a href="#" class="list-group-item"><i class="fa fa-user-plus"></i>Резюме</a>
             </div>
           </div>
-
-          <div class="right-menu col-sm-2 hidden-xs">
+          <div class="article col-xs-6">
             <div class="row">
-              <div class="col-xs-12">
-                <div class="paid-alert alert alert-success">
-                  <a href="#" class="alert-link">Платные объявления</a>
-                </div>
-                <div class="paid-thumbnail thumbnail">
-                  <!-- <img src="http://lorempixel.com/180/120/abstract" alt="default-img"> -->
-                  <span class="caption goods-caption">
-                    <h4>Paid title</h4>
-                    <p><img class="goods-flag" src="flags/english.png" alt="flag" />Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima.</p>
-                    <a class="aull-right">Подробнее...</p>
-                    <a href="#" class="btn btn-warning" role="button">Купить</a>
-                  </span>
-                </div>
-              </div>
+              <div class="article-filter col-xs-12">filter</div>
+              <div class="article-content col-xs-12">content</div>
             </div>
           </div>
-          <!-- Origional snipet by msurguy<http://bootsnipp.com/msurguy>, I editted his snipet so that it works with bootstrap 3.3 -->
-
+          <div class="col-xs-3">
+            <div class="col-xs-12">
+              <div class="right-aside col-xs-9">right-aside</div>
+            </div>
+          </div>
         </div>
-        <div class="container footer">
+      </div>
+      <!-- <div class="container footer">
           <div class="row" style="top: 3px;">
             <div class="col-xs-3">
               <ul class="list-unstyled">
@@ -294,109 +135,7 @@
                 <p class="text-muted pull-right">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
             </div>
           </div>
-        </div>
-      </div>
+        </div> -->
     </div>
-
-
-    <!-- <div class="navbar navbar-default" role="navigation">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#">
-      <img class="logo" src="images/b24_big.png" alt="logo">
-    </a>
-  </div>
-  <div class="navbar-collapse collapse"> -->
-
-    <!-- Left nav -->
-    <!-- <ul class="nav navbar-nav">
-      <li><a href="#">Советы</a></li>
-      <li><a href="#">Реклама на портале</a></li>
-      <li><a href="#">Описание</a></li>
-      <li><a href="#">Публичная оферта</a></li>
-      <li><a href="#">Новый пользователь</a></li>
-    </ul> -->
-
-
-    <!-- <div class="btn-group language-navi">
-      <div id="header-language-selector" data-toggle="dropdown">
-        <img class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png" />
-      </div>
-      {% get_available_languages as LANGUAGES %}
-      <ul class="bootstrap-scoped dropdown-menu" role="menu">
-        {% for code, lang in LANGUAGES %}
-          {% if not code == LANGUAGE_CODE %}
-            <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png" /></a>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div> -->
-
-
-    <!-- Right nav -->
-    <!-- <ul class="nav navbar-nav navbar-right">
-      <li class="btn-group language-navi">
-        <div id="header-language-selector" data-toggle="dropdown">
-          <img class="flag-icon" src="flags/am.png" />
-        </div>
-        <ul class="dropdown-menu" role="lang">
-          <a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a>
-          <a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a>
-          <a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a>
-          <li><a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a></li>
-
-          <li><a href="#"><img class="flag-icon" src="flags/english.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/bulgarian.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/chinese.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/es.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/russian.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/hebrew.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/zh.png" /></a></li>
-          <li><a href="#"><img class="flag-icon" src="flags/ukrainian.png" /></a></li>
-        </ul>
-      </li> -->
-
-
-      <!-- <li><a href="#"><i class="material-icons">account_box</i></a>
-        <ul class="dropdown-menu" role="menu">
-          <li><a href="#">Action</a></li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
-          <li class="divider"></li>
-          <li class="dropdown-header">Nav header</li>
-          <li><a href="#">A sub menu <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="disabled"><a class="disabled" href="#">Disabled item</a></li>
-              <li><a href="#">One more link</a></li>
-            </ul>
-          </li>
-          <li><a href="#">A separated link</a></li>
-        </ul>
-      </li>
-    </ul> -->
-
-  </div><!--/.nav-collapse -->
-</div>
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<!-- <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-
-<!-- SmartMenus jQuery plugin -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.smartmenus/1.0.1/jquery.smartmenus.min.js"></script> -->
-
-<!-- SmartMenus jQuery Bootstrap Addon -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.smartmenus/1.0.1/addons/bootstrap/jquery.smartmenus.bootstrap.min.js"></script> -->
   </body>
 </html>
