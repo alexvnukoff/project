@@ -80,14 +80,27 @@ body .main-row .article-filter {
   margin-right: -30px;
 }
 body .main-row .article-filter .filter-ico {
+  position: relative;
   float: left;
+  display: inline;
+  top: -3px;
+  font-size: 22px;
+  color: #eee;
+  margin-right: 10px;
+  padding: 3px 5px;
+  line-height: 16px;
+  cursor: pointer;
+  border: solid 1px #333;
+  border-radius: 3px;
+  background-color: #414141;
+  padding: 5px 6px;
+}
+body .main-row .article-filter .sprite {
+  margin: -7px 10px 0 -7px;
   width: 32px;
   height: 32px;
-  margin: -7px 10px 0 -7px;
-  display: inline;
   background: url("../../static-assets/b24online/img/news.png");
   background-position: 0px -24px;
-  cursor: pointer;
 }
 body .main-row .article-filter .filter-langs {
   margin-top: 13px;
