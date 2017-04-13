@@ -72,8 +72,7 @@
                 <div class="row">
                   <div class="article-filter col-xs-12">
                     <div class="show-filter">
-                      <!-- <i class="filter-ico sprite"></i> -->
-                      <i class="fa fa-filter filter-ico"></i>
+                      <i class="filter-ico sprite"></i>
                       <div class="filter-langs">
                         <span class="filter-lang">Беларусь <a class="fa fa-close"></a></span>
                         <span class="filter-lang">Россия <a class="fa fa-close"></a></span>
@@ -86,8 +85,8 @@
                   </div>
                   <div class="article-content col-xs-12">
                     <div class="article-header">Последние обновления</div>
-                    <div class="title">Товары</div>
-                    <div class="content">
+                    <div class="block-title">Товары</div>
+                    <div class="content-goods">
                       <div class="row">
                         <div class="thumb-col col-sm-6 col-md-3">
                           <div class="thumbnail">
@@ -167,6 +166,61 @@
                         </div>
                       </div>
                     </div>
+                    <div class="block-title">Инновационные проекты</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                          <div class="date">Дата публикации: 18 Июн 2016</div>
+                          <div class="title"><a href="#">Commodo pharetra, vel quaerat</a></div>
+                          <div class="project-site">Сайт проекта: <a href="#">http://www.bestproject.com</a></div>
+                          <div class="branch pull-left">Отрасль: <span>branch1<span></div>
+                          <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
+                          <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Выставки</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                          <div class="date">Israel Bersheva, 17 Янв 2017 - 19 Янв 2017</div>
+                          <div class="title"><a href="#">Aenean tempor tellus vel aliquam laoreet</a></div>
+                          <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
+                          <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Бизнес предложения</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                          <div class="date">Russia, Дата: 04 Дек 2015</div>
+                          <div class="title"><a href="#">Cras a tellus at odio semper feugiat id at metus</a></div>
+                          <div class="author pull-left">Организация: <a href="#">Development Company</a></div>
+                          <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Новости</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="media">
+                            <a class="pull-left" href="#">
+                              <div class="img-container"><img class="media-object" src="http://placehold.it/100x110" alt="..."></div>
+                            </a>
+                            <div class="title-news"><a href="#">Django 1.10.6 release notes</a></div>
+                            <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                            <div class="news-short">Fixed ClearableFileInput’s “Clear” checkbox on model form fields where the model field has a default (#27805).</div>
+                            <div class="news-detail">Fixed RequestDataTooBig and TooManyFieldsSent exceptions crashing rather than generating a bad request response ...</div>
+                            <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -175,10 +229,12 @@
                   <div class="right-aside col-xs-10">
                     <div class="row">
                       <div class="right-aside-block">
-                        <a href="" hrex="#modal"><i class="fa fa-exclamation-circle"><span class="badge">3</span></i></a>
-                        <a href="" hrex="#messages"><i class="fa fa-envelope-o"><span class="badge">11</span></i></a>
-                        <!-- <a href="" hrex="#users"><i class="fa fa-users"><span class="badge">3</span></i></a> -->
-                        <a href="" hrex="#basket"><i class="fa fa-shopping-cart"><span class="badge">2</span></i></a>
+                        <i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent "></i>
+                        <a href="#" class="showevent num">0</a>
+                        <i class="imgnews icon-notyfi icon-nt2"></i>
+                        <a href="#" class="num" id="mailcounter">0</a>
+                        <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
+                        <i href="#basket" class="icon-notyfi basket"><span>2</span></i>
                       </div>
                     </div>
                   </div>
@@ -201,8 +257,9 @@
           </div>
         </div>
       <!-- </div> -->
-      <!-- <div class="container footer">
+      <div class="container footer">
           <div class="row" style="top: 3px;">
+            <hr class="separator">
             <div class="col-xs-3">
               <ul class="list-unstyled">
                 <br>
@@ -256,11 +313,11 @@
           </div>
           <hr>
           <div class="row">
-            <div class="col-xs-12">
-                <p class="text-muted pull-right">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
+            <div class="col-xs-12 bottom">
+                <p class="text-muted pull-left">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
             </div>
           </div>
-        </div> -->
+        </div>
     </div>
   </body>
 </html>
