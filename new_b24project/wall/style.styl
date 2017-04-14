@@ -2,6 +2,8 @@ body
   @import url('https://fonts.googleapis.com/css?family=Amatic+SC')
   font-family Arial, Helvetica, sans-serif
   font-size 12px
+  a
+    color #0089bc
   .wrapper
     padding 0
   .header-row
@@ -13,6 +15,7 @@ body
         margin-left 0
         padding-top 2px
         .logo
+          cursor pointer
           img
             width 108px
             height 23px
@@ -21,6 +24,12 @@ body
           font-size 12px
           line-height 23px
           margin-top 4px
+          &.pull-left
+            a
+              color #acacac
+              &:hover
+                color #0089bc
+                text-decoration none
           &.pull-right
             margin-right 30px
           .tab
@@ -30,19 +39,47 @@ body
           font-size 18px
           top 3px
           margin-right 10px
+          text-decoration none
         .flag-current
           position relative
-          height 18px
+          height 17px
           margin-right 10px
+          cursor pointer
+        .lang-dropdown
+          position: absolute;
+          top: 100%;
+          left: -70px;
+          z-index: 1000;
+          float: left;
+          min-width: 166px;
+          padding: 5px 10px 6px
+          margin: 2px 0 0;
+          list-style: none;
+          font-size: 14px;
+          background-color: #ffffff;
+          border: 1px solid #cccccc;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          border-radius: 4px;
+          -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+          background-clip: padding-box;
+          img
+            margin: 6px 4px 3px 2px;
+            box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.6);
+            width: 27px
         .avatar
           position relative
           height 18px
           margin-right 5px
+          cursor pointer
         .person-name
           position relative
           height 18px
           margin-right 8px
           color black
+          cursor pointer
+          &:hover
+            text-decoration underline
         .logout
           position relative
           height 18px
@@ -98,7 +135,7 @@ body
             color #888
             cursor pointer
       .filter-search
-        top -25px
+        top -21px
         width 160px
         right -5px
         input
@@ -253,7 +290,7 @@ body
           height 35px
           padding 8px
           border-radius 0 0 3px 3px
-          border solid 1px #484848
+          border solid 1px #e6e6e6
           span
             font-size 12px
             font-weight 500

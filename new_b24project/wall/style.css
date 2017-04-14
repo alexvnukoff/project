@@ -4,6 +4,9 @@ undefined
   font-size: 12px;
 }
 @import url("https://fonts.googleapis.com/css?family=Amatic+SC");
+body a {
+  color: #0089bc;
+}
 body .wrapper {
   padding: 0;
 }
@@ -18,6 +21,9 @@ body .header-row .header-container .header {
   margin-left: 0;
   padding-top: 2px;
 }
+body .header-row .header-container .header .logo {
+  cursor: pointer;
+}
 body .header-row .header-container .header .logo img {
   width: 108px;
   height: 23px;
@@ -27,6 +33,13 @@ body .header-row .header-container .header .nav {
   font-size: 12px;
   line-height: 23px;
   margin-top: 4px;
+}
+body .header-row .header-container .header .nav.pull-left a {
+  color: #acacac;
+}
+body .header-row .header-container .header .nav.pull-left a:hover {
+  color: #0089bc;
+  text-decoration: none;
 }
 body .header-row .header-container .header .nav.pull-right {
   margin-right: 30px;
@@ -39,22 +52,53 @@ body .header-row .header-container .header .fa-map-marker {
   font-size: 18px;
   top: 3px;
   margin-right: 10px;
+  text-decoration: none;
 }
 body .header-row .header-container .header .flag-current {
   position: relative;
-  height: 18px;
+  height: 17px;
   margin-right: 10px;
+  cursor: pointer;
+}
+body .header-row .header-container .header .lang-dropdown {
+  position: absolute;
+  top: 100%;
+  left: -70px;
+  z-index: 1000;
+  float: left;
+  min-width: 166px;
+  padding: 5px 10px 6px;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  background-clip: padding-box;
+}
+body .header-row .header-container .header .lang-dropdown img {
+  margin: 6px 4px 3px 2px;
+  box-shadow: 3px 2px 5px rgba(0,0,0,0.6);
+  width: 27px;
 }
 body .header-row .header-container .header .avatar {
   position: relative;
   height: 18px;
   margin-right: 5px;
+  cursor: pointer;
 }
 body .header-row .header-container .header .person-name {
   position: relative;
   height: 18px;
   margin-right: 8px;
   color: #000;
+  cursor: pointer;
+}
+body .header-row .header-container .header .person-name:hover {
+  text-decoration: underline;
 }
 body .header-row .header-container .header .logout {
   position: relative;
@@ -120,7 +164,7 @@ body .main-row .article-filter .filter-langs .filter-lang a {
   cursor: pointer;
 }
 body .main-row .article-filter .filter-search {
-  top: -25px;
+  top: -21px;
   width: 160px;
   right: -5px;
 }
@@ -313,7 +357,7 @@ body .main-row .right-aside .right-aside-block.list {
   height: 35px;
   padding: 8px;
   border-radius: 0 0 3px 3px;
-  border: solid 1px #484848;
+  border: solid 1px #e6e6e6;
 }
 body .main-row .right-aside .right-aside-block.list span {
   font-size: 12px;
