@@ -185,18 +185,6 @@ class GalleryForm(forms.ModelForm):
         model = GalleryImage
         fields = ('image', 'description', 'link')
 
-    # def clean_image(self):
-    #     image_obj = self.cleaned_data.get('image', None)
-
-    #     if 'image' not in self.changed_data:
-    #         return image_obj
-
-    #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
-    #         raise ValidationError(_('Image dimensions not equals required dimension'))
-
-    #     return image_obj
-
-
 GalleryImageFormSet = inlineformset_factory(
         Gallery,
         GalleryImage,

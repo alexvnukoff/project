@@ -20,9 +20,9 @@
         <br>
 
             <ul class="custom_images">
-                {{ gallery_images_form.management_form }}
-                {{ gallery_images_form.non_form_errors }}
-                {% for gallery_form in gallery_images_form %}
+                {{ form.management_form }}
+                {{ form.non_form_errors }}
+                {% for gallery_form in form %}
                     {{ gallery_form.id }}
                     {% if gallery_form.initial.image %}
 
@@ -35,11 +35,12 @@
                     <h4>{% trans 'Image' %} {{ forloop.counter }}</h4>
                     {% endif %}
                     <li>
-                        {% if gallery_form.errors.image %}<small class="error">{{ gallery_form.errors.image.0 }}</small>{% endif %}
+                        {% if gallery_form.errors.image %}
+                        <small class="error" style="color:#ef6066">{{ gallery_form.errors.image.0 }}</small>{% endif %}
                         <div class="fileinputs" style="margin-bottom:10px;">
 
                         <div style="background:#efefef;width:600px;margin-bottom:20px;">
-                            <input type="file" name="{{ gallery_form.image.html_name }}">
+                            <input type="file" name="{{ gallery_form.image.html_name }}" {% if gallery_form.errors %} style="border:1px solid #ef6066"{% endif %} />
                         </div>
 
                       <table class="desctable">
@@ -78,20 +79,3 @@
 
 </div>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -316,6 +316,21 @@ class Gallery(ActiveModelMixing, models.Model):
     def __str__(self):
         return "{0}".format(self.title)
 
+    def upload_images(self, changed_data=None):
+        from core import tasks
+        params = []
+
+        if changed_data is not None:
+            for image_path in changed_data:
+                params.append({
+                    'file': image_path,
+                    'sizes': {
+                        'big': {'box': (400, 105), 'fit': True},
+                    }
+                })
+
+        tasks.upload_images.delay(*params)
+
 
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
