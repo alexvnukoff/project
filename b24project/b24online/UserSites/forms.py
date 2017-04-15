@@ -202,18 +202,8 @@ class BannerForm(forms.ModelForm):
         model = Banner
         fields = ('image', 'block', 'advertisement_ptr', 'link',)
 
-    # def clean(self):
-    #    cleaned_data = super().clean()
-
-    #    if 'image' in self.changed_data:
-    #        image_obj = cleaned_data.get('image', None)
-    #        block = cleaned_data.get('block', None)
-
-    #        if image_obj and block:
-    #            if block.width and image_obj.image.width != block.width:
-    #                self.add_error('image', _("Image width don't meet the requirements (%s px)" % block.width))
-    #            if block.height and image_obj.image.height != block.height:
-    #                self.add_error('image', _("Image height don't meet the requirements (%s px)" % block.height))
+    # link = forms.URLField(required=False)
+    # image = forms.FileField(required=False)
 
 CompanyBannerFormSet = inlineformset_factory(
     Site,

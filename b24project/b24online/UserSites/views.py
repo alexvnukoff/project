@@ -421,7 +421,7 @@ class SiteLogoView(SiteDispatch, UpdateView):
     def form_valid(self, form):
         if form.has_changed():
             self.object = form.save()
-            self.object.upload_images(form.cleaned_data)
+            self.object.upload_logo(form.cleaned_data)
             messages.add_message(self.request, messages.SUCCESS, _("Site Logo has been saved!"))
             time.sleep(2)
         return super().form_valid(form)
@@ -459,9 +459,9 @@ class SliderImagesView(SiteDispatch, UpdateView):
             for i in form:
                 i.instance.created_by = self.request.user
                 i.instance.updated_by = self.request.user
-
             form.save()
-            self.object.upload_images([obj.instance.image.path for obj in form if obj.has_changed()])
+
+            self.object.upload_gallery([obj.instance.image.path for obj in form if obj.has_changed()])
             time.sleep(3)
             messages.add_message(self.request, messages.SUCCESS, _("Slider images has been saved!"))
         return HttpResponseRedirect(self.get_success_url())
@@ -473,11 +473,16 @@ class SliderImagesView(SiteDispatch, UpdateView):
 
 
 
-
 class BannersView(SiteDispatch, UpdateView):
     model = Banner
     template_name = 'b24online/UserSites/bannersForm.html'
     success_url = reverse_lazy('site:banners')
+
+    def get_form_class(self):
+        if isinstance(self.organization, Company):
+            return CompanyBannerFormSet
+        else:
+            return ChamberBannerFormSet
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -486,7 +491,7 @@ class BannersView(SiteDispatch, UpdateView):
         return context
 
     def get_object(self, queryset=None):
-        return self.site
+        return self.site.site
 
     def get_valid_blocks(self):
         valid_blocks = [
@@ -510,30 +515,6 @@ class BannersView(SiteDispatch, UpdateView):
             code__in=valid_blocks
             ).order_by('id').values_list('pk', 'name'))
 
-    def get_banners_form(self, *args, **kwargs):
-        if isinstance(self.organization, Company):
-            return CompanyBannerFormSet(*args, **kwargs)
-        return ChamberBannerFormSet(*args, **kwargs)
-
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_banners_form(instance=self.object.site)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_banners_form(
-                self.request.POST,
-                self.request.FILES,
-                instance=self.object.site
-            )
-
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def form_valid(self, form):
         self.object = self.get_object()
         if form.has_changed():
@@ -541,18 +522,17 @@ class BannersView(SiteDispatch, UpdateView):
                 i.instance.created_by = self.request.user
                 i.instance.updated_by = self.request.user
                 i.instance.dates = (None, None)
-
             form.save()
 
-            self.object.upload_images([obj.instance.image.path for obj in form if obj.has_changed()])
-            time.sleep(3)
+            self.site.upload_banners([obj.instance.image.path for obj in form if obj.has_changed()])
+            time.sleep(2)
             messages.add_message(self.request, messages.SUCCESS, _("Banners has been saved!"))
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
-        context_data = self.get_context_data(form=form)
-        return self.render_to_response(context_data)
+    # def form_invalid(self, form):
+    #     messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
+    #     context_data = self.get_context_data(form=form)
+    #     return self.render_to_response(context_data)
 
 
 

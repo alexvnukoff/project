@@ -13,7 +13,21 @@
 
 <h1>{{ title }}</h1>
 
-<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+<script type="text/javascript">
+    $(document).ready(function(e) {
+
+      $('#user_site_form').submit(function() {
+        $('input[name$="block"]').each(function(index, element) {
+            var li = $(this).closest('li');
+            if (li.find('input[name$="advertisement_ptr"]').val() == '' && li.find('input[name$="image"]').val() == '') {
+                $(this).val('');
+            }
+        });
+      });
+    });
+</script>
+
+<form enctype="multipart/form-data" method="post" action="" id="user_site_form">{% csrf_token %}
 
 {{ form.errors }}
 
@@ -35,12 +49,18 @@
                             </div>
                             <div class="right">
                                 {% if banner_form.initial.image %}
+                                    <p>&nbsp;</p>
                                     <div class="b-img banner">
                                         <img src='{{ banner_form.initial.image.big }}'>
                                     </div>
+                                    <p>&nbsp;</p>
                                     <div>{% trans 'Remove' %}{{ banner_form.DELETE }}</div>
+                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p>
                                 {% endif %}
+
                                 {% if banner_form.errors.image %}<small class="error">{{ banner_form.errors.image.0 }}</small>{% endif %}
+
                                 <div class="fileinputs">
                                     <input type="file" name="{{ banner_form.image.html_name }}">
                                     <input value="{{ block.pk }}" type="hidden" name="{{ banner_form.block.html_name }}">
@@ -52,6 +72,8 @@
                                 </div>
                             </div>
                         </li>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
                     {% endwith %}
 
                     <p>&nbsp;</p>

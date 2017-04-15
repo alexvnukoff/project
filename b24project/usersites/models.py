@@ -104,20 +104,23 @@ class UserSite(ActiveModelMixing, models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
+    def upload_logo(self, changed_data=None):
         from core import tasks
         params = []
-
-        if is_new_logo:
+        if changed_data:
             params.append({
                 'file': self.logo.path,
                 'sizes': {
                     'big': {'box': (220, 120), 'fit': True}
                 }
             })
+        tasks.upload_images.delay(*params)
 
-        if changed_galleries is not None:
-            for image_path in changed_galleries:
+    def upload_gallery(changed_data=None):
+        from core import tasks
+        params = []
+        if changed_data is not None:
+            for image_path in changed_data:
                 params.append({
                     'file': image_path,
                     'sizes': {
@@ -125,15 +128,19 @@ class UserSite(ActiveModelMixing, models.Model):
                     }
                 })
 
-        if changed_banners is not None:
-            for image_path in changed_banners:
+        tasks.upload_images.delay(*params)
+
+    def upload_banners(self, changed_data=None):
+        from core import tasks
+        params = []
+        if changed_data is not None:
+            for image_path in changed_data:
                 params.append({
                     'file': image_path,
                     'sizes': {
                         'big': {'box': (150, 150), 'fit': False},
                     }
                 })
-
         tasks.upload_images.delay(*params)
 
     @property
