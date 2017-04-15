@@ -1,0 +1,69 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+
+{{ form.errors }}
+
+ <div class="form-group banners">
+        <label>{% trans "Banners" %}:</label>
+
+                {{ form.management_form }}
+                {{ form.non_form_errors }}
+                <ul class="custom_images">
+                {% for banner_form in form %}
+
+                    {{ banner_form.id }}
+                    {% with valid_blocks|pop_val:banner_form.block.value as block %}
+                        <li>
+                            <div class="label">{{ block.name }}
+                              {% if "RIGHT" in block.name %} ({% trans 'Dimensions' %} 205x102)
+                              {% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125)
+                              {% elif "FOOTER" in block.name %} ({% trans 'Dimensions' %} 540x70){%  endif %}
+                            </div>
+                            <div class="right">
+                                {% if banner_form.initial.image %}
+                                    <div class="b-img banner">
+                                        <img src='{{ banner_form.initial.image.big }}'>
+                                    </div>
+                                    <div>{% trans 'Remove' %}{{ banner_form.DELETE }}</div>
+                                {% endif %}
+                                {% if banner_form.errors.image %}<small class="error">{{ banner_form.errors.image.0 }}</small>{% endif %}
+                                <div class="fileinputs">
+                                    <input type="file" name="{{ banner_form.image.html_name }}">
+                                    <input value="{{ block.pk }}" type="hidden" name="{{ banner_form.block.html_name }}">
+                                    <input value="{{ banner_form.advertisement_ptr.value|default_if_none:"" }}" type="hidden" name="{{ banner_form.advertisement_ptr.html_name }}">
+                                </div>
+                                <div>
+                                    {% if banner_form.errors.link %}<small class="error">{{ banner_form.errors.link.0 }}</small>{% endif %}
+                                    {% trans 'Link URL' %}: <input value="{{ banner_form.link.value|default_if_none:"" }}" type="text" name="{{ banner_form.link.html_name }}">
+                                </div>
+                            </div>
+                        </li>
+                    {% endwith %}
+
+                    <p>&nbsp;</p>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

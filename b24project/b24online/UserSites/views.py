@@ -3,6 +3,7 @@ import time
 from collections import OrderedDict
 from django.conf import settings
 from django.contrib import messages
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -10,10 +11,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, Http404
-
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, UpdateView, ListView, TemplateView, FormView
-from b24online.models import Organization, Company, BannerBlock, Gallery, GalleryImage
+from django.views.generic import (CreateView, UpdateView, ListView,
+                                  TemplateView, FormView)
+from b24online.models import (Organization, Company, BannerBlock, Gallery,
+                        GalleryImage, Banner)
 from django.utils.translation import ugettext_lazy as _
 
 from b24online.UserSites.forms import (
@@ -79,6 +81,28 @@ class CreateSite(CreateView):
         messages.add_message(self.request, messages.ERROR, form['domain_part'].errors)
         return super().render_to_response(self.get_context_data(form=form))
 
+    # def get_valid_blocks(self):
+    #     valid_blocks = [
+    #             "SITES LEFT 1",
+    #             "SITES LEFT 2",
+    #             "SITES FOOTER",
+    #             "SITES RIGHT 1",
+    #             "SITES RIGHT 2",
+    #             "SITES RIGHT 3",
+    #             "SITES RIGHT 4",
+    #             "SITES RIGHT 5"
+    #         ]
+
+    #     additional = []
+    #     for i in range(1,18):
+    #         additional.append("SITES CAT {0}".format(i))
+    #     valid_blocks += additional
+
+    #     return OrderedDict(BannerBlock.objects.filter(
+    #         block_type='user_site',
+    #         code__in=valid_blocks
+    #         ).order_by('id').values_list('pk', 'name'))
+
     def form_valid(self, form):
         domain_part = form.cleaned_data.get('domain_part', None)
         domain = "{0}.{1}".format(domain_part, settings.USER_SITES_DOMAIN)
@@ -97,6 +121,23 @@ class CreateSite(CreateView):
                 name='usersites',
                 domain=domain)
             self.object = form.save()
+
+            # for block in BannerBlock:
+            #     for banner in self.get_valid_blocks():
+            #         Banner.objects.create(
+            #             dates=(None, None),
+            #             title=banner,
+            #             link=None,
+            #             block=block,
+            #             organization=self.object.organization,
+            #             site=self.object.site,
+            #             created_by=self.request.user,
+            #             updated_by=self.request.user,
+            #             created_at=timezone.now(),
+            #             is_active=True
+            #             )
+
+
         messages.add_message(self.request, messages.SUCCESS, _("Your site has been created!"))
         return HttpResponseRedirect(self.get_success_url())
 
@@ -433,7 +474,85 @@ class SliderImagesView(SiteDispatch, UpdateView):
 
 
 
+class BannersView(SiteDispatch, UpdateView):
+    model = Banner
+    template_name = 'b24online/UserSites/bannersForm.html'
+    success_url = reverse_lazy('site:banners')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Banners"
+        context['valid_blocks'] = self.get_valid_blocks()
+        return context
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_valid_blocks(self):
+        valid_blocks = [
+                "SITES LEFT 1",
+                "SITES LEFT 2",
+                "SITES FOOTER",
+                "SITES RIGHT 1",
+                "SITES RIGHT 2",
+                "SITES RIGHT 3",
+                "SITES RIGHT 4",
+                "SITES RIGHT 5"
+            ]
+
+        additional = []
+        for i in range(1,18):
+            additional.append("SITES CAT {0}".format(i))
+        valid_blocks += additional
+
+        return OrderedDict(BannerBlock.objects.filter(
+            block_type='user_site',
+            code__in=valid_blocks
+            ).order_by('id').values_list('pk', 'name'))
+
+    def get_banners_form(self, *args, **kwargs):
+        if isinstance(self.organization, Company):
+            return CompanyBannerFormSet(*args, **kwargs)
+        return ChamberBannerFormSet(*args, **kwargs)
+
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_banners_form(instance=self.object.site)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_banners_form(
+                self.request.POST,
+                self.request.FILES,
+                instance=self.object.site
+            )
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        if form.has_changed():
+            for i in form:
+                i.instance.created_by = self.request.user
+                i.instance.updated_by = self.request.user
+                i.instance.dates = (None, None)
+
+            form.save()
+
+            self.object.upload_images([obj.instance.image.path for obj in form if obj.has_changed()])
+            time.sleep(3)
+            messages.add_message(self.request, messages.SUCCESS, _("Banners has been saved!"))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
+        context_data = self.get_context_data(form=form)
+        return self.render_to_response(context_data)
 
 
 

@@ -11,7 +11,8 @@ from b24online.UserSites.views import (
     SiteSloganView,
     FooterTextView,
     SiteLogoView,
-    SliderImagesView
+    SliderImagesView,
+    BannersView
     )
 
 from django.contrib.auth.decorators import login_required
@@ -59,5 +60,9 @@ urlpatterns = [
     url(r'slider_images/$',
         login_required(SliderImagesView.as_view()),
         name='slider_images'),
+
+    url(r'banners/$',
+        login_required(BannersView.as_view()),
+        name='banners'),
 
 ]
