@@ -21,71 +21,67 @@
             <a href="mailto:admin@tppcenter.com">admin@tppcenter.com</a>.
         </p>
 
-<p style="font-size:14.5px;padding:15px 0;color:#949494">{% trans "Choose the section that you want to change:" %}</p>
+    <p style="font-size:14.5px;padding:15px 0;color:#949494">{% trans "Choose the section that you want to change:" %}</p>
+    <ul class="site-sections">
 
+        <h3>{% trans "General Settings for " %}{{ object.site }}:</h3>
+        <a href="{% url 'site:domain_name' %}">
+            <li><strong>{% trans "Domain Name" %}</strong></li>
+        </a>
 
-<ul class="site-sections">
+        <a href="{% url 'site:site_languages' %}">
+            <li><strong>{% trans "Site Languages" %}</strong></li>
+        </a>
 
-    <h3>{% trans "General Settings for " %}{{ object.site }}:</h3>
-    <a href="{% url 'site:domain_name' %}">
-        <li><strong>{% trans "Domain Name" %}</strong></li>
-    </a>
+        <a href="{% url 'site:product_delivery' %}">
+            <li><strong>{% trans "Product Delivery" %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:site_languages' %}">
-        <li><strong>{% trans "Site Languages" %}</strong></li>
-    </a>
+        <a href="{% url 'site:landing_page' %}">
+            <li><strong>{% if object.site.user_site.landing.all|length > 0 %}{% trans "Landing Page" %}{% else %}{% trans "Create Landing Page" %}{% endif %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:product_delivery' %}">
-        <li><strong>{% trans "Product Delivery" %}</strong></li>
-    </a>
+        <h3>{% trans "Appearance:" %}</h3>
 
-    <a href="{% url 'site:landing_page' %}">
-        <li><strong>{% if object.site.user_site.landing.all|length > 0 %}{% trans "Landing Page" %}{% else %}{% trans "Create Landing Page" %}{% endif %}</strong></li>
-    </a>
+        <a href="{% url 'site:template' %}">
+            <li><strong>{% trans "Site Template" %} - {{ object.site.user_site.user_template }}</strong></li>
+        </a>
 
-    <h3>{% trans "Appearance:" %}</h3>
+        <h3>{% trans "Content:" %}</h3>
 
-    <a href="{% url 'site:template' %}">
-        <li><strong>{% trans "Site Template" %} - {{ object.site.user_site.user_template }}</strong></li>
-    </a>
+        <a href="{% url 'site:site_slogan' %}">
+            <li><strong>{% trans "Site Slogan" %}</strong></li>
+        </a>
 
-    <h3>{% trans "Content:" %}</h3>
+        <a href="{% url 'site:footer_text' %}">
+            <li><strong>{% trans "Footer Text" %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:site_slogan' %}">
-        <li><strong>{% trans "Site Slogan" %}</strong></li>
-    </a>
+        <h3>{% trans "Images:" %}</h3>
 
-    <a href="{% url 'site:footer_text' %}">
-        <li><strong>{% trans "Footer Text" %}</strong></li>
-    </a>
+        <a href="{% url 'site:site_logo' %}">
+            <li><strong>{% trans "Organization Logo" %}</strong></li>
+        </a>
 
-    <h3>{% trans "Images:" %}</h3>
+        <a href="{% url 'site:slider_images' %}">
+            <li><strong>{% trans "Slider Images" %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:site_logo' %}">
-        <li><strong>{% trans "Organization Logo" %}</strong></li>
-    </a>
+        <a href="{% url 'site:banners' %}">
+            <li><strong>{% trans "Banners" %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:slider_images' %}">
-        <li><strong>{% trans "Slider Images" %}</strong></li>
-    </a>
+        <h3>{% trans "Links:" %}</h3>
 
-    <a href="{% url 'site:banners' %}">
-        <li><strong>{% trans "Banners" %}</strong></li>
-    </a>
+        <a href="{% url 'site:social_links' %}">
+            <li><strong>{% trans "Social Links" %}</strong></li>
+        </a>
 
-    <h3>{% trans "Links:" %}</h3>
+        <a href="{% url 'site:google_analytics' %}">
+            <li><strong>{% trans "Google Analytics" %}</strong></li>
+        </a>
 
-    <a href="{% url 'site:social_links' %}">
-        <li><strong>{% trans "Social Links" %}</strong></li>
-    </a>
-
-    <a href="{% url 'site:google_analytics' %}">
-        <li><strong>{% trans "Google Analytics" %}</strong></li>
-    </a>
-
-</ul>
-
-
+    </ul>
 
 </div>
 {% endblock %}

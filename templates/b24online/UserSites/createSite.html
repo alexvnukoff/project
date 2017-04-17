@@ -26,7 +26,7 @@
 <form action="" method="POST">{% csrf_token %}
   <div class="form-group">
     <label>{% trans "Domain:" %}</label>
-    <input id="id_domain_part" name="domain_part" type="text" class="short" {% if form.errors.domain_part %}style="border:2px solid #ef6066;"{% endif %} />.{{ site }}
+    <input id="id_domain_part" name="domain_part" type="text" class="short" {% if form.errors.domain_part %}style="border:2px solid #ef6066;"{% endif %} /> .{{ site }}
   </div>
 
   <div class="form-group">

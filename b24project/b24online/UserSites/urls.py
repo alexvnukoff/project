@@ -1,20 +1,10 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls import url
 from b24online.UserSites.views import (
-    form_dispatch,
-    UserTemplateView,
-    TemplateUpdate,
-    LandingPageView,
-    DomainNameView,
-    LanguagesView,
-    ProductDeliveryView,
-    SiteSloganView,
-    FooterTextView,
-    SiteLogoView,
-    SliderImagesView,
-    BannersView,
-    SocialLinksView,
-    GAnalyticsView
+    form_dispatch, UserTemplateView, TemplateUpdate, LandingPageView,
+    DomainNameView, LanguagesView, ProductDeliveryView, SiteSloganView,
+    FooterTextView, SiteLogoView, SliderImagesView, BannersView,
+    SocialLinksView, GAnalyticsView
     )
 
 from django.contrib.auth.decorators import login_required
