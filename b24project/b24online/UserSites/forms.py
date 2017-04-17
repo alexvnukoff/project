@@ -202,9 +202,6 @@ class BannerForm(forms.ModelForm):
         model = Banner
         fields = ('image', 'block', 'advertisement_ptr', 'link',)
 
-    # link = forms.URLField(required=False)
-    # image = forms.FileField(required=False)
-
 CompanyBannerFormSet = inlineformset_factory(
     Site,
     Banner,
@@ -221,6 +218,40 @@ ChamberBannerFormSet = inlineformset_factory(
 
 
 
+class SocialLinksForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('id',)
+
+    facebook = forms.CharField(required=False)
+    youtube = forms.CharField(required=False)
+    twitter = forms.CharField(required=False)
+    instagram = forms.CharField(required=False)
+    vkontakte = forms.CharField(required=False)
+    odnoklassniki = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.initial['facebook'] = self.instance.facebook
+        self.initial['youtube'] = self.instance.youtube
+        self.initial['twitter'] = self.instance.twitter
+        self.initial['instagram'] = self.instance.instagram
+        self.initial['vkontakte'] = self.instance.vkontakte
+        self.initial['odnoklassniki'] = self.instance.odnoklassniki
+
+
+class GAnalyticsForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('id',)
+
+    google_analytics = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.initial['google_analytics'] = self.instance.google_analytics
 
 
 

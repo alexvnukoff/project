@@ -75,11 +75,11 @@
 
     <h3>{% trans "Links:" %}</h3>
 
-    <a href="#">
+    <a href="{% url 'site:social_links' %}">
         <li><strong>{% trans "Social Links" %}</strong></li>
     </a>
 
-    <a href="#">
+    <a href="{% url 'site:google_analytics' %}">
         <li><strong>{% trans "Google Analytics" %}</strong></li>
     </a>
 

@@ -12,7 +12,9 @@ from b24online.UserSites.views import (
     FooterTextView,
     SiteLogoView,
     SliderImagesView,
-    BannersView
+    BannersView,
+    SocialLinksView,
+    GAnalyticsView
     )
 
 from django.contrib.auth.decorators import login_required
@@ -64,5 +66,13 @@ urlpatterns = [
     url(r'banners/$',
         login_required(BannersView.as_view()),
         name='banners'),
+
+    url(r'social_links/$',
+        login_required(SocialLinksView.as_view()),
+        name='social_links'),
+
+    url(r'google_analytics/$',
+        login_required(GAnalyticsView.as_view()),
+        name='google_analytics'),
 
 ]

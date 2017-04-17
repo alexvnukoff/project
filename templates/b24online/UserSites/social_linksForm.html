@@ -1,0 +1,64 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" action="">{% csrf_token %}
+<input type="hidden" name="id" value="{{ form.initial.id }}">
+
+{{ form.errors }}
+        <div class="form-group">
+        <label>{% trans "Facebook Link" %}</label>
+        <input type="text" name="facebook" placeholder="{% trans 'Link to your facebook page or group' %}" maxlength="1000" class="text" style="width:60%;" value="{{ form.facebook.value|default_if_none:"" }}">
+        {% if form.errors.facebook %}<small class="error">{{ form.errors.facebook.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "YouTube Link" %}</label>
+        <input type="text" name="youtube" placeholder="{% trans 'Link to your youtube channel' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.youtube.value|default_if_none:"" }}">
+        {% if form.errors.youtube %}<small class="error">{{ form.errors.youtube.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Twitter Link" %}</label>
+        <input type="text" name="twitter" placeholder="{% trans 'Link to your twitter account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.twitter.value|default_if_none:"" }}">
+        {% if form.errors.twitter %}<small class="error">{{ form.errors.twitter.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Instagram Link" %}</label>
+        <input type="text" name="instagram" placeholder="{% trans 'Link to your Instagram account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.instagram.value|default_if_none:"" }}">
+        {% if form.errors.instagram %}<small class="error">{{ form.errors.instagram.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Vkontakte Link" %}</label>
+        <input type="text" name="vkontakte" placeholder="{% trans 'Link to your vk page or group' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.vkontakte.value|default_if_none:"" }}">
+        {% if form.errors.vkontakte %}<small class="error">{{ form.errors.vkontakte.0 }}</small>{% endif %}
+        </div>
+
+        <div class="form-group">
+        <label>{% trans "Odnoklassniki Link" %}</label>
+        <input type="text" name="odnoklassniki" placeholder="{% trans 'Link to your Ok account' %}" maxlength="225" class="text" style="width:60%;" value="{{ form.odnoklassniki.value|default_if_none:"" }}">
+        {% if form.errors.odnoklassniki %}<small class="error">{{ form.errors.odnoklassniki.0 }}</small>{% endif %}
+        </div>
+
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

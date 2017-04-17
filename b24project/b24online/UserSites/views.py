@@ -3,7 +3,6 @@ import time
 from collections import OrderedDict
 from django.conf import settings
 from django.contrib import messages
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -12,17 +11,14 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
-from django.views.generic import (CreateView, UpdateView, ListView,
-                                  TemplateView, FormView)
-from b24online.models import (Organization, Company, BannerBlock, Gallery,
-                        GalleryImage, Banner)
+from django.views.generic import CreateView, UpdateView, ListView, TemplateView
+from b24online.models import Organization, Company, BannerBlock, Gallery, Banner
 from django.utils.translation import ugettext_lazy as _
 
-from b24online.UserSites.forms import (
-    GalleryImageFormSet, GalleryForm, SiteForm, SiteCreateForm, TemplateForm,
-    LandingForm, CompanyBannerFormSet, ChamberBannerFormSet, DomainForm,
-    LanguagesForm, ProductDeliveryForm, SiteSloganForm, FooterTextForm,
-    SiteLogoForm)
+from b24online.UserSites.forms import (GalleryImageFormSet, SiteCreateForm,
+    TemplateForm, LandingForm, CompanyBannerFormSet, ChamberBannerFormSet,
+    DomainForm, LanguagesForm, ProductDeliveryForm, SiteSloganForm,
+    FooterTextForm, SiteLogoForm, SocialLinksForm, GAnalyticsForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -81,28 +77,6 @@ class CreateSite(CreateView):
         messages.add_message(self.request, messages.ERROR, form['domain_part'].errors)
         return super().render_to_response(self.get_context_data(form=form))
 
-    # def get_valid_blocks(self):
-    #     valid_blocks = [
-    #             "SITES LEFT 1",
-    #             "SITES LEFT 2",
-    #             "SITES FOOTER",
-    #             "SITES RIGHT 1",
-    #             "SITES RIGHT 2",
-    #             "SITES RIGHT 3",
-    #             "SITES RIGHT 4",
-    #             "SITES RIGHT 5"
-    #         ]
-
-    #     additional = []
-    #     for i in range(1,18):
-    #         additional.append("SITES CAT {0}".format(i))
-    #     valid_blocks += additional
-
-    #     return OrderedDict(BannerBlock.objects.filter(
-    #         block_type='user_site',
-    #         code__in=valid_blocks
-    #         ).order_by('id').values_list('pk', 'name'))
-
     def form_valid(self, form):
         domain_part = form.cleaned_data.get('domain_part', None)
         domain = "{0}.{1}".format(domain_part, settings.USER_SITES_DOMAIN)
@@ -121,22 +95,6 @@ class CreateSite(CreateView):
                 name='usersites',
                 domain=domain)
             self.object = form.save()
-
-            # for block in BannerBlock:
-            #     for banner in self.get_valid_blocks():
-            #         Banner.objects.create(
-            #             dates=(None, None),
-            #             title=banner,
-            #             link=None,
-            #             block=block,
-            #             organization=self.object.organization,
-            #             site=self.object.site,
-            #             created_by=self.request.user,
-            #             updated_by=self.request.user,
-            #             created_at=timezone.now(),
-            #             is_active=True
-            #             )
-
 
         messages.add_message(self.request, messages.SUCCESS, _("Your site has been created!"))
         return HttpResponseRedirect(self.get_success_url())
@@ -515,6 +473,11 @@ class BannersView(SiteDispatch, UpdateView):
             code__in=valid_blocks
             ).order_by('id').values_list('pk', 'name'))
 
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+
     def form_valid(self, form):
         self.object = self.get_object()
         if form.has_changed():
@@ -529,14 +492,80 @@ class BannersView(SiteDispatch, UpdateView):
             messages.add_message(self.request, messages.SUCCESS, _("Banners has been saved!"))
         return HttpResponseRedirect(self.get_success_url())
 
-    # def form_invalid(self, form):
-    #     messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
-    #     context_data = self.get_context_data(form=form)
-    #     return self.render_to_response(context_data)
+
+
+class SocialLinksView(SiteDispatch, UpdateView):
+    model = UserSite
+    form_class = SocialLinksForm
+    template_name = 'b24online/UserSites/social_linksForm.html'
+    success_url = reverse_lazy('site:main')
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Social Links"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            form.instance.updated_by = self.request.user
+            messages.add_message(self.request, messages.SUCCESS, _("Social Links has been saved!"))
+
+        if 'facebook' in form.changed_data:
+            form.instance.metadata['facebook'] = form.cleaned_data['facebook']
+
+        if 'youtube' in form.changed_data:
+            form.instance.metadata['youtube'] = form.cleaned_data['youtube']
+
+        if 'twitter' in form.changed_data:
+            form.instance.metadata['twitter'] = form.cleaned_data['twitter']
+
+        if 'instagram' in form.changed_data:
+            form.instance.metadata['instagram'] = form.cleaned_data['instagram']
+
+        if 'vkontakte' in form.changed_data:
+            form.instance.metadata['vkontakte'] = form.cleaned_data['vkontakte']
+
+        if 'odnoklassniki' in form.changed_data:
+            form.instance.metadata['odnoklassniki'] = form.cleaned_data['odnoklassniki']
+
+        return super().form_valid(form)
 
 
 
+class GAnalyticsView(SiteDispatch, UpdateView):
+    model = UserSite
+    form_class = GAnalyticsForm
+    template_name = 'b24online/UserSites/google_analyticsForm.html'
+    success_url = reverse_lazy('site:main')
 
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Google Analytics"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['google_analytics'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            form.instance.updated_by = self.request.user
+            messages.add_message(self.request, messages.SUCCESS, _("Google Analytics has been saved!"))
+
+        if 'google_analytics' in form.changed_data:
+            form.instance.metadata['google_analytics'] = form.cleaned_data['google_analytics']
+
+        return super().form_valid(form)
 
 
 
