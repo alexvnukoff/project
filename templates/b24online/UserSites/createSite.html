@@ -24,11 +24,15 @@
 <p style="font-size:14.5px;padding:8px 0;color:#949494">{% trans "Create your own site:" %}</p>
 
 <form action="" method="POST">{% csrf_token %}
-<p><label>{% trans "Domain:" %}</label>
-<input id="id_domain_part" name="domain_part" type="text" {% if form.errors.domain_part %}style="border:1px solid #ef6066;"{% endif %} />.{{ site }}</p>
+  <div class="form-group">
+    <label>{% trans "Domain:" %}</label>
+    <input id="id_domain_part" name="domain_part" type="text" class="short" {% if form.errors.domain_part %}style="border:2px solid #ef6066;"{% endif %} />.{{ site }}
+  </div>
 
-<br>
-<p><input type="submit" class="bigbuy" value="{% trans 'Create Site' %}"></p>
+  <div class="form-group">
+    <input type="submit" class="bigbuy" value="{% trans 'Create Site' %}">
+  </div>
+
 </form>
 
 <p style="padding:15px 0;color:#949494">{% trans "In the future you will be able to change domain, or even use a your own domain." %}</p>
