@@ -1,0 +1,30 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" action="">{% csrf_token %}
+
+        <div class="form-group">
+        <label>{% trans "Site slogan" %}</label>
+            <input id="id_slogan" maxlength="2048" name="slogan" type="text" value="{{ form.slogan.value|default_if_none:"" }}" {% if form.errors.slogan %}style="border:1px solid #ef6066;"{% endif %} class="middle" />
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

@@ -1,66 +1,41 @@
-{% extends 'b24online/main_page.html' %}
+{% extends 'b24online/forms.html' %}
 {% load i18n %}
-{% load staticfiles %}
+{% load static %}
 {% load CustomFilters %}
 
 {% block title %}{{ title }}{% endblock %}
-
-{% block center %}
-<div class="forms-content">
-<div class="keyword">
-{% block keywords %}{% endblock %}
-</div>
-
 {% block content %}
 
-<style>
-.wrapper {width:840px;padding:0 10px;}
-ol.breadcrumb li {display:inline-block;margin:10px 0;font-size:13px;color:#848484;}
-ol.breadcrumb li:after {margin:0 10px 0 10px;content:"/";color:#dedede;}
-ol.breadcrumb li:last-child:after {content:none;}
-img.t-image {width:185px;margin:10px 0;border:1px solid #919191;display:block;}
-.form-select {width:200px;display:block;height:70px;}
-label {display:block;margin:3px 0;color:#949494;font-weight:bold;}
-{% if LANGUAGE_BIDI %}.form-select {margin-right:-10px;}.form-select label {padding:0 10px;}{% endif %}
-</style>
+<div id="u-site-wrapper">
 
-<div class="wrapper">
-    <ol class="breadcrumb">
-        <li><a href="{% url 'site:main' %}">{% trans "Manage company site" %}</a></li><li><a href="{% url 'site:template' %}">{% trans "Select template" %}</a></li><li class="active">{% trans "Color Shceme" %} - {{ template.name }}</li>
-    </ol>
+{% include "b24online/UserSites/includes/breadcrumbs.html" with template_color=1 %}
+{% include "b24online/UserSites/includes/notifications.html" %}
 
-    <h1>{% trans "Color Shceme" %} - {{ template.name }}</h1>
-    <div style="width:600px;font-size:14px;">
+    <h1>{{ template.name }}</h1>
+
+    <div style="width:600px;font-size:14px;margin-top:15px;" class="templates-box">
         <img class="t-image" src="{{ template.thumbnail.small }}" >
 
-        <div style="margin:20px 0;">{% if template.description %}<label>{% trans "Theme description" %}:</label>{{ template.description|linebreaksbr }}{% endif %}</div>
+            <div style="margin:20px 0;">{% if template.description %}<label>{% trans "Theme description" %}:</label>{{ template.description|linebreaksbr }}{% endif %}</div>
 
-        <form action="" method="POST">{% csrf_token %}
-            <hr>
-            <input type="hidden" name="user_template" value="{{ template.id }}">
-            {% if template_color %}
-                <div class="form-select">
-                    <label>{% trans "Color scheme" %}:</label>
-                    <select name="color_template">
-                        {% for i in template_color %}
-                        <option value="{{ i.id }}">{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% endif %}
-                <input class="bigbuy" style="" value="{% trans "Choose" %}" type="submit">
-        </form>
+            <form action="" method="POST">{% csrf_token %}
+                <hr>
+                <input type="hidden" name="user_template" value="{{ template.id }}">
+                {% if template_color %}
+                    <div class="form-select">
+                        <label>{% trans "Color scheme" %}:</label>
+                        <select name="color_template">
+                            {% for i in template_color %}
+                            <option value="{{ i.id }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    <input class="bigbuy" style="" value="{% trans "Choose" %}" type="submit">
+            </form>
     </div>
 
 </div>
 
 
-
-
-
-</div>
-
 {% endblock %}
-</div>
-{% endblock %}
-{% block right %}{% endblock %}

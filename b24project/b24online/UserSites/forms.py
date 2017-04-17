@@ -10,21 +10,38 @@ from b24online.models import GalleryImage, Gallery, Banner
 from usersites.models import UserSite, LandingPage
 
 
-class SiteForm(forms.ModelForm):
-    domain = forms.URLField(required=False)
-    sub_domain = forms.CharField(required=False)
-    facebook = forms.CharField(required=False)
-    youtube = forms.CharField(required=False)
-    twitter = forms.CharField(required=False)
-    instagram = forms.CharField(required=False)
-    vkontakte = forms.CharField(required=False)
-    odnoklassniki = forms.CharField(required=False)
-    google_analytics = forms.CharField(required=False)
 
-    languages = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, choices=settings.LANGUAGES)
+class SiteCreateForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('domain_part',)
+
+    def clean_domain_part(self):
+        domain_part = self.cleaned_data.get('domain_part', None)
+        if not domain_part:
+            return
+
+        languages = [lan[0] for lan in settings.LANGUAGES]
+        if '.' in domain_part or domain_part in languages:
+            raise ValidationError(_('Enter a valid URL.'))
+
+        root_domain = settings.USER_SITES_DOMAIN
+        full_domain = "%s.%s" % (domain_part, root_domain)
+        validator = validators.URLValidator()
+        validator("http://%s" % full_domain)
+
+        if Site.objects.filter(domain=full_domain).exists():
+            raise ValidationError(_('This domain already taken'))
+        return domain_part
+
+
+
+class DomainForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('slogan',)
 
     def __init__(self, *args, **kwargs):
-        self.gallery_images_form = kwargs.pop('gallery_images_form')
         super().__init__(*args, **kwargs)
 
         if self.instance.pk:
@@ -33,16 +50,8 @@ class SiteForm(forms.ModelForm):
             else:
                 self.initial['sub_domain'] = self.instance.domain_part
 
-        self.initial['facebook'] = self.instance.facebook
-        self.initial['youtube'] = self.instance.youtube
-        self.initial['twitter'] = self.instance.twitter
-        self.initial['instagram'] = self.instance.instagram
-        self.initial['vkontakte'] = self.instance.vkontakte
-        self.initial['odnoklassniki'] = self.instance.odnoklassniki
-        self.initial['google_analytics'] = self.instance.google_analytics
-        self.fields['delivery_currency'].widget.attrs.update({
-            'style': 'width:60%;',
-        })
+    domain = forms.URLField(required=False)
+    sub_domain = forms.CharField(required=False)
 
     def clean_sub_domain(self):
         sub_domain = self.cleaned_data.get('sub_domain', None)
@@ -53,7 +62,7 @@ class SiteForm(forms.ModelForm):
         languages = [lan[0] for lan in settings.LANGUAGES]
 
         if '.' in sub_domain or sub_domain in languages:
-            raise ValidationError(_('Enter a valid URL.'))
+            raise ValidationError(_('Enter a valid URL'))
 
         root_domain = settings.USER_SITES_DOMAIN
 
@@ -89,29 +98,6 @@ class SiteForm(forms.ModelForm):
 
         return parsed_uri.netloc
 
-    def clean_template(self):
-        template = self.cleaned_data.get('template', None)
-
-        if not template:
-            for gallery_form in self.gallery_images_form:
-                if gallery_form['image'].value():
-                    return template
-
-            raise ValidationError(_('You should choose a template or provide your own images'))
-
-        return template
-
-    def clean_logo(self):
-        logo = self.cleaned_data.get('logo', None)
-
-        if 'logo' not in self.changed_data:
-            return logo
-
-        if logo and (logo.image.width > 220 or logo.image.height > 120):
-            raise ValidationError(_('Logo exceeded dimension limit'))
-
-        return logo
-
     def clean(self):
         cleaned_data = super().clean()
         sub_domain = cleaned_data.get('sub_domain', None)
@@ -120,55 +106,47 @@ class SiteForm(forms.ModelForm):
         if not sub_domain and not domain:
             self.add_error('sub_domain', _('Domain is required'))
 
+
+
+class LanguagesForm(forms.ModelForm):
     class Meta:
         model = UserSite
-        fields = ('slogan', 'template', 'footer_text', 'logo', 'language',
-            'is_delivery_available', 'delivery_currency', 'delivery_cost', 'languages')
+        fields = ('language', 'languages',)
+
+    languages = forms.MultipleChoiceField(
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+            choices=settings.LANGUAGES
+        )
 
 
-class GalleryForm(forms.ModelForm):
+
+class ProductDeliveryForm(forms.ModelForm):
     class Meta:
-        model = GalleryImage
-        fields = ('image', 'description', 'link')
+        model = UserSite
+        fields = ('is_delivery_available', 'delivery_currency', 'delivery_cost',)
 
-   # def clean_image(self):
-   #     image_obj = self.cleaned_data.get('image', None)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-   #     if 'image' not in self.changed_data:
-   #         return image_obj
-
-   #     if image_obj and (image_obj.image.width != 700 or image_obj.image.height != 183):
-   #         raise ValidationError(_('Image dimensions not equals required dimension'))
-
-   #     return image_obj
+        self.fields['delivery_currency'].widget.attrs.update({
+            'style': 'width:200px;float:none;',
+        })
 
 
-class BannerForm(forms.ModelForm):
+
+class SiteSloganForm(forms.ModelForm):
     class Meta:
-        model = Banner
-        fields = ('image', 'block', 'advertisement_ptr', 'link',)
-
-    #def clean(self):
-    #    cleaned_data = super().clean()
-
-    #    if 'image' in self.changed_data:
-    #        image_obj = cleaned_data.get('image', None)
-    #        block = cleaned_data.get('block', None)
-
-    #        if image_obj and block:
-    #            if block.width and image_obj.image.width != block.width:
-    #                self.add_error('image', _("Image width don't meet the requirements (%s px)" % block.width))
-    #            if block.height and image_obj.image.height != block.height:
-    #                self.add_error('image', _("Image height don't meet the requirements (%s px)" % block.height))
+        model = UserSite
+        fields = ('slogan',)
 
 
 
-GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
-                                            form=GalleryForm, max_num=5, validate_max=True, extra=5, fields=('image', 'description', 'link'))
-CompanyBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
-                                             validate_max=True, max_num=24, extra=24)
-ChamberBannerFormSet = inlineformset_factory(Site, Banner, form=BannerForm, fields=('image', 'block', 'advertisement_ptr', 'link'),
-                                             validate_max=True, max_num=8, extra=8)
+class FooterTextForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('footer_text',)
+
 
 
 class TemplateForm(forms.ModelForm):
@@ -177,7 +155,100 @@ class TemplateForm(forms.ModelForm):
         fields = ('user_template', 'color_template',)
 
 
+
 class LandingForm(forms.ModelForm):
     class Meta:
         model = LandingPage
         fields = ('title', 'description', 'cover')
+
+
+
+class SiteLogoForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('logo',)
+
+    def clean_logo(self):
+        logo = self.cleaned_data.get('logo', None)
+        if 'logo' not in self.changed_data:
+            return logo
+
+        if logo and (logo.image.width > 220 or logo.image.height > 120):
+            raise ValidationError(_('Logo exceeded dimension limit'))
+        return logo
+
+
+
+class GalleryForm(forms.ModelForm):
+    class Meta:
+        model = GalleryImage
+        fields = ('image', 'description', 'link')
+
+GalleryImageFormSet = inlineformset_factory(
+        Gallery,
+        GalleryImage,
+        form=GalleryForm,
+        max_num=5,
+        validate_max=True,
+        extra=5,
+        fields=('image', 'description', 'link')
+    )
+
+
+
+class BannerForm(forms.ModelForm):
+    class Meta:
+        model = Banner
+        fields = ('image', 'block', 'advertisement_ptr', 'link',)
+
+CompanyBannerFormSet = inlineformset_factory(
+    Site,
+    Banner,
+    form=BannerForm,
+    fields=('image', 'block', 'advertisement_ptr', 'link'),
+    validate_max=True, max_num=24, extra=24)
+
+ChamberBannerFormSet = inlineformset_factory(
+    Site,
+    Banner,
+    form=BannerForm,
+    fields=('image', 'block', 'advertisement_ptr', 'link'),
+    validate_max=True, max_num=8, extra=8)
+
+
+
+class SocialLinksForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('id',)
+
+    facebook = forms.CharField(required=False)
+    youtube = forms.CharField(required=False)
+    twitter = forms.CharField(required=False)
+    instagram = forms.CharField(required=False)
+    vkontakte = forms.CharField(required=False)
+    odnoklassniki = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.initial['facebook'] = self.instance.facebook
+        self.initial['youtube'] = self.instance.youtube
+        self.initial['twitter'] = self.instance.twitter
+        self.initial['instagram'] = self.instance.instagram
+        self.initial['vkontakte'] = self.instance.vkontakte
+        self.initial['odnoklassniki'] = self.instance.odnoklassniki
+
+
+
+class GAnalyticsForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('id',)
+
+    google_analytics = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.initial['google_analytics'] = self.instance.google_analytics

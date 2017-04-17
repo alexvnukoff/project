@@ -1,0 +1,49 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" action="">{% csrf_token %}
+
+        <div class="form-group">
+            <label>{% trans "Is delivery available on site?" %}</label>
+            {{ form.is_delivery_available }}
+            {% if form.errors.is_delivery_available %}
+            <small class="error">{{ form.is_delivery_available.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Delivery currency" %}</label>
+            <div>{{ form.delivery_currency }}</div>
+            {% if form.delivery_currency.errors %}
+                <small class="error">{{ form.delivery_currency.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Delivery cost" %}</label>
+            <input type="text" name="delivery_cost" placeholder="{% trans 'Delivery cost' %}" maxlength="20" class="text" style="width:200px;{% if form.errors.delivery_cost %} border:2px solid #ef6066;"{% endif %}" value="{{ form.delivery_cost.value|default_if_none:'' }}" />
+            {% if form.delivery_cost.errors %}
+                <small class="error">{{ form.delivery_currency.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+    <div class="form-group">
+        <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+    </div>
+
+    </form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+    <form method="post" action="">{% csrf_token %}
+
+    <div class="form-group">
+        <label>{% trans "Site sub-domain" %}</label>
+        <input type="text" id="id_sub_domain" name="sub_domain" class="short" maxlength="50" value="{{ form.sub_domain.value|default_if_none:"" }}" {% if form.errors.sub_domain %}style="border:2px solid #ef6066;"{% endif %} />.{{ site }}
+    </div>
+
+    <div class="form-group">
+        <label>{% trans "OR your own domain" %}</label>
+        <input type="text" id="id_domain" name="domain" class="short" maxlength="50" value="{{ form.domain.value|default_if_none:"" }}" {% if form.errors.domain %}style="border:2px solid #ef6066;"{% endif %} />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+    </div>
+
+    </form>
+</div>
+{% endblock %}
