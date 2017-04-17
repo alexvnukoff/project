@@ -1,0 +1,374 @@
+body {
+undefined
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+@import url("https://fonts.googleapis.com/css?family=Amatic+SC");
+body a {
+  color: #0089bc;
+}
+body .wrapper {
+  padding: 0;
+}
+body .header-row {
+  background-image: linear-gradient(180deg, #efefef, #fbfbfb);
+}
+body .header-row .header-container {
+  width: 1100px;
+}
+body .header-row .header-container .header {
+  min-width: 990px;
+  margin-left: 0;
+  padding-top: 2px;
+}
+body .header-row .header-container .header .logo {
+  cursor: pointer;
+}
+body .header-row .header-container .header .logo img {
+  width: 108px;
+  height: 23px;
+}
+body .header-row .header-container .header .nav {
+  color: #acacac;
+  font-size: 12px;
+  line-height: 23px;
+  margin-top: 4px;
+}
+body .header-row .header-container .header .nav.pull-left a {
+  color: #acacac;
+}
+body .header-row .header-container .header .nav.pull-left a:hover {
+  color: #0089bc;
+  text-decoration: none;
+}
+body .header-row .header-container .header .nav.pull-right {
+  margin-right: 30px;
+}
+body .header-row .header-container .header .nav .tab {
+  padding: 0 5px;
+}
+body .header-row .header-container .header .fa-map-marker {
+  position: relative;
+  font-size: 18px;
+  top: 3px;
+  margin-right: 10px;
+  text-decoration: none;
+}
+body .header-row .header-container .header .flag-current {
+  position: relative;
+  height: 17px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+body .header-row .header-container .header .lang-dropdown {
+  position: absolute;
+  top: 100%;
+  left: -70px;
+  z-index: 1000;
+  float: left;
+  min-width: 166px;
+  padding: 5px 10px 6px;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  background-clip: padding-box;
+}
+body .header-row .header-container .header .lang-dropdown img {
+  margin: 6px 4px 3px 2px;
+  box-shadow: 3px 2px 5px rgba(0,0,0,0.6);
+  width: 27px;
+}
+body .header-row .header-container .header .avatar {
+  position: relative;
+  height: 18px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+body .header-row .header-container .header .person-name {
+  position: relative;
+  height: 18px;
+  margin-right: 8px;
+  color: #000;
+  cursor: pointer;
+}
+body .header-row .header-container .header .person-name:hover {
+  text-decoration: underline;
+}
+body .header-row .header-container .header .logout {
+  position: relative;
+  height: 18px;
+  margin-left: 10px;
+}
+body .main {
+  margin-top: 20px;
+}
+body .main-row .main-container {
+  margin-top: 20px;
+  width: 1190px;
+}
+body .main-row .main-container .main-content {
+  min-width: 990px;
+  margin-left: 0;
+  padding-top: 2px;
+}
+body .main-row .article-filter {
+  background-color: #4a4a4a;
+  height: 45px;
+  width: 640px;
+  border-radius: 4px;
+  margin-left: -30px;
+  margin-right: -30px;
+}
+body .main-row .article-filter .filter-ico {
+  position: relative;
+  float: left;
+  display: inline;
+  top: -3px;
+  font-size: 22px;
+  color: #eee;
+  margin-right: 10px;
+  padding: 3px 5px;
+  line-height: 16px;
+  cursor: pointer;
+  border: solid 1px #333;
+  border-radius: 3px;
+  background-color: #414141;
+  padding: 5px 6px;
+}
+body .main-row .article-filter .sprite {
+  margin: -4px 10px 0 -7px;
+  width: 32px;
+  height: 32px;
+  background: url("../../static-assets/b24online/img/news.png");
+  background-position: 0px -24px;
+}
+body .main-row .article-filter .filter-langs {
+  margin-top: 13px;
+}
+body .main-row .article-filter .filter-langs .filter-lang {
+  color: #fff;
+  background-color: #333;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: default;
+}
+body .main-row .article-filter .filter-langs .filter-lang a {
+  color: #888;
+  cursor: pointer;
+}
+body .main-row .article-filter .filter-search {
+  top: -21px;
+  width: 160px;
+  right: -5px;
+}
+body .main-row .article-filter .filter-search input {
+  height: 28px;
+}
+body .main-row .left-aside {
+  font-size: 12px;
+  padding: 0 50px 0 40px;
+  widows: 400px;
+}
+body .main-row .left-aside a {
+  background-color: #f6f6f6;
+  color: #0089bc;
+  height: 31px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+body .main-row .left-aside a:hover {
+  background-color: #e6e6e6;
+}
+body .main-row .left-aside a.active {
+  color: #fff;
+  background-color: #d7d7d7;
+  border: none;
+}
+body .main-row .left-aside a.red {
+  background-color: #f00;
+}
+body .main-row .left-aside a i {
+  width: 15px;
+  margin-right: 5px;
+}
+body .main-row .article-content {
+  margin-top: 15px;
+  margin-left: -40px;
+  width: 660px;
+}
+body .main-row .article-content .article-header {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Amatic';
+}
+body .main-row .article-content .block-title {
+  margin: 10px 0 20px 0;
+  font-size: 16px;
+  padding: 5px 15px;
+  color: #000;
+  font-weight: bold;
+  height: 30px;
+  background-color: #e6e6e6;
+}
+body .main-row .article-content .content-goods .thumbnail {
+  border: none;
+  padding: 0;
+  margin: 0 -2px 0 0;
+  line-height: 1.3;
+}
+body .main-row .article-content .content-goods .thumbnail .thumb-img {
+  box-shadow: 3px 5px 12px 0px;
+}
+body .main-row .article-content .content-goods .thumbnail .caption {
+  padding: 15px 0 0 0;
+  color: #333;
+  font-size: 11px;
+}
+body .main-row .article-content .content-goods .thumbnail .caption .thumb-flag {
+  height: 16px;
+}
+body .main-row .article-content .content-goods .thumbnail .buy {
+  width: 100%;
+  height: 22px;
+  line-height: 10px;
+  font-size: 12px;
+  border: none;
+  background: url("../../static-assets/b24online/img/btnbuy.gif") repeat-x;
+}
+body .main-row .article-content .content-block {
+  font-size: 12px;
+  color: #9b9b9b;
+}
+body .main-row .article-content .content-block .thumb-flag-block {
+  height: 16px;
+}
+body .main-row .article-content .content-block .date {
+  margin-left: 35px;
+}
+body .main-row .article-content .content-block .title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 6px 0 6px 0;
+}
+body .main-row .article-content .content-block .title-news {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+}
+body .main-row .article-content .content-block .project-site {
+  margin: 0 0 6px 20px;
+}
+body .main-row .article-content .content-block .branch {
+  margin-right: 20px;
+}
+body .main-row .article-content .content-block .branch span {
+  color: #000;
+}
+body .main-row .article-content .content-block .img-container img {
+  max-width: 220px;
+  max-height: 150px;
+}
+body .main-row .article-content .content-block .author {
+  color: #9b9b9b;
+}
+body .main-row .article-content .content-block .news-short {
+  color: #595959;
+}
+body .main-row .article-content .content-block .news-detail {
+  color: #595959;
+  margin-top: 10px;
+}
+body .main-row .right-aside .right-aside-block {
+  height: 45px;
+  border-radius: 4px;
+  background-color: #4a4a4a;
+  padding: 12px;
+}
+body .main-row .right-aside .right-aside-block .num {
+  color: #fff;
+}
+body .main-row .right-aside .right-aside-block .icon-nt1 {
+  width: 14px;
+  height: 14px;
+  background-position: -160px -190px;
+}
+body .main-row .right-aside .right-aside-block .icon-nt2 {
+  width: 15px;
+  height: 11px;
+  background-position: -175px -190px;
+}
+body .main-row .right-aside .right-aside-block .icon-nt3 {
+  width: 18px;
+  height: 13px;
+  background-position: -191px -190px;
+}
+body .main-row .right-aside .right-aside-block .icon-nt3.disable {
+  opacity: 0.4;
+}
+body .main-row .right-aside .right-aside-block .basket {
+  width: 23px;
+  height: 23px;
+  padding: 2px;
+  background-image: url("../../static/b24online/img/basket.png");
+  background-repeat: no-repeat;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  position: relative;
+  background-size: 100% 100%;
+  top: 2px;
+  font-size: 14px;
+  font-style: normal;
+}
+body .main-row .right-aside .right-aside-block .basket span {
+  position: relative;
+  top: -3px;
+}
+body .main-row .right-aside .right-aside-block .icon-notyfi {
+  display: inline-block;
+  margin: 0 2px 0 9px;
+  vertical-align: middle;
+}
+body .main-row .right-aside .right-aside-block .imgnews {
+  background-image: url("../../static-assets/b24online/img/news.png");
+}
+body .main-row .right-aside .right-aside-block.sell {
+  margin-top: 15px;
+}
+body .main-row .right-aside .right-aside-block.title {
+  margin-top: 15px;
+  height: 35px;
+  padding: 8px;
+  border-radius: 3px 3px 0 0;
+  color: #fff;
+}
+body .main-row .right-aside .right-aside-block.title span {
+  font-size: 16px;
+}
+body .main-row .right-aside .right-aside-block.list {
+  background-color: #f5f5f5;
+  height: 35px;
+  padding: 8px;
+  border-radius: 0 0 3px 3px;
+  border: solid 1px #e6e6e6;
+}
+body .main-row .right-aside .right-aside-block.list span {
+  font-size: 12px;
+  font-weight: 500;
+}
+body .footer {
+  font-size: 12px;
+}
+body .footer .separator {
+  margin-top: 80px;
+}
+body .footer .bottom {
+  font-size: 11px;
+}
