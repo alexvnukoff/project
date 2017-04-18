@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if videos %}
+
+    <h2 class="cat-header"><a href="{% url 'video:main' %}">{% trans 'Video' %}</a></h2>
+
+    <div class="main-video">
+
+        {% for entry in videos %}
+
+            <div class="main-video-img">
+                <a href="#" class="">
+                    {% if entry.image %}
+                        <img src="{{ entry.image.big }}" alt="{{ entry.name }}" title="{{ entry.name }}">
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" />
+                    {% endif %}
+                </a>
+            </div>
+
+            <div class="news__text">
+                <h4><a href="{% url 'video:detail' entry.slug entry.pk %}">{{ entry.title }}</a></h4>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endif %}

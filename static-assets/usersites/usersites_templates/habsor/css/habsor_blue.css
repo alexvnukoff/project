@@ -1,0 +1,83 @@
+/* Colors:  002F2F, 046380, EFECCA, A7A37E, E6E2AF*/
+/* Header */
+#search-input input {
+    background-color: #046380;
+}
+
+.top-nav ul li a{
+    color: #046380;
+}
+
+.top-nav ul li a:hover,
+.top-nav ul li a:active{
+    color: #002F2F;
+}
+
+.main-header .cart-header span,
+.main-header .details-header .details-header-icon{
+    color: #046380;
+}
+
+.main-header .cart-header span.label-info{
+    color: #fff;
+}
+
+h2.cat-header a{
+    color: #046380;
+}
+
+footer .footer-menu a{
+    color: #046380;
+}
+
+footer .footer-menu a:hover,
+footer .footer-menu a:active{
+    color: #002F2F;
+}
+
+.product .product__discount{
+    background: #ff6600;
+    color: #fff;
+}
+
+.prop-title{
+    background: #046380;
+    color: #fff;
+}
+
+.prop-title a{
+    color: #fff;
+}
+
+.prop-title a:hover,
+.prop-title a:active,
+.prop-title a:visited:hover,
+.cust-page .cust-nav a:hover,
+.cust-page .cust-nav a:active{
+    color: #81d2eb;
+}
+
+.cust-page .cust-nav a{
+    color: #046380;
+}
+
+.prop-title a:visited{
+    color: #cdf3ff;
+}
+
+.prop-header{
+    border-bottom: 1px solid #fff;
+}
+
+#product-lead form, #leads-in-page {
+    background-color: #046380;
+}
+
+#product-lead form, #leads-in-page label{
+    color: #fff;
+}
+
+.buy-product-btn{
+    background-color: #046380;
+    color: #fff;
+}

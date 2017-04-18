@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+
+<h2 class="cat-header"><a href="{% url 'news:main' %}">{% trans 'Blog' %}</a></h2>
+<!-- Carousel
+================================================== -->
+<div id="newsCarousel" class="carousel slide">
+     <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#newsCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#newsCarousel" data-slide-to="1"></li>
+        <li data-target="#newsCarousel" data-slide-to="2"></li>
+      </ol>
+    <div class="carousel-inner">
+
+        {% for article in news %}
+            {% if forloop.counter == 1 %}
+                <figure class="item active">
+                    <img class="thumbnail" src="{{ article.image.small }}" alt="news">
+                    <div class="news__text">
+                        <a href="{% url 'news:detail' article.slug article.pk %}"><h4>{{ article.title|truncatewords_html:"6" }}</h4></a>
+                        <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+                    </div>
+                </figure>
+            {% else %}
+                <figure class="item">
+                    <img class="thumbnail" src="{{ article.image.small }}" alt="news">
+                    <div class="news__text">
+                        <a href="{% url 'news:detail' article.slug article.pk %}"><h4>{{ article.title|truncatewords_html:"6" }}</h4></a>
+                        <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+                    </div>
+                 </figure>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+</div><!-- End Carousel -->

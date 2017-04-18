@@ -1,0 +1,40 @@
+{% extends 'usersites_templates/cineret/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block after_css %}
+    {{ block.super }}
+    {% include "usersites/B2CProducts/include/deliveryFormCss_cineret.html" %}
+{% endblock %}
+
+{% block content %}
+<section class="content__info grid-layout cart">
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-6 col-lg-6">
+                        <h2 class="page-header">{% trans 'Your Order' %}</h2>
+                        <p>&nbsp;</p>
+                        {# Basket items list #}
+                        {% include "usersites/B2CProducts/include/basketItemsTable_cineret.html" %}
+                        <p>&nbsp;</p>
+                        {# Delivery info form #}
+                        {% include "usersites/B2CProducts/include/deliveryForm_cineret.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'usersites/js/delivery.js' %}"></script>
+{% endblock %}

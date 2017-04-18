@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css?family=Signika');
+
+/*---------- General Styling ----------*/
+body, h1, h2, h3, h4, p, span, div, a{
+	direction: ltr;
+    font-family: 'Signika', sans-serif;
+}
+
+
+/* ----------- Navigation Styling -------------------- */
+.top-nav .top-links{
+    float: right;
+}
+
+.top-nav .top-links ul,
+.top-nav .top-links .top-social,
+.top-nav .top-links .top-search{
+    float: left;
+}
+
+.top-nav .top-link-reg-msg{
+    margin-right: -5px;
+    margin-left: -15px;
+}
+
+#search-input {
+    right: 80px;
+}
+
+#search-input input {
+    left: -450px;
+    transition: left 0;
+}
+
+.main-header .details-header .details-header-icon{
+    float: right;
+}
+
+.main-header .details-header .details-header-text{
+    text-align: right;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .m-top-search{
+        float: left;
+    }
+
+    #m-search-input{
+        float: left;
+    }
+
+    #m-search-label label{
+        float: left;
+    }
+
+    #m-search-label{
+        margin-right: 10px;
+        float: left;
+    }
+
+    .language-navi>img{
+        float: left;
+    }
+
+    #m-top-links{
+        float: right;
+        padding-right: 10px;
+        font-size: 14px;
+    }
+
+    .tel{
+        float: left;
+        padding-left: 10px;
+        font-size: 14px;
+    }
+}
+
+.banner-main-page:first-of-type{
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.banner-main-page:last-of-type{
+    padding-right: 0;
+    padding-left: 10px;
+}
+
+.sidebar-cat,
+.right-header{
+    float: left;
+}
+
+.main-content,
+.left-header{
+    float: right;
+}
+
+.item-page__regular, .item-page__discount{
+    float: left;
+    margin: 15px 15px 15px 0;
+}
+
+
+/* ----------- Proposal Styling -------------------- */
+
+
+
+/* ----------- News Styling -------------------- */
+
+
+ /* ----------- Coupons Styling -------------------- */
+
+
+/* ----------- Product Styling -------------------- */
+.product{
+    float: left;
+}
+
+.product:first-child,
+.product:nth-of-type(4),
+.product:nth-of-type(7){
+    padding-left: 0;
+    padding-right: 10px;
+}
+
+.product:last-child,
+.product:nth-of-type(3),
+.product:nth-of-type(6){
+    padding-right: 0;
+    padding-left: 10px;
+}
+
+/*.gal-container .gal-item:first-child,*/
+.gal-container .gal-item:nth-of-type(3n){
+    padding-left: 10px;
+    padding-right: 0;
+}
+
+/*.gal-container .gal-item:last-child,*/
+.gal-container .gal-item:nth-of-type(3n+1)
+{
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.product:first-child .product__discount,
+.product:nth-of-type(4) .product__discount,
+.product:nth-of-type(7) .product__discount{
+    left: 10px;
+}
+
+.product:last-child .product__discount,
+.product:nth-of-type(3) .product__discount,
+.product:nth-of-type(6) .product__discount{
+    left: 20px;
+}
+
+.product .product__discount{
+    left: 15px;
+}
+
+/* ----------- Contact Styling -------------------- */
+
+#leads-in-page .form-cap img {
+    float: left;
+}
+
+#leads-in-page{
+    padding-left: 10px;
+}
+
+/* ----------- Counter Styling -------------------- */
+
+/*---------- Footer Styling ----------*/
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+
+
+/* ----------- Product list Styling -------------------- */
+
+
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+#paypal_form_layer input[type=image]{
+    float: right;
+}
