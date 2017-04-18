@@ -5,18 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wall</title>
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="bootstrap-rtl.min.css" rel="stylesheet"> -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="style.css" rel="stylesheet">
     <!-- <link href="style.rtl.css" rel="stylesheet"> -->
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
-      crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css">
+    <link href="style.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+
   </head>
   <body>
     <div class="container-fluid wrapper">
@@ -337,67 +337,68 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
-            <h4 class="modal-title" id="myModalLabel">Отправить отзыв</h4>
+            <h4 class="modal-title" id="myModalLabel">Фильтр</h4>
           </div>
           <div class="modal-body">
-        <form action="" id="myBootstrapForm" role="form" class="form-horizontal" method="post">
-        <input type="hidden" name="co_email" value="{{ item.email }}">
-        <input type="hidden" name="co_id" value="{{ item.pk }}">
-        <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
-        <div class="form-group has-feedback">
-          <label for="login" class="control-label col-xs-3">Ваше имя</label>
-          <div class="col-xs-8">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-              <input type="text" class="form-control" name="realname" maxlength="40" pattern=".{3,}" title="3 characters minimum" required>
+            <div id="exTab2" class="">
+              <ul class="nav nav-tabs">
+          			<li class="active">
+                  <a  href="#1" data-toggle="tab">Страна</a>
+          			</li>
+          			<li><a href="#2" data-toggle="tab">Организация</a>
+          			</li>
+          			<li><a href="#3" data-toggle="tab">Категория</a>
+          			</li>
+          		</ul>
+
+        			<div class="tab-content ">
+        			  <div class="tab-pane active" id="1">
+                  <select class="multipleSelect" data-placeholder="Выбрать" multiple>
+                      <option value="1">Россия</option>
+                      <option value="2">Азербайджан</option>
+                      <option value="3">Великобритания</option>
+                      <option value="4">США</option>
+                      <option value="5">Армения</option>
+                      <option value="6">Грузия</option>
+                  </select>
+        				</div>
+        				<div class="tab-pane" id="2">
+                  <select class="multipleSelect" data-placeholder="Выбрать" multiple>
+                      <option value="1">Организация 1</option>
+                      <option value="2">Организация 2</option>
+                      <option value="3">Организация 3</option>
+                      <option value="4">Организация 4</option>
+                      <option value="5">Организация 5</option>
+                      <option value="6">Организация 6</option>
+                  </select>
+        				</div>
+                <div class="tab-pane" id="3">
+                  <select class="multipleSelect" data-placeholder="Выбрать" multiple>
+                      <option value="1">Категория 1</option>
+                      <option value="2">Категория 2</option>
+                      <option value="3">Категория 3</option>
+                      <option value="4">Категория 4</option>
+                      <option value="5">Категория 5</option>
+                      <option value="6">Категория 6</option>
+                  </select>
+        				</div>
+        			</div>
             </div>
-            <span class="glyphicon form-control-feedback"></span>
-          </div>
-        </div>
-        <div class="form-group has-feedback">
-          <label for="email" class="control-label col-xs-3">Ваша почта</label>
-          <div class="col-xs-8">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-              <input type="email" class="form-control" maxlength="80" name="email" required>
-            </div>
-            <span class="glyphicon form-control-feedback"></span>
-          </div>
-        </div>
-        <div class="form-group has-feedback">
-          <label for="phone" class="control-label col-xs-3">Ваш телефон</label>
-          <div class="col-xs-8">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-              <input type="phone" class="form-control" maxlength="40" name="phone" required>
-            </div>
-            <span class="glyphicon form-control-feedback"></span>
-          </div>
-        </div>
-        <div class="form-group has-feedback">
-          <label for="message" class="control-label col-xs-3" maxlength="1000">Ваше сообщение</label>
-          <div class="col-xs-8">
-            <div class="input-group">
-              <textarea class="form-control"
-                        name="message"
-                        id="message"
-                        rows="6"
-                        style="width: 370px;"
-                        maxlength="1000"
-                        required
-              ></textarea>
-            </div>
-            <span class="glyphicon form-control-feedback"></span>
-          </div>
-        </div>
-            </form>
-          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-            <button id="save" type="button" class="btn btn-primary">Отправить</button>
+            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Отправить</button>
           </div>
         </div>
       </div>
     </div>
+    <script>
+      $(document).ready(
+        function () {
+          $(".multipleSelect").select2({
+            maximumSelectionLength: 5,
+          })
+        }
+      );
+    </script>
   </body>
 </html>
