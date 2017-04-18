@@ -102,7 +102,7 @@ $(document).ready(function() {
              <label style="color:555">{% trans " Discount price until" %}<br>{{ product.end_coupon_date }}</label>
               <div class="price">
                   {% if product.cost %}
-                      <span{% if product.is_coupon %} style="color:red"{% endif %}>{{ product.currency|getSymbol }}{{ product.get_discount_price }}</span>
+                      <span{% if product.is_coupon %} style="color:red"{% endif %}>{{ product.currency|getSymbol }}{{ product.get_discount_price|formatPrice }}</span>
                   {% else %}
                       {% trans 'Contact to price' %}
                   {% endif %}
