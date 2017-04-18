@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{# New page content #}
+<div class="container">
+
+    {# Page header #}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="cat-header">{% trans 'Blog' %}</h2>
+        </div>
+    </div>
+
+    <div class="row news">
+        {# The news content #}
+        {% for article in news %}
+
+                <div class="col-md-3 article">
+                    {% if article.image %}
+                        <div class="blog-img-wrap">
+                            <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}">
+                        </div>
+                    {% else %}
+                        <div class="blog-img-wrap">
+                            <img src="{% static 'b24online/img/item.jpg' %}" />
+                        </div>
+                    {% endif %}
+
+                    <h3 class="news-header">
+                       <a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
+                    <p class="date">{{ article.created_at|date:'d M Y' }}</p>
+                </div>
+
+        {% endfor %}
+    </div>
+
+    {% include 'usersites/Proposals/paginator.html' %}
+</div><!-- /.container -->
+
+
+

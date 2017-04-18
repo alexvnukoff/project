@@ -1,0 +1,85 @@
+{% extends 'usersites_templates/habsor/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{% block content %}
+<div class="container">
+<div class="sidebar-cat col-lg-3 col-md-3 col-sm 3">
+    {% include 'usersites_templates/habsor/site_sidebar.html' %}
+</div>
+
+<div class="main-content col-lg-9 col-md-9 col-sm-9">
+
+    {% block slider %}
+       {% include 'usersites_templates/habsor/slider.html' %}
+    {% endblock %}
+
+    <div class="row">
+
+    {# 4 banners, will lead to categories or products #}
+    {# Checking for coupons. With coupons the banners will take 50% of the screen and will be in 2 lines. #}
+    {# Without coupons the banners will take 100% of the screen and will be i 1 line. #}
+    {% check_banner_exist "SITES RIGHT 1" as right_banner_1 %}
+    {% check_banner_exist "SITES RIGHT 2" as right_banner_2 %}
+    {% check_banner_exist "SITES RIGHT 3" as right_banner_3 %}
+
+    {% if right_banner_1 %}
+        <div class="col-md-12 col-sm-12 col-xs-12 banner-main-collection">
+
+            {% if right_banner_3 %}
+
+                <div class="col-md-4 col-sm-4 col-xs-4 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 3" %}
+                </div>
+
+            {% elif right_banner_2 %}
+
+                <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6 banner-main-page">
+                {% site_banner "top" "SITES RIGHT 2" %}
+                </div>
+
+            {% elif right_banner_1 %}
+
+                <div class="col-md-12 col-sm-12 col-xs-12 banner-main-page">
+                    {% site_banner "top" "SITES RIGHT 1" %}
+                </div>
+
+              {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div><!-- /end of banners modoul -->
+
+
+{#    {% coupons 'B2CProducts/main_coupons.html' 3 %}#}
+
+    {% b2c_products 'B2CProducts/main_products.html' 9 %}
+
+    {% include 'usersites_templates/habsor/OrganizationPages/main_gallery.html' %}
+
+</div>
+</div>
+{% endblock %}
+{# including the slider. The slider will apear only on the main page. #}
+
+
+
+

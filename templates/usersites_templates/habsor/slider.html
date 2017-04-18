@@ -1,0 +1,70 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+{# ------------------------------ #}
+
+<!-- Header Carousel -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators hidden-xs">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+
+            {% if site.user_site.slider_images|length == 0 %}
+
+                <div class="item active">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+                <div class="item ">
+                    <div class="fill" style="background-image:url('{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg');"></div>
+                </div>
+
+            {% else %}
+
+                {% for i in site.user_site.slider_images %}
+                    {% if forloop.first %}
+                        <div class="item active ">
+                    {% else %}
+                        <div class="item fill">
+                    {% endif %}
+
+		    {% if i.link %}
+			 <a href="{{ i.link }}" title="{{ i.description }}">
+			    <img src="{{ i.image.original }}"  >
+			    {% if i.description %}
+			       <div class="slider-desc">{{ i.description }}</div>
+			    {% endif %}
+			 </a>
+		    {% else %}
+			    <img src="{{ i.image.original }}" >
+			    {% if i.description %}
+			       <div class="slider-desc">{{ i.description }}</div>
+			    {% endif %}
+		    {% endif %}
+
+{#                            <div class="slider-desc">#}
+{#                                <a href="/">slider title and description is here</a>#}
+{#                            </div>#}
+
+                   </div>{# End of item div #}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+{# ------------------------------- #}
+
+
+

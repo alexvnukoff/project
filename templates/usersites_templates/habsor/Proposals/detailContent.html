@@ -1,0 +1,30 @@
+{% extends 'usersites_templates/habsor/index.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+
+    {{ block.super }}
+    <div class="container">
+
+        <div class="row prop-content">
+            {# Register the 'view' event for b2b product #}
+            {{ object|register_event:"view"|process_event:request }}
+
+            <div class="col-md-4 prop-title">
+                <h3 class="prop-header">{{ object.title }}</h3>
+                <p class="date">{{ object.created_at|date:'d M Y' }}</p>
+            </div>
+
+            <div class="col-md-8 prop-desc">
+                {{ object.description|cleanHtml|safe }}
+            </div>
+        </div>{# /.row #}{# /Proposal Content #}
+
+    </div>
+
+{% endblock %}

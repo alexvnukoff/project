@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load cache %}
+{% load inclusionTags %}
+{% load content_tags %}
+{% load mptt_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{#<h2 class="cat-header"><a href="{% url 'b2c_products:main' %}">{% trans 'Categories' %}</a></h2>#}
+
+
+{% b2c_categories show_as_list=1 as categories %}
+
+    <div class="panel-group cat-sidebar" id="accordion">
+        <div class="panel panel-default">
+            <div class="list-group">
+                {% for pk, category in categories.items %}
+
+                    {% if category.name != 'b2c-category' %}
+                        <a href="{% url 'b2c_products:category' category.slug pk %}" class="list-group-item">{{ category.name }}</a>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="side-banners-pack">
+      <div class="col-md-12 col-sm-12 col-xs-12 banner side-banner">
+        {% site_banner "top" "SITES LEFT 1" %}
+        {% site_banner "top" "SITES LEFT 2" %}
+        {% site_banner "top" "SITES LEFT 3" %}
+      </div>
+</div>
+
+{% if news %}
+    {% news 'News/wall.html' 3 %}
+{% endif %}
+
+{#{% if videos %}#}
+    {% videos 'Video/wall.html' 1 %}
+{#{% endif %}#}

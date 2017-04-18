@@ -1,0 +1,187 @@
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}{% load cache %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
+    <meta name="description" content="{{ site.user_site.organization.short_description|striptags|truncatewords:20 }}"/>
+    <meta name="keywords" content="{{ site.user_site.organization.keywords|striptags|truncatewords:20 }}" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
+    <meta http-equiv="ImageResize" content="no">
+    <meta http-equiv="ImageToolbar" content="no">
+    <meta name="MSSmartTagsPreventParsing" content="true">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
+
+    <!--<link rel="shortcut icon" href="images/favicon.ico">-->
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
+    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+    <link rel="stylesheet" href="{% static 'usersites/css/adviser.css' %}">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'usersites/usersites_templates/habsor/css/general.css' %}">
+    <link rel="stylesheet" href="{{ site.user_site.color.path }}">
+
+    {% if LANGUAGE_BIDI %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/habsor/css/style_rtl.css' %}" />
+    {% else %}
+        <link rel="stylesheet" href="{% static 'usersites/usersites_templates/habsor/css/style.css' %}" />
+    {% endif %}
+
+    <link rel="stylesheet" href="{% static 'usersites/css/accessibility-plugin.css' %}">
+    <script src="https://use.fontawesome.com/127f9ebfc0.js"></script>
+
+    <!-- Custom Fonts -->
+    <link  href="{% static 'usersites/usersites_templates/cineret/font-awesome/css/font-awesome.min.css' %}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    {% block after_css %}{% endblock %}
+
+</head>
+
+<body{% if request.path == "/" %} id="main"{% endif %} class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}">
+
+    <div id="wrap-main">
+        <div id="main">
+
+        {% block header %}
+            <div id="accessDialog" class="accessibility hidden-xs" ></div>
+
+            {% include 'usersites_templates/habsor/header.html' %}
+        {% endblock %}
+
+
+            {# Sthe slider apear on the front page only, so it will  be included on the contant page. #}
+{#            {% include 'usersites_templates/habsor/site_sidebar.html' %}#}
+{#            {% block slider %}  {% endblock %}#}
+
+            {# Content will be in the contant page. #}
+            <section class="content">
+                <div class="wrapper">
+                    {% block content %}{% endblock %}
+                </div>
+            </section>
+        </div>
+    </div>
+
+{#</div>#}
+
+    <div id="main-footer">
+        {# Footer will be included in all the files. The footer will include the b24 banner and the footer info cols. #}
+        {% block footer %}
+            {% include 'usersites_templates/habsor/footer.html' %}
+        {% endblock %}
+    </div>
+
+<!-- //////////////////////////////////////////////////////////////////////// -->
+
+        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'usersites/js/basket.js' %}"></script>
+        <script src="{% static 'usersites/js/main.js' %}"></script>
+        {% block adviser %}
+            {% if user.is_authenticated %}
+            <script src="{% static 'usersites/js/adviser.js' %}"></script>
+            {% endif %}
+        {% endblock %}
+        <script src="{% static 'usersites/usersites_templates/habsor/js/script.js' %}"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="{% static 'usersites/usersites_templates/cineret/js/classie.js' %}"></script>
+    <script src="{% static 'usersites/usersites_templates/cineret/js/cbpAnimatedHeader.js' %}"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="{% static 'usersites/usersites_templates/cineret/js/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'usersites/usersites_templates/cineret/js/contact_me.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'usersites/usersites_templates/cineret/js/agency.js' %}"></script>
+
+    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+    <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+    <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
+
+    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
+
+
+    <script type="text/javascript" charset="utf-8">
+    function wazeMapInfo(){
+        {% if site.user_site.organization.location %}
+          {% with site.user_site.organization.location|split:"," as LatLng %}
+            var wazeInfo = {
+                lat: {{ LatLng.0 }},
+                lon: {{ LatLng.1 }}
+            };
+          {% endwith %}
+        {% endif %}
+
+{#        var wazeInfo = {#}
+{#                lat: 32,#}
+{#                lon: 15#}
+{#            };#}
+
+        var srcString, linkString;
+        if($( window ).width() > 480) {
+            srcString = "https://embed.waze.com/iframe?pin=1&zoom=16&lat=" + wazeInfo.lat + "&lon=" + wazeInfo.lon;
+            document.getElementById("wazeFrame").setAttribute("src", srcString);
+        } else {
+            srcString = "https://embed.waze.com/iframe?pin=1&zoom=14&lat=" + wazeInfo.lat + "&lon=" + wazeInfo.lon;
+            document.getElementById("wazeFrameMobile").setAttribute("src", srcString);
+        }
+
+        if (navigator.appVersion.indexOf("Mac")!=-1){
+            linkString = "waze://?ll=" + wazeInfo.lat + wazeInfo.lon + "&navigate=yes";
+            $(".wazeLink").attr("href", linkString);
+        }else{
+            linkString = "geo:" + wazeInfo.lat + "," + wazeInfo.lon;
+            $(".wazeLink").attr("href", linkString);
+        }
+
+{#        alert(srcString);#}
+    }
+
+        window.onload = function() {
+       //when the document is finished loading, replace everything
+       //between the <a ...> </a> tags with the value of splitText
+           wazeMapInfo();
+        }
+
+    </script>
+{% if site.user_site.google_analytics %}
+<script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', '{{ site.user_site.google_analytics }}', 'auto');
+ ga('send', 'pageview');
+
+</script>
+
+{% endif %}
+
+    {% block js %}{% endblock %}
+
+</body>
+
