@@ -81,7 +81,7 @@ body .header-row .header-container .header .lang-dropdown {
 }
 body .header-row .header-container .header .lang-dropdown img {
   margin: 6px 4px 3px 2px;
-  box-shadow: 3px 2px 5px rgba(0,0,0,0.6);
+  box-shadow: 1px 2px 2px 0px rgba(0,0,0,0.6);
   width: 27px;
 }
 body .header-row .header-container .header .avatar {
@@ -387,11 +387,12 @@ body .header-row .header-container .header .logout {
   border: solid 1px #e6e6e6;
 }
 .main-row .right-aside .right-aside-block.companies-title span {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a4a4a;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card {
-  margin: -12px;
+  margin: -13px -5px;
   border-radius: 0 0 3px 3px;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .paid-img {
@@ -399,6 +400,10 @@ body .header-row .header-container .header .logout {
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .text-details {
   font-size: 11px;
+}
+.main-row .right-aside .right-aside-block.list .company-paid-card .thumb-title {
+  color: #0089bc;
+  font-weight: 700;
 }
 #footer {
   font-size: 12px;
