@@ -375,14 +375,22 @@ body .main-row .right-aside .right-aside-block.list span {
   font-size: 12px;
   font-weight: 500;
 }
-body .footer {
+body #footer {
   font-size: 12px;
 }
-body .footer .separator {
+body #footer .footer-separator {
   margin-top: 80px;
 }
-body .footer .bottom {
+body #footer .bottom {
   font-size: 11px;
+}
+body #footer .footer-links h5 {
+  margin-bottom: 15px;
+}
+body #footer .footer-links a {
+  position: relative;
+  float: left;
+  clear: left;
 }
 .modal .tab-content {
   margin-top: 20px;

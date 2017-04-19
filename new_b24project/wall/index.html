@@ -287,69 +287,63 @@
           </div>
         </div>
       </div>
+      <div class="container">
+        <footer id="footer">
+          <hr class="footer-separator">
+          <div class="container">
+            <div class="row-fluid footer-links">
+                <div class="col-xs-3">
+                    <p class="footer-links">
+                        <h5>ОПИСАНИЕ</h5>
+                        <a href="#">Платежная система</a>
+                        <a href="#">Реклама на портале</a>
+                        <a href="#">Описание</a>
+                        <a href="#">Публичная оферта</a>
+                        <a href="#">Правила использования</a>
+                        <a href="#">Приветствия</a>
+                    </p>
+                </div>
+                <div class="col-xs-3">
+                    <p class="footer-links">
+                      <h5>ПОМОЩЬ</h5>
+                      <a href="#">Советы</a>
+                      <a href="#">Найти бизнес партнера</a>
+                      <a href="#">Поиск работы/сотрудника</a>
+                      <a href="#">Разместить анонс</a>
+                      <a href="#">Языковая поддержка и перевод</a>
+                      <a href="#">Новый пользователь</a>
+                      <a href="#">Добавить бизнес предложение</a>
+                      <a href="#">Собственный интернет-сайт</a>
+                      <a href="#">Создать онлайн магазин</a>
+                    </p>
+                </div>
+                <div class="col-xs-3">
+                    <p class="footer-links">
+                        <h5>КОНТАКТЫ</h5>
+                        <a href="#">Часто задаваемые вопросы</a>
+                        <a href="#">Контакты</a>
+                    </p>
+                </div>
+                <div class="col-xs-3">
+                    <p class="footer-links">
+                        <h5>КОМПАНИИ: 50741</h5>
+                        <span>Партнеры: 209</span>
+                    </p>
 
-      <div class="container footer">
-          <div class="row" style="top: 3px;">
-            <hr class="separator">
-            <div class="col-xs-3">
-              <ul class="list-unstyled">
-                <br>
-                <br>
-                <li>ОПИСАНИЕ<li>
-                <br>
-                <li><a href="#">Платежная система</a></li>
-                <li><a href="#">Реклама на портале</a></li>
-                <li><a href="#">Описание</a></li>
-                <li><a href="#">Публичная оферта</a></li>
-                <li><a href="#">Правила использования</a></li>
-                <li><a href="#">Приветствия</a></li>
-              </ul>
+                </div>
+              </div>
             </div>
-            <div class="col-xs-3">
-              <ul class="list-unstyled">
-                <br>
-                <br>
-                <li>ПОМОЩЬ<li>
-                <br>
-                <li><a href="#">Советы</a></li>
-                <li><a href="#">Найти бизнес партнера</a></li>
-                <li><a href="#">Поиск работы/сотрудника</a></li>
-                <li><a href="#">Разместить анонс</a></li>
-                <li><a href="#">Языковая поддержка и перевод</a></li>
-                <li><a href="#">Новый пользователь</a></li>
-                <li><a href="#">Добавить бизнес предложение</a></li>
-                <li><a href="#">Собственный интернет-сайт</a></li>
-                <li><a href="#">Создать онлайн магазин</a></li>
-              </ul>
+            <hr>
+            <div class="row">
+              <div class="col-xs-12 bottom">
+                  <p class="text-muted bottom text-center">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
+              </div>
             </div>
-            <div class="col-xs-3">
-              <ul class="list-unstyled">
-                <br>
-                <br>
-                <li>КОНТАКТЫ<li>
-                <br>
-                <li><a href="#">Часто задаваемые вопросы</a></li>
-                <li><a href="#">Контакты</a></li>
-              </ul>
-            </div>
-            <div class="col-xs-3">
-              <ul class="list-unstyled">
-                <br>
-                <br>
-                <li>КОМПАНИИ: 50741<li>
-                <br>
-                <li>Партнеры: 209</li>
-              </ul>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-xs-12 bottom">
-                <p class="text-muted pull-left">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
-            </div>
-          </div>
-        </div>
-    </div>
+          </footer>
+      </div>
+
+
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -416,7 +410,6 @@
           })
           $('.tab-pane').find('input').each(function() {
             var $this = $(this);
-            console.log(this);
             $this.width($this.parents('span.select2-container').width() - 2);
           });
         }
