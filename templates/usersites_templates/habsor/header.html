@@ -7,9 +7,9 @@
     <div id="top-links-id" class="top-links tog-display">
         {# Top search button #}
         <div class="top-search hidden-xs">
-            <form id="search" action="{% url 'b2c_products:search' %}" method="post">
+            <form id="search" action="{% url 'b2c_products:search' %}" >
                 <div id="search-label"><label for="search-terms" id="search-label"></label></div>
-                <div id="search-input"><input type="text" name="s" id="search-terms" placeholder="Enter search terms..."></div>
+                <div id="search-input"><input type="text" name="s" id="search-terms" placeholder="Search"></div>
             </form>
         </div>
 
