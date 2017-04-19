@@ -86,10 +86,9 @@
                     </div>
                 {% endif %}
             </li>
-        </ul>
 
-        {# Social links #}
-        <div class="top-social">
+        <li>
+            <div class="top-social">
             {% if site.user_site.facebook %}
                 <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
             {% endif %}
@@ -114,6 +113,11 @@
                 <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
             {% endif %}
         </div>
+        </li>
+        </ul>
+
+        {# Social links #}
+
 
 
     </div> {# End of top links div #}

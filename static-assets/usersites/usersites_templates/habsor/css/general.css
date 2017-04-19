@@ -303,7 +303,7 @@ h4{
 *****************************************/
 /**** sidebar **************************/
 h2.cat-header{
-    margin: 0 0 5px 0;
+    margin: 10px 0 5px 0;
 }
 
 h2.cat-header a{
@@ -341,6 +341,16 @@ h2.cat-header a{
     padding: 0;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.sidebar-cat,
+.main-content{
+    margin-top: 20px;
+}
+
+hr.style-one {
+    border: 1px solid #ccc;
+    margin: 5px 0;
 }
 
 /******************************************
@@ -435,12 +445,16 @@ footer .footer-banner{
 }
 
 footer .footer-logo{
-    width: 120px;
-    height: auto;
+    /*width: 120px;*/
+    height: 80px;
+}
+
+footer .footer-waze{
+    padding-top: 80px;
 }
 
 footer .footer-menu{
-    padding-top: 50px;
+    padding-top: 80px;
     list-style: none;
 }
 

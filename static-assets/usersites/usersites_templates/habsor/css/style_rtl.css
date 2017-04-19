@@ -87,6 +87,10 @@ body, h1, h2, h3, h4, p, span, div, a{
     float: left;
 }
 
+.gal-container .gal-item{
+    float: right;
+}
+
 
 /* ----------- Proposal Styling -------------------- */
 .prop-title{
@@ -138,6 +142,10 @@ body, h1, h2, h3, h4, p, span, div, a{
 
 #leads-in-page{
     padding-right: 10px;
+}
+
+.contact-info{
+    float: right;
 }
 
 /* ----------- Counter Styling -------------------- */
