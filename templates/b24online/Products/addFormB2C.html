@@ -94,8 +94,7 @@
       </fieldset>
     </form>
 
-    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-        {% csrf_token %}
+    <form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
         <div class="uploadimgage">
             <div class="imgbig">
 
@@ -118,7 +117,7 @@
                 {% endif %}
 
                 <div class="fileinputs">
-                    <input name="image" type="file" style="width: 100%"  />
+                    <input name="image" type="file" style="width: 100%" />
                 </div>
             </div>
 
@@ -296,7 +295,7 @@
             {% endfor %}
         </div>
 
-
+    <div id="imgs_fields"></div>
 
     <div class="append-pr-form">
        <div class="addpage-title">{% trans 'Additional parameters' %}</div>
@@ -312,14 +311,12 @@
 
     </div>
 </div>
-    <div id="imgs_fields"></div>
 
     <div class="newform-button">
         <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
         <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
     </div>
     </form>
-
 
 <script>
 $(document).ready(function() {
@@ -337,7 +334,6 @@ $(document).ready(function() {
                 .prop('href', '#')
                 .append($('<img />', {
                   src: '{{ i }}',
-                  width: '150',
                   height: '100'
               })).appendTo("#additional-images");
 
@@ -373,7 +369,6 @@ $(document).ready(function() {
                 .prop('href', '#')
                 .append($('<img />', {
                   src: data.image['url'],
-                  width: '150',
                   height: '100'
               })).appendTo("#additional-images");
             }
