@@ -5,12 +5,10 @@
 
 {% block title %}{% trans "B2C Products" %}{% endblock %}
 
-<section class="content__info">
 
 {# Page title #}
  <div class="container">
-            <h2 class="page-header in-page">{% trans 'Search B2C Products' %}</h2>
-            {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
+            <h2 class="cat-header">{% trans 'Search B2C Products' %}</h2>
 
 {#        <div class="row main-products-thumb">#}
 
@@ -19,50 +17,27 @@
 
                     {% for product in products %}
 
-                        <div class="pin">
+                        <div class="col-sm-6 col-xs-12 col-md-4 product">
+
                             {% if product.image %}
                                 <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-                                    <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                    <div class="main-img-wrap">
+                                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                    </div>
                                 </a>
                             {% else %}
                                 <img src="{% static 'b24online/img/item.jpg' %}" />
                             {% endif %}
 
                             {% if product.coupon_discount_percent %}
-                                <p class="product__discount">{{ product.coupon_discount_percent|intword }}%</p>
+                                <div class="product__discount">{{ product.coupon_discount_percent|intword }}%</div>
                             {% endif %}
 
-                            <div class="caption">
-                                <h5 class="product__title">{{ product.name|truncatechars:20 }}</h5>
-                                <p class="product__desc">{{ product.short_description|truncatechars:100 }}</p>
-
-                                {# If there is one, display the cost. If there is a discount, display it too. #}
-                                {% if product.cost %}
-                                    <p class="product__price">{{ product.get_discount_price|formatPrice }}{{ product.currency|getSymbol }}
-                                        {% if product.cost != product.get_discount_price %}
-                                            <span class="product__deleted-price">{{ product.cost|formatPrice }}{{ product.currency|getSymbol }} </span>
-                                        {% endif %}
-                                    </p>
-                                {% else %}
-                                        <p class="product__price"><a href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a></p>
-                                {% endif %}
-
-                                {# If the product is a coupon, the color of the button will be diff #}
-                                {% if product.coupon_discount_percent %}
-                                    <a type="button" class="btn btn-default product__btn coupon__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                                {% else %}
-                                    <a type="button" class="btn btn-default product__btn" href="{% url 'b2c_products:detail' product.slug product.pk %}">{% trans "Buy" %}</a>
-                                {% endif %}
-
-                                {# If the product is a coupon, display the timer #}
-                                {% if product.coupon_discount_percent %}
-                                    <div class="coupon-timer">
-                                        <p class="timer-heading">{% trans "Promotion ends" %}</p>
-                                        <div class="timer-mini" date="{{ product.end_coupon_date|date:'Y-m-d' }}"></div>
-                                    </div>
-                                {% endif %}
+                            {# Product details #}
+                            <div class="product__caption">
+                                {# Product title - up 20 char to keep design #}
+                                <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:35 }}</a></h3>
                             </div>
-
                         </div>
 
                     {% endfor %}
@@ -72,6 +47,6 @@
 
         </div>
 
- {% include 'usersites_templates/cineret/B2CProducts/paginator.html' %}
+ {% include 'usersites_templates/habsor/B2CProducts/paginator.html' %}
  </div>
 
