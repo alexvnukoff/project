@@ -5,7 +5,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import (HStoreField, DateRangeField,
                                             JSONField, ArrayField)
-from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -16,10 +15,10 @@ from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from b24online.custom import CustomImageField
-from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery, Document,
-                                image_storage, IndexedModelMixin, ActiveModelMixing,
-                                GalleryImage, Producer, Questionnaire)
-from b24online.utils import generate_upload_path, reindex_instance
+from b24online.models import (Company, CURRENCY, AdditionalPage, Gallery,
+            Document, image_storage, IndexedModelMixin, ActiveModelMixing,
+            GalleryImage, Producer, AdditionalParameters)
+from b24online.utils import generate_upload_path
 import uuid
 from decimal import Decimal
 
@@ -67,6 +66,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False, db_index=True)
     additional_pages = GenericRelation(AdditionalPage)
+    additional_parameters = GenericRelation(AdditionalParameters)
     metadata = HStoreField()
     discount_percent = models.FloatField(null=True, blank=True)
     coupon_discount_percent = models.FloatField(null=True, blank=True)

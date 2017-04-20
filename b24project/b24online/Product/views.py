@@ -11,20 +11,18 @@ from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import (DetailView, ListView, TemplateView)
+from django.views.generic import DetailView, ListView
 from guardian.mixins import LoginRequiredMixin
 from paypal.standard.forms import PayPalPaymentsForm
 
 from b24online.Product.forms import (B2BProductForm, AdditionalPageFormSet,
     B2CProductForm, B2_ProductBuyForm, DealPaymentForm, DealListFilterForm,
     DealItemFormSet, DealOrderedFormSet, B2BProductFormSet, B2CProductFormSet,
-    ProducerForm, ExtraParamsForm)
+    ProducerForm, ExtraParamsForm, AdditionalParametersFormSet)
 from b24online.cbv import (ItemsList, ItemDetail, ItemUpdate, ItemCreate,
-                    ItemDeactivate, GalleryImageList, ProductGalleryImageList,
-                    DeleteGalleryImage, DeleteDocument, DocumentList,
-                    ProductDocumentList)
+                    ItemDeactivate, ProductGalleryImageList, DeleteGalleryImage,
+                    DeleteDocument, ProductDocumentList)
 from b24online.models import (B2BProduct, Company, B2BProductCategory,
                     DealOrder, Deal, DealItem, Producer)
 from b24online.utils import (get_current_organization, get_permitted_orgs,
@@ -548,7 +546,10 @@ class B2BProductUpdate(ItemUpdate):
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            additional_page_form=additional_page_form)
+        )
 
 
 class B2CProductCreate(ItemCreate):
@@ -567,8 +568,14 @@ class B2CProductCreate(ItemCreate):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet()
+        additional_parameters_form = AdditionalParametersFormSet()
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            additional_page_form=additional_page_form,
+            additional_parameters_form=additional_parameters_form
+            )
+        )
 
     def post(self, request, *args, **kwargs):
         """
@@ -580,13 +587,25 @@ class B2CProductCreate(ItemCreate):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(self.request.POST)
+        additional_parameters_form = AdditionalParametersFormSet(self.request.POST)
 
-        if form.is_valid() and additional_page_form.is_valid():
-            return self.form_valid(form, additional_page_form)
+        if form.is_valid() and \
+            additional_page_form.is_valid() and \
+            additional_parameters_form.is_valid():
+
+            return self.form_valid(
+                    form,
+                    additional_page_form,
+                    additional_parameters_form
+                )
         else:
-            return self.form_invalid(form, additional_page_form)
+            return self.form_invalid(
+                    form,
+                    additional_page_form,
+                    additional_parameters_form
+                )
 
-    def form_valid(self, form, additional_page_form):
+    def form_valid(self, form, additional_page_form, additional_parameters_form):
         """
         Called if all forms are valid. Creates a Recipe instance along with
         associated Ingredients and Instructions and then redirects to a
@@ -607,6 +626,8 @@ class B2CProductCreate(ItemCreate):
         with transaction.atomic():
             self.object = form.save()
             additional_page_form.instance = self.object
+            additional_parameters_form.instance = self.object
+            additional_parameters_form.save()
 
             for page_form in additional_page_form:
                 page_form.instance.created_by = self.request.user
@@ -619,13 +640,14 @@ class B2CProductCreate(ItemCreate):
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form, additional_page_form):
+    def form_invalid(self, form, additional_page_form, additional_parameters_form):
         """
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
         context_data = self.get_context_data(form=form,\
-             additional_page_form=additional_page_form)
+             additional_page_form=additional_page_form,\
+             additional_parameters_form=additional_parameters_form)
         categories = form.cleaned_data.get('categories', None)
 
         if categories is not None:
@@ -650,8 +672,13 @@ class B2CProductUpdate(ItemUpdate):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(instance=self.object)
+        additional_parameters_form = AdditionalParametersFormSet(instance=self.object)
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            additional_page_form=additional_page_form,
+            additional_parameters_form=additional_parameters_form)
+        )
 
     def post(self, request, *args, **kwargs):
         """
@@ -664,13 +691,26 @@ class B2CProductUpdate(ItemUpdate):
         form = self.get_form(form_class)
         self.imageslist = request.POST.getlist('additional_images')
 
-        additional_page_form = AdditionalPageFormSet(self.request.POST,\
-                                                  instance=self.object)
+        additional_page_form = AdditionalPageFormSet(
+            self.request.POST, instance=self.object)
 
-        if form.is_valid() and additional_page_form.is_valid():
-            return self.form_valid(form, additional_page_form)
+        additional_parameters_form = AdditionalParametersFormSet(
+            self.request.POST, instance=self.object)
+
+        if form.is_valid() and \
+        additional_page_form.is_valid() and \
+        additional_parameters_form.is_valid():
+            return self.form_valid(
+                    form,
+                    additional_page_form,
+                    additional_parameters_form
+                )
         else:
-            return self.form_invalid(form, additional_page_form)
+            return self.form_invalid(
+                    form,
+                    additional_page_form,
+                    additional_parameters_form
+                )
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -682,7 +722,7 @@ class B2CProductUpdate(ItemUpdate):
 
         return context_data
 
-    def form_valid(self, form, additional_page_form):
+    def form_valid(self, form, additional_page_form, additional_parameters_form):
         """
         Called if all forms are valid. Creates a Recipe instance along with
         associated Ingredients and Instructions and then redirects to a
@@ -709,6 +749,7 @@ class B2CProductUpdate(ItemUpdate):
         with transaction.atomic():
             self.object = form.save()
             additional_page_form.instance = self.object
+            additional_parameters_form.instance = self.object
 
             for page_form in additional_page_form:
                 if not page_form.instance.created_by_id:
@@ -716,6 +757,7 @@ class B2CProductUpdate(ItemUpdate):
                 page_form.instance.updated_by = self.request.user
 
             additional_page_form.save()
+            additional_parameters_form.save()
 
         if form.changed_data:
             self.object.reindex()
@@ -725,13 +767,17 @@ class B2CProductUpdate(ItemUpdate):
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form, additional_page_form):
+    def form_invalid(self, form, additional_page_form, additional_parameters_form):
         """
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
 
-        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            additional_page_form=additional_page_form,
+            additional_parameters_form=additional_parameters_form)
+        )
 
 
 class ProductGalleryImageList(ProductGalleryImageList):
@@ -1328,6 +1374,3 @@ class ExtraParamsDelete(LoginRequiredMixin, DetailView):
             'products:extra_params_list',
             kwargs={'item_id': self.object.pk}
         )
-
-
-

@@ -15,11 +15,8 @@ from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.conf import settings
-
-from guardian.shortcuts import get_objects_for_user
-
-from b24online.models import (B2BProduct, AdditionalPage, Organization,
-    DealOrder, Deal, DealItem, Company, Producer)
+from b24online.models import (B2BProduct, AdditionalPage, DealOrder, Deal,
+    DealItem, Company, Producer, AdditionalParameters)
 from centerpokupok.models import B2CProduct
 from b24online.utils import get_permitted_orgs
 from b24online.widgets import JsTreeInput
@@ -44,6 +41,7 @@ class B2BProductForm(forms.ModelForm):
         fields = ('name', 'description', 'keywords', 'short_description',
                   'image', 'currency', 'measurement_unit', 'cost',
                   'producer', 'categories')
+
 
 
 class B2CProductForm(forms.ModelForm):
@@ -111,8 +109,15 @@ class B2CProductForm(forms.ModelForm):
                   'coupon_discount_percent', 'discount_percent',
                   'producer', 'additional_images', 'show_on_main')
 
-AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
-                                                      validate_max=True, extra=0)
+
+AdditionalPageFormSet = generic_inlineformset_factory(
+    AdditionalPage, fields=('title', 'content'), max_num=5, validate_max=True, extra=0)
+
+
+AdditionalParametersFormSet = generic_inlineformset_factory(
+    AdditionalParameters, fields=('title', 'description'), max_num=10, validate_max=True, extra=0)
+
+
 
 class B2_ProductBuyForm(forms.Form):
     """
@@ -420,10 +425,10 @@ class ProducerForm(forms.ModelForm):
             attrs={'rows': '2', 'cols': '50'}
         )
         self.fields['b2b_categories'].widget = JsTreeInput(
-            attrs={'data-url': reverse('products:category_tree_json', 
+            attrs={'data-url': reverse('products:category_tree_json',
                 kwargs={'b2_type': 'b2b'})})
         self.fields['b2c_categories'].widget = JsTreeInput(
-            attrs={'data-url': reverse('products:category_tree_json', 
+            attrs={'data-url': reverse('products:category_tree_json',
                 kwargs={'b2_type': 'b2c'})})
         self.fields['b2b_categories'].required = False
         self.fields['b2c_categories'].required = False
@@ -435,12 +440,12 @@ class ExtraParamsForm(forms.Form):
     name = forms.RegexField(
         label=_('Field name'),
         regex='^\w+$',
-        required=True, 
+        required=True,
         max_length=100
     )
     label = forms.CharField(
         label=_('Field label'),
-        required=False, 
+        required=False,
         widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
     )
     fieldtype = forms.ChoiceField(
@@ -455,12 +460,12 @@ class ExtraParamsForm(forms.Form):
     )
     pre_text = forms.CharField(
         label=_('Text before the field'),
-        required=False, 
+        required=False,
         widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
     )
     post_text = forms.CharField(
         label=_('Text after the field'),
-        required=False, 
+        required=False,
         widget=forms.Textarea(attrs={'rows': '2', 'cols': '50'}),
     )
 
@@ -479,7 +484,7 @@ class ExtraParamsForm(forms.Form):
                     label=_('Initial field value for lang') \
                         + ' &laquo;<span style="color: red;">{0}</span>&raquo;' \
                         . format(lang),
-                    required=False, 
+                    required=False,
                     widget=forms.Textarea(attrs={'rows': '7', 'cols': '50'}),
                 )
         if self._data and field_name and field_name in self._data:
