@@ -196,13 +196,31 @@ body
         height 30px
         background-color #e6e6e6
       .content-goods
+        margin-left -5px
+        margin-right 0
         .thumbnail
           border none
-          padding 0
-          margin 0 -2px 0 0
+          padding: 8px 8px 1px;
+          margin: -10px -15px 0px -10px;
           line-height 1.3
-          .thumb-img
-            box-shadow 3px 5px 12px 0px;
+          background-color #fafafa
+          .shadow-effect
+            position relative
+            .thumb-img
+              position: relative;
+              max-width 100%
+              // box-shadow 3px 5px 12px 0px;
+            &:before
+              z-index: 0;
+              position: absolute;
+              content: "";
+              bottom: 5px;
+              left: 4px;
+              width: 90%;
+              top: 78%;
+              max-width: 300px;
+              box-shadow: 0px 5px 7px 0px #616161;
+              transform: rotate(-3deg);
           .caption
             padding 15px 0 0 0
             color #333
@@ -264,7 +282,7 @@ body
           .badge
             margin-left 3px
             font-size 10px
-        a.disabled
+        i.disabled
           color #929292
           cursor default
         .num
