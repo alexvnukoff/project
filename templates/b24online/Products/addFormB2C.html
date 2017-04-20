@@ -50,7 +50,7 @@
     function additionalUpload() {
       $('#selectAdditionaImage').click();
       };
-    
+
 </script>
 <style>
   .list-cat li {
@@ -90,7 +90,7 @@
     <form id="upload-file" method="post" enctype="multipart/form-data">
       <fieldset>
         <label style="display:none;" for="file">{% trans 'Select a file' %}</label>
-        <input  style="display:none;" id="selectAdditionaImage" name="file" type="file">
+        <input style="display:none;" id="selectAdditionaImage" name="file" type="file">
       </fieldset>
     </form>
 
@@ -123,6 +123,7 @@
             </div>
 
             <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();" id="additionalButton">{% trans 'Additional images' %}</a>
+
             <div style="display:none" id="additionalLoading">{% trans 'Loading..' %}</div>
             <div>
                 <label class="sapce">{% trans 'Product producer' %}</label>
@@ -279,38 +280,51 @@
                     </div>
                 </li>
             </ul>
+
         </div>
 
         <div class="append-formin">
-                   <div class="addpage-title">{% trans 'Additional pages' %}</div>
-                   <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
-                    {{ additional_page_form.management_form }}
-                    {{ additional_page_form.non_form_errors }}
-                    {% for form in additional_page_form %}
-                        {{ form.id }}
-                        {% with prefix=form.prefix num=forloop.counter0 %}
-                            {% include "b24online/additionalPage.html" %}
-                        {% endwith %}
-                    {% endfor %}
+           <div class="addpage-title">{% trans 'Additional pages' %}</div>
+           <a href="#" style="margin-top:20px;" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear add-advandce">{% trans 'Add page' %}</a>
+            {{ additional_page_form.management_form }}
+            {{ additional_page_form.non_form_errors }}
+            {% for form in additional_page_form %}
+                {{ form.id }}
+                {% with prefix=form.prefix num=forloop.counter0 %}
+                    {% include "b24online/additionalPage.html" %}
+                {% endwith %}
+            {% endfor %}
         </div>
 
-        
-        <div id="imgs_fields">
-        </div>
 
-        <div class="newform-button">
-            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
-            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
-        </div>
-    </form>
+
+    <div class="append-pr-form">
+       <div class="addpage-title">{% trans 'Additional parameters' %}</div>
+       <a href="#" style="margin-top:20px;" data-prefix="{{ additional_parameters_form.prefix }}" id="add-parameter" class="buttonclear add-advandce">{% trans 'Add parameter' %}</a>
+            {{ additional_parameters_form.management_form }}
+            {{ additional_parameters_form.non_form_errors }}
+            {% for form in additional_parameters_form %}
+                {{ form.id }}
+                {% with prefix=form.prefix num=forloop.counter0 %}
+                    {% include "b24online/additionalParameter.html" %}
+                {% endwith %}
+            {% endfor %}
+
+    </div>
 </div>
+    <div id="imgs_fields"></div>
+
+    <div class="newform-button">
+        <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+        <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+    </div>
+    </form>
 
 
 <script>
 $(document).ready(function() {
 
     var lding = $("#additionalLoading"), mylist_count = 0;
-
     {% if object.additional_images %}
 
     $(function() {
@@ -318,12 +332,12 @@ $(document).ready(function() {
               mylist_count++;
               $('#imgs_fields').append('<input id="myLC_' + mylist_count + '" type="text" name="additional_images" value="{{ i }}" />');
               if(mylist_count == 5) {
-              $('#additionalButton').hide();} 
+              $('#additionalButton').hide();}
               $('<a class="ai" />')
                 .prop('href', '#')
                 .append($('<img />', {
                   src: '{{ i }}',
-                  wifth: '150',
+                  width: '150',
                   height: '100'
               })).appendTo("#additional-images");
 
@@ -354,12 +368,12 @@ $(document).ready(function() {
               mylist_count++;
               $('#imgs_fields').append('<input id="myLC_' + mylist_count + '" type="text" name="additional_images" value="' + data.image['url'] + '" />');
               if(mylist_count == 5) {
-              $('#additionalButton').hide();} 
+              $('#additionalButton').hide();}
               $('<a class="ai" />')
                 .prop('href', '#')
                 .append($('<img />', {
                   src: data.image['url'],
-                  wifth: '150',
+                  width: '150',
                   height: '100'
               })).appendTo("#additional-images");
             }
@@ -378,9 +392,9 @@ $(document).ready(function() {
         currentValue = $('#myLC_' + mylist_count).remove();
         mylist_count--;
         if(mylist_count <= 4) {
-        $('#additionalButton').show();} 
+        $('#additionalButton').show();}
         });
 
-});   
+});
 </script>
 {% endblock %}

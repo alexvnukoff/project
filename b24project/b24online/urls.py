@@ -81,6 +81,7 @@ urlpatterns = [
 
     url(r'^notification/get/$', b24online.views.get_notification_list),
     url(r'^addPage/get/$', b24online.views.get_additional_page),
+    url(r'^addParameter/get/$', b24online.views.get_additional_parameter),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
     url(r'^adv/tops/', b24online.views.get_live_top),

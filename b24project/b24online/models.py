@@ -3025,6 +3025,22 @@ class LeadsStore(ActiveModelMixing, models.Model):
         return "{0}".format(self.organization)
 
 
+
+class AdditionalParameters(models.Model):
+    title = models.CharField(max_length=255, blank=False, null=False)
+    description = models.CharField(max_length=1000, blank=False, null=False)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
+    def has_perm(self, user):
+        return self.title
+
+
+
 def user_extended_profile(backend, user, response, *args, **kwargs):
     if backend.name == 'facebook' or backend.name == 'google':
         try:

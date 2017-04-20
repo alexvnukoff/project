@@ -218,6 +218,11 @@ def get_additional_page(request):
     return render_to_response("b24online/additionalPage.html", {'prefix': prefix, 'num': int(request.GET.get('num'))})
 
 
+def get_additional_parameter(request):
+    prefix = '-'.join((request.GET.get('prefix'), request.GET.get('num')))
+    return render_to_response("b24online/additionalParameter.html", {'prefix': prefix, 'num': int(request.GET.get('num'))})
+
+
 def perm_denied(request):
     template_params = {'DeniedContent': render_to_string('b24online/permissionDen.html', None, request)}
     return render(request, "b24online/main/denied.html", template_params)
