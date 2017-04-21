@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{% trans "B2C Products" %}{% endblock %}
+
+
+{# Page title #}
+ <div class="container">
+            <h2 class="cat-header">{% trans 'Search B2C Products' %}</h2>
+
+{#        <div class="row main-products-thumb">#}
+
+            <div id="wrapper">
+                <div id="columns">
+
+                    {% for product in products %}
+
+                        <div class="col-sm-6 col-xs-12 col-md-4 product">
+
+                            {% if product.image %}
+                                <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                                    <div class="main-img-wrap">
+                                        <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                                    </div>
+                                </a>
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" />
+                            {% endif %}
+
+                            {% if product.coupon_discount_percent %}
+                                <div class="product__discount">{{ product.coupon_discount_percent|intword }}%</div>
+                            {% endif %}
+
+                            {# Product details #}
+                            <div class="product__caption">
+                                {# Product title - up 20 char to keep design #}
+                                <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:35 }}</a></h3>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+{#            </div>#}
+
+        </div>
+
+ {% include 'usersites_templates/habsor/B2CProducts/paginator.html' %}
+ </div>
+

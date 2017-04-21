@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load content_tags %}
+
+{% if site.user_site.organization.gallery_images %}
+
+  <div class="gal-container">
+    	<h2 class="cat-header"><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></h2>
+
+    <div class="gal-items">
+
+        {% for gallery_obj in site.user_site.organization.gallery_images|slice:":6" %}
+            <div class="col-md-4 col-sm-4 col-xs-4 gal-item">
+                <div class="img-wrap">
+                    <figure>
+                        <a href="{{ gallery_obj.image.original }}" rel="gallery" fancybox class="fancybox">
+                            <img src="{{ gallery_obj.image.original }}">
+                        </a>
+                    </figure>
+                </div>
+            </div>
+        {% endfor %}
+
+	</div>
+  </div>
+
+{% endif %}

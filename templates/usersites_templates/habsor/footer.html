@@ -1,0 +1,61 @@
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% is_chamber_site as is_chamber %}
+
+<footer>
+
+    <div class="container clearfix">
+        <div class="col-md-4 footer-about">
+            {% if site.user_site.logo %}
+                <img class="footer-logo" src="{{ site.user_site.logo.big }}" alt="" />
+            {% else %}
+                {{ site.user_site.organization.name }}
+            {% endif %}
+
+{#            <p>#}
+                {{ site.user_site.organization.short_description|cleanHtml|safe }}
+{#            </p>#}
+        </div>
+
+            <div class="col-md-4 footer-links">
+                <ul class="footer-menu">
+                  <li><a href="{% url 'main' %}">{% trans 'Home' %}</a></li>
+                  <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
+                    {% for page in site.user_site.organization.additional_pages.all %}
+                        <li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></li>
+                    {% endfor %}
+
+                    {% for doc_obj in site.user_site.organization.document_files.all %}
+                        <li><i class="fa fa-download" aria-hidden="true"></i><a href="{{ doc_obj.document.url }}"> {{ doc_obj.name }} </a></li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="clearfix footer-col footer-waze hidden-xs">
+                    <iframe id="wazeFrame" src="" width="300" height="150"></iframe>
+                </div>
+
+                <div class="clearfix footer-col footer-waze visible-xs">
+                    <iframe id="wazeFrameMobile" src="" width="200" height="100"></iframe>
+                            <a class="wazeLink" href="#"><img src="{% static 'usersites/images/logowaze.png' %}">{% trans 'Open with Waze' %}</a>
+                </div>
+            </div>
+
+
+        <div class="col-lg-12 col-md-12 col-xs-12 footer-banner">
+            {% site_banner "footer" "SITES FOOTER" %}
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix" >
+            All rights reserved © <a href="http://www.b24online.com/">b24online.com</a> 2011-2016
+        </div>
+    </div>
+</footer>
+
+

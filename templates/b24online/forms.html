@@ -24,7 +24,8 @@
         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/external.css" %}"/>
-        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/usersite-settings.css" %}"/>
     {% endblock %}
 
     {% block js %}
@@ -78,8 +79,8 @@
             $(document).on("click", "#add-page", function() {
                 var formin = $('.append-formin');
                 var prefix = $(this).data('prefix');
-                var num =  formin.find('textarea[class="tiny"]').length;
-                var button = $(this)
+                var num = formin.find('textarea[class="tiny"]').length;
+                var button = $(this);
 
                 if (num >= 5)
                     return false;
@@ -96,10 +97,30 @@
                 return false
             });
 
+            $(document).on("click", "#add-parameter", function() {
+                var formin = $('.append-pr-form');
+                var prefix = $(this).data('prefix');
+                var num = formin.find('input[class="pr-description"]').length;
+                var button = $(this);
+
+                if (num >= 10)
+                    return false;
+
+                var dataPost = {"prefix": prefix, "num": num};
+
+                $.get('/addParameter/get/',dataPost, function(data) {
+                    $(data).insertAfter(button);
+                    num += 1;
+                    formin.find('input[name$="TOTAL_FORMS"]').val(num)
+                }, 'html');
+
+                return false
+            });
+
             $(document).on("click", ".buttonremove", function() {
                 var total_forms = $('input[name$="TOTAL_FORMS"]')
                 var num = total_forms.val(parseInt(total_forms.val()) - 1)
-                var page = $(this).parents(".addpage-form");
+                var page = $(this).parent();
                 page.remove();
                 return false
             });
@@ -119,8 +140,6 @@
         </script>
     {% endblock %}
 
-
-
      {% block center %}
             <div class="forms-content">
                 <div  class="keyword">
@@ -133,4 +152,3 @@
 
      {% endblock %}
 {% block right %}{% endblock %}
-

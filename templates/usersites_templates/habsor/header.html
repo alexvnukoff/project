@@ -1,0 +1,198 @@
+{% load i18n %}{% load staticfiles %}{% load CustomFilters %}
+
+<div class="container">
+{# Site to navigation with: Registration/Login, blog link, contact link, language link and a floating search button. #}
+<div class="top-nav">
+    <div id="m-top-links" class=" visible-xs "><span class="fa fa-hand-o-down" aria-hidden="true"></span></div>
+    <div id="top-links-id" class="top-links tog-display">
+        {# Top search button #}
+        <div class="top-search hidden-xs">
+            <form id="search" action="{% url 'b2c_products:search' %}" >
+                <div id="search-label"><label for="search-terms" id="search-label"></label></div>
+                <div id="search-input"><input type="text" name="s" id="search-terms" placeholder="Search"></div>
+            </form>
+        </div>
+
+        <div class="m-top-search visible-xs">
+            <form action="{% url 'b2c_products:search' %}" method="post">
+                <div id="m-search-label"><label></label></div>
+                <div id="m-search-input"><input type="text" name="s" placeholder="Enter search terms..."></div>
+            </form>
+        </div>
+
+        <ul>
+
+            {% if user.is_authenticated %}
+
+                {% get_messages_number as messages_number %}
+                <li class="top-link-reg-avtr">
+                    <a href="{% url 'my_profile' %}">
+                        {% if request.user.profile.avatar %}
+                            <img src="{{ request.user.profile.avatar.th }}"
+                                style="vertical-align:middle;margin-top:-4px;width:18px;">
+                        {% else %}
+                            <img src="/static/b24online/img/profile_24x24.jpg">
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="top-link-reg-name">
+                    <a href="{% url 'my_profile' %}">&nbsp;
+                        {% if request.user.profile %}
+                            {{ request.user.profile.full_name }}
+                        {% else %}
+                            {{ request.user }}
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="top-link-reg-env"><a href="{% url 'messages:main' %}">
+                    <img style="width:24px; margin-right: 4px;" class="flag-icon" src="/static/usersites/images/messages.png"></a>
+                </li>
+                <li class="top-link-reg-msg"><span class="label label-info">{{ messages_number }}</span></li>
+                <li class="top-link-reg-out"><a href="{% url 'auth_logout' %}"> | {% trans 'Sign out' %}</a></li>
+
+            {% else %}
+                <li class="top-link-reg-reg">
+                    <a href="{% url 'registration_register' %}" class="dialog-open"
+                        data-title="{% trans 'User registartion' %}">{% trans 'Register' %}</a>
+                </li>
+                <li class="top-link-reg-in">
+                    <a href="{% url 'auth_login' %}" class="dialog-open"
+                        data-title="{% trans 'Sign in' %}">{% trans 'Login' %}</a>
+                </li>
+            {% endif %}
+
+            <li class="top-link-m"><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
+
+            {% if news %}
+                <li class="top-link-m"><span class="top-blog"></span><a href="{% url 'news:main' %}">{% trans 'Blog' %}</a></li>
+            {% endif %}
+            {% if site.user_site.organization.proposals.exists %}
+                <li class="top-link-m"><span class="top-business"></span><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
+            {% endif %}
+            <li class="top-link-m"><span class="top-contact"></span><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
+
+            {# Language menu. Will apear only if usersite has more than 1 lang #}
+            <li class="top-lang top-link-m">
+                {% if site_languages|length > 1 %}
+                    <div class="language-navi">
+                        <img style="width:24px;" class="flag-icon" src="/static/b24online/bt/flags/{{ LANGUAGE_CODE }}.png">
+                        <div class="language-navi-dropdown">
+                            {% for code, lang in site_languages %}
+                                {% if not code == LANGUAGE_CODE %}
+                                    <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}"><img class="flag-icon" src="/static/b24online/bt/flags/{{ code }}.png"></a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </li>
+
+        <li>
+            <div class="top-social">
+            {% if site.user_site.facebook %}
+                <a href="{{ site.user_site.facebook }}" target="_blank" class="button" style="color: #3361a1;"><i class="fa fa-facebook fa-lg"></i></a>
+            {% endif %}
+
+            {% if site.user_site.youtube %}
+                <a href="{{ site.user_site.youtube }}" target="_blank" class="button" style="color: #dd3333;"><i class="fa fa-youtube fa-lg"></i></a>
+            {% endif %}
+
+            {% if site.user_site.twitter %}
+                <a href="{{ site.user_site.twitter }}" target="_blank" class="button" style="color: #00fff9;"><i class="fa fa-twitter fa-lg"></i></a>
+            {% endif %}
+
+            {% if site.user_site.instagram %}
+                <a href="{{ site.user_site.instagram }}" target="_blank" class="button" style="color: #985a0c"><i class="fa fa-instagram fa-lg"></i></a>
+            {% endif %}
+
+            {% if site.user_site.vkontakte %}
+                <a href="{{ site.user_site.vkontakte }}" target="_blank" class="button" style="color: #2358c9;"><i class="fa fa-vk fa-lg"></i></a>
+            {% endif %}
+
+            {% if site.user_site.odnoklassniki %}
+                <a href="{{ site.user_site.odnoklassniki }}" target="_blank" class="button" style="color: #edae0e;"><i class="fa fa-odnoklassniki fa-lg"></i></a>
+            {% endif %}
+        </div>
+        </li>
+        </ul>
+
+        {# Social links #}
+
+
+
+    </div> {# End of top links div #}
+
+    {# Phone call me - for mobiles #}
+    <div class="tel vertical visible-xs">
+        <i class="fa fa-phone-square" aria-hidden="true"></i>
+        <a href="tel:{{ site.user_site.organization.phone }}">{% trans 'Call Now!' %}</a>
+    </div>
+</div>{# End of top nav div #}
+</div>{# End of container div #}
+
+<div class="container">
+    <div class="main-header">
+        <div class="right-header col-md-6 col-sm-4 col-xs-6">
+            {% if site.user_site.logo %}
+                <a class="main-header-logo" href="/"><img src="{{ site.user_site.logo.big }}" alt="" /></a>
+            {% endif %}
+        </div>
+
+        <div class="left-header col-md-6 col-sm-8 col-xs-6">
+            <div class="details-header col-md-10 col-sm-8 hidden-xs">
+                <div class="col-md-2 details-header-icon"><span class="glyphicon glyphicon-home"></span></div>
+                <div class="col-md-10 details-header-text">{{ site.user_site.organization.address }}<br/></div>
+
+                <div class="col-md-2 details-header-icon"><span class="glyphicon glyphicon-phone-alt"></span></div>
+                <div class="col-md-10 details-header-text">{{ site.user_site.organization.phone }}<br/></div>
+
+                <div class="col-md-2 details-header-icon"><span class="glyphicon glyphicon-envelope"></span></div>
+                <div class="col-md-10 details-header-text">{{ site.user_site.organization.email }}<br/></div>
+            </div>
+            <div class="cart-header col-md-2 col-sm-4 col-xs-12">
+                <a href="{% url 'b2c_products:basket' %}" class="header-cart"><span class="glyphicon glyphicon-shopping-cart"></span>
+                     <span class="label label-info">{{ request|basket_quantity }}</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{# -------------------------------------- #}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    (function(window){
+
+        // get vars
+        var searchEl = document.querySelector("#search-input");
+        var labelEl = document.querySelector("#search-label");
+
+        // register clicks and toggle classes
+        labelEl.addEventListener("click",function(){
+            if (classie.has(searchEl,"focus")) {
+                classie.remove(searchEl,"focus");
+                classie.remove(labelEl,"active");
+            } else {
+                classie.add(searchEl,"focus");
+                classie.add(labelEl,"active");
+            }
+        });
+
+        // register clicks outisde search box, and toggle correct classes
+        document.addEventListener("click",function(e){
+            var clickedID = e.target.id;
+            if (clickedID != "search-terms" && clickedID != "search-label") {
+                if (classie.has(searchEl,"focus")) {
+                    classie.remove(searchEl,"focus");
+                    classie.remove(labelEl,"active");
+                }
+            }
+        });
+    }(window));
+
+    $("#m-top-links").click(function(){
+        $( "#top-links-id" ).toggleClass( "tog-display" );
+    });
+</script>
+
+

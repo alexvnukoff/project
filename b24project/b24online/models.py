@@ -316,6 +316,21 @@ class Gallery(ActiveModelMixing, models.Model):
     def __str__(self):
         return "{0}".format(self.title)
 
+    def upload_images(self, changed_data=None):
+        from core import tasks
+        params = []
+
+        if changed_data is not None:
+            for image_path in changed_data:
+                params.append({
+                    'file': image_path,
+                    'sizes': {
+                        'big': {'box': (400, 105), 'fit': True},
+                    }
+                })
+
+        tasks.upload_images.delay(*params)
+
 
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
@@ -3008,6 +3023,22 @@ class LeadsStore(ActiveModelMixing, models.Model):
 
     def __str__(self):
         return "{0}".format(self.organization)
+
+
+
+class AdditionalParameters(models.Model):
+    title = models.CharField(max_length=255, blank=False, null=False)
+    description = models.CharField(max_length=1000, blank=False, null=False)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        index_together = ["content_type", "object_id"]
+
+    def has_perm(self, user):
+        return self.title
+
 
 
 def user_extended_profile(backend, user, response, *args, **kwargs):

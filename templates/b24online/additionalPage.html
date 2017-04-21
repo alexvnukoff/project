@@ -11,7 +11,7 @@
             <input class="text" style="width:89%;" id="{{ prefix }}-title"  name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
             <div style="margin-bottom: 20px">{% trans 'Delete' %}: <input type="checkbox" name="{{ prefix }}-DELETE" {% if form and form.DELETE.value %} checked="checked" {% endif %}/> </div>
             </div>
-                     {% if form.errors.content %}
+            {% if form.errors.content %}
                 <div class="error-handler">
                     <div class="formserror">{{ form.errors.content.0 }}</div>
                 </div>
@@ -19,7 +19,8 @@
         <div class="clumn2">
             <div style="margin-bottom: 20px"><label>{% trans 'Content' %}</label></div>
             <div class="">
-                <textarea class="tiny"  id="{{ prefix }}-content" name="{{ prefix }}-content">{{ form.content.value|default_if_none:"" }}</textarea>
+                <textarea class="tiny" id="{{ prefix }}-content" name="{{ prefix }}-content">{{ form.content.value|default_if_none:"" }}</textarea>
             </div>
         </div>
+
      </div>

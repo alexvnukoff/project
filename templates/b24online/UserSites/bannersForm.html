@@ -1,0 +1,82 @@
+{% extends 'b24online/forms.html' %}
+{% load i18n %}
+{% load static %}
+{% load CustomFilters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div id="u-site-wrapper">
+
+{% include "b24online/UserSites/includes/breadcrumbs.html" %}
+{% include "b24online/UserSites/includes/notifications.html" %}
+
+<h1>{{ title }}</h1>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+
+      $('#user_site_form').submit(function() {
+        $('input[name$="block"]').each(function(index, element) {
+            var li = $(this).closest('li');
+            if (li.find('input[name$="advertisement_ptr"]').val() == '' && li.find('input[name$="image"]').val() == '') {
+                $(this).val('');
+            }
+        });
+      });
+    });
+</script>
+
+<form enctype="multipart/form-data" method="post" action="" id="user_site_form">{% csrf_token %}
+
+ <div class="form-group banners">
+        <label>{% trans "Banners" %}:</label>
+
+                {{ form.management_form }}
+                {{ form.non_form_errors }}
+                <ul class="custom_images">
+                {% for banner_form in form %}
+
+                    {{ banner_form.id }}
+                    {% with valid_blocks|pop_val:banner_form.block.value as block %}
+                    <li{% if banner_form.initial.image %} style="padding:5px;background:#f7f7f7;border:1px solid #dedede"{% endif %}>
+                        <div class="label">{{ block.name }}
+                          {% if "RIGHT" in block.name %} ({% trans 'Dimensions' %} 205x102)
+                          {% elif "LEFT" in block.name %} ({% trans 'Dimensions' %} 218x125)
+                          {% elif "FOOTER" in block.name %} ({% trans 'Dimensions' %} 540x70){%  endif %}
+                        </div>
+
+                        {% if banner_form.initial.image %}
+                        <div style="display:block;margin:0;">
+
+                                <img style="width:110px;hight:100px;display:block;margin:5px 0;border:1px solid #aeaeae" src='{{ banner_form.initial.image.big }}'>
+
+                        </div>
+                        {% endif %}
+
+                                <input type="file" name="{{ banner_form.image.html_name }}" {% if banner_form.errors.image %}style="border:1px solid #ef6066;"{% endif %} />
+                                <input value="{{ block.pk }}" type="hidden" name="{{ banner_form.block.html_name }}">
+                                <input value="{{ banner_form.advertisement_ptr.value|default_if_none:"" }}" type="hidden" name="{{ banner_form.advertisement_ptr.html_name }}" />
+
+                                {% trans 'Link URL' %}: <input value="{{ banner_form.link.value|default_if_none:"" }}" type="text" name="{{ banner_form.link.html_name }}" {% if banner_form.errors.link %}style="border:2px solid #ef6066;"{% endif %} />
+                                {% if banner_form.initial.image %}<label style="display:inline;margin:0 50px;">{% trans 'Remove' %}{{ banner_form.DELETE }}</label>{% endif %}
+
+                        {% if banner_form.errors.image %}<small class="error" style="display:block;">{{ banner_form.errors.image.0 }}</small>{% endif %}
+
+                    </li>
+
+                    {% endwith %}
+
+                    <p>&nbsp;</p>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="bigbuy" value="{% trans 'Save' %}">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

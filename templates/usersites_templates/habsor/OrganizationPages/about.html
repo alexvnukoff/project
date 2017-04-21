@@ -1,0 +1,45 @@
+{% extends 'usersites_templates/habsor/index.html' %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load i18n %}
+{% load inclusionTags %}
+{% load content_tags %}
+{% load humanize %}
+
+{% block title %}{% trans "About us" %}{% endblock %}
+
+
+{% block content %}
+
+    {% check_banner_exist "SITES RIGHT 4" as right_banner_4 %}
+{% if right_banner_4 %}
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12 banner-about-page">
+            {% site_banner "top" "SITES RIGHT 4" %}
+        </div>
+    </div>
+{% endif %}
+
+    {{ block.super }}
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row ">
+            <div class="col-lg-12">
+                <h2 class="cat-header">{{ site.user_site.organization.name }}</h2>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Map Column -->
+            <div id="no-more-tables" class="col-md-12 about-page-content">
+                <p>{{ site.user_site.organization.description|cleanHtml|safe }} </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

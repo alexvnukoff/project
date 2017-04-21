@@ -1,0 +1,26 @@
+{% load i18n %}
+     <div class="addpage-form">
+        <div class="clumn1">
+            <label>{% trans 'Title' %}</label>
+            {% if form.errors.title %}
+                <div class="error-handler">
+                    <div class="formserror">{{ form.errors.title.0 }}</div>
+                </div>
+            {% endif %}
+
+            <input class="text" style="width:89%;" id="{{ prefix }}-title"  name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
+            <div style="margin-bottom: 20px">{% trans 'Delete' %}: <input type="checkbox" name="{{ prefix }}-DELETE" {% if form and form.DELETE.value %} checked="checked" {% endif %}/> </div>
+            </div>
+            {% if form.errors.description %}
+                <div class="error-handler">
+                    <div class="formserror">{{ form.errors.description.0 }}</div>
+                </div>
+            {% endif %}
+        <div class="clumn2">
+            <div style="margin-bottom: 20px"><label>{% trans 'Description' %}</label></div>
+            <div class="">
+                <input class="pr-description" id="{{ prefix }}-description" name="{{ prefix }}-description" value="{{ form.description.value|default_if_none:"" }}" />
+            </div>
+        </div>
+{#         <a href="#" style="margin-top:20px;" class="buttonclear buttonremove">{% trans 'Delete page' %}</a> #}
+     </div>

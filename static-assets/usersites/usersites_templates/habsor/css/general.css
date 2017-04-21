@@ -1,0 +1,608 @@
+/*---------- General Styling ----------*/
+
+
+
+body {
+    overflow-x: hidden;
+    /*padding-top: 50px; !* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. *!*/
+}
+
+* {margin:0;padding:0;}
+
+html, body {height: 100%;}
+
+img{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    padding: 0;
+}
+
+#wrap-main {min-height: 100%;}
+
+#main {
+    overflow-y:auto;
+	padding-bottom: 300px;
+}  /* must be same height as the footer */
+
+#main-footer {
+    position: relative;
+	margin-top: -300px; /* negative value of footer height */
+	height: 300px;
+	clear:both;
+}
+
+/*Opera Fix*/
+body:before {/* thanks to Maleika (Kohoutec)*/
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;/* thank you Erik J - negate effect of float*/
+}
+
+/* IMPORTANT
+
+You also need to include this conditional style in the <head> of your HTML file to feed this style to IE 6 and lower and 8 and higher.
+
+<!--[if !IE 7]>
+	<style type="text/css">
+		#wrap {display:table;height:100%}
+	</style>
+<![endif]-->
+
+*/
+/* ----------------- End of sticky fooer ---------------------*/
+
+h1, h2, h3, h4, h5, h6 {
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+h4{
+    font-size: 1.2em;
+}
+
+/* ------------------------------------
+   Header Stying ----------------------
+---------------------------------------*/
+.top-nav{
+    clear: both;
+    display: inline-block;
+    width: 100%;
+}
+
+.top-nav ul{
+    list-style: none;
+    margin-top: 23px;
+    z-index: 99;
+}
+
+.top-nav ul li{
+    display: inline-block;
+    text-transform: capitalize;
+    padding: 0 10px;
+}
+
+.top-nav .top-link-reg-msg{
+    padding: 0;
+}
+
+.top-nav .top-link-reg-env{
+    padding: 0;
+}
+
+.top-nav .top-link-reg-name,
+.top-nav .top-link-reg-out{
+    padding: 0 3px;
+}
+
+.top-nav .top-link-reg-avtr{
+    padding: 0;
+}
+
+.top-nav ul li a {
+    text-decoration: none;
+}
+
+/* Search on navbar */
+#search {
+    position: absolute;
+    top: 23px;
+    /*left: 0;*/
+    width: 60px;
+    height: 60px;
+}
+#search-label {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    z-index: 20;
+}
+
+#search-label label:before,
+#m-search-label label:before{
+  /*position: absolute;*/
+  font-family: 'FontAwesome';
+  top: 0;
+  left: 10px;
+  content: "\f002";
+}
+
+#search-label label {
+    display: block;
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#search-label label:hover::before,
+#search-label.active label::before{
+  /*position: absolute;*/
+  font-family: 'FontAwesome';
+  top: 0;
+  left: 10px;
+  content: "\f002";
+}
+
+#search-input {
+    position: absolute;
+    top: -10px;
+    /*right: 80px;*/
+    width: 250px;
+    height: 60px;
+    z-index: 5;
+    overflow: hidden;
+}
+
+#search-input input {
+    display: block;
+    position: absolute;
+    top: 0;
+    /*left: -450px;*/
+    width: 250px;
+    height: 80%;
+    margin: 0;
+    padding: 0 10px;
+    border: none;
+    /*background-color: #23688b;*/
+    color: #fff;
+    font-size: 18px;
+    backface-visibility: none;
+    border-radius: 0;
+    transition: left 0.3s;
+}
+
+#search-input input:focus {
+    outline: none
+}
+
+#search-input.focus {
+    z-index: 20
+}
+
+#search-input.focus input {
+    left: 0;
+    transition: left 0.3s;
+}
+
+/* Language menu */
+.top-nav .language-navi {
+	position:relative;
+	display:inline-block;
+	cursor:pointer;
+	float:left;
+	z-index: 9999;
+	color: #000;
+}
+
+.top-nav ul.dropdown-menu>li>a>img.flag-icon {
+    border: 1px solid #e7e7e7;
+    margin: -3px 5px 0 5px;
+    width: 24px;
+}
+
+.top-nav ul.dropdown-menu>li>a{
+	padding: 3px 5px;
+	margin: 0;
+}
+
+.language-navi-dropdown {
+    display: none;
+	top: 28px;
+    left: -8px;
+    padding: 4px 8px;
+	position: absolute;
+    background: #f9f9f9;
+	margin: -10px -101px 0 0;
+    z-index: 99;
+}
+
+.language-navi:hover .language-navi-dropdown {display:block;}
+
+.language-navi-dropdown a{
+	padding: 0;
+}
+
+.language-navi-dropdown img {
+    width: 24px;
+	display: inline;
+}
+
+/* Main header */
+.main-header{
+    border-top: 1px solid #ccc;
+}
+
+.main-header .left-header{
+    padding-top: 20px;
+}
+
+.main-header .cart-header{
+    text-align: center;
+
+}
+
+.main-header .cart-header span.glyphicon-shopping-cart{
+    padding-top: 10px;
+    font-size: 30px;
+}
+
+.main-header .cart-header span a,
+.main-header .cart-header span{
+    text-decoration: none;
+}
+
+/* Mobile collapsed top menu */
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .m-top-search{
+        position: relative;
+        margin: 10px;
+    }
+
+    #m-search-input input{
+        border-radius: 3px;
+        width: 200px;
+        height: 2em;
+    }
+
+    .top-nav ul{
+        margin: 10px;
+        padding: 0;
+    }
+
+    .top-nav .top-links ul .top-link-m{
+        display: block;
+        padding: 0;
+    }
+
+    .top-nav{
+        margin-top: 6px;
+    }
+
+    .language-navi-dropdown{
+        display: block;
+        position: static;
+        background: none;
+    }
+
+    .language-navi-dropdown img{
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+
+    .top-nav .tog-display{
+        display: none;
+    }
+}
+
+/****************************************
+** content styling **********************
+*****************************************/
+/**** sidebar **************************/
+h2.cat-header{
+    margin: 10px 0 5px 0;
+}
+
+h2.cat-header a{
+    text-decoration: none;
+}
+
+.cat-sidebar .panel>.list-group a.list-group-item{
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #aaa;
+    padding-right: 0;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.cat-sidebar .panel{
+    border: none;
+}
+.banner-main-collection{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.banner-main-page{
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.side-banner{
+    padding: 0;
+}
+
+.side-banner>div{
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sidebar-cat,
+.main-content{
+    margin-top: 20px;
+}
+
+hr.style-one {
+    border: 1px solid #ccc;
+    margin: 5px 0;
+}
+
+/******************************************
+** product styling ************************
+******************************************/
+.product{
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+}
+
+.product .main-img-wrap,
+.news .blog-img-wrap{
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.product .product__title{
+    font-size: 16px;
+    text-transform: capitalize;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.product .product__discount{
+    position: absolute;
+    top: 10px;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-page-container .paypal_form_layer{
+    clear: both;
+}
+
+.gal-container{
+    margin-bottom: 10px;
+}
+
+.gal-container .gal-item{
+    padding: 5px;
+}
+
+.gal-container .gal-item .img-wrap{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+/************************
+** news styling *********
+************************/
+/*#####################
+Additional Styles (required)
+######################*/
+.carousel-indicators {
+	top:15px;
+	left:10px;
+	width:auto;
+	margin-left:0;
+    height: 20px;
+}
+.carousel-indicators li {
+	border-radius:0;
+	width:8px;
+	height:8px;
+	background:#fff;
+}
+.carousel-indicators .active {
+	width:10px;
+	height:10px;
+	background:#3276b1;
+	border-color:#3276b1;
+}
+
+#newsCarousel img.thumbnail{
+    margin: 0;
+    width: 100%;
+}
+
+/******************************
+** footer styling *************
+******************************/
+footer{
+    margin-top: 20px;
+}
+
+footer .footer-banner{
+    margin-top: 10px;
+}
+
+footer .footer-logo{
+    /*width: 120px;*/
+    height: 80px;
+}
+
+footer .footer-waze{
+    padding-top: 80px;
+}
+
+footer .footer-menu{
+    padding-top: 80px;
+    list-style: none;
+}
+
+footer .footer-menu a{
+    text-decoration: none;
+}
+
+/****************************
+** about page ***************
+****************************/
+.banner-about-page{
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+/****************************
+** business proposals *******
+****************************/
+.prop-header,
+.news-header{
+    font-size: 18px;
+}
+
+.prop-content{
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.prop-title{
+    padding: 25px;
+    margin-bottom: 10px;
+}
+
+.prop-title a{
+    text-decoration: none;
+}
+
+.news-content{
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.video-row{
+    margin-bottom: 20px;
+}
+
+.video-row .video-header{
+    font-size: 18px;
+}
+
+.cust-page .cust-nav a{
+    padding: 15px;
+    text-decoration: none;
+}
+
+#product-lead form{
+    border: 1px solid #000;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#product-lead form .control-group{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+#leads-in-page{
+    border: 1px solid #000;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#leads-in-page .form-cap img{
+    margin-right: 5px;
+    margin-left: 5px;
+    height: 34px;
+}
+
+#leads-in-page .form-cap input{
+    height: 34px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#leads-in-page .form-cap p{
+    margin: 0;
+}
+
+.item-page__price{
+    font-size: 24px;
+    color: green;
+}
+
+.item-page__coupon{
+    border-top: 1px solid #aaa;
+}
+
+.prod-about-title{
+    clear: both;
+}
+
+.item-page__qty .item-page__qty-box{
+    height: 34px;
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+}
+
+.buy-product-btn{
+    width: 200px;
+    height: 50px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}

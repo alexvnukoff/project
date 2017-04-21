@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% if products %}
+    <div class=" clearfix main-products">
+
+        {# Looping the products from that came from the view #}
+        {# display only the products that aren't coupons #}
+        {% for product in products %}
+
+        {# Order of elements in the product thumbnail: #}
+        {# img, title, category, short description, price, deleted price, button group #}
+            <div class="col-sm-6 col-xs-12 col-md-4 product">
+
+                {% if product.image %}
+                    <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        <div class="main-img-wrap">
+                            <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}">
+                        </div>
+                    </a>
+                {% else %}
+                    <img src="{% static 'b24online/img/item.jpg' %}" />
+                {% endif %}
+
+                {% if product.coupon_discount_percent %}
+                    <div class="product__discount">{{ product.coupon_discount_percent|intword }}%</div>
+                {% endif %}
+
+                {# Product details #}
+                <div class="product__caption">
+                    {# Product title - up 20 char to keep design #}
+                    <h3 class="product__title"><a href="{% url 'b2c_products:detail' product.slug product.pk %}">{{ product.name|truncatechars:35 }}</a></h3>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+{% endif %}{# End of products section. #}

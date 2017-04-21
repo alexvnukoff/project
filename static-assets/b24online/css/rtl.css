@@ -240,3 +240,6 @@ select#id_language {float:right;}
 .chat-title-imgs {float:left;}
 .message-attachments {float:right;}
 .profile-socials {float:right;}
+
+#u-site-wrapper .template .ex-img {margin:5px 0 5px 10px !important;}
+#u-site-wrapper div.fileinputs {float: right;margin-right:0;}

@@ -1,0 +1,66 @@
+{% extends 'usersites_templates/habsor/index.html' %}
+
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
+{% load inclusionTags %}
+{% load content_tags %}
+
+{% block content %}
+    {{ block.super }}
+    {# ------------------------------------- #}
+
+    <div class="container cust-page">
+
+        <div class="row">
+          <div class="col-lg-12">
+          <form class="form-inline" id="leads-in-page" action="{% url 'sendmessage' %}" method="post">{% csrf_token %}
+              <label class="leads-form-lbl">{% trans "Contact us:" %}</label>
+            <input type="hidden" name="co_id" value="{{ site.pk }}">
+            <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
+
+              <div class="control-group form-group">
+                <input type="text" class="form-control" value="{{ form.name.value|default_if_none:"" }}" name="name" placeholder="{% trans 'Your name' %}">
+              </div>
+
+              <div class="control-group form-group">
+                <input type="tel" class="form-control"  value="{{ form.phone.value|default_if_none:"" }}" name="phone" placeholder="{% trans 'Your phone' %}">
+              </div>
+
+              <div class="control-group form-group">
+                <input type="email" class="form-control" value="{{ form.email.value|default_if_none:"" }}" name="email" placeholder="{% trans 'Your email' %}">
+              </div>
+
+              <div class="control-group form-group form-cap">
+                  <p>{{ form.captcha }}</p>
+              </div>
+
+              <div class="control-group form-group">
+                <input type="submit" class="btn btn-default main-contact-btn" value="{% trans 'Send' %}"></input>
+              </div>
+          </form>
+          </div>
+        </div>
+
+        <h2 class="cat-header">{{ object.title }}</h2>
+
+        <div class="row">
+            <div class="cust-nav">
+               {% for page in site.user_site.organization.additional_pages.all %}
+                    <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+                {% endfor %}
+            </div>{# /secondary menu #}
+        </div>
+
+        <!-- Intro Content -->
+        <div class="row cust-page">
+            <div id="no-more-tables" class="col-md-12 about-page-content">
+                <p>{{ object.content|cleanHtml|safe }}</p>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+
+{% endblock %}

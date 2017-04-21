@@ -1,0 +1,175 @@
+/* style.css and he_style.css is styling the direction of the site. */
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Alef');
+
+/*---------- General Styling ----------*/
+body, h1, h2, h3, h4, p, span, div, a{
+	direction: rtl;
+    font-family: 'Alef', sans-serif;
+}
+
+
+/* ----------- Navigation Styling -------------------- */
+.top-nav .top-links{
+    float: left;
+}
+
+.top-nav .top-links ul,
+.top-nav .top-links .top-social,
+.top-nav .top-links .top-search{
+    float: right;
+}
+
+.top-nav .top-links ul{
+    padding: 0 40px 0 0;
+}
+
+.top-nav .top-link-reg-msg{
+    margin-right: -15px;
+    margin-left: -5px;
+}
+
+#search-input {
+    left: 80px;
+}
+
+#search-input input {
+    left: -450px;
+    transition: left 0.3s;
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .m-top-search{
+        float: right;
+    }
+
+    #m-search-input{
+        float: right;
+    }
+
+    #m-search-label label{
+        float: right;
+    }
+
+    #m-search-label{
+        margin-left: 10px;
+        float: right;
+    }
+
+    .language-navi>img{
+        float: right;
+    }
+
+    #m-top-links{
+        float: left;
+        padding-left: 10px;
+        font-size: 14px;
+    }
+
+    .tel{
+        float: right;
+        padding-right: 10px;
+        font-size: 14px;
+    }
+}
+
+.sidebar-cat,
+.right-header,
+.details-header,
+.details-header-icon{
+    float: right;
+}
+
+.main-content,
+.left-header,
+.cart-header{
+    float: left;
+}
+
+.gal-container .gal-item{
+    float: right;
+}
+
+
+/* ----------- Proposal Styling -------------------- */
+.prop-title{
+    float: right;
+}
+
+
+/* ----------- News Styling -------------------- */
+.article{
+    float: right;
+}
+
+.news-content{
+    float: right;
+}
+
+.content__info__news .news__img{
+    float: right;
+}
+
+/* ----------- Coupons Styling -------------------- */
+
+
+/* ----------- Product Styling -------------------- */
+.main-content .product{
+    float: right;
+}
+
+.product .product__discount{
+    left: inherit;
+    right: 15px;
+}
+
+.product-page-container .item-page{
+    float: right;
+}
+
+.item-page__regular, .item-page__discount{
+    float: right;
+    margin: 15px 0 15px 15px;
+}
+
+
+/* ----------- Contact Styling -------------------- */
+
+#leads-in-page .form-cap img {
+    float: right;
+}
+
+#leads-in-page{
+    padding-right: 10px;
+}
+
+.contact-info{
+    float: right;
+}
+
+/* ----------- Counter Styling -------------------- */
+
+/*---------- Footer Styling ----------*/
+.footer-about,
+.footer-links{
+    float: right;
+}
+
+/*---------- Banner Advertisment Styling ----------*/
+/* The banner above the footer */
+
+
+/* ----------- Product list Styling -------------------- */
+
+
+/*---------- table Styling ----------*/
+/* The bable is used in the cart page to display the shoppings table */
+#paypal_form_layer input[type=image]{
+    float: left;
+}
+
+/*---------- Member banner Styling ----------*/
+
+
+/*!*---------- Navigation Styling ----------*!*/

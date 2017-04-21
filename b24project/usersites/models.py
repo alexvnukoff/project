@@ -97,29 +97,30 @@ class UserSite(ActiveModelMixing, models.Model):
     galleries = GenericRelation(Gallery, related_query_name='sites')
     metadata = JSONField(default=dict())
     is_delivery_available = models.BooleanField(default=True)
-    delivery_currency = models.CharField(max_length=20, blank=False,
-                                         null=True, choices=CURRENCY)
-    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2,
-                                        null=True, blank=False)
+    delivery_currency = models.CharField(max_length=20, blank=True, null=True, choices=CURRENCY)
+    delivery_cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
+    def upload_logo(self, changed_data=None):
         from core import tasks
         params = []
-
-        if is_new_logo:
+        if changed_data:
             params.append({
                 'file': self.logo.path,
                 'sizes': {
                     'big': {'box': (220, 120), 'fit': True}
                 }
             })
+        tasks.upload_images.delay(*params)
 
-        if changed_galleries is not None:
-            for image_path in changed_galleries:
+    def upload_gallery(changed_data=None):
+        from core import tasks
+        params = []
+        if changed_data is not None:
+            for image_path in changed_data:
                 params.append({
                     'file': image_path,
                     'sizes': {
@@ -127,15 +128,19 @@ class UserSite(ActiveModelMixing, models.Model):
                     }
                 })
 
-        if changed_banners is not None:
-            for image_path in changed_banners:
+        tasks.upload_images.delay(*params)
+
+    def upload_banners(self, changed_data=None):
+        from core import tasks
+        params = []
+        if changed_data is not None:
+            for image_path in changed_data:
                 params.append({
                     'file': image_path,
                     'sizes': {
                         'big': {'box': (150, 150), 'fit': False},
                     }
                 })
-
         tasks.upload_images.delay(*params)
 
     @property
@@ -311,4 +316,3 @@ def add_deal_for_product(sender, instance, created, **kwargs):
                     )
             except IntegrityError:
                 raise
-
