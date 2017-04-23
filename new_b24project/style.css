@@ -397,10 +397,14 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-goods .thumbnail .shadow-effect {
   position: relative;
+  height: 140px;
 }
 .main-row .article-content .content-goods .thumbnail .shadow-effect .thumb-img {
   position: relative;
   max-width: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
 }
 .main-row .article-content .content-goods .thumbnail .shadow-effect:before {
   z-index: 0;
