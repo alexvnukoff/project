@@ -700,6 +700,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .paid-img {
   margin-right: 5px;
+  max-height: 45px;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .text-details {
   font-size: 11px;
