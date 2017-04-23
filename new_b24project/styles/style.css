@@ -466,11 +466,100 @@ body .header-row .header-container .header .logout {
   padding: 13px 10px 30px;
   margin-top: 10px;
 }
+.main-row .article-content .content-block .content.company {
+  margin: 10px 0;
+  padding: 10px;
+}
+.main-row .article-content .content-block .content.company .afisha {
+  background: url("../images/news.png");
+  position: absolute;
+  width: 34px;
+  height: 35px;
+  background-position: -266px -60px;
+  top: -10px;
+  right: -10px;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  background-color: #323232;
+  padding: 0;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li {
+  height: 30px;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a {
+  color: #fff;
+  left: 0;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a:hover {
+  background-color: #777;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a i {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.main-row .article-content .content-block .content.company .body {
+  margin-top: 10px;
+  color: #595959;
+}
+.main-row .article-content .content-block .content.company .body .contacts {
+  border-left: solid 1px #e1e1e1;
+}
+.main-row .article-content .content-block .content.company .body .contacts .address {
+  float: left;
+  clear: left;
+}
+.main-row .article-content .content-block .content.company .body .contacts .phone {
+  float: left;
+  clear: left;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .extra-phone {
+  float: left;
+  clear: left;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .mail {
+  float: left;
+  clear: left;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .sprite {
+  background: url("../images/news.png");
+  margin-right: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .address-ico {
+  background-position: -120px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .phone-ico {
+  background-position: -137px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .extra-phone-ico {
+  background-position: -153px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .mail-ico {
+  background-position: -187px -90px;
+  width: 16px;
+  height: 16px;
+}
 .main-row .article-content .content-block .content .thumb-flag-block {
   height: 16px;
 }
 .main-row .article-content .content-block .content .date {
   margin-left: 35px;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 6px 0 6px 0;
 }
 .main-row .article-content .content-block .content .title {
   font-size: 16px;
@@ -482,6 +571,12 @@ body .header-row .header-container .header .logout {
   font-weight: 800;
   margin: 0 0 6px 0;
 }
+.main-row .article-content .content-block .content .title-company {
+  width: 90%;
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 800;
+}
 .main-row .article-content .content-block .content .project-site {
   margin: 0 0 6px 20px;
 }
@@ -492,8 +587,8 @@ body .header-row .header-container .header .logout {
   color: #000;
 }
 .main-row .article-content .content-block .content .img-container img {
-  max-width: 220px;
-  max-height: 150px;
+  max-width: 100%;
+  max-height: 100px;
 }
 .main-row .article-content .content-block .content .author {
   color: #9b9b9b;
