@@ -145,7 +145,7 @@ body .header-row .header-container .header .logout {
   margin: -4px 10px 0 -7px;
   width: 32px;
   height: 32px;
-  background: url("images/news.png");
+  background: url("../images/news.png");
   background-position: 0px -24px;
 }
 .main-row .article-filter .filter-langs {
@@ -447,7 +447,7 @@ body .header-row .header-container .header .logout {
   line-height: 10px;
   font-size: 12px;
   border: none;
-  background: url("../static-assets/b24online/img/coupon_btnbuy.gif") repeat-x;
+  background: url("../images/coupon_btnbuy.gif") repeat-x;
 }
 .main-row .article-content .content-goods .thumbnail .buy {
   width: 100%;
@@ -455,48 +455,53 @@ body .header-row .header-container .header .logout {
   line-height: 10px;
   font-size: 12px;
   border: none;
-  background: url("../static-assets/b24online/img/btnbuy.gif") repeat-x;
+  background: url("../images/btnbuy.gif") repeat-x;
 }
 .main-row .article-content .content-block {
   font-size: 12px;
   color: #9b9b9b;
 }
-.main-row .article-content .content-block .thumb-flag-block {
+.main-row .article-content .content-block .content {
+  background-color: #fafafa;
+  padding: 13px 10px 30px;
+  margin-top: 10px;
+}
+.main-row .article-content .content-block .content .thumb-flag-block {
   height: 16px;
 }
-.main-row .article-content .content-block .date {
+.main-row .article-content .content-block .content .date {
   margin-left: 35px;
 }
-.main-row .article-content .content-block .title {
+.main-row .article-content .content-block .content .title {
   font-size: 16px;
   font-weight: 800;
   margin: 6px 0 6px 0;
 }
-.main-row .article-content .content-block .title-news {
+.main-row .article-content .content-block .content .title-news {
   font-size: 16px;
   font-weight: 800;
   margin: 0 0 6px 0;
 }
-.main-row .article-content .content-block .project-site {
+.main-row .article-content .content-block .content .project-site {
   margin: 0 0 6px 20px;
 }
-.main-row .article-content .content-block .branch {
+.main-row .article-content .content-block .content .branch {
   margin-right: 20px;
 }
-.main-row .article-content .content-block .branch span {
+.main-row .article-content .content-block .content .branch span {
   color: #000;
 }
-.main-row .article-content .content-block .img-container img {
+.main-row .article-content .content-block .content .img-container img {
   max-width: 220px;
   max-height: 150px;
 }
-.main-row .article-content .content-block .author {
+.main-row .article-content .content-block .content .author {
   color: #9b9b9b;
 }
-.main-row .article-content .content-block .news-short {
+.main-row .article-content .content-block .content .news-short {
   color: #595959;
 }
-.main-row .article-content .content-block .news-detail {
+.main-row .article-content .content-block .content .news-detail {
   color: #595959;
   margin-top: 10px;
 }
@@ -567,7 +572,7 @@ body .header-row .header-container .header .logout {
   vertical-align: middle;
 }
 .main-row .right-aside .right-aside-block .imgnews {
-  background-image: url("../../static-assets/b24online/img/news.png");
+  background-image: url("images/news.png");
 }
 .main-row .right-aside .right-aside-block.sell {
   margin-top: 15px;
