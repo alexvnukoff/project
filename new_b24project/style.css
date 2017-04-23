@@ -366,6 +366,9 @@ body .header-row .header-container .header .logout {
   margin-left: -5px;
   margin-right: 0;
 }
+.main-row .article-content .content-goods .b2b-elem {
+  margin-top: 30px;
+}
 .main-row .article-content .content-goods .thumbnail {
   border: none;
   padding: 8px 8px 1px;
@@ -426,7 +429,8 @@ body .header-row .header-container .header .logout {
   color: #4a4a4a;
 }
 .main-row .article-content .content-goods .thumbnail .caption .media {
-  margin-bottom: 35px;
+  margin-bottom: 0;
+  height: 80px;
 }
 .main-row .article-content .content-goods .thumbnail .caption .thumb-flag {
   height: 16px;
