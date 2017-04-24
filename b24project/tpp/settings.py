@@ -204,7 +204,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'tpp.SetCurCompanyMiddleware.SetCurCompany',
     'centerpokupok.BasketMiddleware.Basket',
-    'b24online.stats.middleware.RegisteredEventMiddleware',
+    # 'b24online.stats.middleware.RegisteredEventMiddleware',
     'tpp.GeolocationFilterByRegion.GeolocationMiddleware',
 )
 

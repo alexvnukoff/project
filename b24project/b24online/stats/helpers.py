@@ -138,33 +138,35 @@ class RegisteredEventHelper(object):
 
     @classmethod
     def get_stored_event(cls, instance, event_type_slug):
+        pass
         """
         Return the key for Instance and EventType
         """
-        assert isinstance(instance, models.Model), 'Invalid parameter'
-        try:
-            content_type = ContentType.objects.get_for_model(instance)
-            event_type = RegisteredEventType.objects.get(
-                slug=event_type_slug)
-        except (RegisteredEventType.DoesNotExist, AttributeError) as exc:
-            err_msg = 'Error: %s' % exc
-            logger.error(err_msg)
-            raise InconsistentDataError(err_msg)
-        else:
-            return [event_type.pk, content_type.pk, instance.pk]
+        # assert isinstance(instance, models.Model), 'Invalid parameter'
+        # try:
+        #     content_type = ContentType.objects.get_for_model(instance)
+        #     event_type = RegisteredEventType.objects.get(
+        #         slug=event_type_slug)
+        # except (RegisteredEventType.DoesNotExist, AttributeError) as exc:
+        #     err_msg = 'Error: %s' % exc
+        #     logger.error(err_msg)
+        #     raise InconsistentDataError(err_msg)
+        # else:
+        #     return [event_type.pk, content_type.pk, instance.pk]
 
     @classmethod
     def register(cls, event_stored_data, request):
+        pass
         """
         Store the Event in Redis queue.
         """
-        event_stored_key = glue('registered', 'event', event_stored_data)
-        request_uuid = getattr(request, '_uuid', None)
-        if request_uuid:
-            events_queue_key = cls.get_request_key(request_uuid, 'queue')
-            if events_queue_key:
-                rconn = get_redis_connection()
-                rconn.lpush(events_queue_key, event_stored_key)
+        # event_stored_key = glue('registered', 'event', event_stored_data)
+        # request_uuid = getattr(request, '_uuid', None)
+        # if request_uuid:
+        #     events_queue_key = cls.get_request_key(request_uuid, 'queue')
+        #     if events_queue_key:
+        #         rconn = get_redis_connection()
+        #         rconn.lpush(events_queue_key, event_stored_key)
 
     @classmethod
     def get_unique_key(cls, extra_data):
