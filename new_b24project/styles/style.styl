@@ -324,6 +324,7 @@ body
             .badge
               position absolute
               top 0
+              right 0
               height 25px
               font-size 12px
               width 40px
@@ -399,15 +400,22 @@ body
           &.company
             margin 10px 0
             padding 10px
-            .afisha
-              background url(../images/news.png)
+            .dropdown-toggle
+              width 10px
+              border 18px solid transparent
+              border-top 18px solid #4a4a4a
+              border-right 18px solid #4a4a4a
               position absolute
-              width 34px
-              height 35px
-              background-position -266px -60px
-              top -10px
               right -10px
-              z-index 999
+              top -10px
+              .afisha
+                position absolute
+                color #fff
+                top -14px
+                right -14px
+                font-size 13px
+                cursor pointer
+                z-index 999
             .afisha-dropdown
               position absolute
               right 15px
@@ -468,43 +476,46 @@ body
                 // .phone-ico
                 // .extra-phone-ico
 
-          .thumb-flag-block
-            height 16px
-          .date
-            margin-left 35px
-            font-size 16px
-            font-weight 800
-            margin 6px 0 6px 0
-          .title
-            font-size 16px
-            font-weight 800
-            margin 6px 0 6px 0
-          .title-news
-            font-size 16px
-            font-weight 800
-            margin 0 0 6px 0
-          .title-company
-            width 90%
-            margin-left 10px
-            font-size 16px
-            font-weight 800
-          .project-site
-            margin 0 0 6px 20px
-          .branch
-            margin-right 20px
-            span
-              color #000
-          .img-container
-            img
-              max-width 100%
-              max-height 100px
-          .author
-            color #9b9b9b
-          .news-short
-            color #595959
-          .news-detail
-            color #595959
-            margin-top 10px
+        .thumb-flag-block
+          height 16px
+        .date
+          position relative
+          top -3px
+          margin-left 35px
+          font-size 12px
+          font-weight 300
+          // margin 6px 0 6px 0
+        .title
+          font-size 16px
+          font-weight 800
+          margin 6px 0 6px 0
+        .title-news
+          font-size 16px
+          font-weight 800
+          margin 0 0 6px 0
+        .title-company
+          width 90%
+          margin-left 10px
+          margin-top -4px
+          font-size 16px
+          font-weight 800
+        .project-site
+          margin 0 0 6px 20px
+        .branch
+          margin-right 20px
+          span
+            color #000
+        .img-container
+          img
+            max-width 100%
+            max-height 100px
+        .author
+          color #9b9b9b
+        .news-short
+          color #595959
+        .news-detail
+          color #595959
+          margin-top 10px
     //MAIN-right aside
     .right-aside
       .right-aside-block
@@ -587,12 +598,19 @@ body
           .company-paid-card
             margin -13px -5px
             border-radius 0 0 3px 3px
+            .flag
+              margin-left 0
+              .thumb-flag
+                width 22px
             .paid-img
               margin-right 5px
               max-height 45px
             .text-details
               font-size 11px
             .thumb-title
+              position relative
+              top -6px
+              margin-left 10px
               color #0089bc
               font-weight 700
 

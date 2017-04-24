@@ -382,6 +382,7 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-goods .thumbnail.coupons .badge {
   position: absolute;
   top: 0;
+  right: 0;
   height: 25px;
   font-size: 12px;
   width: 40px;
@@ -470,14 +471,22 @@ body .header-row .header-container .header .logout {
   margin: 10px 0;
   padding: 10px;
 }
-.main-row .article-content .content-block .content.company .afisha {
-  background: url("../images/news.png");
+.main-row .article-content .content-block .content.company .dropdown-toggle {
+  width: 10px;
+  border: 18px solid transparent;
+  border-top: 18px solid #4a4a4a;
+  border-right: 18px solid #4a4a4a;
   position: absolute;
-  width: 34px;
-  height: 35px;
-  background-position: -266px -60px;
-  top: -10px;
   right: -10px;
+  top: -10px;
+}
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha {
+  position: absolute;
+  color: #fff;
+  top: -14px;
+  right: -14px;
+  font-size: 13px;
+  cursor: pointer;
   z-index: 999;
 }
 .main-row .article-content .content-block .content.company .afisha-dropdown {
@@ -552,51 +561,53 @@ body .header-row .header-container .header .logout {
   width: 16px;
   height: 16px;
 }
-.main-row .article-content .content-block .content .thumb-flag-block {
+.main-row .article-content .content-block .thumb-flag-block {
   height: 16px;
 }
-.main-row .article-content .content-block .content .date {
+.main-row .article-content .content-block .date {
+  position: relative;
+  top: -3px;
   margin-left: 35px;
+  font-size: 12px;
+  font-weight: 300;
+}
+.main-row .article-content .content-block .title {
   font-size: 16px;
   font-weight: 800;
   margin: 6px 0 6px 0;
 }
-.main-row .article-content .content-block .content .title {
-  font-size: 16px;
-  font-weight: 800;
-  margin: 6px 0 6px 0;
-}
-.main-row .article-content .content-block .content .title-news {
+.main-row .article-content .content-block .title-news {
   font-size: 16px;
   font-weight: 800;
   margin: 0 0 6px 0;
 }
-.main-row .article-content .content-block .content .title-company {
+.main-row .article-content .content-block .title-company {
   width: 90%;
   margin-left: 10px;
+  margin-top: -4px;
   font-size: 16px;
   font-weight: 800;
 }
-.main-row .article-content .content-block .content .project-site {
+.main-row .article-content .content-block .project-site {
   margin: 0 0 6px 20px;
 }
-.main-row .article-content .content-block .content .branch {
+.main-row .article-content .content-block .branch {
   margin-right: 20px;
 }
-.main-row .article-content .content-block .content .branch span {
+.main-row .article-content .content-block .branch span {
   color: #000;
 }
-.main-row .article-content .content-block .content .img-container img {
+.main-row .article-content .content-block .img-container img {
   max-width: 100%;
   max-height: 100px;
 }
-.main-row .article-content .content-block .content .author {
+.main-row .article-content .content-block .author {
   color: #9b9b9b;
 }
-.main-row .article-content .content-block .content .news-short {
+.main-row .article-content .content-block .news-short {
   color: #595959;
 }
-.main-row .article-content .content-block .content .news-detail {
+.main-row .article-content .content-block .news-detail {
   color: #595959;
   margin-top: 10px;
 }
@@ -698,6 +709,12 @@ body .header-row .header-container .header .logout {
   margin: -13px -5px;
   border-radius: 0 0 3px 3px;
 }
+.main-row .right-aside .right-aside-block.list .company-paid-card .flag {
+  margin-left: 0;
+}
+.main-row .right-aside .right-aside-block.list .company-paid-card .flag .thumb-flag {
+  width: 22px;
+}
 .main-row .right-aside .right-aside-block.list .company-paid-card .paid-img {
   margin-right: 5px;
   max-height: 45px;
@@ -706,6 +723,9 @@ body .header-row .header-container .header .logout {
   font-size: 11px;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .thumb-title {
+  position: relative;
+  top: -6px;
+  margin-left: 10px;
   color: #0089bc;
   font-weight: 700;
 }
