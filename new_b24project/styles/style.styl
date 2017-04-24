@@ -318,7 +318,6 @@ body
           margin: -10px -15px 0px -10px;
           line-height 1.3
           background-color #fafafa
-
           &.coupons
             margin-top 20px
             .badge
@@ -362,6 +361,8 @@ body
           .caption
             padding 15px 0 0 0
             color #333
+            position align-self
+            bottom 0
             font-size 12px
             font-weight 100
             color #4a4a4a
@@ -400,7 +401,7 @@ body
           width 100%
           &.company
             margin 10px 0
-            padding 10px
+            padding 10px 10px 5px 10px
             .dropdown-toggle
               width 10px
               border 18px solid transparent
@@ -437,8 +438,13 @@ body
             .body
               margin-top 10px
               color #595959
+              .logo
+                padding-right 0
+              .details
+                width 300px
               .contacts
                 border-left solid 1px #e1e1e1
+                width 164px
                 .address
                   float left
                   clear left
@@ -478,12 +484,13 @@ body
                 // .extra-phone-ico
 
         .thumb-flag-block
-          height 16px
+          height 13px
+          margin-right 7px
         .date
           position relative
           top -3px
           margin-left -5px
-          font-size 12px
+          font-size 13px
           font-weight 300
           // margin 6px 0 6px 0
         .title
@@ -496,7 +503,6 @@ body
           margin 0 0 6px 0
         .title-company
           width 90%
-          margin-left 10px
           margin-top -4px
           font-size 16px
           font-weight 800
@@ -513,9 +519,11 @@ body
 
         .img-container
           position relative
+          max-width 90px
+          margin-bottom 10px
           img
             position: relative;
-            max-width 150px
+            max-width 100%
             max-height 130px
             min-width 50px
             min-height 50px
@@ -530,8 +538,6 @@ body
             max-width: 300px;
             box-shadow: 0px 5px 7px 0px #616161;
             transform: rotate(-3deg);
-
-
         .author
           color #9b9b9b
         .news-company
@@ -626,7 +632,7 @@ body
             .flag
               margin-left 0
               .thumb-flag
-                width 22px
+                width 18px
             .paid-img
               margin-right 5px
               max-height 45px
@@ -634,7 +640,7 @@ body
               font-size 11px
             .thumb-title
               position relative
-              top -6px
+              top -5px
               margin-left 10px
               color #0089bc
               font-weight 700
