@@ -377,6 +377,7 @@ body .header-row .header-container .header .logout {
   background-color: #fafafa;
 }
 .main-row .article-content .content-goods .thumbnail.coupons {
+  height: 340px;
   margin-top: 20px;
 }
 .main-row .article-content .content-goods .thumbnail.coupons .badge {
@@ -399,18 +400,20 @@ body .header-row .header-container .header .logout {
   top: 0;
   right: 100%;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container {
   position: relative;
-  height: 140px;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect .thumb-img {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .shadow-effect {
+  position: relative;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .thumb-img {
   position: relative;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 185px;
   min-width: 100%;
-  min-height: 100%;
+  min-height: 50px;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect:before {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container:before {
   z-index: 0;
   position: absolute;
   content: "";
@@ -422,29 +425,28 @@ body .header-row .header-container .header .logout {
   box-shadow: 0px 5px 7px 0px #616161;
   transform: rotate(-3deg);
 }
-.main-row .article-content .content-goods .thumbnail .caption {
+.main-row .article-content .content-goods .thumbnail.coupons .caption {
   padding: 15px 0 0 0;
   color: #333;
-  position: align-self;
+  position: absolute;
   bottom: 0;
   font-size: 12px;
   font-weight: 100;
   color: #4a4a4a;
 }
-.main-row .article-content .content-goods .thumbnail .caption .media {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .media {
   margin-bottom: 0;
-  height: 80px;
 }
-.main-row .article-content .content-goods .thumbnail .caption .thumb-flag {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .thumb-flag {
   height: 16px;
 }
-.main-row .article-content .content-goods .thumbnail .caption .price {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .price {
   color: #f00;
   font-weight: 700;
   font-size: 13px;
   margin-top: 10px;
 }
-.main-row .article-content .content-goods .thumbnail .coupon-buy {
+.main-row .article-content .content-goods .thumbnail.coupons .coupon-buy {
   width: 100%;
   height: 22px;
   line-height: 10px;
@@ -452,7 +454,7 @@ body .header-row .header-container .header .logout {
   border: none;
   background: url("../images/coupon_btnbuy.gif") repeat-x;
 }
-.main-row .article-content .content-goods .thumbnail .buy {
+.main-row .article-content .content-goods .thumbnail.coupons .buy {
   width: 100%;
   height: 22px;
   line-height: 10px;
