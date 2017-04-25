@@ -588,7 +588,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .date {
   position: relative;
-  top: -3px;
+  top: -1px;
   margin-right: -5px;
   font-size: 13px;
   font-weight: 300;
@@ -648,7 +648,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .news-company {
   position: relative;
-  top: -3px;
+  top: 0;
   color: #595959;
 }
 .main-row .article-content .content-block .news-detail {
