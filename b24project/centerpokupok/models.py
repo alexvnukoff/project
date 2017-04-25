@@ -73,6 +73,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     coupon_dates = DateRangeField(null=True, blank=True)
 
     extra_params = JSONField(_('Extra param fields'), null=True, blank=True)
+    colors = ArrayField(models.CharField('Colors', max_length=100), blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')

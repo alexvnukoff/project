@@ -439,6 +439,21 @@ CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 CAPTCHA_BACKGROUND_COLOR = '#f1f1f1'
 CAPTCHA_FOREGROUND_COLOR = '#666666'
 
+COLORS = [
+    ('#1e1e1e', _('')),
+    ('#ffffff', _('')),
+    ('#be0074', _('')),
+    ('#fc0006', _('')),
+    ('#fc5b07', _('')),
+    ('#fd8d08', _('')),
+    ('#ffff0a', _('')),
+    ('#87c806', _('')),
+    ('#19ac03', _('')),
+    ('#149dc3', _('')),
+    ('#0b59af', _('')),
+    ('#00009f', _('')),
+    ('#59009f', _('')),
+]
 
 try:
     from local_settings import *

@@ -276,20 +276,8 @@ li a.coupon_btnbuy:hover, li a.coupon_btnbuy:active {opacity:.9}
 .profile-socials {width:48%;margin:0;float:left;}
 .profile-socials label {font-weight:bold;display:block;margin:10px 20px 5px 20px;}
 .profile-socials input.text {width:93%;margin:0 20px;background:#fff;border:1px solid #bdbdbd;padding:5px;}
-
-#header-language-selector {
-  position: relative;
-  cursor: pointer;
-  width: 26px;
-  top: -3px;
-}
-#header-language-selector img {
-    width: 23px;
-}
-.tophead-r .dropdown-menu a img {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
-}
-.tophead-r .dropdown-menu {
-  width: 175px;
-  left: -92px !important;
-}
+#header-language-selector {position: relative;cursor: pointer;width: 26px;top: -3px;}
+#header-language-selector img {width: 23px;}
+.tophead-r .dropdown-menu a img {box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);}
+.tophead-r .dropdown-menu {width: 175px;left: -92px !important;}
+.colors-settings {float:left;width:30px;}

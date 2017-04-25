@@ -1,8 +1,7 @@
 # -*- encoding: utf-8 -*-
-
 import json
 import logging
-
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -656,6 +655,18 @@ class B2CProductCreate(ItemCreate):
 
         return self.render_to_response(context_data)
 
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.object:
+            context['object'] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+        context['colors'] = settings.COLORS
+        context.update(kwargs)
+        return super().get_context_data(**context)
+
+
 
 class B2CProductUpdate(ItemUpdate):
     model = B2CProduct
@@ -715,6 +726,7 @@ class B2CProductUpdate(ItemUpdate):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         categories = context_data['form']['categories'].value()
+        context_data['colors'] = settings.COLORS
 
         if categories:
             context_data['categories'] = B2CProductCategory.objects\

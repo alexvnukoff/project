@@ -65,6 +65,9 @@ class B2CProductForm(forms.ModelForm):
                 self.initial['start_coupon_date'] = self.instance.start_coupon_date.strftime('%d/%m/%Y')
                 self.initial['end_coupon_date'] = self.instance.end_coupon_date.strftime('%d/%m/%Y')
 
+    colors = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple, required=False, choices=settings.COLORS)
+
     def clean(self):
         cleaned_data = super().clean()
         start_coupon_date = cleaned_data.get("start_coupon_date")
@@ -105,7 +108,7 @@ class B2CProductForm(forms.ModelForm):
     class Meta:
         model = B2CProduct
         fields = ('name', 'description', 'keywords', 'short_description',
-                  'image', 'currency', 'cost', 'categories',
+                  'image', 'currency', 'cost', 'colors', 'categories',
                   'coupon_discount_percent', 'discount_percent',
                   'producer', 'additional_images', 'show_on_main')
 

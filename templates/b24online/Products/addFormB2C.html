@@ -125,10 +125,26 @@
                     <input name="image" type="file" style="width: 100%" />
                 </div>
             </div>
+            <p>&nbsp;</p>
 
-            <a style="display:block;margin:220px 0 10px 0;" href="#" onclick="additionalUpload();" id="additionalButton">{% trans 'Additional images' %}</a>
-
+            <a style="display:block;margin:auto 0 12px 0;" href="#" onclick="additionalUpload();" id="additionalButton">{% trans 'Additional images' %}</a>
             <div style="display:none" id="additionalLoading">{% trans 'Loading..' %}</div>
+
+
+<h3 style="padding-bottom:5px;">{% trans "Colors:" %}</h3>
+<div class="colors-settings">
+{% for color in colors %}
+    <span style="display:block;background:{{ color.0 }};height:17px;margin-bottom:4px;width:20px;border:1px solid #dedede"></span>
+{% endfor %}
+</div>
+
+<div class="colors-settings">
+{% for field in form.colors %}
+    {{ field }}
+{% endfor %}
+
+</div>
+
             <div>
                 <label class="sapce">{% trans 'Product producer' %}</label>
                 {% if form.errors.producer %}
