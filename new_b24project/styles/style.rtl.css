@@ -145,13 +145,17 @@ body .header-row .header-container .header .logout {
   margin: -4px -7px 0 10px;
   width: 32px;
   height: 32px;
-  background: url("../../static-assets/b24online/img/news.png");
+  background: url("../images/news.png");
   background-position: 0px -24px;
 }
 .main-row .article-filter .filter-langs {
   margin-top: 13px;
 }
 .main-row .article-filter .filter-langs .filter-lang {
+  position: relative;
+  float: right;
+  top: -3px;
+  margin-right: 5px;
   color: #fff;
   background-color: #333;
   padding: 4px 6px;
@@ -164,7 +168,7 @@ body .header-row .header-container .header .logout {
   cursor: pointer;
 }
 .main-row .article-filter .filter-search {
-  top: -21px;
+  top: -5px;
   width: 160px;
   left: -5px;
 }
@@ -215,6 +219,139 @@ body .header-row .header-container .header .logout {
   margin-right: -40px;
   width: 660px;
 }
+.main-row .article-content .paginator {
+  color: #777;
+}
+.main-row .article-content .paginator a {
+  margin-right: 10px;
+}
+.main-row .article-content .banner {
+  height: 220px;
+  width: 100%;
+  background: #e9f7fc;
+  padding: 10px;
+  margin-top: 10px;
+}
+.main-row .article-content .banner .banner-container {
+  height: 100%;
+  width: 100%;
+}
+.main-row .article-content .banner .banner-container .body {
+  width: 100%;
+  height: 150px;
+}
+.main-row .article-content .banner .banner-container .body .content {
+  background: #fff;
+  position: relative;
+  float: right;
+  height: 150px;
+}
+.main-row .article-content .banner .banner-container .body .content .img img {
+  position: relative;
+  float: right;
+  margin-top: 14px;
+  max-height: 100%;
+  max-width: 100%;
+}
+.main-row .article-content .banner .banner-container .body .content .img .badge {
+  position: absolute;
+  top: 14px;
+  height: 28px;
+  font-size: 16px;
+  width: 57px;
+  line-height: 21px;
+  background-color: #dd201c;
+  border-radius: 0;
+}
+.main-row .article-content .banner .banner-container .body .content .img .badge:after {
+  content: " ";
+  border-width: 3px 4px 4px 3px;
+  border-style: solid;
+  border-color: transparent transparent #dd201c #dd201c;
+  position: absolute;
+  top: 0;
+  left: 100%;
+}
+.main-row .article-content .banner .banner-container .body .content .text {
+  margin-top: 10px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .title {
+  position: relative;
+  float: right;
+  font-size: 20px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .status {
+  position: relative;
+  float: right;
+  clear: right;
+  margin-top: 5px;
+  color: #a5a5a5;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire {
+  position: relative;
+  float: right;
+  clear: right;
+  margin-top: 5px;
+  font-size: 26px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire .clock {
+  margin-top: 20px;
+  color: #5a5a5a;
+  margin-right: 10px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire .exp {
+  margin-right: 30px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire .exp:first-child {
+  margin-right: 10px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire .count {
+  font-size: 30px;
+  text-align: center;
+  color: #5a5a5a;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire .date {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #cacaca;
+}
+.main-row .article-content .banner .banner-container .footer {
+  width: 100%;
+  height: 50px;
+  background: #159fcb;
+}
+.main-row .article-content .banner .banner-container .footer .buy {
+  margin-top: 7px;
+  padding: 6px 20px;
+  color: #fff;
+  background-color: #dd201c;
+  border: solid 1px #f00;
+  font-size: 15px;
+  font-weight: 700;
+}
+.main-row .article-content .banner .banner-container .footer .current-price {
+  margin-left: 15px;
+  line-height: 50px;
+  font-weight: 700;
+  color: #c8f2ff;
+}
+.main-row .article-content .banner .banner-container .footer .current-price .price {
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 5px;
+  color: #fff;
+}
+.main-row .article-content .banner .banner-container .footer .old-price {
+  margin-left: 15px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 14px;
+}
+.main-row .article-content .banner .banner-container .footer .old-price .price {
+  text-decoration: line-through;
+  color: #fff;
+  margin-left: 5px;
+}
 .main-row .article-content .article-header {
   font-size: 20px;
   font-weight: 600;
@@ -233,6 +370,9 @@ body .header-row .header-container .header .logout {
   margin-right: -5px;
   margin-left: 0;
 }
+.main-row .article-content .content-goods .b2b-elem {
+  margin-top: 30px;
+}
 .main-row .article-content .content-goods .thumbnail {
   border: none;
   padding: 8px 8px 1px;
@@ -240,14 +380,44 @@ body .header-row .header-container .header .logout {
   line-height: 1.3;
   background-color: #fafafa;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect {
+.main-row .article-content .content-goods .thumbnail.coupons {
+  height: 340px;
+  margin-top: 20px;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  font-size: 12px;
+  width: 40px;
+  line-height: 18px;
+  background-color: #dd201c;
+  border-radius: 0;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .badge:after {
+  content: " ";
+  border-width: 3px 4px 4px 3px;
+  border-style: solid;
+  border-color: transparent transparent #dd201c #dd201c;
+  position: absolute;
+  top: 0;
+  left: 100%;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container {
   position: relative;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect .thumb-img {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .shadow-effect {
+  position: relative;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .thumb-img {
   position: relative;
   max-width: 100%;
+  max-height: 185px;
+  min-width: 100%;
+  min-height: 50px;
 }
-.main-row .article-content .content-goods .thumbnail .shadow-effect:before {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container:before {
   z-index: 0;
   position: absolute;
   content: "";
@@ -259,31 +429,167 @@ body .header-row .header-container .header .logout {
   box-shadow: 0px 5px 7px 0px #616161;
   transform: rotate(3deg);
 }
-.main-row .article-content .content-goods .thumbnail .caption {
+.main-row .article-content .content-goods .thumbnail.coupons .caption {
   padding: 15px 0 0 0;
   color: #333;
-  font-size: 11px;
+  position: absolute;
+  bottom: 0;
+  font-size: 12px;
+  font-weight: 100;
+  color: #4a4a4a;
 }
-.main-row .article-content .content-goods .thumbnail .caption .thumb-flag {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .media {
+  margin-bottom: 0;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .caption .thumb-flag {
   height: 16px;
 }
-.main-row .article-content .content-goods .thumbnail .buy {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .price {
+  color: #f00;
+  font-weight: 700;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .coupon-buy {
   width: 100%;
   height: 22px;
   line-height: 10px;
   font-size: 12px;
   border: none;
-  background: url("../../static-assets/b24online/img/btnbuy.gif") repeat-x;
+  background: url("../images/coupon_btnbuy.gif") repeat-x;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .buy {
+  width: 100%;
+  height: 22px;
+  line-height: 10px;
+  font-size: 12px;
+  border: none;
+  background: url("../images/btnbuy.gif") repeat-x;
+}
+.main-row .article-content .content-goods .thumbnail.wall {
+  margin-top: 0;
 }
 .main-row .article-content .content-block {
   font-size: 12px;
   color: #9b9b9b;
 }
-.main-row .article-content .content-block .thumb-flag-block {
+.main-row .article-content .content-block .content {
+  background-color: #fafafa;
+  padding: 13px 10px 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+.main-row .article-content .content-block .content.company {
+  margin: 10px 0;
+  padding: 10px 10px 5px 10px;
+}
+.main-row .article-content .content-block .content.company .dropdown-toggle {
+  width: 10px;
+  border: 18px solid transparent;
+  border-top: 18px solid #4a4a4a;
+  border-left: 18px solid #4a4a4a;
+  position: absolute;
+  left: -10px;
+  top: -10px;
+}
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha {
+  position: absolute;
+  color: #fff;
+  top: -14px;
+  left: -14px;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown {
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  background-color: #323232;
+  padding: 0;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li {
+  height: 30px;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a {
+  color: #fff;
+  right: 0;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a:hover {
+  background-color: #777;
+}
+.main-row .article-content .content-block .content.company .afisha-dropdown li a i {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+.main-row .article-content .content-block .content.company .body {
+  margin-top: 10px;
+  color: #595959;
+}
+.main-row .article-content .content-block .content.company .body .logo {
+  padding-left: 0;
+}
+.main-row .article-content .content-block .content.company .body .details {
+  width: 300px;
+}
+.main-row .article-content .content-block .content.company .body .contacts {
+  border-right: solid 1px #e1e1e1;
+  width: 164px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .address {
+  float: right;
+  clear: right;
+}
+.main-row .article-content .content-block .content.company .body .contacts .phone {
+  float: right;
+  clear: right;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .extra-phone {
+  float: right;
+  clear: right;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .mail {
+  float: right;
+  clear: right;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .sprite {
+  background: url("../images/news.png");
+  margin-left: 6px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .address-ico {
+  background-position: -120px -90px;
+  width: 16px;
   height: 16px;
 }
+.main-row .article-content .content-block .content.company .body .contacts .phone-ico {
+  background-position: -137px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .extra-phone-ico {
+  background-position: -153px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .mail-ico {
+  background-position: -187px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .thumb-flag-block {
+  height: 13px;
+  margin-left: 7px;
+}
 .main-row .article-content .content-block .date {
-  margin-right: 35px;
+  position: relative;
+  top: -3px;
+  margin-right: -5px;
+  font-size: 13px;
+  font-weight: 300;
 }
 .main-row .article-content .content-block .title {
   font-size: 16px;
@@ -295,6 +601,12 @@ body .header-row .header-container .header .logout {
   font-weight: 800;
   margin: 0 0 6px 0;
 }
+.main-row .article-content .content-block .title-company {
+  width: 90%;
+  margin-top: -4px;
+  font-size: 16px;
+  font-weight: 800;
+}
 .main-row .article-content .content-block .project-site {
   margin: 0 20px 6px 0;
 }
@@ -304,14 +616,36 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .branch span {
   color: #000;
 }
+.main-row .article-content .content-block .img-container {
+  position: relative;
+  max-width: 90px;
+  margin-bottom: 10px;
+}
 .main-row .article-content .content-block .img-container img {
-  max-width: 220px;
-  max-height: 150px;
+  position: relative;
+  max-width: 100%;
+  max-height: 130px;
+  min-width: 50px;
+  min-height: 50px;
+}
+.main-row .article-content .content-block .img-container:before {
+  z-index: 0;
+  position: absolute;
+  content: "";
+  bottom: 5px;
+  right: 4px;
+  width: 90%;
+  top: 78%;
+  max-width: 300px;
+  box-shadow: 0px 5px 7px 0px #616161;
+  transform: rotate(3deg);
 }
 .main-row .article-content .content-block .author {
   color: #9b9b9b;
 }
-.main-row .article-content .content-block .news-short {
+.main-row .article-content .content-block .news-company {
+  position: relative;
+  top: -3px;
   color: #595959;
 }
 .main-row .article-content .content-block .news-detail {
@@ -385,7 +719,7 @@ body .header-row .header-container .header .logout {
   vertical-align: middle;
 }
 .main-row .right-aside .right-aside-block .imgnews {
-  background-image: url("../../static-assets/b24online/img/news.png");
+  background-image: url("images/news.png");
 }
 .main-row .right-aside .right-aside-block.sell {
   margin-top: 15px;
@@ -416,13 +750,23 @@ body .header-row .header-container .header .logout {
   margin: -13px -5px;
   border-radius: 0 0 3px 3px;
 }
+.main-row .right-aside .right-aside-block.list .company-paid-card .flag {
+  margin-right: 0;
+}
+.main-row .right-aside .right-aside-block.list .company-paid-card .flag .thumb-flag {
+  width: 18px;
+}
 .main-row .right-aside .right-aside-block.list .company-paid-card .paid-img {
   margin-left: 5px;
+  max-height: 45px;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .text-details {
   font-size: 11px;
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .thumb-title {
+  position: relative;
+  top: -5px;
+  margin-right: 10px;
   color: #0089bc;
   font-weight: 700;
 }

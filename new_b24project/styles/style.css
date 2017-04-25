@@ -152,6 +152,10 @@ body .header-row .header-container .header .logout {
   margin-top: 13px;
 }
 .main-row .article-filter .filter-langs .filter-lang {
+  position: relative;
+  float: left;
+  top: -3px;
+  margin-left: 5px;
   color: #fff;
   background-color: #333;
   padding: 4px 6px;
@@ -164,7 +168,7 @@ body .header-row .header-container .header .logout {
   cursor: pointer;
 }
 .main-row .article-filter .filter-search {
-  top: -21px;
+  top: -5px;
   width: 160px;
   right: -5px;
 }
@@ -461,6 +465,9 @@ body .header-row .header-container .header .logout {
   font-size: 12px;
   border: none;
   background: url("../images/btnbuy.gif") repeat-x;
+}
+.main-row .article-content .content-goods .thumbnail.wall {
+  margin-top: 0;
 }
 .main-row .article-content .content-block {
   font-size: 12px;
