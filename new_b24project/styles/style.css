@@ -503,8 +503,8 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.company .afisha-dropdown {
   position: absolute;
-  right: 15px;
-  top: 10px;
+  right: -11px;
+  top: -14px;
   background-color: #323232;
   padding: 0;
 }

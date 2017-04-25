@@ -19,6 +19,22 @@
 
   </head>
   <body>
+
+    <script>
+      $(document).ready(function() {
+        $('.afisha.id-1').hover(function() {
+          $('.afisha-dropdown.id-1').stop(true, true).delay(100).fadeIn(200);
+        }, function() {
+          $('.afisha-dropdown.id-1').stop(true, true).delay(500).fadeOut(500);
+        });
+        $('.afisha.id-2').hover(function() {
+          $('.afisha-dropdown.id-2').stop(true, true).delay(100).fadeIn(200);
+        }, function() {
+          $('.afisha-dropdown.id-2').stop(true, true).delay(500).fadeOut(500);
+        });
+      })
+    </script>
+
     <div class="container-fluid wrapper">
 
       <div class="row header-row">
@@ -139,17 +155,11 @@
                             <div class="col-xs-12 body">
                               <div class="container content company">
                                 <div class="dropdown">
-                                  <script>
-                                    $('.dropdown').hover(function() {
-                                      $(this).find('.afisha-dropdown').stop(true, true).delay(100).fadeIn(200);
-                                    }, function() {
-                                      $(this).find('.afisha-dropdown').stop(true, true).delay(500).fadeOut(500);
-                                    });
-                                  </script>
                                   <div class="dropdown dropdown-toggle" data-toggle="dropdown">
-                                    <i class="afisha fa fa-pencil" ></i>
+                                    <i class="afisha id-1 fa fa-pencil" >
+                                    </i>
                                   </div>
-                                  <ul class="afisha-dropdown dropdown-menu pull-right">
+                                  <ul class="afisha-dropdown id-1 dropdown-menu pull-right">
                                     <li>
                                       <a href="#"><i class="edit fa fa-pencil"></i>Edit</a>
                                     </li>
@@ -204,17 +214,10 @@
                             <div class="col-xs-12 body">
                               <div class="container content company">
                                 <div class="dropdown">
-                                  <script>
-                                    $('.dropdown').hover(function() {
-                                      $(this).find('.afisha-dropdown').stop(true, true).delay(100).fadeIn(200);
-                                    }, function() {
-                                      $(this).find('.afisha-dropdown').stop(true, true).delay(500).fadeOut(500);
-                                    });
-                                  </script>
                                   <div class="dropdown dropdown-toggle" data-toggle="dropdown">
-                                    <i class="afisha fa fa-pencil" ></i>
+                                    <i class="afisha id-2 fa fa-pencil" ></i>
                                   </div>
-                                  <ul class="afisha-dropdown dropdown-menu pull-right">
+                                  <ul class="afisha-dropdown id-2 dropdown-menu pull-right">
                                     <li>
                                       <a href="#"><i class="edit fa fa-pencil"></i>Edit</a>
                                     </li>
