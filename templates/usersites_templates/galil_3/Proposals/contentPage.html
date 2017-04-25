@@ -1,8 +1,10 @@
-{% extends 'usersites_templates/galil/index.html' %}
+{% extends 'usersites_templates/galil_3/index.html' %}
 {% load i18n %}
 {% load staticfiles %}
 {% load CustomFilters %}
 {% load content_tags %}
+
+{% block title %}{% trans "Business proposals" %}{% endblock %}
 
 {% block content %}
     {{ block.super }}

@@ -1,4 +1,4 @@
-{% extends 'usersites_templates/galil/index.html' %}
+{% extends 'usersites_templates/galil_3/index.html' %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
@@ -104,7 +104,7 @@
 
         </div><!-- /end of Coupons and news modouls -->
 
-        <div id="banner1" class="banner col-lg-12 ">
+        <div id="about-main" class="col-lg-12 ">
                 <div>
                     <h2 class="page-header section-header">{{ site.user_site.organization.name }}</h2>
                     <p>
@@ -116,20 +116,8 @@
             </div>
     </div><!-- /container -->
 
-        {% b2c_products 'B2CProducts/main_products.html' 4 %}
-
-
-
-
-    {# Row for business proposals and news. If there are no bp the news will take a full line. #}
-    {# The proposals will have the same design as the news, so i am using the news styles. #}
     <div class="container">
-
-        <div class="row news">
-
-                {% news 'News/wall.html' 4 %}
-
-        </div><!-- end of news modoul -->
+        {% b2c_products 'B2CProducts/main_products.html' 8 %}
     </div>
 
 

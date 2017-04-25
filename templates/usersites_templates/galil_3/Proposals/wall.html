@@ -5,20 +5,17 @@
 
 {# Start of the bp model. There are 2 bp. #}
 {% if proposals %}
-    <div class="col-sm-12 col-md-8 main-proposal">
 
-        <h2 class="page-header"><a href="{% url 'proposal:main' %}">{% trans "Business proposals" %}</a></h2>
+        <h4><a href="{% url 'proposal:main' %}">{% trans "Business proposals" %}</a></h4>
 
         {% for proposal in proposals %}
             {# Each proposal will have a title, description, date and a button which will take to the main page of proposals. #}
             <div class="col-sm-12 col-md-12 proposal">
-                <h3 class="news__title">{{ proposal.title }}</h3>
-                <p class="news__text">{{ proposal.description|cleanHtml:"p"|striptags|truncatewords_html:"90" }}</p>
+                <a href="{{ proposal.get_absolute_url }}"><h4>{{ proposal.title }}</h4></a>
+                <p class="news__text">{{ proposal.description|cleanHtml:"p"|striptags|truncatewords_html:"10" }}</p>
                 <p class="news__text">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
-                <a type="button" class="btn btn-default news__btn" href="{{ proposal.get_absolute_url }}" role="button">{% trans 'More' %}</a>
             </div>
         {% endfor %}
 
-    </div>
 {% endif %}
 
