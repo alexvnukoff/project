@@ -93,6 +93,7 @@ body .header-row .header-container .header .avatar {
 body .header-row .header-container .header .person-name {
   position: relative;
   height: 18px;
+  top: 4px;
   margin-right: 8px;
   color: #000;
   cursor: pointer;
@@ -104,6 +105,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   height: 18px;
   margin-left: 10px;
+  top: 4px;
 }
 .main {
   margin-top: 20px;
@@ -597,6 +599,7 @@ body .header-row .header-container .header .logout {
   margin: 6px 0 6px 0;
 }
 .main-row .article-content .content-block .title-news {
+  line-height: 14px;
   font-size: 16px;
   font-weight: 800;
   margin: 0 0 6px 0;
@@ -765,7 +768,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .right-aside .right-aside-block.list .company-paid-card .thumb-title {
   position: relative;
-  top: -5px;
+  font-size: 12px;
   margin-left: 10px;
   color: #0089bc;
   font-weight: 700;
