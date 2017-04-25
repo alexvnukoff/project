@@ -501,24 +501,24 @@ body .header-row .header-container .header .logout {
   cursor: pointer;
   z-index: 999;
 }
-.main-row .article-content .content-block .content.company .afisha-dropdown {
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown {
   position: absolute;
   right: -11px;
   top: -14px;
   background-color: #323232;
   padding: 0;
 }
-.main-row .article-content .content-block .content.company .afisha-dropdown li {
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li {
   height: 30px;
 }
-.main-row .article-content .content-block .content.company .afisha-dropdown li a {
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a {
   color: #fff;
   left: 0;
 }
-.main-row .article-content .content-block .content.company .afisha-dropdown li a:hover {
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a:hover {
   background-color: #777;
 }
-.main-row .article-content .content-block .content.company .afisha-dropdown li a i {
+.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a i {
   width: 20px;
   height: 20px;
   margin-right: 10px;
