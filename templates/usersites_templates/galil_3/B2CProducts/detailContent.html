@@ -1,9 +1,10 @@
-{% extends 'usersites_templates/galil/index.html' %}
+{% extends 'usersites_templates/galil_3/index.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load inclusionTags %}
+{% load content_tags %}
 {% load humanize %}
 {% block title %}{{ object.name }}{% endblock %}
 {% block content %}
@@ -21,14 +22,69 @@
 
         <div class="row">
 
-            {# If there is, the image of the product #}
-            <div class="col-md-6 item-page">
-                {% if object.image %}
-                    <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
-                {% else %}
-                    <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                {% endif %}
-            </div>
+                        {% if not object.gallery_images %}
+                {# If there is, the image of the product #}
+                <div class="col-md-6 item-page">
+                    {% if object.image %}
+                        <img src="{{ object.image.original }}" alt="{{ object.name }}" title="{{ object.name }}" />
+                    {% else %}
+                        <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                    {% endif %}
+                </div>
+
+            {% else %}
+
+            <!-- Slider -->
+                <div class="col-md-6 item-page" id="product-page-slider">
+                    <!-- Top part of the slider -->
+                        <div class="row">
+                            <div class="col-md-12" id="carousel-bounding-box">
+                                <div class="carousel slide" id="prodSlider">
+                                    <!-- Carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="active item" data-slide-number="0">
+                                        <img src="{{ object.image.original }}"></div>
+
+                                        {% for gallery_obj in object.gallery_images %}
+
+                                            <div class="item" data-slide-number="{{ forloop.counter }}">
+                                            <img src="{{ gallery_obj.image.original }}"></div>
+
+                                        {% endfor %}
+
+                                    </div><!-- Carousel nav -->
+                                    <a class="carousel-control left" data-slide="prev" href="#prodSlider">‹</a> <a class="carousel-control right" data-slide="next" href="#myCarousel">›</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    <div class="row hidden-phone" id="slider-thumbs">
+{#                        <div class="col-md-6">#}
+                            <!-- Bottom switcher of slider -->
+
+                            <ul class="thumbnails">
+                                <li class="col-md-3">
+                                    <a class="thumbnail" id="carousel-selector-0"><img src="{{ object.image.original }}"></a>
+                                </li>
+
+                                {% for gallery_obj in object.gallery_images %}
+
+                                    <li class="col-md-3">
+                                        <a class="thumbnail" id="carousel-selector-{{ forloop.counter }}"><img src="{{ gallery_obj.image.original }}"></a>
+                                    </li>
+
+                                 {% endfor %}
+
+                            </ul>
+{#                        </div>#}
+                    </div>
+
+                    </div>
+
+
+
+            {% endif %}
 
             {# product details - price, quantity, decription and add to cart. If its a coupon, there will be a timer. #}
             <div class="col-md-6 item-price-table">
@@ -109,7 +165,6 @@
                 {% endif %}
                 <h4>{% trans 'About Company' %}</h4>
                 <p>{{ object.description|cleanHtml|safe }}</p>
-
             </div>{# end of details table #}
 
         </div>{# end of row #}
@@ -148,4 +203,3 @@
         });
     </script>
 {% endblock %}
-

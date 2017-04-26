@@ -22,7 +22,7 @@
     left: inherit;
     top: 80px;
     width: 0;
-    height: 400px;
+    height: 450px;
     margin-right: -220px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -135,6 +135,18 @@
     text-align: right;
 }
 
+.navbar-inverse .access-link-declare{
+    color: #337ab7;
+    text-align: center;
+    width: 100%;
+}
+
+.navbar-inverse .access-link-declare:hover,
+.navbar-inverse .access-link-declare:active,
+.navbar-inverse .access-link-declare:visited,
+.navbar-inverse .access-link-declare:focus{
+    color: #000;
+}
 
 .sidebar-nav > .sidebar-brand {
     height: 65px;
@@ -379,4 +391,20 @@
     bottom: 0;
     background-color: rgba(250,250,250,.8);
     z-index: 1;
+}
+
+/*******************
+** model box *******
+********************/
+#accessModal .close{
+    float: left;
+}
+
+#accessModal .modal-title{
+    text-align: right;
+}
+
+#accessModal .modal-body{
+    text-align: right;
+    direction: rtl;
 }

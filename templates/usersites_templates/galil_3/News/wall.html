@@ -4,9 +4,8 @@
 {% load humanize %}
 
 {% if news %}
-    <div class="col-sm-12 col-md-12">
 
-        <h2 class="page-header"><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h2>
+        <h4><a href="{% url 'news:main' %}">{% trans 'News' %}</a></h4>
 
 {#        <div class="col-12-md">#}
             <div class="news-wrapper">
@@ -15,7 +14,7 @@
                 {# News feed wil contain a photo, header, date, short text and a burron to the main news page. #}
                 {% for article in news %}
                     <li class="media">
-                        <div class="col-3-md">
+                        <div class="wall-news-img">
                             <a href="#" class="news__img">
                                 {% if article.image %}
                                     <img src="{{ article.image.small }}" alt="" class="img-rounded">
@@ -23,18 +22,17 @@
                             </a>
                         </div>
 
-                        <div class="col-9-md">
+                        <div class="wall-news-content">
                             <div class="media-body">
-                                <h4>{{ article.title }}</h4>
+                                <a href="{% url 'news:detail' article.slug article.pk %}"><h4>{{ article.title }}</h4></a>
                                 <p class="date">{{ article.created_at|date:'d M Y' }}</p>
 
                                 {% if article.short_description %}
-                                    <p class="text">{{ article.short_description|force_escape|linebreaks|truncatewords_html:"20" }}</p>
+                                    <p class="text">{{ article.short_description|force_escape|linebreaks|truncatewords_html:"10" }}</p>
                                 {% else %}
                                     <p class="text">{{ article.content|cleanHtml|safe|truncatewords_html:"20" }}</p>
                                 {% endif %}
 
-                                <a type="button" class="btn btn-default news__btn" href="{% url 'news:detail' article.slug article.pk %}" role="button">{% trans 'More' %}</a>
 
                             </div>
                         </div>
@@ -46,5 +44,4 @@
         </div>
 {#        </div>#}
 
-    </div>
 {% endif %}

@@ -1,9 +1,11 @@
-{% extends 'usersites_templates/galil/index.html' %}
+{% extends 'usersites_templates/galil_3/index.html' %}
 {% load i18n %}
 {% load content_tags %}
 {% load staticfiles %}
 {% load humanize %}
 {% load inclusionTags %}
+
+{% block title %}{% trans "B2C Products" %}{% endblock %}
 
 {% block content %}
     {{ block.super }}
