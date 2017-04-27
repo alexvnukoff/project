@@ -1,0 +1,145 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+
+{% for company in object_list %}
+
+        <div class="content-block">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="content-block">
+                <div class="row">
+                  <div class="col-xs-12 body">
+                    <div class="container content company">
+{#                        {% setContextMenu company %} #}
+{% comment %}
+                          <div class="dropdown">
+                            <div class="dropdown dropdown-toggle" data-toggle="dropdown">
+                              <i class="afisha id-{{ forloop.counter }} fa fa-pencil" >
+                                <ul class="afisha-dropdown id-{{ forloop.counter }} dropdown-menu pull-right">
+                                  <li>
+                                    <a href="#"><i class="edit fa fa-pencil"></i>Edit</a>
+                                  </li>
+                                  <li>
+                                    <a href=#><i class="advertise fa fa-bell"></i>Advertise</a>
+                                  </li>
+                                  <li>
+                                    <a href="#"><i class="set fa fa-cogs"></i>Set current</a>
+                                  </li>
+                                  <li>
+                                    <a href="#"><i class="remove fa fa-times"></i>Remove</a>
+                                  </li>
+                                </ul>
+                              </i>
+                            </div>
+                          </div>
+{% endcomment %}
+                      <div class="row title-news">
+                        <i class="flag sprite {{ company.country.flag }}"></i>
+                        <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+                        <a href="{{ company.get_absolute_url }}" class="title-company pull-left">{{ company.name }}</a>
+                      </div>
+                      <div class="media body">
+                        <a class="pull-left logo" href="{{ company.get_absolute_url }}">
+                          <div class="img-container">
+                              {% if company.logo %}
+                                  <img class="media-object" src="{{ company.logo.big }}" alt="{{ company.name }}" title="{{ company.name }}" />
+                              {% else %}
+                                 <img class="media-object" src="{% static 'b24online/images/100x100.png' %}" alt="{{ company.name }}" title="{{ company.name }}" />
+                              {% endif %}
+                          </div>
+                        </a>
+                        <div class="">
+                          <div class="col-xs-7">
+                          {% if company.parent %}
+                            <div class=""><strong>{% trans 'Member of' %}</strong>
+                              <a href="{{ company.parent.get_absolute_url }}">{{ company.parent.name|truncatechars:30 }}</a>
+                            </div>
+                          {% endif %}
+
+                            <div class="">
+                                {% if company.short_description %}
+                                    {{ company.short_description|cleanHtml|safe|truncatechars_html:200 }}
+                                {% else %}
+                                    {{ company.description|cleanHtml|safe|truncatechars_html:200 }}
+                                {% endif %}
+                            </div>
+                            <div class="more pull-left"><a href="{{ company.get_absolute_url }}">{% trans "More" %}...</a></div>
+                          </div>
+                          <div class="col-xs-1 contacts pull-right">
+
+                            {% if company.address %}
+                                <div class="address">
+                                  <i class="address-ico sprite pull-left"></i>
+                                  <div class="data pull-left">{{ company.address }}</div>
+                                </div>
+                            {% endif %}
+
+                            {% if company.phone %}
+                            <div class="extra-phone">
+                              <i class="extra-phone-ico sprite pull-left"></i>
+                              <div class="data pull-left">{{ company.phone }}</div>
+                            </div>
+                            {% endif %}
+
+                            {% if company.fax %}
+                            <div class="extra-phone">
+                              <i class="extra-phone-ico sprite pull-left"></i>
+                              <div class="data pull-left">{{ company.fax }}</div>
+                            </div>
+                            {% endif %}
+
+                            {% if company.site %}
+
+                            <div class="extra-phone">
+                              <i class="extra-phone-ico sprite pull-left"></i>
+                              <div class="data pull-left"><a href="{{ company.site }}" rel="nofollow" target="_blank">{{ company.site }}</a></div>
+                            </div>
+                            {% endif %}
+
+                            {% if request.user.is_authenticated %}
+
+
+                                <div class="mail">
+                                <i class="mail-ico sprite pull-left"></i>
+                                  <div class="data pull-left">
+                                    <a href="{% url 'auth_login' %}">{% trans 'Send Message' %}</a>
+{#                                      <a class="contact-us" data-name="{{ company.title }}" data-id="{{ company.pk }}" href="{% url 'messages:send_message_to_recipient' 'organization' company.pk %}" >{% trans 'Contact us' %}</a> #}
+                                  </div>
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="mail">
+                                <i class="mail-ico sprite pull-left"></i>
+                                  <div class="data pull-left">
+                                    <a href="{% url 'auth_login' %}">{% trans 'Contact us' %}</a>
+                                  </div>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% empty %}
+        <p>{% trans "No results found" %}</p>
+    {% endfor %}
+    </div>
+
+    <div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+    </div>
