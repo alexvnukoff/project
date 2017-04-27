@@ -1,0 +1,61 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+
+    {% for news in object_list %}
+{#     {% setContextMenu news %} #}
+      <div class="content-block">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="container content">
+              <div class="media">
+                <a class="pull-left" href="{{ news.get_absolute_url }}">
+                  <div class="img-container">
+                    {% if news.image %}
+                        <img class="media-object" src="{{ news.image.big }}" alt="{{ news.title }}" title="{{ news.title }}" />
+                    {% else %}
+                        <img class="media-object" src="{% static 'b24online/images/100x110.png' %}" alt="{{ news.title }}" title="{{ news.title }}" />
+                    {% endif %}
+                  </div>
+                </a>
+                <div class="title-news"><a href="{{ news.get_absolute_url }}">{% if news.video_code %}<span title="YouTube">YouTube icon here</span>{% endif %}{{ news.title }}</a></div>
+
+                {% if news.organization %}
+                    {% if news.organization.flag %}
+                        <img class="thumb-flag-block pull-left" src="{{ news.organization.flag_url }}" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
+                    {% else %}
+                        <i class="sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+                    {% endif %}
+                {% elif news.country %}
+                    <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
+                {% endif %}
+                <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+
+                <div class="date pull-left">{{ news.created_at|date:'d M Y' }},</div>
+                <div class="news-company"><a href="">Company name</a></div>
+                <div class="news-detail">
+                    {% if news.short_description %}
+                        {{ news.short_description|linebreaks|safe }}
+                    {% else %}
+                        {{ news.content|safe|truncatewords_html:"30" }}
+                    {% endif %}
+                </div>
+                <div class="more pull-right"><a href="#">{% trans 'Read more' %}...</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% empty %}
+        <p>{% trans "No results found" %}</p>
+    {% endfor %}
+    </div>
+
+    <div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+    </div>

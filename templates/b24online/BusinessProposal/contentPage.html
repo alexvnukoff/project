@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+
+   {% for proposal in object_list %}
+{#    {% setContextMenu proposal %} #}
+
+      <div class="content-block">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="container content">
+
+               {% if proposal.country %}
+                    <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
+                    <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
+               {% else %}
+                    <img src="{{ proposal.organization.flag_url }}" title="{{ proposal.organization.name }}" />
+                    <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
+                {% endif %}
+
+              <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+
+              <div class="title"><a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.title }}</a></div>
+              <div class="author pull-left">{% trans 'Organization' %}: <a href="#">{{ proposal.organization.name }}</a></div>
+              <div class="more pull-right"><a href="{{ proposal.get_absolute_url }}">{% trans 'More' %}...</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% empty %}
+        <p>{% trans "No results found" %}</p>
+    {% endfor %}
+    </div>
+
+    <div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+    </div>
