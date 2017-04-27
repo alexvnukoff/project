@@ -1,0 +1,262 @@
+{% extends 'b24online/base.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load inclusionTags %}
+{% load CustomFilters %}
+
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
+         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+         <style>
+            .selected-menu {
+                background-color: #D7D7D9;
+                color: #FFF;
+            }
+            .basket {
+                width: 20px;
+                height: 20px;
+                padding: 2px;
+                background-image: url({% static "b24online/img/basket.png" %});
+                background-repeat: no-repeat;
+                text-align: center;
+                font-weight: bold;
+                background-size: 100% 100%;
+            }
+
+            .basket a {
+                margin: 2px;
+            }
+
+         </style>
+    {% endblock %}
+
+    {% block js %}
+        {{  block.super }}
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/jquery.history.min.js"></script>
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+        <script  type="text/javascript" src="{% static "b24online/js/ui.js"%}"></script>
+        <script type="text/javascript" src="{% static "b24online/js/plugin.js" %}"></script>
+
+        {% if user.is_authenticated %}
+            <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+            <script  type="text/javascript" src="{% static 'b24online/js/async.js'%}"></script>
+        {% endif %}
+
+        <script type="text/javascript">
+		$(document).ready(function() {
+			$(".fancybox").fancybox({
+				openEffect	: 'none',
+				closeEffect	: 'none'
+			});
+		});
+        var LANG = {};
+
+            $(document).ready(function(e) {
+                $('#thumbs').delegate('img','click', function(){
+                    $('#largeImage').attr('src',$(this).attr('src').replace('thumb','large'));
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                ui.init();
+                uiDetail.init();
+                uiEvents.init();
+            });
+        </script>
+        <script type="text/javascript">
+                $(function() {
+                    var cname = 'tab';
+                    var ca = document.cookie.split(';');
+                    var name = cname + "=";
+                    var tab = 0;
+
+                    for(var i=0; i < ca.length; i++) {
+                         var c = ca[i].trim();
+
+                         if (c.indexOf(name)==0) {
+                            tab = c.substring(name.length, c.length);
+                            break;
+                         }
+                     }
+
+                    $( "#tabs" ).tabs({
+                        active: tab,
+                        activate: function(event, ui) {
+                            var i = ui.newTab.index();
+
+                            document.cookie = cname + "=" + i + "; path=/";
+                        }
+                    });
+                    $( ".tabfilter" ).tabs();
+                });
+        </script>
+    {% endblock %}
+
+{% block body %}
+<div class="news-main">
+    {% block left %}
+         <div class="news-left">
+         {% comment %}
+         <div class="b-filter">
+            	<div class="b-filter-left">
+                </div>
+              {% if not addNew or not user.is_authenticated %}
+                  <a  class="add-new {% if not user.is_authenticated %}logged-out{% endif %}" href="#">
+                    <button class="addButton disable">
+                        <img src="{% static 'b24online/img/plus.svg' %}" alt="">
+                        <span>{% trans 'Add' %}</span>
+                    </button>
+                  </a>
+              {% else %}
+                    <a class="add-new" href="{{ addNew }}">
+                        <button class="addButton">
+                            <img src="{% static 'b24online/img/plus.svg' %}" alt="">
+                            <span>{% trans 'Add' %}</span>
+                        </button>
+                    </a>
+              {% endif %}
+            </div>
+            {% endcomment %}
+
+            <div class="categories-news" id="tabs" style="background:#f6f6f6">
+                <div class="tab-cate" style="display:none;">
+                    <ul>
+                        <li><a href="#tabs-1" class="tab1">{% trans "Main" %}</a></li>
+                    </ul>
+                </div>
+                {% if user.is_commando or user.is_superuser or user.is_authenticated and user.manageable_organizations|length > 1 %}
+                   {% get_my_companies_list %}
+                {% endif %}
+                <div id="tabs-1" style="border:0">
+                    <ul class="tab1-cate">
+                        {% if user.is_authenticated %}
+                            {% if user.is_commando or user.is_superuser %}
+                                <li class="highlight"><a href="{% url "AdminTpp:adv" %}"><i class="icon-lock"></i>&nbsp;{% trans 'Admin Panel' %}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <li class="highlight"><a href="{% url 'dashboard' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'Control Panel' %}</a></li>
+                        {% else %}
+                            <li class="highlight"><a href="{% url 'registration_register' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Join Us' %}</a></li>
+                        {% endif %}
+                        <li><a class="single-page" href="{% url 'wall:main' %}"><i class="icon-menu"></i>&nbsp;{% trans 'Wall' %}</a></li>
+                    	<li><a class="single-page" href="{% url 'news:main' %}"><i class="icon-coffee"></i>&nbsp;{% trans 'News' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main' %}"><i class="icon-suitcase"></i>&nbsp;{% trans 'Products B2B' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main_b2c' %}"><i class="icon-basket"></i>&nbsp;{% trans 'Products B2C' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main_coupons' %}"><i class="icon-globe"></i>&nbsp;{% trans 'Online Coupons' %}</a></li>
+                        <li><a class="single-page" href="{% url 'tpp:main' %}"><i class="icon-shield"></i>&nbsp;{% trans 'Organizations' %}</a></li>
+                        <li><a class="single-page" href="{% url 'companies:main' %}"><i class="icon-briefcase"></i>&nbsp;{% trans 'Companies' %}</a></li>
+                        <li><a class="single-page" href="{% url 'innov:main' %}"><i class="icon-lightbulb"></i>&nbsp;{% trans 'Innovation Projects' %}</a></li>
+                        <li><a class="single-page" href="{% url 'proposal:main' %}"><i class="icon-laptop"></i>&nbsp;{% trans 'Business Proposals' %}</a></li>
+                        <li><a class="single-page" href="{% url 'exhibitions:main' %}"><i class="icon-users"></i>&nbsp;{% trans 'Exhibitions / Forums' %}</a></li>
+                        <li><a class="single-page" href="{% url 'video:main' %}"><i class="icon-desktop"></i>&nbsp;{% trans 'TPP CHANNEL' %}</a></li>
+                        <li><a class="single-page" href="{% url 'vacancy:main' %}"><i class="icon-graduation-cap"></i>&nbsp;{% trans 'Job requirements' %}</a></li>
+                        <li><a class="single-page" href="{% url 'resume:main' %}"><i class="icon-user-plus"></i>&nbsp;{% trans 'Resume' %}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="banner-wrapper-left">
+
+                {% get_banner "Left 1" item %}
+                {% get_banner "Left 2" item %}
+                {% get_banner "Left 3" item %}
+            </div>
+        </div>
+    {% endblock %}
+        {% block center %}
+            {% block centerdiv %}
+            <div class="news-center" {% block extra_center_cls %}{% endblock %}>
+            {% endblock centerdiv%}
+                <div  class="keyword">
+                    {% block keywords %}
+                        <div class="showFilter">
+                        <i class="icon-key imgnews" id="filter-link"></i>
+                        <ul class="list-key">
+                        </ul>
+                        <div class="search-key">
+                        <form action="" method="get" name="search">
+                            <input type="text" name="q" value="{% search_query %}" placeholder="{% trans "Find.." %}" class="text" />
+                            <input type="submit" name="" value="" class="i-search imgnews" />
+                        </form>
+                        </div>
+                        </div>
+                    {% endblock %}
+                </div>
+
+                {% block content %}{% endblock %}
+
+            </div>
+
+        {% endblock %}
+
+        {% block right %}
+
+            <div class="newsright">
+            <div class="b-notyfi event-holder">
+            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% set_notification_count %}</a>
+              <div class="formevent">
+                <i class="close-event imgnews" ></i>
+                <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
+                <div class="list-holder">
+                  <ul>
+                  </ul>
+                </div>
+                <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
+              </div>
+
+              <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
+
+              {# Unreaded messages #}
+              {% get_messages_number as messages_number %}
+              <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{{ messages_number }} </a>
+
+              <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
+
+              {% if request.user.is_authenticated %}
+                <a style="font-weight: bold; color: white;" class="basket" href="{% url 'products:deal_order_basket' %}">{{ request|deal_order_quantity|default:"0" }}</a>
+              {% else %}
+                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
+              {% endif %}
+            </div>
+            {% comment %}
+            <div>
+              <div class="help-desk">
+                <div class="title">{% trans "Shortcuts" %}</div>
+                <span class="titlesub">{% trans "Business" %}</span>
+                <ul class="list-shortcuts">
+                  <li><div class="shortcut"><a href="{% url 'companies:add' %}">{% trans "Create a Company Account" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'proposal:add' %}">{% trans "Add Business Proposal" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:add' %}">{% trans "Add B2B Product" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:addB2C' %}">{% trans "Add B2C Product" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'products:producer_add' %}">{% trans "Add Product Producer" %}</a></div></li>
+                </ul>
+
+                <span class="titlesub">{% trans "Jobs &amp; Vacancies" %}</span>
+                <ul class="list-shortcuts">
+                  <li><div class="shortcut"><a href="{% url 'vacancy:add' %}">{% trans "Post a Vacancy" %}</a></div></li>
+                  <li><div class="shortcut"><a href="{% url 'resume:add' %}">{% trans "Post Your Resume Online" %}</a></div></li>
+                </ul>
+              </div>
+            </div>
+            {% endcomment %}
+                {% get_top_on_page item %}
+                 <div class="banner-wrapper-right">
+                 {% get_banner "Right 1" item %}
+                 {% get_banner "Right 2" item  %}
+                 {% get_banner "Right 3" item  %}
+                 </div>
+            </div>
+
+        {% endblock %}
+
+</div>
+
+{% endblock %}
+

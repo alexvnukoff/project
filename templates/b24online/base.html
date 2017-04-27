@@ -1,271 +1,383 @@
 {% spaceless %}
-{% load staticfiles %}
 {% load i18n %}
+{% load static %}
 {% load CustomFilters %}
-{% load cache %}
-{% load compress %}
 {% load inclusionTags %}
 {% get_current_language as LANGUAGE_CODE %}
-<!doctype html>
+<!doctype html>{% endspaceless %}
 <html lang="{% getLang %}">
-<head>
-<meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block head %}
-        <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
-        <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+    {% block meta %}
+        <meta name='yandex-verification' content='7036efbb8c82d0da' />
+        <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
 
-        {% block  meta%}
+        {% if meta %}
+            <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
+            <meta property="og:url" content="{{ meta.url }}" />
+            <meta property="og:description" content="{{ meta.description|cleanHtml|safe|striptags|remove_whitespaces|truncatechars:300 }}" />
 
-            <meta name='yandex-verification' content='7036efbb8c82d0da' />
-            <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
-
-            {% if meta %}
-                <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
-                <meta property="og:url" content="{{ meta.url }}" />
-                <meta property="og:description" content="{{ meta.description|cleanHtml|safe|striptags|remove_whitespaces|truncatechars:300 }}" />
-
-                {% if meta.image %}
-                    <meta property="og:image" content="{{ meta.image }}" />
-                {% endif %}
-
-                <title>
-                    {% block html_title %}
-                    {{ meta.title|striptags|truncatewords:10}}
-                    {% endblock %}
-                </title>
-
-                <meta name="description" content="{{ meta.description|striptags|truncatewords:20 }}"/>
-                <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
-            {% else %}
-
-                {% if current_section %}
-                    <title>{{ current_section }}</title>
-                {% else %}
-                    <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
-                {% endif %}
-
-                {% block description %}
-                 <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
-                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
-                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
-                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
-                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
-                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
-                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
-                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
-                {% endblock %}
-
+            {% if meta.image %}
+                <meta property="og:image" content="{{ meta.image }}" />
             {% endif %}
 
+            <title>
+                {% block html_title %}
+                {{ meta.title|striptags|truncatewords:10}}
+                {% endblock %}
+            </title>
 
-           <meta property="og:site_name" content="B24Online"/>
+            <meta name="description" content="{{ meta.description|striptags|truncatewords:20 }}"/>
+            <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
+        {% else %}
 
-        {% endblock %}
+            {% if current_section %}
+                <title>{{ current_section }}</title>
+            {% else %}
+                <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
+            {% endif %}
 
-        {% block styles %}
-            <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/main.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/reset.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/flags.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/icons.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/fancybox.min.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
-            <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery-ui.custom.css' %}" />
-        {% endblock %}
+            {% block description %}
+             <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
+             Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
+             проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
+             Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
+             Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
+             Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
+             Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
+             международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
+            {% endblock %}
 
+        {% endif %}
 
-        {% block js %}
-            <script type="application/javascript">
-                var statciPath = '{% static "b24online/" %}';
-                var LANG = {};
-            </script>
-            <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.js"></script>
-            <script type="text/javascript" src="{% static 'b24online/js/base.js' %}"></script>
-            <script type="text/javascript" src="{% static 'b24online/js/jquery.sticky-kit.min.js' %}"></script>
-            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-            <script type="text/javascript" src="{% static 'b24online/js/messages.js' %}"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        {% endblock %}
+       <meta property="og:site_name" content="B24Online"/>
 
     {% endblock %}
 
-    <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "b24online/css/ie.css" %}" /><![endif]-->
+    {% if LANGUAGE_BIDI %}
+        <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/bootstrap-rtl.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.rtl.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.fixes.rtl.css' %}" />
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.css' %}" />
+    {% endif %}
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
+        <link rel="stylesheet" type="text/css" href="https://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css" />
 
-    <!-- Google Translate-->
-    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
 
-</head>
-{% endspaceless %}
-<body>
+  </head>
+  <body>
+    <div class="container-fluid wrapper">
+      <div class="header-row">
+        <div class="container header-container">
+          <div class="col-xs-12 header">
+            <div class="row">
+              <div class="logo pull-left">
+                <img src="{% static 'b24online/images/b24_small.png' %}" alt="logo">
+              </div>
+              <div class="nav pull-left">
 
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=1701658433380177";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+                {% show_top_static_pages_front %}
 
-    {% block header %}
-    {% endblock %}
+              </div>
+              <div class="nav pull-right">
+                <span><a href="#" class="fa fa-map-marker"></a></span>
+                <div class="btn-group language-navi">
+                  <div id="header-language-selector" data-toggle="dropdown">
+                    <img class="flag-current" src="/static/b24online/flags/{{ LANGUAGE_CODE }}.png" />
+                  </div>
+                  <ul class="dropdown-menu lang-dropdown" role="menu">
+                  {% for code, lang in LANGUAGES %}
+                        {% if not code == LANGUAGE_CODE %}
+                            <a href="http{% if request.is_secure %}s{% endif %}://{{ code }}.{{ site }}{{ request.path }}">
+                                <img class="flag-icon" src="/static/b24online/flags/{{ code }}.png" />
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
 
-    {% block rtl %}
-         {% if LANGUAGE_BIDI %}
-              <link type="text/css" rel="stylesheet" href="{% static "b24online/css/rtl.css"%}" />
-          {% endif %}
-    {% endblock %}
+                {% if request.user.is_authenticated %}
 
-    {% block body %}
-    {% endblock %}
+                    <a href="{% url "profile:main" %}">
+                        {% if request.user.profile.avatar %}
+                            <span><img class="avatar" src="{{ request.user.profile.avatar.th }}" alt="avatar"/></span>
+                        {% else %}
+                            <span><div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin:0;border:1px solid #aeaeae;"></div></span>
+                        {% endif %}
+                    </a>
 
-{% block footer %}
-{% spaceless %}
-    <div class="wrapper">
-        <div class="linkbottom">
-            {% show_static_pages %}
-            <ul class="clumn">
-                {% cache 3600 statistic LANGUAGE_CODE %}
-                    {% statistic %}
-                {% endcache %}
-            </ul>
+                    <a href="{% url "profile:main" %}"><span class="person-name">{% userName %} <span class="caret"></span></span></a>
+                    <span><a class="logout" href="{% url 'loginas-user-logout' %}">{% trans "Sign out" %}</a></span>
+
+                {% else %}
+
+                    <a class="#" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span>Facebook</span></a> |
+                    <a class="#" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span>Gplus</span></a> |
+                    <a href="{% url 'auth_login' %}" title="{% trans 'Sign in' %}">{% trans 'Sign in' %}</a> |
+                    <a href="{% url 'registration_register' %}?next={{ request.path }}" title="{% trans 'Sign up' %}">{% trans 'Sign up' %}</a>
+
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
- </div>
-    <div id="footer">
-        <div class="wrapper">
-            © 2010–{% now 'Y' %} {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
+      </div>
+
+      <div class="main-row">
+        <div class="container main-container">
+          <div class="row">
+            <div class="left-aside col-xs-3">
+              <div class="left-select-container">
+                <select id="monoSelect">
+                  <option value="1">Организация 1</option>
+                  <option value="2">Организация 2</option>
+                  <option value="3">Организация 3</option>
+                  <option value="4">Организация 4</option>
+                  <option value="5">Организация 5</option>
+                  <script>
+                    $(document).ready(
+                    function () {
+                      $("#monoSelect").select2({
+                        maximumSelectionLength: 5,
+                      })
+                    }
+                    );
+                  </script>
+                </select>
+              </div>
+              <div class="list-group">
+                <a href="#" class="list-group-item active red"><i class="fa fa-desktop"></i>Управление</a>
+                <a href="#" class="list-group-item"><i class="fa fa-bars"></i>Стена</a>
+                <a href="#" class="list-group-item"><i class="fa fa-coffee"></i>Новости</a>
+                <a href="#" class="list-group-item"><i class="fa fa-suitcase"></i>B2B Центр</a>
+                <a href="#" class="list-group-item"><i class="fa fa-shopping-cart"></i>Центр покупок</a>
+                <a href="#" class="list-group-item"><i class="fa fa-globe"></i>Купоны</a>
+                <a href="#" class="list-group-item"><i class="fa fa-shield"></i>Организации</a>
+                <a href="#" class="list-group-item"><i class="fa fa-briefcase"></i>Компании</a>
+                <a href="#" class="list-group-item"><i class="fa fa-lightbulb-o"></i>Инновационные проекты</a>
+                <a href="#" class="list-group-item"><i class="fa fa-laptop"></i>Бизнес предложения</a>
+                <a href="#" class="list-group-item"><i class="fa fa-users"></i>Выставки / Форумы</a>
+                <a href="#" class="list-group-item"><i class="fa fa-desktop"></i>TPP CHANNEL</a>
+                <a href="#" class="list-group-item"><i class="fa fa-graduation-cap"></i>Требуются</a>
+                <a href="#" class="list-group-item"><i class="fa fa-user-plus"></i>Резюме</a>
+              </div>
+            </div>
+
+            <div class="article col-xs-6">
+              <div class="row">
+                <div class="article-filter col-xs-12">
+                  <div class="show-filter">
+                    <i class="filter-ico sprite" id="feebackform-btn" data-toggle="modal" data-target="#myModal"></i>
+                    <div class="filter-langs">
+                      <span class="filter-lang">Беларусь <a class="fa fa-close"></a></span>
+                      <span class="filter-lang">Россия <a class="fa fa-close"></a></span>
+                    </div>
+                  </div>
+                  <div class="filter-search input-group pull-right">
+                    <input type="text" class="form-control" placeholder="Найти.." aria-describedby="basic-addon1">
+                    <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                  </div>
+                </div>
+
+
+
+{% block body %}{% endblock %}
+
+</div>
+</div>
+
+
+              <div class="col-xs-3">
+                <div class="col-xs-12">
+                  <div class="right-aside col-xs-10">
+                    <div class="row">
+                      <div class="right-aside-block">
+                        <a href=""><i class="fa fa-exclamation-circle"><span class="badge">3</span></i></a>
+                        <a href=""><i class="fa fa-envelope-o"><span class="badge">11</span></i></a>
+                        <a href=""><i class="fa fa-users disabled"><span class="badge">3</span></i></a>
+                        <a href=""><i class="fa fa-shopping-cart"><span class="badge">2</span></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12">
+                  <div class="right-aside col-xs-10">
+                    <div class="row">
+                      <div class="right-aside-block title">
+                        <span>Платные объявления</span>
+                      </div>
+                      <div class="right-aside-block companies-title">
+                        <span>Компании</span>
+                      </div>
+                      <div class="right-aside-block list">
+                        <div class="thumbnail company-paid-card">
+                          <div class="caption">
+                            <ul class="media-list">
+                              <li class="media">
+                                <div class="media-body">
+                                  <a class="flag pull-left" href="#">
+                                    <img class="thumb-flag media-object" src="flags/english.png" alt="...">
+                                  </a>
+                                  <a href="" class="thumb-title">Expert center</a>
+                                </div>
+                              </li>
+                            </ul>
+                            <div>
+                              <img class="paid-img pull-left" src="http://placehold.it/70x50" alt="">
+                              <p class="text-details">Expert center Company was founded in 2003...</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="container">
+          <footer id="footer">
+            <hr class="footer-separator">
+            <div class="container">
+              <div class="row-fluid footer-links">
+                <div class="col-xs-3">
+                  <p class="footer-links">
+                    <h5>ОПИСАНИЕ</h5>
+                    <a href="#">Платежная система</a>
+                    <a href="#">Реклама на портале</a>
+                    <a href="#">Описание</a>
+                    <a href="#">Публичная оферта</a>
+                    <a href="#">Правила использования</a>
+                    <a href="#">Приветствия</a>
+                  </p>
+                </div>
+                <div class="col-xs-3">
+                  <p class="footer-links">
+                    <h5>ПОМОЩЬ</h5>
+                    <a href="#">Советы</a>
+                    <a href="#">Найти бизнес партнера</a>
+                    <a href="#">Поиск работы/сотрудника</a>
+                    <a href="#">Разместить анонс</a>
+                    <a href="#">Языковая поддержка и перевод</a>
+                    <a href="#">Новый пользователь</a>
+                    <a href="#">Добавить бизнес предложение</a>
+                    <a href="#">Собственный интернет-сайт</a>
+                    <a href="#">Создать онлайн магазин</a>
+                  </p>
+                </div>
+                <div class="col-xs-3">
+                  <p class="footer-links">
+                    <h5>КОНТАКТЫ</h5>
+                    <a href="#">Часто задаваемые вопросы</a>
+                    <a href="#">Контакты</a>
+                  </p>
+                </div>
+                <div class="col-xs-3">
+                  <p class="footer-links">
+                    <h5>КОМПАНИИ: 50741</h5>
+                    <span>Партнеры: 209</span>
+                  </p>
+
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-xs-12 bottom">
+                <p class="text-muted bottom text-center">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title" id="myModalLabel">Фильтр</h4>
+          </div>
+          <div class="modal-body">
+            <div id="exTab2" class="">
+              <ul class="nav nav-tabs">
+                    <li class="active">
+                  <a  href="#1" data-toggle="tab">Страна</a>
+                    </li>
+                    <li><a href="#2" data-toggle="tab">Организация</a>
+                    </li>
+                    <li><a href="#3" data-toggle="tab">Категория</a>
+                    </li>
+                </ul>
+                    <div class="tab-content ">
+                      <div class="tab-pane active" id="1">
+                  <select class="multipleSelect" data-placeholder="Выбрать страну" multiple>
+                      <option value="1">Россия</option>
+                      <option value="2">Азербайджан</option>
+                      <option value="3">Великобритания</option>
+                      <option value="4">США</option>
+                      <option value="5">Армения</option>
+                      <option value="6">Грузия</option>
+                  </select>
+                        </div>
+                        <div class="tab-pane" id="2">
+                  <select class="multipleSelect" data-placeholder="Выбрать организацию" multiple>
+                      <option value="1">Организация 1</option>
+                      <option value="2">Организация 2</option>
+                      <option value="3">Организация 3</option>
+                      <option value="4">Организация 4</option>
+                      <option value="5">Организация 5</option>
+                      <option value="6">Организация 6</option>
+                  </select>
+                        </div>
+                <div class="tab-pane" id="3">
+                  <select class="multipleSelect" data-placeholder="Выбрать категорию" multiple>
+                      <option value="1">Категория 1</option>
+                      <option value="2">Категория 2</option>
+                      <option value="3">Категория 3</option>
+                      <option value="4">Категория 4</option>
+                      <option value="5">Категория 5</option>
+                      <option value="6">Категория 6</option>
+                  </select>
+                        </div>
+                    </div>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Отправить</button>
+          </div>
+        </div>
+      </div>
     </div>
-
- <div class="black_overlay" id="fade-profile"></div>
- {% endspaceless %}
- {% endblock %}
-
-             <!-- Yandex.Metrika counter -->
-            <script type="text/javascript">
-                (function (d, w, c) {
-                    (w[c] = w[c] || []).push(function() {
-                        try {
-                            w.yaCounter22547614 = new Ya.Metrika({id:22547614,
-                                    webvisor:true,
-                                    clickmap:true,
-                                    trackLinks:true,
-                                    accurateTrackBounce:true});
-                        } catch(e) { }
-                    });
-
-                    var n = d.getElementsByTagName("script")[0],
-                        s = d.createElement("script"),
-                        f = function () { n.parentNode.insertBefore(s, n); };
-                    s.type = "text/javascript";
-                    s.async = true;
-                    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-
-                    if (w.opera == "[object Opera]") {
-                        d.addEventListener("DOMContentLoaded", f, false);
-                    } else { f(); }
-                })(document, window, "yandex_metrika_callbacks");
-            </script>
-            <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-            <!-- /Yandex.Metrika counter -->
-
-            <!-- Google analytics -->
-            <script>
-              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-              ga('create', 'UA-68656058-1', 'auto');
-              ga('send', 'pageview');
-
-            </script>
-            <!-- /Google analytics -->
-
-    <script type="text/javascript">
-     if ( typeof ui != 'undefined' ){
-         $(document).bind(ui.signals['end_load'], function(event, url, data, history) {
-             ga('send', 'pageview', {page: history});
-         });
-     }
-     ga('send', 'pageview');
+    <script>
+      $(document).ready(
+        function () {
+          $(".multipleSelect").select2({
+            maximumSelectionLength: 5,
+          })
+          $('.tab-pane').find('input').each(function() {
+            var $this = $(this);
+            $this.width($this.parents('span.select2-container').width() - 2);
+          });
+        }
+      );
     </script>
 
+© 2010–{% now 'Y' %} {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
 
-{% spaceless %}
-<div style="display: none;" class="white_content" id="light-contact">
-    <div class="contact-table">
-        <div class="contact-tablein">
-        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
-          <form id="message-to-organization"  enctype="multipart/form-data">
-            <input name="organization" id="organization-id" type="hidden" />
-            <input name="recipient" id="recipient-id" type="hidden" />
-            <ul class="contactform">
-              <li style="text-align: left; background-color: #f1f1f1; padding: 10px;">
-                <label id="delivery-result-msg" style="color: #008000;" hidden="hidden">
-                  {% trans 'You have successfully sent the message.' %}
-                </label>
-              </li>
-            	<li id="organization-info">
-                	<label>{% trans 'Send message to' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="organization-name"></span>
-              </li>
-            	<li id="recipient-info" style="display: none;">
-                	<label>{% trans 'For user' %}:</label>
-                	<span style="float: left; font-weight: bold; font-size:120%;" id="recipient-name"></span>
-              </li>
-
-            	<li>
-                	<label>{% trans 'Message subject' %}:</label>
-                  <div class=""><input name="subject" style="width: 498px;" /></div>
-                </li>
-                <li>
-                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
-                  <div class=""><textarea name="content" style="width: 498px;height: 135px;"></textarea></div>
-                </li>
-                <li>
-                	<label id="file-title">{% trans 'File' %}</label>
-                  <input name="attachment" id="file-input" class="file-attachment" type="file" />
-                </li>
-                <li>
-                	<label id="destination">{% trans 'Deliver as' %}</label>
-                	<div style="flow: left">
-                    <div>
-                      <input name="delivery_way" type="radio" value="message" checked />
-                      <span>{% trans 'Message' %}</span>
-                    </div>
-                	  <div>
-                	    <input name="delivery_way" type="radio" value="email" />
-                	    <span>{% trans 'Email' %}</span>
-                	  </div>
-                  </div>
-                </li>
-                <li>
-                	<label id="destination">{% trans 'Is message private' %}</label>
-                	<div style="flow: left">
-                    <div>
-                      <input name="is_private" type="checkbox" />
-                    </div>
-                  </div>
-                </li>
-                <li class="end">
-                	<div class="newform-button">
-                    <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
-                    <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
-                  </div>
-                </li>
-            </ul>
-          </form>
-        </div>
-    </div>
-</div>
-<div class="black_overlay" id="fade-contact"></div>
-<div id="process-data-dialog" style="display: none;"></div>
-{% endspaceless %}
-{% block vacancy %}{% endblock %}
-</body>
+  </body>
 </html>
+
+
+
+
