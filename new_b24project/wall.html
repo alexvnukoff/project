@@ -21,8 +21,7 @@
   </head>
   <body>
     <div class="container-fluid wrapper">
-
-      <div class="row header-row">
+      <div class="header-row">
         <div class="container header-container">
           <div class="col-xs-12 header">
             <div class="row">
@@ -40,20 +39,20 @@
                 <span><a href="" class="fa fa-map-marker"></a></span>
                 <!-- <span><img class="flag-current" src="flags/english.png" alt="en"></span> -->
                 <div class="btn-group language-navi">
-          				<div id="header-language-selector" data-toggle="dropdown">
-          					<img class="flag-current" src="flags/english.png" />
-          				</div>
-          			  <ul class="dropdown-menu lang-dropdown" role="menu">
-      							<a href=""><img class="flag-icon" src="flags/arabic.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/armenian.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/chinese.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/bulgarian.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/he.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/uk.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/es.png" /></a>
-      							<a href=""><img class="flag-icon" src="flags/hebrew.png" /></a>
-          			  </ul>
-          			</div>
+                  <div id="header-language-selector" data-toggle="dropdown">
+                    <img class="flag-current" src="flags/english.png" />
+                  </div>
+                  <ul class="dropdown-menu lang-dropdown" role="menu">
+                    <a href=""><img class="flag-icon" src="flags/arabic.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/armenian.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/chinese.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/bulgarian.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/he.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/uk.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/es.png" /></a>
+                    <a href=""><img class="flag-icon" src="flags/hebrew.png" /></a>
+                  </ul>
+                </div>
                 <span><img class="avatar" src="http://lorempixel.com/20/20" alt="avatar"/></span>
                 <span class="person-name">Геннадий Андреевич Балачков <span class="caret"></span></span>
                 <span><a class="logout" href="#exit">Выйти</a></span>
@@ -62,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div class="row main-row">
+      <div class="main-row">
         <div class="container main-container">
           <div class="row">
             <div class="left-aside col-xs-3">
@@ -74,13 +73,13 @@
                   <option value="4">Организация 4</option>
                   <option value="5">Организация 5</option>
                   <script>
-                  $(document).ready(
+                    $(document).ready(
                     function () {
                       $("#monoSelect").select2({
                         maximumSelectionLength: 5,
                       })
                     }
-                  );
+                    );
                   </script>
                 </select>
               </div>
@@ -216,71 +215,71 @@
                         <div class="title"><a href="#">Commodo pharetra, vel quaerat</a></div>
                         <div class="project-site">Сайт проекта: <a href="#">http://www.bestproject.com</a></div>
                         <div class="branch pull-left">Отрасль: <span>branch1<span></div>
-                        <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
-                        <div class="more pull-right"><a href="#">Подробнее...</a></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="block-title">Выставки</div>
-                  <div class="content-block">
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
-                        <div class="date">Israel Bersheva, 17 Янв 2017 - 19 Янв 2017</div>
-                        <div class="title"><a href="#">Aenean tempor tellus vel aliquam laoreet</a></div>
-                        <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
-                        <div class="more pull-right"><a href="#">Подробнее...</a></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="block-title">Бизнес предложения</div>
-                  <div class="content-block">
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
-                        <div class="date">Russia, Дата: 04 Дек 2015</div>
-                        <div class="title"><a href="#">Cras a tellus at odio semper feugiat id at metus</a></div>
-                        <div class="author pull-left">Организация: <a href="#">Development Company</a></div>
-                        <div class="more pull-right"><a href="#">Подробнее...</a></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="block-title">Новости</div>
-                  <div class="content-block">
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <div class="media">
-                          <a class="pull-left" href="#">
-                            <div class="img-container"><img class="media-object" src="http://placehold.it/100x110" alt="..."></div>
-                          </a>
-                          <div class="title-news"><a href="#">Django 1.10.6 release notes</a></div>
-                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
-                          <div class="news-short">Fixed ClearableFileInput’s “Clear” checkbox on model form fields where the model field has a default (#27805).</div>
-                          <div class="news-detail">Fixed RequestDataTooBig and TooManyFieldsSent exceptions crashing rather than generating a bad request response ...</div>
+                          <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
                           <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Выставки</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                          <div class="date">Israel Bersheva, 17 Янв 2017 - 19 Янв 2017</div>
+                          <div class="title"><a href="#">Aenean tempor tellus vel aliquam laoreet</a></div>
+                          <div class="author pull-left">Организатор: <a href="#">Development Company</a></div>
+                          <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Бизнес предложения</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                          <div class="date">Russia, Дата: 04 Дек 2015</div>
+                          <div class="title"><a href="#">Cras a tellus at odio semper feugiat id at metus</a></div>
+                          <div class="author pull-left">Организация: <a href="#">Development Company</a></div>
+                          <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-title">Новости</div>
+                    <div class="content-block">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="media">
+                            <a class="pull-left" href="#">
+                              <div class="img-container"><img class="media-object" src="http://placehold.it/100x110" alt="..."></div>
+                            </a>
+                            <div class="title-news"><a href="#">Django 1.10.6 release notes</a></div>
+                            <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                            <div class="news-short">Fixed ClearableFileInput’s “Clear” checkbox on model form fields where the model field has a default (#27805).</div>
+                            <div class="news-detail">Fixed RequestDataTooBig and TooManyFieldsSent exceptions crashing rather than generating a bad request response ...</div>
+                            <div class="more pull-right"><a href="#">Подробнее...</a></div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-xs-3">
-              <div class="col-xs-12">
-                <div class="right-aside col-xs-10">
-                  <div class="row">
-                    <div class="right-aside-block">
-                       <a href=""><i class="fa fa-exclamation-circle"><span class="badge">3</span></i></a>
-                       <a href=""><i class="fa fa-envelope-o"><span class="badge">11</span></i></a>
-                       <a href=""><i class="fa fa-users disabled"><span class="badge">3</span></i></a>
-                       <a href=""><i class="fa fa-shopping-cart"><span class="badge">2</span></i></a>
-                     </div>
+              <div class="col-xs-3">
+                <div class="col-xs-12">
+                  <div class="right-aside col-xs-10">
+                    <div class="row">
+                      <div class="right-aside-block">
+                        <a href=""><i class="fa fa-exclamation-circle"><span class="badge">3</span></i></a>
+                        <a href=""><i class="fa fa-envelope-o"><span class="badge">11</span></i></a>
+                        <a href=""><i class="fa fa-users disabled"><span class="badge">3</span></i></a>
+                        <a href=""><i class="fa fa-shopping-cart"><span class="badge">2</span></i></a>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-xs-12">
-                <div class="right-aside col-xs-10">
-                  <div class="row">
+                <div class="col-xs-12">
+                  <div class="right-aside col-xs-10">
+                    <div class="row">
                       <div class="right-aside-block title">
                         <span>Платные объявления</span>
                       </div>
@@ -307,55 +306,55 @@
                           </div>
                         </div>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="container">
-        <footer id="footer">
-          <hr class="footer-separator">
-          <div class="container">
-            <div class="row-fluid footer-links">
+        <div class="container">
+          <footer id="footer">
+            <hr class="footer-separator">
+            <div class="container">
+              <div class="row-fluid footer-links">
                 <div class="col-xs-3">
-                    <p class="footer-links">
-                        <h5>ОПИСАНИЕ</h5>
-                        <a href="#">Платежная система</a>
-                        <a href="#">Реклама на портале</a>
-                        <a href="#">Описание</a>
-                        <a href="#">Публичная оферта</a>
-                        <a href="#">Правила использования</a>
-                        <a href="#">Приветствия</a>
-                    </p>
+                  <p class="footer-links">
+                    <h5>ОПИСАНИЕ</h5>
+                    <a href="#">Платежная система</a>
+                    <a href="#">Реклама на портале</a>
+                    <a href="#">Описание</a>
+                    <a href="#">Публичная оферта</a>
+                    <a href="#">Правила использования</a>
+                    <a href="#">Приветствия</a>
+                  </p>
                 </div>
                 <div class="col-xs-3">
-                    <p class="footer-links">
-                      <h5>ПОМОЩЬ</h5>
-                      <a href="#">Советы</a>
-                      <a href="#">Найти бизнес партнера</a>
-                      <a href="#">Поиск работы/сотрудника</a>
-                      <a href="#">Разместить анонс</a>
-                      <a href="#">Языковая поддержка и перевод</a>
-                      <a href="#">Новый пользователь</a>
-                      <a href="#">Добавить бизнес предложение</a>
-                      <a href="#">Собственный интернет-сайт</a>
-                      <a href="#">Создать онлайн магазин</a>
-                    </p>
+                  <p class="footer-links">
+                    <h5>ПОМОЩЬ</h5>
+                    <a href="#">Советы</a>
+                    <a href="#">Найти бизнес партнера</a>
+                    <a href="#">Поиск работы/сотрудника</a>
+                    <a href="#">Разместить анонс</a>
+                    <a href="#">Языковая поддержка и перевод</a>
+                    <a href="#">Новый пользователь</a>
+                    <a href="#">Добавить бизнес предложение</a>
+                    <a href="#">Собственный интернет-сайт</a>
+                    <a href="#">Создать онлайн магазин</a>
+                  </p>
                 </div>
                 <div class="col-xs-3">
-                    <p class="footer-links">
-                        <h5>КОНТАКТЫ</h5>
-                        <a href="#">Часто задаваемые вопросы</a>
-                        <a href="#">Контакты</a>
-                    </p>
+                  <p class="footer-links">
+                    <h5>КОНТАКТЫ</h5>
+                    <a href="#">Часто задаваемые вопросы</a>
+                    <a href="#">Контакты</a>
+                  </p>
                 </div>
                 <div class="col-xs-3">
-                    <p class="footer-links">
-                        <h5>КОМПАНИИ: 50741</h5>
-                        <span>Партнеры: 209</span>
-                    </p>
+                  <p class="footer-links">
+                    <h5>КОМПАНИИ: 50741</h5>
+                    <span>Партнеры: 209</span>
+                  </p>
 
                 </div>
               </div>
@@ -363,11 +362,11 @@
             <hr>
             <div class="row">
               <div class="col-xs-12 bottom">
-                  <p class="text-muted bottom text-center">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
+                <p class="text-muted bottom text-center">© 2015 - 2017 ТПП-Центр — Центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.</p>
               </div>
             </div>
           </footer>
-      </div>
+        </div>
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
