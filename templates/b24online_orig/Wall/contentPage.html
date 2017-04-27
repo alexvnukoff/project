@@ -1,0 +1,148 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<div class="container">
+    {% include "b24online/main/popupFilter.html" %}
+    <div class="wall-title">{% trans 'Latest updates' %}</div>
+    {% if products %}
+        <div class="wall-title-bg">{% trans 'Products' %}</div>
+        <ul class="listprd">
+            {% for prod in products %}
+                <li>
+                    <div class="thumb">
+                        <a href="{{ prod.get_absolute_url }}">
+                            {% if prod.image %}
+                                <img src="{{ prod.image.big }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
+                            {% else %}
+                                <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="link">
+                        <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.name }}"></i>
+                        <a href="{{ prod.get_absolute_url }}" class="name">{{ prod.name|truncatechars:40 }}</a>
+                    </div>
+                    <div class="price">
+                        {% if prod.cost %}
+                            {{ prod.currency|getSymbol }} {{ prod.cost|formatPrice }}
+                        {% else %}
+                            {% trans 'Get the price' %}
+                        {% endif %}
+                    </div>
+                    <a href="{{ prod.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if innovation_project  %}
+        <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
+        <ul class="tender-list" id="afisha-list">
+            <li>
+                <div class="title">
+                    {% if innovation_project.country %}
+                        <i class="flag sprite {{ innovation_project.country.flag }}" title="{{ innovation_project.country.name }}"></i>
+                    {% elif innovation_project.organization.flag %}
+                        <img src="{{ innovation_project.organization.flag_url }}" class="flag" title="{{ innovation_project.organization.name }}" alt="{{ innovation_project.organization.name }}"/>
+                    {% else %}
+                        <i class="flag sprite {{ innovation_project.created_by.profile.country.flag }}" title="{{ innovation_project.created_by.profile.country.name }}"></i>
+                    {% endif %}
+                    <font class="name">{% trans 'Publication date' %}: {{ innovation_project.created_at|date:'d M Y' }}</font>
+                </div>
+                <h2><a href="{{ innovation_project.get_absolute_url }}">{{ innovation_project.name|truncatewords:14 }}</a></h2>
+                <div class="desc">{% trans 'Project cost' %}: <b class="num">{{ innovation_project.currency|getSymbol }} {{ innovation_project.cost|formatPrice }}</b></div>
+                <div class="line">
+                {% if innovation_project.branches.all|length > 0 %}
+                    <span class="clumn">{%  trans "Branch" %}:
+                    {% for branch in innovation_project.branches.all %}
+                        {% if branch.name  %}
+                             <font class="gray">{{ branch.name }}</font>
+                        {% endif %}
+                    {% endfor %}
+                    </span>
+                {% endif %}
+                    <span class="clumn">{% trans 'Organizer' %}:
+                        {% if  innovation_project.organization  %}
+                            <a href="{{ innovation_project.organization.get_absolute_url }}"> {{ innovation_project.organization.name }}</a>
+                        {% else %}
+                            {{ innovation_project.created_by.profile.full_name }}
+                        {% endif %}
+                    </span>
+                </div>
+                <a href="{{ innovation_project.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
+            </li>
+        </ul>
+    {% endif %}
+    {% if exhibition %}
+        <div class="wall-title-bg">{% trans 'Exhibitions' %}</div>
+        <ul class="tender-list" id="afisha-list">
+            <li>
+                <div class="title">
+                    {% if exhibition.country.flag %}
+                        <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.name }}"></i>
+                    {% endif %}
+                    <font class="name">{{ exhibition.country.name }}  {{ exhibition.city }},  {{ exhibition.start_date|date:"d M Y" }} - {{ exhibition.end_date|date:"d M Y"  }}</font>
+                </div>
+                <h2><a href="{{ exhibition.get_absolute_url }}">{{ exhibition.title }}</a></h2>
+                <div class="line">{% trans 'Organizer' %}:
+                    <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a>
+                </div>
+                <a href="{{ exhibition.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
+            </li>
+        </ul>
+    {% endif %}
+    {% if proposal %}
+        <div class="wall-title-bg">{% trans 'Bussiness Proposals' %}</div>
+        <ul class="tender-list" id="afisha-list">
+            <li>
+                <div class="title">
+                    {% if proposal.country.flag %}
+                        <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
+                    {% elif proposal.organization.flag %}
+                        <img src="{{ proposal.organization.flag_url }}" class="flag" title="{{ proposal.organization.name }}" alt="{{ proposal.organization.name }}" />
+                    {% else %}
+                        <i class="flag sprite {{ proposal.organization.country.flag }}" title="{{ proposal.organization.country.name }}"></i>
+                    {% endif %}
+                    <font class="name">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
+                </div>
+                <h2><a href="{{ proposal.get_absolute_url }}"> {{ proposal.title }} </a></h2>
+                <div class="line">{% trans 'Organization' %}:
+                    <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a>
+                </div>
+                <a href="{{ proposal.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
+            </li>
+        </ul>
+    {% endif %}
+    {% if news %}
+        <div class="wall-title-bg">{% trans 'News' %}</div>
+        <ul class="listnews">
+            <li>
+                <div class="thumb shadow">
+                    <a href="{{ news.get_absolute_url }}">
+                        {% if news.image %}
+                            <img src="{{ news.image.big }}" alt="{{ news.title }}" title="{{ news.title }}"/>
+                        {% else %}
+                            <img src="{% static "b24online/img/news.jpg" %} " alt="" />
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="infoprd">
+                    <a href="{{ news.get_absolute_url }}" class="name">{{ news.title }}</a>
+                    <p class="date">
+                        {% if news.organization %}
+                            {% if news.organization.flag %}
+                                <img src="{{ news.organization.flag_url }}" class="flag"  alt="{{ news.organization.title }}" title="{{ news.organization.title }}"/>
+                            {% else %}
+                                <i class="flag sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+                            {% endif %}
+                        {% else %}
+                            <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
+                        {% endif %}
+                        {{ news.obj_create_date|date:'d M Y' }}
+                    </p>
+                    <p>{{ news.content|cleanHtml|safe|truncatewords_html:"30" }} </p>
+                    <!--noindex--><a href="{{ news.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                </div>
+            </li>
+        </ul>
+    {% endif %}
+</div>
