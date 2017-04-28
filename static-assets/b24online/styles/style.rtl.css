@@ -582,6 +582,74 @@ body .header-row .header-container .header .logout {
   width: 16px;
   height: 16px;
 }
+.main-row .article-content .content-block .content.vacancy {
+  background-color: #fff;
+  padding-right: 0;
+  margin-top: -30px;
+}
+.main-row .article-content .content-block .content.vacancy .title {
+  margin-right: 15px;
+}
+.main-row .article-content .content-block .content.vacancy .social {
+  position: relative;
+  float: right;
+  clear: right;
+  margin: 10px 0 20px;
+  padding-right: 15px;
+}
+.main-row .article-content .content-block .content.vacancy .social i {
+  display: inline-block;
+  width: 24px;
+  height: 26px;
+  margin-left: 6px;
+  background: url("../images/news.png");
+}
+.main-row .article-content .content-block .content.vacancy .social i.fb {
+  background-position: 0px -60px;
+}
+.main-row .article-content .content-block .content.vacancy .social i.vk {
+  background-position: -30px -60px;
+}
+.main-row .article-content .content-block .content.vacancy .social i.ok {
+  background-position: -60px -60px;
+}
+.main-row .article-content .content-block .content.vacancy .social i.tw {
+  background-position: -90px -60px;
+}
+.main-row .article-content .content-block .content.vacancy .vacancy-content {
+  border: solid 1px #eee;
+  border-radius: 5px;
+  padding-bottom: 20px;
+}
+.main-row .article-content .content-block .content.vacancy .fields div {
+  margin-top: 5px;
+}
+.main-row .article-content .content-block .content.vacancy .values div {
+  margin-top: 5px;
+}
+.main-row .article-content .content-block .content.vacancy .nav-tabs {
+  margin-top: 10px;
+}
+.main-row .article-content .content-block .content.vacancy .buy {
+  position: absolute;
+  margin-top: 5px;
+  left: 15px;
+  width: 100%;
+  line-height: 27px;
+  font-size: 17px;
+  border: none;
+  background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0, #3c9bcb), color-stop(0.49, #3c9fc3), color-stop(0.5, #2186b8), color-stop(1, #2188bb));
+}
+.main-row .article-content .content-block .content.vacancy .tab-content {
+  margin-top: 25px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content img {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
 .main-row .article-content .content-block .thumb-flag-block {
   height: 13px;
   margin-left: 7px;
@@ -596,6 +664,7 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .title {
   font-size: 16px;
   font-weight: 800;
+  color: #000;
   margin: 6px 0 6px 0;
 }
 .main-row .article-content .content-block .title-news {
@@ -614,10 +683,36 @@ body .header-row .header-container .header .logout {
   margin: 0 20px 6px 0;
 }
 .main-row .article-content .content-block .branch {
+  position: relative;
+  clear: right;
   margin-left: 20px;
 }
 .main-row .article-content .content-block .branch span {
   color: #000;
+}
+.main-row .article-content .content-block .author {
+  color: #9b9b9b;
+}
+.main-row .article-content .content-block .author span {
+  color: #777;
+}
+.main-row .article-content .content-block .costs {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+.main-row .article-content .content-block .costs span {
+  color: #777;
+  font-weight: 800;
+  font-size: 14px;
+}
+.main-row .article-content .content-block .news-company {
+  position: relative;
+  top: 0;
+  color: #595959;
+}
+.main-row .article-content .content-block .news-detail {
+  color: #595959;
+  margin-top: 10px;
 }
 .main-row .article-content .content-block .img-container {
   position: relative;
@@ -642,18 +737,6 @@ body .header-row .header-container .header .logout {
   max-width: 300px;
   box-shadow: 0px 5px 7px 0px #616161;
   transform: rotate(3deg);
-}
-.main-row .article-content .content-block .author {
-  color: #9b9b9b;
-}
-.main-row .article-content .content-block .news-company {
-  position: relative;
-  top: 0;
-  color: #595959;
-}
-.main-row .article-content .content-block .news-detail {
-  color: #595959;
-  margin-top: 10px;
 }
 .main-row .right-aside .right-aside-block {
   height: 45px;
