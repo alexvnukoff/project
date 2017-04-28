@@ -582,6 +582,17 @@ body .header-row .header-container .header .logout {
   width: 16px;
   height: 16px;
 }
+.main-row .article-content .content-block .content.vacancy {
+  background-color: #fff;
+}
+.main-row .article-content .content-block .content.vacancy span {
+  margin-left: 30px;
+}
+.main-row .article-content .content-block .content.vacancy .vacancy-table td:last-child {
+  font-weight: 800;
+  color: #000;
+  padding-left: 40px;
+}
 .main-row .article-content .content-block .thumb-flag-block {
   height: 13px;
   margin-right: 7px;
@@ -596,6 +607,7 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .title {
   font-size: 16px;
   font-weight: 800;
+  color: #000;
   margin: 6px 0 6px 0;
 }
 .main-row .article-content .content-block .title-news {
