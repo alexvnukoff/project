@@ -595,7 +595,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   float: left;
   clear: left;
-  margin: 10px 0 20px;
+  margin-top: 10px;
   padding-left: 15px;
 }
 .main-row .article-content .content-block .content.vacancy .social i {
@@ -618,6 +618,8 @@ body .header-row .header-container .header .logout {
   background-position: -90px -60px;
 }
 .main-row .article-content .content-block .content.vacancy .vacancy-content {
+  padding: 0 20px;
+  margin-top: 20px;
   border: solid 1px #eee;
   border-radius: 5px;
   padding-bottom: 20px;
@@ -626,6 +628,8 @@ body .header-row .header-container .header .logout {
   margin-top: 5px;
 }
 .main-row .article-content .content-block .content.vacancy .values div {
+  color: #777;
+  font-weight: 800;
   margin-top: 5px;
 }
 .main-row .article-content .content-block .content.vacancy .nav-tabs {
