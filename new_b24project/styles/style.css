@@ -243,6 +243,7 @@ body .header-row .header-container .header .logout {
   height: 150px;
 }
 .main-row .article-content .banner .banner-container .body .content {
+  min-width: 100%;
   background: #fff;
   position: relative;
   float: left;
