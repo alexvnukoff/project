@@ -136,9 +136,11 @@
       {% endif %}
       {% endif %}
 
-{% endfor %}
-</div>
-</div>
+    {% empty %}
+        <p>{% trans "No results found" %}</p>
+    {% endfor %}
+    </div>
+    </div>
 
     <div class="article-content col-xs-12">
     {% include "b24online/main/paginator.html" %}
