@@ -591,32 +591,6 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .title {
   margin-left: 15px;
 }
-.main-row .article-content .content-block .content.vacancy .social {
-  position: relative;
-  float: left;
-  clear: left;
-  margin-top: 10px;
-  padding-left: 15px;
-}
-.main-row .article-content .content-block .content.vacancy .social i {
-  display: inline-block;
-  width: 24px;
-  height: 26px;
-  margin-right: 6px;
-  background: url("../images/news.png");
-}
-.main-row .article-content .content-block .content.vacancy .social i.fb {
-  background-position: 0px -60px;
-}
-.main-row .article-content .content-block .content.vacancy .social i.vk {
-  background-position: -30px -60px;
-}
-.main-row .article-content .content-block .content.vacancy .social i.ok {
-  background-position: -60px -60px;
-}
-.main-row .article-content .content-block .content.vacancy .social i.tw {
-  background-position: -90px -60px;
-}
 .main-row .article-content .content-block .content.vacancy .vacancy-content {
   padding: 0 20px;
   margin-top: 20px;
@@ -654,6 +628,35 @@ body .header-row .header-container .header .logout {
   margin-right: auto;
   max-width: 100%;
   max-height: 100%;
+}
+.main-row .article-content .content-block .content .social {
+  position: relative;
+  float: left;
+  clear: left;
+  margin-top: 10px;
+  padding-left: 15px;
+}
+.main-row .article-content .content-block .content .social i {
+  display: inline-block;
+  width: 24px;
+  height: 26px;
+  margin-right: 6px;
+  background: url("../images/news.png");
+}
+.main-row .article-content .content-block .content .social i.fb {
+  background-position: 0px -60px;
+}
+.main-row .article-content .content-block .content .social i.vk {
+  background-position: -30px -60px;
+}
+.main-row .article-content .content-block .content .social i.ok {
+  background-position: -60px -60px;
+}
+.main-row .article-content .content-block .content .social i.tw {
+  background-position: -90px -60px;
+}
+.main-row .article-content .content-block .content.video .video-content {
+  margin-top: 15px;
 }
 .main-row .article-content .content-block .thumb-flag-block {
   height: 13px;
