@@ -1,0 +1,26 @@
+{% load CustomFilters %}
+{% load i18n %}
+
+
+  <div class="left-select-container">
+    <select id="monoSelect">
+
+      <option value="1">Организация 1</option>
+      <option value="2">Организация 2</option>
+      <option value="3">Организация 3</option>
+      <option value="4">Организация 4</option>
+      <option value="5">Организация 5</option>
+      <script>
+        $(document).ready(
+        function () {
+          $("#monoSelect").select2({
+            maximumSelectionLength: 5,
+          })
+        }
+        );
+      </script>
+    </select>
+  </div>
+
+
+

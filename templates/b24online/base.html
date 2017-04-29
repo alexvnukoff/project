@@ -138,39 +138,30 @@
         <div class="container main-container">
           <div class="row">
             <div class="left-aside col-xs-3">
-              <div class="left-select-container">
-                <select id="monoSelect">
-                  <option value="1">Организация 1</option>
-                  <option value="2">Организация 2</option>
-                  <option value="3">Организация 3</option>
-                  <option value="4">Организация 4</option>
-                  <option value="5">Организация 5</option>
-                  <script>
-                    $(document).ready(
-                    function () {
-                      $("#monoSelect").select2({
-                        maximumSelectionLength: 5,
-                      })
-                    }
-                    );
-                  </script>
-                </select>
-              </div>
+
+              {% if user.is_commando or user.is_superuser or user.is_authenticated and user.manageable_organizations|length > 1 %}
+                 {% get_my_companies_list %}
+              {% endif %}
+
               <div class="list-group">
-                <a href="#" class="list-group-item active red"><i class="fa fa-desktop"></i>Управление</a>
-                <a href="#" class="list-group-item"><i class="fa fa-bars"></i>Стена</a>
-                <a href="#" class="list-group-item"><i class="fa fa-coffee"></i>Новости</a>
-                <a href="#" class="list-group-item"><i class="fa fa-suitcase"></i>B2B Центр</a>
-                <a href="#" class="list-group-item"><i class="fa fa-shopping-cart"></i>Центр покупок</a>
-                <a href="#" class="list-group-item"><i class="fa fa-globe"></i>Купоны</a>
-                <a href="#" class="list-group-item"><i class="fa fa-shield"></i>Организации</a>
-                <a href="#" class="list-group-item"><i class="fa fa-briefcase"></i>Компании</a>
-                <a href="#" class="list-group-item"><i class="fa fa-lightbulb-o"></i>Инновационные проекты</a>
-                <a href="#" class="list-group-item"><i class="fa fa-laptop"></i>Бизнес предложения</a>
-                <a href="#" class="list-group-item"><i class="fa fa-users"></i>Выставки / Форумы</a>
-                <a href="#" class="list-group-item"><i class="fa fa-desktop"></i>TPP CHANNEL</a>
-                <a href="#" class="list-group-item"><i class="fa fa-graduation-cap"></i>Требуются</a>
-                <a href="#" class="list-group-item"><i class="fa fa-user-plus"></i>Резюме</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="list-group-item active red"><i class="fa fa-desktop"></i>{% trans 'Control Panel' %}</a>
+                {% else %}
+                <a href="{% url 'registration_register' %}" class="list-group-item active red"><i class="fa fa-desktop"></i>{% trans 'Join Us' %}</a>
+                {% endif %}
+                <a href="{% url 'wall:main' %}" class="list-group-item"><i class="fa fa-bars"></i>{% trans 'Wall' %}</a>
+                <a href="{% url 'news:main' %}" class="list-group-item"><i class="fa fa-coffee"></i>{% trans 'News' %}</a>
+                <a href="{% url 'products:main' %}" class="list-group-item"><i class="fa fa-suitcase"></i>{% trans 'Products B2B' %}</a>
+                <a href="{% url 'products:main_b2c' %}" class="list-group-item"><i class="fa fa-shopping-cart"></i>{% trans 'Products B2C' %}</a>
+                <a href="{% url 'products:main_coupons' %}" class="list-group-item"><i class="fa fa-globe"></i>{% trans 'Online Coupons' %}</a>
+                <a href="{% url 'tpp:main' %}" class="list-group-item"><i class="fa fa-shield"></i>{% trans 'Organizations' %}</a>
+                <a href="{% url 'companies:main' %}" class="list-group-item"><i class="fa fa-briefcase"></i>{% trans 'Companies' %}</a>
+                <a href="{% url 'innov:main' %}" class="list-group-item"><i class="fa fa-lightbulb-o"></i>{% trans 'Innovation Projects' %}</a>
+                <a href="{% url 'proposal:main' %}" class="list-group-item"><i class="fa fa-laptop"></i>{% trans 'Business Proposals' %}</a>
+                <a href="{% url 'exhibitions:main' %}" class="list-group-item"><i class="fa fa-users"></i>{% trans 'Exhibitions / Forums' %}</a>
+                <a href="{% url 'video:main' %}" class="list-group-item"><i class="fa fa-desktop"></i>{% trans 'TPP CHANNEL' %}</a>
+                <a href="{% url 'vacancy:main' %}" class="list-group-item"><i class="fa fa-graduation-cap"></i>{% trans 'Job requirements' %}</a>
+                <a href="{% url 'resume:main' %}" class="list-group-item"><i class="fa fa-user-plus"></i>{% trans 'Resume' %}</a>
               </div>
             </div>
 
