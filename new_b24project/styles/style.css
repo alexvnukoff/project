@@ -655,6 +655,22 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content .social i.tw {
   background-position: -90px -60px;
 }
+.main-row .article-content .content-block .content.video .title {
+  padding: 0 15px;
+}
+.main-row .article-content .content-block .content.video .title .fa-youtube-play {
+  margin-right: 8px;
+  color: #c10010;
+}
+.main-row .article-content .content-block .content.video .thumb-flag-block {
+  margin-left: 15px;
+}
+.main-row .article-content .content-block .content.video .date {
+  margin-left: 0;
+}
+.main-row .article-content .content-block .content.video .link {
+  margin-left: 10px;
+}
 .main-row .article-content .content-block .content.video .video-content {
   margin-top: 15px;
 }
