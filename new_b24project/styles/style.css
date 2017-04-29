@@ -1,9 +1,11 @@
 body {
 undefined
+undefined
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
 @import url("https://fonts.googleapis.com/css?family=Amatic+SC");
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 body a {
   color: #0089bc;
 }
@@ -482,6 +484,9 @@ body .header-row .header-container .header .logout {
   margin-top: 10px;
   width: 100%;
 }
+.main-row .article-content .content-block .content.clear-bgc {
+  background-color: #fff;
+}
 .main-row .article-content .content-block .content.company {
   margin: 10px 0;
   padding: 10px 10px 5px 10px;
@@ -655,24 +660,102 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content .social i.tw {
   background-position: -90px -60px;
 }
-.main-row .article-content .content-block .content.video .title {
+.main-row .article-content .content-block .content.details .title {
   padding: 0 15px;
 }
-.main-row .article-content .content-block .content.video .title .fa-youtube-play {
+.main-row .article-content .content-block .content.details .title .fa-youtube-play {
   margin-right: 8px;
   color: #c10010;
 }
-.main-row .article-content .content-block .content.video .thumb-flag-block {
+.main-row .article-content .content-block .content.details .thumb-flag-block {
   margin-left: 15px;
 }
-.main-row .article-content .content-block .content.video .date {
+.main-row .article-content .content-block .content.details .date {
   margin-left: 0;
 }
-.main-row .article-content .content-block .content.video .link {
+.main-row .article-content .content-block .content.details .link {
   margin-left: 10px;
 }
-.main-row .article-content .content-block .content.video .video-content {
+.main-row .article-content .content-block .content.details .video-content {
   margin-top: 15px;
+}
+.main-row .article-content .content-block .content.details .news-content {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #fafafa;
+}
+.main-row .article-content .content-block .content.details .news-content .thumb-container {
+  position: relative;
+  margin-bottom: 10px;
+}
+.main-row .article-content .content-block .content.details .news-content .thumb-container .thumb-img {
+  position: relative;
+  max-width: 100%;
+  max-height: 185px;
+  min-width: 100%;
+  min-height: 50px;
+}
+.main-row .article-content .content-block .content.details .news-content .thumb-container:before {
+  z-index: 0;
+  position: absolute;
+  content: "";
+  bottom: 5px;
+  left: 4px;
+  width: 90%;
+  top: 78%;
+  max-width: 300px;
+  box-shadow: 0px 5px 7px 0px #616161;
+  transform: rotate(-3deg);
+}
+.main-row .article-content .content-block .content.details .similar {
+  position: relative;
+  float: left;
+  clear: left;
+  margin-top: 20px;
+  background-color: #fafafa;
+}
+.main-row .article-content .content-block .content.details .similar .title {
+  font-size: 20px;
+  font-weight: 300;
+  font-family: 'Roboto', sans-serif;
+  color: #777;
+}
+.main-row .article-content .content-block .content.details .similar .caption {
+  clear: left;
+}
+.main-row .article-content .content-block .content.details .similar .caption .date {
+  color: #9b9b9b;
+}
+.main-row .article-content .content-block .content.details .similar .news {
+  border: none;
+  background-color: #fafafa;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  margin-top: 15px;
+}
+.main-row .article-content .content-block .content.details .similar .news .thumbnail-container .thumb-container {
+  position: relative;
+  margin-bottom: 10px;
+  left: 35px;
+}
+.main-row .article-content .content-block .content.details .similar .news .thumbnail-container .thumb-container .thumb-img {
+  position: relative;
+  max-width: 100%;
+  max-height: 185px;
+  min-width: 50px;
+  min-height: 50px;
+}
+.main-row .article-content .content-block .content.details .similar .news .thumbnail-container .thumb-container:before {
+  z-index: 0;
+  position: absolute;
+  content: "";
+  bottom: 5px;
+  left: 4px;
+  width: 90%;
+  top: 78%;
+  max-width: 300px;
+  box-shadow: 0px 5px 7px 0px #616161;
+  transform: rotate(-3deg);
 }
 .main-row .article-content .content-block .thumb-flag-block {
   height: 13px;
