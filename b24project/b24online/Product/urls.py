@@ -18,7 +18,7 @@ from centerpokupok.models import B2CProductCategory
 urlpatterns = [
 
     url(r'^b2b/$', B2BProductList.as_view(), name='main'),
-    url(r'^page(?P<page>[0-9]+)?/$', B2BProductList.as_view(), name="paginator"),
+    url(r'^b2b/page(?P<page>[0-9]+)?/$', B2BProductList.as_view(), name="paginator"),
     url(r'^my/$', B2BProductList.as_view(my=True), name='my_main'),
     url(r'^my/page(?P<page>[0-9]+)?/$', B2BProductList.as_view(my=True), name="my_main_paginator"),
     url(r'^my/update/$', B2BProductUpdateList.as_view(my=True),
