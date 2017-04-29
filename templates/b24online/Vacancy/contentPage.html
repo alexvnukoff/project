@@ -1,0 +1,40 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+
+    {% for vacancy in object_list %}
+
+      <div class="content-block">
+{#         {% setContextMenu vacancy %} #}
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="container content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <img class="thumb-flag-block pull-left" src="../flags/english.png" alt="flag">
+                  <div class="date">{{ vacancy.country.name }}, {{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.created_at|date:'d M Y' }}</div>
+                  <div class="title"><a href="{{ vacancy.get_absolute_url }}">{{ vacancy.title }}</a></div>
+                    {% if vacancy.country %}
+                        <i class="flag sprite {{ vacancy.country.flag }}" title="{{ vacancy.country.name }}" ></i>
+                    {% endif %}
+                  <div class="news-detail">{{ vacancy.description|cleanHtml|safe|truncatewords_html:30 }}</div>
+                  <div class="more pull-right"><a href="{{ vacancy.get_absolute_url }}">{% trans "More" %}...</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% empty %}
+        <p>{% trans "No results found" %}</p>
+    {% endfor %}
+    </div>
+
+    <div class="article-content col-xs-12">
+    {% include "b24online/main/paginator.html" %}
+    </div>

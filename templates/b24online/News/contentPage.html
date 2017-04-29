@@ -36,7 +36,7 @@
                 <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
 
                 <div class="date pull-left">{{ news.created_at|date:'d M Y' }},</div>
-                <div class="news-company"><a href="">Company name</a></div>
+                <div class="news-company"><a href="#">{% trans "Company name" %}</a></div>
                 <div class="news-detail">
                     {% if news.short_description %}
                         {{ news.short_description|linebreaks|safe }}
