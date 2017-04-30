@@ -27,7 +27,7 @@ B24 и остальные сайты
 
  + cp ./b24project/local_settings.py.sample ./b24project/local_settings.py
  + docker-compose -f docker-compose.local.yml up -d
- + ./postinstall.sh DB_CONTAINER_ID
+ + ./post_install.sh DB_CONTAINER_ID
  + docker-compose -f docker-compose.local.yml stop
  + docker-compose -f docker-compose.local.yml up -d
 
