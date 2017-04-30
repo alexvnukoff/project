@@ -1,7 +1,7 @@
 B24 и остальные сайты
 ===
 
-#Правила разработки
+# Правила разработки
  + Пишем всё в рамках PEP 0008, а что не соответсвует, по возможности корректируем.
  + В конце любой операции по изменению объекта нужно вызывать переиндексацию, а иммено метод reindex.
  + Удалять объекты можно только по одному (bulk нельзя) для переиндексации и вызова callbacks
@@ -9,15 +9,15 @@ B24 и остальные сайты
  + Разрабатывать на Python 3
 
 
-#Сервера
+# Сервера
 
  + EC2 под проект B24online.com (Docker)
  + 1 EC2 для Elasticsearch
+ + Cache - Redis
+ + Search - ElasticSearch
  + Аналитика в NewRelic
- + 1 Elastic Cache Redis для очередей Celery
- + 1 Elastic Cache Redis для очередей Tornado + SockJS
  + RDS Postgres
- + Cloud Front + S3 для файлов (static.tppcenter.com)
+ + Cloud Front + S3 для файлов (static.b24online.com)
  + DNS на Route 53
 
 --
