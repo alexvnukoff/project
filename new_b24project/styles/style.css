@@ -696,6 +696,9 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .video-content {
   margin-top: 15px;
 }
+.main-row .article-content .content-block .content.details .paypal {
+  margin-top: 15px;
+}
 .main-row .article-content .content-block .content.details .media-content {
   margin-top: 15px;
   padding: 15px;
@@ -733,26 +736,16 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .contacts .flag {
   width: 18px;
+  margin-right: 10px;
 }
 .main-row .article-content .content-block .content.details .contacts .event-title {
-  margin-left: 10px;
   margin-bottom: 15px;
 }
 .main-row .article-content .content-block .content.details .contacts .address {
   float: left;
   clear: left;
 }
-.main-row .article-content .content-block .content.details .contacts .phone {
-  float: left;
-  clear: left;
-  margin-top: 6px;
-}
-.main-row .article-content .content-block .content.details .contacts .extra-phone {
-  float: left;
-  clear: left;
-  margin-top: 6px;
-}
-.main-row .article-content .content-block .content.details .contacts .mail {
+.main-row .article-content .content-block .content.details .contacts .contact {
   float: left;
   clear: left;
   margin-top: 6px;
@@ -776,8 +769,13 @@ body .header-row .header-container .header .logout {
   width: 16px;
   height: 16px;
 }
+.main-row .article-content .content-block .content.details .contacts .site-ico {
+  background-position: -170px -90px;
+  width: 16px;
+  height: 16px;
+}
 .main-row .article-content .content-block .content.details .contacts .mail-ico {
-  background-position: -187px -90px;
+  background-position: -187px -88px;
   width: 16px;
   height: 16px;
 }
