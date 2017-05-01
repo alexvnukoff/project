@@ -8,11 +8,12 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, DetailView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
+from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
@@ -204,15 +205,73 @@ class ChangePasswordDone(UserTemplateMixin, TemplateView):
     template_name = '{template_path}/change_password_done.html'
 
 
-class LandingView(UserTemplateMixin, TemplateView):
+class LandingView(UserTemplateMixin, DetailView):
     template_name = '{template_path}/landingPage.html'
+    model = LandingPage
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context_data = self.get_context_data(object=self.object)
+
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            if not self.organization.email:
+                email = 'admin@tppcenter.com'
+                subject = _('This message was sent to company:')
+            else:
+                email = self.organization.email
+                subject = "B24online.com: New Lead from {0}".format(cd['name'])
+
+            # Collecting lead
+            getlead = GetLead(request)
+            getlead.collect(
+                url=cd['url_path'],
+                realname=cd['name'],
+                email=cd['email'],
+                message=cd['message'],
+                phone=cd['phone'],
+                company_id=cd['co_id']
+                )
+
+            mail = EmailMessage(subject,
+                    """
+                    From: {0}
+                    URL: {1}
+                    Email: {2}
+                    Phone: {3}
+
+                    Message: {4}
+                    """.format(
+                        cd['name'],
+                        cd['url_path'],
+                        cd['email'],
+                        cd['phone'],
+                        cd['message']
+                        ),
+                    cd['email'],
+                    [email]
+                )
+            mail.send()
+            messages.add_message(self.request, messages.SUCCESS, _("Message sent"))
+            return self.render_to_response(context_data)
+
+        context_data['form'] = form
+        messages.add_message(self.request, messages.ERROR, _("Please fix the errors below"))
+        return self.render_to_response(context_data)
+
+    def get_object(self, queryset=None):
+        try:
+            obj = self.model.objects.get(src=self.usersite)
+        except self.model.DoesNotExist:
+            raise Http404
+        return obj
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("Landing Page")
-        try:
-            context['object'] = LandingPage.objects.get(src=self.usersite)
-        except LandingPage.DoesNotExist:
-            raise Http404
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = _("Landing Page")
+        context_data['form'] = ContactForm()
 
-        return context
+        return context_data
+
