@@ -3029,6 +3029,7 @@ class LeadsStore(ActiveModelMixing, models.Model):
 class AdditionalParameters(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     description = models.CharField(max_length=1000, blank=False, null=False)
+    extra_cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')

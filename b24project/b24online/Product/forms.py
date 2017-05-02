@@ -118,7 +118,7 @@ AdditionalPageFormSet = generic_inlineformset_factory(
 
 
 AdditionalParametersFormSet = generic_inlineformset_factory(
-    AdditionalParameters, fields=('title', 'description'), max_num=10, validate_max=True, extra=0)
+    AdditionalParameters, fields=('title', 'description', 'extra_cost'), max_num=10, validate_max=True, extra=0)
 
 
 

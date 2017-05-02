@@ -57,7 +57,7 @@
                             </td>
                         </tr>
                     </table>
-                </form>                
+                </form>
                 {% else %}
                 <form action="" method="post" id="BasketItemAdd">{% csrf_token %}
                     {% if extra_params_uuid %}
@@ -123,11 +123,7 @@
                 {% endif %}
             </div>
 
-
-
         </div>
-
-
 
             {% comment %}
             <li>
@@ -177,7 +173,6 @@
                 </ul>
             </div>
 
-
             <div id="tabs-3">
                 <ul class="gallery">
                 {% for gallery_obj in object.gallery_images %}
@@ -193,7 +188,7 @@
             {% if hm_questionnaires %}
             <div id="tabs-4">
                 <ul class="tpp-gallery gallery">
-                {% for questionnaire in questionnaires %}    
+                {% for questionnaire in questionnaires %}
                     <li>
                     <div class="b-img">
                         <a target="_blank" href="{% url 'questionnaires:detail' item_id=questionnaire.id %}">

@@ -8,7 +8,7 @@
                 </div>
             {% endif %}
 
-            <input class="text" style="width:89%;" id="{{ prefix }}-title"  name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
+            <input class="text" style="width:89%;" id="{{ prefix }}-title" name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
             <div style="margin-bottom: 20px">{% trans 'Delete' %}: <input type="checkbox" name="{{ prefix }}-DELETE" {% if form and form.DELETE.value %} checked="checked" {% endif %}/> </div>
             </div>
             {% if form.errors.content %}

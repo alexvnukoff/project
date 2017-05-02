@@ -762,6 +762,7 @@ class B2CProductUpdate(ItemUpdate):
             self.object = form.save()
             additional_page_form.instance = self.object
             additional_parameters_form.instance = self.object
+            additional_parameters_form.save()
 
             for page_form in additional_page_form:
                 if not page_form.instance.created_by_id:
@@ -769,7 +770,6 @@ class B2CProductUpdate(ItemUpdate):
                 page_form.instance.updated_by = self.request.user
 
             additional_page_form.save()
-            additional_parameters_form.save()
 
         if form.changed_data:
             self.object.reindex()
