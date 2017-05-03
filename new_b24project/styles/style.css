@@ -808,6 +808,9 @@ body .header-row .header-container .header .logout {
   font-weight: 800;
   margin-top: 5px;
 }
+.main-row .article-content .content-block .content.details iframe {
+  width: 100%;
+}
 .main-row .article-content .content-block .content.details .nav-tabs {
   margin-top: 10px;
 }
