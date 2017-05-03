@@ -163,38 +163,34 @@
 
                     <p>{{ object.description|cleanHtml|safe }}</p>
 
-              {% if object.additional_parameters.count > 0 %}
-                {% for i in object.additional_parameters.all %}
-
                 <script>
                 $(document).ready(function() {
+                    var current_price = parseFloat($('#current_price').data('target'));
+                    var currency = '{{ object.currency|getSymbol }}';
 
-                    $('.checkbox{{ forloop.counter0 }}').change(function() {
-                        var current = 0;
-                        var price = 0;
-                        price += $('#current_price').data('target');
-                        current += $(this).data('target');
-
-                        console.log(current);
-                        console.log(price);
+                    $('.checkbox').change(function() {
+                        var current_cost = parseFloat($(this).data('target'));
 
                         if($(this).is(":checked")) {
-
-                          var obj = price+current;
-                          $('#current_price').attr('data-target', obj);
-                          $('#current_price').text(obj);
+                          current_price += current_cost;
+                          $('#current_price').attr('data-target', current_price);
+                          var str = currency + current_price.toFixed(2);
+                          $('#current_price').text(str);
 
                         } else {
-                          var obj = price+current;
-                          $('#current_price').attr('data-target', obj);
-                          $('#current_price').text(obj);
+                          current_price -= current_cost;
+                          $('#current_price').attr('data-target', current_price);
+                          var str = currency + current_price.toFixed(2);
+                          $('#current_price').text(str);
 
                         }
 
-                        $('#textbox1').val($(this).is(':checked'));
                     });
                 });
                 </script>
+
+              {% if object.additional_parameters.count > 0 %}
+                {% for i in object.additional_parameters.all %}
 
                 <div class="row" style="color:#fff">
                 <div class="col-lg-10">
@@ -206,7 +202,7 @@
                 <div class="col-lg-2">
                 <p>&nbsp;</p>
                   <label style="cursor:pointer">
-                    <p style="background:#555;padding:15px;border-radius:4px;"><input type="checkbox" class="checkbox{{ forloop.counter0 }}" data-target="{{ i.extra_cost|formatPrice }}" style="cursor:pointer" /></p>
+                    <p style="background:#555;padding:15px;border-radius:4px;"><input type="checkbox" class="checkbox" data-target="{{ i.extra_cost|formatPrice }}" style="cursor:pointer" /></p>
                   </label>
                 </div>
 
