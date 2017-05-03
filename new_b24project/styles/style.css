@@ -700,6 +700,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .link {
   margin-left: 15px;
+  margin-bottom: 10px;
 }
 .main-row .article-content .content-block .content.details .link img {
   margin-right: 5px;
@@ -826,6 +827,12 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .tab-content p {
   color: #777;
   font-weight: 800;
+}
+.main-row .article-content .content-block .content.details .tab-content .text {
+  color: #777;
+}
+.main-row .article-content .content-block .content.details .tab-content .text p {
+  font-weight: 300;
 }
 .main-row .article-content .content-block .content.details .tab-content img {
   display: block;
