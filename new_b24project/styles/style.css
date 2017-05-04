@@ -553,6 +553,10 @@ body .header-row .header-container .header .logout {
   border-left: solid 1px #e1e1e1;
   width: 164px;
 }
+.main-row .article-content .content-block .content.company .body .contacts .contact {
+  float: left;
+  clear: left;
+}
 .main-row .article-content .content-block .content.company .body .contacts .address {
   float: left;
   clear: left;
