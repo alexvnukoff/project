@@ -688,6 +688,9 @@ body .header-row .header-container .header .logout {
   clear: left;
   width: 60%;
 }
+.main-row .article-content .content-block .content.details .title.product {
+  font-weight: 300;
+}
 .main-row .article-content .content-block .content.details .price-value {
   color: #000;
   font-weight: 800;
@@ -728,8 +731,30 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .video-content {
   margin-top: 15px;
 }
-.main-row .article-content .content-block .content.details .paypal {
-  margin-top: 15px;
+.main-row .article-content .content-block .content.details .customer-fieldset {
+  border: solid 1px #aaa !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+}
+.main-row .article-content .content-block .content.details .customer-fieldset .title-legend {
+  font-weight: bold !important;
+  text-align: left !important;
+  font-weight: 300 !important;
+  font-size: 16px !important;
+  width: auto;
+  padding: 0 10px;
+  border-bottom: none;
+}
+.main-row .article-content .content-block .content.details .customer-fieldset .input-label {
+  font-weight: 300;
+}
+.main-row .article-content .content-block .content.details .customer-fieldset .price {
+  font-weight: 800;
+  font-size: 14px;
+  color: #4a4a4a;
+}
+.main-row .article-content .content-block .content.details .customer-fieldset .quantity {
+  margin-top: 10px;
 }
 .main-row .article-content .content-block .content.details .media-content {
   margin-top: 15px;
@@ -765,6 +790,12 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .contacts {
   border-left: solid 1px #e1e1e1;
+}
+.main-row .article-content .content-block .content.details .contacts.product {
+  width: 200px;
+  border: none;
+  background-color: #f3f3f3;
+  padding: 10px;
 }
 .main-row .article-content .content-block .content.details .contacts .flag {
   width: 18px;
