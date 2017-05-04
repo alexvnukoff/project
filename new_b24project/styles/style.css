@@ -883,6 +883,27 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .tab-content {
   margin-top: 25px;
 }
+.main-row .article-content .content-block .content.details .tab-content .document {
+  background-color: #fdfdfd;
+  padding: 10px;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download {
+  position: relative;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download:hover a {
+  display: block;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download a {
+  position: absolute;
+  display: none;
+  top: 65px;
+  left: 0px;
+  background-color: #777;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
 .main-row .article-content .content-block .content.details .tab-content p {
   color: #777;
   font-weight: 800;
