@@ -492,6 +492,9 @@ body .header-row .header-container .header .logout {
   margin-top: 10px;
   width: 100%;
 }
+.main-row .article-content .content-block .content .modal {
+  color: #000;
+}
 .main-row .article-content .content-block .content.clear-bgc {
   background-color: #fff;
 }
