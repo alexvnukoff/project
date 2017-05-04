@@ -237,19 +237,21 @@ $( document ).ready(function() {
         </div>\
         </div>');
 
-    var accessDeclaration = "אינטרנט מהווה כיום את המאגר הגדול ביותר לחופש המידע עבור כלל המשתמשים, ומשתמשים בעלי מוגבלויות בפרט. " +
-            "ככזה, אנו שמים חשיבות רבה במתן אפשרות שווה לאנשים עם מוגבלות לשימוש במידע המוצג באתר, ולאפשר חווית גלישה טובה יותר." +
+    var accessDeclaration = "Our objective of making our website accessible is to create a website that is available, " +
+            "convenient and user friendly for people with hand or vision disabilities or other difficulties " +
+            "and to enable all to surf the site easily and quickly and to benefit from the content at the site." +
             "\u003cbr\u003e" +
-            "אנו שואפים להבטיח כי השירותים הדיגיטליים יהיו נגישים לאנשים עם מוגבלויות, ועל כן הושקעו משאבים רבים להקל את השימוש באתר עבור אנשים עם מוגבלויות, ככל האפשר, מתוך אמונה כי לכל אדם מגיעה הזכות לחיות בשוויון, כבוד, נוחות ועצמאות." +
+            "The website is supported by standard browsers. Support for Internet Explorer is from version 10 and higher." +
             "\u003cbr\u003e" +
-            "באתר מוצב תפריט הנגשה. לחיצה על התפריט מאפשרת פתיחת כפתורי ההנגשה." +
+            "The contents at the website were written in a simple and clear manner." +
             "\u003cbr\u003e" +
-            "חרף מאמצנו לאפשר גלישה באתר נגיש עבור כל דפי האתר, יתכן ויתגלו דפים באתר שטרם הונגשו, או שטרם נמצא הפתרון הטכנולוגי המתאים." +
-            "אנו ממשיכים במאמצים לשפר את נגישות האתר, ככל האפשר, וזאת מתוך אמונה ומחויבות מוסרית לאפשר שימוש באתר לכלל האוכלוסייה, לרבות אנשים עם מוגבלויות." +
+            "There is an accessibility menu at the top right hand side of each page with the following options:" +
             "\u003cbr\u003e" +
-            "על נגישות המקום תוכלו לקרוא בעמוד הנגישות באתר." +
+            "Contrast, Font Size and Links." +
             "\u003cbr\u003e" +
-            "להערות, שאלות והצעות ניתן לפנות אלינו דרך דף צור קשר שבאתר.";
+            "We will continue to preserve and improve the level of accessibility of the website from a perspective of equality of rights and equality of opportunity for all." +
+            "\u003cbr\u003e" +
+            "Should you, in any case, come across a difficulty, we will be happy to receive any response, idea and suggestion on the matter via email";
 
     $('#accessDialog').append(appToAccess);
     $('#accesDecaration').append(accessDeclaration);
@@ -283,9 +285,3 @@ $( document ).ready(function() {
       //       $('#sidebar-wrapper').toggleClass('.toggled-sidbar-width');
       // });
 });
-
-
-
-
-
-

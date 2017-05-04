@@ -1815,7 +1815,8 @@ header.carousel .fill {
 }
 
 /* Pages leads styling */
-#leads-in-page{
+#leads-in-page,
+.leads-in-page{
     background-color: #ddd;
     padding: 10px;
     border-radius: 5px;
@@ -1823,12 +1824,14 @@ header.carousel .fill {
     text-align: center;
 }
 
-#leads-in-page .leads-form-lbl{
+#leads-in-page .leads-form-lbl,
+.leads-in-page .leads-form-lbl{
     font-size: 1.2em;
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-    #leads-in-page input{
+    #leads-in-page input,
+    .leads-in-page input{
         width: 120px;
     }
 }
