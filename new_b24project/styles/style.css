@@ -873,6 +873,10 @@ body .header-row .header-container .header .logout {
   border: none;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3c9bcb), color-stop(0.49, #3c9fc3), color-stop(0.5, #2186b8), color-stop(1, #2188bb));
 }
+.main-row .article-content .content-block .content.details .basket {
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3c9bcb), color-stop(0.49, #3c9fc3), color-stop(0.5, #2186b8), color-stop(1, #2188bb));
+  color: #fff;
+}
 .main-row .article-content .content-block .content.details .tab-content {
   margin-top: 25px;
 }
