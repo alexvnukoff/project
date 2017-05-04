@@ -125,7 +125,7 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 contact-form">
 
-                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm" novalidate>{% csrf_token %}
+                    <form method="post" action="{% url 'sendmessage' %}" class="clearfix" name="sentMessage" id="contactForm">{% csrf_token %}
 
                         <input type="hidden" name="co_id" value="{{ site.pk }}">
                         <input type="hidden" name="url_path" value="{{ request.build_absolute_uri }}">
