@@ -83,11 +83,14 @@
     <script src="{% static 'usersites/usersites_templates/golan/js/timer.js' %}"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
 
-    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+     {% if LANGUAGE_BIDI %}
+        <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
+     {% else %}
+        <script src="{% static 'usersites/js/accessibility-plugin-en.js' %}"></script>
+    {% endif %}
+
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
-
     <script type="text/javascript" charset="utf-8">
 
 

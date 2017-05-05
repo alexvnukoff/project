@@ -114,14 +114,15 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'usersites/usersites_templates/cineret/js/agency.js' %}"></script>
-
-    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
     <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
     <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
     <script src="{% static 'usersites/js/jquery.cookie.js' %}"></script>
 
-    <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
-
+     {% if LANGUAGE_BIDI %}
+        <script src="{% static 'usersites/js/accessibility-plugin.js' %}"></script>
+     {% else %}
+        <script src="{% static 'usersites/js/accessibility-plugin-en.js' %}"></script>
+    {% endif %}
 
     <script type="text/javascript" charset="utf-8">
     function wazeMapInfo(){
