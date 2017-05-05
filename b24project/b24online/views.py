@@ -324,7 +324,12 @@ def feedback_form(request):
 
 def get_profile_card(request, user_id):
     obj = get_object_or_404(User, pk=user_id)
+    return render(request,
+        'b24online/Profile/Public/contentPage.html', {'object': obj})
 
-    return render(request, 'b24online/Profile/Public/contentPage.html', {'object': obj})
 
-
+def get_profile_vcard(request, user_id):
+    obj = get_object_or_404(User, pk=user_id)
+    return render(request,
+        'b24online/Profile/Public/vCard.vcf',
+        {'object': obj}, content_type='text/x-vCard')

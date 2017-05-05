@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-
 import datetime
 import logging
 import os
 import re
+import base64
+import requests
 from collections import OrderedDict, Iterable, namedtuple
 from copy import copy
 from decimal import Decimal
 from urllib.parse import urljoin
-
 from django import template
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -21,7 +21,6 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import escape
 from django.utils.translation import trans_real
 from lxml.html.clean import Cleaner
-
 import b24online.urls
 from appl.func import currency_symbol
 from b24online.models import (Chamber, Notification, MessageChat, Message,
@@ -636,3 +635,8 @@ def set_var(parser, token):
     if not (new_val[0] == new_val[-1] and new_val[0] in ('"', "'")):
         raise template.TemplateSyntaxError("{0} tag's argument should be in quotes".format(tag_name))
     return SetVarNode(new_val[1:-1], var_name)
+
+
+@register.filter
+def get_as_base64(obj):
+    return base64.b64encode(requests.get(obj).content)

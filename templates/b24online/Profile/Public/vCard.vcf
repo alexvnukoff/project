@@ -1,0 +1,16 @@
+{% load i18n %}{% load CustomFilters %}{% get_card_url request as the_card %}BEGIN:VCARD
+N:{{ object.profile.last_name }};{{ object.profile.first_name }};;;
+FN:{{ object.get_full_name }}
+EMAIL;type=INTERNET;type=pref:{{ object.email }}
+ORG:{{ object.profile.co_name }}
+TEL;type=CELL;type=VOICE;type=pref:{{ object.profile.mobile_number }}
+TEL;FAX;WORK:{{ object.profile.co_phone }}
+TEL;WORK:{{ object.profile.co_phone }}
+TITLE:{{ object.profile.profession }}
+URL;WORK:{{ object.profile.site }}
+URL:{{ the_card }}id{{ object.id }}/
+END:VCARD
+
+
+
+

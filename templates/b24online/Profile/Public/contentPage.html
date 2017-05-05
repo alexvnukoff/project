@@ -58,7 +58,7 @@ a.main-button:hover {
 background-color: #e3e3e3;
 border-color: rgba(0,0,0,0.5);
 }
-  
+
 a.main-button:active {
 background-color: #dedede;
 border-color: rgba(0,0,0,0.9);
@@ -151,7 +151,8 @@ opacity:0.8;
         <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
         {% endif %}
 
-        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send Email' %}</a>
+        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send Email' %}</a>&nbsp;
+        <a href="{% url 'get_profile_vcard' object.id %}" download="{{ object.get_full_name }}" class="main-button">{% trans 'Save vCard' %}</a>
 
         {% if object.profile.contacts %}
         <h4 style="margin:5px 0;color:#828282;"><i class="icon-location"></i>{% trans 'Address' %}</h4>
