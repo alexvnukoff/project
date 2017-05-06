@@ -9,7 +9,7 @@ TEL;WORK:{{ object.profile.co_phone }}
 TITLE:{{ object.profile.profession }}
 URL;WORK:{{ object.profile.site }}
 URL:{{ the_card }}id{{ object.id }}/
-{% if object.profile.avatar %}PHOTO;ENCODING=b;TYPE=JPEG:{{ object.profile.avatar.big|get_as_base64 }}{% endif %}END:VCARD
+{% if object.profile.avatar %}{% with obj=object.profile.avatar.small|get_as_base64 %}PHOTO;ENCODING=b;TYPE={{ obj.avatar_content_type }}:{{ obj.avatar_url }}{% endwith %}{% endif %}END:VCARD
 
 
 

@@ -639,4 +639,20 @@ def set_var(parser, token):
 
 @register.filter
 def get_as_base64(obj):
-    return base64.encodebytes(requests.get(obj).content)
+    http = "https:" if obj.startswith('//') else ""
+    url = "{0}{1}".format(http, obj)
+    raw = requests.get(url)
+    img = base64.encodebytes(raw.content)
+    header = raw.headers['Content-Type']
+
+    if 'png' in header:
+        ct = "PNG"
+    elif 'gif' in header:
+        ct = "GIF"
+    else:
+        ct = "JPEG"
+
+    return {
+        'avatar_content_type': ct,
+        'avatar_url': img
+        }
