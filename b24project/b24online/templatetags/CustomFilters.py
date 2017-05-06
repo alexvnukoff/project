@@ -639,4 +639,4 @@ def set_var(parser, token):
 
 @register.filter
 def get_as_base64(obj):
-    return base64.b64encode(requests.get(obj).content)
+    return base64.encodebytes(requests.get(obj).content)

@@ -332,4 +332,4 @@ def get_profile_vcard(request, user_id):
     obj = get_object_or_404(User, pk=user_id)
     return render(request,
         'b24online/Profile/Public/vCard.vcf',
-        {'object': obj}, content_type='text/x-vCard')
+        {'object': obj}, content_type='text/x-vcard')
