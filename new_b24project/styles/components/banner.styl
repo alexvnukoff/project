@@ -1,0 +1,107 @@
+.banner
+  height 240px
+  width 100%
+  background #e9f7fc
+  padding 10px
+  margin-top 10px
+  &.details
+    height 320px
+  .coupon-header
+    margin-top 15px
+    font-size 16px
+  .banner-container
+    height 100%
+    width 100%
+    .body
+      width 100%
+      height 170px
+      &.details
+        height 250px
+      .content
+        min-width 100%
+        background #fff
+        position relative
+        float left
+        height 170px
+        &.details
+          height 300px
+        .img
+          img
+            position relative
+            float left
+            margin-top 14px
+            max-height 100%
+            max-width 100%
+          .badge
+            position absolute
+            top 14px
+            height 28px
+            font-size 16px
+            width 57px
+            line-height 21px
+            background-color #dd201c
+            border-radius 0
+            &:after
+              content " "
+              border-width 3px 3px 4px 4px
+              border-style solid
+              border-color transparent #dd201c #dd201c transparent
+              position absolute
+              top 0
+              right 100%
+        .text
+          margin-top 10px
+          @import './content/social'
+          @import './content/contact-us-btn'
+          .price-container
+            font-size 18px
+            .price
+              font-weight 800
+              margin-left 5px
+            .old-price
+              text-decoration line-through
+              margin-left 5px
+              font-weight 500
+              color #a5a5a5
+          .title
+            position relative
+            float left
+            font-size 20px
+          .status
+            position relative
+            float left
+            clear left
+            margin-top 5px
+            color #a5a5a5
+          @import './expire-block'
+    .footer
+      width 100%
+      height 50px
+      background #159fcb
+      .buy
+        margin-top 7px
+        padding 6px 20px
+        color #fff
+        background-color #dd201c
+        border solid 1px #f00
+        font-size 15px
+        font-weight 700
+      .current-price
+        margin-right 15px
+        line-height 50px
+        font-weight 700
+        color #c8f2ff
+        .price
+          font-size 18px
+          font-weight 700
+          margin-left 5px
+          color #fff
+      .old-price
+        margin-right 15px
+        line-height 50px
+        color #fff
+        font-size 14px
+        .price
+          text-decoration line-through
+          color #fff
+          margin-right 5px
