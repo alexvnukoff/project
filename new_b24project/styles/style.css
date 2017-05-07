@@ -887,6 +887,9 @@ body .header-row .header-container .header .logout {
   background-color: #fdfdfd;
   padding: 10px;
 }
+.main-row .article-content .content-block .content.details .tab-content .document .name {
+  text-align: center;
+}
 .main-row .article-content .content-block .content.details .tab-content .document .download {
   position: relative;
 }
@@ -913,6 +916,16 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content .text p {
   font-weight: 300;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy img {
+  display: block;
+  position: relative;
+  float: left;
+  margin-left: 20px;
+  margin-right: auto;
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 15px;
 }
 .main-row .article-content .content-block .content.details .tab-content img {
   display: block;
