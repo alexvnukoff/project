@@ -1,8 +1,8 @@
-from django.conf import settings
-from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
+
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
 from b24online.search_indexes import SearchEngine
 
@@ -12,13 +12,6 @@ def get_wall_list(request):
 
     wallPage = _wall_content(request)
 
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
-
-    scripts = []
-
     if not request.is_ajax():
         templateParams = {
             'current_section': current_section,
@@ -27,16 +20,7 @@ def get_wall_list(request):
 
         return render(request, "b24online/Wall/index.html", context=templateParams)
     else:
-        serialize = {
-            'current_section': current_section,
-            'styles': styles,
-            'scripts': scripts,
-            'content': wallPage,
-
-        }
-
-        return JsonResponse(serialize)
-
+        return HttpResponse(wallPage)
 
 def _wall_content(request):
     valid_filters = {

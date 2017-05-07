@@ -1,6 +1,7 @@
 import logging
 import os
 from urllib.parse import urlparse
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -8,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, Http404, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
 from django.template.loader import render_to_string
 from django.utils._os import abspathu
 from django.utils.decorators import method_decorator
@@ -19,22 +20,13 @@ from appl import func
 from b24online.forms import GalleryImageForm, DocumentForm
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
     GalleryImage, Document, Chamber, IndexedModelMixin, B2BProduct
-from centerpokupok.models import B2CProduct
 from b24online.search_indexes import SearchEngine
+from centerpokupok.models import B2CProduct
 from centerpokupok.models import B2CProductCategory
 from core import tasks
-from core.cbv import HybridListView
+from core.cbv import AjaxListView
 
 logger = logging.getLogger(__name__)
-
-class TabItemList(HybridListView):
-
-    paginate_by = 10
-    allow_empty = True
-
-    # pagination url
-    url_paginator = None
-
 
 class ItemUpdate(UpdateView):
     @method_decorator(login_required)
@@ -100,7 +92,7 @@ class ItemCreate(CreateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ItemsList(HybridListView):
+class ItemsList(AjaxListView):
     paginate_by = 10
     allow_empty = True
 
@@ -128,9 +120,6 @@ class ItemsList(HybridListView):
 
     url_parameter = []
 
-    # Lists of required scripts and styles for ajax request
-    scripts = []
-    styles = []
 
     # Fields to sort by
     sortFields = {
@@ -206,16 +195,8 @@ class ItemsList(HybridListView):
 
         return None
 
-    def get_data(self, context):
-        # For JSON response
-
-        return {
-            'styles': self.styles,
-            'scripts': self.scripts,
-            'content': render_to_string(self.template_name, context, self.request),
-            'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
-            'current_section': self.current_section
-        }
+    def render_ajax_response(self, context, **response_kwargs):
+        return render_to_response(self.template_name, context, self.request)
 
     def get_context_data(self, **kwargs):
         context = super(ItemsList, self).get_context_data(**kwargs)
@@ -234,8 +215,6 @@ class ItemsList(HybridListView):
             'current_path': self.request.get_full_path(),
             'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
             'current_section': self.current_section,
-            'styles': self.styles,
-            'scripts': self.scripts,
             'available_filters': list(self.filter_list.keys()),
             'model': self.model.__name__,
             'is_my': self.is_my(),

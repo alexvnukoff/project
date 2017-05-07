@@ -25,8 +25,6 @@ class UsersitesChatsListView(LoginRequiredMixin, UserTemplateMixin,
     paginate_by = 10
     model = MessageChat
     url_paginator = "messages:chats_paginator"
-    scripts = []
-    styles = []
     without_json = True
 
     def get_context_data(self, **kwargs):

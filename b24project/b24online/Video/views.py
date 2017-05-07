@@ -13,12 +13,6 @@ class VideoList(ItemsList):
     url_my_paginator = "video:my_main_paginator"
     addUrl = 'video:add'
 
-    # Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
-
     project_news = False
 
     sortFields = {

@@ -25,3 +25,15 @@ class HybridListView(JSONResponseMixin, MultipleObjectTemplateResponseMixin, Bas
             return self.render_to_json_response(context)
         else:
             return super(HybridListView, self).render_to_response(context)
+
+
+class AjaxListView(MultipleObjectTemplateResponseMixin, BaseListView):
+
+    def render_ajax_response(self, context, **response_kwargs):
+        pass
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.is_ajax():
+            return self.render_ajax_response(context)
+        else:
+            return super().render_to_response(context)

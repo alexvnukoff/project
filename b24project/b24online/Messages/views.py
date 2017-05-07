@@ -192,9 +192,6 @@ class ChatListView(LoginRequiredMixin, ItemsList):
     paginate_by = 10
     url_paginator = "messages:chats_paginator"
 
-    # Lists of required scripts and styles for ajax request
-    scripts = []
-    styles = []
 
     current_section = _("Products B2B")
     # addUrl = 'products:add'

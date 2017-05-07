@@ -15,11 +15,6 @@ class TenderList(ItemsList):
     url_paginator = "tenders:paginator"
     url_my_paginator = "tenders:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
 
     current_section = _("Tenders")
     addUrl = 'tenders:add'

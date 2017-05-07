@@ -19,12 +19,6 @@ class NewsList(ItemsList):
     url_my_paginator = "news:my_main_paginator"
     addUrl = 'news:add'
 
-    # Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
-    
     project_news = False
 
     sortFields = {

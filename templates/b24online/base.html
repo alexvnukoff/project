@@ -57,22 +57,62 @@
 
     {% endblock %}
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
     {% if LANGUAGE_BIDI %}
         <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/bootstrap-rtl.min.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.rtl.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.fixes.rtl.css' %}" />
     {% else %}
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="{% static 'b24online/styles/style.css' %}" />
     {% endif %}
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
-        <link rel="stylesheet" type="text/css" href="https://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css" />
 
-        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-        <script src="{% static 'b24online/js/jquery.countdown.min.js' %}"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css"
+          integrity="sha256-xJOZHfpxLR/uhh1BwYFS5fhmOAdIRQaiOul5F/b7v3s="
+          crossorigin="anonymous" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
+          integrity="sha256-nbyata2PJRjImhByQzik2ot6gSHSU4Cqdz5bNYL2zcU="
+          crossorigin="anonymous" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"
+            integrity="sha256-+mWd/G69S4qtgPowSELIeVAv7+FuL871WXaolgXnrwQ="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/{{ LANGUAGE_CODE }}.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"
+            integrity="sha256-Ikk5myJowmDQaYVCUD0Wr+vIDkN8hGI58SGWdE671A8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/history/4.6.1/history.min.js"
+            integrity="sha256-qZ9jx0oB4jEyGZinIIy7t78PgOQ6uPR0yGkq0xW7q5M="
+            crossorigin="anonymous"
+            async="async"></script>
+    <script src="{% static 'b24online/js/ui_new.js' %}"></script>
+    
+    <script>
+      $(document).ready(function() {
+        ContentManager.init();
+        SinglePage.init();
+      });
+    </script>
 
   </head>
   <body>
@@ -149,19 +189,19 @@
                 {% else %}
                 <a href="{% url 'registration_register' %}" class="list-group-item active red"><i class="fa fa-desktop"></i>{% trans 'Join Us' %}</a>
                 {% endif %}
-                <a href="{% url 'wall:main' %}" class="list-group-item"><i class="fa fa-bars"></i>{% trans 'Wall' %}</a>
-                <a href="{% url 'news:main' %}" class="list-group-item"><i class="fa fa-coffee"></i>{% trans 'News' %}</a>
-                <a href="{% url 'products:main' %}" class="list-group-item"><i class="fa fa-suitcase"></i>{% trans 'Products B2B' %}</a>
-                <a href="{% url 'products:main_b2c' %}" class="list-group-item"><i class="fa fa-shopping-cart"></i>{% trans 'Products B2C' %}</a>
-                <a href="{% url 'products:main_coupons' %}" class="list-group-item"><i class="fa fa-globe"></i>{% trans 'Online Coupons' %}</a>
-                <a href="{% url 'tpp:main' %}" class="list-group-item"><i class="fa fa-shield"></i>{% trans 'Organizations' %}</a>
-                <a href="{% url 'companies:main' %}" class="list-group-item"><i class="fa fa-briefcase"></i>{% trans 'Companies' %}</a>
-                <a href="{% url 'innov:main' %}" class="list-group-item"><i class="fa fa-lightbulb-o"></i>{% trans 'Innovation Projects' %}</a>
-                <a href="{% url 'proposal:main' %}" class="list-group-item"><i class="fa fa-laptop"></i>{% trans 'Business Proposals' %}</a>
-                <a href="{% url 'exhibitions:main' %}" class="list-group-item"><i class="fa fa-users"></i>{% trans 'Exhibitions / Forums' %}</a>
-                <a href="{% url 'video:main' %}" class="list-group-item"><i class="fa fa-desktop"></i>{% trans 'TPP CHANNEL' %}</a>
-                <a href="{% url 'vacancy:main' %}" class="list-group-item"><i class="fa fa-graduation-cap"></i>{% trans 'Job requirements' %}</a>
-                <a href="{% url 'resume:main' %}" class="list-group-item"><i class="fa fa-user-plus"></i>{% trans 'Resume' %}</a>
+                <a href="{% url 'wall:main' %}" class="single-page list-group-item"><i class="fa fa-bars"></i>{% trans 'Wall' %}</a>
+                <a href="{% url 'news:main' %}" class="single-page list-group-item"><i class="fa fa-coffee"></i>{% trans 'News' %}</a>
+                <a href="{% url 'products:main' %}" class="single-page list-group-item"><i class="fa fa-suitcase"></i>{% trans 'Products B2B' %}</a>
+                <a href="{% url 'products:main_b2c' %}" class="single-page list-group-item"><i class="fa fa-shopping-cart"></i>{% trans 'Products B2C' %}</a>
+                <a href="{% url 'products:main_coupons' %}" class="single-page list-group-item"><i class="fa fa-globe"></i>{% trans 'Online Coupons' %}</a>
+                <a href="{% url 'tpp:main' %}" class="single-page list-group-item"><i class="fa fa-shield"></i>{% trans 'Organizations' %}</a>
+                <a href="{% url 'companies:main' %}" class="single-page list-group-item"><i class="fa fa-briefcase"></i>{% trans 'Companies' %}</a>
+                <a href="{% url 'innov:main' %}" class="single-page list-group-item"><i class="fa fa-lightbulb-o"></i>{% trans 'Innovation Projects' %}</a>
+                <a href="{% url 'proposal:main' %}" class="single-page list-group-item"><i class="fa fa-laptop"></i>{% trans 'Business Proposals' %}</a>
+                <a href="{% url 'exhibitions:main' %}" class="single-page list-group-item"><i class="fa fa-users"></i>{% trans 'Exhibitions / Forums' %}</a>
+                <a href="{% url 'video:main' %}" class="single-page list-group-item"><i class="fa fa-desktop"></i>{% trans 'TPP CHANNEL' %}</a>
+                <a href="{% url 'vacancy:main' %}" class="single-page list-group-item"><i class="fa fa-graduation-cap"></i>{% trans 'Job requirements' %}</a>
+                <a href="{% url 'resume:main' %}" class="single-page list-group-item"><i class="fa fa-user-plus"></i>{% trans 'Resume' %}</a>
               </div>
             </div>
 

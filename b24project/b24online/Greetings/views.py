@@ -19,12 +19,7 @@ class GreetingList(ItemsList):
     sortFields = {
         'name': 'name'
     }
- 
-    #Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
+
 
     current_section = _("Greetings")
 

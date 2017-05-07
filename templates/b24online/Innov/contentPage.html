@@ -3,58 +3,52 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-<div class="article-content col-xs-12">
-    {% include "b24online/main/paginator.html" %}
+{% include "b24online/main/paginator.html" %}
+<div class="content-block">
 
-    <div class="content-block">
+{% for innov in object_list %}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="container content">
+        <!-- {% setContextMenu innov %} -->
+        <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
 
-    {% for innov in object_list %}
-                <div class="row">
-                  <div class="col-xs-12">
-                    <div class="container content">
-                    <!-- {% setContextMenu innov %} -->
-                    <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+        {% if innov.country %}
+            <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.name }}"></i>
+        {% elif innov.organization.flag %}
+            <img src="{{ innov.organization.flag_url }}" class="flag" title="{{ innov.organization.name }}" alt="{{ innov.organization.name }}"/>
+        {% else %}
+            <i class="flag sprite {{ innov.created_by.profile.country.flag }}" title="{{ innov.created_by.profile.country.name }}"></i>
+        {% endif %}
 
-                    {% if innov.country %}
-                        <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.name }}"></i>
-                    {% elif innov.organization.flag %}
-                        <img src="{{ innov.organization.flag_url }}" class="flag" title="{{ innov.organization.name }}" alt="{{ innov.organization.name }}"/>
-                    {% else %}
-                        <i class="flag sprite {{ innov.created_by.profile.country.flag }}" title="{{ innov.created_by.profile.country.name }}"></i>
-                    {% endif %}
-
-                  <div class="date">{% trans 'Publication date' %}: {{ innov.created_at|date:'d M Y' }}</div>
-                  <div class="title"><a href="{{ innov.get_absolute_url }}">{{ innov.name|truncatewords:14 }}</a></div>
-                  <div class="costs pull-left">{% trans 'Project cost' %}: <span href="{{ innov.get_absolute_url }}">{{ innov.currency|getSymbol }} {{ innov.cost|formatPrice }}</span></div>
+        <div class="date">{% trans 'Publication date' %}: {{ innov.created_at|date:'d M Y' }}</div>
+        <div class="title"><a href="{{ innov.get_absolute_url }}">{{ innov.name|truncatewords:14 }}</a></div>
+        <div class="costs pull-left">{% trans 'Project cost' %}: <span href="{{ innov.get_absolute_url }}">{{ innov.currency|getSymbol }} {{ innov.cost|formatPrice }}</span></div>
 
 
-                  {% if innov.branches.count > 0 %}
-                  <div class="branch pull-left">{%  trans "Branch" %}:
-                    {% for branch in innov.branches.all %}
-                        <span href="#">{{ branch.name }}</span>
-                    {% endfor %}
-                  </div>
-                  {% endif %}
-
-                  <div class="author pull-left">{% trans 'Organizer' %}:
-                    {% if innov.organization.name %}
-                        <a href="{{ innov.organization.get_absolute_url }}"> {{ innov.organization.name }}</a>
-                    {% elif innov.created_by.profile.full_name %}
-                       {% get_card_url request as the_card %}
-                       <a href="{{ the_card }}id{{ innov.created_by.id }}/">{{ innov.created_by.profile.full_name }}</a>
-                    {% endif %}
-                  </div>
-                  <div class="more pull-right"><a href="{{ innov.get_absolute_url }}">{% trans 'More' %}...</a></div>
-                </div>
-              </div>
-            </div>
-
-    {% empty %}
-        <p>{% trans "No results found" %}</p>
-    {% endfor %}
-    </div>
+          {% if innov.branches.count > 0 %}
+          <div class="branch pull-left">{%  trans "Branch" %}:
+            {% for branch in innov.branches.all %}
+                <span href="#">{{ branch.name }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+    
+          <div class="author pull-left">{% trans 'Organizer' %}:
+            {% if innov.organization.name %}
+                <a href="{{ innov.organization.get_absolute_url }}"> {{ innov.organization.name }}</a>
+            {% elif innov.created_by.profile.full_name %}
+               {% get_card_url request as the_card %}
+               <a href="{{ the_card }}id{{ innov.created_by.id }}/">{{ innov.created_by.profile.full_name }}</a>
+            {% endif %}
+          </div>
+          <div class="more pull-right"><a href="{{ innov.get_absolute_url }}">{% trans 'More' %}...</a></div>
+        </div>
+      </div>
     </div>
 
-    <div class="article-content col-xs-12">
-    {% include "b24online/main/paginator.html" %}
-    </div>
+{% empty %}
+    <p>{% trans "No results found" %}</p>
+{% endfor %}
+</div>
+{% include "b24online/main/paginator.html" %}

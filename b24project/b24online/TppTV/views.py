@@ -11,13 +11,6 @@ class TVNewsLIst(ItemsList):
     #pagination url
     url_paginator = "tv:paginator"
 
-    #Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css',
-        settings.STATIC_URL + 'b24online/css/tpp.reset.css'
-    ]
-
     current_section = _("TPP-TV")
 
     #allowed filter list

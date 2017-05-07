@@ -19,11 +19,7 @@ class ResumeList(ItemsList):
     url_paginator = "resume:paginator"
     url_my_paginator = "resume:my_main_paginator"
 
-    # Lists of required scripts and styles for ajax request
-    styles = [
-        settings.STATIC_URL + 'b24online/css/news.css',
-        settings.STATIC_URL + 'b24online/css/company.css'
-    ]
+
 
     addUrl = 'resume:add'
 

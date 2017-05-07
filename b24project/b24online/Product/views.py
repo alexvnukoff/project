@@ -38,10 +38,6 @@ class B2BProductList(ItemsList):
     url_paginator = "products:paginator"
     url_my_paginator = "products:my_main_paginator"
 
-    # Lists of required scripts and styles for ajax request
-    scripts = []
-    styles = []
-
     paginate_by = 12
 
     addUrl = 'products:add'
@@ -56,7 +52,7 @@ class B2BProductList(ItemsList):
     model = B2BProduct
 
     def ajax(self, request, *args, **kwargs):
-        self.template_name = 'b24online/Products/contentPage.html'
+        self.template_name = 'b24online/Products/contentPageB2B.html'
 
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/index.html'
@@ -132,10 +128,6 @@ class B2CProductList(ItemsList):
     # pagination url
     url_paginator = "products:main_b2c_paginator"
     url_my_paginator = "products:my_b2c_paginator"
-
-    # Lists of required scripts and styles for ajax request
-    scripts = []
-    styles = []
 
     paginate_by = 12
 
@@ -244,10 +236,6 @@ class B2CPCouponsList(ItemsList):
     # pagination url
     url_paginator = "products:coupons_paginator"
     paginate_by = 13
-
-    # Lists of required scripts and styles for ajax request
-    scripts = []
-    styles = []
 
     addUrl = 'products:addB2C'
 
