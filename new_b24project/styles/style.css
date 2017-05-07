@@ -621,11 +621,13 @@ body .header-row .header-container .header .logout {
   color: #9b9b9b;
 }
 .main-row .article-content .content-block .not-found {
+  display: none;
   text-align: center;
   color: #777;
   font-size: 26px;
 }
 .main-row .article-content .content-block .loader {
+  display: none;
   text-align: center;
 }
 .main-row .article-content .content-block .content {
