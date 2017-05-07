@@ -1995,6 +1995,20 @@ footer .btn-default{
     background-image: none;
 }
 
+.landing-contact-form .captcha-controls img{
+	width: 45%;
+	height: 34px;
+}
+
+.landing-contact-form .captcha-controls input{
+	width: 50%;
+	height: 34px;
+	border: 1px solid #ccc;
+    border-radius: 4px;
+	color: #000;
+}
+
+
 /* Portrait phones and smaller */
 @media (max-width: 480px) {
 	.landing-contact-wrap {
