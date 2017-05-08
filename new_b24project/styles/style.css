@@ -308,16 +308,40 @@ body .header-row .header-container .header .logout {
   padding: 10px;
   margin-top: 30px;
 }
+.main-row .article-content .banner .coupon-header {
+  margin-top: 15px;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
 .main-row .article-content .banner.details {
   height: 320px;
 }
-.main-row .article-content .banner .coupon-header {
-  margin-top: 15px;
-  font-size: 16px;
+.main-row .article-content .banner.details .coupon-header {
+  margin-top: 25px;
 }
 .main-row .article-content .banner .banner-container {
   height: 100%;
   width: 100%;
+}
+.main-row .article-content .banner .banner-container .badge {
+  position: absolute;
+  top: -5px;
+  left: 80px;
+  height: 28px;
+  font-size: 16px;
+  width: 57px;
+  line-height: 21px;
+  background-color: #dd201c;
+  border-radius: 0;
+}
+.main-row .article-content .banner .banner-container .badge:after {
+  content: " ";
+  border-width: 3px 3px 4px 4px;
+  border-style: solid;
+  border-color: transparent #dd201c #dd201c transparent;
+  position: absolute;
+  top: 0;
+  right: 100%;
 }
 .main-row .article-content .banner .banner-container .body {
   width: 100%;
@@ -336,32 +360,15 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .banner .banner-container .body .content.details {
   height: 300px;
 }
+.main-row .article-content .banner .banner-container .body .content.details .img img {
+  margin-top: 0;
+}
 .main-row .article-content .banner .banner-container .body .content .img img {
   position: relative;
   float: left;
-  margin-top: 14px;
+  margin-top: 25px;
   max-height: 100%;
   max-width: 100%;
-}
-.main-row .article-content .banner .banner-container .body .content .img .badge {
-  position: absolute;
-  top: -5px;
-  left: 30px;
-  height: 28px;
-  font-size: 16px;
-  width: 57px;
-  line-height: 21px;
-  background-color: #dd201c;
-  border-radius: 0;
-}
-.main-row .article-content .banner .banner-container .body .content .img .badge:after {
-  content: " ";
-  border-width: 3px 3px 4px 4px;
-  border-style: solid;
-  border-color: transparent #dd201c #dd201c transparent;
-  position: absolute;
-  top: 0;
-  right: 100%;
 }
 .main-row .article-content .banner .banner-container .body .content .text {
   margin-top: 10px;

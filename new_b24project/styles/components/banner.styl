@@ -4,14 +4,35 @@
   background #e9f7fc
   padding 10px
   margin-top 30px
-  &.details
-    height 320px
   .coupon-header
     margin-top 15px
+    margin-bottom 4px
     font-size 16px
+  &.details
+    height 320px
+    .coupon-header
+      margin-top 25px
   .banner-container
     height 100%
     width 100%
+    .badge
+      position absolute
+      top -5px
+      left 80px
+      height 28px
+      font-size 16px
+      width 57px
+      line-height 21px
+      background-color #dd201c
+      border-radius 0
+      &:after
+        content " "
+        border-width 3px 3px 4px 4px
+        border-style solid
+        border-color transparent #dd201c #dd201c transparent
+        position absolute
+        top 0
+        right 100%
     .body
       width 100%
       height 170px
@@ -25,31 +46,16 @@
         height 170px
         &.details
           height 300px
+          .img
+            img
+              margin-top 0
         .img
           img
             position relative
             float left
-            margin-top 14px
+            margin-top 25px
             max-height 100%
             max-width 100%
-          .badge
-            position absolute
-            top -5px
-            left 30px
-            height 28px
-            font-size 16px
-            width 57px
-            line-height 21px
-            background-color #dd201c
-            border-radius 0
-            &:after
-              content " "
-              border-width 3px 3px 4px 4px
-              border-style solid
-              border-color transparent #dd201c #dd201c transparent
-              position absolute
-              top 0
-              right 100%
         .text
           margin-top 10px
           @import './content/social'
