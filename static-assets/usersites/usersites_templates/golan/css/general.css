@@ -318,6 +318,20 @@ collapse the menu on 991px. */
 	font-size: 8pt;
 }
 
+#leads-in-page .captcha-control img{
+	height: 34px;
+	margin: 0 5px;
+}
+
+#leads-in-page .captcha-control p{
+	margin: 0;
+}
+
+#leads-in-page .captcha-control input {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
 @media(max-width:767px) {
     .social-header{
         padding-top: 7px;

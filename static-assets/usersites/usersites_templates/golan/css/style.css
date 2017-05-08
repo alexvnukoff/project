@@ -314,3 +314,7 @@ footer span{
 	float: right;
 }
 
+#leads-in-page .captcha-control img{
+	float: left;
+}
+
