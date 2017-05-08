@@ -229,38 +229,104 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .paginator a {
   margin-left: 10px;
 }
+.main-row .article-content .coupon #exTab {
+  margin-top: 20px;
+}
+.main-row .article-content .coupon #exTab .tab-content {
+  margin-top: 25px;
+}
+.main-row .article-content .coupon #exTab .tab-content #map {
+  width: 100%;
+  height: 400px;
+}
+.main-row .article-content .coupon #exTab .tab-content .document {
+  background-color: #fdfdfd;
+  padding: 10px;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .name {
+  text-align: center;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download {
+  position: relative;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download:hover a {
+  display: block;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download a {
+  position: absolute;
+  display: none;
+  top: 65px;
+  left: 0px;
+  background-color: #777;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
+.main-row .article-content .coupon #exTab .tab-content p {
+  color: #777;
+  font-weight: 800;
+}
+.main-row .article-content .coupon #exTab .tab-content .text {
+  color: #777;
+}
+.main-row .article-content .coupon #exTab .tab-content .text p {
+  font-weight: 300;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy img {
+  display: block;
+  position: relative;
+  float: left;
+  margin-left: 20px;
+  margin-right: auto;
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 15px;
+}
+.main-row .article-content .coupon #exTab .tab-content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin-bottom: 15px;
+}
+.main-row .article-content .coupon #exTab .tab-content .text {
+  margin-bottom: 20px;
+}
+.main-row .article-content .coupon #exTab .tab-content .field {
+  margin-top: 5px;
+}
+.main-row .article-content .coupon #exTab .tab-content .value {
+  margin-top: 5px;
+  color: #777;
+}
 .main-row .article-content .banner {
-  height: 220px;
+  height: 240px;
   width: 100%;
   background: #e9f7fc;
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 30px;
+}
+.main-row .article-content .banner .coupon-header {
+  margin-top: 15px;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+.main-row .article-content .banner.details {
+  height: 320px;
+}
+.main-row .article-content .banner.details .coupon-header {
+  margin-top: 25px;
 }
 .main-row .article-content .banner .banner-container {
   height: 100%;
   width: 100%;
 }
-.main-row .article-content .banner .banner-container .body {
-  width: 100%;
-  height: 150px;
-}
-.main-row .article-content .banner .banner-container .body .content {
-  min-width: 100%;
-  background: #fff;
-  position: relative;
-  float: left;
-  height: 150px;
-}
-.main-row .article-content .banner .banner-container .body .content .img img {
-  position: relative;
-  float: left;
-  margin-top: 14px;
-  max-height: 100%;
-  max-width: 100%;
-}
-.main-row .article-content .banner .banner-container .body .content .img .badge {
+.main-row .article-content .banner .banner-container .badge {
   position: absolute;
-  top: 14px;
+  top: -5px;
+  left: 80px;
   height: 28px;
   font-size: 16px;
   width: 57px;
@@ -268,7 +334,7 @@ body .header-row .header-container .header .logout {
   background-color: #dd201c;
   border-radius: 0;
 }
-.main-row .article-content .banner .banner-container .body .content .img .badge:after {
+.main-row .article-content .banner .banner-container .badge:after {
   content: " ";
   border-width: 3px 3px 4px 4px;
   border-style: solid;
@@ -277,8 +343,87 @@ body .header-row .header-container .header .logout {
   top: 0;
   right: 100%;
 }
+.main-row .article-content .banner .banner-container .body {
+  width: 100%;
+  height: 170px;
+}
+.main-row .article-content .banner .banner-container .body.details {
+  height: 250px;
+}
+.main-row .article-content .banner .banner-container .body .content {
+  min-width: 100%;
+  background: #fff;
+  position: relative;
+  float: left;
+  height: 170px;
+}
+.main-row .article-content .banner .banner-container .body .content.details {
+  height: 300px;
+}
+.main-row .article-content .banner .banner-container .body .content.details .img img {
+  margin-top: 0;
+}
+.main-row .article-content .banner .banner-container .body .content .img img {
+  position: relative;
+  float: left;
+  margin-top: 25px;
+  max-height: 100%;
+  max-width: 100%;
+}
 .main-row .article-content .banner .banner-container .body .content .text {
   margin-top: 10px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social {
+  position: relative;
+  float: left;
+  clear: left;
+  margin-top: 10px;
+  padding-left: 15px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social.coupon {
+  padding-left: 0;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social i {
+  display: inline-block;
+  width: 24px;
+  height: 26px;
+  margin-right: 6px;
+  background: url("../images/news.png");
+}
+.main-row .article-content .banner .banner-container .body .content .text .social i.fb {
+  background-position: 0px -60px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social i.vk {
+  background-position: -30px -60px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social i.ok {
+  background-position: -60px -60px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .social i.tw {
+  background-position: -90px -60px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .contact-us-btn {
+  margin-top: 15px;
+  height: 35px;
+  width: 152px;
+  text-align: center;
+  line-height: 35px;
+  font-size: 16px;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3c9bcb), color-stop(0.49, #3c9fc3), color-stop(0.5, #2186b8), color-stop(1, #2188bb));
+  color: #fff;
+}
+.main-row .article-content .banner .banner-container .body .content .text .price-container {
+  font-size: 18px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .price-container .price {
+  font-weight: 800;
+  margin-left: 5px;
+}
+.main-row .article-content .banner .banner-container .body .content .text .price-container .old-price {
+  text-decoration: line-through;
+  margin-left: 5px;
+  font-weight: 500;
+  color: #a5a5a5;
 }
 .main-row .article-content .banner .banner-container .body .content .text .title {
   position: relative;
@@ -292,30 +437,35 @@ body .header-row .header-container .header .logout {
   margin-top: 5px;
   color: #a5a5a5;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block {
   position: relative;
   float: left;
   clear: left;
   margin-top: 5px;
   font-size: 26px;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire .clock {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block.details {
+  border-top: solid 1px #eee;
+  border-bottom: solid 1px #eee;
+  padding: 10px 0;
+}
+.main-row .article-content .banner .banner-container .body .content .text .expire-block .clock {
   margin-top: 20px;
   color: #5a5a5a;
   margin-left: 10px;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire .exp {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block .exp {
   margin-left: 30px;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire .exp:first-child {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block .exp:first-child {
   margin-left: 10px;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire .count {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block .count {
   font-size: 30px;
   text-align: center;
   color: #5a5a5a;
 }
-.main-row .article-content .banner .banner-container .body .content .text .expire .date {
+.main-row .article-content .banner .banner-container .body .content .text .expire-block .date {
   margin-top: 10px;
   font-size: 12px;
   color: #cacaca;
@@ -484,6 +634,7 @@ body .header-row .header-container .header .logout {
   font-size: 26px;
 }
 .main-row .article-content .content-block .loader {
+  display: none;
   text-align: center;
 }
 .main-row .article-content .content-block .content {
@@ -554,27 +705,25 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.company .body .contacts {
   border-left: solid 1px #e1e1e1;
-  width: 164px;
 }
-.main-row .article-content .content-block .content.company .body .contacts .contact {
-  float: left;
-  clear: left;
+.main-row .article-content .content-block .content.company .body .contacts.product {
+  width: 200px;
+  border: none;
+  background-color: #f3f3f3;
+  padding: 10px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .flag {
+  width: 18px;
+  margin-right: 10px;
+}
+.main-row .article-content .content-block .content.company .body .contacts .event-title {
+  margin-bottom: 15px;
 }
 .main-row .article-content .content-block .content.company .body .contacts .address {
   float: left;
   clear: left;
 }
-.main-row .article-content .content-block .content.company .body .contacts .phone {
-  float: left;
-  clear: left;
-  margin-top: 6px;
-}
-.main-row .article-content .content-block .content.company .body .contacts .extra-phone {
-  float: left;
-  clear: left;
-  margin-top: 6px;
-}
-.main-row .article-content .content-block .content.company .body .contacts .mail {
+.main-row .article-content .content-block .content.company .body .contacts .contact {
   float: left;
   clear: left;
   margin-top: 6px;
@@ -598,8 +747,13 @@ body .header-row .header-container .header .logout {
   width: 16px;
   height: 16px;
 }
+.main-row .article-content .content-block .content.company .body .contacts .site-ico {
+  background-position: -170px -90px;
+  width: 16px;
+  height: 16px;
+}
 .main-row .article-content .content-block .content.company .body .contacts .mail-ico {
-  background-position: -187px -90px;
+  background-position: -187px -88px;
   width: 16px;
   height: 16px;
 }
@@ -642,12 +796,71 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content {
   margin-top: 25px;
 }
+.main-row .article-content .content-block .content.vacancy .tab-content #map {
+  width: 100%;
+  height: 400px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document {
+  background-color: #fdfdfd;
+  padding: 10px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .name {
+  text-align: center;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download {
+  position: relative;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download:hover a {
+  display: block;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download a {
+  position: absolute;
+  display: none;
+  top: 65px;
+  left: 0px;
+  background-color: #777;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content p {
+  color: #777;
+  font-weight: 800;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .text {
+  color: #777;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .text p {
+  font-weight: 300;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy img {
+  display: block;
+  position: relative;
+  float: left;
+  margin-left: 20px;
+  margin-right: auto;
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 15px;
+}
 .main-row .article-content .content-block .content.vacancy .tab-content img {
   display: block;
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
   max-height: 100%;
+  margin-bottom: 15px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .text {
+  margin-bottom: 20px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .field {
+  margin-top: 5px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .value {
+  margin-top: 5px;
+  color: #777;
 }
 .main-row .article-content .content-block .content .social {
   position: relative;
@@ -655,6 +868,9 @@ body .header-row .header-container .header .logout {
   clear: left;
   margin-top: 10px;
   padding-left: 15px;
+}
+.main-row .article-content .content-block .content .social.coupon {
+  padding-left: 0;
 }
 .main-row .article-content .content-block .content .social i {
   display: inline-block;
@@ -852,6 +1068,9 @@ body .header-row .header-container .header .logout {
   border-radius: 5px;
   padding-bottom: 20px;
 }
+.main-row .article-content .content-block .content.details .tabs .nav-tabs {
+  margin-top: 10px;
+}
 .main-row .article-content .content-block .content.details .fields div {
   margin-top: 5px;
 }
@@ -862,9 +1081,6 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details iframe {
   width: 100%;
-}
-.main-row .article-content .content-block .content.details .nav-tabs {
-  margin-top: 10px;
 }
 .main-row .article-content .content-block .content.details .buy {
   position: absolute;
@@ -883,6 +1099,34 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .tab-content {
   margin-top: 25px;
 }
+.main-row .article-content .content-block .content.details .tab-content #map {
+  width: 100%;
+  height: 400px;
+}
+.main-row .article-content .content-block .content.details .tab-content .document {
+  background-color: #fdfdfd;
+  padding: 10px;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .name {
+  text-align: center;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download {
+  position: relative;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download:hover a {
+  display: block;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download a {
+  position: absolute;
+  display: none;
+  top: 65px;
+  left: 0px;
+  background-color: #777;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
 .main-row .article-content .content-block .content.details .tab-content p {
   color: #777;
   font-weight: 800;
@@ -892,6 +1136,16 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content .text p {
   font-weight: 300;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy img {
+  display: block;
+  position: relative;
+  float: left;
+  margin-left: 20px;
+  margin-right: auto;
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 15px;
 }
 .main-row .article-content .content-block .content.details .tab-content img {
   display: block;

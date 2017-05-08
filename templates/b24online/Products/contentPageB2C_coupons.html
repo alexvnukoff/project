@@ -8,7 +8,7 @@
 
 <div class="row content-goods">
   {% for product in object_list %}
-  
+
     {% if forloop.first %}
       {% if product.is_coupon %}
       <script>
@@ -21,11 +21,12 @@
           });
       });
       </script>
-  
+
   <div class="banner">
     <div class="banner-container">
       <div class="body">
         <div class="content">
+          <div class="badge pull-left">-{{ product.coupon_discount_percent|intword }}%</div>
           <div class="img col-md-3">
             <a href="{% url 'products:B2CDetail' product.slug product.pk %}">
               {% if product.image %}
@@ -33,32 +34,31 @@
               {% else %}
               <img src="{% static 'b24online/images/400x400.png' %}" alt="{{ product.name|truncatechars:40 }}" />
               {% endif %}
-              <div class="badge pull-left">-{{ product.coupon_discount_percent|intword }}%</div>
             </a>
           </div>
-          
+
           <div class="text col-md-8 col-md-offset-1">
             <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="title">{{ product.name }}</a>
             <div class="status">{% trans "Coupon's status" %}</div>
             <div class="expire">
               <div class="clock fa fa-clock-o pull-left"></div>
               <div class="time pull-left countdown-{{ product.id }}">
-                
+
                 <div class="exp days pull-left">
                   <div class="count clock-days"></div>
                   <div class="date">{% trans "Days" %}</div>
                 </div>
-                
+
                 <div class="exp hours pull-left">
                   <div class="count clock-hours"></div>
                   <div class="date">{% trans "Hours" %}</div>
                 </div>
-                
+
                 <div class="exp minuts pull-left">
                   <div class="count clock-minutes"></div>
                   <div class="date">{% trans "Minutes" %}</div>
                 </div>
-              
+
               </div>
             </div>
           </div>
@@ -81,14 +81,14 @@
       </div>
     </div>
   </div>
-  
+
   {% endif %}
   {% else %}
   {% if product.is_coupon %}
   <!-- {% setContextMenu product update_url=update_url delete_url=delete_url %} -->
   <div class="col-xs-3">
     <div class="thumbnail coupons">
-      
+
       <div class="thumbnail-container">
         <div class="shadow-effect">
         </div>
@@ -101,7 +101,7 @@
           <div class="badge">-{{ product.coupon_discount_percent|intword }}%</div>
         </a>
       </div>
-      
+
       <div class="caption">
         <ul class="media-list">
           <li class="media">
@@ -116,25 +116,25 @@
             </div>
           </li>
         </ul>
-        
+
         <div>{% trans "Discount price until" %}</div>
         <div>{{ product.end_coupon_date }}</div>
-        
+
         {% if product.cost %}
         <p class="price">{{ product.currency|getSymbol }}{{ product.get_discount_price|formatPrice }}</p>
         {% else %}
         {% trans 'Contact to price' %}
         {% endif %}
-        
+
         <p><a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="btn btn-primary coupon-buy" role="button">{% trans "Buy" %}</a></p>
       </div>
-    
+
     </div>
   </div>
-  
+
   {% endif %}
   {% endif %}
-  
+
   {% empty %}
     <p>{% trans "No results found" %}</p>
   {% endfor %}

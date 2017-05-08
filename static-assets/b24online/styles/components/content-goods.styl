@@ -1,0 +1,87 @@
+.content-goods
+  margin-left -5px
+  margin-right 0
+  .b2b-elem
+    margin-top 30px
+  .thumbnail
+    border none
+    padding: 8px 8px 1px;
+    margin: -10px -15px 0px -10px;
+    line-height 1.3
+    background-color #fafafa
+    &.coupons
+      height 340px
+      margin-top 20px
+      .badge
+        position absolute
+        top 0
+        right 0
+        height 25px
+        font-size 12px
+        width 40px
+        line-height 18px
+        background-color #dd201c
+        border-radius 0
+        &:after
+          content " "
+          border-width 3px 3px 4px 4px
+          border-style solid
+          border-color transparent #dd201c #dd201c transparent
+          position absolute
+          top 0
+          right 100%
+      .thumbnail-container
+        position relative
+        .shadow-effect
+          position relative
+        .thumb-img
+          position: relative;
+          max-width 100%
+          max-height 185px
+          min-width 100%
+          min-height 50px
+        &:before
+          z-index: 0;
+          position: absolute;
+          content: "";
+          bottom: 5px;
+          left: 4px;
+          width: 90%;
+          top: 78%;
+          max-width: 300px;
+          box-shadow: 0px 5px 7px 0px #616161;
+          transform: rotate(-3deg);
+      .caption
+        padding 15px 0 0 0
+        color #333
+        position absolute
+        bottom 0
+        font-size 12px
+        font-weight 100
+        color #4a4a4a
+        .media
+          margin-bottom 0
+          // height 80px
+        .thumb-flag
+          height 16px
+        .price
+          color red
+          font-weight 700
+          font-size 13px
+          margin-top 10px
+      .coupon-buy
+        width 100%
+        height 22px
+        line-height 10px
+        font-size 12px
+        border none
+        background url(../images/coupon_btnbuy.gif) repeat-x
+      .buy
+        width 100%
+        height 22px
+        line-height 10px
+        font-size 12px
+        border none
+        background url(../images/btnbuy.gif) repeat-x
+    &.wall
+      margin-top 0
