@@ -13,25 +13,25 @@
       <div class="loader"><img src="{% static 'b24online/images/ajax-loader.gif' %}" alt="loader"></div>
 
 <!-- Content -->
-{% for company in object_list %}
+{% for tpp in object_list %}
       <div class="content-block">
         <div class="row">
           <div class="col-xs-12 body">
             <div class="container content company">
-{#             {% setContextMenu company %} #}
+{#             {% setContextMenu tpp %} #}
 
               <div class="row title-news">
                 <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
-                <a href="{{ company.get_absolute_url }}" class="title-company pull-left">{{ company.name }}</a>
+                <a href="{{ tpp.get_absolute_url }}" class="title-tpp pull-left">{{ tpp.name }}</a>
               </div>
 
               <div class="media body">
-                <a class="pull-left logo" href="{{ company.get_absolute_url }}">
+                <a class="pull-left logo" href="{{ tpp.get_absolute_url }}">
                   <div class="img-container">
-                    {% if company.logo %}
-                      <img class="media-object" src="{{ company.logo.big }}" alt="{{ company.name }}" title="{{ company.name }}" />
+                    {% if tpp.logo %}
+                      <img class="media-object" src="{{ tpp.logo.big }}" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
                     {% else %}
-                      <img class="media-object" src="{% static 'b24online/images/100x100.png' %}" alt="{{ company.name }}" title="{{ company.name }}" />
+                      <img class="media-object" src="{% static 'b24online/images/100x100.png' %}" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
                     {% endif %}
                   </div>
                 </a>
@@ -39,34 +39,34 @@
                 <div class="">
                   <div class="col-xs-7">
                     <div class="">
-                      {% if company.short_description %}
-                        {{ company.short_description|cleanHtml|safe|truncatechars_html:200 }}
+                      {% if tpp.short_description %}
+                        {{ tpp.short_description|cleanHtml|safe|truncatechars_html:200 }}
                       {% else %}
-                        {{ company.description|cleanHtml|safe|truncatechars_html:200 }}
+                        {{ tpp.description|cleanHtml|safe|truncatechars_html:200 }}
                       {% endif %}
                     </div>
-                    <div class="more pull-left"><a href="{{ company.get_absolute_url }}">{% trans "More" %}...</a></div>
+                    <div class="more pull-left"><a href="{{ tpp.get_absolute_url }}">{% trans "More" %}...</a></div>
                   </div>
 
                   <div class="col-xs-3 contacts pull-right">
-                    {% if company.address %}
+                    {% if tpp.address %}
                       <div class="address">
                         <i class="address-ico sprite pull-left"></i>
-                        {{ company.address }}
+                        {{ tpp.address }}
                       </div>
                     {% endif %}
 
-                    {% if company.phone %}
+                    {% if tpp.phone %}
                       <div class="extra-phone">
                         <i class="extra-phone-ico sprite pull-left"></i>
-                        {{ company.phone }}
+                        {{ tpp.phone }}
                       </div>
                     {% endif %}
 
-                    {% if company.fax %}
+                    {% if tpp.fax %}
                       <div class="extra-phone">
                         <i class="extra-phone-ico sprite pull-left"></i>
-                        {{ company.fax }}
+                        {{ tpp.fax }}
                       </div>
                     {% endif %}
 
@@ -76,7 +76,7 @@
                         <i class="mail-ico sprite pull-left"></i>
                           <div class="data pull-left">
                             <a href="{% url 'auth_login' %}">{% trans 'Send Message' %}</a>
-{#                          <a class="contact-us" data-name="{{ company.title }}" data-id="{{ company.pk }}" href="{% url 'messages:send_message_to_recipient' 'organization' company.pk %}" >{% trans 'Contact us' %}</a> #}
+{#                          <a class="contact-us" data-name="{{ tpp.title }}" data-id="{{ tpp.pk }}" href="{% url 'messages:send_message_to_recipient' 'organization' company.pk %}" >{% trans 'Contact us' %}</a> #}
                           </div>
                         </div>
 
