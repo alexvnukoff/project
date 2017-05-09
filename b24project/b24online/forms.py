@@ -23,7 +23,8 @@ class DocumentForm(forms.ModelForm):
             return None
 
         ext = os.path.splitext(document.name)[1]
-        valid_extensions = ['.pdf', '.doc', '.docx', '.zip', '.rar', '.xsl']
+        valid_extensions = ['.pdf', '.doc', '.docx', '.zip', '.rar', '.xsl',
+                                        '.xlsx', '.pptx', '.pptm', '.ppt', ]
 
         if ext not in valid_extensions:
             raise ValidationError('File not supported!')

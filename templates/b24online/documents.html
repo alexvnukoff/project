@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load staticfiles %}
+{% load static %}
 <div class="tpp-dt-content">
     {% if has_perm %}
         <div class="uploader">
@@ -44,7 +44,7 @@
 
         options = {
             fileSizeLimit: '2MB',
-            fileTypeExts: '*.pdf; *.doc; *.docx; *.zip; *.rar; *.xls',
+            fileTypeExts: '*.pdf; *.doc; *.docx; *.zip; *.rar; *.xls; *.xlsx; *.pptx; *.pptm; *.ppt',
             fileObjName: 'document',
             swf: '{% static "b24online/uploadify.swf" %}',
             uploader: '{{ uploaderURL }}',
