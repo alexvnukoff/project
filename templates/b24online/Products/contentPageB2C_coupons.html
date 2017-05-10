@@ -40,7 +40,7 @@
           <div class="text col-md-8 col-md-offset-1">
             <a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="title">{{ product.name }}</a>
             <div class="status">{% trans "Coupon's status" %}</div>
-            <div class="expire">
+            <div class="expire-block">
               <div class="clock fa fa-clock-o pull-left"></div>
               <div class="time pull-left countdown-{{ product.id }}">
 
@@ -85,7 +85,7 @@
   {% endif %}
   {% else %}
   {% if product.is_coupon %}
-  <!-- {% setContextMenu product update_url=update_url delete_url=delete_url %} -->
+{# {% setContextMenu product update_url=update_url delete_url=delete_url %} #}
   <div class="col-xs-3">
     <div class="thumbnail coupons">
 
@@ -107,9 +107,8 @@
           <li class="media">
             <a class="pull-left" href="{% url 'products:B2CDetail' product.slug product.pk %}">
               {% if product.country %}
-              <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
+                <div class="sprite-flags {{ product.country.flag }} thumb-flag media-object"></div>
               {% endif %}
-              <!-- <img class="thumb-flag media-object" src="flags/english.png" alt="..."> -->
             </a>
             <div class="media-body">
               <a href="{% url 'products:B2CDetail' product.slug product.pk %}">{{ product.name|truncatechars:45 }}</a>

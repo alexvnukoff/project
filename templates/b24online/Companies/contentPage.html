@@ -21,7 +21,7 @@
 {#             {% setContextMenu company %} #}
 
               <div class="row title-news">
-                <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                <div class="thumb-flag-block pull-left sprite-flags {{ company.country.flag }}"></div>
                 <a href="{{ company.get_absolute_url }}" class="title-company pull-left">{{ company.name }}</a>
               </div>
 

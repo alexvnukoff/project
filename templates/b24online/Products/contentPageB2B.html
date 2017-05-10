@@ -12,7 +12,7 @@
   <div class="col-xs-3 b2b-elem">
     <div class="thumbnail coupons wall">
       <div class="thumbnail-container">
-        
+
         <a href="{{ product.get_absolute_url }}">
           {% if product.image %}
           <img class="thumb-img" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
@@ -20,21 +20,19 @@
           <img class="thumb-img" src="{% static 'b24online/images/400x400.png' %}" alt="{{ product.name|truncatechars:40 }}" />
           {% endif %}
         </a>
-      
+
       </div>
       <div class="caption">
         <ul class="media-list">
           <li class="media">
-            <a class="pull-left" href="{{ product.get_absolute_url }}">
-              {% if product.country %}
-              <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
-              {% endif %}
-              <!-- <img class="thumb-flag media-object" src="flags/english.png" alt="..."> -->
-              
-              <div class="media-body">
-                {{ product.name|truncatechars:45 }}
-              </div>
-            </a>
+              <a class="pull-left" href="{{ product.get_absolute_url }}">
+                  <div class="media-body">
+                    {% if product.country %}
+                      <div class="thumb-flag-block pull-left sprite-flags {{ product.country.flag }}"></div>&nbsp;
+                    {% endif %}
+                    {{ product.name|truncatechars:45 }}
+                  </div>
+              </a>
           </li>
         </ul>
         {% if product.cost %}
@@ -43,11 +41,11 @@
         {% else %}
         <p><a href="#" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
         {% endif %}
-      
+
       </div>
     </div>
   </div>
-  
+
   {% empty %}
   <p>{% trans "No results found" %}</p>
   {% endfor %}

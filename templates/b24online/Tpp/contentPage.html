@@ -21,7 +21,7 @@
 {#             {% setContextMenu tpp %} #}
 
               <div class="row title-news">
-                <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag">
+                <div class="thumb-flag-block pull-left sprite-flags {{ tpp.country.flag }}"></div>
                 <a href="{{ tpp.get_absolute_url }}" class="title-tpp pull-left">{{ tpp.name }}</a>
               </div>
 
