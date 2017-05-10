@@ -1,0 +1,34 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% include "b24online/main/paginator.html" %}
+
+{% for exhibition in object_list %}
+{#    {% setContextMenu exhibition %} #}
+
+  <div class="content-block">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="container content">
+
+           {% if exhibition.country %}
+                <div class="sprite-flags {{ exhibition.country.flag }} thumb-flag-block pull-left"></div>
+                <div class="date">{{ exhibition.country.name }}, {% trans 'Date' %}: {{ exhibition.created_at|date:"d M Y" }}</div>
+           {% else %}
+                <img src="{{ proposal.organization.flag_url }}" title="{{ exhibition.organization.name }}" />
+                <div class="date">{{ exhibition.country.name }}, {% trans 'Date' %}: {{ exhibition.created_at|date:"d M Y" }}</div>
+            {% endif %}
+
+          <div class="title"><a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.title }}</a></div>
+          <div class="author pull-left">{% trans 'Organization' %}: <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a></div>
+          <div class="more pull-right"><a href="{{ exhibition.get_absolute_url }}">{% trans 'More' %}...</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+    <p>{% trans "No results found" %}</p>
+{% endfor %}
+{% include "b24online/main/paginator.html" %}

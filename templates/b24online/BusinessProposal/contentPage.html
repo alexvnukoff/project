@@ -14,17 +14,15 @@
         <div class="container content">
 
            {% if proposal.country %}
-                <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
+                <div class="sprite-flags {{ proposal.country.flag }} thumb-flag-block pull-left"></div>
                 <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
            {% else %}
                 <img src="{{ proposal.organization.flag_url }}" title="{{ proposal.organization.name }}" />
                 <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
             {% endif %}
 
-          <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
-
           <div class="title"><a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.title }}</a></div>
-          <div class="author pull-left">{% trans 'Organization' %}: <a href="#">{{ proposal.organization.name }}</a></div>
+          <div class="author pull-left">{% trans 'Organization' %}: <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a></div>
           <div class="more pull-right"><a href="{{ proposal.get_absolute_url }}">{% trans 'More' %}...</a></div>
         </div>
       </div>

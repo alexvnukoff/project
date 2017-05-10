@@ -1,0 +1,33 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% include "b24online/main/paginator.html" %}
+
+{% for resume in object_list %}
+  <div class="content-block">
+    {#         {% setContextMenu resume %} #}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="container content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="date">{% trans 'Publication date' %}: {{ resume.created_at|date:'d M Y' }}</div>
+              <div class="title"><a href="{{ resume.get_absolute_url }}">{{ resume.title }}</a></div>
+              {% if resume.country %}
+              <i class="flag sprite {{ resume.country.flag }}" title="{{ resume.country.name }}" ></i>
+              {% endif %}
+              <div class="news-detail">{{ resume.description|cleanHtml|safe|truncatewords_html:30 }}</div>
+              <div class="more pull-right"><a href="{{ resume.get_absolute_url }}">{% trans "More" %}...</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% empty %}
+  <p>{% trans "No results found" %}</p>
+{% endfor %}
+{% include "b24online/main/paginator.html" %}

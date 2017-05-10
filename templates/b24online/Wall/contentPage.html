@@ -6,13 +6,13 @@
 <div class="block-title">{% trans "Products" %}</div>
 <div class="">
   <div class="row content-goods">
-    
+
     {% if products %}
       {% for prod in products %}
       <div class="col-xs-3">
         <div class="thumbnail coupons wall">
           <div class="thumbnail-container">
-            
+
             <a href="{{ prod.get_absolute_url }}">
               {% if prod.image %}
               <img class="thumb-img" src="{{ prod.image.big }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
@@ -20,26 +20,26 @@
               <img class="thumb-img" src="{% static 'b24online/images/item.jpg' %}" alt="" />
               {% endif %}
             </a>
-          
+
           </div>
           <div class="caption">
             <ul class="media-list">
               <li class="media">
                 <a class="pull-left" href="{{ prod.get_absolute_url }}" title="{{ prod.country.name }}">
-                  <img class="thumb-flag media-object" src="{{ prod.country.flag }}" title="{{ prod.country.name }}" />
+                  <div class="thumb-flag-block pull-left sprite-flags {{ prod.country.flag }}"></div>
                 </a>
                 <div class="media-body">
                   <a href="{{ prod.get_absolute_url }}">{{ prod.name|truncatechars:40 }}</a>
                 </div>
               </li>
             </ul>
-            
+
             {% if prod.cost %}
             <p>{{ prod.currency|getSymbol }} {{ prod.cost|formatPrice }}</p>
             {% else %}
             <p>{% trans 'Get the price' %}</p>
             {% endif %}
-            
+
             <p><a href="{{ prod.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans "Buy" %}</a></p>
           </div>
         </div>
@@ -54,19 +54,18 @@
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">
-      
+
       {% if innovation_project.country %}
-        <i class="flag sprite {{ innovation_project.country.flag }}" title="{{ innovation_project.country.name }}"></i>
+        <div class="thumb-flag-block pull-left sprite-flags {{ innovation_project.country.flag }}"></div>
       {% elif innovation_project.organization.flag %}
         <img class="thumb-flag-block pull-left" src="{{ innovation_project.organization.flag_url }}"  title="{{ innovation_project.organization.name }}" alt="{{ innovation_project.organization.name }}" />
       {% else %}
-        <i class="flag sprite {{ innovation_project.created_by.profile.country.flag }}" title="{{ innovation_project.created_by.profile.country.name }}"></i>
+        <div class="thumb-flag-block pull-left sprite-flags {{ innovation_project.created_by.profile.country.flag }}"></div>
       {% endif %}
-      
+
       <div class="date">{% trans 'Publication date' %}: {{ innovation_project.created_at|date:'d M Y' }}</div>
       <div class="title"><a href="{{ innovation_project.get_absolute_url }}">{{ innovation_project.name|truncatewords:14 }}</a></div>
-      <!-- <div class="project-site">Сайт проекта: <a href="#">http://www.bestproject.com</a></div> -->
-      
+
       {% if innovation_project.branches.all|length > 0 %}
         {% for branch in innovation_project.branches.all %}
           {% if branch.name  %}
@@ -74,38 +73,35 @@
           {% endif %}
         {% endfor %}
       {% endif %}
-      
-      <div class="author pull-left">{% trans 'Organizer' %}:
+
+      <div class="author pull-left">{% trans 'Organization' %}:
         {% if innovation_project.organization  %}
           <a href="{{ innovation_project.organization.get_absolute_url }}"> {{ innovation_project.organization.name }}</a>
         {% else %}
           {{ innovation_project.created_by.profile.full_name }}
         {% endif %}
       </div>
-      
+
       <div class="pull-left">
         {% trans 'Project cost' %}: <strong>{{ innovation_project.currency|getSymbol }} {{ innovation_project.cost|formatPrice }}</strong>
       </div>
-      
+
       <div class="more pull-right"><a href="{{ innovation_project.get_absolute_url }}">{% trans 'More' %}...</a></div>
     </div>
   </div>
 </div>
 {% endif %}
 
-
-
 {% if exhibition %}
 <div class="block-title">{% trans 'Exhibitions' %}</div>
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">
-      
+
       {% if exhibition.country.flag %}
-        <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.name }}"></i>
+        <div class="thumb-flag-block pull-left sprite-flags {{ exhibition.country.flag }}"></div>
       {% endif %}
-      
-      <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+
       <div class="date">{{ exhibition.country.name }} {{ exhibition.city }},  {{ exhibition.start_date|date:"d M Y" }} - {{ exhibition.end_date|date:"d M Y" }}</div>
       <div class="title"><a href="{{ exhibition.get_absolute_url }}">{{ exhibition.title }}</a></div>
       <div class="author pull-left">{% trans 'Organizer' %}: <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a></div>
@@ -121,15 +117,13 @@
   <div class="row">
     <div class="col-xs-12">
       {% if proposal.country.flag %}
-      <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
+      <div class="thumb-flag-block pull-left sprite-flags {{ proposal.country.flag }}"></div>
       {% elif proposal.organization.flag %}
       <img src="{{ proposal.organization.flag_url }}" class="flag" title="{{ proposal.organization.name }}" alt="{{ proposal.organization.name }}" />
       {% else %}
-      <i class="flag sprite {{ proposal.organization.country.flag }}" title="{{ proposal.organization.country.name }}"></i>
+      <div class="thumb-flag-block pull-left sprite-flags {{ proposal.organization.country.flag }}"></div>
       {% endif %}
-      
-      <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
-      
+
       <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
       <div class="title"><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></div>
       <div class="author pull-left">{% trans 'Organization' %}: <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a></div>
@@ -156,18 +150,18 @@
           </div>
         </a>
         <div class="title-news"><a href="{{ news.get_absolute_url }}">{{ news.title }}</a></div>
-        
+
         {% if news.organization %}
           {% if news.organization.flag %}
           <img src="{{ news.organization.flag_url }}" class="flag"  alt="{{ news.organization.title }}" title="{{ news.organization.title }}"/>
           {% else %}
-          <i class="flag sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+          <div class="sprite-flags {{ news.organization.country.flag }} thumb-flag-block pull-left"></div>
           {% endif %}
         {% else %}
-          <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
+          <div class="sprite-flags {{ news.country.flag }} thumb-flag-block pull-left"></div>
         {% endif %}
         {{ news.obj_create_date|date:'d M Y' }}
-        
+
         <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
         <!-- <div class="news-short">{{ news.content|cleanHtml|safe|truncatewords_html:"30" }}</div> -->
         <div class="news-detail">{{ news.content|cleanHtml|safe|truncatewords_html:"30" }}</div>
@@ -177,5 +171,3 @@
   </div>
 </div>
 {% endif %}
-
-

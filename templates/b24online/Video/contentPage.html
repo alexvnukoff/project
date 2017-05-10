@@ -1,0 +1,55 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% include "b24online/main/paginator.html" %}
+
+{% for video in object_list %}
+{#     {% setContextMenu video %} #}
+  <div class="content-block">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="container content">
+          <div class="media">
+            <a class="pull-left" href="{{ video.get_absolute_url }}">
+              <div class="img-container">
+                {% if video.image %}
+                    <img class="media-object" src="{{ video.image.big }}" alt="{{ video.title }}" title="{{ video.title }}" />
+                {% else %}
+                    <img class="media-object" src="{% static 'b24online/images/100x110.png' %}" alt="{{ video.title }}" title="{{ video.title }}" />
+                {% endif %}
+              </div>
+            </a>
+            <div class="title-news"><a href="{{ video.get_absolute_url }}">{% if video.video_code %}<span title="YouTube">YouTube icon here</span>{% endif %}{{ video.title }}</a></div>
+
+            {% if video.organization %}
+                {% if video.organization.flag %}
+                    <img class="thumb-flag-block pull-left" src="{{ video.organization.flag_url }}" title="{{ video.organization.name }}" alt="{{ video.organization.name }}" />
+                {% else %}
+                    <div class="sprite-flags {{ video.organization.country.flag }} thumb-flag-block pull-left"></div>
+                {% endif %}
+            {% elif video.country %}
+                <i class="sprite {{ video.country.flag }}" title="{{ video.country.name }}"></i>
+            {% endif %}
+
+            <div class="date pull-left">{{ video.created_at|date:'d M Y' }},</div>
+            <div class="news-company">{% trans 'Organization' %}: <a href="#">{{ video.organization.name }}</a></div>
+            <div class="news-detail">
+                {% if video.short_description %}
+                    {{ video.short_description|linebreaks|safe }}
+                {% else %}
+                    {{ video.content|safe|truncatewords_html:"30" }}
+                {% endif %}
+            </div>
+            <div class="more pull-right"><a href="#">{% trans 'Read more' %}...</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% empty %}
+    <p>{% trans "No results found" %}</p>
+{% endfor %}
+{% include "b24online/main/paginator.html" %}

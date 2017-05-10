@@ -7,44 +7,47 @@
 {% include "b24online/main/paginator.html" %}
 
 <div class="row content-goods">
-    {% for product in object_list %}
-    {#  {% setContextMenu product update_url=update_url delete_url=delete_url %} #}
-    <div class="col-xs-3 b2b-elem">
-        <div class="thumbnail coupons wall">
-            <div class="thumbnail-container">
+  {% for product in object_list %}
+  {#  {% setContextMenu product update_url=update_url delete_url=delete_url %} #}
+  <div class="col-xs-3 b2b-elem">
+    <div class="thumbnail coupons wall">
+      <div class="thumbnail-container">
+        <a href="{{ product.get_absolute_url }}">
+          {% if product.image %}
+          <img class="thumb-img" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+          {% else %}
+          <img class="thumb-img" src="{% static 'b24online/images/400x400.png' %}" alt="{{ product.name|truncatechars:40 }}" />
+          {% endif %}
+        </a>
+      </div>
 
-                <a href="{{ product.get_absolute_url }}">
-                    {% if product.image %}
-                    <img class="thumb-img" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
-                    {% else %}
-                    <img class="thumb-img" src="{% static 'b24online/images/400x400.png' %}" alt="{{ product.name|truncatechars:40 }}" />
-                    {% endif %}
-                </a>
+      <div class="caption">
+        <ul class="media-list">
+          <li class="media">
+            <a class="pull-left" href="{{ product.get_absolute_url }}">
+              {% if product.country %}
+                <div class="thumb-flag-block pull-left sprite-flags {{ product.country.flag }}"></div>
+              {% endif %}
+            </a>
 
+            <div class="media-body">
+              <a href="{{ product.get_absolute_url }}">
+                {{ product.name|truncatechars:45 }}
+              </a>
             </div>
-            <div class="caption">
-                <ul class="media-list">
-                    <li class="media">
-                        <a class="pull-left" href="{{ product.get_absolute_url }}">
-                            <div class="media-body">
-                              {% if product.country %}
-                                <div class="thumb-flag-block pull-left sprite-flags {{ product.country.flag }}"></div>&nbsp;
-                              {% endif %}
-                              {{ product.name|truncatechars:45 }}
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-                {% if product.cost %}
-                <p>{{ product.currency|getSymbol }} {{ product.cost|formatPrice }}</p>
-                <p><a href="{{ product.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans 'Buy' %}</a></p>
-                {% else %}
-                <p><a href="#" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
-                {% endif %}
+          </li>
+        </ul>
 
-            </div>
-        </div>
+        {% if product.cost %}
+        <p>{{ product.currency|getSymbol }} {{ product.cost|formatPrice }}</p>
+        <p><a href="{{ product.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans 'Buy' %}</a></p>
+        {% else %}
+        <p><a href="#" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
+        {% endif %}
+
+      </div>
     </div>
+  </div>
 
     {% empty %}
     <p>{% trans "No results found" %}</p>

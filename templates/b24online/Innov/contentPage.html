@@ -10,11 +10,10 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="container content">
-        <!-- {% setContextMenu innov %} -->
-        <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
+{#         {% setContextMenu innov %}  #}
 
         {% if innov.country %}
-            <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.name }}"></i>
+            <div class="sprite-flags {{ innov.country.flag }} thumb-flag-block pull-left"></div>
         {% elif innov.organization.flag %}
             <img src="{{ innov.organization.flag_url }}" class="flag" title="{{ innov.organization.name }}" alt="{{ innov.organization.name }}"/>
         {% else %}
@@ -25,7 +24,6 @@
         <div class="title"><a href="{{ innov.get_absolute_url }}">{{ innov.name|truncatewords:14 }}</a></div>
         <div class="costs pull-left">{% trans 'Project cost' %}: <span href="{{ innov.get_absolute_url }}">{{ innov.currency|getSymbol }} {{ innov.cost|formatPrice }}</span></div>
 
-
           {% if innov.branches.count > 0 %}
           <div class="branch pull-left">{%  trans "Branch" %}:
             {% for branch in innov.branches.all %}
@@ -33,15 +31,13 @@
             {% endfor %}
           </div>
           {% endif %}
-    
-          <div class="author pull-left">{% trans 'Organizer' %}:
-            {% if innov.organization.name %}
-                <a href="{{ innov.organization.get_absolute_url }}"> {{ innov.organization.name }}</a>
-            {% elif innov.created_by.profile.full_name %}
-               {% get_card_url request as the_card %}
-               <a href="{{ the_card }}id{{ innov.created_by.id }}/">{{ innov.created_by.profile.full_name }}</a>
-            {% endif %}
+
+          {% if innov.organization.name %}
+          <div class="author pull-left">{% trans 'Organization' %}:
+            <a href="{{ innov.organization.get_absolute_url }}"> {{ innov.organization.name }}</a>
           </div>
+          {% endif %}
+
           <div class="more pull-right"><a href="{{ innov.get_absolute_url }}">{% trans 'More' %}...</a></div>
         </div>
       </div>

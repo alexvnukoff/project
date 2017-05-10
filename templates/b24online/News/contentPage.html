@@ -27,15 +27,14 @@
                 {% if news.organization.flag %}
                     <img class="thumb-flag-block pull-left" src="{{ news.organization.flag_url }}" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
                 {% else %}
-                    <i class="sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+                    <div class="sprite-flags {{ news.organization.country.flag }} thumb-flag-block pull-left"></div>
                 {% endif %}
             {% elif news.country %}
                 <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
             {% endif %}
-            <!-- <img class="thumb-flag-block pull-left" src="flags/english.png" alt="flag"> -->
 
             <div class="date pull-left">{{ news.created_at|date:'d M Y' }},</div>
-            <div class="news-company"><a href="#">{% trans "Company name" %}</a></div>
+            <div class="news-company">{% trans 'Organization' %}: <a href="#">{{ news.organization.name }}</a></div>
             <div class="news-detail">
                 {% if news.short_description %}
                     {{ news.short_description|linebreaks|safe }}
