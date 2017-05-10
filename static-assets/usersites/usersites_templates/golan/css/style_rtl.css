@@ -542,3 +542,15 @@ th, td{
     margin: -10px -101px 0 0;
     z-index: 99;
 }
+
+.landing-contact-form .captcha-controls img{
+	float: right;
+}
+
+.landing-contact-form .captcha-controls input{
+	float: left;
+}
+
+#leads-in-page .captcha-control img{
+	float: right;
+}

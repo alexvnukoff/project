@@ -306,3 +306,15 @@ footer span{
 	float: left;
 }
 
+.landing-contact-form .captcha-controls img{
+	float: left;
+}
+
+.landing-contact-form .captcha-controls input{
+	float: right;
+}
+
+#leads-in-page .captcha-control img{
+	float: left;
+}
+
