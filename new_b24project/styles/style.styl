@@ -1,12 +1,21 @@
 body
   @import url('https://fonts.googleapis.com/css?family=Amatic+SC')
-  @import url('https://fonts.googleapis.com/css?family=Roboto');
+  @import url('https://fonts.googleapis.com/css?family=Roboto')
   font-family Arial, Helvetica, sans-serif
   font-size 12px
+
+  .sprite-flags
+    background-image: url(../images/spritesheet.png)
+    background-repeat: no-repeat
+  @import './flags.styl'
+
   a
     color #0089bc
   .wrapper
     padding 0
+  .sprite
+    background-image: url(../images/spritesheet.png);
+    background-repeat: no-repeat;
 
   @import './components/header'
 
