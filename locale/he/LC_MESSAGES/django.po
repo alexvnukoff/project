@@ -6382,7 +6382,7 @@ msgstr "אודות"
 
 #: templates/b24online/index.html:60
 msgid "Public Offer"
-msgstr "הצעה פומבית "
+msgstr "השירותים שלנו"
 
 #: templates/b24online/index.html:78
 msgid "Switch language"
