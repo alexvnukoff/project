@@ -1009,15 +1009,40 @@ body .header-row {
   background-image: linear-gradient(180deg, #efefef, #fbfbfb);
 }
 body .header-row .header-container {
-  width: 1100px;
+  height: 37px;
+  width: auto;
+}
+@media (min-width: 768px) {
+  body .header-row .header-container .header-container {
+    width: 800px;
+  }
 }
 body .header-row .header-container .header {
-  min-width: 990px;
   margin-left: 0;
   padding-top: 2px;
 }
-body .header-row .header-container .header .logo {
+body .header-row .header-container .header .header-menu {
+  position: relative;
+  left: 10px;
+  top: 10px;
+}
+body .header-row .header-container .header .header-menu .fa-sort-desc {
+  position: relative;
+  bottom: 3px;
+  font-size: 16px;
+  color: #888;
   cursor: pointer;
+}
+body .header-row .header-container .header .header-menu .fa-sort-desc:hover {
+  color: #000;
+}
+body .header-row .header-container .header .header-menu .fa-sort-desc .dropdown-menu {
+  left: 0;
+}
+body .header-row .header-container .header .logo {
+  position: relative;
+  cursor: pointer;
+  top: 5px;
 }
 body .header-row .header-container .header .logo img {
   width: 108px;
@@ -1082,6 +1107,8 @@ body .header-row .header-container .header .lang-dropdown img {
 body .header-row .header-container .header .avatar {
   position: relative;
   height: 18px;
+  max-width: 25px;
+  max-height: 18px;
   margin-right: 5px;
   cursor: pointer;
 }
