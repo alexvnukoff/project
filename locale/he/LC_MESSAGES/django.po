@@ -788,7 +788,8 @@ msgstr "מצא שותף עסקי"
 
 #: b24project/b24online/Project/urls.py:13
 msgid "Public offer"
-msgstr "הצעה פומבית"
+msgstr "השירותים שלנו"
+
 
 #: b24project/b24online/Project/urls.py:14
 #: templates/b24online/Project/shop.html:16
