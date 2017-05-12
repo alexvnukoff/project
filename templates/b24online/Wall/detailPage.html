@@ -1,0 +1,17 @@
+{% extends 'b24online/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="article-content col-xs-12" id="content">
+    {% block content %}{% endblock %}
+</div>
+<div class="article-content col-xs-12" id="loader">
+    <div class="content-block">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="loader"><img src="{% static 'b24online/images/ajax-loader.gif' %}" alt="loader"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

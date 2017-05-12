@@ -42,7 +42,7 @@
         <p>{{ product.currency|getSymbol }} {{ product.cost|formatPrice }}</p>
         <p><a href="{{ product.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans 'Buy' %}</a></p>
         {% else %}
-        <p><a href="#" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
+        <p><a href="{{ product.company.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
         {% endif %}
 
       </div>

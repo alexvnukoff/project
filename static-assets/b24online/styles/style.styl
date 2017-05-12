@@ -26,7 +26,13 @@ body
     // MAIN-filter
     .main-container
       margin-top 20px
-      width 1190px
+      // width 1190px
+      // @media (max-width: 992px)
+      //   width inherit
+      @media (max-width: 768px)
+        width inherit
+      @media (max-width: 992px)
+        width inherit
       .main-content
         min-width 990px
         margin-left 0
@@ -36,8 +42,8 @@ body
     // MAIN-center
     .article-content
       margin-top 15px
-      margin-left -40px
-      width 660px
+      margin-left -30px
+      // width 660px
       // Coupons'
       .paginator
         color #777
@@ -60,7 +66,7 @@ body
         font-weight bold
         height 30px
         background-color #e6e6e6
-      @import './components/content-goods'
+      @import './components/coupons-b2b-container'
       @import './components/content-block'
 
     //MAIN-right aside

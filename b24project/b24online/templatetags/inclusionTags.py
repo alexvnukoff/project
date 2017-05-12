@@ -1,8 +1,7 @@
 # -*- encoding: utf-8 -*-
-
 import os
 import logging
-
+import urllib.parse
 from django.db import models
 from django import template
 from django.conf import settings
@@ -15,6 +14,7 @@ from b24online.models import (Chamber, B2BProduct, Organization, StaticPage,
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from jobs.models import Requirement, Resume
 from tpp.DynamicSiteMiddleware import get_current_site
+from django.template.defaultfilters import truncatechars
 
 logger = logging.getLogger(__name__)
 
@@ -269,7 +269,7 @@ def show_top_static_pages_front(site_type='b2b'):
         pages = cache.get(cache_name)
     return {'pages': pages}
 
-
+# deprecated
 @register.inclusion_tag('b24online/main/socialShare.html', takes_context=True)
 def b2b_social_buttons(context, image, title, text, item_id=None):
     return {
@@ -278,6 +278,16 @@ def b2b_social_buttons(context, image, title, text, item_id=None):
         'text': text,
         'item_id': item_id or '',
     }
+
+
+@register.inclusion_tag('b24online/main/socialShare.html',  takes_context=True)
+def social_share(context, obj, obj_title):
+    request = context['request']
+    domain = "http{}://{}".format("s" if request.is_secure() else "", request.get_host())
+    title = truncatechars(obj_title, 100).replace(" ", "+")
+    the_url = urllib.parse.quote("{}{}".format(domain, obj.get_absolute_url()), safe='')
+
+    return {'request':request, 'title': title, 'the_url': the_url}
 
 
 @register.inclusion_tag("centerpokupok/main/main_menu.html", takes_context=True)

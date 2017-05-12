@@ -1,0 +1,261 @@
+{% extends 'b24online/main_detail_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load humanize %}
+
+
+{% block content %}
+
+{% if item.is_coupon %}
+      <script>
+      $(document).ready(function() {
+          $('.countdown').countdown("{{ item.end_coupon_date|date:'Y/m/d' }}",
+          function(event) {
+            $('.clock-days').html(event.strftime('%d'));
+            $('.clock-hours').html(event.strftime('%H'));
+            $('.clock-minutes').html(event.strftime('%M'));
+          });
+      });
+      </script>
+
+      <div class="banner details">
+        <div class="banner-container">
+          <div class="body details">
+            <div class="content details">
+              <div class="badge pull-left">-{{ item.coupon_discount_percent|intword }}%</div>
+              <div class="col-xs-12 coupon-header">
+                <a href="#">{{ item.name }}r</a>
+              </div>
+
+              <div class="img col-md-3">
+              {% if item.image %}
+                <img src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
+              {% else %}
+                <img src="{% static 'b24online/images/400x400.png' %}" alt="{{ item.name|truncatechars:40 }}" />
+              {% endif %}
+              </div>
+
+              <div class="text col-md-8 col-md-offset-1">
+                <div class="price-container">
+                  <div class="pull-left">{% trans "Current price" %}:</div>
+                  <div class="pull-left price">{{ item.currency|getSymbol }}{{ item.get_discount_price|formatPrice }}</div>
+                  <div class="pull-left old-price">({{ item.currency|getSymbol }}{{ item.cost|formatPrice }})</div>
+                </div>
+                <div class="status">{% trans "Promotion ends" %}</div>
+                <div class="expire-block details">
+                  <div class="clock fa fa-clock-o pull-left"></div>
+                  <div class="time pull-left countdown">
+
+                    <div class="exp days pull-left">
+                      <div class="count clock-days"></div>
+                      <div class="date">{% trans "Days" %}</div>
+                    </div>
+
+                    <div class="exp hours pull-left">
+                      <div class="count clock-hours"></div>
+                      <div class="date">{% trans "Hours" %}</div>
+                    </div>
+
+                    <div class="exp minuts pull-left">
+                      <div class="count clock-minutes"></div>
+                      <div class="date">{% trans "Minutes" %}</div>
+                    </div>
+
+                  </div>
+                </div>
+
+                {% social_share item item.name %}
+                <a href="{{ item.company.get_absolute_url }}"><div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+{% else %}
+
+            <div class="article col-xs-6">
+              <div class="row">
+                <div class="article-content col-xs-12">
+                  <div class="content-block">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="row">
+                          <div class="container content details clear-bgc">
+                            <div class="title product">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia quia perspiciatis, amet odio similique magnam.</div>
+                            <div class="col-xs-4 media-content event">
+                              <div class="media">
+                                <a class="pull-left" href="#">
+                                  <div class="thumb-container">
+                                    <img class="media-object thumb-img" src="http://placehold.it/150x100" alt="...">
+                                  </div>
+                                </a>
+                                <div class="media-body">
+                                  <div class="social pull-left">
+                                    <a href="#"><i class="fb"></i></a>
+                                    <a href="#"><i class="vk"></i></a>
+                                    <a href="#"><i class="ok"></i></a>
+                                    <a href="#"><i class="tw"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          <div class="col-xs-4" style="left:-20px;">
+                              <fieldset class="customer-fieldset">
+                                <legend class="title-legend">Select customer</legend>
+                                <div class="control-group">
+                                    <label class="control-label input-label">Customer type:</label>
+                                    <div class="controls">
+                                      <div class="radio">
+                                        <label><input type="radio" name="optradio">Person</label>
+                                      </div>
+                                      <div class="radio">
+                                        <label><input type="radio" name="optradio">Organization</label>
+                                      </div>
+                                    </div>
+                                </div>
+                              </fieldset>
+                              <fieldset class="customer-fieldset">
+                                <legend class="title-legend">Quantity</legend>
+                                <div class="control-group">
+                                  <label class="control-label input-label">Product price:</label>
+                                  <p class="price">Contact for price</p>
+                                  <p class="quantity">Quantity:</p>
+                                  <div class="spinner">
+                                    <div class="input-group number-spinner">
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button>
+                                      </span>
+                                      <input type="text" class="form-control text-center" value="1">
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                            <div class="col-xs-4 contacts product">
+                              <a href="#" class="event-title pull-left"><img class="flag pull-left" src="../flags/english.png"/>Y.A.N.A.</a>
+                              <div class="address">
+                                <i class="address-ico sprite pull-left"></i>
+                                Россия, Ярославль
+                              </div>
+                              <div class="contact">
+                                <i class="phone-ico sprite pull-left"></i>
+                                +79306387070
+                              </div>
+                              <div class="contact">
+                                <i class="extra-phone-ico sprite pull-left"></i>
+                                +79306387070
+                              </div>
+                              <div class="contact">
+                                <i class="site-ico sprite pull-left"></i>
+                                <a href="#">www.google.com</a>
+                              </div>
+                              <div class="contact">
+                                <i class="mail-ico sprite pull-left"></i>
+                                <div class="data pull-left">
+                                  <a href="#">Contact us</a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-4 col-xs-offset-4 btn basket"  style="left:-20px;">To basket</div>
+
+
+
+
+
+                            <div class="col-xs-12">
+                              <div class="col-xs-12 tabs">
+                                <div id="exTab2" class="">
+                                  <ul class="nav nav-tabs">
+                                    <li class="active">
+                                      <a  href="#1" data-toggle="tab">About</a>
+                                    </li>
+                                    <li>
+                                      <a href="#2" data-toggle="tab">Gallery</a>
+                                    </li>
+                                    <li>
+                                      <a href="#3" data-toggle="tab">Documents</a>
+                                    </li>
+                                  </ul>
+                                  <div class="tab-content">
+                                    <div class="tab-pane active" id="1">
+                                      <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
+                                    </div>
+                                    <div class="tab-pane" id="2">
+                                      <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
+                                      <a class="grouped_elements fancy" rel="group1" href="../images/gallery/img1.jpg"><img src="../images/gallery/img1.jpg" alt=""/></a>
+                                      <a class="grouped_elements fancy" rel="group1" href="../images/gallery/img2.jpg"><img src="../images/gallery/img2.jpg" alt=""/></a>
+                                      <a class="grouped_elements fancy" rel="group1" href="../images/gallery/slide1.jpg"><img src="../images/gallery/slide1.jpg" alt=""/></a>
+                                    </div>
+                                    <div class="tab-pane" id="3">
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+                                      <div class="col-xs-2 document">
+                                        <div class="download">
+                                          <img src="../images/file_icon.png" alt="">
+                                          <p><a href="#">Download</a></p>
+                                        </div>
+                                        <div class="name">Name lorem ipsum dolor sit.</div>
+                                      </div>
+
+
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+{% endif %}
+
+
+<div class="fb-comments" data-href="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
+{% endblock %}

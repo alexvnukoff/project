@@ -122,7 +122,7 @@
         {% if product.cost %}
         <p class="price">{{ product.currency|getSymbol }}{{ product.get_discount_price|formatPrice }}</p>
         {% else %}
-        {% trans 'Contact to price' %}
+        <p><a href="{{ product.company.get_absolute_url }}" class="btn btn-primary buy" role="button">{% trans 'Contact to price' %}</a></p>
         {% endif %}
 
         <p><a href="{% url 'products:B2CDetail' product.slug product.pk %}" class="btn btn-primary coupon-buy" role="button">{% trans "Buy" %}</a></p>

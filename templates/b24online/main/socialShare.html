@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load CustomFilters %}
+
+<!-- Share for social networks -->
+
+    <div class="social coupon col-xs-12">
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ the_url }}" target="_blank" alt="{% trans "Share on Facebook" %}" onclick="window.open(this.href, '{% trans "Share on Facebook" %}', 'width=640,height=436,toolbar=0,status=0'); return false"><i class="fb"></i></a>
+      <a href="http://vk.com/share.php?url={{ the_url }}" target="_blank" alt="{% trans "Share on VK.COM" %}" onclick="window.open(this.href, '{% trans "Share on VK.COM" %}', 'width=640,height=436,toolbar=0,status=0'); return false"><i class="vk"></i></a>
+      <a href="https://connect.ok.ru/offer?url={{ the_url }}" target="_blank" alt="{% trans "Share on OK.RU" %}" onclick="window.open(this.href, '{% trans "Share on OK.RU" %}', 'width=640,height=436,toolbar=0,status=0'); return false"><i class="ok"></i></a>
+      <a href="https://twitter.com/intent/tweet?text={{ title }}+{{ the_url }}" target="_blank" alt="{% trans "Share on Twitter" %}" onclick="window.open(this.href, '{% trans "Share on Twitter" %}', 'width=640,height=436,toolbar=0,status=0'); return false"><i class="tw"></i></a>
+    </div>
+
+<!-- /Share for social networks -->
