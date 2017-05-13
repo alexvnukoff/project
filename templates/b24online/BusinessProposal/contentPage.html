@@ -21,7 +21,7 @@
                 <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>
             {% endif %}
 
-          <div class="title"><a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.title }}</a></div>
+          <div class="title"><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></div>
           <div class="author pull-left">{% trans 'Organization' %}: <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a></div>
           <div class="more pull-right"><a href="{{ proposal.get_absolute_url }}">{% trans 'More' %}...</a></div>
         </div>

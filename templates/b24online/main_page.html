@@ -2,9 +2,25 @@
 {% load static %}
 
 {% block body %}
-<div class="article-content col-xs-12" id="content">
-    {% block content %}{% endblock %}
+
+<div class="article-filter col-xs-12">
+  <div class="show-filter">
+    <i class="filter-ico sprite" id="feebackform-btn" data-toggle="modal" data-target="#myModal"></i>
+    <div class="filter-langs">
+      <span class="filter-lang">Беларусь <a class="fa fa-close"></a></span>
+      <span class="filter-lang">Россия <a class="fa fa-close"></a></span>
+    </div>
+  </div>
+  <div class="filter-search input-group pull-right">
+    <input type="text" class="form-control" placeholder="Найти.." aria-describedby="basic-addon1">
+    <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+  </div>
 </div>
+
+<div class="article-content col-xs-12" id="content">
+{% block content %}{% endblock %}
+</div>
+
 <div class="article-content col-xs-12" id="loader">
     <div class="content-block">
         <div class="row">

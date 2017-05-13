@@ -1021,12 +1021,6 @@ body .header-row .header-container .header {
   margin-left: 0;
   padding-top: 2px;
 }
-body .header-row .header-container .header .header-info {
-  position: relative;
-  font-size: 18px;
-  margin-left: 6px;
-  bottom: -3px;
-}
 body .header-row .header-container .header .header-menu {
   position: relative;
   left: 10px;
@@ -1140,16 +1134,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .main-container {
   margin-top: 20px;
-}
-@media (max-width: 768px) {
-  .main-row .main-container {
-    width: inherit;
-  }
-}
-@media (max-width: 992px) {
-  .main-row .main-container {
-    width: inherit;
-  }
+  width: 1190px;
 }
 .main-row .main-container .main-content {
   min-width: 990px;
@@ -1159,6 +1144,7 @@ body .header-row .header-container .header .logout {
 .main-row .article-filter {
   background-color: #4a4a4a;
   height: 45px;
+  width: 640px;
   border-radius: 4px;
   margin-left: -30px;
   margin-right: -30px;
@@ -1213,49 +1199,10 @@ body .header-row .header-container .header .logout {
 .main-row .article-filter .filter-search input {
   height: 28px;
 }
-.main-row .article-filter .filter-menu {
-  width: 31px;
-  height: 31px;
-  margin-right: 10px;
-  text-align: center;
-  font-size: 21px;
-  line-height: 30px;
-  color: #444;
-  margin-left: -8px;
-  position: relative;
-  float: left;
-  bottom: 6px;
-  cursor: pointer;
-  border: solid 1px #333;
-  border-radius: 3px;
-  background: linear-gradient(to bottom, #e6c45c 0%, #e0b744 33%, #d7a633 67%, #d9a936 96%, #dcaf3b 100%);
-}
-.main-row .article-filter .filter-menu a {
-  background-color: #f6f6f6;
-  color: #0089bc;
-  height: 31px;
-  padding: 7px 10px;
-  line-height: 17px;
-  font-size: 12px;
-}
-.main-row .article-filter .filter-menu a:hover {
-  background-color: #e6e6e6;
-}
-.main-row .article-filter .filter-menu a.active {
-  color: #fff;
-  background-color: #d7d7d7;
-  border: none;
-}
-.main-row .article-filter .filter-menu a.red {
-  background-color: #f00;
-}
-.main-row .article-filter .filter-menu a i {
-  width: 15px;
-  margin-right: 5px;
-}
 .main-row .left-aside {
   font-size: 12px;
   padding: 0 50px 0 40px;
+  widows: 400px;
 }
 .main-row .left-aside .left-select-container {
   width: 100%;
@@ -1293,7 +1240,8 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content {
   margin-top: 15px;
-  margin-left: -30px;
+  margin-left: -40px;
+  width: 660px;
 }
 .main-row .article-content .paginator {
   color: #777;
@@ -1593,25 +1541,25 @@ body .header-row .header-container .header .logout {
   height: 30px;
   background-color: #e6e6e6;
 }
-.main-row .article-content .coupons-b2b-container {
+.main-row .article-content .content-goods {
   margin-left: -5px;
   margin-right: 0;
 }
-.main-row .article-content .coupons-b2b-container .b2b-elem {
+.main-row .article-content .content-goods .b2b-elem {
   margin-top: 30px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail {
+.main-row .article-content .content-goods .thumbnail {
   border: none;
   padding: 8px 8px 1px;
   margin: -10px -15px 0px -10px;
   line-height: 1.3;
   background-color: #fafafa;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons {
+.main-row .article-content .content-goods .thumbnail.coupons {
   height: 340px;
   margin-top: 20px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .badge {
+.main-row .article-content .content-goods .thumbnail.coupons .badge {
   position: absolute;
   top: 0;
   right: 0;
@@ -1622,7 +1570,7 @@ body .header-row .header-container .header .logout {
   background-color: #dd201c;
   border-radius: 0;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .badge:after {
+.main-row .article-content .content-goods .thumbnail.coupons .badge:after {
   content: " ";
   border-width: 3px 3px 4px 4px;
   border-style: solid;
@@ -1631,20 +1579,20 @@ body .header-row .header-container .header .logout {
   top: 0;
   right: 100%;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .thumbnail-container {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container {
   position: relative;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .thumbnail-container .shadow-effect {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .shadow-effect {
   position: relative;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .thumbnail-container .thumb-img {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container .thumb-img {
   position: relative;
   max-width: 100%;
   max-height: 185px;
   min-width: 100%;
   min-height: 50px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .thumbnail-container:before {
+.main-row .article-content .content-goods .thumbnail.coupons .thumbnail-container:before {
   z-index: 0;
   position: absolute;
   content: "";
@@ -1656,39 +1604,31 @@ body .header-row .header-container .header .logout {
   box-shadow: 0px 5px 7px 0px #616161;
   transform: rotate(-3deg);
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption {
+.main-row .article-content .content-goods .thumbnail.coupons .caption {
   padding: 15px 0 0 0;
   color: #333;
-  width: 85%;
   position: absolute;
   bottom: 0;
   font-size: 12px;
   font-weight: 100;
   color: #4a4a4a;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption .media-list {
-  position: absolute;
-  height: 0;
-  width: 100%;
-  bottom: 130px;
-}
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption .media-list .media {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .media {
   margin-bottom: 0;
-  width: 100%;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption .media-list .media a {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .media a {
   margin-right: 3px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption .media-list .thumb-flag {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .thumb-flag {
   height: 16px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .caption .media-list .price {
+.main-row .article-content .content-goods .thumbnail.coupons .caption .price {
   color: #f00;
   font-weight: 700;
   font-size: 13px;
   margin-top: 10px;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .coupon-buy {
+.main-row .article-content .content-goods .thumbnail.coupons .coupon-buy {
   width: 100%;
   height: 22px;
   line-height: 10px;
@@ -1696,7 +1636,7 @@ body .header-row .header-container .header .logout {
   border: none;
   background: url("../images/coupon_btnbuy.gif") repeat-x;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.coupons .buy {
+.main-row .article-content .content-goods .thumbnail.coupons .buy {
   width: 100%;
   height: 22px;
   line-height: 10px;
@@ -1704,7 +1644,7 @@ body .header-row .header-container .header .logout {
   border: none;
   background: url("../images/btnbuy.gif") repeat-x;
 }
-.main-row .article-content .coupons-b2b-container .thumbnail.wall {
+.main-row .article-content .content-goods .thumbnail.wall {
   margin-top: 0;
 }
 .main-row .article-content .content-block {
