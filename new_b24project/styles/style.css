@@ -1392,6 +1392,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon-product {
   margin-bottom: 20px;
+  margin-top: -45px;
 }
 .main-row .article-content .coupon-product .product {
   padding: 10px 25px;
