@@ -1728,6 +1728,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.company .body .contacts {
   border-left: solid 1px #e1e1e1;
+  margin-left: -10px;
 }
 .main-row .article-content .content-block .content.company .body .contacts.product {
   width: 200px;
@@ -2032,6 +2033,7 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .contacts {
   border-left: solid 1px #e1e1e1;
+  margin-left: -10px;
 }
 .main-row .article-content .content-block .content.details .contacts.product {
   width: 200px;
