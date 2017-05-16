@@ -1403,6 +1403,9 @@ body .header-row .header-container .header .logout {
   padding: 10px;
   margin-top: 30px;
 }
+.main-row .article-content .banner.banner-main {
+  background: #e9f7fc;
+}
 .main-row .article-content .banner .coupon-header {
   margin-top: 15px;
   margin-bottom: 4px;
@@ -2010,7 +2013,7 @@ body .header-row .header-container .header .logout {
   width: 60%;
 }
 .main-row .article-content .content-block .content.details .title.product {
-  margin-top: -25px;
+  margin-top: 20px;
   font-weight: 300;
   padding: 0;
 }
