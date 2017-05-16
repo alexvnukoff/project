@@ -1753,46 +1753,6 @@ body .header-row .header-container .header .logout {
   margin: 10px 0;
   padding: 10px 10px 5px 10px;
 }
-.main-row .article-content .content-block .content.company .dropdown-toggle {
-  width: 10px;
-  border: 18px solid transparent;
-  border-top: 18px solid #4a4a4a;
-  border-right: 18px solid #4a4a4a;
-  position: absolute;
-  right: -10px;
-  top: -10px;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha {
-  position: absolute;
-  color: #fff;
-  top: -14px;
-  right: -14px;
-  font-size: 13px;
-  cursor: pointer;
-  z-index: 999;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown {
-  position: absolute;
-  right: -11px;
-  top: -14px;
-  background-color: #323232;
-  padding: 0;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li {
-  height: 30px;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a {
-  color: #fff;
-  left: 0;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a:hover {
-  background-color: #777;
-}
-.main-row .article-content .content-block .content.company .dropdown-toggle .afisha-dropdown li a i {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
 .main-row .article-content .content-block .content.company .body {
   margin-top: 10px;
   color: #595959;
@@ -1991,6 +1951,46 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content .social i.tw {
   background-position: -90px -60px;
+}
+.main-row .article-content .content-block .content .dropdown-toggle {
+  width: 10px;
+  border: 18px solid transparent;
+  border-top: 18px solid #4a4a4a;
+  border-right: 18px solid #4a4a4a;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha {
+  position: absolute;
+  color: #fff;
+  top: -14px;
+  right: -14px;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown {
+  position: absolute;
+  right: -11px;
+  top: -14px;
+  background-color: #323232;
+  padding: 0;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li {
+  height: 30px;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a {
+  color: #fff;
+  left: 0;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a:hover {
+  background-color: #777;
+}
+.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a i {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 .main-row .article-content .content-block .content.details {
   margin-top: -30px;
