@@ -6,13 +6,14 @@
 {% include "b24online/main/paginator.html" %}
 
 {% for proposal in object_list %}
-{#    {% setContextMenu proposal %} #}
+
 
   <div class="content-block">
+
     <div class="row">
       <div class="col-xs-12">
         <div class="container content">
-
+          {% setContextMenu proposal %}
            {% if proposal.country %}
                 <div class="sprite-flags {{ proposal.country.flag }} thumb-flag-block pull-left"></div>
                 <div class="date">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</div>

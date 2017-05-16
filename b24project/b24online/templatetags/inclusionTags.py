@@ -148,6 +148,7 @@ def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
     model_name = context.get('model', None)
     request = context.get('request')
+    req = context['request']
 
     url_namespace = None
     set_current = False
@@ -203,7 +204,7 @@ def set_context_menu(context, obj, **kwargs):
     if has_perm is None or url_namespace is None:
         params['has_perm'] = None
     else:
-        params['has_perm'] = has_perm(request.user)
+        params['has_perm'] = has_perm(req.user)
 
     params.update(kwargs)
 

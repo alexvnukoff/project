@@ -6,13 +6,13 @@
 {% include "b24online/main/paginator.html" %}
 
 {% for exhibition in object_list %}
-{#    {% setContextMenu exhibition %} #}
+
 
   <div class="content-block">
     <div class="row">
       <div class="col-xs-12">
         <div class="container content">
-
+          {% setContextMenu exhibition %}
            {% if exhibition.country %}
                 <div class="sprite-flags {{ exhibition.country.flag }} thumb-flag-block pull-left"></div>
                 <div class="date">{{ exhibition.country.name }}, {% trans 'Date' %}: {{ exhibition.created_at|date:"d M Y" }}</div>

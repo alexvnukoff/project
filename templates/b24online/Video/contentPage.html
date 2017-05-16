@@ -6,11 +6,11 @@
 {% include "b24online/main/paginator.html" %}
 
 {% for video in object_list %}
-{#     {% setContextMenu video %} #}
   <div class="content-block">
     <div class="row">
       <div class="col-xs-12">
         <div class="container content">
+        {% setContextMenu video %}
           <div class="media">
             <a class="pull-left" href="{{ video.get_absolute_url }}">
               <div class="img-container">

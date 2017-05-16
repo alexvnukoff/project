@@ -8,8 +8,9 @@
 
 <div class="row content-goods">
   {% for product in object_list %}
-  {#  {% setContextMenu product update_url=update_url delete_url=delete_url %} #}
+
   <div class="col-xs-3 b2b-elem">
+     {% setContextMenu product update_url=update_url delete_url=delete_url %}
     <div class="thumbnail coupons wall">
       <div class="thumbnail-container">
         <a href="{{ product.get_absolute_url }}">
