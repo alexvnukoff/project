@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-15 21:00+0000\n"
-"PO-Revision-Date: 2016-11-15 14:56+0200\n"
+"PO-Revision-Date: 2017-05-17 10:52+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: he\n"
@@ -459,8 +459,8 @@ msgstr "מוצרים למכירה"
 #: templates/centerpokupok/Coupons/index.html:85
 #: templates/centerpokupok/Product/detail.html:102
 #: templates/centerpokupok/Product/index.html:60
-#: templates/centerpokupok/Product/new.html:96
-#: templates/usersites/base.html:83 templates/usersites/site_sidebar.html:98
+#: templates/centerpokupok/Product/new.html:96 templates/usersites/base.html:83
+#: templates/usersites/site_sidebar.html:98
 #: templates/usersites_templates/carmel/site_sidebar.html:98
 #: templates/usersites_templates/cat_business/site_sidebar.html:98
 #: templates/usersites_templates/cineret/site_sidebar.html:98
@@ -767,45 +767,37 @@ msgstr "דחה עסקה"
 
 #: b24online/Product/forms.py:444
 #: templates/b24online/Products/extraParamsList.html:36
-#, fuzzy
-#| msgid "File name"
 msgid "Field name"
 msgstr "שם קובץ"
 
 #: b24online/Product/forms.py:450
 #: templates/b24online/Products/extraParamsList.html:37
-#, fuzzy
-#| msgid "Field"
 msgid "Field label"
-msgstr "שדה"
+msgstr "קטגוריה"
 
 #: b24online/Product/forms.py:455
 #: templates/b24online/Products/extraParamsList.html:38
-#, fuzzy
-#| msgid "Field"
 msgid "Field type"
-msgstr "שדה"
+msgstr "סוג"
 
 #: b24online/Product/forms.py:461
 #: templates/b24online/Products/extraParamsList.html:39
-#, fuzzy
-#| msgid "This field is required."
 msgid "Is field required"
-msgstr "שדה חובה"
+msgstr "האם שדה זה חיוני?"
 
 #: b24online/Product/forms.py:465
 #: templates/b24online/Products/extraParamsList.html:41
 msgid "Text before the field"
-msgstr ""
+msgstr "דרוש טקסט לפני השדה"
 
 #: b24online/Product/forms.py:470
 #: templates/b24online/Products/extraParamsList.html:42
 msgid "Text after the field"
-msgstr ""
+msgstr "דרוש טקסט אחרי השדה"
 
 #: b24online/Product/forms.py:487
 msgid "Initial field value for lang"
-msgstr ""
+msgstr "טקסט לא תואם שפה"
 
 #: b24online/Product/views.py:148 b24online/Product/views.py:331
 #: b24online/Product/views.py:1265 b24online/Product/views.py:1274
@@ -1076,10 +1068,8 @@ msgid "This domain already taken"
 msgstr "כתובת זו כבר בשימוש"
 
 #: b24online/UserSites/forms.py:65
-#, fuzzy
-#| msgid "Enter a valid URL."
 msgid "Enter a valid URL"
-msgstr "הכנס קישור פעיל"
+msgstr "הכנס קישור פעיל "
 
 #: b24online/UserSites/forms.py:95
 msgid "The domain already in use"
@@ -1096,95 +1086,69 @@ msgstr "לוגו בגבול מימדי האתר"
 #: b24online/UserSites/views.py:73
 #: templates/b24online/UserSites/createSite.html:15
 #: templates/b24online/UserSites/createSite.html:33
-#, fuzzy
-#| msgid "Create Date"
 msgid "Create Site"
-msgstr "תאריך הפקה"
+msgstr "צור אתר"
 
 #: b24online/UserSites/views.py:99
-#, fuzzy
-#| msgid "Your message has been sent!"
 msgid "Your site has been created!"
-msgstr "ההודעה נשלחה!"
+msgstr "האתר נוצר בהצלחה"
 
 #: b24online/UserSites/views.py:116
-#, fuzzy
-#| msgid "Update time"
 msgid "Update Site"
-msgstr "זמן עדכון"
+msgstr "עדכן אתר"
 
 #: b24online/UserSites/views.py:136
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Landing page has been created!"
-msgstr "משתמש הופעל!"
+msgstr "עמוד נחיתה נוצר בהצלחה"
 
 #: b24online/UserSites/views.py:147
-#, fuzzy
-#| msgid "Your message has been sent!"
 msgid "Landing page has been saved!"
-msgstr "ההודעה נשלחה!"
+msgstr "עמוד נחיתה נשמר בהצלחה"
 
 #: b24online/UserSites/views.py:250
-#, fuzzy
-#| msgid "Your message has been sent!"
 msgid "Domain Name has been saved!"
-msgstr "ההודעה נשלחה!"
+msgstr "כתובת אתר נשמרה בהצלחה"
 
 #: b24online/UserSites/views.py:281
 msgid "Site Languages has been saved!"
-msgstr ""
+msgstr "שפה נשמרה בהצלחה"
 
 #: b24online/UserSites/views.py:306
-#, fuzzy
-#| msgid "Products delivery"
 msgid "Product Delivery has been saved!"
-msgstr "רשימת המוצרים"
+msgstr "משלוח נשמר בהצלחה"
 
 #: b24online/UserSites/views.py:331
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Site Slogan has been saved!"
-msgstr "משתמש הופעל!"
+msgstr "סלוגן נשמר בהצלחה"
 
 #: b24online/UserSites/views.py:356
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Footer Text has been saved!"
-msgstr "משתמש הופעל!"
+msgstr "FOOTER נשמר בהצלחה"
 
 #: b24online/UserSites/views.py:383
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Site Logo has been saved!"
-msgstr "משתמש הופעל!"
+msgstr "לוגו נשמר בהצלחה"
 
 #: b24online/UserSites/views.py:424
-#, fuzzy
-#| msgid "Your message has been sent!"
 msgid "Slider images has been saved!"
-msgstr "ההודעה נשלחה!"
+msgstr "תמונת הסליידר נשמרה בהצלחה"
 
 #: b24online/UserSites/views.py:428 b24online/UserSites/views.py:477
 #: b24online/UserSites/views.py:512 usersites/views.py:261
 msgid "Please fix the errors below"
-msgstr ""
+msgstr "נא תקן את התקלות "
 
 #: b24online/UserSites/views.py:492
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Banners has been saved!"
-msgstr "משתמש הופעל!"
+msgstr "באנרים נשמרו בהצלחה"
 
 #: b24online/UserSites/views.py:518
-#, fuzzy
-#| msgid "User has been activated!"
 msgid "Social Links has been saved!"
-msgstr "משתמש הופעל!"
+msgstr "קישורים נשמרו בהצלחה"
 
 #: b24online/UserSites/views.py:563
 msgid "Google Analytics has been saved!"
-msgstr ""
+msgstr "קוד גוגל אנליטיקס נשמר בהצלחה"
 
 #: b24online/Users/views.py:13 templates/b24online/AdminTpp/users.html:5
 #: templates/b24online/Messages/index.html:42
@@ -1374,13 +1338,11 @@ msgstr "איש עסקים"
 msgid "Individual"
 msgstr "פרטי"
 
-#: b24online/models.py:1496 b24online/models.py:1716
-#: usersites/Api/views.py:297
+#: b24online/models.py:1496 b24online/models.py:1716 usersites/Api/views.py:297
 msgid "B2B"
 msgstr "מכירות סיטונאיות"
 
-#: b24online/models.py:1497 b24online/models.py:1717
-#: usersites/Api/views.py:291
+#: b24online/models.py:1497 b24online/models.py:1717 usersites/Api/views.py:291
 msgid "B2C"
 msgstr "מוצרים למכירה"
 
@@ -1786,8 +1748,8 @@ msgstr "מספר טלפון"
 msgid "Country"
 msgstr "ארץ"
 
-#: b24online/models.py:2198 centerpokupok/forms.py:18
-#: centerpokupok/forms.py:42 centerpokupok/forms.py:85
+#: b24online/models.py:2198 centerpokupok/forms.py:18 centerpokupok/forms.py:42
+#: centerpokupok/forms.py:85
 #: templates/b24online/BusinessProposal/detailContent.html:85
 #: templates/b24online/Companies/addForm.html:205
 #: templates/b24online/Companies/detailContent.html:390
@@ -2191,10 +2153,8 @@ msgid "Extra param fields"
 msgstr "שדות נוספים"
 
 #: centerpokupok/models.py:178
-#, fuzzy
-#| msgid "Additional pages"
 msgid "Additional_parameters"
-msgstr "דפים נוספים"
+msgstr "פרמטרים נוספים"
 
 #: centerpokupok/models.py:237
 msgid "Baskets"
@@ -2206,7 +2166,7 @@ msgstr "אתר"
 
 #: centerpokupok/models.py:244
 msgid "Created"
-msgstr "נוצר ב"
+msgstr "נוצר "
 
 #: centerpokupok/models.py:245
 msgid "Ordered?"
@@ -2663,8 +2623,7 @@ msgstr "תנאי שימוש"
 msgid "Sign up"
 msgstr "הירשם"
 
-#: templates/admin/show_stats.html:17
-#: templates/admin/show_stats_detail.html:17
+#: templates/admin/show_stats.html:17 templates/admin/show_stats_detail.html:17
 #: templates/usersites_templates/carmel/footer.html:44
 #: templates/usersites_templates/carmel/header.html:116
 #: templates/usersites_templates/cat_business/footer.html:21
@@ -3462,10 +3421,8 @@ msgstr "הוסף  הקטגוריות"
 #: templates/b24online/Products/addFormB2C.html:307
 #: templates/b24online/Tenders/addForm.html:142
 #: templates/b24online/Tpp/addForm.html:206
-#, fuzzy
-#| msgid "Additional images"
 msgid "Additional pages"
-msgstr "תמונות נוספות"
+msgstr "עמודים נוספים"
 
 #: templates/b24online/BusinessProposal/addForm.html:152
 #: templates/b24online/Companies/addForm.html:231
@@ -4012,10 +3969,8 @@ msgstr "חבר"
 
 #: templates/b24online/Companies/detailContent.html:65
 #: templates/b24online/Tpp/detailContent.html:73
-#, fuzzy
-#| msgid "This field is required."
 msgid "This field is required."
-msgstr "שדה חובה"
+msgstr "שדה חובה "
 
 #: templates/b24online/Companies/detailContent.html:89
 #: templates/b24online/Tpp/detailContent.html:97
@@ -4024,10 +3979,8 @@ msgstr "הזן כתובת מייל"
 
 #: templates/b24online/Companies/detailContent.html:98
 #: templates/b24online/Tpp/detailContent.html:106
-#, fuzzy
-#| msgid "Your password has been reset!"
 msgid "Your message has been sent!"
-msgstr "הסיסמא שלך שונתה!"
+msgstr "ההודעה שלך נשלחה"
 
 #: templates/b24online/Companies/detailContent.html:114
 #: templates/b24online/Tpp/detailContent.html:122
@@ -4580,8 +4533,6 @@ msgstr "שם המוצר"
 
 #: templates/b24online/Innov/addForm.html:149
 #: templates/b24online/Innov/detailContent.html:64
-#, fuzzy
-#| msgid "Business plan file"
 msgid "Business plan"
 msgstr "קובץ תוכנית עסקית"
 
@@ -5012,10 +4963,8 @@ msgid "Loading.."
 msgstr "טוען... "
 
 #: templates/b24online/Products/addFormB2C.html:134
-#, fuzzy
-#| msgid "Color"
 msgid "Colors:"
-msgstr "צבע"
+msgstr "צבעים:"
 
 #: templates/b24online/Products/addFormB2C.html:195
 msgid "Discount percent"
@@ -5044,16 +4993,12 @@ msgstr "תאריך סיום קופון"
 #: templates/b24online/Products/addFormB2C.html:322
 #: templates/b24online/Products/extraParamsForm.html:25
 #: templates/b24online/Products/extraParamsList.html:25
-#, fuzzy
-#| msgid "Additional pages"
 msgid "Additional parameters"
-msgstr "דפים נוספים"
+msgstr "פרמטרים נוספים"
 
 #: templates/b24online/Products/addFormB2C.html:323
-#, fuzzy
-#| msgid "Invalid parameter"
 msgid "Add parameter"
-msgstr "פרמטר אינו קיים"
+msgstr "הוסף פרמטר"
 
 #: templates/b24online/Products/buyB2BProduct.html:78
 #: templates/b24online/Products/buyB2CProduct.html:73
@@ -5653,20 +5598,16 @@ msgid "Current price"
 msgstr "מחיר"
 
 #: templates/b24online/Products/extraParamsForm.html:31
-#, fuzzy
-#| msgid "Deal item additional parameters"
 msgid "Enter additional parameter field"
-msgstr "בחר הרשאות נוספות "
+msgstr "בחר הרשאות נוספות"
 
 #: templates/b24online/Products/extraParamsList.html:31
-#, fuzzy
-#| msgid "Add news"
 msgid "Add new"
-msgstr "הוסיפו חדשות לעסק!"
+msgstr "הוסיפו חדש"
 
 #: templates/b24online/Products/extraParamsList.html:40
 msgid "Initial value"
-msgstr ""
+msgstr "ערך"
 
 #: templates/b24online/Products/extraParamsList.html:51
 #: templates/b24online/Questionnaires/questionnaireCaseAnswers.html:20
@@ -5679,7 +5620,7 @@ msgstr "כן"
 
 #: templates/b24online/Products/extraParamsList.html:51
 msgid "No"
-msgstr ""
+msgstr "לא"
 
 #: templates/b24online/Products/extraParamsList.html:68
 #: templates/b24online/Questionnaires/detail.html:203
@@ -5690,10 +5631,8 @@ msgid "Delete"
 msgstr "מחק"
 
 #: templates/b24online/Products/extraParamsList.html:73
-#, fuzzy
-#| msgid "Deal item additional parameters"
 msgid "There are no additional parameters"
-msgstr "בחר הרשאות נוספות "
+msgstr "אין הרשאות נוספות "
 
 #: templates/b24online/Products/producerForm.html:84
 #: templates/b24online/Products/producerForm.html:106
@@ -5723,21 +5662,17 @@ msgstr "אין יצרנים"
 #: templates/b24online/Profile/Profile.html:33
 #: templates/b24online/Profile/Profile.html:52
 msgid "Error"
-msgstr ""
+msgstr "תקלה"
 
 #: templates/b24online/Profile/Profile.html:44
 #: templates/b24online/Profile/Profile.html:62
-#, fuzzy
-#| msgid "Choose date"
 msgid "Choose Image"
-msgstr "בחר מועד"
+msgstr "בחר תמונה"
 
 #: templates/b24online/Profile/Profile.html:45
 #: templates/b24online/Profile/Profile.html:63
-#, fuzzy
-#| msgid "Uploaded"
 msgid "Upload"
-msgstr "הטעינה הושלמה"
+msgstr "העלה"
 
 #: templates/b24online/Profile/Profile.html:92
 #: templates/extended_templates/rbase/profileForm.html:57
@@ -5822,36 +5757,26 @@ msgid "Linkedin"
 msgstr "לינקדין"
 
 #: templates/b24online/Profile/Profile.html:178
-#, fuzzy
-#| msgid "Twitter Link"
 msgid "Twitter"
 msgstr "קישור לטוויטר Twitter"
 
 #: templates/b24online/Profile/Profile.html:186
-#, fuzzy
-#| msgid "Instagram Link"
 msgid "Instagram"
 msgstr "קישור לאינסטגרם"
 
 #: templates/b24online/Profile/Profile.html:194
 msgid "Google Plus"
-msgstr ""
+msgstr "Google plus"
 
 #: templates/b24online/Profile/Profile.html:202
-#, fuzzy
-#| msgid "Vkontakte Link"
 msgid "Vkontakte"
 msgstr "קישור לקונטקטה"
 
 #: templates/b24online/Profile/Profile.html:210
-#, fuzzy
-#| msgid "Odnoklassniki Link"
 msgid "Odnoklassniki"
 msgstr "קישור לאודנוקלסניקי"
 
 #: templates/b24online/Profile/Profile.html:218
-#, fuzzy
-#| msgid "Youtube code"
 msgid "Youtube"
 msgstr "קישור YouTube"
 
@@ -5868,16 +5793,12 @@ msgid "Company slogan"
 msgstr "סלוגן"
 
 #: templates/b24online/Profile/Profile.html:242
-#, fuzzy
-#| msgid "Company name"
 msgid "Company phone"
-msgstr "שם חברה"
+msgstr "טלפון חברה"
 
 #: templates/b24online/Profile/Profile.html:248
-#, fuzzy
-#| msgid "Company Info"
 msgid "Company fax"
-msgstr "מידע "
+msgstr "פקס"
 
 #: templates/b24online/Profile/Profile.html:257
 #: templates/centerpokupok/Product/orderStepOne.html:109
@@ -5895,7 +5816,7 @@ msgstr "שלח מייל "
 
 #: templates/b24online/Profile/Public/contentPage.html:156
 msgid "Save vCard"
-msgstr ""
+msgstr "שמירה"
 
 #: templates/b24online/Profile/changePassword.html:30
 msgid "New password confirmation"
@@ -6240,26 +6161,22 @@ msgid "Logo"
 msgstr "לוגו"
 
 #: templates/b24online/Tpp/tabGallery.html:37
-#: templates/b24online/documents.html:37
-#: templates/b24online/tabGallery.html:37
+#: templates/b24online/documents.html:37 templates/b24online/tabGallery.html:37
 msgid "Uploading"
 msgstr "טוען"
 
 #: templates/b24online/Tpp/tabGallery.html:38
-#: templates/b24online/documents.html:38
-#: templates/b24online/tabGallery.html:38
+#: templates/b24online/documents.html:38 templates/b24online/tabGallery.html:38
 msgid "Uploaded"
 msgstr "הטעינה הושלמה"
 
 #: templates/b24online/Tpp/tabGallery.html:39
-#: templates/b24online/documents.html:39
-#: templates/b24online/tabGallery.html:39
+#: templates/b24online/documents.html:39 templates/b24online/tabGallery.html:39
 msgid "Fail"
 msgstr "נכשל"
 
 #: templates/b24online/Tpp/tabGallery.html:40
-#: templates/b24online/documents.html:40
-#: templates/b24online/tabGallery.html:40
+#: templates/b24online/documents.html:40 templates/b24online/tabGallery.html:40
 msgid "The following files were not uploaded"
 msgstr "הקבצים והשדות לא עודכנו"
 
@@ -6290,9 +6207,8 @@ msgid ""
 "create your own  external website in\n"
 "                just a couple of minutes."
 msgstr ""
-"עמיתים יקרים , אנו שמחים להודיע כי לנוחיותכם פיתחנו מודול לבניית אתרים קלה, "
-"אשר ייעזר לכם ליצור אתר האינטרנט החיצוני לחברה בכמה דקות. אתר מסנכרן באופן "
-"אוטומטי כל נתונים כולל מוצרים, חדשות והצעות עסקיות. "
+"משתמשים יקרים , אנו שמחים להודיע כי לנוחיותכם פיתחנו מודול לבניית אתרים קלה, "
+"אשר יעזור לכם ליצור אתר אינטרנט לחברה בכמה דקות. "
 
 #: templates/b24online/UserSites/addForm.html:80
 #: templates/b24online/UserSites/createSite.html:20
@@ -6315,11 +6231,11 @@ msgstr "בחר עיצוב"
 
 #: templates/b24online/UserSites/addForm.html:101
 msgid "Edit Landing Page"
-msgstr ""
+msgstr "ערוך דף נחיתה"
 
 #: templates/b24online/UserSites/addForm.html:101
 msgid "Create Landing Page Right Now"
-msgstr ""
+msgstr "צור דף נחיתה לעסק שלך"
 
 #: templates/b24online/UserSites/addForm.html:103
 msgid "Your site"
@@ -6340,26 +6256,20 @@ msgid "Maximum 50 characters"
 msgstr "50 תווים מקסימום"
 
 #: templates/b24online/UserSites/addForm.html:126
-#, fuzzy
-#| msgid "Switch language"
 msgid "Site languages"
-msgstr "שפה "
+msgstr "שפות"
 
 #: templates/b24online/UserSites/addForm.html:128
 #: templates/b24online/UserSites/languagesForm.html:19
 msgid "Site default language"
-msgstr "שפה"
+msgstr "שפת ברירת מחדל"
 
 #: templates/b24online/UserSites/addForm.html:133
 #: templates/b24online/UserSites/languagesForm.html:24
-#, fuzzy
-#| msgid "Site default language"
 msgid "Site available languages"
-msgstr "שפה"
+msgstr "שפות לבחירה"
 
 #: templates/b24online/UserSites/addForm.html:139
-#, fuzzy
-#| msgid "Products list"
 msgid "Products delivery"
 msgstr "רשימת המוצרים:"
 
@@ -6455,15 +6365,13 @@ msgstr "קישור למסמכים "
 
 #: templates/b24online/UserSites/addForm.html:206
 #: templates/b24online/UserSites/updateSite.html:81
-#, fuzzy
-#| msgid "Analytic"
 msgid "Google Analytics"
-msgstr "כניסה למערכת ניתוח נתונים עסקית"
+msgstr "גוגל אנליטיקס"
 
 #: templates/b24online/UserSites/addForm.html:208
 #: templates/b24online/UserSites/google_analyticsForm.html:20
 msgid "Google Analytics code"
-msgstr ""
+msgstr "קוד גוגל אנליטיקס"
 
 #: templates/b24online/UserSites/addForm.html:215
 #: templates/b24online/UserSites/logoForm.html:24
@@ -6524,155 +6432,117 @@ msgid "edit"
 msgstr "עריכה"
 
 #: templates/b24online/UserSites/createSite.html:24
-#, fuzzy
-#| msgid "create your own online shop"
 msgid "Create your own site:"
-msgstr "ליצור חנות מקוונת משלך"
+msgstr "צור אתר משלך:"
 
 #: templates/b24online/UserSites/createSite.html:28
 msgid "Domain:"
-msgstr ""
+msgstr "דומיין (כתובת אתר)"
 
 #: templates/b24online/UserSites/createSite.html:38
 msgid ""
 "In the future you will be able to change domain, or even use a your own "
 "domain."
-msgstr ""
+msgstr "בכל זמן תוכלו לשנות את כתובת האתר או להזין דומיין עצמאי משלכם"
 
 #: templates/b24online/UserSites/footer_textForm.html:19
-#, fuzzy
-#| msgid "Footer description"
 msgid "Footer text"
 msgstr "באנר תחתון"
 
 #: templates/b24online/UserSites/includes/breadcrumbs.html:5
 #: templates/b24online/main/dashboard.html:37
 msgid "Manage company site"
-msgstr "כניסה למערכת ניהול!"
+msgstr "כניסה למערכת ניהול"
 
 #: templates/b24online/UserSites/index.html:9
 msgid "Sites"
 msgstr "אתרים"
 
 #: templates/b24online/UserSites/site_sloganForm.html:19
-#, fuzzy
-#| msgid "Slogan"
 msgid "Site slogan"
 msgstr "סלוגן"
 
 #: templates/b24online/UserSites/slider_imagesForm.html:19
-#, fuzzy
-#| msgid "Your message has been sent!"
 msgid "Slider images"
-msgstr "ההודעה נשלחה!"
+msgstr "תמונות סליידרים"
 
 #: templates/b24online/UserSites/templateForm.html:19
-#, fuzzy
-#| msgid "Image description:"
 msgid "Theme description"
 msgstr "הסבר תמונה"
 
 #: templates/b24online/UserSites/templateForm.html:26
 msgid "Color scheme"
-msgstr ""
+msgstr "צבע"
 
 #: templates/b24online/UserSites/templateForm.html:34
-#, fuzzy
-#| msgid "Choose CCI"
 msgid "Choose"
-msgstr "CCI בחר"
+msgstr "בחר"
 
 #: templates/b24online/UserSites/updateSite.html:24
 msgid "Choose the section that you want to change:"
-msgstr ""
+msgstr "בחר אזור או חלק שתרצו לשנות"
 
 #: templates/b24online/UserSites/updateSite.html:27
 msgid "General Settings for "
-msgstr ""
+msgstr "הגדרות כלליות עבור"
 
 #: templates/b24online/UserSites/updateSite.html:29
-#, fuzzy
-#| msgid "Store main page"
 msgid "Domain Name"
-msgstr "חנות - עמוד ראשי"
+msgstr "שם דומיין "
 
 #: templates/b24online/UserSites/updateSite.html:33
-#, fuzzy
-#| msgid "Switch language"
 msgid "Site Languages"
-msgstr "שפה "
+msgstr "שפות"
 
 #: templates/b24online/UserSites/updateSite.html:37
-#, fuzzy
-#| msgid "Product supplier"
 msgid "Product Delivery"
-msgstr "ספק "
+msgstr "משלוח"
 
 #: templates/b24online/UserSites/updateSite.html:41 usersites/views.py:273
 msgid "Landing Page"
-msgstr ""
+msgstr "נחיתה"
 
 #: templates/b24online/UserSites/updateSite.html:41
-#, fuzzy
-#| msgid "Creation date"
 msgid "Create Landing Page"
-msgstr "תאריך יצירה"
+msgstr "צור דף נחיתה לעסק שלך"
 
 #: templates/b24online/UserSites/updateSite.html:44
 msgid "Appearance:"
-msgstr ""
+msgstr "הופעה:"
 
 #: templates/b24online/UserSites/updateSite.html:47
-#, fuzzy
-#| msgid "Select Template"
 msgid "Site Template"
-msgstr "בחר עיצוב"
+msgstr "בחר עיצוב - טמפלט"
 
 #: templates/b24online/UserSites/updateSite.html:50
-#, fuzzy
-#| msgid "Content"
 msgid "Content:"
 msgstr "תוכן"
 
 #: templates/b24online/UserSites/updateSite.html:53
-#, fuzzy
-#| msgid "Slogan"
 msgid "Site Slogan"
 msgstr "סלוגן"
 
 #: templates/b24online/UserSites/updateSite.html:57
-#, fuzzy
-#| msgid "Footer description"
 msgid "Footer Text"
 msgstr "באנר תחתון"
 
 #: templates/b24online/UserSites/updateSite.html:60
-#, fuzzy
-#| msgid "Images"
 msgid "Images:"
 msgstr "תמונות"
 
 #: templates/b24online/UserSites/updateSite.html:63
-#, fuzzy
-#| msgid "Organization logo"
 msgid "Organization Logo"
 msgstr "לוגו ארגון"
 
 #: templates/b24online/UserSites/updateSite.html:67
-#, fuzzy
-#| msgid "Images"
 msgid "Slider Images"
-msgstr "תמונות"
+msgstr "תמונות סליידר"
 
 #: templates/b24online/UserSites/updateSite.html:74
-#, fuzzy
-#| msgid "Your Link:"
 msgid "Links:"
-msgstr "קישור שלך:"
+msgstr "קישורים:"
 
 #: templates/b24online/UserSites/updateSite.html:77
-#, fuzzy
-#| msgid "Social links"
 msgid "Social Links"
 msgstr "קישורים לרשתות חברתיות"
 
@@ -6771,9 +6641,9 @@ msgid ""
 msgstr ""
 "פרויקט בינלאומי לקידום ותמיכה ביזמים ובעלי עסקים.\n"
 "כלים עסקיים לפיתוח עסקי, יצירת ביקושים לשירותים ולמוצרים שלך.\n"
-"אתר אינטרנט אישי, חנות מכירות משוכללת, קטלוג חברות ועסקים, קטלוג מוצרים/"
-"שירותים, משרד וירטואלי אישי, מודול חדשות, פורומים, תערוכות וכנסים, ניתוח "
-"נתונים, הצעות עסקיות, מכרזים פנימיים, פיתוח מסלול קריירה וניהול צוות.\n"
+"אתר אינטרנט אישי, חנות מכירות משוכללת, קטלוג חברות ועסקים, קטלוג "
+"מוצרים/שירותים, משרד וירטואלי אישי, מודול חדשות, פורומים, תערוכות וכנסים, "
+"ניתוח נתונים, הצעות עסקיות, מכרזים פנימיים, פיתוח מסלול קריירה וניהול צוות.\n"
 "מה אנו מצעים?\n"
 "אתר אינטרנט עצמאי מולטי פונקציונאלי מסונכרן עם תכנית חובקת עולם לפיתוח קשרים "
 "ותמיכה ביזמים קשר עסקי לעשרות אלפי יזמים בעולם.\n"
@@ -6843,10 +6713,8 @@ msgstr "תקציר"
 
 #: templates/b24online/baseFilter.html:94
 #: templates/b24online/baseFilter.html:122
-#, fuzzy
-#| msgid "File name"
 msgid "Field"
-msgstr "שם קובץ"
+msgstr "שדה"
 
 #: templates/b24online/baseFilter.html:99
 #: templates/b24online/baseFilter.html:127
@@ -7133,7 +7001,7 @@ msgstr "כניסה למרכז הקניות "
 #: templates/usersites_templates/top_business/B2CProducts/main_coupons.html:14
 #: templates/usersites_templates/yarden/B2CProducts/main_coupons.html:14
 msgid "Coupons"
-msgstr "קופונים חמים!"
+msgstr "קופונים"
 
 #: templates/b24online/index.html:321
 msgid ""
@@ -7173,7 +7041,7 @@ msgstr "התחל צ'אט!"
 
 #: templates/b24online/index.html:376
 msgid "Company E-Business Card"
-msgstr "כרטיס ביקור אינטראקטיבי - עסקי!"
+msgstr "כרטיס ביקור אינטראקטיבי - עסקי"
 
 #: templates/b24online/index.html:377
 msgid ""
@@ -7187,7 +7055,7 @@ msgstr ""
 
 #: templates/b24online/index.html:384
 msgid "Personal E-Business Card"
-msgstr "כרטיס ביקור אינטראקטיבי - אישי!"
+msgstr "כרטיס ביקור אינטראקטיבי - אישי"
 
 #: templates/b24online/index.html:385
 msgid "Your own personal interactive business card, with easy sharing option."
@@ -7520,7 +7388,7 @@ msgstr "אזור המוצרים והשירותים הסיטונאיים שלך"
 
 #: templates/b24online/main/dashboard.html:25
 msgid "Add new B2B product"
-msgstr "לחצו כאן להוספה!"
+msgstr "לחצו כאן להוספה"
 
 #: templates/b24online/main/dashboard.html:29
 msgid "B2C products"
@@ -7528,7 +7396,7 @@ msgstr "לחצו כאן לכניסה לאזור המוצרים למכירה"
 
 #: templates/b24online/main/dashboard.html:31
 msgid "Add new B2C product"
-msgstr "הוסף/י מוצר למכירה!"
+msgstr "הוסף/י מוצר למכירה"
 
 #: templates/b24online/main/dashboard.html:35
 msgid "Company site"
@@ -7544,7 +7412,7 @@ msgstr "מערכת ניהול לידים ופניות לקוחות לעסק"
 
 #: templates/b24online/main/dashboard.html:43
 msgid "Manage leads"
-msgstr "כניסה למערכת לידים!"
+msgstr "כניסה למערכת לידים"
 
 #: templates/b24online/main/dashboard.html:48
 msgid "Announce evens using you news repository"
@@ -7552,7 +7420,7 @@ msgstr "הודע על אירועים מתוכננים"
 
 #: templates/b24online/main/dashboard.html:49
 msgid "Add news"
-msgstr "הוסיפו חדשות לעסק!"
+msgstr "הוסיפו חדשות לעסק"
 
 #: templates/b24online/main/dashboard.html:54
 msgid "Post videos in your videos blog"
@@ -7560,7 +7428,7 @@ msgstr "מערכת פרסום וידאו או בלוג אישי"
 
 #: templates/b24online/main/dashboard.html:55
 msgid "Add video"
-msgstr "להוספת וידאו - לחצו כאן!"
+msgstr "להוספת וידאו - לחצו כאן"
 
 #: templates/b24online/main/dashboard.html:59
 msgid "Analytic"
@@ -7572,7 +7440,7 @@ msgstr "מערכת ניתוח אתר החברה שלכם (אנאליטיקס)"
 
 #: templates/b24online/main/dashboard.html:61
 msgid "Check company analytic"
-msgstr "לחצו כאן לבדיקה!"
+msgstr "לחצו כאן לבדיקה"
 
 #: templates/b24online/main/dashboard.html:66
 msgid "Upload your banners and use advertisement to grow sales"
@@ -7580,7 +7448,7 @@ msgstr "העלו באנרים ופרסומות להגדלת המכירות"
 
 #: templates/b24online/main/dashboard.html:67
 msgid "Upload banner"
-msgstr "להעלאת באנר - לחצו כאן!"
+msgstr "להעלאת באנר - לחצו כאן"
 
 #: templates/b24online/main/dashboard.html:71
 msgid "Vacancies"
@@ -7592,7 +7460,7 @@ msgstr "מערכת משרות ועבודות של העסק"
 
 #: templates/b24online/main/dashboard.html:73
 msgid "Publish new vacancy"
-msgstr "לצפייה במשרות פנויות - לחצו כאן!"
+msgstr "לצפייה במשרות פנויות - לחצו כאן"
 
 #: templates/b24online/main/dashboard.html:78
 msgid "Product producers"
@@ -7750,7 +7618,7 @@ msgstr "מרכז הצעות עסקיות ושותפים עסקיים"
 
 #: templates/b24online/main/dashboard.html:99
 msgid "Publish new proposal"
-msgstr "הוסיפו הצעה עסקית!"
+msgstr "הוסיפו הצעה עסקית"
 
 #: templates/b24online/main/dashboard.html:104
 #: templates/b24online/main_page.html:159
@@ -7815,8 +7683,7 @@ msgstr "אחורה"
 msgid "Forward"
 msgstr "קדימה"
 
-#: templates/b24online/main/staticPages.html:12
-#: templates/b24online/tos.html:28
+#: templates/b24online/main/staticPages.html:12 templates/b24online/tos.html:28
 msgid "Terms of Service"
 msgstr "תנאי שימוש"
 
@@ -7908,7 +7775,7 @@ msgstr "הורדה"
 
 #: templates/captcha/image.html:3
 msgid "Play CAPTCHA as audio file"
-msgstr ""
+msgstr "הפעל כקובץ קול"
 
 #: templates/centerpokupok/Cabinet/favorite.html:5
 #: templates/centerpokupok/Cabinet/favorite.html:21
@@ -8833,37 +8700,27 @@ msgstr "תנאים"
 
 #: templates/extended_templates/rbase/B2BProducts/categoriesPage.html:10
 #: templates/extended_templates/rbase/B2CProducts/categoriesPage.html:10
-#, fuzzy
-#| msgid "All Categories"
 msgid "Full Categories Page"
 msgstr "כל הקטגוריות"
 
 #: templates/extended_templates/rbase/B2BProducts/detailContent.html:27
-#, fuzzy
-#| msgid "Contact us"
 msgid "Contact Us"
 msgstr "צור קשר"
 
 #: templates/extended_templates/rbase/B2BProducts/detailContent.html:36
 #: templates/extended_templates/rbase/B2CProducts/detailContent.html:97
-#, fuzzy
-#| msgid "Shopping center - buy with pleasure all over the world"
 msgid "Shipping: FREE shipping all over the world!"
-msgstr "מרכז קניות - קנה בהנאה מכל מקום בעולם"
+msgstr "מרכז קניות - משלוח חינם לכל העולם!"
 
 #: templates/extended_templates/rbase/B2BProducts/detailContent.html:38
 #: templates/extended_templates/rbase/B2CProducts/detailContent.html:99
-#, fuzzy
-#| msgid "Personal Information"
 msgid "Seller information"
-msgstr "נתונים אישיים "
+msgstr "מידע על המוכר"
 
 #: templates/extended_templates/rbase/B2BProducts/detailContent.html:75
 #: templates/extended_templates/rbase/B2CProducts/detailContent.html:136
-#, fuzzy
-#| msgid "Shipping Addres"
 msgid "Shipping and Payments"
-msgstr "כתובת למשלוח דואר"
+msgstr "משלוחים ואמצעי תשלום"
 
 #: templates/extended_templates/rbase/B2BProducts/list.html:119
 #: templates/extended_templates/rbase/B2BProducts/main_products.html:26
@@ -9100,10 +8957,8 @@ msgstr "צור קשר"
 #: templates/extended_templates/rbase/B2BProducts/new_label_products.html:10
 #: templates/extended_templates/rbase/B2CProducts/main_products.html:9
 #: templates/extended_templates/rbase/B2CProducts/new_label_products.html:9
-#, fuzzy
-#| msgid "Products"
 msgid "New Products"
-msgstr "מוצרים"
+msgstr "מוצרים חדשים"
 
 #: templates/extended_templates/rbase/B2BProducts/new_label_products.html:20
 #: templates/extended_templates/rbase/B2BProducts/special_products.html:19
@@ -9111,7 +8966,7 @@ msgstr "מוצרים"
 #: templates/extended_templates/rbase/B2CProducts/new_label_products.html:21
 #: templates/extended_templates/rbase/B2CProducts/special_products.html:21
 msgid "new"
-msgstr ""
+msgstr "חדש"
 
 #: templates/extended_templates/rbase/B2BProducts/paginator.html:15
 #: templates/extended_templates/rbase/B2BProducts/paginator.html:22
@@ -9224,22 +9079,16 @@ msgid "Select Category"
 msgstr "בחר קטגוריה"
 
 #: templates/extended_templates/rbase/B2BProducts/search_content.html:9
-#, fuzzy
-#| msgid "Search B2C Products"
 msgid "Search B2B Products"
-msgstr "חפש מוצרים למכירה"
+msgstr "חפש מוצרים למכירה "
 
 #: templates/extended_templates/rbase/B2BProducts/slider_products.html:6
 #: templates/extended_templates/rbase/B2CProducts/slider_products.html:6
-#, fuzzy
-#| msgid "Deal products"
 msgid "Other products"
-msgstr "מוצרי החברה "
+msgstr "מוצרים נוספים"
 
 #: templates/extended_templates/rbase/B2BProducts/special_products.html:10
 #: templates/extended_templates/rbase/B2CProducts/special_products.html:10
-#, fuzzy
-#| msgid "Special price"
 msgid "Special offers"
 msgstr "מחיר מיוחד"
 
@@ -9396,8 +9245,6 @@ msgid "Discount"
 msgstr "הנחה"
 
 #: templates/extended_templates/rbase/B2CProducts/detailContent.html:80
-#, fuzzy
-#| msgid "Add to basket"
 msgid "Add To basket"
 msgstr "הוסף לסל"
 
@@ -9495,22 +9342,20 @@ msgid ""
 msgstr ""
 
 #: templates/extended_templates/rbase/BusinessIndex/branchPage.html:121
-#, fuzzy
-#| msgid "Call Now!"
 msgid "Call"
 msgstr "חייג/י!"
 
 #: templates/extended_templates/rbase/BusinessIndex/contentPage.html:13
 msgid "Find the best busines"
-msgstr ""
+msgstr "מצ אאת העסקים הטובים ביותר"
 
 #: templates/extended_templates/rbase/BusinessIndex/contentPage.html:19
 msgid "The fast and best way"
-msgstr ""
+msgstr "הדרך הטובה והמהירה ביותר"
 
 #: templates/extended_templates/rbase/BusinessIndex/contentPage.html:25
 msgid "It's all around you"
-msgstr ""
+msgstr "הכול סובב אותך"
 
 #: templates/extended_templates/rbase/Messages/chats.html:28
 #: templates/usersites_templates/carmel/Messages/chats.html:28
@@ -9622,30 +9467,22 @@ msgid "New message"
 msgstr "הודעה חדשה "
 
 #: templates/extended_templates/rbase/OrganizationPages/company.html:27
-#, fuzzy
-#| msgid "B24Online"
 msgid "Only On B24Online"
-msgstr "B24Online - פורטל העסקים הגדול בישראל"
+msgstr "רק ב- B24Online - פורטל העסקים הגדול בישראל"
 
 #: templates/extended_templates/rbase/OrganizationPages/company.html:28
-#, fuzzy
-#| msgid "To all the Products"
 msgid "On All Products!"
 msgstr "לכל המוצרים"
 
 #: templates/extended_templates/rbase/OrganizationPages/company.html:29
-#, fuzzy
-#| msgid "Special price"
 msgid "Special Offer"
 msgstr "מחיר מיוחד"
 
 #: templates/extended_templates/rbase/OrganizationPages/company.html:63
 msgid "Mail"
-msgstr ""
+msgstr "דואר אלקטרוני"
 
 #: templates/extended_templates/rbase/OrganizationPages/company.html:108
-#, fuzzy
-#| msgid "Gallery"
 msgid "Image Gallery"
 msgstr "גלרייה"
 
@@ -9676,7 +9513,7 @@ msgstr "גלריית וידאו"
 #: templates/usersites_templates/top_business/OrganizationPages/contact.html:90
 #: templates/usersites_templates/yarden/OrganizationPages/contact.html:93
 msgid "Captcha"
-msgstr ""
+msgstr "אני לא רובוט"
 
 #: templates/extended_templates/rbase/OrganizationPages/page.html:12
 #: templates/usersites_templates/cineret/OrganizationPages/page.html:12
@@ -9729,23 +9566,17 @@ msgstr "עובד"
 #: templates/usersites_templates/golan_purple/Video/contentPage.html:7
 #: templates/usersites_templates/habsor/Video/contentPage.html:7
 #: templates/usersites_templates/yarden/Video/contentPage.html:7
-#, fuzzy
-#| msgid "Video"
 msgid "video"
 msgstr "וידאו"
 
 #: templates/extended_templates/rbase/change_password_done.html:3
-#, fuzzy
-#| msgid "Password changed"
 msgid "Password changed!"
 msgstr "סיסמא שונתה"
 
 #: templates/extended_templates/rbase/header.html:9
 #: usersites/BusinessIndex/views.py:27 usersites/BusinessIndex/views.py:36
-#, fuzzy
-#| msgid "Business plan"
 msgid "Business Index"
-msgstr "תכנית עסקית"
+msgstr "אינדקס עסקי"
 
 #: templates/extended_templates/rbase/header.html:12
 #: templates/usersites_templates/cineret_red/header.html:129
@@ -9756,11 +9587,9 @@ msgstr "התנתק"
 
 #: templates/extended_templates/rbase/header.html:14
 msgid "Join for FREE"
-msgstr ""
+msgstr "הירשם חינם"
 
 #: templates/extended_templates/rbase/header.html:15
-#, fuzzy
-#| msgid "Join Us"
 msgid "Join"
 msgstr "הירשם/י!"
 
@@ -9769,45 +9598,31 @@ msgid "Help &amp; Contact"
 msgstr ""
 
 #: templates/extended_templates/rbase/header.html:59
-#, fuzzy
-#| msgid "B24Online"
 msgid "Login to B24Online"
-msgstr "B24Online - פורטל העסקים הגדול בישראל"
+msgstr "הצטרף ל- B24Online"
 
 #: templates/extended_templates/rbase/header.html:74
-#, fuzzy
-#| msgid "Add user email"
 msgid "username or email"
-msgstr "הוסף דואר אלקטרוני"
+msgstr "שם משתמש או דואר אלקטרוני"
 
 #: templates/extended_templates/rbase/header.html:79
 #: templates/extended_templates/rbase/header.html:129
-#, fuzzy
-#| msgid "Password"
 msgid "password"
 msgstr "סיסמא"
 
 #: templates/extended_templates/rbase/header.html:92
-#, fuzzy
-#| msgid "Forgot password"
 msgid "Forgot password?"
-msgstr "שכחתי סיסמה"
+msgstr "שכחת סיסמה?"
 
 #: templates/extended_templates/rbase/header.html:109
-#, fuzzy
-#| msgid "Register organization"
 msgid "Register to B24Online"
-msgstr "הארגון שלך"
+msgstr "הירשם ל-B24online"
 
 #: templates/extended_templates/rbase/header.html:124
-#, fuzzy
-#| msgid "Email"
 msgid "email"
-msgstr "דוא''ל"
+msgstr "דואר אלקטרוני"
 
 #: templates/extended_templates/rbase/header.html:134
-#, fuzzy
-#| msgid "Confirm password"
 msgid "confirm the password"
 msgstr "אשר סיסמא"
 
@@ -9830,8 +9645,6 @@ msgid "Register"
 msgstr "הירשם"
 
 #: templates/extended_templates/rbase/header.html:181
-#, fuzzy
-#| msgid "All Categories"
 msgid "Full Categories Page >"
 msgstr "כל הקטגוריות"
 
@@ -9860,8 +9673,6 @@ msgstr "כל הקטגוריות"
 #: templates/usersites_templates/one/message_sent.html:22
 #: templates/usersites_templates/one_pic/message_sent.html:22
 #: templates/usersites_templates/yarden/message_sent.html:22
-#, fuzzy
-#| msgid "Message sent!"
 msgid "Message sent!"
 msgstr "הודעה נשלחה!"
 
@@ -10507,13 +10318,13 @@ msgstr "חייג/י!"
 
 #: templates/usersites_templates/cat_business/OrganizationPages/contact.html:88
 msgid "Capthca"
-msgstr ""
+msgstr "אני לא רובוט"
 
 #: templates/usersites_templates/habsor/News/list.html:12
 #: templates/usersites_templates/habsor/News/wall.html:7
 #: templates/usersites_templates/habsor/header.html:67
 msgid "Blog"
-msgstr ""
+msgstr "בלוג"
 
 #: templates/usersites_templates/ibonds/Questionnaires/history.html:24
 msgid "The Email with url has been sent to Your email"
@@ -10700,8 +10511,6 @@ msgid "Invalid form description"
 msgstr "הוזן תיאור לא ברור"
 
 #: usersites/views.py:257
-#, fuzzy
-#| msgid "Message sent!"
 msgid "Message sent"
 msgstr "הודעה נשלחה!"
 
