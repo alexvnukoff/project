@@ -1738,6 +1738,10 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-goods .b2b-elem {
   margin-top: 30px;
 }
+.main-row .article-content .content-goods .b2b-elem .dropdown-toggle {
+  top: 8px;
+  right: -7px;
+}
 .main-row .article-content .content-goods .dropdown-toggle {
   width: 10px;
   border: 18px solid transparent;
@@ -1747,10 +1751,6 @@ body .header-row .header-container .header .logout {
   right: -10px;
   top: -10px;
   z-index: 999999;
-}
-.main-row .article-content .content-goods .dropdown-toggle.b2b {
-  top: 8px;
-  right: -7px;
 }
 .main-row .article-content .content-goods .dropdown-toggle .afisha {
   position: absolute;
@@ -2218,10 +2218,6 @@ body .header-row .header-container .header .logout {
   right: -10px;
   top: -10px;
   z-index: 999999;
-}
-.main-row .article-content .content-block .content .dropdown-toggle.b2b {
-  top: 8px;
-  right: -7px;
 }
 .main-row .article-content .content-block .content .dropdown-toggle .afisha {
   position: absolute;
