@@ -8,7 +8,6 @@ var ContentManager = (function() {
         loader = $('#loader');
     }
 
-
     function fetchAdv() {
         //TODO
     }
@@ -26,7 +25,6 @@ var ContentManager = (function() {
                 }
             },
             context: content_holder,
-            method: "GET",
             success: function( response ) {
                 $(this).html(response);
                 loader.hide();

@@ -10,9 +10,8 @@
   {% for product in object_list %}
 
   <div class="col-xs-3 b2b-elem">
-
+    {% setContextMenu product update_url=update_url delete_url=delete_url %}
     <div class="thumbnail coupons wall">
-      {% setContextMenu product update_url=update_url delete_url=delete_url %}
       <div class="thumbnail-container">
         <a href="{{ product.get_absolute_url }}">
           {% if product.image %}

@@ -1256,9 +1256,37 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .tab-content .upload {
   position: relative;
   float: left;
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
 }
-.main-row .article-content .tab-content .upload i {
-  font-size: 20px;
+.main-row .article-content .tab-content .upload .upload-btn {
+  background-color: #fafafa;
+  width: 100px;
+  height: 35px;
+  padding: 5px;
+  border: solid 1px #888;
+  border-radius: 3px;
+}
+.main-row .article-content .tab-content .upload .upload-btn:hover {
+  background-color: #38a8dc;
+}
+.main-row .article-content .tab-content .upload .upload-btn:hover .text {
+  color: #fff;
+}
+.main-row .article-content .tab-content .upload .upload-btn:hover i {
+  color: #fff;
+}
+.main-row .article-content .tab-content .upload .upload-btn i {
+  font-size: 25px;
+  position: relative;
+  float: left;
+}
+.main-row .article-content .tab-content .upload .upload-btn .text {
+  line-height: 25px;
+  position: relative;
+  float: left;
+  margin-left: 10px;
 }
 .main-row .article-content .tab-content .document {
   background-color: #fdfdfd;
@@ -1344,9 +1372,37 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .coupon #exTab .tab-content .upload {
   position: relative;
   float: left;
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
 }
-.main-row .article-content .coupon #exTab .tab-content .upload i {
-  font-size: 20px;
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn {
+  background-color: #fafafa;
+  width: 100px;
+  height: 35px;
+  padding: 5px;
+  border: solid 1px #888;
+  border-radius: 3px;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover {
+  background-color: #38a8dc;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover .text {
+  color: #fff;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover i {
+  color: #fff;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn i {
+  font-size: 25px;
+  position: relative;
+  float: left;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn .text {
+  line-height: 25px;
+  position: relative;
+  float: left;
+  margin-left: 10px;
 }
 .main-row .article-content .coupon #exTab .tab-content .document {
   background-color: #fdfdfd;
@@ -1416,6 +1472,42 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon-product .product {
   padding: 10px 25px;
+}
+.main-row .article-content .coupon-product .b2c {
+  padding: 25px 10px;
+}
+.main-row .article-content .coupon-product .b2c .social {
+  position: relative;
+  float: left;
+  clear: left;
+  margin-top: 10px;
+  padding-left: 15px;
+}
+.main-row .article-content .coupon-product .b2c .social.coupon {
+  padding-left: 0;
+}
+.main-row .article-content .coupon-product .b2c .social i {
+  display: inline-block;
+  width: 24px;
+  height: 26px;
+  margin-right: 6px;
+  background: url("../images/news.png");
+}
+.main-row .article-content .coupon-product .b2c .social i.fb {
+  background-position: 0px -60px;
+}
+.main-row .article-content .coupon-product .b2c .social i.vk {
+  background-position: -30px -60px;
+}
+.main-row .article-content .coupon-product .b2c .social i.ok {
+  background-position: -60px -60px;
+}
+.main-row .article-content .coupon-product .b2c .social i.tw {
+  background-position: -90px -60px;
+}
+.main-row .article-content .coupon-product .b2c .paypal {
+  cursor: pointer;
+  margin-top: 10px;
 }
 .main-row .article-content .banner {
   height: auto;
@@ -1646,6 +1738,10 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-goods .b2b-elem {
   margin-top: 30px;
 }
+.main-row .article-content .content-goods .b2b-elem .dropdown-toggle {
+  top: 8px;
+  right: -7px;
+}
 .main-row .article-content .content-goods .dropdown-toggle {
   width: 10px;
   border: 18px solid transparent;
@@ -1655,10 +1751,6 @@ body .header-row .header-container .header .logout {
   right: -10px;
   top: -10px;
   z-index: 999999;
-}
-.main-row .article-content .content-goods .dropdown-toggle.b2b {
-  top: 8px;
-  right: -7px;
 }
 .main-row .article-content .content-goods .dropdown-toggle .afisha {
   position: absolute;
@@ -1793,6 +1885,61 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block {
   font-size: 12px;
   color: #9b9b9b;
+}
+.main-row .article-content .content-block .contacts {
+  border-left: solid 1px #e1e1e1;
+  margin-left: -10px;
+}
+.main-row .article-content .content-block .contacts.product {
+  width: 200px;
+  border: none;
+  background-color: #f3f3f3;
+  padding: 10px;
+}
+.main-row .article-content .content-block .contacts .flag {
+  width: 18px;
+  margin-right: 10px;
+}
+.main-row .article-content .content-block .contacts .event-title {
+  margin-bottom: 15px;
+}
+.main-row .article-content .content-block .contacts .address {
+  float: left;
+  clear: left;
+}
+.main-row .article-content .content-block .contacts .contact {
+  float: left;
+  clear: left;
+  margin-top: 6px;
+}
+.main-row .article-content .content-block .contacts .sprite {
+  background: url("../images/news.png");
+  margin-right: 6px;
+}
+.main-row .article-content .content-block .contacts .address-ico {
+  background-position: -120px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .contacts .phone-ico {
+  background-position: -137px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .contacts .extra-phone-ico {
+  background-position: -153px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .contacts .site-ico {
+  background-position: -170px -90px;
+  width: 16px;
+  height: 16px;
+}
+.main-row .article-content .content-block .contacts .mail-ico {
+  background-position: -187px -88px;
+  width: 16px;
+  height: 16px;
 }
 .main-row .article-content .content-block .not-found {
   text-align: center;
@@ -1939,9 +2086,37 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content .upload {
   position: relative;
   float: left;
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
 }
-.main-row .article-content .content-block .content.vacancy .tab-content .upload i {
-  font-size: 20px;
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn {
+  background-color: #fafafa;
+  width: 100px;
+  height: 35px;
+  padding: 5px;
+  border: solid 1px #888;
+  border-radius: 3px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover {
+  background-color: #38a8dc;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover .text {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover i {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn i {
+  font-size: 25px;
+  position: relative;
+  float: left;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn .text {
+  line-height: 25px;
+  position: relative;
+  float: left;
+  margin-left: 10px;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .document {
   background-color: #fdfdfd;
@@ -2043,10 +2218,6 @@ body .header-row .header-container .header .logout {
   right: -10px;
   top: -10px;
   z-index: 999999;
-}
-.main-row .article-content .content-block .content .dropdown-toggle.b2b {
-  top: 8px;
-  right: -7px;
 }
 .main-row .article-content .content-block .content .dropdown-toggle .afisha {
   position: absolute;
@@ -2300,9 +2471,37 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .tab-content .upload {
   position: relative;
   float: left;
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
 }
-.main-row .article-content .content-block .content.details .tab-content .upload i {
-  font-size: 20px;
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn {
+  background-color: #fafafa;
+  width: 100px;
+  height: 35px;
+  padding: 5px;
+  border: solid 1px #888;
+  border-radius: 3px;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover {
+  background-color: #38a8dc;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover .text {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover i {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn i {
+  font-size: 25px;
+  position: relative;
+  float: left;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn .text {
+  line-height: 25px;
+  position: relative;
+  float: left;
+  margin-left: 10px;
 }
 .main-row .article-content .content-block .content.details .tab-content .document {
   background-color: #fdfdfd;
