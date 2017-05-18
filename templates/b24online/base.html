@@ -161,8 +161,8 @@
 
                 {% else %}
 
-                    <a class="#" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><span>Facebook</span></a> |
-                    <a class="#" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><span>Gplus</span></a> |
+                    <a class="ico fb" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><i class="fa fa-facebook-official"></i></a>
+                    <a class="ico gplus" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><i class="fa fa-google-plus-square"></i></a>
                     <a href="{% url 'auth_login' %}" title="{% trans 'Sign in' %}">{% trans 'Sign in' %}</a> |
                     <a href="{% url 'registration_register' %}?next={{ request.path }}" title="{% trans 'Sign up' %}">{% trans 'Sign up' %}</a>
 

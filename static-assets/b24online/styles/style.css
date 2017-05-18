@@ -1122,6 +1122,18 @@ body .header-row .header-container .header .person-name {
 body .header-row .header-container .header .person-name:hover {
   text-decoration: underline;
 }
+body .header-row .header-container .header .ico {
+  position: relative;
+  font-size: 22px;
+  top: 4px;
+}
+body .header-row .header-container .header .ico.fb {
+  color: #445d9a;
+}
+body .header-row .header-container .header .ico.gplus {
+  color: #ea4335;
+  margin: 0 7px;
+}
 body .header-row .header-container .header .logout {
   position: relative;
   height: 18px;
