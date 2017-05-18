@@ -13,39 +13,38 @@
           $(this).find('.afisha-dropdown').stop(true, true).delay(500).fadeOut(500);
         });
         </script>
-        <i class="afisha fa fa-pencil">
-          <ul class="afisha-dropdown dropdown-menu pull-right">
-
-            {% if update_url %}
-              <li><a href="{% url url_namespace|add:':'|add:update_url obj.pk %}?next={{ current_path }}"><i class="edit fa fa-pencil"></i>{% trans "Edit" %}</a></li>
-            {% else %}
-              <li><a href="{% url url_namespace|add:':update' obj.pk %}?next={{ current_path }}"><i class="edit fa fa-pencil"></i>{% trans "Edit" %}</a></li>
-            {% endif %}
-
-            {% if top_perm %}
-              <li><a href="{% url 'adv_top:top_form' top_type obj.pk %}"><i class="advertise fa fa-bell"></i>{% trans 'Advertise' %}</a></li>
-            {% endif %}
-
-            {% if set_current %}
-              <li><a href="{% url 'setCurrent' obj.pk %}?next={{ current_path }}"><i class="set fa fa-cogs"></i>{% trans 'set current' %}</a></li>
-            {% endif %}
-
-            {% if delete_url %}
-              <li><a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}"><i class="remove fa fa-times"></i>{% trans 'remove' %}</a></li>
-            {% elif delete %}
-              <li><a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}"><i class="remove fa fa-times"></i>{% trans 'remove' %}</a></li>
-            {% endif %}
-
-            {% if extra_options %}
-              {% for option_url, option_title in extra_options %}
-                <li><a href="{{ option_url }}?next={{ current_path }}"><i class="set fa fa-cogs"></i>{{ option_title }}</a></li>
-              {% endfor %}
-            {% endif %}
-            <!-- Test URL -->
-            <li><a href="https://google.com"><i class="set fa fa-cogs"></i>Google</a></li>
-          </ul>
-        </i>
       </div>
+      <i class="afisha fa fa-pencil">
+        <ul class="afisha-dropdown dropdown-menu pull-right">
+
+          {% if update_url %}
+            <li><a href="{% url url_namespace|add:':'|add:update_url obj.pk %}?next={{ current_path }}"><i class="edit fa fa-pencil"></i>{% trans "Edit" %}</a></li>
+          {% else %}
+            <li><a href="{% url url_namespace|add:':update' obj.pk %}?next={{ current_path }}"><i class="edit fa fa-pencil"></i>{% trans "Edit" %}</a></li>
+          {% endif %}
+
+          {% if top_perm %}
+            <li><a href="{% url 'adv_top:top_form' top_type obj.pk %}"><i class="advertise fa fa-bell"></i>{% trans 'Advertise' %}</a></li>
+          {% endif %}
+
+          {% if set_current %}
+            <li><a href="{% url 'setCurrent' obj.pk %}?next={{ current_path }}"><i class="set fa fa-cogs"></i>{% trans 'set current' %}</a></li>
+          {% endif %}
+
+          {% if delete_url %}
+            <li><a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:':'|add:delete_url obj.pk %}?next={{ current_path }}"><i class="remove fa fa-times"></i>{% trans 'remove' %}</a></li>
+          {% elif delete %}
+            <li><a onclick="return confirm('Are you sure delete this item?')" href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}"><i class="remove fa fa-times"></i>{% trans 'remove' %}</a></li>
+          {% endif %}
+
+          {% if extra_options %}
+            {% for option_url, option_title in extra_options %}
+              <li><a href="{{ option_url }}?next={{ current_path }}"><i class="set fa fa-cogs"></i>{{ option_title }}</a></li>
+            {% endfor %}
+          {% endif %}
+          <!-- Test URL -->
+          <li><a href="https://google.com"><i class="set fa fa-cogs"></i>Google</a></li>
+        </ul>
+      </i>
     </div>
 {% endif %}
-
