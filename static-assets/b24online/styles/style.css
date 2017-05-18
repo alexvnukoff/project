@@ -1875,6 +1875,7 @@ body .header-row .header-container .header .logout {
   padding: 15px 0 0 0;
   color: #333;
   position: absolute;
+  width: 88%;
   bottom: 0;
   font-size: 12px;
   font-weight: 100;
@@ -1882,6 +1883,9 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-goods .thumbnail.coupons .caption .media {
   margin-bottom: 0;
+  position: absolute;
+  bottom: 20px;
+  height: 95px;
 }
 .main-row .article-content .content-goods .thumbnail.coupons .caption .media a {
   margin-right: 3px;
@@ -1894,6 +1898,14 @@ body .header-row .header-container .header .logout {
   font-weight: 700;
   font-size: 13px;
   margin-top: 10px;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .caption .price-block {
+  position: absolute;
+  bottom: 40px;
+}
+.main-row .article-content .content-goods .thumbnail.coupons .caption .btn-block {
+  position: absolute;
+  bottom: 10px;
 }
 .main-row .article-content .content-goods .thumbnail.coupons .coupon-buy {
   width: 100%;
