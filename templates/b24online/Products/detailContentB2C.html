@@ -115,16 +115,17 @@
                 <br>
 
                 {% if paypal_form %}
+                  <a href="{{ item.company.get_absolute_url }}"><div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div></a>
+                {% else %}
                   <div>{% trans "Amount" %}</div>
-                  <div style="">{{ paypal_form.render }}</div>
-                  <input id="id_quantity_src" placeholder="{% trans "Amount" %}" type="text" class="text" />
+                  <input id="id_quantity_src" type="text" class="text" />
+                  <img class="paypal" src="https://images.paypal.com/images/x-click-but01.gif" alt="Buy now">
+                  <div>{{ paypal_form.render }}</div>
                   <script>
                   $("#id_quantity_src").keyup(function() {
-                      document.getElementById('id_quantity').value = this.value;
+                    document.getElementById('id_quantity').value = this.value;
                   });
                   </script>
-                {% else %}
-                  <a href="{{ item.company.get_absolute_url }}"><div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div></a>
                 {% endif %}
 
               </div>
