@@ -211,6 +211,12 @@ class UserSite(ActiveModelMixing, models.Model):
         return None
 
     @property
+    def facebook_pixel(self):
+        if self.metadata:
+            return self.metadata.get('facebook_pixel', '')
+        return None
+
+    @property
     def color(self):
         if self.color_template:
             return {

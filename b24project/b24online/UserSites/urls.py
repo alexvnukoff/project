@@ -4,7 +4,7 @@ from b24online.UserSites.views import (
     form_dispatch, UserTemplateView, TemplateUpdate, LandingPageView,
     DomainNameView, LanguagesView, ProductDeliveryView, SiteSloganView,
     FooterTextView, SiteLogoView, SliderImagesView, BannersView,
-    SocialLinksView, GAnalyticsView
+    SocialLinksView, GAnalyticsView, FacebookPixelView
     )
 
 from django.contrib.auth.decorators import login_required
@@ -65,4 +65,7 @@ urlpatterns = [
         login_required(GAnalyticsView.as_view()),
         name='google_analytics'),
 
+    url(r'facebook_pixel/$',
+        login_required(FacebookPixelView.as_view()),
+        name='facebook_pixel'),
 ]

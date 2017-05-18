@@ -18,7 +18,8 @@ from django.utils.translation import ugettext_lazy as _
 from b24online.UserSites.forms import (GalleryImageFormSet, SiteCreateForm,
     TemplateForm, LandingForm, CompanyBannerFormSet, ChamberBannerFormSet,
     DomainForm, LanguagesForm, ProductDeliveryForm, SiteSloganForm,
-    FooterTextForm, SiteLogoForm, SocialLinksForm, GAnalyticsForm)
+    FooterTextForm, SiteLogoForm, SocialLinksForm, GAnalyticsForm,
+    FacebookPixelForm)
 
 from usersites.models import (UserSite, ExternalSiteTemplate,
                 UserSiteTemplate, UserSiteSchemeColor, LandingPage)
@@ -564,5 +565,35 @@ class GAnalyticsView(SiteDispatch, UpdateView):
 
         if 'google_analytics' in form.changed_data:
             form.instance.metadata['google_analytics'] = form.cleaned_data['google_analytics']
+
+        return super().form_valid(form)
+
+
+
+class FacebookPixelView(SiteDispatch, UpdateView):
+    model = UserSite
+    form_class = FacebookPixelForm
+    template_name = 'b24online/UserSites/facebook_pixelForm.html'
+    success_url = reverse_lazy('site:main')
+
+    def get_object(self, queryset=None):
+        return self.site
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Facebook Pixel"
+        return context
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form['facebook_pixel'].errors)
+        return super().render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        if form.has_changed():
+            form.instance.updated_by = self.request.user
+            messages.add_message(self.request, messages.SUCCESS, _("Facebook Pixel has been saved!"))
+
+        if 'facebook_pixel' in form.changed_data:
+            form.instance.metadata['facebook_pixel'] = form.cleaned_data['facebook_pixel']
 
         return super().form_valid(form)

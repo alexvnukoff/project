@@ -17,9 +17,10 @@
 <input type="hidden" name="id" value="{{ form.initial.id }}">
 
         <div class="form-group">
-        <label>{% trans "Google Analytics code" %}</label>
-        <input type="text" name="google_analytics" placeholder="for example: UA-69005122-2" maxlength="30" class="text" style="width:60%;" value="{{ form.google_analytics.value|default_if_none:"" }}">
-        {% if form.errors.google_analytics %}<small class="error">{{ form.errors.google_analytics.0 }}</small>{% endif %}
+        <label>{% trans "Facebook Pixel code" %}</label>
+        <input type="text" name="facebook_pixel" placeholder="{% trans "Insert your pixel ID here" %}" maxlength="30" class="text" style="width:60%;" value="{{ form.facebook_pixel.value|default_if_none:"" }}">
+
+        {% if form.errors.facebook_pixel %}<small class="error">{{ form.errors.facebook_pixel.0 }}</small>{% endif %}
         </div>
 
         <div class="form-group">

@@ -252,3 +252,17 @@ class GAnalyticsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.initial['google_analytics'] = self.instance.google_analytics
+
+
+
+class FacebookPixelForm(forms.ModelForm):
+    class Meta:
+        model = UserSite
+        fields = ('id',)
+
+    facebook_pixel = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.initial['facebook_pixel'] = self.instance.facebook_pixel
