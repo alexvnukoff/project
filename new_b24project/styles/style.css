@@ -1010,12 +1010,6 @@ body .header-row {
 }
 body .header-row .header-container {
   height: 37px;
-  width: auto;
-}
-@media (min-width: 768px) {
-  body .header-row .header-container .header-container {
-    width: 800px;
-  }
 }
 body .header-row .header-container .header {
   margin-left: 0;
