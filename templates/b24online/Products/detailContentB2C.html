@@ -70,8 +70,11 @@
                 {% social_share item item.name %}
 
                 {% if paypal_form %}
-                  <div style="">{{ paypal_form.render }}</div>
-                  <input id="id_quantity_src" placeholder="{% trans "Amount" %}" type="text" class="text" />
+                  <div class="coupon-paypal col-md-4" style="margin-top: 15px">
+                    <div>{% trans "Amount" %}</div>
+                    <input id="id_quantity_src" type="text" class="quantity" />
+                    <div style="margin-top: 10px;">{{ paypal_form.render }}</div>
+                  </div>
                   <script>
                   $("#id_quantity_src").keyup(function() {
                       document.getElementById('id_quantity').value = this.value;
@@ -79,7 +82,7 @@
                   </script>
                 {% else %}
                   <a href="{{ item.company.get_absolute_url }}">
-                    <div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div>
+                    <div class="col-xs-12 contact-us-btn" style="top: -5px;">{% trans "Contact us" %}</div>
                   </a>
                 {% endif %}
 
