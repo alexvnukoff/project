@@ -1753,6 +1753,10 @@ body .header-row .header-container .header .logout {
   top: 8px;
   right: -7px;
 }
+.main-row .article-content .content-goods .b2b-elem .afisha {
+  top: 12px;
+  right: -2px;
+}
 .main-row .article-content .content-goods .dropdown-toggle {
   width: 10px;
   border: 18px solid transparent;
@@ -1761,35 +1765,35 @@ body .header-row .header-container .header .logout {
   position: absolute;
   right: -10px;
   top: -10px;
-  z-index: 999999;
+  z-index: 99;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha {
+.main-row .article-content .content-goods .afisha {
   position: absolute;
   color: #fff;
-  top: -14px;
-  right: -14px;
+  top: -6px;
+  right: -5px;
   font-size: 13px;
   cursor: pointer;
   z-index: 999;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha-dropdown {
+.main-row .article-content .content-goods .afisha-dropdown {
   position: absolute;
   right: -11px;
   top: -14px;
   background-color: #323232;
   padding: 0;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha-dropdown li {
+.main-row .article-content .content-goods .afisha-dropdown li {
   height: 30px;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha-dropdown li a {
+.main-row .article-content .content-goods .afisha-dropdown li a {
   color: #fff;
   left: 0;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha-dropdown li a:hover {
+.main-row .article-content .content-goods .afisha-dropdown li a:hover {
   background-color: #777;
 }
-.main-row .article-content .content-goods .dropdown-toggle .afisha-dropdown li a i {
+.main-row .article-content .content-goods .afisha-dropdown li a i {
   width: 20px;
   height: 20px;
   margin-right: 10px;
@@ -2228,35 +2232,35 @@ body .header-row .header-container .header .logout {
   position: absolute;
   right: -10px;
   top: -10px;
-  z-index: 999999;
+  z-index: 99;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha {
+.main-row .article-content .content-block .content .afisha {
   position: absolute;
   color: #fff;
-  top: -14px;
-  right: -14px;
+  top: -6px;
+  right: -5px;
   font-size: 13px;
   cursor: pointer;
   z-index: 999;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown {
+.main-row .article-content .content-block .content .afisha-dropdown {
   position: absolute;
   right: -11px;
   top: -14px;
   background-color: #323232;
   padding: 0;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li {
+.main-row .article-content .content-block .content .afisha-dropdown li {
   height: 30px;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a {
+.main-row .article-content .content-block .content .afisha-dropdown li a {
   color: #fff;
   left: 0;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a:hover {
+.main-row .article-content .content-block .content .afisha-dropdown li a:hover {
   background-color: #777;
 }
-.main-row .article-content .content-block .content .dropdown-toggle .afisha-dropdown li a i {
+.main-row .article-content .content-block .content .afisha-dropdown li a i {
   width: 20px;
   height: 20px;
   margin-right: 10px;
