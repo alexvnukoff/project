@@ -1533,9 +1533,15 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .coupon-product .b2c .social i.tw {
   background-position: -90px -60px;
 }
-.main-row .article-content .coupon-product .b2c .paypal {
-  cursor: pointer;
-  margin-top: 10px;
+.main-row .article-content .coupon-product .b2c .contact-us-btn {
+  margin-top: 15px;
+  height: 35px;
+  width: 152px;
+  text-align: center;
+  line-height: 35px;
+  font-size: 16px;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3c9bcb), color-stop(0.49, #3c9fc3), color-stop(0.5, #2186b8), color-stop(1, #2188bb));
+  color: #fff;
 }
 .main-row .article-content .banner {
   height: auto;

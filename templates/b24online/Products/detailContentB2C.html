@@ -78,7 +78,9 @@
                   });
                   </script>
                 {% else %}
-                  <a href="{{ item.company.get_absolute_url }}"><div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div></a>
+                  <a href="{{ item.company.get_absolute_url }}">
+                    <div class="col-xs-12 contact-us-btn">{% trans "Contact us" %}</div>
+                  </a>
                 {% endif %}
 
             </div>
