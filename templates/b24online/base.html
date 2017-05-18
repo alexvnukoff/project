@@ -152,7 +152,7 @@
                         {% if request.user.profile.avatar %}
                             <span><img class="avatar" src="{{ request.user.profile.avatar.th }}" alt="avatar"/></span>
                         {% else %}
-                            <span><div style="background:#d3d3d3;width:17px;height:17px;display:inline-block;vertical-align:middle;margin:0;border:1px solid #aeaeae;"></div></span>
+                            <span><div class="noavatar"></div></span>
                         {% endif %}
                     </a>
 

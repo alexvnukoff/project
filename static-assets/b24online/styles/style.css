@@ -1111,6 +1111,15 @@ body .header-row .header-container .header .avatar {
   margin-right: 5px;
   cursor: pointer;
 }
+body .header-row .header-container .header .noavatar {
+  background: #d3d3d3;
+  width: 17px;
+  height: 17px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  border: 1px solid #aeaeae;
+}
 body .header-row .header-container .header .person-name {
   position: relative;
   height: 18px;
@@ -1363,6 +1372,14 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .paginator {
   color: #777;
+}
+.main-row .article-content .paginator .total {
+  position: absolute;
+  margin-left: 20px;
+}
+.main-row .article-content .paginator .current-page {
+  font-weight: bolder;
+  margin-left: 8px;
 }
 .main-row .article-content .paginator a {
   margin-left: 10px;

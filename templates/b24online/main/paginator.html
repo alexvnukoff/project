@@ -3,15 +3,15 @@
 
 {% if is_paginated %}
     <div class="row paginator">
-        <div class="col-xs-5">{% trans "Total pages" %}: {{ page.paginator.num_pages }}</div>
+        <div class="total">{% trans "Total pages" %}: {{ page.paginator.num_pages }}</div>
 
-        <div class="col-xs-7">
+        <div class="text-center">
         {% if page.has_previous %}
                &larr; <a class="single-page" href="{% dynurl url_paginator url_parameter page.previous_page_number %}" >{% trans "Back" %}</a>
         {% endif %}
         {% for i in paginator_range %}
             {% ifequal i page.number %}
-                <span style="font-weight:bolder;margin-left:8px;">{{ page.number }}</span>
+                <span class="current-page">{{ page.number }}</span>
             {% else %}
                <a class="single-page" href="{% dynurl url_paginator url_parameter i %}">{{ i }}</a>
             {% endifequal %}
