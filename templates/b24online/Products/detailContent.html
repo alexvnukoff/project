@@ -7,26 +7,6 @@
 
 
 {% block content %}
-    <script type="text/javascript">
-      $(function() {
-         $(".goods-details-tab").tabs();
-      });
-
-      {% if form and form.has_companies %}
-      $(document).ready(
-          function() {
-              $('input:radio[name=customer_type]').change(function() {
-                  var value = $(this).val();
-                  if (value == 'person') {
-                      $('#id-customer-company-row').hide();
-                  } else {
-                      $('#id-customer-company-row').show();
-                  }
-              });
-          }
-      );
-      {% endif %}
-    </script>
 
   <div class="coupon-product">
     <div class="product">
@@ -55,80 +35,36 @@
               </div>
             </div>
 
-        <form action="" method="post">{% csrf_token %}
-
             <div class="col-xs-4" style="left:-20px;">
-              <fieldset class="customer-fieldset">
-
-                <legend class="title-legend">{% trans "Select customer" %}</legend>
-                <div class="control-group">
-
-                    {% if form.customer_type.is_hidden %}
-                      {{ form.customer_type }}
-                      <label>{% trans 'Customer' %}:</label>
-                      <p>{{ request.user }}</p>
-
-                    {% else %}
-
-                      <label>{{ form.customer_type.label }}:</label>
-                      <p>{{ form.customer_type }}</p>
-                    {% endif %}
-
-                    {% if form.is_bound and form.customer_type.errors %}
-                      <p class="errors">{{ form.customer_type.errors|striptags }}</p>
-                    {% endif %}
-
-                </div>
-              </fieldset>
-
-              {% if form.has_companies %}
                 <ul>
-                  <li id="id-customer-company-row" style="display: none;">
-                    <label>{{ form.customer_organization.label }}:</label>
-                    <p>{{ form.customer_organization }}</p>
-                    {% if form.is_bound and form.customer_organization.errors %}
-                      <p class="errors">{{ form.customer_organization.errors|striptags }}</p>
+                    <li>
+                    <label>{% trans "Price" %}:</label>
+                    <p>
+                        {% if item.cost %}
+                             {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
+                        {% else %}
+                             {% trans 'Get price' %}
+                        {% endif %}
+                    </p>
+                    </li>
+
+                    {% if item.measurement_unit %}
+                    <li>
+                        <label>{% trans 'Unit' %}:</label>
+                            <p>{{ item.get_measurement_unit_display }}</p>
+                        </li>
                     {% endif %}
-                  </li>
+                    <li>
+                        <label>{% trans 'Amount' %}:</label>
+                        <input type="text" name="" value="" class="text" style="width:60%;" />
+                    </li>
+
+                    <li>
+                        <a class="btn btn-primary" href="{{ item.company.get_absolute_url }}" >{% trans 'Contact us' %}</a>
+                    </li>
                 </ul>
-              {% endif %}
-
-              <fieldset class="customer-fieldset">
-                <legend class="title-legend">{% trans "Quantity" %}</legend>
-                <div class="control-group">
-                  <label class="control-label input-label">{% trans "Product price" %}:</label>
-                  <p class="price">{% trans "Contact for price" %}</p>
-                  <p class="quantity">{% trans "Quantity" %}:</p>
-
-                  {% if item.cost and item.cost > 0 %}
-                    {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
-                  {% else %}
-                    {% trans "Contact for price" %}
-                  {% endif %}
-
-                <label>{{ form.quantity.label }}:</label>
-                <p>{{ form.quantity }}</p>
-                {% if form.is_bound and form.quantity.errors %}
-                  <p class="errors">{{ form.quantity.errors|striptags }}</p>
-                {% endif %}
-
-                  {% comment %}
-                  <div class="spinner">
-                    <div class="input-group number-spinner">
-                      <span class="input-group-btn">
-                        <button class="btn btn-default" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button>
-                      </span>
-                      <input type="text" class="form-control text-center" value="1">
-                      <span class="input-group-btn">
-                        <button class="btn btn-default" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button>
-                      </span>
-                    </div>
-                  </div>
-                {% endcomment %}
-
-                </div>
-              </fieldset>
             </div>
+
             <div class="col-xs-4 contacts product">
               <a href="{{ item.company.get_absolute_url }}" class="event-title pull-left"><div class="thumb-flag-block pull-left sprite-flags {{ item.company.country.flag }}"></div>{{ item.company.name }}</a>
 
@@ -174,13 +110,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-xs-4 col-xs-offset-4">
-            <input type="submit" name="save" class="btn basket" value="{% trans 'To basket' %}" />
-            </div>
-
           </div>
         </div>
-        </form>
       </div>
     </div>
   </div>

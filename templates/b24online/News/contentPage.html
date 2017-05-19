@@ -42,7 +42,7 @@
                     {{ news.content|safe|truncatewords_html:"30" }}
                 {% endif %}
             </div>
-            <div class="more pull-right"><a href="#">{% trans 'Read more' %}...</a></div>
+            <div class="more pull-right"><a href="{{ news.get_absolute_url }}">{% trans 'Read more' %}...</a></div>
           </div>
         </div>
       </div>
