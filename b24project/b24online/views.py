@@ -21,7 +21,8 @@ from appl import func
 from b24online.Leads.utils import GetLead
 from b24online.forms import EditorImageUploadForm, FeedbackForm
 from b24online.models import (Chamber, B2BProduct, Greeting, BusinessProposal,
-                    Exhibition, Organization, Branch, User)
+                    Exhibition, Organization, Branch, Profile, News, BusinessProposal)
+from centerpokupok.models import B2CProduct
 
 logger = logging.getLogger(__name__)
 
@@ -323,13 +324,48 @@ def feedback_form(request):
 
 
 def get_profile_card(request, user_id):
-    obj = get_object_or_404(User, pk=user_id)
+    obj = get_object_or_404(Profile, user=user_id)
+    promote_news = None
+    promote_b2c = None
+    promote_b2b = None
+    promote_bproposal = None
+
+    if obj.promote_news:
+        try:
+            promote_news = News.objects.get(pk=int(obj.promote_news))
+        except News.DoesNotExist:
+            pass
+
+    if obj.promote_b2b:
+        try:
+            promote_b2b = B2BProduct.objects.get(pk=obj.promote_b2b)
+        except B2BProduct.DoesNotExist:
+            pass
+
+    if obj.promote_b2c:
+        try:
+            promote_b2c = B2CProduct.objects.get(pk=obj.promote_b2c)
+        except B2CProduct.DoesNotExist:
+            pass
+
+    if obj.promote_bproposal:
+        try:
+            promote_bproposal = BusinessProposal.objects.get(pk=obj.promote_bproposal)
+        except BusinessProposal.DoesNotExist:
+            pass
+
     return render(request,
-        'b24online/Profile/Public/contentPage.html', {'object': obj})
+        'b24online/Profile/Public/contentPage.html', {
+        'object': obj,
+        'promote_news': promote_news,
+        'promote_b2c': promote_b2c,
+        'promote_b2b': promote_b2b,
+        'promote_bproposal': promote_bproposal,
+        })
 
 
 def get_profile_vcard(request, user_id):
-    obj = get_object_or_404(User, pk=user_id)
+    obj = get_object_or_404(Profile, user=user_id)
     return render(request,
         'b24online/Profile/Public/vCard.vcf',
         {'object': obj}, content_type='text/x-vcard')

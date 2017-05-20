@@ -50,6 +50,15 @@
                     </a>
                 </div>
             {% endif %}
+
+            {% if top_type == 'b2bproduct' or top_type == 'b2cproduct' or top_type == 'news' or top_type == 'businessproposal' or top_type == 'news' %}
+            <div class="tender-action">
+                <i class="imgnews sett icon-action"></i>
+                <a href="{% url 'profile:promote' top_type obj.id %}?next={{ current_path }}">
+                    <span class="deletext">{% trans "Promote to BC" %}</span>
+                </a>
+            </div>{% endif %}
+
             {% if extra_options %}
                 {% for option_url, option_title in extra_options %}
                  <div class="tender-action">

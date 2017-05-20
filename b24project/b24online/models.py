@@ -1422,6 +1422,30 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
             return self.metadata.get('co_fax', '')
         return None
 
+    @property
+    def promote_b2b(self):
+        if self.metadata:
+            return self.metadata.get('promote_b2b', '')
+        return None
+
+    @property
+    def promote_b2c(self):
+        if self.metadata:
+            return self.metadata.get('promote_b2c', '')
+        return None
+
+    @property
+    def promote_bproposal(self):
+        if self.metadata:
+            return self.metadata.get('promote_bproposal', '')
+        return None
+
+    @property
+    def promote_news(self):
+        if self.metadata:
+            return self.metadata.get('promote_news', '')
+        return None
+
 
 class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)

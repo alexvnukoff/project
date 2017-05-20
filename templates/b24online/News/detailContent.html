@@ -31,39 +31,6 @@
             {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }}, <a href="{{ item.organization.get_absolute_url }}" title="{{ item.organization.name }}">{{ item.organization.name }}</a>
             {% for category in item.categories.all %} {{ category.name }}{% endfor %}
         </p>
-                          <!-- Яндекс.Директ -->
-                    <div id="yandex_ad"></div>
-                    <script type="text/javascript">
-                    (function(w, d, n, s, t) {
-                        w[n] = w[n] || [];
-                        w[n].push(function() {
-                            Ya.Direct.insertInto(126256, "yandex_ad", {
-                                stat_id: 1,
-                                ad_format: "direct",
-                                font_size: 1,
-                                type: "horizontal",
-                                border_type: "ad",
-                                limit: 3,
-                                title_font_size: 3,
-                                site_bg_color: "FFFFFF",
-                                header_bg_color: "FEEAC7",
-                                border_color: "FBE5C0",
-                                title_color: "0000CC",
-                                url_color: "006600",
-                                text_color: "000000",
-                                hover_color: "0066FF",
-                                favicon: true,
-                                no_sitelinks: false
-                            });
-                        });
-                        t = d.getElementsByTagName("script")[0];
-                        s = d.createElement("script");
-                        s.src = "//an.yandex.ru/system/context.js";
-                        s.type = "text/javascript";
-                        s.async = true;
-                        t.parentNode.insertBefore(s, t);
-                    })(window, document, "yandex_context_callbacks");
-                    </script>
 
                     <div class="content-news">
                         <div class="gallery">
@@ -85,40 +52,7 @@
                         <p>{{ item.content|cleanHtml|safe }} </p>
                     </div>
                     {% b2b_social_buttons  item.image item.title item.content %}
-                    <!-- Яндекс.Директ -->
-                    <div id="yandex_ad2"></div>
-                    <script type="text/javascript">
-                    (function(w, d, n, s, t) {
-                        w[n] = w[n] || [];
-                        w[n].push(function() {
-                            Ya.Direct.insertInto(126256, "yandex_ad2", {
-                                stat_id: 2,
-                                ad_format: "direct",
-                                font_size: 1,
-                                type: "horizontal",
-                                border_type: "block",
-                                limit: 3,
-                                title_font_size: 3,
-                                border_radius: true,
-                                site_bg_color: "FFFFFF",
-                                header_bg_color: "FEEAC7",
-                                border_color: "FBE5C0",
-                                title_color: "0000CC",
-                                url_color: "006600",
-                                text_color: "000000",
-                                hover_color: "0066FF",
-                                favicon: true,
-                                no_sitelinks: false
-                            });
-                        });
-                        t = d.getElementsByTagName("script")[0];
-                        s = d.createElement("script");
-                        s.src = "//an.yandex.ru/system/context.js";
-                        s.type = "text/javascript";
-                        s.async = true;
-                        t.parentNode.insertBefore(s, t);
-                    })(window, document, "yandex_context_callbacks");
-                    </script>
+
                     {% if item.video_code %}
                     <div class="video-details">
                         <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>

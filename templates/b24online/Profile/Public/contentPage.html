@@ -1,34 +1,35 @@
 {% extends "b24online/Profile/Public/base.html" %}
 {% load static %}
 {% load i18n %}
-
-<title>{% block title %}{{ object.profile }}{% endblock %}</title>
+{% load CustomFilters %}
+{% load humanize %}
+<title>{% block title %}{{ object }}{% endblock %}</title>
 
 {% block header %}
-        <meta name="description" content="{{ object.profile.profession }}"/>
+        <meta name="description" content="{{ object.profession }}"/>
         <meta name="url" content="https://b24online.com/"/>
-        <meta name="title" content="{{ object.profile }}"/>
-        {% if object.profile.avatar %}
-        <meta name="image" content="{{ object.profile.avatar.small }}"/>
+        <meta name="title" content="{{ object }}"/>
+        {% if object.avatar %}
+        <meta name="image" content="{{ object.avatar.small }}"/>
         {% else %}
         <meta name="image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>
         {% endif %}
 
-        <meta name="og:description" content="{{ object.profile.profession }}"/>
+        <meta name="og:description" content="{{ object.profession }}"/>
         <meta name="og:url" content="https://b24online.com/"/>
-        <meta name="og:title" content="{{ object.profile }}"/>
-        {% if object.profile.avatar %}
-        <meta name="og:image" content="{{ object.profile.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
+        <meta name="og:title" content="{{ object }}"/>
+        {% if object.avatar %}
+        <meta name="og:image" content="{{ object.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
 
-        <meta property="og:title" content="{{ object.profile }}" />
-        <meta property="og:description" content="{{ object.profile.profession }}" />
-        {% if object.profile.avatar %}<meta property="og:image:secure_url" itemprop="image" content="{{ object.profile.avatar.small }}">{% else %}<meta property="og:image:secure_url" itemprop="image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}">{% endif %}
+        <meta property="og:title" content="{{ object }}" />
+        <meta property="og:description" content="{{ object.profession }}" />
+        {% if object.avatar %}<meta property="og:image:secure_url" itemprop="image" content="{{ object.avatar.small }}">{% else %}<meta property="og:image:secure_url" itemprop="image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}">{% endif %}
         <meta property="og:type" content="website" />
 
-        <meta name="og:description" content="{{ object.profile.profession }}"/>
+        <meta name="og:description" content="{{ object.profession }}"/>
         <meta name="og:url" content="https://b24online.com/"/>
-        <meta name="og:title" content="{{ object.profile }}"/>
-        {% if object.profile.avatar %}<meta name="og:image" content="{{ object.profile.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
+        <meta name="og:title" content="{{ object }}"/>
+        {% if object.avatar %}<meta name="og:image" content="{{ object.avatar.small }}"/>{% else %}<meta name="og:image" content="https://{{ site }}{% static 'b24online/img/avatar_blank.png' %}"/>{% endif %}
         <meta name="og:type" content="website" />
 
 {% endblock %}
@@ -36,7 +37,7 @@
 {% block content %}
 
 <style>
-
+{% if LANGUAGE_BIDI %}html {direction:rtl;}{% else %}html {direction:ltr;}{% endif %}
 a.main-button {
 display: inline-block;
 margin:10px 0 20px 0;
@@ -90,73 +91,143 @@ a span.ophover:hover {
 opacity:0.8;
 }
 
+
+.b2b-product {opacity:1;padding:15px 0;}
+.b2b-product:hover {opacity:0.9;background:#f1f1f1;}
+.b2b-product-link:hover {text-decoration:none;}
+
 </style>
 
 <div class="container-fluid" style="border-top:1px solid #dedede;">
 
   <div class="row">
     <div class="col-lg-12" style="text-align:center">
-        {% if object.profile.avatar %}
-      <img src="{{ object.profile.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede;">
+        {% if object.avatar %}
+      <img src="{{ object.avatar.small }}" style="margin-top:-55px;border:1px solid #dedede;">
       {% else %}
       <img src="{% static 'b24online/img/avatar_blank.png' %}" style="margin-top:-55px;border:1px solid #dedede;">
       {% endif %}
-      <h1 style="margin:15px 0 0 0;">{{ object.profile }}</h1>
+      <h1 style="margin:15px 0 0 0;">{{ object }}</h1>
       {% comment %}<p style="margin:0;color:#848484;">{{ object.profile.country }}</p>{% endcomment %}
-      <h3 style="margin:0 0 3px 0;color:#828282;font-weight:300;">{{ object.profile.profession }}</h3>
+      <h3 style="margin:0 0 3px 0;color:#828282;font-weight:300;">{{ object.profession }}</h3>
 
-      {% if object.profile.facebook %}<a href="{{ object.profile.facebook }}" rel="nofollow" target="_blank"><span class="ophover icon-facebook-official"></span></a>{% endif %}
-      {% if object.profile.linkedin %}<a href="{{ object.profile.linkedin }}" rel="nofollow" target="_blank"><span class="ophover icon-linkedin-squared"></span></a>{% endif %}
-          {% if object.profile.twitter %}<a href="{{ object.profile.twitter }}" rel="nofollow" target="_blank"><span class="ophover icon-twitter"></span></a>{% endif %}
-          {% if object.profile.instagram %}<a href="{{ object.profile.instagram }}" rel="nofollow" target="_blank"><span class="ophover icon-instagram"></span></a>{% endif %}
-          {% if object.profile.gplus %}<a href="{{ object.profile.gplus }}" rel="nofollow" target="_blank"><span class="ophover icon-gplus"></span></a>{% endif %}
-          {% if object.profile.vkontakte %}<a href="{{ object.profile.vkontakte }}" rel="nofollow" target="_blank"><span class="ophover icon-vkontakte"></span></a>{% endif %}
-          {% if object.profile.odnoklassniki %}<a href="{{ object.profile.odnoklassniki }}" rel="nofollow" target="_blank"><span class="ophover icon-odnoklassniki"></span></a>{% endif %}
-          {% if object.profile.youtube %}<a href="{{ object.profile.youtube }}" rel="nofollow" target="_blank"><span class="ophover icon-youtube-play"></span></a>{% endif %}
+      {% if object.facebook %}<a href="{{ object.facebook }}" rel="nofollow" target="_blank"><span class="ophover icon-facebook-official"></span></a>{% endif %}
+      {% if object.linkedin %}<a href="{{ object.linkedin }}" rel="nofollow" target="_blank"><span class="ophover icon-linkedin-squared"></span></a>{% endif %}
+          {% if object.twitter %}<a href="{{ object.twitter }}" rel="nofollow" target="_blank"><span class="ophover icon-twitter"></span></a>{% endif %}
+          {% if object.instagram %}<a href="{{ object.instagram }}" rel="nofollow" target="_blank"><span class="ophover icon-instagram"></span></a>{% endif %}
+          {% if object.gplus %}<a href="{{ object.gplus }}" rel="nofollow" target="_blank"><span class="ophover icon-gplus"></span></a>{% endif %}
+          {% if object.vkontakte %}<a href="{{ object.vkontakte }}" rel="nofollow" target="_blank"><span class="ophover icon-vkontakte"></span></a>{% endif %}
+          {% if object.odnoklassniki %}<a href="{{ object.odnoklassniki }}" rel="nofollow" target="_blank"><span class="ophover icon-odnoklassniki"></span></a>{% endif %}
+          {% if object.youtube %}<a href="{{ object.youtube }}" rel="nofollow" target="_blank"><span class="ophover icon-youtube-play"></span></a>{% endif %}
 
     </div>
 
   <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top:10px;padding-bottom:10px;margin-bottom:10px;border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
     <div class="col-lg-12" style="margin-top:15px;text-align:center;">
 
-        {% if object.profile.co_name %}
+        {% if object.co_name %}
 
-            {% if object.profile.image %}
-                <img src="{{ object.profile.image.small }}" style="width:100px;margin-bottom:4px;border:1px solid #dedede">
+            {% if object.image %}
+                <img src="{{ object.image.small }}" style="width:100px;margin-bottom:4px;border:1px solid #dedede">
             {% endif %}
 
-            <h3 style="text-align:center;margin:0;padding:0;">{{ object.profile.co_name }}</h3>
-            {% if object.profile.co_slogan %}<p style="margin:0;color:#828282">{{ object.profile.co_slogan }}</p>{% endif %}
+            <h3 style="text-align:center;margin:0;padding:0;">{{ object.co_name }}</h3>
+            {% if object.co_slogan %}<p style="margin:0;color:#828282">{{ object.co_slogan }}</p>{% endif %}
 
-            {% if object.profile.co_phone %}
+            {% if object.co_phone %}
             <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Company' %}</h4>
-            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_phone }}">{{ object.profile.co_phone }}</a></p>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.co_phone }}">{{ object.co_phone }}</a></p>
             {% endif %}
 
-            {% if object.profile.co_fax %}
+            {% if object.co_fax %}
             <h4 style="text-align:center;margin:10px 0 5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Fax' %}</h4>
-            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.profile.co_fax }}">{{ object.profile.co_fax }}</a></p>
+            <p style="margin:5px 0 10px 0;"><a href="tel:{{ object.co_fax }}">{{ object.co_fax }}</a></p>
             {% endif %}
 
-            {% if object.profile.co_description %}{{ object.profile.co_description|linebreaks }}{% endif %}
+            {% if object.co_description %}{{ object.co_description|linebreaks }}{% endif %}
         {% endif %}
 
-        {% if object.profile.site %}
+        {% if object.site %}
         <h4 style="text-align:center;margin:5px 0;color:#828282;"><i class="icon-globe"></i>{% trans 'Site' %}</h4>
-        <p style="margin:5px 0 15px 0;"><a href="{{ object.profile.site }}">{{ object.profile.site }}</a></p>
+        <p style="margin:5px 0 15px 0;"><a href="{{ object.site }}">{{ object.site }}</a></p>
         {% endif %}
 
-        {% if object.profile.mobile_number %}
+        {% if object.mobile_number %}
         <h4 style="text-align:center;margin:5px 0;color:#828282;"><i class="icon-phone-squared"></i>{% trans 'Phone' %}</h4>
-        <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.profile.mobile_number }}">{{ object.profile.mobile_number }}</a></p>
+        <p style="margin:5px 0 15px 0;"><a href="tel:{{ object.mobile_number }}">{{ object.mobile_number }}</a></p>
         {% endif %}
 
-        <a href="mailto:{{ object.email }}" class="main-button">{% trans 'Send Email' %}</a>&nbsp;
-        <a href="{% url 'get_profile_vcard' object.id %}" download="{{ object.get_full_name }}" class="main-button">{% trans 'Save vCard' %}</a>
+        <a href="mailto:{{ object.user.email }}" class="main-button">{% trans 'Send Email' %}</a>&nbsp;
+        <a href="{% url 'get_profile_vcard' object.user.id %}" download="{{ object.user.get_full_name }}" class="main-button">{% trans 'Save vCard' %}</a>
 
-        {% if object.profile.contacts %}
+        {% if object.contacts %}
         <h4 style="margin:5px 0;color:#828282;"><i class="icon-location"></i>{% trans 'Address' %}</h4>
-        <p style="margin:5px 0 15px 0;">{{ object.profile.contacts }}</p>
+        <p style="margin:5px 0 15px 0;">{{ object.contacts }}</p>
+        {% endif %}
+
+        {% if promote_b2b %}
+        <hr>
+        <h4 style="margin:10px 0;color:#828282;">{% trans 'Product' %}{% if request.user == object.user %} <span style="font-size:12px;">(<i class="icon-trash-empty"></i><a onclick="return confirm('Are you sure delete this item?')" href="{% url 'profile:promote_del' 'b2bproduct' %}?next={{ request.path }}">{% trans "delete" %}</a>)</span>{% endif %}</h4>
+          <a href="{{ promote_b2b.get_absolute_url }}" class="b2b-product-link">
+            <div class="b2b-product">
+              <p>{{ promote_b2b.name }}</p>
+              {% if promote_b2b.image %}
+                <img src="{{ promote_b2b.image.small }}" alt="{{ promote_b2b.name }}" style="width:100px;border:1px solid #dedede" title="{{ promote_b2b.name }}" />
+              {% endif %}
+                <div class="price">
+                    {% if promote_b2b.cost %}
+                        {{ promote_b2b.currency|getSymbol }} <strong style="font-size:16px;">{{ promote_b2b.cost|formatPrice }}</strong>
+                    {% else %}
+                        {% trans 'Contact to price' %}
+                    {% endif %}
+                </div>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if promote_b2c %}
+        <hr>
+        <h4 style="margin:10px 0;color:#828282;">{% trans 'Product' %}{% if request.user == object.user %} <span style="font-size:12px;">(<i class="icon-trash-empty"></i><a onclick="return confirm('Are you sure delete this item?')" href="{% url 'profile:promote_del' 'b2cproduct' %}?next={{ request.path }}">{% trans "delete" %}</a>)</span>{% endif %}</h4>
+          <a href="{{ promote_b2c.get_absolute_url }}" class="b2b-product-link">
+            <div class="b2b-product">
+              <p{% if promote_b2c.is_coupon %} style="color:#d41e2e" {% endif %}>{{ promote_b2c.name }}</p>
+              {% if promote_b2c.image %}
+                <img src="{{ promote_b2c.image.small }}" alt="{{ promote_b2c.name }}" {% if promote_b2c.is_coupon %} style="width:100px;border:1px solid #d41e2e" {% else %}style="width:100px;border:1px solid #dedede"{% endif %} title="{{ promote_b2b.name }}" />
+              {% endif %}
+                <div class="price"{% if promote_b2c.is_coupon %} style="color:#d41e2e" {% endif %}>
+                    {% if promote_b2c.cost %}
+                        {% if promote_b2c.is_coupon %}
+                        <span style="font-size:12px;color:#848484;display:block;margin-top:5px;"><strike>{{ promote_b2c.currency|getSymbol }}{{ promote_b2c.cost|formatPrice }}</strike> ({{ promote_b2c.coupon_discount_percent|intword }}% off)</span>
+                        {% endif %}
+                        {{ promote_b2c.currency|getSymbol }} <strong style="font-size:16px;">{{ promote_b2c.cost|formatPrice }}</strong>
+
+                    {% else %}
+                        {% trans 'Contact to price' %}
+                    {% endif %}
+                </div>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if promote_bproposal %}
+          <hr>
+          <h4 style="margin:10px 0;color:#828282;">{% trans 'Business Proposal' %}{% if request.user == object.user %} <span style="font-size:12px;">(<i class="icon-trash-empty"></i><a onclick="return confirm('Are you sure delete this item?')" href="{% url 'profile:promote_del' 'businessproposal' %}?next={{ request.path }}">{% trans "delete" %}</a>)</span>{% endif %}</h4>
+          <p style="margin:5px 0 5px 0;font-size:12px;font-weight:bold;"><a href="{{ promote_bproposal.organization.get_absolute_url }}" target="_blank" style="color:#555">{{ promote_bproposal.organization.name }}</a></p>
+          <a href="{{ promote_bproposal.get_absolute_url }}">{% trans 'Read more' %}...</a>
+        {% endif %}
+
+        {% if promote_news %}
+          <hr>
+          <h4 style="margin:10px 0;color:#828282;">{% trans 'News' %}{% if request.user == object.user %} <span style="font-size:12px;">(<i class="icon-trash-empty"></i><a onclick="return confirm('Are you sure delete this item?')" href="{% url 'profile:promote_del' 'news' %}?next={{ request.path }}">{% trans "delete" %}</a>)</span>{% endif %}</h4>
+          <a href="{{ promote_news.get_absolute_url }}" class="name">{{ promote_news.title }}</a>
+          <p style="margin:5px 0;color:#949494;font-size:12px;">{{ promote_news.created_at|date:'d M Y' }}</p>
+            {% if promote_news.short_description %}
+                {{ promote_news.short_description|linebreaks|safe }}
+            {% else %}
+                {{ promote_news.content|safe|truncatewords_html:"30" }}
+            {% endif %}
+
+          <a href="{{ promote_news.get_absolute_url }}">{% trans 'Read more' %}...</a>
         {% endif %}
 
     </div>

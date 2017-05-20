@@ -188,6 +188,7 @@ def set_context_menu(context, obj, **kwargs):
         'top_perm': top_perm,
         'top_type': model_name.lower(),
         'obj': obj,
+        'request': request,
         'url_namespace': url_namespace,
         'current_path': current_path,
         'set_current': set_current,
@@ -296,7 +297,6 @@ def companyMenuB2C(context, company, menu):
         'MEDIA_URL': MEDIA_URL,
         'user': request.user
     }
-
 
 @register.inclusion_tag("b24online/Products/slider.html")
 def products_banner_slider():

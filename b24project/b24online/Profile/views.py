@@ -6,13 +6,15 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from b24online.models import Profile
 from b24online.Profile.forms import ProfileForm, AvatarForm, ImageForm
 from b24online.cbv import ItemUpdate
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404, HttpResponseRedirect
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 
 
 class ProfileView(ItemUpdate):
@@ -138,3 +140,70 @@ class ChangePassword(FormView):
         update_session_auth_hash(self.request, form.user)
         return super(ChangePassword, self).form_valid(form)
 
+
+@login_required
+def ProfilePromote(request, type, item_id):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.ObjectDoesNotExist:
+        raise Http404
+
+    redirect = request.GET.get('next', None)
+    cahnges = False
+
+    if type == 'news':
+        profile.metadata['promote_news'] = item_id
+        cahnges = True
+        field = "News"
+    elif type == 'b2bproduct':
+        profile.metadata['promote_b2b'] = item_id
+        cahnges = True
+        field = "B2B Product"
+    elif type == 'b2cproduct':
+        profile.metadata['promote_b2c'] = item_id
+        cahnges = True
+        field = "B2C Product"
+    elif type == 'businessproposal':
+        profile.metadata['promote_bproposal'] = item_id
+        cahnges = True
+        field = "Business Proposal"
+    else:
+        pass
+
+    if cahnges:
+        context = mark_safe(_("New Promote for <strong>{}</strong> has been saved!").format(field))
+        messages.add_message(request, messages.SUCCESS, context)
+        profile.save()
+
+    if redirect:
+        return HttpResponseRedirect(redirect)
+    else:
+        return HttpResponseRedirect('/')
+
+
+@login_required
+def PromoteDel(request, type):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.ObjectDoesNotExist:
+        raise Http404
+
+    redirect = request.GET.get('next', None)
+
+    if type == 'news':
+        profile.metadata['promote_news'] = None
+    elif type == 'b2bproduct':
+        profile.metadata['promote_b2b'] = None
+    elif type == 'b2cproduct':
+        profile.metadata['promote_b2c'] = None
+    elif type == 'businessproposal':
+        profile.metadata['promote_bproposal'] = None
+    else:
+        raise Http404
+
+    profile.save()
+
+    if redirect:
+        return HttpResponseRedirect(redirect)
+    else:
+        return HttpResponseRedirect('/')

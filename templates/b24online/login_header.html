@@ -6,6 +6,16 @@
 <script type="text/javascript">if (window.location.hash == '#_=_') { window.location.hash = '';}</script>
 <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/bootstrap-scoped.css' %}" />
 
+{% if not '/site/' in request.path %}
+<script>setTimeout(function() {$('.notification-section').slideUp('fast');}, 2500);</script>
+<style>
+.notification-section {display:block;margin:0;padding:0;text-align:center;}
+.notification-success {display:block;color:#3c763d;background:#dff0d8;border:1px solid #d6e9c6;margin:0;padding:15px;font-size:14px;}
+.notification-error {display:block;color:#a94442;background:#f2dede;border:1px solid #ebccd1;margin:0;padding:15px;font-size:14px;}
+</style>
+{% include "b24online/UserSites/includes/notifications.html" %}
+{% endif %}
+
 <div class="tophead">
 
 	<div class="news">
@@ -17,9 +27,7 @@
       <div class="tophead-center">
       </div>
 
-
     <div class="tophead-r">
-
       <div class="geolocation-navi">
         <a href="/wall/" title="Geolocation"><span class="icon-location"></span></a>
       </div>

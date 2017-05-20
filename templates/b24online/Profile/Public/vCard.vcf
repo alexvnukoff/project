@@ -1,15 +1,15 @@
 {% load i18n %}{% load CustomFilters %}{% get_card_url request as the_card %}BEGIN:VCARD
-N:{{ object.profile.last_name }};{{ object.profile.first_name }};;;
-FN:{{ object.get_full_name }}
+N:{{ object.last_name }};{{ object.first_name }}
+FN:{{ object.user.get_full_name }}
 EMAIL;type=INTERNET;type=pref:{{ object.email }}
-ORG:{{ object.profile.co_name }}
-TEL;type=CELL;type=VOICE;type=pref:{{ object.profile.mobile_number }}
-TEL;FAX;WORK:{{ object.profile.co_phone }}
-TEL;WORK:{{ object.profile.co_phone }}
-TITLE:{{ object.profile.profession }}
-URL;WORK:{{ object.profile.site }}
+ORG:{{ object.co_name }}
+TEL;type=CELL;type=VOICE;type=pref:{{ object.mobile_number }}
+TEL;FAX;WORK:{{ object.co_phone }}
+TEL;WORK:{{ object.co_phone }}
+TITLE:{{ object.profession }}
+URL;WORK:{{ object.site }}
 URL:{{ the_card }}id{{ object.id }}/
-{% if object.profile.avatar %}{% with obj=object.profile.avatar.small|get_as_base64 %}PHOTO;ENCODING=b;TYPE={{ obj.avatar_content_type }}:{{ obj.avatar_url }}{% endwith %}{% endif %}END:VCARD
+{% if object.avatar %}{% with obj=object.avatar.small|get_as_base64 %}PHOTO;ENCODING=b;TYPE={{ obj.avatar_content_type }}:{{ obj.avatar_url }}{% endwith %}{% endif %}END:VCARD
 
 
 
