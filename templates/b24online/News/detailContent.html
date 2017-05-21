@@ -1,0 +1,117 @@
+{% extends 'b24online/main_detail_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load humanize %}
+
+
+{% block content %}
+
+    <div class="article col-xs-6">
+      <div class="row">
+        <div class="article-content col-xs-12">
+          <div class="content-block">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="row">
+                  <div class="container content details clear-bgc">
+                    <div class="title">{% if item.video_code %}<i class="fa fa-youtube-play"></i>{% endif %}{{ item.title }}</div>
+                    <div class="col-xs-8">
+
+                      <div class="row">
+                        {% if item.country %}
+                            <div class="thumb-flag-block pull-left sprite-flags {{ item.country.flag }}"></div>
+                        {% elif item.organization %}
+                            <div class="thumb-flag-block pull-left sprite-flags {{ item.organization.flag }}"></div>
+                        {% endif %}
+
+                        <div class="date pull-left">{% if item.country %}{{ item.country.name }}, {% endif %}{{ item.created_at|date:"d M Y" }}</div>
+                        <a class="link pull-left" href="{{ item.organization.get_absolute_url }}" title="{{ item.organization.name }}">{{ item.organization.name }}</a>
+                        {% for category in item.categories.all %} {{ category.name }}{% endfor %}
+                      </div>
+                    </div>
+
+                    <div class="col-xs-12 media-content">
+                      <div class="media">
+                        <a class="pull-left" href="#">
+                          <div class="thumb-container">
+
+                              {% if item.image %}
+                              <img class="media-object thumb-img" src="{{ item.image.big }}" alt="{{ item.title }}" title="{{ item.title }}" />
+                              {% else %}
+                              <img class="media-object thumb-img" src="{% static 'b24online/images/400x400.png' %}" alt="{{ item.title|truncatechars:40 }}" />
+                              {% endif %}
+
+                          </div>
+                        </a>
+
+                        <div id="thumbs">
+                           {% for gallery in item.galleries.all %}
+                            {% for gallery_item in gallery.gallery_items.all %}
+                                <img src="{{ gallery_item.image.big }}" alt="" />
+                            {% endfor %}
+                           {% endfor %}
+                        </div>
+
+                        <div class="media-body">
+                          {{ item.content|cleanHtml|safe }}
+                        </div>
+
+                    {% if item.video_code %}
+                    <div class="video-details">
+                        <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    {% endif %}
+
+                      </div>
+                    </div>
+                    <div class="social pull-left">
+                        {% social_share item item.title %}
+                    </div>
+
+                    <div class="fb-comments" data-href="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ request.path }}" data-width="100%" data-numposts="5"></div>
+
+
+                    <div class="news-similar">
+                      <div class="title">{% trans 'Similar news' %}</div>
+
+                      {% for news in similarNews %}
+                      <div class="col-xs-4">
+                        <div class="thumbnail news">
+                          <div class="thumbnail-container">
+                            <div class="thumb-container pull-left">
+                                {% if news.image %}
+                                    <img src="{{ news.image.big }}" alt="{{ news.title }}" title="{{ news.title }}" class="thumb-img" />
+                                {% else %}
+                                    <img src="{% static 'b24online/img/news.jpg' %}" alt="" class="thumb-img" />
+                                {% endif %}
+                            </div>
+                          </div>
+                          <div class="caption">
+                            <ul class="media-list">
+                              <li class="media">
+                                <div class="media-body">
+                                  <a href="{{ news.get_absolute_url }}">{{ news.title|truncatechars:23 }}</a>
+                                  <div class="date">{{ news.created_at|date:'d M Y' }}</div>
+                                </div>
+                              </li>
+                            </ul>
+                            <p class="price">{{ news.content|cleanHtml|safe|truncatewords_html:12 }}</p>
+                            <a href="{{ news.get_absolute_url }}"><span class="pull-right">{% trans 'More' %}...</span></a>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
