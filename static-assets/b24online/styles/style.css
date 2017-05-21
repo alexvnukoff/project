@@ -1278,7 +1278,24 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
-  cursor: pointer;
+  height: 35px;
+}
+.main-row .article-content .tab-content .upload:hover .upload-btn {
+  background-color: #38a8dc;
+}
+.main-row .article-content .tab-content .upload:hover .upload-btn .text {
+  color: #fff;
+}
+.main-row .article-content .tab-content .upload:hover .upload-btn i {
+  color: #fff;
+}
+.main-row .article-content .tab-content .upload form #image-upload {
+  position: absolute;
+  opacity: 0;
+  height: 35px;
+  width: 100px;
+  margin-left: 0;
+  z-index: 999;
 }
 .main-row .article-content .tab-content .upload .upload-btn {
   background-color: #fafafa;
@@ -1287,15 +1304,6 @@ body .header-row .header-container .header .logout {
   padding: 5px;
   border: solid 1px #888;
   border-radius: 3px;
-}
-.main-row .article-content .tab-content .upload .upload-btn:hover {
-  background-color: #38a8dc;
-}
-.main-row .article-content .tab-content .upload .upload-btn:hover .text {
-  color: #fff;
-}
-.main-row .article-content .tab-content .upload .upload-btn:hover i {
-  color: #fff;
 }
 .main-row .article-content .tab-content .upload .upload-btn i {
   font-size: 25px;
@@ -1402,7 +1410,24 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
-  cursor: pointer;
+  height: 35px;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload:hover .upload-btn {
+  background-color: #38a8dc;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload:hover .upload-btn .text {
+  color: #fff;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload:hover .upload-btn i {
+  color: #fff;
+}
+.main-row .article-content .coupon #exTab .tab-content .upload form #image-upload {
+  position: absolute;
+  opacity: 0;
+  height: 35px;
+  width: 100px;
+  margin-left: 0;
+  z-index: 999;
 }
 .main-row .article-content .coupon #exTab .tab-content .upload .upload-btn {
   background-color: #fafafa;
@@ -1411,15 +1436,6 @@ body .header-row .header-container .header .logout {
   padding: 5px;
   border: solid 1px #888;
   border-radius: 3px;
-}
-.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover {
-  background-color: #38a8dc;
-}
-.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover .text {
-  color: #fff;
-}
-.main-row .article-content .coupon #exTab .tab-content .upload .upload-btn:hover i {
-  color: #fff;
 }
 .main-row .article-content .coupon #exTab .tab-content .upload .upload-btn i {
   font-size: 25px;
@@ -2138,7 +2154,24 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
-  cursor: pointer;
+  height: 35px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload:hover .upload-btn {
+  background-color: #38a8dc;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload:hover .upload-btn .text {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload:hover .upload-btn i {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .upload form #image-upload {
+  position: absolute;
+  opacity: 0;
+  height: 35px;
+  width: 100px;
+  margin-left: 0;
+  z-index: 999;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn {
   background-color: #fafafa;
@@ -2147,15 +2180,6 @@ body .header-row .header-container .header .logout {
   padding: 5px;
   border: solid 1px #888;
   border-radius: 3px;
-}
-.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover {
-  background-color: #38a8dc;
-}
-.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover .text {
-  color: #fff;
-}
-.main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn:hover i {
-  color: #fff;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .upload .upload-btn i {
   font-size: 25px;
@@ -2523,7 +2547,24 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
-  cursor: pointer;
+  height: 35px;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload:hover .upload-btn {
+  background-color: #38a8dc;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload:hover .upload-btn .text {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload:hover .upload-btn i {
+  color: #fff;
+}
+.main-row .article-content .content-block .content.details .tab-content .upload form #image-upload {
+  position: absolute;
+  opacity: 0;
+  height: 35px;
+  width: 100px;
+  margin-left: 0;
+  z-index: 999;
 }
 .main-row .article-content .content-block .content.details .tab-content .upload .upload-btn {
   background-color: #fafafa;
@@ -2532,15 +2573,6 @@ body .header-row .header-container .header .logout {
   padding: 5px;
   border: solid 1px #888;
   border-radius: 3px;
-}
-.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover {
-  background-color: #38a8dc;
-}
-.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover .text {
-  color: #fff;
-}
-.main-row .article-content .content-block .content.details .tab-content .upload .upload-btn:hover i {
-  color: #fff;
 }
 .main-row .article-content .content-block .content.details .tab-content .upload .upload-btn i {
   font-size: 25px;
