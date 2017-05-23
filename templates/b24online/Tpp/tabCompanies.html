@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load staticfiles %}
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Logo" %}</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Contacts" %}</td>
+            <td>{% trans "Site" %}</td>
+        </tr>
+
+        {% for company in page.object_list %}
+            <tr>
+                <td>{{ company.pk }}</td>
+                <td>
+                    <a href="{{ company.get_absolute_url }}" title="{{ company.name }}">
+                        {% if logo %}
+                            <img src="{{ company.logo.small }}" alt="{{ company.name }}" title="{{ company.name }}" />
+                        {% else %}
+                            <img src="{% static "b24online/img/company.jpg"  %}" alt="{{ company.name }}" />
+                        {%endif %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ company.get_absolute_url }}" title="{{ company.name }}">
+                        {{ company.name|truncatewords:2 }}
+                    </a>
+                </td>
+                <td>{{ company.phone }}</td>
+                <td>{{ company.site }}</td>
+            </tr>
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "b24online/main/paginator.html" %}
+</div>

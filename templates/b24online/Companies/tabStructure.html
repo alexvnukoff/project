@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+<script>
+    $(function(){
+        companyStructure.init('{% url "companies:tab_structure" item_pk %}', LANG['structure']);
+    });
+</script>
+
+<div class="tpp-dt-content">
+    <div class="content-staff">
+        <div class="content-staffin">
+            {% if page.object_list|length > 0 %}
+                <ul class="sitemap department">
+                    {% for department in page.object_list %}
+                        <li data-item-id="{{ department.pk }}" data-type="department">
+                            <a href="#" title="{{ department.name }}">{{ department.name }}</a>
+                            <ul class="sub vacancy">
+                                <li>{{ department.vacancyList}}</li>
+                                {% for vacancy in department.vacancies.all %}
+                                    {% spaceless %}
+                                    <li data-type="vacancy" 
+                                        data-item-id="{{ vacancy.pk }}"
+                                        {% if vacancy.staffgroup %}
+                                          data-staffgroup-id="{{ vacancy.staffgroup.id }}"
+                                        {% endif %}
+                                        {% if vacancy.is_hidden_user %}
+                                          data-is-hidden-user="1"
+                                        {% endif %}><span>{{ vacancy.name }}</span></li>
+                                     {% endspaceless %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="no-results">{% trans "No Departments found." %}</div>
+            {% endif %}
+            <!-- right buttons menu -->
+            <div class="btn-clumn">
+                {% if has_perm %}
+                    <i class="btnadd btnaction imgnews addform department" id="add-button"></i>
+                    <i class="btnedit btnaction imgnews panel" style="display: none;" id="edit-button"></i>
+                    <i class="btnremove btnaction imgnews panel" style="display: none;" id="remove-button"></i>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% include "b24online/main/paginator.html" %}
+</div>

@@ -1,0 +1,90 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+<script type="text/javascript">
+    $(function(){
+        var STAFFGROUPS = [
+            {% for item in staffgroups %}
+              {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
+            {% endfor %}  
+        ];
+        companyStaff.init('{% url "companies:tab_staff" item_pk %}', LANG['staff']);
+    });
+</script>
+
+<div id="staff-tabs" class="tpp-dt-content">
+    <div class="content-staff">
+        <div class="content-staffin">
+            <div class="error-msg">
+                {% if errorMessage %}
+                    <p>{{ errorMessage }}</p>
+                {% endif %}
+            </div>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff">
+                <tr class="top">
+                    <td width="24">&nbsp;</td>
+                    <td>{% trans "Name" %}</td>
+                    <td>{% trans "Department" %}</td>
+                    <td>{% trans "Position" %}</td>
+                    <td>{% trans "Contact" %}</td>
+                    <td>{% trans "Status" %}</td>
+                    <td class="status"></td>-
+                </tr>
+
+                {% for vacancy in page.object_list %}
+                    <tr data-item-id="{{ vacancy.user.pk }}">
+                        <td>
+                            <div class="avatar">
+                                {% if vacancy.user.profile.avatar %}
+                                     <img src="{{ vacancy.user.profile.avatar.th }}" alt="{{ vacancy.user.profile.full_name }}" />
+                                {% else %}
+                                     <img style="width: 24px;height: 24px;" src="{% static "b24online/img/profile.jpg"  %}" alt="{{ vacancy.user.profile.full_name }}" />
+                                {% endif %}
+                            </div>
+                        </td>
+                        {% if vacancy.user.profile.full_name %}
+                            <td><a href="#" title="{{ vacancy.user.profile.full_name }}">{{ vacancy.user.profile.full_name }}</a></td>
+                        {% else %}
+                            <td><a href="#" title="">{% trans "User with empty profile. User ID:" %} {{ vacancy.user.pk }}</a></td>
+                        {% endif %}
+                        <td>{{ vacancy.department.name }}</td>
+                        <td>{{ vacancy.name }}</td>
+                        <td>
+                          <i class="staff-contact-msg img-status contact-us" 
+                            data-id="{{ vacancy.user.pk }}"
+                            data-organization-id="{{ vacancy.department.organization.pk }}"
+                            data-organization-name="{{ vacancy.department.organization.name }}" 
+                            data-recipient-id="{{ vacancy.user.pk }}"
+                            data-recipient-name="{% if vacancy.user.profile and vacancy.user.profile.full_name %}{{ vacancy.user.profile.full_name }}{% else %}{{ vacancy.user.email }}{% endif %}">
+                          </i>
+                        </td>
+                        <td><i class="staff-status-active img-status"></i></td>
+                        {% comment %}
+                            {% if status == 'Active' %}
+                                <td><i class="staff-status-active img-status"></i></td>
+                            {% else %}
+                                <td><i class="staff-status-passive img-status"></i></td>
+                            {% endif %}
+                        {% endcomment %}
+                        <td>
+                            {% if has_perm %}
+                                <i class="btnremove-small imgnews" data-id="{{ id }}"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <div class="no-results">{% trans "No Staff found." %}</div>
+                {% endfor %}
+
+            </table>
+            {% if has_perm %}
+                <div class="btn-clumn">
+                    <i class="btnadd btnaction imgnews addform" id="user-add-button"></i>
+                    <!-- <i class="btnremove btnaction imgnews"></i> -->
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% include "b24online/main/paginator.html" %}
+</div>

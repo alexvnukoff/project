@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+<div class="tpp-dt-content">
+<table class="table-big" cellpadding="0" cellpadding="0">
+    {% for video in page.object_list %}
+        <tr>
+            <td colspan="2">
+                <a href="{{ video.get_absolute_url }}" title="{{ video.title }}">
+                    {{ video.title|truncatewords:10 }}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="{{ video.get_absolute_url }}" title="{{ video.title }}">
+                    {% if video.image %}
+                        <img src="{{ video.image.small }}" alt="{{ video.title }}" title="{{ video.title }}"/>
+                    {% else %}
+                        <img src="{% static 'b24online/img/news.jpg' %}"/>
+                    {% endif %}
+                </a>
+            </td>
+            <td>
+                {{ video.content|cleanHtml|safe|truncatewords_html:50 }}
+            </td>
+        </tr>
+    {% empty %}
+        <div class="no-results">{% trans "No results found" %}</div>
+    {% endfor %}
+</table>
+{% include "b24online/main/paginator.html" %}
+</div>
