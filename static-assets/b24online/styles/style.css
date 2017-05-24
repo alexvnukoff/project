@@ -1277,7 +1277,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   float: left;
   clear: left;
-  margin-top: 10px;
+  margin: 10px 20px;
   height: 35px;
 }
 .main-row .article-content .tab-content .upload:hover .upload-btn {
@@ -1325,11 +1325,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .tab-content .document .download {
   position: relative;
+  float: left;
+  clear: both;
 }
 .main-row .article-content .tab-content .document .download:hover a {
   display: block;
+  transition: 0.5s all;
 }
-.main-row .article-content .tab-content .document .download a {
+.main-row .article-content .tab-content .document .download:hover .trash {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .tab-content .document .download .download {
   position: absolute;
   display: none;
   top: 65px;
@@ -1339,6 +1346,22 @@ body .header-row .header-container .header .logout {
   text-align: center;
   color: #fff;
   cursor: pointer;
+}
+.main-row .article-content .tab-content .document .download .trash {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .tab-content .document .download .trash:hover {
+  color: #f00;
 }
 .main-row .article-content .tab-content p {
   color: #777;
@@ -1350,7 +1373,36 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .tab-content .text p {
   font-weight: 300;
 }
-.main-row .article-content .tab-content .fancy img {
+.main-row .article-content .tab-content .fancy-container {
+  float: left;
+  clear: left;
+  margin-top: 10px;
+}
+.main-row .article-content .tab-content .fancy-container .gallery-item {
+  min-height: 130px;
+}
+.main-row .article-content .tab-content .fancy-container .gallery-item:hover .fa-trash-o {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .tab-content .fancy-container .gallery-item .fa-trash-o {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  left: 35px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .tab-content .fancy-container .gallery-item .fa-trash-o:hover {
+  color: #f00;
+}
+.main-row .article-content .tab-content .fancy-container .gallery-item img {
   display: block;
   position: relative;
   float: left;
@@ -1409,7 +1461,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   float: left;
   clear: left;
-  margin-top: 10px;
+  margin: 10px 20px;
   height: 35px;
 }
 .main-row .article-content .coupon #exTab .tab-content .upload:hover .upload-btn {
@@ -1457,11 +1509,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon #exTab .tab-content .document .download {
   position: relative;
+  float: left;
+  clear: both;
 }
 .main-row .article-content .coupon #exTab .tab-content .document .download:hover a {
   display: block;
+  transition: 0.5s all;
 }
-.main-row .article-content .coupon #exTab .tab-content .document .download a {
+.main-row .article-content .coupon #exTab .tab-content .document .download:hover .trash {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download .download {
   position: absolute;
   display: none;
   top: 65px;
@@ -1471,6 +1530,22 @@ body .header-row .header-container .header .logout {
   text-align: center;
   color: #fff;
   cursor: pointer;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download .trash {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .coupon #exTab .tab-content .document .download .trash:hover {
+  color: #f00;
 }
 .main-row .article-content .coupon #exTab .tab-content p {
   color: #777;
@@ -1482,7 +1557,36 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .coupon #exTab .tab-content .text p {
   font-weight: 300;
 }
-.main-row .article-content .coupon #exTab .tab-content .fancy img {
+.main-row .article-content .coupon #exTab .tab-content .fancy-container {
+  float: left;
+  clear: left;
+  margin-top: 10px;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item {
+  min-height: 130px;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item:hover .fa-trash-o {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item .fa-trash-o {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  left: 35px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item .fa-trash-o:hover {
+  color: #f00;
+}
+.main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item img {
   display: block;
   position: relative;
   float: left;
@@ -2153,7 +2257,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   float: left;
   clear: left;
-  margin-top: 10px;
+  margin: 10px 20px;
   height: 35px;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .upload:hover .upload-btn {
@@ -2201,11 +2305,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .document .download {
   position: relative;
+  float: left;
+  clear: both;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .document .download:hover a {
   display: block;
+  transition: 0.5s all;
 }
-.main-row .article-content .content-block .content.vacancy .tab-content .document .download a {
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download:hover .trash {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download .download {
   position: absolute;
   display: none;
   top: 65px;
@@ -2215,6 +2326,22 @@ body .header-row .header-container .header .logout {
   text-align: center;
   color: #fff;
   cursor: pointer;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download .trash {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .document .download .trash:hover {
+  color: #f00;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content p {
   color: #777;
@@ -2226,7 +2353,36 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content .text p {
   font-weight: 300;
 }
-.main-row .article-content .content-block .content.vacancy .tab-content .fancy img {
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container {
+  float: left;
+  clear: left;
+  margin-top: 10px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item {
+  min-height: 130px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item:hover .fa-trash-o {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item .fa-trash-o {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  left: 35px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item .fa-trash-o:hover {
+  color: #f00;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item img {
   display: block;
   position: relative;
   float: left;
@@ -2546,7 +2702,7 @@ body .header-row .header-container .header .logout {
   position: relative;
   float: left;
   clear: left;
-  margin-top: 10px;
+  margin: 10px 20px;
   height: 35px;
 }
 .main-row .article-content .content-block .content.details .tab-content .upload:hover .upload-btn {
@@ -2594,11 +2750,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content .document .download {
   position: relative;
+  float: left;
+  clear: both;
 }
 .main-row .article-content .content-block .content.details .tab-content .document .download:hover a {
   display: block;
+  transition: 0.5s all;
 }
-.main-row .article-content .content-block .content.details .tab-content .document .download a {
+.main-row .article-content .content-block .content.details .tab-content .document .download:hover .trash {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download .download {
   position: absolute;
   display: none;
   top: 65px;
@@ -2608,6 +2771,22 @@ body .header-row .header-container .header .logout {
   text-align: center;
   color: #fff;
   cursor: pointer;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download .trash {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.details .tab-content .document .download .trash:hover {
+  color: #f00;
 }
 .main-row .article-content .content-block .content.details .tab-content p {
   color: #777;
@@ -2619,7 +2798,36 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.details .tab-content .text p {
   font-weight: 300;
 }
-.main-row .article-content .content-block .content.details .tab-content .fancy img {
+.main-row .article-content .content-block .content.details .tab-content .fancy-container {
+  float: left;
+  clear: left;
+  margin-top: 10px;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item {
+  min-height: 130px;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item:hover .fa-trash-o {
+  opacity: 1;
+  transition: 0.5s all;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item .fa-trash-o {
+  opacity: 0;
+  color: #fff;
+  background-color: #888;
+  height: 25px;
+  width: 25px;
+  left: 35px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item .fa-trash-o:hover {
+  color: #f00;
+}
+.main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item img {
   display: block;
   position: relative;
   float: left;

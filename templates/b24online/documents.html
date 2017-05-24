@@ -2,36 +2,20 @@
 {% load static %}
 <div class="tpp-dt-content">
     {% if has_perm %}
-        <div class="uploader">
-                <form>
-                    <input id="file-upload" name="image" type="file" multiple="true">
-                    <div id="file-upload-queue"></div>
-                </form>
+      <div class="upload col-xs-12">
+        <form>
+            <input id="image-upload" name="image" type="file" multiple="true">
+        </form>
+        <div class="upload-btn">
+          <i class="fa fa-upload"></i>
+          <div class="text">Upload</div>
         </div>
+      </div>
     {% endif %}
-    <div class="files_holder">
-        {% include "b24online/tab_documents_structure.html" %}
-    </div>
+    {% include "b24online/tab_documents_structure.html" %}
 </div>
 
 {% if has_perm %}
-    <!-- Gallery uploader -->
-    <style>
-        .uploader {
-            max-height: 130px;
-            overflow-y: hidden;
-        }
-        #file-upload-queue, #file-upload {
-            float: left;
-            margin-left: 11px;
-        }
-        .uploader:after {
-           content: "";
-           display: block;
-           clear: both;
-        }
-    </style>
-
     <script>
         LANG['UPLOAD'] = {
             'uploading': '{% trans "Uploading" %}',

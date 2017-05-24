@@ -2,7 +2,56 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 
-<ul class="tpp-gallery">
+<!-- <ul class="tpp-gallery"> -->
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+  <div class="col-xs-2 document">
+    <div class="download">
+      <img src="http://placehold.it/100x100" alt="">
+      <p><a href="#remove" class="trash"><span class="fa fa-trash-o"></span></a></p>
+      <p><a href="#" class="download">Download</a></p>
+    </div>
+    <div class="name">Name lorem ipsum dolor sit.</div>
+  </div>
+
     {% for item in documents %}
         <li>
             <div class="b-img">
@@ -30,7 +79,7 @@
             <div>{{ item.name }}</div>
         </li>
     {% endfor %}
-</ul>
+<!-- </ul> -->
 
 {% if is_paginated %}
 <div class="panging">

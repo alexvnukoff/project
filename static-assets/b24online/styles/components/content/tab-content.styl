@@ -10,7 +10,7 @@
     position: relative;
     float: left;
     clear: left;
-    margin-top: 10px;
+    margin 10px 20px;
     height 35px
     // cursor pointer
     &:hover
@@ -53,19 +53,40 @@
       text-align center
     .download
       position relative
+      float left
+      clear both
       &:hover
         a
           display block
-      a
+          transition .5s all
+        .trash
+          opacity 1
+          transition .5s all
+      .download
         position absolute
         display none
         top 65px
-        left 0px;
+        left 0px
         background-color #777
         width 100%
         text-align center
         color #fff
         cursor pointer
+      .trash
+        opacity 0
+        color #fff
+        background-color #888
+        height 25px
+        width 25px
+        // left 35px
+        text-align center
+        line-height 25px
+        font-size 16px
+        position absolute
+        top 0px
+        z-index 999
+        &:hover
+          color red
   p
     color #777
     font-weight 800
@@ -73,16 +94,40 @@
     color #777
     p
       font-weight 300
-  .fancy
-    img
-      display block
-      position relative
-      float left
-      margin-left 20px
-      margin-right auto
-      max-width 100px
-      max-height 100px
-      margin-bottom 15px
+  .fancy-container
+    float left
+    clear left
+    margin-top 10px
+    .gallery-item
+      min-height 130px
+      &:hover
+        .fa-trash-o
+          opacity 1
+          transition .5s all
+      .fa-trash-o
+        opacity 0
+        color #fff
+        background-color #888
+        height 25px
+        width 25px
+        left 35px
+        text-align center
+        line-height 25px
+        font-size 16px
+        position absolute
+        top 0px
+        z-index 999
+        &:hover
+          color red
+      img
+        display block
+        position relative
+        float left
+        margin-left 20px
+        margin-right auto
+        max-width 100px
+        max-height 100px
+        margin-bottom 15px
   img
     display block
     margin-left auto

@@ -4,53 +4,28 @@
 
     {% if has_perm %}
 
-    <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
+      <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
       <script type="text/javascript">
         $(document).ready(function() {
           $("a.grouped_elements").fancybox();
         });
       </script>
-      <a class="grouped_elements fancy" rel="group1" href="{% static "b24online/images/gallery/img1.jpg" %}"><img src="{% static "b24online/images/gallery/img1.jpg" %}" alt=""/></a>
-      <a class="grouped_elements fancy" rel="group1" href="{% static "b24online/images/gallery/img2.jpg" %}"><img src="{% static "b24online/images/gallery/img2.jpg" %}" alt=""/></a>
-      <a class="grouped_elements fancy" rel="group1" href="{% static "b24online/images/gallery/slide1.jpg" %}"><img src="{% static "b24online/images/gallery/slide1.jpg" %}" alt=""/></a>
-        <div class="upload">
-          <form>
-              <input id="image-upload" name="image" type="file" multiple="true">
-          </form>
-          <div class="upload-btn">
-            <i class="fa fa-upload"></i>
-            <div class="text">Upload</div>
-          </div>
+      <div class="upload">
+        <form>
+            <input id="image-upload" name="image" type="file" multiple="true">
+        </form>
+        <div class="upload-btn">
+          <i class="fa fa-upload"></i>
+          <div class="text">Upload</div>
         </div>
-    </div>
-        <!-- <div class="uploader">
-                <form>
-                    <input id="image-upload" name="image" type="file" multiple="true">
-                    <div id="image-upload-queue"></div>
-                </form>
-        </div> -->
+      </div>
     {% endif %}
-    <div class="files_holder">
-        {% include "b24online/tab_gallery_structure.html" %}
-    </div>
+
+    {% include "b24online/tab_gallery_structure.html" %}
 </div>
 
 {% if has_perm %}
-    <!-- Gallery uploader -->
-    <style>
-        .uploader {
-            max-height: 130px;
-            overflow-y: hidden;
-        }
-        #image-upload-queue, #image-upload {
-            float: left;
-            margin-left: 11px;
-        }
-        .uploader:after {
-           content: "";
-           display: block;
-           clear: both;
-        }
+  
     </style>
 
     <script>
