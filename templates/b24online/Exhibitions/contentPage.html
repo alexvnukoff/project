@@ -21,7 +21,7 @@
                 <div class="date">{{ exhibition.country.name }}, {% trans 'Date' %}: {{ exhibition.created_at|date:"d M Y" }}</div>
             {% endif %}
 
-          <div class="title"><a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.title }}</a></div>
+          <div class="title"><a href="{{ exhibition.get_absolute_url }}">{{ exhibition.title }}</a></div>
           <div class="author pull-left">{% trans 'Organization' %}: <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a></div>
           <div class="more pull-right"><a href="{{ exhibition.get_absolute_url }}">{% trans 'More' %}...</a></div>
         </div>

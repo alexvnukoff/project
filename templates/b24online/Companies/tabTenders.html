@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load CustomFilters %}
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Start date" %}</td>
+            <td>{% trans "End date" %}</td>
+            <td>{% trans "Price" %}</td>
+        </tr>
+       {% for tender in page.object_list %}
+            <tr>
+                <td>{{ tender.pk }}</td>
+                <td>
+                    <a href="{{ tender.get_absolute_url }}" title="{{ tender.title }}">
+                       {{ tender.title|truncatewords:10 }}
+                    </a>
+                </td>
+                <td>
+                    {{ tender.start_date|makeDate|date:"d M Y" }}
+
+                </td>
+                <td>{{ tender.end_date|makeDate|date:"d M Y" }}</td>
+                <td>{{ tender.currency|getSymbol }} {{ tender.cost }}</td>
+
+            </tr>
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "b24online/main/paginator.html" %}
+</div>
