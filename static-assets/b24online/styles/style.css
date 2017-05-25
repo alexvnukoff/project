@@ -1269,6 +1269,18 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .tab-content table img {
   float: left;
 }
+.main-row .article-content .tab-content #staff-tabs .table-staff td {
+  line-height: 30px;
+}
+.main-row .article-content .tab-content #staff-tabs .table-staff .contact-us {
+  color: #0089bc;
+}
+.main-row .article-content .tab-content #staff-tabs .table-staff .contact-us .fa {
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  left: 15px;
+}
 .main-row .article-content .tab-content #map {
   width: 100%;
   height: 400px;
@@ -1453,6 +1465,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon #exTab .tab-content table img {
   float: left;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff td {
+  line-height: 30px;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff .contact-us {
+  color: #0089bc;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff .contact-us .fa {
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  left: 15px;
 }
 .main-row .article-content .coupon #exTab .tab-content #map {
   width: 100%;
@@ -2266,6 +2290,18 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content table img {
   float: left;
 }
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff td {
+  line-height: 30px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff .contact-us {
+  color: #0089bc;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff .contact-us .fa {
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  left: 15px;
+}
 .main-row .article-content .content-block .content.vacancy .tab-content #map {
   width: 100%;
   height: 400px;
@@ -2711,6 +2747,18 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content table img {
   float: left;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff td {
+  line-height: 30px;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff .contact-us {
+  color: #0089bc;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff .contact-us .fa {
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  left: 15px;
 }
 .main-row .article-content .content-block .content.details .tab-content #map {
   width: 100%;
