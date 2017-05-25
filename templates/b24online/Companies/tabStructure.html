@@ -15,6 +15,19 @@
         $('.sub-vacancy').show(250)
       }
     }
+    showModal = (target) => {
+      $(`#${target}`).modal();
+      let edit
+      if (target.includes('edit')) {
+        if (target.includes('Group')) {
+          edit = $('.department-structure>a').attr('value')
+          $('.edit-target').val(edit)
+        } else {
+          edit = $('.vacancy').attr('value')
+          $('.edit-target').val(edit)
+        }
+      }
+    }
 </script>
 
 <div class="tpp-dt-content">
@@ -25,10 +38,12 @@
                     {% for department in page.object_list %}
                         <div data-item-id="{{ department.pk }}" data-type="department">
                             <div class="department-structure" onclick="extendDepartment()">
-                              <a href="#" title="{{ department.name }}">{{ department.name }}</a>
+                              <a href="#" value="{{ department.name }}">{{ department.name }}</a>
                               {% if has_perm %}
-                                <span class="fa fa-times pull-right"></span>
-                                <span class="fa fa-pencil pull-right"></span>
+                                <!-- <span class="fa fa-times pull-right"></span> -->
+                                <i class="fa fa-times pull-right" data-toggle="modal" onclick="showModal('delGroupModal')"></i>
+                                <i class="fa fa-pencil pull-right" data-toggle="modal" onclick="showModal('editGroupModal')"></i>
+                                <i class="fa fa-plus-circle pull-right" data-toggle="modal" onclick="showModal('addGroupModal')"></i>
                               {% endif %}
                             </div>
                             <div class="sub-vacancy">
@@ -36,6 +51,8 @@
                                 {% for vacancy in department.vacancies.all %}
                                     {% spaceless %}
                                       <div data-type="vacancy"
+                                          class="vacancy"
+                                          value="{{ vacancy.name }}"
                                           data-item-id="{{ vacancy.pk }}"
                                           {% if vacancy.staffgroup %}
                                             data-staffgroup-id="{{ vacancy.staffgroup.id }}"
@@ -45,8 +62,9 @@
                                           {% endif %}>
                                           <span>{{ vacancy.name }}</span>
                                           {% if has_perm %}
-                                            <span class="fa fa-times pull-right"></span>
-                                            <span class="fa fa-pencil pull-right"></span>
+                                            <i class="fa fa-times pull-right" data-toggle="modal" onclick="showModal('delVacancyModal')"></i>
+                                            <i class="fa fa-pencil pull-right" data-toggle="modal" onclick="showModal('editVacancyModal')"></i>
+                                            <i class="fa fa-plus-circle pull-right" data-toggle="modal" onclick="showModal('addVacancyModal')"></i>
                                           {% endif %}
                                       </div>
                                     {% endspaceless %}
@@ -69,4 +87,115 @@
         </div>
     </div>
     {% include "b24online/main/paginator.html" %}
+</div>
+
+<div class="modal fade" id="delGroupModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Удаление</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Вы действительно хотите удалить группу?</div>
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Изменение</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Измените название группы</div>
+        <input type="text" class="edit-target" value="">
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addGroupModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Добавление новой группы</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Добавление группы</div>
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="delVacancyModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Удаление</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Вы действительно хотите удалить вакансию?</div>
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editVacancyModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Изменение</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Изменение названия вакансии</div>
+        <input type="text" class="edit-target" value="">
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addVacancyModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title" id="myModalLabel">Удаление</h4>
+      </div>
+      <div class="modal-body">
+        <div class="accept">Добавление вакансии</div>
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Подтвердить</button>
+      </div>
+    </div>
+  </div>
 </div>
