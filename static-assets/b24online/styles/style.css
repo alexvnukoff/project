@@ -1281,6 +1281,56 @@ body .header-row .header-container .header .logout {
   position: relative;
   left: 15px;
 }
+.main-row .article-content .tab-content .content-staff .department-structure {
+  height: 30px;
+  padding-left: 30px;
+  line-height: 30px;
+}
+.main-row .article-content .tab-content .content-staff .department-structure:hover {
+  background-color: #eee;
+}
+.main-row .article-content .tab-content .content-staff .department-structure:hover .fa {
+  display: block;
+}
+.main-row .article-content .tab-content .content-staff .department-structure.active {
+  background-color: #eee;
+}
+.main-row .article-content .tab-content .content-staff .department-structure .fa {
+  display: none;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.main-row .article-content .tab-content .content-staff .department-structure .fa:hover {
+  color: #000;
+  cursor: pointer;
+  font-size: 15px;
+}
+.main-row .article-content .tab-content .content-staff .sub-vacancy {
+  display: none;
+  margin-left: 40px;
+  padding-left: 10px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.main-row .article-content .tab-content .content-staff .sub-vacancy:hover {
+  background-color: #f8f8f8;
+}
+.main-row .article-content .tab-content .content-staff .sub-vacancy:hover .fa {
+  display: block;
+}
+.main-row .article-content .tab-content .content-staff .sub-vacancy:hover .fa:hover {
+  color: #000;
+  font-size: 15px;
+}
+.main-row .article-content .tab-content .content-staff .sub-vacancy .fa {
+  display: none;
+  font-size: 14px;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+}
 .main-row .article-content .tab-content #map {
   width: 100%;
   height: 400px;
@@ -1477,6 +1527,56 @@ body .header-row .header-container .header .logout {
   cursor: pointer;
   position: relative;
   left: 15px;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure {
+  height: 30px;
+  padding-left: 30px;
+  line-height: 30px;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure:hover {
+  background-color: #eee;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure:hover .fa {
+  display: block;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure.active {
+  background-color: #eee;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure .fa {
+  display: none;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .department-structure .fa:hover {
+  color: #000;
+  cursor: pointer;
+  font-size: 15px;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .sub-vacancy {
+  display: none;
+  margin-left: 40px;
+  padding-left: 10px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .sub-vacancy:hover {
+  background-color: #f8f8f8;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .sub-vacancy:hover .fa {
+  display: block;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .sub-vacancy:hover .fa:hover {
+  color: #000;
+  font-size: 15px;
+}
+.main-row .article-content .coupon #exTab .tab-content .content-staff .sub-vacancy .fa {
+  display: none;
+  font-size: 14px;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
 }
 .main-row .article-content .coupon #exTab .tab-content #map {
   width: 100%;
@@ -2302,6 +2402,56 @@ body .header-row .header-container .header .logout {
   position: relative;
   left: 15px;
 }
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure {
+  height: 30px;
+  padding-left: 30px;
+  line-height: 30px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure:hover {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure:hover .fa {
+  display: block;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure.active {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure .fa {
+  display: none;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .department-structure .fa:hover {
+  color: #000;
+  cursor: pointer;
+  font-size: 15px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .sub-vacancy {
+  display: none;
+  margin-left: 40px;
+  padding-left: 10px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .sub-vacancy:hover {
+  background-color: #f8f8f8;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .sub-vacancy:hover .fa {
+  display: block;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .sub-vacancy:hover .fa:hover {
+  color: #000;
+  font-size: 15px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .content-staff .sub-vacancy .fa {
+  display: none;
+  font-size: 14px;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+}
 .main-row .article-content .content-block .content.vacancy .tab-content #map {
   width: 100%;
   height: 400px;
@@ -2759,6 +2909,56 @@ body .header-row .header-container .header .logout {
   cursor: pointer;
   position: relative;
   left: 15px;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure {
+  height: 30px;
+  padding-left: 30px;
+  line-height: 30px;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure:hover {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure:hover .fa {
+  display: block;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure.active {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure .fa {
+  display: none;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .department-structure .fa:hover {
+  color: #000;
+  cursor: pointer;
+  font-size: 15px;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .sub-vacancy {
+  display: none;
+  margin-left: 40px;
+  padding-left: 10px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .sub-vacancy:hover {
+  background-color: #f8f8f8;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .sub-vacancy:hover .fa {
+  display: block;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .sub-vacancy:hover .fa:hover {
+  color: #000;
+  font-size: 15px;
+}
+.main-row .article-content .content-block .content.details .tab-content .content-staff .sub-vacancy .fa {
+  display: none;
+  font-size: 14px;
+  color: #888;
+  margin: 0 5px;
+  line-height: 30px;
 }
 .main-row .article-content .content-block .content.details .tab-content #map {
   width: 100%;

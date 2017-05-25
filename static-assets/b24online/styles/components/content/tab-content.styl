@@ -14,6 +14,47 @@
           cursor pointer
           position relative
           left 15px
+  .content-staff
+    .department-structure
+      height 30px
+      padding-left 30px
+      line-height 30px
+      &:hover
+        background-color #eee
+        .fa
+          display block
+      &.active
+        background-color #eee
+      .fa
+        display none
+        color #888
+        margin 0 5px
+        line-height 30px
+        font-size 14px
+        &:hover
+          color #000
+          cursor pointer
+          font-size 15px
+    .sub-vacancy
+      display none
+      // margin-top 5px
+      margin-left 40px
+      padding-left 10px
+      line-height 30px
+      cursor pointer
+      &:hover
+        background-color #eee + 10
+        .fa
+          display block
+          &:hover
+            color #000
+            font-size 15px
+      .fa
+        display none
+        font-size 14px
+        color #888
+        margin 0 5px
+        line-height 30px
   #map
     width 100%
     height 400px

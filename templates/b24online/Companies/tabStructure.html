@@ -6,34 +6,55 @@
     $(function(){
         companyStructure.init('{% url "companies:tab_structure" item_pk %}', LANG['structure']);
     });
+    extendDepartment = () => {
+      if ($('.sub-vacancy').is(":visible")) {
+        $('.sub-vacancy').hide(250)
+        $('.department-structure').removeClass('active')
+      } else {
+        $('.department-structure').addClass('active')
+        $('.sub-vacancy').show(250)
+      }
+    }
 </script>
 
 <div class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
             {% if page.object_list|length > 0 %}
-                <ul class="sitemap department">
+                <div class="sitemap department">
                     {% for department in page.object_list %}
-                        <li data-item-id="{{ department.pk }}" data-type="department">
-                            <a href="#" title="{{ department.name }}">{{ department.name }}</a>
-                            <ul class="sub vacancy">
-                                <li>{{ department.vacancyList}}</li>
+                        <div data-item-id="{{ department.pk }}" data-type="department">
+                            <div class="department-structure" onclick="extendDepartment()">
+                              <a href="#" title="{{ department.name }}">{{ department.name }}</a>
+                              {% if has_perm %}
+                                <span class="fa fa-times pull-right"></span>
+                                <span class="fa fa-pencil pull-right"></span>
+                              {% endif %}
+                            </div>
+                            <div class="sub-vacancy">
+                                <div>{{ department.vacancyList}}</div>
                                 {% for vacancy in department.vacancies.all %}
                                     {% spaceless %}
-                                    <li data-type="vacancy" 
-                                        data-item-id="{{ vacancy.pk }}"
-                                        {% if vacancy.staffgroup %}
-                                          data-staffgroup-id="{{ vacancy.staffgroup.id }}"
-                                        {% endif %}
-                                        {% if vacancy.is_hidden_user %}
-                                          data-is-hidden-user="1"
-                                        {% endif %}><span>{{ vacancy.name }}</span></li>
-                                     {% endspaceless %}
+                                      <div data-type="vacancy"
+                                          data-item-id="{{ vacancy.pk }}"
+                                          {% if vacancy.staffgroup %}
+                                            data-staffgroup-id="{{ vacancy.staffgroup.id }}"
+                                          {% endif %}
+                                          {% if vacancy.is_hidden_user %}
+                                            data-is-hidden-user="1"
+                                          {% endif %}>
+                                          <span>{{ vacancy.name }}</span>
+                                          {% if has_perm %}
+                                            <span class="fa fa-times pull-right"></span>
+                                            <span class="fa fa-pencil pull-right"></span>
+                                          {% endif %}
+                                      </div>
+                                    {% endspaceless %}
                                 {% endfor %}
-                            </ul>
-                        </li>
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% else %}
                 <div class="no-results">{% trans "No Departments found." %}</div>
             {% endif %}
