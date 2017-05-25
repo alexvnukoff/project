@@ -1887,16 +1887,19 @@ body .header-row .header-container .header .logout {
   height: 30px;
   background-color: #e6e6e6;
 }
-.main-row .article-content .company .company-flag {
+.main-row .article-content .company .deal-details {
+  margin: 0 15px;
+}
+.main-row .article-content .company .deal-details .company-flag {
   margin-right: 10px;
   margin-top: 3px;
 }
-.main-row .article-content .company .thumb-deal {
+.main-row .article-content .company .deal-details .thumb-deal {
   margin-right: 20px;
   max-width: 170px;
   max-height: 170px;
 }
-.main-row .article-content .company .member-of {
+.main-row .article-content .company .deal-details .member-of {
   margin-top: 40px;
 }
 .main-row .article-content .content-goods {

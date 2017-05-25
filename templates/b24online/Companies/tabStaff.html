@@ -7,7 +7,7 @@
         var STAFFGROUPS = [
             {% for item in staffgroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
         companyStaff.init('{% url "companies:tab_staff" item_pk %}', LANG['staff']);
     });
@@ -21,9 +21,9 @@
                     <p>{{ errorMessage }}</p>
                 {% endif %}
             </div>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff table table-inverse table-striped">
                 <tr class="top">
-                    <td width="24">&nbsp;</td>
+                    <td w>&nbsp;</td>
                     <td>{% trans "Name" %}</td>
                     <td>{% trans "Department" %}</td>
                     <td>{% trans "Position" %}</td>
@@ -51,10 +51,10 @@
                         <td>{{ vacancy.department.name }}</td>
                         <td>{{ vacancy.name }}</td>
                         <td>
-                          <i class="staff-contact-msg img-status contact-us" 
+                          <i class="staff-contact-msg img-status contact-us"
                             data-id="{{ vacancy.user.pk }}"
                             data-organization-id="{{ vacancy.department.organization.pk }}"
-                            data-organization-name="{{ vacancy.department.organization.name }}" 
+                            data-organization-name="{{ vacancy.department.organization.name }}"
                             data-recipient-id="{{ vacancy.user.pk }}"
                             data-recipient-name="{% if vacancy.user.profile and vacancy.user.profile.full_name %}{{ vacancy.user.profile.full_name }}{% else %}{{ vacancy.user.email }}{% endif %}">
                           </i>
