@@ -193,12 +193,12 @@
         var STAFFGROUPS = [
             {% for item in staffgroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
         var EXTRAGROUPS = [
             {% for item in extragroups %}
               {"value": {{ item.0 }}, "name": "{{ item.1 }}"},
-            {% endfor %}  
+            {% endfor %}
         ];
 
     </script>
@@ -207,14 +207,14 @@
 {% block content %}
     <div class="companies">
         <div class="deal-details">
-            <h3>
+            <h5>
                 {% if item.flag %}
                     <img src="{{ item.flag_url }}" class="flag" title="{{ item.name }}" alt="{{ item.name }}" />
                 {% elif item.country.flag %}
                      <i class="flag sprite  {{ item.country.flag }}" title="{{ item.country.name }}"></i>
                 {% endif %}
                 {{ item.name }}
-            </h3>
+            </h5>
             {% if item.logo %}
                 <img src="{{ item.logo.big }}" class="thumb-deal" alt="{{ item.name }}" title="{{ item.name }}"  />
             {% else %}

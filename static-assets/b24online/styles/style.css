@@ -1377,6 +1377,7 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
+  margin-left: -30px;
 }
 .main-row .article-content .tab-content .fancy-container .gallery-item {
   min-height: 130px;
@@ -1561,6 +1562,7 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
+  margin-left: -30px;
 }
 .main-row .article-content .coupon #exTab .tab-content .fancy-container .gallery-item {
   min-height: 130px;
@@ -1884,6 +1886,18 @@ body .header-row .header-container .header .logout {
   font-weight: bold;
   height: 30px;
   background-color: #e6e6e6;
+}
+.main-row .article-content .company .company-flag {
+  margin-right: 10px;
+  margin-top: 3px;
+}
+.main-row .article-content .company .thumb-deal {
+  margin-right: 20px;
+  max-width: 170px;
+  max-height: 170px;
+}
+.main-row .article-content .company .member-of {
+  margin-top: 40px;
 }
 .main-row .article-content .content-goods {
   margin-left: -5px;
@@ -2357,6 +2371,7 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
+  margin-left: -30px;
 }
 .main-row .article-content .content-block .content.vacancy .tab-content .fancy-container .gallery-item {
   min-height: 130px;
@@ -2802,6 +2817,7 @@ body .header-row .header-container .header .logout {
   float: left;
   clear: left;
   margin-top: 10px;
+  margin-left: -30px;
 }
 .main-row .article-content .content-block .content.details .tab-content .fancy-container .gallery-item {
   min-height: 130px;
