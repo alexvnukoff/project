@@ -1,0 +1,105 @@
+{% extends 'b24online/main_detail_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load humanize %}
+
+
+{% block content %}
+
+    <!-- нужен правильный шаблон для апликаций специалистов -->
+    <div class="content-block">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="row">
+            <div class="container content vacancy">
+              <div class="title">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia quia perspiciatis, amet odio similique magnam.</div>
+              <div class="col-xs-8">
+                <div class="row">
+                  <div class="col-xs-4 fields">
+                    <div>Дата:</div>
+                    <div>Компания:</div>
+                    <div>Тип занятости:</div>
+                  </div>
+                  <div class="col-xs-8 values">
+                    <div>28.09.2016</div>
+                    <div><a href="#">Company name</a></div>
+                    <div>Полная</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <button type="button" class="btn btn-primary buy" data-toggle="modal" data-target="#myModal">
+                  Отправить резюме
+                </button>
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="resume-modal" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title pull-left" id="resume-modal">Send resume</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div>You send resume on position: <i style="color:red;">*</i></div>
+                        <p>Admin</p>
+                        <div>Add new resume to profile <i style="color:red;">*</i></div>
+                        <p>
+                          <a href="#">New resume</a>
+                        </p>
+                        <div>Send existing resume:</div>
+                        <p>
+                          <select class="selectpicker" title="Choose resume">
+                            <option>First</option>
+                            <option>Second</option>
+                            <option>Third</option>
+                          </select>
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Send</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="social pull-left">
+                <a href="#"><i class="fb"></i></a>
+                <a href="#"><i class="vk"></i></a>
+                <a href="#"><i class="ok"></i></a>
+                <a href="#"><i class="tw"></i></a>
+              </div>
+              <div class="col-xs-12 vacancy-content">
+                <div id="exTab2" class="">
+                  <ul class="nav nav-tabs">
+                    <li class="active">
+                      <a  href="#1" data-toggle="tab">Описание</a>
+                    </li>
+                    <li><a href="#2" data-toggle="tab">Требования</a>
+                    </li>
+                    <li><a href="#3" data-toggle="tab">Условия</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="1">
+                      <img src="http://placehold.it/500x300" alt="">
+                    </div>
+                    <div class="tab-pane" id="2">
+                      <img src="http://placehold.it/150x150" alt="">
+                    </div>
+                    <div class="tab-pane" id="3">
+                      <img src="http://placehold.it/250x300" alt="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

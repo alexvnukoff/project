@@ -8,28 +8,6 @@
 
 {% block content %}
 
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
-<script type="text/javascript">
-$(function() {
-     $(".goods-details-tab").tabs();});
-var marker;
-    $(document).ready(function($) {
-        var tabs =  $('.goods-details-tab')
-        tabs.tabs();
-        var href = tabs.find('a[href="#goods-tabs-4"]');
-        href.on('click',function(){
-            {% if item.location %}
-              {% with item.location|split:"," as LatLng %}
-              marker = new google.maps.Marker({
-                position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
-                });
-              {% endwith %}
-            {% endif %}
-          initialize(false);
-        })});
-</script>
-
     <div class="content-block">
       <div class="row">
         <div class="col-xs-12">
@@ -46,7 +24,7 @@ var marker;
                 </div>
               </div>
               <br>
-              <div class="title">{{ item.name }}</div>
+              <div class="title">{{ item.title }}</div>
               <div class="link">
 
               {% if item.organization.logo %}
@@ -55,13 +33,11 @@ var marker;
                   <img src="{% static 'b24online/img/company.jpg' %}" class="thumb" />
               {% endif %}
 
-                <a href="#">
                   {% if item.organization %}
-                      <a href="{{ item.organization.get_absolute_url }} ">{{ item.organization.name }}</a>
+                    <a href="{{ item.organization.get_absolute_url }} ">{{ item.organization.name }}</a>
                   {% else %}
-                      {{ item.created_by.profile.full_name }}
+                    {{ item.created_by.profile.full_name }}
                   {% endif %}
-                </a>
 
               </div>
               <div class="col-xs-12">
@@ -206,8 +182,6 @@ var marker;
 
                       </div>
                     </div>
-
-
                   </div>
                 </div>
               </div>

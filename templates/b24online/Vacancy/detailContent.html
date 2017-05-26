@@ -1,0 +1,107 @@
+{% extends 'b24online/main_detail_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load humanize %}
+
+
+{% block content %}
+
+    <div class="content-block">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="row">
+            <div class="container content vacancy">
+              <div class="title">{{ item.title }}</div>
+              <div class="col-xs-8">
+                <div class="row">
+                  <div class="col-xs-4 fields">
+                    <div>{% trans 'Date' %}:</div>
+                    <div>{% trans 'Company' %}:</div>
+                    <div>{% trans 'Type of employments' %}:</div>
+                  </div>
+                  <div class="col-xs-8 values">
+                    <div>{{ item.created_at|date:'d M Y' }}</div>
+                    <div>{% if item.is_anonymous %}
+                        {% trans 'Anonymous company' %}
+                      {% else %}
+                        <a href="{{ item.vacancy.department.organization.get_absolute_url }}">{{ item.vacancy.department.organization.name }}</a>
+                      {% endif %}</div>
+                    <div>{{ item.get_type_of_employment_display }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <button type="button" class="btn btn-primary buy" data-toggle="modal" data-target="#myModal">
+                  {% trans 'Send resume' %}
+                </button>
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="resume-modal" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title pull-left" id="resume-modal">{% trans 'Send resume' %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div>{% trans 'You send resume on position:' %}: <i style="color:red;">*</i></div>
+                        <p>{{ item.vacancy.name }}</p>
+                        <div>{% trans 'Add new resume to profile' %} <i style="color:red;">*</i></div>
+                        <p>
+                          <a href="{% url 'resume:main' %}">{% trans 'New resume' %}</a>
+                        </p>
+                        <div>{% trans 'Send existing resume' %}:</div>
+                        <p>
+                          <select class="selectpicker" title="Choose resume">
+                          {% for resume in resumes %}
+                          <option value="{{ resume.pk }}"> {{ resume.title }}</option>
+                           {% empty %}
+                             <option disabled> {% trans 'No existing resumes' %}</option>
+                          {% endfor %}
+                          </select>
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Send' %}</button>
+                        <button type="button" class="btn btn-primary">{% trans 'Cancel' %}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="social pull-left">
+                {% social_share item item.title %}
+              </div>
+              <div class="col-xs-12 vacancy-content">
+                <div id="exTab2" class="">
+                  <ul class="nav nav-tabs">
+                    <li class="active">
+                      <a  href="#1" data-toggle="tab">{% trans 'Description' %}</a>
+                    </li>
+                    <li><a href="#2" data-toggle="tab">{% trans 'Requirements' %}</a>
+                    </li>
+                    <li><a href="#3" data-toggle="tab">{% trans 'Terms' %}</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="1">
+                      <p>{{ item.description|cleanHtml|safe|default_if_none:"" }}</p>
+                    </div>
+                    <div class="tab-pane" id="2">
+                      <p>{{ item.requirements|cleanHtml|safe|default_if_none:"" }}</p>
+                    </div>
+                    <div class="tab-pane" id="3">
+                      <p>{{ item.terms|cleanHtml|safe|default_if_none:"" }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

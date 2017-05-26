@@ -5,7 +5,6 @@
 {% load inclusionTags %}
 {% load humanize %}
 
-
 {% block content %}
 
     <div class="content-block">
@@ -13,148 +12,33 @@
         <div class="col-xs-12">
           <div class="row">
             <div class="container content details clear-bgc">
-              <div class="col-xs-12">
+              <div class="title">{% if item.video_code %}<i class="fa fa-youtube-play"></i>{% endif %}{{ item.title }}</div>
+              <div class="col-xs-8">
                 <div class="row">
-                  {% if item.country %}
-                      <div class="thumb-flag-block pull-left sprite-flags {{ item.country.flag }}"></div>
-                  {% elif item.organization %}
-                      <div class="thumb-flag-block pull-left sprite-flags {{ item.organization.flag }}"></div>
-                  {% endif %}
-                  <div class="date pull-left">{{ item.country.name }}</div>
-                </div>
-              </div>
-              <br>
-              <div class="title">{{ item.name }}</div>
-              <div class="link">
 
-              {% if item.organization.logo %}
-                  <img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
-              {% else %}
-                  <img src="{% static 'b24online/img/company.jpg' %}" class="thumb" />
-              {% endif %}
-
-                <a href="#">
                   {% if item.organization %}
-                      <a href="{{ item.organization.get_absolute_url }} "> {{ item.organization.name }}</a>
-                  {% else %}
-                      {{ item.created_by.profile.full_name }}
+                    {% if item.organization.flag %}
+                        <div class="thumb-flag-block pull-left flag sprite-flags {{ item.organization.flag }}"></div>
+                    {% else %}
+                        <div class="thumb-flag-block pull-left flag sprite-flags {{ item.organization.country.flag }}"></div>
+                    {% endif %}
                   {% endif %}
-                </a>
 
-              </div>
-              <div class="col-xs-12">
-                <p>{{ item.description|cleanHtml|safe }}</p>
-              </div>
-              <div class="col-xs-12">
-                <div class="col-xs-12 tabs">
-                  <div id="exTab2" class="">
-                    <ul class="nav nav-tabs">
-                      <li class="active">
-                        <a  href="#1" data-toggle="tab">{% trans "Main" %}</a>
-                      </li>
-                      <li>
-                        <a  href="#2" data-toggle="tab">{% trans "Business plan" %}</a>
-                      </li>
-                      <li>
-                        <a href="#3" data-toggle="tab">{% trans "Galery" %}</a>
-                      </li>
-                      <li>
-                        <a href="#4" data-toggle="tab">{% trans "Documents" %}</a>
-                      </li>
-                      <li>
-                        <a href="#5" data-toggle="tab">{% trans "Contacts" %}</a>
-                      </li>
+                  <div class="date pull-left">{% if item.country %}{{ item.country.name }}, {% endif %}{{ item.created_at|date:"d M Y" }}, <a href="{{ item.organization.get_absolute_url }}" title="{{ item.organization.name }}">{{ item.organization.name }}</a></div>
 
-                      {% for page in item.additional_pages.all %}
-                       <li>
-                        <a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a>
-                      </li>
-                      {% endfor %}
-
-                    </ul>
-                    <div class="tab-content">
-                      <div class="tab-pane active" id="1">
-                        <div class="col-xs-4">
-                          <div class="field">{% trans 'Product' %}:</div>
-                          <div class="field">{% trans 'Industry' %}:</div>
-                          <div class="field">{% trans 'Cost' %}:</div>
-                          <div class="field">{% trans 'Realese date' %}:</div>
-                        </div>
-                        <div class="col-xs-8">
-                          <div class="value">{{ item.product_name }}</div>
-                          <div class="value">
-                            {% if item.branches.count != 0 %}
-                              {% for branch in item.branches.all %}{{ branch.name }} {% endfor %}
-                            {% endif %}
-                          </div>
-                          <div class="value">{{ item.currency|getSymbol }} {{ item.cost|formatPrice }}</div>
-                          <div class="value">{{ item.release_date }}</div>
-                        </div>
-                      </div>
-                      <div class="tab-pane" id="2">
-                        <div class="text">{{ item.business_plan|cleanHtml|safe }}</div>
-                      </div>
-                      <div class="tab-pane" id="3">
-                        <!-- тут галлерея -->
-                        <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
-                        <img src="http://placehold.it/250x300" alt="">
-                      </div>
-                      <div class="tab-pane" id="4">
-                        <!-- тут документы -->
-                        <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus cum aperiam odio numquam maxime voluptates laudantium facere eos voluptatibus.</div>
-                        <img src="http://placehold.it/300x250" alt="">
-                      </div>
-                      <div class="tab-pane" id="5">
-
-                        {% if item.organization.address %}
-                        <div class="col-xs-12">
-                          <div class="col-xs-4 field">{% trans 'Address' %}:</div>
-                          <div class="col-xs-8 value">{{ item.organization.address }}</div>
-                        </div>
-                        {% endif %}
-
-                        {% if item.organization.phone %}
-                        <div class="col-xs-12">
-                          <div class="col-xs-4 field">{% trans 'Telephone number' %}:</div>
-                          <div class="col-xs-8 value">{{ item.organization.phone }}</div>
-                        </div>
-                        {% endif %}
-
-                        {% if item.organization.fax %}
-                        <div class="col-xs-12">
-                          <div class="col-xs-4 field">{% trans 'Fax' %}:</div>
-                          <div class="col-xs-8 value">{{ item.organization.fax }}</div>
-                        </div>
-                        {% endif %}
-
-                        {% if item.organization.email %}
-                        <div class="col-xs-12">
-                          <div class="col-xs-4 field">{% trans 'Email' %}:</div>
-                          <div class="col-xs-8 value">{{ item.organization.email }}</div>
-                        </div>
-                        {% endif %}
-
-                        {% if item.organization.site %}
-                        <div class="col-xs-12">
-                          <div class="col-xs-4 field">{% trans 'WWW' %}:</div>
-                          <div class="col-xs-8 value">{{ item.organization.site }}</div>
-                        </div>
-                        {% endif %}
-                      </div>
-
-                        {% for page in item.additional_pages.all %}
-                        <div class="col-xs-12" id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                          <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                  </div>
                 </div>
+              </div>
+              <div class="col-xs-12 video-content">
+                <iframe width="100%" height="360px" src="http://www.youtube.com/embed/DkaUsBwe0fo" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="social pull-left">
+                  {% social_share item item.title %}
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
 {% endblock %}
