@@ -215,7 +215,12 @@
     <div class="company">
       <div class="deal-details">
         <h5 class="article-header">
-          <div class="company-flag pull-left sprite-flags {{ item.country.flag }}"></div>
+          {% if item.flag %}
+              <div class="company-flag pull-left sprite-flags {{ item.flag }}"></div>
+              <!-- <img src="{{ item.flag_url }}" class="flag" title="{{ item.name }}" alt="{{ item.name }}" /> -->
+          {% elif item.country.flag %}
+              <div class="company-flag pull-left sprite-flags {{ item.country.flag }}"></div>
+          {% endif %}
           {{ item.name }}
         </h5>
         {% if item.logo %}
@@ -281,7 +286,7 @@
         <div class="col-xs-12">
           <div class="col-xs-12 tabs">
             <div id="exTab">
-              <ul class="nav nav-tabs tabs-up" id="friends">
+              <ul class="nav nav-tabs tabs-up">
                 <li class="active">
                     <a href="#about" data-target="#about" class="media_node active span" data-toggle="tab">
                         {% trans "About" %}

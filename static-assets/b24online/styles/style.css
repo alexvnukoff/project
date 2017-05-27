@@ -1152,6 +1152,13 @@ body .header-row .header-container .header .logout {
 .main {
   margin-top: 20px;
 }
+.main-row .modal input {
+  padding: 0 10px;
+  margin-top: 10px;
+  border-radius: 1px;
+  height: 30px;
+  outline: none;
+}
 .main-row .main-container {
   margin-top: 20px;
   width: 1190px;
@@ -1272,6 +1279,15 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .tab-content #staff-tabs .table-staff td {
   line-height: 30px;
+}
+.main-row .article-content .tab-content #staff-tabs .table-staff td.status .fa {
+  padding-left: 10px;
+}
+.main-row .article-content .tab-content #staff-tabs .table-staff td.status .status-on {
+  color: #008000;
+}
+.main-row .article-content .tab-content #staff-tabs .table-staff td.status .status-off {
+  color: #f00;
 }
 .main-row .article-content .tab-content #staff-tabs .table-staff .contact-us {
   color: #0089bc;
@@ -1510,6 +1526,8 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon #exTab {
   margin-top: 20px;
+  border: solid 1px #eee;
+  padding: 10px;
 }
 .main-row .article-content .coupon #exTab .tab-content {
   margin-top: 25px;
@@ -1520,6 +1538,15 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff td {
   line-height: 30px;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff td.status .fa {
+  padding-left: 10px;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff td.status .status-on {
+  color: #008000;
+}
+.main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff td.status .status-off {
+  color: #f00;
 }
 .main-row .article-content .coupon #exTab .tab-content #staff-tabs .table-staff .contact-us {
   color: #0089bc;
@@ -2396,6 +2423,15 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff td {
   line-height: 30px;
 }
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff td.status .fa {
+  padding-left: 10px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff td.status .status-on {
+  color: #008000;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff td.status .status-off {
+  color: #f00;
+}
 .main-row .article-content .content-block .content.vacancy .tab-content #staff-tabs .table-staff .contact-us {
   color: #0089bc;
 }
@@ -2904,6 +2940,15 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff td {
   line-height: 30px;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff td.status .fa {
+  padding-left: 10px;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff td.status .status-on {
+  color: #008000;
+}
+.main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff td.status .status-off {
+  color: #f00;
 }
 .main-row .article-content .content-block .content.details .tab-content #staff-tabs .table-staff .contact-us {
   color: #0089bc;

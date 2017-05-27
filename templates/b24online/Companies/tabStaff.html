@@ -44,9 +44,13 @@
                             </div>
                         </td>
                         {% if vacancy.user.profile.full_name %}
-                            <td><a href="#" title="{{ vacancy.user.profile.full_name }}">{{ vacancy.user.profile.full_name }}</a></td>
+                            <td>
+                              <a href="#" title="{{ vacancy.user.profile.full_name }}">{{ vacancy.user.profile.full_name }}</a>
+                            </td>
                         {% else %}
-                            <td><a href="#" title="">{% trans "User with empty profile. User ID:" %} {{ vacancy.user.pk }}</a></td>
+                            <td>
+                              <a href="#" title="">{% trans "User with empty profile. User ID:" %} {{ vacancy.user.pk }}</a>
+                            </td>
                         {% endif %}
                         <td>{{ vacancy.department.name }}</td>
                         <td>{{ vacancy.name }}</td>
@@ -59,14 +63,13 @@
                             data-recipient-name="{% if vacancy.user.profile and vacancy.user.profile.full_name %}{{ vacancy.user.profile.full_name }}{% else %}{{ vacancy.user.email }}{% endif %}">
                           </i>
                         </td>
-                        <td><i class="staff-status-active img-status"></i></td>
-                        {% comment %}
-                            {% if status == 'Active' %}
-                                <td><i class="staff-status-active img-status"></i></td>
-                            {% else %}
-                                <td><i class="staff-status-passive img-status"></i></td>
-                            {% endif %}
-                        {% endcomment %}
+                        <td>
+                          {% if status == 'Active' %}
+                              <i class="fa fa-circle status-on">{{status}}</i>
+                          {% else %}
+                              <i class="fa fa-circle status-off">{{status}}</i>
+                          {% endif %}
+                        </td>
                         <td>
                             {% if has_perm %}
                                 <i class="btnremove-small imgnews" data-id="{{ id }}"></i>
