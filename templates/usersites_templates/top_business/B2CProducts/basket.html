@@ -97,10 +97,11 @@
 
                                     <a href="{% url 'b2c_products:basket' %}?clean=1" class="btn btn-warning btn-sm clean">{% trans 'Clean basket' %}</a>
                                     <a class="btn btn-primary btn-sm clean" href="{% url 'b2c_products:order_by_email' %}">{% trans 'Order by E-mail' %}</a>
-                                    <button class="update btn-info btn-sm">{% trans 'Update price' %}</button>
+                                    <button class="update btn btn-success btn-sm clean">{% trans 'Update price' %}</button>
 
 
                                 </form>
+                            <br/>
 
                                 <div class="pay">
                                     {% if paypal_form %}
