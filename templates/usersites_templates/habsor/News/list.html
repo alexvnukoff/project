@@ -17,7 +17,7 @@
         {# The news content #}
         {% for article in news %}
 
-                <div class="col-md-3 article">
+                <div class="col-md-3 col-sm-4 col-xs-6 article">
                     {% if article.image %}
                         <div class="blog-img-wrap">
                             <img src="{{ article.image.big }}" alt="{{ article.name }}" title="{{ article.name }}">
@@ -29,7 +29,7 @@
                     {% endif %}
 
                     <h3 class="news-header">
-                       <a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
+                       <a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title|truncatewords_html:"10" }}</a></h3>
                     <p class="date">{{ article.created_at|date:'d M Y' }}</p>
                 </div>
 
