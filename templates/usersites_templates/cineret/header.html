@@ -136,14 +136,9 @@
                     <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
 
                     {% if not is_chamber %}
-                        {% if site.user_site.organization.b2c_products %}
+                        {% if site.user_site.organization.b2c_products.exists %}
                             <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
                         {% endif %}
-                    {% endif %}
-
-                    {# here need to check if there are coupons and add to the menu #}
-                    {% if site.user_site.organization.b2c_coupons %}
-                        <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Coupons' %}</a></li>
                     {% endif %}
 
                     {% if site.user_site.organization.proposals.exists %}
