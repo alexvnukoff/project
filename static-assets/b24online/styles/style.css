@@ -2034,6 +2034,7 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .article-header {
   font-size: 20px;
   font-weight: 600;
+  margin-left: 15px;
   font-family: 'Amatic';
 }
 .main-row .article-content .block-title {
@@ -2044,9 +2045,6 @@ body .header-row .header-container .header .logout {
   font-weight: bold;
   height: 30px;
   background-color: #e6e6e6;
-}
-.main-row .article-content .company .deal-details {
-  margin: 0 15px;
 }
 .main-row .article-content .company .deal-details .company-flag {
   margin-right: 10px;

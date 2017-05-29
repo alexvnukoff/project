@@ -13,18 +13,18 @@
       });
 
       {% if form and form.has_companies %}
-      $(document).ready(
-          function() {
-              $('input:radio[name=customer_type]').change(function() {
-                  var value = $(this).val();
-                  if (value == 'person') {
-                      $('#id-customer-company-row').hide();
-                  } else {
-                      $('#id-customer-company-row').show();
-                  }
-              });
-          }
-      );
+        $(document).ready(
+            function() {
+                $('input:radio[name=customer_type]').change(function() {
+                    var value = $(this).val();
+                    if (value == 'person') {
+                        $('#id-customer-company-row').hide();
+                    } else {
+                        $('#id-customer-company-row').show();
+                    }
+                });
+            }
+        );
       {% endif %}
     </script>
 
@@ -34,7 +34,7 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="row">
-              <div class="container content details product clear-bgc">
+              <div class="container content details product company clear-bgc">
                 <!-- <div class="company-flag pull-left sprite-flags {{ item.company.country.flag }}" styles="margin-right: 10px;"></div>
                 <div class="title product">{{ item.name }}</div> -->
                 <div class="deal-details">
@@ -63,7 +63,6 @@
                     {% social_share item item.name %}
                     </div>
                   </div>
-
             </div>
 
         <form action="" method="post">{% csrf_token %}
@@ -259,7 +258,8 @@
   </div>
 
 <script>
-  $(document).on('click', '.number-spinner button', function () {
+  $(document).on('click', '.number-spinner button', function (e) {
+    e.preventDefault()
   	var btn = $(this),
   		oldValue = btn.closest('.number-spinner').find('input').val().trim(),
   		newVal = 0;
