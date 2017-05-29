@@ -931,6 +931,15 @@ span.percent{
 	padding: 1px;
 }
 
+.product-extra-pages{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.product-extra-pages .tab-content{
+	padding: 15px;
+}
+
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
 	.main-products .row{

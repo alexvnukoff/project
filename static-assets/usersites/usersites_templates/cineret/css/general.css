@@ -953,6 +953,15 @@ h3 a:focus{
     height: auto;
 }
 
+.product-extra-pages{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.product-extra-pages .tab-content{
+	padding: 15px;
+}
+
 /* Landscape tablets and medium desktops */
 @media (min-width: 992px)  {
     .product .product__caption .product__desc{

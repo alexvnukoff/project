@@ -252,6 +252,10 @@ body{
     float: right;
 }
 
+.product-extra-pages .nav-tabs>li{
+	float: right;
+}
+
 #product-page-slider #slider-thumbs .thumbnails li{
 	float: right!important;
 }

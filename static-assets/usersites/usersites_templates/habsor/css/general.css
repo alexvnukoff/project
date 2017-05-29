@@ -388,6 +388,15 @@ hr.style-one {
     clear: both;
 }
 
+.product-extra-pages{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.product-extra-pages .tab-content{
+	padding: 15px;
+}
+
 .gal-container{
     margin-bottom: 10px;
 }
@@ -432,6 +441,45 @@ Additional Styles (required)
     margin: 0;
     width: 100%;
 }
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+    .news .article{
+        height: 300px;
+    }
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .news .article{
+        height: 300px;
+    }
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    .news .article{
+        height: 320px;
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .news .article{
+        height: 320px;
+        width: 100%;
+    }
+
+    .news .blog-img-wrap {
+        height: 220px;
+    }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
 
 /******************************
 ** footer styling *************
@@ -580,7 +628,9 @@ footer .footer-menu a{
     font-size: 20px;
 }
 
-
+.col-xxs-12 {
+    width: 100%;
+}
 
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
@@ -606,3 +656,4 @@ footer .footer-menu a{
 @media (max-width: 480px) {
 
 }
+

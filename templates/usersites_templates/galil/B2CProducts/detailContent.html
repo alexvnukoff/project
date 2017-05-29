@@ -170,6 +170,40 @@
         </div>{# end of row #}
       </div>{# end of container #}
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 product-extra-pages">
+                <!-- Nav tabs -->
+                <div class="card ">
+                    <ul class="nav nav-tabs" role="tablist">
+                        {% for page in object.additional_pages.all %}
+                            {% if  forloop.counter0 == 0 %}
+                                <li role="presentation" class="active"><a href="#goods-tabs-{{ forloop.counter0|add:4 }}" aria-controls="home" role="tab" data-toggle="tab">{{ page.title }}</a></li>
+                            {% else %}
+                                <li role="presentation"><a href="#goods-tabs-{{ forloop.counter0|add:4 }}" aria-controls="home" role="tab" data-toggle="tab">{{ page.title }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content" id="goods-tabs-1">
+                        {% for page in object.additional_pages.all %}
+                            {% if  forloop.counter0 == 0 %}
+                                <div role="tabpanel" class="tab-pane active" id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                                    <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                                </div>
+                            {% else %}
+                                <div role="tabpanel" class="tab-pane" id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                                    <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                                </div>
+                            {% endif %}
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block js %}
