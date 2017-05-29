@@ -728,6 +728,15 @@ collapse the menu on 991px. */
 	bottom: 60px;
 }
 
+.product-extra-pages{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.product-extra-pages .tab-content{
+	padding: 15px;
+}
+
 #product-page-slider .thumbnails{
 	list-style: none;
 	padding: 5px;

@@ -345,3 +345,6 @@ footer a:active{
     color: #000;
 }
 
+.product-extra-pages li>a{
+	color: #a40000;
+}

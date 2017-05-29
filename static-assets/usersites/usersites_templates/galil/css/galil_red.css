@@ -178,3 +178,6 @@ footer a:active{
     font-size: 80%;
     color: red;
 }
+.product-extra-pages li>a{
+	color: #a40000;
+}

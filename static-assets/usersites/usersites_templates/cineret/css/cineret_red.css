@@ -332,3 +332,6 @@ footer a:active{
     color: red;
 }
 
+.product-extra-pages li>a{
+	color: #BF0000;
+}

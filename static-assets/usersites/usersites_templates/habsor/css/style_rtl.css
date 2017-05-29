@@ -133,6 +133,10 @@ body, h1, h2, h3, h4, p, span, div, a{
     margin: 15px 0 15px 15px;
 }
 
+.product-extra-pages .nav-tabs>li{
+	float: right;
+}
+
 
 /* ----------- Contact Styling -------------------- */
 

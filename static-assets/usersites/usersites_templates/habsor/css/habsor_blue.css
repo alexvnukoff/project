@@ -81,3 +81,7 @@ footer .footer-menu a:active{
     background-color: #046380;
     color: #fff;
 }
+
+.product-extra-pages li>a{
+	color: #046380;
+}
