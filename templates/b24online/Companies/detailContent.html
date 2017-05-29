@@ -224,9 +224,9 @@
           {{ item.name }}
         </h5>
         {% if item.logo %}
-          <img src="{{ item.logo.big }}" class="thumb-deal pull-left" alt="{{ item.logo }}" title="{{ item.logo }}" />
+          <img src="{{ item.logo.big }}" class="thumb-img pull-left" alt="{{ item.logo }}" title="{{ item.logo }}" />
         {% else %}
-          <img src="{% static "b24online/img/company.jpg" %}" class="thumb-deal pull-left" alt="" />
+          <img src="{% static "b24online/img/company.jpg" %}" class="thumb-img pull-left" alt="" />
         {% endif %}
 
         {% comment %} Pay membership button {% endcomment %}
