@@ -397,6 +397,30 @@ hr.style-one {
 	padding: 15px;
 }
 
+
+#product-page-slider .thumbnails{
+    list-style: none;
+}
+
+#product-page-slider .thumbnails{
+    padding: 0;
+}
+
+#product-page-slider .thumbnails li{
+    padding: 2px;
+    height: 80px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+#product-page-slider .thumbnails li .thumbnail{
+    border: none;
+}
+
+#slider-thumbs{
+    padding: 0;
+}
+
 .gal-container{
     margin-bottom: 10px;
 }

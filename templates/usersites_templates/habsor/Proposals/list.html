@@ -20,7 +20,7 @@
         {% for proposal in proposals %}
             <div class="row prop-content">
                 {# Register the 'view' event for b2b product #}
-                {{ proposal|register_event:"view"|process_event:request }}
+{#                {{ proposal|register_event:"view"|process_event:request }}#}
 
                 <div class="col-md-4 prop-title">
                     <h3 class="prop-header"><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
@@ -28,9 +28,10 @@
                 </div>
 
                 <div class="col-md-8 prop-desc">
-                    {{ proposal.description|cleanHtml|safe|truncatewords:100 }}
+                    {{ proposal.description|safe|truncatewords:100 }}
                 </div>
             </div>{# /.row #}{# /Proposal Content #}
+            <div class="clearfix"></div>
         {% endfor %}
 
 
