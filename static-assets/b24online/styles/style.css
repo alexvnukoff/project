@@ -1159,6 +1159,9 @@ body .header-row .header-container .header .logout {
   height: 30px;
   outline: none;
 }
+.main-row .modal input.clear {
+  margin-top: 0;
+}
 .main-row .main-container {
   margin-top: 20px;
   width: 1190px;
@@ -1525,6 +1528,8 @@ body .header-row .header-container .header .logout {
   margin-left: 10px;
 }
 .main-row .article-content .coupon #exTab {
+  float: left;
+  width: 100%;
   margin-top: 20px;
   border: solid 1px #eee;
   padding: 10px;
