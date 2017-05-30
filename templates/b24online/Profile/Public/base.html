@@ -1,0 +1,37 @@
+{% load staticfiles %}{% load i18n %}{% load compress %}{% load CustomFilters %}{% getLang as language_code %}<!doctype html>
+<html lang="{% getLang %}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block header %}{% endblock %}
+<title>{% block title %}{% endblock %}</title>
+<link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+<link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+
+{% compress css %}
+<link href="{% static 'b24online/css/bootstrap.css' %}" rel="stylesheet">
+<link href="{% static 'b24online/css/icons.css' %}" rel="stylesheet">
+{% endcompress %}
+
+</head>
+<body style="background:#f5f5f5">
+
+    {% comment %}
+    <div class="container-fluid" style="background:#efefef;border-bottom:1px solid #dedede">&nbsp;</div>
+    {% endcomment %}
+<div class="container-fluid" style="background:#fff;">
+    <p style="margin-top:20px;text-align:center;height:100px;">
+    <a href="/"><img src="{% static 'b24online/img/b24_small.png' %}"></a>
+  </p>
+</div>
+
+{% block content %}{% endblock %}
+
+<div class="container">
+<p style="text-align:center;color:#999">© 2010–{% now 'Y' %} B24Online.com</p>
+</div>
+<br><br>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57e022d670e3f980"></script>
+{% if language_code == 'he' %}<script type="text/javascript">var addthis_config = addthis_config||{};addthis_config.lang = 'en'</script>{% endif %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% load i18n %}
+     <div class="addpage-form">
+        <div class="clumn1">
+            <label>{% trans 'Title' %}</label>
+            {% if form.errors.title %}
+                <div class="error-handler">
+                    <div class="formserror">{{ form.errors.title.0 }}</div>
+                </div>
+            {% endif %}
+
+            <input class="text" style="width:89%;" id="{{ prefix }}-title"  name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
+            <div style="margin-bottom: 20px">{% trans 'Delete' %}: <input type="checkbox" name="{{ prefix }}-DELETE" {% if form and form.DELETE.value %} checked="checked" {% endif %}/> </div>
+            </div>
+            {% if form.errors.content %}
+                <div class="error-handler">
+                    <div class="formserror">{{ form.errors.content.0 }}</div>
+                </div>
+            {% endif %}
+        <div class="clumn2">
+            <div style="margin-bottom: 20px"><label>{% trans 'Content' %}</label></div>
+            <div class="">
+                <textarea class="tiny" id="{{ prefix }}-content" name="{{ prefix }}-content">{{ form.content.value|default_if_none:"" }}</textarea>
+            </div>
+        </div>
+
+     </div>

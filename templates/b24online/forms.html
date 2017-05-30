@@ -1,0 +1,154 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+   {% block title %}{% trans 'Companies' %}{% endblock %}
+
+   {% block description %}
+        {% if description %}
+             <meta name="description" content="{{ description|truncatewords:30 }}"/>
+        {% else %}
+            {{ block.super }}
+         {% endif %}
+   {% endblock %}
+
+
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/external.css" %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/extra.css" %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/usersite-settings.css" %}"/>
+    {% endblock %}
+
+    {% block js %}
+         {{ block.super }}
+         <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+         <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script>
+
+        <script>
+            function add_category(name, pk) {
+                $('#list-categories').append('<li data-pk="' + pk + '">' + name + '<a href="#"><i class="i-close category-remove imgnews"></i></a></li>');
+                $('form').append('<input type="hidden" class="category-' + pk + '" name="categories" value="' + pk + '" />');
+            }
+            function add_branch(name, pk) {
+                $('#list-branches').append('<li data-pk="' + pk + '">' + name + '<a href="#"><i class="i-close branch-remove imgnews"></i></a></li>');
+                $('form').append('<input type="hidden" class="branch-' + pk + '" name="branches" value="' + pk + '" />');
+            }
+
+            var branches = [
+                {% if branches %}
+                    {% for branch in branches %}
+                        {
+                            pk: {{ branch.pk }},
+                            name: '{{ branch.name }}'
+                        },
+
+                    {% endfor %}
+                {% endif %}
+            ];
+
+
+            function setTiny(selector)
+            {
+                tinymce.PluginManager.load('uploadimage', '{% static "b24online/js/tinymce/plugins/uploadimage/plugin.js" %}');
+                tinymce.PluginManager.load('media_ext', '{% static "b24online/js/tinymce/plugins/media_ext/plugin.js" %}');
+
+                $(selector).tinymce({
+                        mode:"textareas",
+                        selector: selector,
+                        {% if LANGUAGE_BIDI %}language : 'he_IL',
+                        language_url: '/static/b24online/js/tinymce/langs/he_IL.js',
+                        directionality :"rtl",{% endif %}
+                        plugins : "textcolor paste link lists print table preview -media_ext -uploadimage",
+                        toolbar1: 'insertfile undo redo | styleselect | uploadimage bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image',
+                        paste_as_text: true,
+                        media_live_embeds: true,
+                        link_assume_external_targets: true,
+                        uploadimage_form_url: '{% url 'upload_editor_image' %}'
+                    });
+            }
+
+            $(document).on("click", "#add-page", function() {
+                var formin = $('.append-formin');
+                var prefix = $(this).data('prefix');
+                var num = formin.find('textarea[class="tiny"]').length;
+                var button = $(this);
+
+                if (num >= 5)
+                    return false;
+
+                var dataPost = {"prefix": prefix, "num": num};
+
+                $.get('/addPage/get/',dataPost, function(data) {
+                    $(data).insertAfter(button);
+                    setTiny('.append-formin textarea[class="tiny"]:eq(0)');
+                    num += 1;
+                    formin.find('input[name$="TOTAL_FORMS"]').val(num)
+                }, 'html');
+
+                return false
+            });
+
+            $(document).on("click", "#add-parameter", function() {
+                var formin = $('.append-pr-form');
+                var prefix = $(this).data('prefix');
+                var num = formin.find('input[class="pr-description"]').length;
+                var button = $(this);
+
+                if (num >= 10)
+                    return false;
+
+                var dataPost = {"prefix": prefix, "num": num};
+
+                $.get('/addParameter/get/',dataPost, function(data) {
+                    $(data).insertAfter(button);
+                    num += 1;
+                    formin.find('input[name$="TOTAL_FORMS"]').val(num)
+                }, 'html');
+
+                return false
+            });
+
+            $(document).on("click", ".buttonremove", function() {
+                var total_forms = $('input[name$="TOTAL_FORMS"]')
+                var num = total_forms.val(parseInt(total_forms.val()) - 1)
+                var page = $(this).parent();
+                page.remove();
+                return false
+            });
+
+            $(document).on("click", ".deleteimge", function() {
+                var parent = $(this).parent();
+                parent.find('img').parent().remove();
+                parent.find("#delete").attr('checked', 'checked');
+            });
+
+            $(document).on('click', '#select-branch', function() {
+                    var url = "{% url "branch_list" %}";
+                    window.open(url, "test", "width=600,height=600");
+
+                    return false;
+            });
+        </script>
+    {% endblock %}
+
+     {% block center %}
+            <div class="forms-content">
+                <div  class="keyword">
+                    {% block keywords %}
+                    {% endblock %}
+                </div>
+                {% block content %}{% endblock %}
+
+            </div>
+
+     {% endblock %}
+{% block right %}{% endblock %}

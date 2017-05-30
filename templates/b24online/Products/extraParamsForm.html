@@ -1,0 +1,52 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block title %}
+  {{ item }}
+{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/extra.css' %}" />
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <h1>{% trans 'Additional parameters' %} {% trans 'for' %} {{ object }}</h1>
+    <hr class="hr-divider-one">
+    <form action="" method="post">
+        {% csrf_token %}
+        <ul class="form-control">
+            <fieldset class="dcol">
+              <legend>{% trans 'Enter additional parameter field' %}</legend>
+              {% for field in form %}  
+              <li style="overflow: auto;">
+                {% autoescape off %}
+                <label>{{ field.label }}:
+                    {% if field.field.required %}<span style="color: #a00;">*</span>{% endif %}
+                </label>
+                {% endautoescape %}
+                <p>{{ field }}</p>
+                {% if form.is_bound and field.errors %}
+                <p class="errors">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </fieldset>
+            <li>
+              <input type="submit" name="save" value="{% trans 'Save' %}" />
+            </li>
+        </ul>
+    </form>
+</div>
+{% endblock %}
