@@ -1,0 +1,328 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+
+    <style>
+        .select2-container-multi .select2-choices {
+         max-height: 150px !important;
+         overflow: auto;
+         margin: 5px ;
+        }
+        .ads-details-center .filter {
+            margin-top: 15px;
+        }
+        .ads-details-center .filter label {
+            font-weight: bold;
+
+        }
+        .ads-details-center .ads-line:after {
+           content: "";
+           display: block;
+           clear: both;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $( "#tabs" ).tabs();
+            $( ".tabfilter" ).tabs();
+
+
+            $(".messages-l").tabs();
+            $(".message-tabcontent").tabs();
+            $('.custom-ms').slimScroll({
+                height: '750px',
+                railVisible: true,
+                alwaysVisible: false
+            });
+            $('.customtablein').slimScroll({
+                height: '580px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            $('.ads-pricein').slimScroll({
+                height: '270px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            //slimScroll fix
+            $('.arrow-scroll-down').click(function(){
+                $(this).parent().find('.custom-ms').trigger('scrollContent', [1] );
+                $(this).parent().find('.customtablein').trigger('scrollContent', [1] );
+                $(this).parent().find('.clumnin').trigger('scrollContent', [1] );
+                $(this).parent().find('.ads-pricein').trigger('scrollContent', [1] );
+            });
+
+            $('.arrow-scroll-up').click(function(){
+                $('.custom-ms').trigger('scrollContent', [-1] );
+                $('.customtablein').trigger('scrollContent', [-1] );
+                $('.clumnin').trigger('scrollContent', [-1] );
+                $('.ads-pricein').trigger('scrollContent', [-1] );
+            });
+
+
+            var initial = {
+                branches: [],
+                country: [],
+                chamber: []
+            }
+
+            {% if branches %}
+                {% for branch in branches %}
+                    initial['branches'].push({id: {{ branch.id }}, title: "{{ branch.name }}", cost: "{{ branch.cost }}"});
+                {% endfor %}
+            {% endif %}
+
+            {% if country %}
+                {% for c in country %}
+                    initial['country'].push({id: {{ c.id }}, title: "{{ c.name }}", cost: "{{ c.cost }}"});
+                {% endfor %}
+            {% endif %}
+
+            {% if chamber %}
+                {% for org in chamber %}
+                    initial['chamber'].push({id: {{ org.id }}, title: "{{ org.name }}", cost: "{{ org.cost }}"});
+                {% endfor %}
+            {% endif %}
+
+            var advForm = $('form[name="advForm"]');
+            var priceList = $('.ads-pricein ul');
+            var totalCost = 0;
+            var total = $('.total-price.white .right b:first');
+            var totalDays = $('.total-price.brown .right');
+            var factor = 1;
+            var days = 0;
+            var stDate;
+            var edDate;
+
+            $( "#date-start" ).datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                maxDate: edDate ? edDate : null,
+                minDate: 0,
+                onClose: function( selectedDate ) {
+                    $( "#date-end" ).datepicker( "option", "minDate", selectedDate );
+
+                    stDate = $(this).datepicker( "getDate" )
+                    setDays();
+                }
+            });
+
+
+
+            $( "#date-end" ).datepicker({
+                dateFormat: "dd/mm/yy",
+                defaultDate: "+1d",
+                minDate: stDate ? stDate : '+1d',
+                changeMonth: true,
+                onClose: function( selectedDate ) {
+                    $( "#date-start" ).datepicker("option", "maxDate", selectedDate);
+
+                    edDate = $(this).datepicker( "getDate" )
+                    setDays();
+                }
+            });
+
+
+            var stDate = $('#date-start').datepicker( "getDate" )
+            var edDate = $('#date-end').datepicker( "getDate" )
+
+
+            function setDays() {
+
+                if (stDate && edDate)
+                {
+                    var mSec = Math.abs(edDate - stDate);
+
+                    if ( !mSec || mSec <= 0 )
+                        days = 0;
+                    else
+                        days = Math.round((mSec / (1000 * 60 * 60 * 24)));
+
+                    totalDays.html(days)
+                    setTotal();
+
+                }
+            }
+
+            function setTotal() {
+
+                var newCost = totalCost * days;
+
+                newCost = newCost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                total.text(newCost);
+
+            }
+            $.fn.onChangeSet = function(e) {
+                if ( e.added ) {
+
+                     var input = $('<input />');
+                     var name = $(this).data('type')
+
+                    input.attr({
+                        name: name,
+                        value: e.added.id,
+                        type: 'hidden'
+                    });
+
+                    input.data('cost', e.added.cost);
+
+                    var cost = parseFloat(e.added.cost) * factor;
+                    cost = cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                    html = $('<li></li>').addClass('basket-' + e.added.id);
+                    html.append('<span class="left">' + e.added.title + '</span>');
+                    html.append('<span class="right">' + cost + ' $/{% trans "day" %}</span>');
+
+                    priceList.append(html);
+                    totalCost += cost * days;
+
+                    setTotal();
+
+                    input.appendTo(advForm);
+                } else if ( e.removed ) {
+                    toRemove = advForm.find('input[value="' + e.removed.id + '"]');
+
+                    cost = toRemove.data('cost');
+                    toRemove.remove();
+                    priceList.find('li.basket-' + e.removed.id).remove();
+
+                    totalCost -= parseFloat(cost) * factor * days;
+                    setTotal();
+                }
+
+            };
+
+            $('.ads-details-center .filter input').select2({
+                    width: "100%",
+                    multiple:true,
+                    formatNoMatches: function noMatches(term) {
+                            if (term.length > 0 && term.length < 3)
+                                return '{% trans "Minimum length of search term is 3 characters" %}';
+
+                            return '{% trans "No result found" %}';
+                    },
+                    ajax: {
+                        url: "{% url "adv_top:filter" %}",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            page: page, // page number
+                            type: $(this).data('type'),
+                            q: term //search term
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    initSelection : function (element, callback) {
+                        var name = element.data('type');
+
+                        if ( name in initial )
+                        {
+                            e = {'added': {}, removed: {}};
+
+                            for ( data in initial[name] )
+                            {
+                                e.added = initial[name][data];
+                                 element.onChangeSet(e);
+                            }
+
+                            callback(initial[name]);
+                        }
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+            }).on("change", function(e) { $(this).onChangeSet(e) });
+
+
+            setDays();
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block center %}
+<div class="ads-details">
+<h1>{{ adv_item }}</h1>
+    <form enctype="multipart/form-data" method="post" action="" name="advForm">
+        {% csrf_token %}
+        <div class="ads-details-center">
+            <ul class="ads-line">
+                <li class="date-line">
+                    <div class="clumn2">
+                        <label>{% trans "Start date" %}</label>
+                        {% if form.errors.start_date %}
+                            <div class="error-handler"><div class="formserror2">{{ form.errors.start_date.0 }}</div></div>
+                        {% endif %}
+                        <input value="{{ form.start_date.value|default_if_none:"" }}" type="text" name="start_date" class="date" id="date-start" />
+                   </div>
+
+                    <div class="clumn2">
+                        <label>{% trans "End date" %}</label>
+                        {% if form.errors.end_date %}
+                            <div class="error-handler"><div class="formserror2">{{ form.errors.end_date.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" value="{{ form.end_date.value|default_if_none:"" }}" name="end_date" class="date"  id="date-end" />
+                    </div>
+                </li>
+            </ul>
+
+            <div class="filter">
+                <label>{% trans "Filter" %}</label>
+                {% if form.non_field_errors %}
+                    <div class="error-handler"><div class="formserror2">{{ form.non_field_errors.0 }}</div></div>
+                {% endif %}
+                <input {% if form.branches.value.0 %} value="{{ form.branches.value|join:"," }}" {% endif %} data-type="branches" placeholder="{% trans 'Filter by Branch' %}" type="hidden" />
+                <input {% if form.country.value.0 %} value="{{ form.country.value|join:"," }}"{% endif %}  data-type="country" placeholder="{% trans 'Filter by Country' %}" type="hidden" />
+                <input {% if form.chamber.value.0 %} value="{{ form.chamber.value|join:"," }}"{% endif %}  data-type="chamber" placeholder="{% trans 'Filter by Chamber' %}" type="hidden" />
+            </div>
+            <div class="screen"><img src="{% static 'b24online/img/demo.gif'%}"></div>
+        </div>
+
+        <div class="ads-details-right">
+
+            <div class="title">{% trans "Basket" %}</div>
+                <div class="ads-price">
+                	<div class="arrow-scroll-up"></div>
+                	<div class="ads-pricein">
+                    	<ul>
+                        </ul>
+                    </div>
+                    <div class="arrow-scroll-down"></div>
+                </div>
+                <div class="total-price brown">
+                	<span class="left">{% trans "Days Q-ty" %}:</span>
+                    <span class="right">0</span>
+                </div>
+                <div class="total-price white">
+                	<span class="left"><b>{% trans "Summary" %}:</b></span>
+                    <span class="right"><b>0.00</b><b> $</b></span>
+                </div>
+                <input type="submit" value="{% trans "Pay" %}" class="btnprice">
+            </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block right %}
+{% endblock %}

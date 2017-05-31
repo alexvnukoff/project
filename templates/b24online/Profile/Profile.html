@@ -1,0 +1,365 @@
+{% extends "b24online/Profile/index.html" %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+
+<script src="http://malsup.github.com/jquery.form.js"></script>
+
+<style>
+#avatar-form .mybut345, #image-form .mybut345 {display:inline-block;margin:10px 0;background-color:#e5e5e5;font-size:11px;padding:1px;border:1px solid #dedede;cursor:pointer}
+.avatar {display:inline-block;width:150px;height:auto;}
+.avatar .input-error {color:red;display:block;text-align:center;padding:20px 0;}
+.avatar .ava {display:block;text-align:center;padding:10px 0;font-size:33px;color:#999}
+.uplavatarform {width:150px;min-height:150px;}
+.uplimageform {width:150px;min-height:150px;}
+
+{% if LANGUAGE_BIDI %}
+.rtsidebox {width:150px;float:right;margin:0;}
+.ltsidebox {width:480px;float:right;margin-top:-10px;}
+{% else %}
+.rtsidebox {width:150px;float:left;margin:0;}
+.ltsidebox {width:480px;float:left;margin-top:-10px;}
+{% endif %}
+</style>
+
+<div class="user-profile">
+<p class="change-passwd-link"><a href="{% url 'profile:change_password' %}">{% trans 'Change password' %}</a></p>
+
+<div class="rtsidebox">
+    <div class="uplavatarform">
+        <div class="avatar" id="avatar-src">
+            <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+            <span class="input-error" style="display:none">{% trans "Error" %}</span>
+
+            {% if form1.initial.avatar %}
+            <img src="{{ form1.initial.avatar.big }}" style="max-width:130px;max-height:135px;" />
+            {% else %}
+            <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:130px;max-height:135px;" />
+            {% endif %}
+        </div>
+
+        <form id="avatar-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+            <input id="id_avatar" name="avatar" type="file" style="display:none">
+            <button id="aclick" class="mybut345">{% trans "Choose Image" %}</button>
+            <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form1" disabled />
+        </form>
+    </div>
+
+    <div class="uplimageform">
+        <div class="avatar" id="image-src">
+            <span class="icon-spin3 animate-spin ava" style="display:none"></span>
+            <span class="input-error" style="display:none">{% trans "Error" %}</span>
+            {% if form2.initial.image %}
+            <img src="{{ form2.initial.image.big }}" style="max-width:130px;max-height:135px;" />
+            {% else %}
+            <img src="{% static 'b24online/img/profile.jpg' %}" style="max-width:130px;max-height:135px;" />
+            {% endif %}
+        </div>
+
+        <form id="image-form" enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+            <input id="id_image" name="image" type="file" style="display:none">
+            <button id="bclick" class="mybut345">{% trans "Choose Image" %}</button>
+            <input type="submit" class="mybut345" value="{% trans "Upload" %}" name="form2" disabled />
+        </form>
+    </div>
+</div>
+
+<div class="ltsidebox">
+
+      <div style="display:block;margin:0 10px 10px 10px;">
+      <label style="font-weight:bold;display:block;margin:5px 0;">{% trans 'Email' %}</label>
+      <div style="border:1px solid #c5c5c5;background:#f1f1f1;width:100%;padding:4px;"><strong>{{ request.user.email }}</strong></div>
+      </div>
+
+    <form  method="post" action="">{% csrf_token %}
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Last name' %}</label>
+                {% if form.errors.last_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.last_name.0 }}</div></div>
+                {% endif %}
+                {{ form.last_name }}
+            </li>
+            <li>
+                <label>{% trans 'First Name' %}</label>
+                {% if form.errors.first_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.first_name.0 }}</div></div>
+                {% endif %}
+                {{ form.first_name }}
+            </li>
+            <li>
+                <label>{% trans 'Middle name' %}</label>
+                {% if form.errors.middle_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.middle_name.0 }}</div></div>
+                {% endif %}
+                {{ form.middle_name }}
+            </li>
+            <li>
+                <label>{% trans 'Profile type' %}</label>
+                {% if form.errors.user_type %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.user_type.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.user_type %}
+                    <div class="radio">{{ radio }}</div>
+                {% endfor %}
+            </li>
+            <li style="margin-bottom: 10px;">
+                <label>{% trans "WWW" %}&nbsp;<span style="color:#949494;font-size:11px;">{% trans "Don't have a site?" %}&nbsp;<a href="{% url 'site:main' %}" target="_blank">{% trans "Open right Now" %}</a></span></label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                {{ form.site }}
+            </li>
+        </ul>
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Country' %}</label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </li>
+            <li>
+                <label>{% trans 'Birthday' %}</label>
+                {% if form.errors.birthday %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.birthday.0 }}</div></div>
+                {% endif %}
+                {{ form.birthday }}
+            </li>
+            <li>
+                <label>{% trans 'Phone Number' %}</label>
+                {% if form.errors.mobile_number %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.mobile_number.0 }}</div></div>
+                {% endif %}
+                {{ form.mobile_number }}
+            </li>
+            <li>
+                <label>{% trans 'Sex' %}</label>
+                {% if form.errors.sex %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.sex.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.sex %}
+                    <div class="radio">
+                        {{ radio }}
+                    </div>
+                {% endfor %}
+            </li>
+            <li>
+                <label>{% trans 'Profession' %}</label>
+                {% if form.errors.profession %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.profession.0 }}</div></div>
+                {% endif %}
+                {{ form.profession }}
+            </li>
+
+        </ul>
+    </div><div style="clear:both"></div>
+
+          <h2 style="margin:10px 20px 10px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Social links' %}</h2>
+            
+            <div class="profile-socials">
+                <label><i class="icon-facebook-official" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Facebook' %}</label>
+                {% if form.errors.facebook %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.facebook.0 }}</div></div>
+                {% endif %}
+                {{ form.facebook }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-linkedin-squared" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Linkedin' %}</label>
+                {% if form.errors.linkedin %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.linkedin.0 }}</div></div>
+                {% endif %}
+                {{ form.linkedin }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-twitter" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Twitter' %}</label>
+                {% if form.errors.twitter %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.twitter.0 }}</div></div>
+                {% endif %}
+                {{ form.twitter }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-instagram" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Instagram' %}</label>
+                {% if form.errors.instagram %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.instagram.0 }}</div></div>
+                {% endif %}
+                {{ form.instagram }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-gplus" style="font-size:14px;vertical-align:bottom"></i>&nbsp;{% trans 'Google Plus' %}</label>
+                {% if form.errors.gplus %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.gplus.0 }}</div></div>
+                {% endif %}
+                {{ form.gplus }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-vkontakte" style="font-size:14px;vertical-align:bottom"></i>&nbsp;{% trans 'Vkontakte' %}</label>
+                {% if form.errors.vkontakte %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.vkontakte.0 }}</div></div>
+                {% endif %}
+                {{ form.vkontakte }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-odnoklassniki" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Odnoklassniki' %}</label>
+                {% if form.errors.odnoklassniki %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.odnoklassniki.0 }}</div></div>
+                {% endif %}
+                {{ form.odnoklassniki }}
+            </div>
+
+            <div class="profile-socials">
+                <label><i class="icon-youtube" style="font-size:14px;vertical-align:bottom"></i>{% trans 'Youtube' %}</label>
+                {% if form.errors.youtube %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.youtube.0 }}</div></div>
+                {% endif %}
+                {{ form.youtube }}
+            </div>
+
+        <div style="margin-bottom:15px;clear:both"></div>
+
+        <div class="profile-fieldsets">
+              <h2 style="margin:10px 20px 20px 20px;color:#949494;padding:5px 0;border-bottom:1px solid #ccc">{% trans 'Company Info' %}</h2>
+
+                    <label>{% trans 'Company name' %}</label>
+                    {% if form.errors.co_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_name.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_name }}
+
+                    <label>{% trans 'Company slogan' %}</label>
+                    {% if form.errors.co_slogan %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_slogan.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_slogan }}
+
+                    <label>{% trans 'Company phone' %}</label>
+                    {% if form.errors.co_phone %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_phone.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_phone }}
+
+                    <label>{% trans 'Company fax' %}</label>
+                    {% if form.errors.co_fax %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_fax.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_fax }}
+
+            </div>
+
+            <div class="profile-fieldsets" style="margin-top:5px;">
+                    <label>{% trans 'Adress' %}</label>
+                    {% if form.errors.contacts %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.contacts.0 }}</div></div>
+                    {% endif %}
+                    {{ form.contacts }}
+            </div>
+
+            <div class="profile-fieldsets" style="margin-top:110px;">
+                    <label>{% trans 'Company description' %}</label>
+                    {% if form.errors.co_description %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.co_description.0 }}</div></div>
+                    {% endif %}
+                    {{ form.co_description }}
+            </div>
+
+            <div class="profilebutton" style="display:block;width:100%;">
+                <input class="btntype2" type="submit" name="form" value="{% trans 'Save' %}"/>
+                <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+            </div>
+
+    </form>
+    </div>
+
+<script>
+$(document).ready(function() { 
+    var a = $("#avatar-src").children("img");
+    var i = $("#image-src").children("img");
+    var sp1 = $("#avatar-src").children(".ava");
+    var sp2 = $("#image-src").children(".ava");
+    var ack = $("#aclick");
+    var bck = $("#bclick");
+    var avf = $("#avatar-form").children("input[type=submit]");
+    var ivf = $("#image-form").children("input[type=submit]");
+
+    ack.click(function(e) {
+        e.preventDefault();
+        $("#id_avatar").trigger('click');
+        avf.removeAttr("disabled");
+    });
+
+    bck.click(function(e) {
+        e.preventDefault();
+        $("#id_image").trigger('click');
+        ivf.removeAttr("disabled");
+    });
+
+    $('#avatar-form').ajaxForm({
+        beforeSend: function() {
+            a.hide();
+            a.removeAttr("src");
+            $("#id_avatar").val('');
+            ack.attr("disabled", true);
+            avf.attr("disabled", true);
+            sp1.show();
+            $("#avatar-src").children(".input-error").hide();
+            },
+        error: function(data) {
+            $("#avatar-src").children(".input-error").show();
+            sp1.hide();
+            },
+        success: function(data) {
+            var d = data['avatar'];
+            setTimeout(function(){
+                a.attr("src", d).delay(300).fadeIn();
+                $("#hava01").html('<img src="' + d +'" style="vertical-align:middle;margin-top:-4px;width:18px;height:18px;">');
+                $("#hava02").html('<img src="' + d +'" style="width:25px;margin-top:-17px;border:1px solid #dedede;">');
+                sp1.hide();
+            }, 4000);
+        },
+        complete: function(data) {
+            setTimeout(function(){
+            ack.attr("disabled", false);
+            }, 4300);
+        }
+    });
+
+    $('#image-form').ajaxForm({
+        beforeSend: function() {
+            i.hide();
+            i.removeAttr("src");
+            $("#id_image").val('');
+            bck.attr("disabled", true);
+            ivf.attr("disabled", true);
+            sp2.show();
+            $("#image-src").children(".input-error").hide();
+            },
+        error: function(data) {
+            $("#image-src").children(".input-error").show();
+            sp2.hide();
+            },
+        success: function(data) {
+            var d = data['image'];
+            setTimeout(function(){
+                i.attr("src", d).delay(300).fadeIn();
+                $("#hava03").html('<img src="' + d +'" style="width:20px;margin:2px 0;border:1px solid #dedede;">');
+                sp2.hide();
+            }, 4000);
+        },
+        complete: function(data) {
+            setTimeout(function(){
+            bck.attr("disabled", false);
+            }, 4300);
+        }
+    });
+
+}); 
+
+</script>
+{% endblock %}

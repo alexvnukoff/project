@@ -1,0 +1,38 @@
+{% extends 'b24online/Profile/main.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}{% trans 'Profile' %}{% endblock %}
+
+
+
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+
+    {% block js %}
+        {{ block.super }}
+            <script type="text/javascript">
+                $(function() {
+                $( ".date" ).datepicker({
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "1900:",
+                  dateFormat: "dd/mm/yy"
+                });
+              });
+            </script>
+    {% endblock %}
+
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}"/>
+         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+    {% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}{% endblock %}

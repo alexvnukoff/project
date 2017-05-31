@@ -1,0 +1,185 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block content %}
+
+<link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        $( ".date" ).datepicker({
+          dateFormat: "dd/mm/yy"
+        });
+        setTiny('textarea[class="tiny"]');
+
+    });
+
+    var marker;
+
+    {% if form.latitude.value and form.longitude.value %}
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng({{ form.latitude.value  }}, {{ form.longitude.value }})
+    });
+    {% endif %}
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    $(document).bind('branchSelected', function(event, pk, name) {
+            add_branch(name, pk);
+        });
+
+    $(document).on('click', '.branch-remove', function() {
+        var li = $(this).parents('li')
+        var pk = li.data('pk');
+        li.remove();
+        $('input.brnach-' + pk).remove();
+        return false;
+    });
+    </script>
+    <style>
+        .list-cat li {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #333;
+            color: #FFF;
+            padding-right: 25px;
+            position: relative;
+            float: left;
+            margin-bottom: 5px;
+            margin-right: 5px;
+        }
+
+        .list-cat li .i-close {
+            position: absolute;
+            width: 8px;
+            height: 7px;
+            background-position: -195px 0;
+            top: 8px;
+            right: 5px;
+        }
+    </style>
+
+{% include "b24online/main/add_button.html" %}
+<div class="newsform">
+    <form onkeypress="return event.keyCode != 13;" enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        <div class="uploadimgage">
+            <div>
+                <label class="sapce">{% trans 'City' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.city %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.city.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="city" value="{{ form.city.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Start event date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.start_date %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.start_date.0 }}</div></div>
+                {% endif %}
+                <input type="text"  name="start_date" value="{{ form.start_date.value|default_if_none:"" }}"  placeholder="" class="date" />
+            </div>
+            <div>
+                <label class="sapce">  {% trans 'End event date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.end_date %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.end_date.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="end_date" value="{{ form.end_date.value|default_if_none:"" }}" placeholder="" class="date"  />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+            <div>
+                <div class="line">
+                    <label class="sapce">{% trans 'Route description' %}</label>
+                    {% if form.errors.route %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.route.0 }}</div></div>
+                    {% endif %}
+                    <textarea name="route"  rows="7">{{ form.route.value|default_if_none:"" }}</textarea>
+                </div>
+            </div>
+            <div>
+                {% if form.errors.branches %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.branches.0 }}</div>
+                    </div>
+                {% endif %}
+                <label class="sapce">{% trans 'Branches' %}</label>
+                    <ul class="list-cat" id="list-branches">
+                    </ul>
+                    <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
+                    <script>
+                    for(i in branches) {
+                        add_branch(branches[i].name, branches[i].pk)
+                    }
+                </script>
+            </div>
+        </div>
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Title' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.title %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.title.0 }}</div></div>
+                  {% endif %}
+                <input type="text" class="text" placeholder="" name="title" value="{{ form.title.value|default_if_none:"" }}" />
+            </li>
+            <li>
+                <label>{% trans 'Description' %}</label>
+                {% if form.errors.description %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.description.0 }}</div>
+                    </div>
+                {% endif %}
+            </li>
+            <li>
+                <div class="detail">
+                    <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
+                </div>
+            </li>
+            <li>
+                <div  class="line">
+                    <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.location %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.location.0 }}</div></div>
+                    {% endif %}
+                    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                    <div id="map-canvas"></div>
+                </div>
+            </li>
+        </ul>
+        <div class="append-formin">
+               <div class="addpage-title">{% trans 'Additional pages' %}</div>
+               <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+                {{ additional_page_form.management_form }}
+                {{ additional_page_form.non_form_errors }}
+                {% for form in additional_page_form %}
+                    {{ form.id }}
+                    {% with prefix=form.prefix num=forloop.counter0 %}
+                        {% include "b24online/additionalPage.html" %}
+                    {% endwith %}
+                {% endfor %}
+        </div>
+        <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+
+        <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
+        <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
+    </form>
+</div>
+{% endblock %}
