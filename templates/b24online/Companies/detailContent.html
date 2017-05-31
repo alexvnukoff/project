@@ -267,9 +267,15 @@
         {% endif %}
         <!-- Pay membership button -->
         {% if item.short_description %}
-          <p class="description pull-left">{{ item.short_description|cleanHtml|safe }}</p>
+          <p class="description pull-left">
+            {{ item.short_description|cleanHtml|safe }}
+            {% b2b_social_buttons item.logo item.name item.description item.pk %}
+          </p>
         {% else %}
-          <p class="description pull-left">{{ item.description|cleanHtml|safe }}</p>
+          <p class="description pull-left">
+            {{ item.description|cleanHtml|safe }}
+            {% b2b_social_buttons item.logo item.name item.description item.pk %}
+          </p>
         {% endif %}
 
         {% if item.parent %}
@@ -279,7 +285,6 @@
           </p>
         {% endif %}
 
-        {% b2b_social_buttons item.logo item.name item.description item.pk %}
       </div>
 
       <div class="row coupon">

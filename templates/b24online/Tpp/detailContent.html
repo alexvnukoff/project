@@ -223,12 +223,17 @@
             {% endif %}
             <!-- <p class="description pull-left">{{ item.short_description }}</p> -->
             {% if item.short_description %}
-                <p class="description pull-left">{{ item.short_description|cleanHtml|safe }}</p>
+                <p class="description pull-left">
+                  {{ item.short_description|cleanHtml|safe }}
+                  {% b2b_social_buttons  item.logo item.name item.description %}
+                </p>
             {% else %}
-                <p class="description pull-left">{{ item.description|cleanHtml|safe }}</p>
+                <p class="description pull-left">
+                  {{ item.description|cleanHtml|safe }}
+                  {% b2b_social_buttons  item.logo item.name item.description %}
+                </p>
             {% endif %}
         </div>
-        {% b2b_social_buttons  item.logo item.name item.description %}
         <div class="row coupon">
           <div class="col-xs-12">
             <div class="col-xs-12 tabs">

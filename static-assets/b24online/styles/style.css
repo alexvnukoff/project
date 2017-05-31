@@ -2034,11 +2034,11 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .article-header {
   font-size: 20px;
   font-weight: 600;
-  margin-left: 15px;
+  margin-left: 20px;
   font-family: 'Amatic';
 }
 .main-row .article-content .block-title {
-  margin: 10px 0 20px 0;
+  margin: 10px 0 20px 10px;
   font-size: 16px;
   padding: 5px 15px;
   color: #000;
@@ -2052,11 +2052,16 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .company .deal-details .thumb-deal {
   margin-right: 20px;
+  margin-left: 20px;
   max-width: 170px;
   max-height: 170px;
 }
 .main-row .article-content .company .deal-details .member-of {
   margin-top: 40px;
+}
+.main-row .article-content .company .deal-details .thumb-img {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 .main-row .article-content .content-goods {
   margin-left: -5px;
@@ -3222,6 +3227,7 @@ body .header-row .header-container .header .logout {
   transform: rotate(-3deg);
 }
 .main-row .article-content .content-block .thumb-flag-block {
+  margin-left: 15px;
   height: 13px;
   margin-right: 7px;
 }
