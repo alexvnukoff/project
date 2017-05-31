@@ -1,10 +1,12 @@
 .article-filter
   background-color #4a4a4a
   height 45px
-  width 640px
+  width 105%
   border-radius 4px
-  margin-left -30px
-  margin-right -30px
+  margin-left -3%
+  @media (max-width: 992px)
+    margin-left -30px
+    width 109%
   .filter-ico
     position relative
     float left
@@ -48,3 +50,37 @@
     right -5px
     input
       height 28px
+  .filter-menu
+      width: 31px;
+      height: 31px;
+      margin-right 10px
+      text-align center
+      font-size 21px
+      line-height 30px
+      color #444
+      margin-left -8px
+      position: relative;
+      float: left;
+      bottom: 6px;
+      cursor: pointer;
+      border: solid 1px #333;
+      border-radius: 3px;
+      background linear-gradient(to bottom,#e6c45c 0%,#e0b744 33%,#d7a633 67%,#d9a936 96%,#dcaf3b 100%)
+      a
+        background-color #f6f6f6
+        color #0089bc
+        height 31px
+        padding 7px 10px
+        line-height 17px
+        font-size 12px
+        &:hover
+          background-color #e6e6e6
+        &.active
+          color #fff
+          background-color #d7d7d7
+          border none
+        &.red
+          background-color #ff0000
+        i
+          width 15px
+          margin-right 5px

@@ -5,6 +5,35 @@
 
 <div class="article-filter col-xs-12">
   <div class="show-filter">
+    <div class="dropdown header-nav hidden-md hidden-lg">
+      <div class="dropdown dropdown-toggle" data-toggle="dropdown">
+        <script>
+        $('.dropdown').hover(function() {
+          $(this).find('.menu-dropdown').stop(true, true).delay(100).fadeIn(200);
+        }, function() {
+          $(this).find('.menu-dropdown').stop(true, true).delay(200).fadeOut(200);
+        });
+        </script>
+        <i class="filter-menu visible-xs fa fa-bars">
+          <div class="list-group menu-dropdown dropdown-menu">
+            <a href="#" class="list-group-item active red"><i class="fa fa-desktop"></i>Управление</a>
+            <a href="#" class="list-group-item"><i class="fa fa-bars"></i>Стена</a>
+            <a href="#" class="list-group-item"><i class="fa fa-coffee"></i>Новости</a>
+            <a href="#" class="list-group-item"><i class="fa fa-suitcase"></i>B2B Центр</a>
+            <a href="#" class="list-group-item"><i class="fa fa-shopping-cart"></i>Центр покупок</a>
+            <a href="#" class="list-group-item"><i class="fa fa-globe"></i>Купоны</a>
+            <a href="#" class="list-group-item"><i class="fa fa-shield"></i>Организации</a>
+            <a href="#" class="list-group-item"><i class="fa fa-briefcase"></i>Компании</a>
+            <a href="#" class="list-group-item"><i class="fa fa-lightbulb-o"></i>Инновационные проекты</a>
+            <a href="#" class="list-group-item"><i class="fa fa-laptop"></i>Бизнес предложения</a>
+            <a href="#" class="list-group-item"><i class="fa fa-users"></i>Выставки / Форумы</a>
+            <a href="#" class="list-group-item"><i class="fa fa-desktop"></i>TPP CHANNEL</a>
+            <a href="#" class="list-group-item"><i class="fa fa-graduation-cap"></i>Требуются</a>
+            <a href="#" class="list-group-item"><i class="fa fa-user-plus"></i>Резюме</a>
+          </div>
+        </i>
+      </div>
+    </div>
     <i class="filter-ico sprite" id="feebackform-btn" data-toggle="modal" data-target="#myModal"></i>
     <div class="filter-langs">
       <span class="filter-lang">Беларусь <a class="fa fa-close"></a></span>
