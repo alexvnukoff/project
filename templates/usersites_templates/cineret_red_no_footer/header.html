@@ -146,7 +146,7 @@
                 <li><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
 
                 {% if not is_chamber %}
-                    {% if site.user_site.organization.b2c_products.exists %}
+                    {% if site.user_site.organization.b2c_products.all|check_obj_list_exists %}
                         <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
                     {% endif %}
                 {% endif %}
@@ -182,7 +182,7 @@
                 <li><a href="{% url 'pages:about' %}"><i class="fa fa-users" aria-hidden="true"></i></a></li>
 
                 {% if not is_chamber %}
-                    {% if site.user_site.organization.b2c_products.exists %}
+                    {% if site.user_site.organization.b2c_products.all|check_obj_list_exists %}
                         <li><a href="{% url 'b2c_products:main' %}"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></li>
                     {% endif %}
                 {% endif %}

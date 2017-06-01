@@ -656,3 +656,12 @@ def get_as_base64(obj):
         'avatar_content_type': ct,
         'avatar_url': img
         }
+
+
+@register.filter
+def check_obj_list_exists(obj_list):
+    for i in obj_list:
+        if i.is_deleted == False:
+            return True
+    return False
+
