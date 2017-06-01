@@ -3,7 +3,7 @@
 {% load CustomFilters %}
 
 <div class="article-header">{% trans "Last updates" %}</div>
-<div class="block-title">{% trans "Products" %}</div>
+<a href="{% url 'products:main' %}"><div class="block-title">{% trans "Products" %}</div></a>
 <div class="">
   <div class="row content-goods">
 
@@ -50,7 +50,7 @@
 </div>
 
 {% if innovation_project  %}
-<div class="block-title">{% trans 'Innovation Project' %}</div>
+<a href="{% url 'innov:main' %}"><div class="block-title">{% trans 'Innovation Project' %}</div></a>
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">
@@ -93,7 +93,7 @@
 {% endif %}
 
 {% if exhibition %}
-<div class="block-title">{% trans 'Exhibitions' %}</div>
+<a href="{% url 'exhibitions:main' %}"><div class="block-title">{% trans 'Exhibitions' %}</div></a>
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">
@@ -112,7 +112,7 @@
 {% endif %}
 
 {% if proposal %}
-<div class="block-title">{% trans 'Bussiness Proposals' %}</div>
+<a href="{% url 'proposal:main' %}"><div class="block-title">{% trans 'Bussiness Proposals' %}</div></a>
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">
@@ -135,7 +135,7 @@
 
 
 {% if news %}
-<div class="block-title">{% trans 'News' %}</div>
+<a href="{% url 'news:main' %}"><div class="block-title">{% trans 'News' %}</div></a>
 <div class="content-block">
   <div class="row">
     <div class="col-xs-12">

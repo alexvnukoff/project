@@ -2135,7 +2135,7 @@ body .header-row .header-container .header .logout {
   font-family: 'Amatic';
 }
 .main-row .article-content .block-title {
-  margin: 10px 0 20px 10px;
+  margin: 10px 0 20px 0;
   font-size: 16px;
   padding: 5px 15px;
   color: #000;
