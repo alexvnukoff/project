@@ -1383,6 +1383,23 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .tab-content {
   margin-top: 25px;
 }
+.main-row .article-content .tab-content .sub-tab {
+  padding: 5px 10px 5px 5px;
+  color: #0089bc;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: solid 1px #fff;
+}
+.main-row .article-content .tab-content .sub-tab:hover {
+  border: solid 1px #eee;
+  border-radius: 3px;
+}
+.main-row .article-content .tab-content .sub-tab.active {
+  background-color: #eee;
+}
+.main-row .article-content .tab-content .text {
+  clear: left;
+}
 .main-row .article-content .tab-content table img {
   float: left;
   max-height: 30px;
@@ -1643,6 +1660,23 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .coupon #exTab .tab-content {
   margin-top: 25px;
+}
+.main-row .article-content .coupon #exTab .tab-content .sub-tab {
+  padding: 5px 10px 5px 5px;
+  color: #0089bc;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: solid 1px #fff;
+}
+.main-row .article-content .coupon #exTab .tab-content .sub-tab:hover {
+  border: solid 1px #eee;
+  border-radius: 3px;
+}
+.main-row .article-content .coupon #exTab .tab-content .sub-tab.active {
+  background-color: #eee;
+}
+.main-row .article-content .coupon #exTab .tab-content .text {
+  clear: left;
 }
 .main-row .article-content .coupon #exTab .tab-content table img {
   float: left;
@@ -2531,6 +2565,23 @@ body .header-row .header-container .header .logout {
 .main-row .article-content .content-block .content.vacancy .tab-content {
   margin-top: 25px;
 }
+.main-row .article-content .content-block .content.vacancy .tab-content .sub-tab {
+  padding: 5px 10px 5px 5px;
+  color: #0089bc;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: solid 1px #fff;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .sub-tab:hover {
+  border: solid 1px #eee;
+  border-radius: 3px;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .sub-tab.active {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.vacancy .tab-content .text {
+  clear: left;
+}
 .main-row .article-content .content-block .content.vacancy .tab-content table img {
   float: left;
   max-height: 30px;
@@ -3045,6 +3096,23 @@ body .header-row .header-container .header .logout {
 }
 .main-row .article-content .content-block .content.details .tab-content {
   margin-top: 25px;
+}
+.main-row .article-content .content-block .content.details .tab-content .sub-tab {
+  padding: 5px 10px 5px 5px;
+  color: #0089bc;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: solid 1px #fff;
+}
+.main-row .article-content .content-block .content.details .tab-content .sub-tab:hover {
+  border: solid 1px #eee;
+  border-radius: 3px;
+}
+.main-row .article-content .content-block .content.details .tab-content .sub-tab.active {
+  background-color: #eee;
+}
+.main-row .article-content .content-block .content.details .tab-content .text {
+  clear: left;
 }
 .main-row .article-content .content-block .content.details .tab-content table img {
   float: left;
