@@ -14,6 +14,13 @@
                     <span class="glyphicon glyphicon-home"></span>{{ site.user_site.organization.address }}<br/>
                     <span class="glyphicon glyphicon-phone-alt"></span>{{ site.user_site.organization.phone }}<br/>
                     <span class="glyphicon glyphicon-envelope"></span>{{ site.user_site.organization.email }}<br/>
+
+                    {% if site.user_site.facebook %}
+                        <div class="fb-page" data-href="{{ site.user_site.facebook }}" data-small-header="true"
+                             data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true">
+                            <blockquote cite="{{ site.user_site.facebook }}" class="fb-xfbml-parse-ignore">
+                                <a href="{{ site.user_site.facebook }}">My Baby Blog</a></blockquote></div>
+                    {% endif %}
                 </div>
 
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 clearfix footer-col">
