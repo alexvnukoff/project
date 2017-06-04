@@ -435,6 +435,13 @@ hr.style-one {
     overflow: hidden;
 }
 
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+    .gal-container .gal-item .img-wrap{
+        height: 100px;
+    }
+}
+
 /************************
 ** news styling *********
 ************************/

@@ -61,11 +61,20 @@
                 </li>
             {% endif %}
 
+            <li><a href="{% url 'main' %}"><span>{% trans 'Home' %}</span></a></li>
+
             <li class="top-link-m"><a href="{% url 'pages:about' %}">{% trans 'About us' %}</a></li>
+
+            {% if not is_chamber %}
+                {% if site.user_site.organization.b2c_products.exists %}
+                    <li><a href="{% url 'b2c_products:main' %}"><span>{% trans 'Store' %}</span></a></a></li>
+                {% endif %}
+            {% endif %}
 
             {% if news %}
                 <li class="top-link-m"><span class="top-blog"></span><a href="{% url 'news:main' %}">{% trans 'Blog' %}</a></li>
             {% endif %}
+
             {% if site.user_site.organization.proposals.exists %}
                 <li class="top-link-m"><span class="top-business"></span><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
             {% endif %}
