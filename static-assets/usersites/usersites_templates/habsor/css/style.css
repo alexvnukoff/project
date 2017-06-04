@@ -23,6 +23,12 @@ body, h1, h2, h3, h4, p, span, div, a{
     margin-left: -15px;
 }
 
+@media (max-width: 480px) {
+    .top-nav ul li {
+        padding: 0 10px 0 0;
+    }
+}
+
 #search-input {
     right: 80px;
 }
