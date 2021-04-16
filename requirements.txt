@@ -15,7 +15,7 @@ django-celery-email==1.1.5
 django-celery-results==1.0.1
 django-compressor==2.1
 django-cors-headers==2.0.2
-django-debug-toolbar==1.7
+django-debug-toolbar==1.11.1
 django-guardian==1.4.6
 django-loginas==0.3.1
 django-modeltranslation==0.12
